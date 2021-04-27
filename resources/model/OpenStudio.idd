@@ -3881,8 +3881,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \note A default curve named “Data Center Servers Power fLoadTemp” is assigned.
        \type object-list
        \required-field
-       \object-list BicubicBiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   N3 , \field Design Fan Power Input Fraction
        \note The fraction of the total power input at design conditions which is for the cooling fan(s)
        \type real
@@ -3904,8 +3903,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \note A default curve named “Data Center Servers Power fLoadTemp” is assigned.
        \type object-list
        \required-field
-       \object-list BicubicBiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   A7 , \field Fan Power Input Function of Flow Curve Name
        \note The name of a single-variable curve or table lookup object which modifies the cooling
        \note fan power as a function of flow fraction (x).
@@ -3913,8 +3911,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \note A default curve named “ECM FanPower fFlow” is assigned.
        \type object-list
        \required-field
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   N5,  \field Design Entering Air Temperature
        \note The entering air temperature at design conditions.
        \type real
@@ -3963,8 +3960,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \note is assumed to always equal 1.0.
        \note This field is only used when Air Flow Calculation Method is FlowFromSystem.
        \type object-list
-       \object-list BicubicBiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   N7 , \field Design Electric Power Supply Efficiency
        \note The efficiency of the power supply system serving this ITE
        \type real
@@ -3977,8 +3973,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \note This curve (table) should equal 1.0 at full load (PLR = 1.0).
        \note If this curve is left blank, then the curve is assumed to always equal 1.0.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   N8 , \field Fraction of Electric Power Supply Losses to Zone
        \note Fraction of the electric power supply losses which are a heat gain to the zone
        \note If this field is <1.0, the remainder of the losses are assumed to be lost to the outdoors.
@@ -7389,7 +7384,7 @@ OS:Refrigeration:Case,
   A6,   \field Latent Case Credit Curve Name
         \type object-list
         \required-field
-        \object-list CubicCurves
+        \object-list UnivariateFunctions
   N8,   \field Standard Case Fan Power per Unit Length
         \type real
         \units W/m
@@ -7495,7 +7490,7 @@ OS:Refrigeration:Case,
         \note types with temperature termination only.
   A13,  \field Defrost Energy Correction Curve Name
         \type object-list
-        \object-list CubicCurves
+        \object-list UnivariateFunctions
         \note Defrost Energy Correction Curve Name is applicable to case defrost types
         \note with temperature termination only.
   N19,  \field Under Case HVAC Return Air Fraction
@@ -7585,7 +7580,7 @@ OS:Refrigeration:Condenser:AirCooled,
         \reference DesuperHeatingCoilSources
   A3,   \field Rated Effective Total Heat Rejection Rate Curve Name
         \type object-list
-        \object-list LinearCurves
+        \object-list UnivariateFunctions
         \note Rating as per ARI 460
         \note Be sure the rating corresponds to the correct refrigerant
         \note HeatRejection(W)=C1 +C2(Condensing Temp - Entering Air Temp, deg C)
@@ -7940,7 +7935,7 @@ OS:Refrigeration:Compressor,
   A3,   \field Refrigeration Compressor Power Curve Name
         \type object-list
         \required-field
-        \object-list BicubicCurves
+        \object-list BivariateFunctions
         \note The input order for the Curve:Bicubic does not
         \note match the ARI 540-2004 Eq. 1 coefficient order
         \note N1 is ARI_C1, N2 is ARI_C2, N3 is ARI_C4, N4 is ARI_C3,
@@ -7953,7 +7948,7 @@ OS:Refrigeration:Compressor,
   A4,   \field Refrigeration Compressor Capacity Curve Name
         \type object-list
         \required-field
-        \object-list BicubicCurves
+        \object-list BivariateFunctions
         \note The input order for the Curve:Bicubic does not
         \note match the ARI 540-2004 Eq. 1 coefficient order
         \note N1 is ARI_C1, N2 is ARI_C2, N3 is ARI_C4, N4 is ARI_C3,
@@ -7999,10 +7994,10 @@ OS:Refrigeration:Compressor,
         \default Subcritical
   A7,   \field Transcritical Compressor Power Curve Name
         \type object-list
-        \object-list BicubicCurves
+        \object-list BivariateFunctions
   A8;   \field Transcritical Compressor Capacity Curve Name
         \type object-list
-        \object-list BicubicCurves
+        \object-list BivariateFunctions
 
 OS:Refrigeration:CompressorRack,
         \memo Works in conjunction with the refrigeration case and walk-in objects to simulate the
@@ -8035,7 +8030,7 @@ OS:Refrigeration:CompressorRack,
   A4,   \field Compressor Rack COP Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
+        \object-list UnivariateFunctions
         \note It is important that this COP curve correspond to the lowest saturated suction
         \note      temperature needed to serve all refrigeration loads
   N2,   \field Design Condenser Fan Power
@@ -8046,7 +8041,7 @@ OS:Refrigeration:CompressorRack,
         \minimum 0.0
   A5,   \field Condenser Fan Power Function of Temperature Curve Name
         \type object-list
-        \object-list QuadraticCubicCurves
+        \object-list UnivariateFunctions
   A6,   \field Condenser Type
         \required-field
         \type choice
@@ -8279,7 +8274,7 @@ OS:Refrigeration:GasCooler:AirCooled,
   A3,   \field Rated Total Heat Rejection Rate Curve Name
         \required-field
         \type object-list
-        \object-list LinearCurves
+        \object-list UnivariateFunctions
         \note Be sure the rating corresponds to the correct refrigerant (R744)
         \note HeatRejection(W)=C1 +C2(Gas Cooler Outlet Temp - Entering Air Temp, deg C)
         \note Will be adjusted for elevation automatically
@@ -8691,7 +8686,7 @@ OS:Refrigeration:SecondarySystem,
         \default Constant
   A6,   \field Variable Speed Pump Cubic Curve Name
         \type object-list
-        \object-list CubicCurves
+        \object-list UnivariateFunctions
         \note Variable Speed Pump Curve Name is applicable to variable speed pumps
   N12,  \field Pump Motor Heat to Fluid
         \type real
@@ -9077,9 +9072,8 @@ OS:Refrigeration:AirChiller,
         \note default LinearSHR60 unless Capcity Rating Type = CapacityTotalSpecificConditions
   A6,   \field Capacity Correction Curve Name
         \type object-list
-        \object-list LinearCurves
-        \object-list QuadraticCurves
-        \note Can also be the name of a "Table:OneIndependentVariable" or a "Table:MultiVariableLookup"
+        \object-list UnivariateFunctions
+        \object-list TrivariateFunctions
         \note Should be blank for LinearSHR60 correction curve type
   N9,   \field SHR60 Correction Factor
         \type real
@@ -9224,15 +9218,14 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note Cooling is disabled above this temperature.
   A4 , \field Cooling Capacity Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter a curve name that represents full load cooling capacity ratio as a
        \note function of outdoor dry-bulb temperature and indoor wet-bulb temperature.
        \note Up to two curves are allowed if the performance cannot be represented by a single curve.
        \note The following two fields are used if two curves are required.
   A5 , \field Cooling Capacity Ratio Boundary Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve object is used to allow separate low and high cooling capacity ratio
        \note performance curves. This curve represents a line passing through the points where
        \note performance changes. The curve calculates outdoor dry-bulb temperature given weighted
@@ -9240,7 +9233,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note leave this field blank.
   A6 , \field Cooling Capacity Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note This curve object is used to describe the high outdoor temperature
        \note performance curve used to describe cooling capacity ratio.
        \note This curve is used when a single performance curve does not accurately describe
@@ -9248,13 +9241,12 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A7 , \field Cooling Energy Input Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter a curve name that represents cooling energy ratio as a function of
        \note outdoor dry-bulb temperature and indoor wet-bulb temperature
   A8 , \field Cooling Energy Input Ratio Boundary Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve object is used to allow separate low and high cooling energy input ratio
        \note performance curves. This curve represents a line passing through the points where
        \note performance changes. The curve calculates outdoor dry-bulb temperature given weighted
@@ -9262,23 +9254,21 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note leave this field blank.
   A9 , \field Cooling Energy Input Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note This curve object is used to describe the high outdoor temperature
        \note performance curve used to describe cooling energy ratio.
        \note This curve is used when a single performance curve does not accurately describe
        \note cooling energy ratio as a function of temperature
   A10 , \field Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note Enter a curve name that represents cooling energy ratio as a function of
        \note part-load ratio for part-load ratios less than or equal to 1.
        \note If this field is left blank, the model assumes energy is proportional to
        \note part-load ratio.
   A11, \field Cooling Energy Input Ratio Modifier Function of High Part-Load Ratio Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note Enter a curve name that represents cooling energy ratio as a function of
        \note part-load ratio for part-load ratios greater than 1. Part-load ratios
        \note can exceed 1 in variable speed compression systems.
@@ -9286,16 +9276,14 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note part-load ratio.
   A12, \field Cooling Combination Ratio Correction Factor Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve defines how rated capacity changes when the total indoor terminal unit cooling
        \note capacity is greater than the Gross Rated Total Cooling Capacity defined in this object.
        \note If this field is left blank, the model assumes total indoor terminal unit cooling
        \note capacity is equal to the Gross Rated Total Cooling Capacity defined above.
   A13, \field Cooling Part-Load Fraction Correlation Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve defines the cycling losses when the heat pump compressor cycles on and off
        \note below the Minimum Heat Pump Part-Load Ratio specified in the field below.
   N5 , \field Gross Rated Heating Capacity
@@ -9332,7 +9320,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note Enter the maximum outdoor temperature allowed for heating operation.
   A14, \field Heating Capacity Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter a curve name that represents full load heating capacity ratio as a
        \note function of outdoor wet-bulb temperature and indoor dry-bulb temperature.
        \note Outdoor dry-bulb temperature may be used if wet-bulb temperature data is unavailable.
@@ -9342,8 +9330,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note The following two fields are used if two curves are required.
   A15, \field Heating Capacity Ratio Boundary Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve object is used to allow separate low and high heating capacity ratio
        \note performance curves. This curve represents a line passing through the points where
        \note performance changes. The curve calculates outdoor dry-bulb or wet-bulb temperature
@@ -9352,7 +9339,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A16, \field Heating Capacity Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note This curve object is used to describe the high outdoor temperature
        \note performance curve used to describe heating capacity ratio.
        \note This curve is used when a single performance curve does not accurately describe
@@ -9360,7 +9347,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A17, \field Heating Energy Input Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter a curve name that represents heating energy ratio as a function of
        \note outdoor wet-bulb temperature and indoor dry-bulb temperature
        \note Outdoor dry-bulb temperature may be used if wet-bulb temperature data is unavailable.
@@ -9368,8 +9355,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note outdoor temperature type to use.
   A18, \field Heating Energy Input Ratio Boundary Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve object is used to allow separate low and high heating energy input ratio
        \note performance curves. This curve represents a line passing through the points where
        \note performance changes. The curve calculates outdoor dry-bulb or wet-bulb temperature
@@ -9378,7 +9364,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note If a single performance curve is used, leave this field blank.
   A19, \field Heating Energy Input Ratio Modifier Function of High Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note This curve object is used to allow separate performance curves for heating energy.
        \note If a single performance curve is used, leave this field blank.
   A20, \field Heating Performance Curve Outdoor Temperature Type
@@ -9391,25 +9377,22 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note is used to evaluate these curves.
   A21, \field Heating Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve represents the heating energy input ratio for part-load ratios less than 1.
   A22, \field Heating Energy Input Ratio Modifier Function of High Part-Load Ratio Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve represents the heating energy input ratio for part-load ratios greater than 1.
   A23, \field Heating Combination Ratio Correction Factor Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve defines how rated capacity changes when the total indoor terminal unit heating
        \note capacity is greater than the Gross Rated Heating Capacity defined in this object.
        \note If this field is left blank, the model assumes total indoor terminal unit heating
        \note capacity is equal to the Gross Rated Heating Capacity defined above.
   A24, \field Heating Part-Load Fraction Correlation Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note This curve defines the cycling losses when the heat pump compressor cycles on and off
        \note below the Minimum Heat Pump Part-Load Ratio specified in the following field.
   N10, \field Minimum Heat Pump Part-Load Ratio
@@ -9463,9 +9446,8 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note Enter the height difference between the highest and lowest terminal unit
   A30, \field Piping Correction Factor for Length in Cooling Mode Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
-       \object-list BiquadraticCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
        \note PCF = a0 + a1*L + a2*L^2 + a3*L^3 + a4*H
        \note PCF = a0 + a1*L + a2*L^2 + a3*CR + a4*CR^2 + a5*(L)(CR)
        \note where L = length and CR = combination ratio
@@ -9485,9 +9467,8 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note Enter the equivalent length of the farthest terminal unit from the condenser
   A31, \field Piping Correction Factor for Length in Heating Mode Curve Name
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
-       \object-list BiquadraticCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
        \note PCF = a0 + a1*L + a2*L^2 + a3*L^3 + a4*H
        \note PCF = a0 + a1*L + a2*L^2 + a3*CR + a4*CR^2 + a5*(L)(CR) + a6*H
        \note where L = length and CR = combination ratio
@@ -9541,7 +9522,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note OnDemand to defrost only when necessary.
   A34, \field Defrost Energy Input Ratio Modifier Function of Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note A valid performance curve must be used if reversecycle defrost strategy is selected.
   N20, \field Defrost Time Period Fraction
        \type real
@@ -9667,7 +9648,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note recovery mode will not operate.
   A41, \field Heat Recovery Cooling Capacity Modifier Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter the name of a performance curve which represents
        \note the change in cooling capacity when heat recovery is active
        \note A default constant of 0.9 is used if this input is blank
@@ -9688,7 +9669,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note from cooling only mode to heat recovery mode
   A42, \field Heat Recovery Cooling Energy Modifier Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter the name of a performance curve which represents
        \note the change in cooling energy when heat recovery is active
        \note A default constant of 1.1 is used if this input is blank
@@ -9709,7 +9690,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note from cooling only mode to heat recovery mode
   A43, \field Heat Recovery Heating Capacity Modifier Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter the name of a performance curve which represents
        \note the change in heating capacity when heat recovery is active
        \note A default constant of 1.1 is used if this input is blank
@@ -9730,7 +9711,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note from cooling only mode to heat recovery mode
   A44, \field Heat Recovery Heating Energy Modifier Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note Enter the name of a performance curve which represents
        \note the change in heating electric consumption rate when heat recovery is active
        \note A default constant of 1.1 is used if this input is blank
@@ -12281,8 +12262,7 @@ OS:AvailabilityManager:HybridVentilation,
        \note Used only if Ventilation Control Mode = 4
   A7 , \field Opening Factor Function of Wind Speed Curve
        \type object-list
-       \object-list LinearOrQuadraticCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note linear curve = a + b*WS
        \note quadratic curve = a + b*WS + c*WS**2
        \note WS = wind speed (m/s)
@@ -12364,6 +12344,9 @@ OS:Boiler:HotWater,
        \key EnteringBoiler
        \key LeavingBoiler
   A5, \field Normalized Boiler Efficiency Curve Name
+       \type object-list
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
        \note Linear, Quadratic and Cubic efficiency curves are solely a function of PLR.
        \note All other efficiency curve types are a function of PLR and boiler water temperature.
        \note Linear = C1 + C2*PLR
@@ -12375,8 +12358,6 @@ OS:Boiler:HotWater,
        \note TriQuadratic curves are not allowed.
        \note PLR = part-load ratio
        \note T = boiler water temperature (either entering or leaving).
-       \type object-list
-       \object-list AllCurves
   N3, \field Design Water Flow Rate
        \type real
        \units m3/s
@@ -12704,7 +12685,7 @@ OS:Chiller:Electric:EIR,
        \note Cooling capacity as a function of CW supply temp and entering condenser temp
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
        \note CWS = supply (leaving) chilled water temperature(C)
        \note ECT = entering condenser fluid temperature(C)
@@ -12713,7 +12694,7 @@ OS:Chiller:Electric:EIR,
        \note EIR = 1/COP
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
        \note CWS = supply (leaving) chilled water temperature(C)
        \note ECT = entering condenser fluid temperature(C)
@@ -12722,7 +12703,7 @@ OS:Chiller:Electric:EIR,
        \note EIR = 1/COP
        \type object-list
        \required-field
-       \object-list QuadraticCurves
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
        \note PLR = part load ratio (cooling load/steady state capacity)
   N7,  \field Minimum Part Load Ratio
@@ -12924,7 +12905,7 @@ OS:Chiller:Electric:ReformulatedEIR,
        \note and leaving condenser fluid temperature
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note curve = a + b*CWS + c*CWS**2 + d*LCT + e*LCT**2 + f*CWS*LCT
        \note CWS = supply (leaving) chilled water temperature(C)
        \note LCT = leaving condenser fluid temperature(C)
@@ -12933,7 +12914,7 @@ OS:Chiller:Electric:ReformulatedEIR,
        \note and leaving condenser fluid temperature.   EIR = 1/COP.
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note curve = a + b*CWS + c*CWS**2 + d*LCT + e*LCT**2 + f*CWS*LCT
        \note CWS = supply (leaving) chilled water temperature(C)
        \note LCT = leaving condenser fluid temperature(C)
@@ -12951,8 +12932,8 @@ OS:Chiller:Electric:ReformulatedEIR,
        \note EIR = 1/COP
        \required-field
        \type object-list
-       \object-list BicubicCurves
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
+       \object-list TrivariateFunctions
        \note The form of this curve is based on the input for
        \note Electric Input to Cooling Output RatioFunction of Part Load Ratio Curve Type
        \note Type=LeavingCondenserWaterTemperature: Calculated based on LCT and PLR
@@ -13245,22 +13226,16 @@ OS:ChillerHeaterPerformance:Electric:EIR,
   A6 , \field Cooling Mode Cooling Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   A7 , \field Cooling Mode Electric Input to Cooling Output Ratio Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   A8 , \field Cooling Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
        \required-field
        \type object-list
-       \object-list BicubicCurves
-       \object-list QuadraticCurves
-       \object-list UniVariateTables
-       \object-list BiVariateTables
-       \object-list UniVariateCurves
-       ! TODO: temp per https://github.com/NREL/EnergyPlus/issues/6224
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   N16, \field Cooling Mode Cooling Capacity Optimum Part Load Ratio
        \required-field
        \type real
@@ -13273,22 +13248,16 @@ OS:ChillerHeaterPerformance:Electric:EIR,
   A10, \field Heating Mode Cooling Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   A11, \field Heating Mode Electric Input to Cooling Output Ratio Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   A12, \field Heating Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
        \required-field
        \type object-list
-       \object-list BicubicCurves
-       \object-list QuadraticCurves
-       \object-list UniVariateTables
-       \object-list BiVariateTables
-       \object-list UniVariateCurves
-       ! TODO: temp per https://github.com/NREL/EnergyPlus/issues/6224
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   N17, \field Heating Mode Cooling Capacity Optimum Part Load Ratio
        \required-field
        \type real
@@ -13400,13 +13369,11 @@ OS:Chiller:Absorption:Indirect,
   A8,  \field Generator Heat Input Function of Part Load Ratio Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A9,  \field Pump Electric Input Function of Part Load Ratio Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A10 , \field Generator Inlet Node
        \type object-list
        \object-list ConnectionNames
@@ -13422,33 +13389,28 @@ OS:Chiller:Absorption:Indirect,
   A12, \field Capacity Correction Function of Condenser Temperature Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Curve which shows the change in normalized capacity to changes in condenser temperature.
   A13, \field Capacity Correction Function of Chilled Water Temperature Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Curve which shows the change in normalized capacity to changes in leaving chilled water temperature.
   A14, \field Capacity Correction Function of Generator Temperature Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Used when generator fluid type is hot water
        \note Curve which shows the change in normalized capacity to changes in generator temperature.
   A15, \field Generator Heat Input Correction Function of Condenser Temperature Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Curve which shows the change in normalized heat input to changes in condenser temperature.
   A16, \field Generator Heat Input Correction Function of Chilled Water Temperature Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Curve which shows the change in normalized heat input to changes in leaving chilled water temperature.
   A17, \field Generator Heat Source Type
        \type choice
@@ -14217,12 +14179,11 @@ OS:CoolingTower:VariableSpeed,
        \note Standard conversion for horsepower is 1 HP = 745.7 W
   A7 , \field Fan Power Ratio Function of Air Flow Rate Ratio Curve
        \type object-list
-       \object-list CubicCurves
-       \note FPR = a + b*AFR + c*AFR**2 + d*AFR**3
-       \note FPR = fraction of the design fan power
-       \note AFR = fraction of the design air flow rate
-       \note If left blank, then fan power is assumed to be proportional to
-       \note (air flow rate ratio)^3
+       \object-list UnivariateFunctions
+       \note Any curve or table with one independent variable can be used
+       \note cubic curve = a + b*AFR + c*AFR**2 + d*AFR**3
+       \note quartic curve = a + b*AFR + c*AFR**2 + d*AFR**3 + e*AFR**4
+       \note x = AFR = Ratio of current operating air flow rate to Design Air Flow Rate
   N7 , \field Minimum Air Flow Rate Ratio
        \type real
        \minimum 0.2
@@ -15019,24 +14980,21 @@ OS:Coil:Cooling:FourPipeBeam,
        \note temperature difference divided by the rating point temperature difference.
        \note This field is required when beam is connected to a chilled water plant.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A6 , \field Beam Cooling Capacity Air Flow Modification Factor Curve Name
        \note Adjusts beam cooling capacity when the primary air supply flow rate is different
        \note than at the rating point. The single independent variable is the current normalized
        \note air flow rate divided by the normalized air flow rate at the rating point.
        \note This field is required when beam is connected to a chilled water plant.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A7 ; \field Beam Cooling Capacity Chilled Water Flow Modification Factor Curve Name
        \note Adjusts beam cooling capacity when the normalized chilled water flow rate is different
        \note than at the rating point. The single independent variable is the current normalized
        \note chilled water flow rate divided by the normalized chilled water flow rate at the rating point.
        \note This field is required when beam is connected to a chilled water plant.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
 
 OS:Coil:Heating:FourPipeBeam,
   \min-fields 10
@@ -15082,24 +15040,21 @@ OS:Coil:Heating:FourPipeBeam,
        \note temperature difference divided by the rating point temperature difference.
        \note This field is required when beam is connected to a hot water plant.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A6 , \field Beam Heating Capacity Air Flow Modification Factor Curve Name
        \note Adjusts beam heating capacity when the primary air supply flow rate is different
        \note than at the rating point. The single independent variable is the current normalized
        \note air flow rate divided by the normalized air flow rate at the rating point.
        \note This field is required when beam is connected to a hot water plant.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A7 ; \field Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
        \note Adjusts beam heating capacity when the normalized hot water flow rate is different
        \note than at the rating point. The single independent variable is the current normalized
        \note hot water flow rate divided by the normalized hot water flow rate at the rating point.
        \note This field is required when beam is connected to a hot water plant.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
 
 OS:Coil:Cooling:DX,
        \memo New general DX cooling coil supporting on or more speeds and one or or operating  modes.
@@ -15437,31 +15392,33 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A4, \field Total Cooling Capacity Modifier Function of Air Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A5, \field Energy Input Ratio Modifier Function of Temperature Curve
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A6, \field Energy Input Ratio Modifier Function of Air Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A7, \field Part Load Fraction Correlation Curve
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLR = part load ratio (cooling load/steady state capacity)
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   N10,\field Rated Waste Heat Fraction of Power Input
        \note Recoverable waste heat at full load and rated conditions
        \required-field
@@ -15474,7 +15431,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note cdb = entering condenser dry-bulb temperature (C)
        \note edb = entering coil dry-bulb temperature (C)
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A9, \field Sensible Heat Ratio Modifier Function of Temperature Curve
        \note curve = a + b*wb + c*wb**2 + d*db + e*db**2 + f*wb*db
        \note wb = entering wet-bulb temperature seen by the DX cooling coil (C)
@@ -15483,7 +15440,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note If this curve is used and the Sensible Heat Ratio Modifier Function of Flow Fraction (SHRFFF)
        \note Curve Name is blank, the SHRFFF is assumed to be a constant value of 1.0.
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A10; \field Sensible Heat Ratio Modifier Function of Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
@@ -15491,7 +15448,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note If this curve is used and the Sensible Heat Ratio Modifier Function of Temperature Curve Name (SHRFT)
        \note Curve Name is blank, the SHRFT is assumed to be a constant value of 1.0.
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
 
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
@@ -15570,35 +15527,35 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A7, \field Total Cooling Capacity Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A8, \field Energy Input Ratio Function of Temperature Curve Name
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A9, \field Energy Input Ratio Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A10, \field Part Load Fraction Correlation Curve Name
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLR = part load ratio (cooling load/steady state capacity)
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   N6 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \required-field
@@ -15875,40 +15832,35 @@ OS:CoilPerformance:DX:Cooling,
   A3 , \field Total Cooling Capacity Function of Temperature Curve
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
   A4 , \field Total Cooling Capacity Function of Flow Fraction Curve
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
   A5 , \field Energy Input Ratio Function of Temperature Curve
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
   A6 , \field Energy Input Ratio Function of Flow Fraction Curve
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
   A7 , \field Part Load Fraction Correlation Curve
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLR = part load ratio (cooling load/steady state capacity)
@@ -15982,16 +15934,14 @@ OS:CoilPerformance:DX:Cooling,
        \note Rated power consumed by the evaporative condenser's water pump
   A10,  \field Sensible Heat Ratio Function of Temperature Curve
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
        \note curve = a + b*wb + c*wb**2 + d*db + e*db**2 + f*wb*db
        \note wb = entering wet-bulb temperature seen by the DX cooling coil (C)
        \note db = entering dry-bulb temperature seen by the DX cooling coil (C)
        \note entering temperature can be outside air or pretreated air.
   A11; \field Sensible Heat Ratio Function of Flow Fraction Curve
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
@@ -16131,23 +16081,23 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
   A3, \field Total Cooling Capacity Function of Temperature Curve
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A4, \field Total Cooling Capacity Function of Flow Fraction Curve
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A5, \field Energy Input Ratio Function of Temperature Curve
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A6, \field Energy Input Ratio Function of Flow Fraction Curve
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A7, \field Part Load Fraction Correlation Curve
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   N6, \field Nominal Time for Condensate Removal to Begin
        \type real
        \units s
@@ -16181,7 +16131,7 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
   A8, \field Waste Heat Function of Temperature Curve
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   N11, \field Evaporative Condenser Effectiveness
        \type real
        \units dimensionless
@@ -16273,35 +16223,35 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A7, \field Total Cooling Capacity Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A8, \field Energy Input Ratio Function of Temperature Curve Name
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A9, \field Energy Input Ratio Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A10, \field Part Load Fraction Correlation Curve Name
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLR = part load ratio (cooling load/steady state capacity)
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   N6, \field Rated Low Speed Total Cooling Capacity
        \note gross capacity excluding supply air fan heat
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
@@ -16341,14 +16291,14 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A12, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   A13, \field Condenser Air Inlet Node Name
        \note Enter the name of an outdoor air node. This node name is also specified in
        \note an OutdoorAir:Node or OutdoorAir:NodeList object.
@@ -16645,14 +16595,12 @@ OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   A4 , \field Cooling Capacity Ratio Modifier Function of Temperature Curve
        \required-field
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
-       \object-list BiquadraticCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A5 , \field Cooling Capacity Modifier Curve Function of Flow Fraction
        \required-field
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A6 , \field Coil Air Inlet Node
        \type object-list
        \object-list ConnectionNames
@@ -17018,14 +16966,15 @@ OS:Coil:Heating:DX:SingleSpeed,
        \note available for the heating capacity to be sensitive to both iat and oat.
        \type object-list
        \required-field
-       \object-list BiquadraticQuadraticCubicCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A7, \field Total Heating Capacity Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A8, \field Energy Input Ratio Function of Temperature Curve Name
        \note quadratic curve = a + b*oat + c*oat**2
        \note cubic curve = a + b*oat + c*oat**2 + d*oat**3
@@ -17036,28 +16985,29 @@ OS:Coil:Heating:DX:SingleSpeed,
        \note available for the energy input ratio to be sensitive to both iat and oat.
        \type object-list
        \required-field
-       \object-list BiquadraticQuadraticCubicCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A9, \field Energy Input Ratio Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A10, \field Part Load Fraction Correlation Curve Name
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLR = part load ratio (sensible heating load/steady state heating capacity)
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A11, \field Defrost Energy Input Ratio Function of Temperature Curve Name
        \note biquadratic curve = a + b*wb + c*wb**2 + d*oat + e*oat**2 + f*wb*oat
        \note wb = wet-bulb temperature (C) of air entering the indoor coil
        \note oat = outdoor air dry-bulb temperature (C)
        \note only required if ReverseCycle defrost strategy is specified
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
   N5, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
@@ -17140,14 +17090,12 @@ OS:Coil:Heating:DX:VariableRefrigerantFlow,
   A6 , \field Heating Capacity Ratio Modifier Function of Temperature Curve
        \required-field
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
-       \object-list BiquadraticCurves
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A7 ; \field Heating Capacity Modifier Function of Flow Fraction Curve
        \required-field
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
@@ -17249,7 +17197,7 @@ OS:Coil:Heating:Gas,
        \note This part load degradation is for coil performance & will
        \note increase the gas consumption of the coil due to transient coil operation.
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   N4, \field Parasitic Gas Load
        \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
        \type real
@@ -17290,7 +17238,7 @@ OS:Coil:Heating:Gas:MultiStage,
       \object-list ConnectionNames
   A6, \field Part Load Fraction Correlation Curve
       \type object-list
-      \object-list QuadraticCubicCurves
+      \object-list UnivariateFunctions
   N1, \field Parasitic Gas Load
       \units W
   A7; \field Stage 1
@@ -17427,7 +17375,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \note the maximum inlet water temperature for heat reclaim.
   A5,  \field Heat Reclaim Efficiency Function of Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
+       \object-list BivariateFunctions
        \note A biquadratic curve defining the performance of the desuperheater heating coil.
        \note Performance can be specified as a function of inlet water temperature, outdoor air
        \note dry-bulb temperature, or both.
@@ -17903,8 +17851,7 @@ OS:Coil:Heating:DX:MultiSpeed,
        \units C
   A6 , \field Defrost Energy Input Ratio Function of Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   N5 , \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
        \required-field
        \type real
@@ -17990,28 +17937,25 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
   A2 , \field Heating Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticQuadraticCubicCurves
-       \object-list BiVariateTables
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A3 , \field Heating Capacity Function of Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A4 , \field Energy Input Ratio Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticQuadraticCubicCurves
-       \object-list BiVariateTables
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
   A5 , \field Energy Input Ratio Function of Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   A6 , \field Part Load Fraction Correlation Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   N5 , \field Rated Waste Heat Fraction of Power Input
        \required-field
        \type real
@@ -18021,8 +17965,7 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
   A7 ; \field Waste Heat Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
 
 OS:Coil:Heating:DX:VariableSpeed,
         \min-fields 19
@@ -18060,12 +18003,17 @@ OS:Coil:Heating:DX:VariableSpeed,
    A5,  \field Energy Part Load Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
+        \note quadratic curve = a + b*PLR + c*PLR**2
+        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
+        \note PLR = part load ratio (heating load/steady state capacity)
    A6,  \field Defrost Energy Input Ratio Function of Temperature Curve Name
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
+        \note biquadratic curve = a + b*wb + c*wb**2 + d*oat + e*oat**2 + f*wb*oat
+        \note wb = wet-bulb temperature (C) of air entering the indoor coil
+        \note oat = outdoor air dry-bulb temperature (C)
+        \note only required if ReverseCycle defrost strategy is specified
    N4,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \required-field
         \type real
@@ -18144,23 +18092,31 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
    A3,  \field Heating Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
+        \note curve = a + b*db + c*db**2 + d*oat + e*oat**2 + f*db*oat
+        \note db = entering air dry-bulb temperature (C)
+        \note oat = air entering temperature seen by the evaporator (C)
    A4,  \field Total  Heating Capacity Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
+        \note quadratic curve = a + b*ffa + c*ffa**2
+        \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
+        \note ffa = Fraction of the full load Air Flow
    A5,  \field Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
+        \note curve = a + b*db + c*db**2 + d*oat + e*oat**2 + f*db*oat
+        \note db = entering air dry-bulb temperature (C)
+        \note oat = air entering temperature seen by the evaporator (C)
    A6;  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
+        \note quadratic curve = a + b*ffa + c*ffa**2
+        \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
+        \note ffa = Fraction of the full load Air Flow
 
 OS:Coil:Cooling:DX:VariableSpeed,
         \min-fields 21
@@ -18209,8 +18165,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
    A5,  \field Energy Part Load Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A6,  \field Condenser Air Inlet Node Name
         \type alpha
    A7,  \field Condenser Type
@@ -18306,23 +18261,19 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
    A3,  \field Total Cooling Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
    A4,  \field Total Cooling Capacity Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A5,  \field Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
    A6;  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
 
 OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \min-fields 12
@@ -18374,8 +18325,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
    A7,  \field Energy Part Load Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A8;  \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
@@ -18415,33 +18365,27 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    A3,  \field Heating Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
    A4,  \field Total Heating Capacity Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A5,  \field Heating Capacity Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A6,  \field Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list UnivariateFunctions
    A7,  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A8,  \field Energy Input Ratio Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    N5,  \field Reference Unit Waste Heat Fraction of Input Power At Rated Conditions
         \units dimensionless
         \type real
@@ -18450,8 +18394,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    A9;  \field Waste Heat Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list UnivariateFunctions
 
 OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \min-fields 15
@@ -18518,8 +18461,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
    A7,  \field Energy Part Load Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A8;  \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
@@ -18564,33 +18506,27 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    A3,  \field Total Cooling Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
    A4,  \field Total Cooling Capacity Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A5,  \field Total Cooling Capacity Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A6,  \field Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
    A7,  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    A8,  \field Energy Input Ratio Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    N6,  \field Reference Unit Waste Heat Fraction of Input Power At Rated Conditions
         \units dimensionless
         \type real
@@ -18599,8 +18535,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    A9;  \field Waste Heat Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
 
 OS:Coil:Cooling:Water:Panel:Radiant,
   A1 , \field Handle
@@ -18924,7 +18859,7 @@ OS:Controller:OutdoorAir,
        \note economizer control type. No input or blank input means this limit is not operative
        \note Limit is applied regardless of economizer control type.
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   N6, \field Economizer Minimum Limit Dry-Bulb Temperature
        \note Enter the minimum outdoor dry-bulb temperature limit for economizer control.
        \note No input or blank input means this limit is not operative
@@ -19081,9 +19016,7 @@ OS:Curve:Linear,
        \note curve = C1 + C2*x
        \type alpha
        \required-field
-       \reference LinearCurves
-       \reference LinearOrQuadraticCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -19371,12 +19304,8 @@ OS:Curve:Quadratic,
        \note curve = C1 + C2*x + C3*x**2
        \type alpha
        \required-field
-       \reference QuadraticCurves
-       \reference LinearOrQuadraticCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
-       \reference QuadraticCubicCurves
-       \reference BiquadraticQuadraticCubicCurves
   N1, \field Coefficient1 Constant
        \type real
        \required-field
@@ -19424,12 +19353,8 @@ OS:Curve:Cubic,
        \note curve = C1 + C2*x + C3*x**2 + C4*x**3
        \type alpha
        \required-field
-       \reference CubicCurves
+       \reference UnivariateFunctions
        \reference AllCurves
-       \reference UniVariateCurves
-       \reference QuadraticCubicCurves
-       \reference BiquadraticCubicCurves
-       \reference BiquadraticQuadraticCubicCurves
   N1, \field Coefficient1 Constant
        \type real
        \required-field
@@ -19480,8 +19405,7 @@ OS:Curve:Quartic,
        \note curve = C1 + C2*x + C3*x**2 + C4*x**3 + C5*x**4
        \type alpha
        \required-field
-       \reference QuarticCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -19537,8 +19461,7 @@ OS:Curve:Exponent,
        \note The independent variable x is raised to the C3 power, multiplied by C2, and C1 is added to the result.
        \type alpha
        \required-field
-       \reference ExponentCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -19591,9 +19514,8 @@ OS:Curve:Bicubic,
        \note + C10*x*y**2
        \type alpha
        \required-field
+       \reference BivariateFunctions
        \reference AllCurves
-       \reference BicubicCurves
-       \reference BicubicBiquadraticCurves
   N1, \field Coefficient1 Constant
        \type real
        \required-field
@@ -19677,11 +19599,8 @@ OS:Curve:Biquadratic,
        \note curve = C1 + C2*x + C3*x**2 + C4*y + C5*y**2 + C6*x*y
        \type alpha
        \required-field
-       \reference BiquadraticCurves
+       \reference BivariateFunctions
        \reference AllCurves
-       \reference BiquadraticCubicCurves
-       \reference BiquadraticQuadraticCubicCurves
-       \reference BicubicBiquadraticCurves
   N1, \field Coefficient1 Constant
        \type real
        \required-field
@@ -19753,7 +19672,7 @@ OS:Curve:QuadraticLinear,
        \note curve = (C1 + C2*x + C3*x**2) + (C4 + C5*x + C6*x**2)*y
        \type alpha
        \required-field
-       \reference QuadraticLinearCurves
+       \reference BivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -19833,7 +19752,7 @@ OS:Curve:Triquadratic,
        \note + a23*x**2*y*z + a24*x*y**2*z + a25*x*y*z**2 +a26*x*y*z
        \type alpha
        \required-field
-       \reference TriQuadraticCurves
+       \reference TrivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 Constant
        \type real
@@ -19953,9 +19872,8 @@ OS:Curve:Functional:PressureDrop,
   A2, \field Name
        \type alpha
        \required-field
+       \reference UnivariateFunctions
        \reference AllCurves
-       \reference UniVariateCurves
-       \reference PressureDropCurves
   N1, \field Diameter
        \note "D" in above expression, used to also calculate local velocity
        \type real
@@ -19994,8 +19912,7 @@ OS:Curve:FanPressureRise,
        \note See InputOut Reference for curve details
        \type alpha
        \required-field
-       \reference FanPressureRiseCurves
-       \reference BiVariateCurves
+       \reference BivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -20047,8 +19964,7 @@ OS:Curve:ExponentialSkewNormal,
        \note See InputOut Reference for curve description
        \type alpha
        \required-field
-       \reference ExponentialSkewNormalCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -20092,8 +20008,7 @@ OS:Curve:Sigmoid,
        \note See InputOut Reference for curve description
        \type alpha
        \required-field
-       \reference SigmoidCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -20140,8 +20055,7 @@ OS:Curve:RectangularHyperbola1,
        \note curve = ((C1*x)/(C2+x))+C3
        \type alpha
        \required-field
-       \reference RectangularHyperbola1Curves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -20182,8 +20096,7 @@ OS:Curve:RectangularHyperbola2,
        \note curve = ((C1*x)/(C2+x))+(C3*x)
        \type alpha
        \required-field
-       \reference RectangularHyperbola2Curves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -20224,8 +20137,7 @@ OS:Curve:ExponentialDecay,
        \note curve = C1+C2*exp(C3*x)
        \type alpha
        \required-field
-       \reference ExponentialDecayCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -20265,8 +20177,7 @@ OS:Curve:DoubleExponentialDecay,
   A2, \field Name
        \type alpha
        \required-field
-       \reference DoubleExponentialDecayCurves
-       \reference UniVariateCurves
+       \reference UnivariateFunctions
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -20319,23 +20230,13 @@ OS:Table:MultiVariableLookup,
   A2 , \field Name
        \required-field
        \type alpha
-       \reference TableMultiVariableLookup
+       \reference UnivariateFunctions
+       \reference BivariateFunctions
+       \reference TrivariateFunctions
+       \reference QuadvariateFunctions
+       \reference QuintvariateFunctions
+       \reference MultivariateFunctions
        \reference AllCurves
-       \reference LinearCurves
-       \reference LinearOrQuadraticCurves
-       \reference QuadraticCurves
-       \reference QuadraticCubicCurves
-       \reference BiquadraticQuadraticCubicCurves
-       \reference CubicCurves
-       \reference QuarticCurves
-       \reference BicubicCurves
-       \reference BicubicBiquadraticCurves
-       \reference BiquadraticCurves
-       \reference QuadraticLinearCurves
-       \reference TriQuadraticCurves
-       \reference BiquadraticCubicCurves
-       \reference BiVariateTables
-       \reference UniVariateTables
   A3 , \field Interpolation Method
        \type choice
        \key LinearInterpolationOfTable
@@ -20648,8 +20549,7 @@ OS:Humidifier:Steam:Gas,
       \note rated gas use rate and design condition.
   A4, \field Thermal Efficiency Modifier Curve Name
       \type object-list
-      \object-list LinearCurves
-      \object-list QuadraticCubicCurves
+      \object-list UnivariateFunctions
       \note Linear, Quadratic and Cubic efficiency curves are solely a function of PLR.
       \note Linear = C1 + C2*PLR
       \note Quadratic = C1 + C2*PLR + C3*PLR^2
@@ -20774,7 +20674,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note by multiplying the value by the result of this curve, eff_wb = eff_wb_design * func(HXFlowRatio)
        \note x = HXFlowRatio = sum of the primary and secondary flow rates divided by the sum of the design flow rates
        \type object-list
-       \object-list AllCurves
+       \object-list UnivariateFunctions
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -20790,7 +20690,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note by multiplying the value by the result of this curve, eff_db = eff_db_design * f(HXFlowRatio)
        \note x = HXFlowRatio = sum of the primary and secondary flow rates divided by the sum of the design flow rates
        \type object-list
-       \object-list AllCurves
+       \object-list UnivariateFunctions
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -20805,7 +20705,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
        \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate
        \type object-list
-       \object-list AllCurves
+       \object-list UnivariateFunctions
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -20829,7 +20729,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \note of this curve.  It should have a value of 1.0 at a x = 1.0.
        \note x = ff = flow fraction on the secondary side, secondary air flow rate during operation divided by Secondary Design Air Flow Rate
        \type object-list
-       \object-list AllCurves
+       \object-list UnivariateFunctions
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -20909,7 +20809,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note the primary air design flow rate. If this input field is left blank then, the effectiveness
        \note is assumed to be constant.
        \type object-list
-       \object-list AllCurves
+       \object-list UnivariateFunctions
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -20930,7 +20830,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note x = ff = flow fraction on the primary air.  The flow fraction is the primary air flow rate during current operation divided
        \note by Primary Air Design Flow Rate
        \type object-list
-       \object-list UniVariateCurves
+       \object-list UnivariateFunctions
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -21409,8 +21309,7 @@ OS:Fan:SystemModel,
        \note dependent variable is modification factor multiplied by Design Power Consumption.
        \note This field is required if Speed Control Method is set to Continuous or if the Number of Speeds is greater than 1 and Speed Electric Power Fraction fields are not used.
        \type object-list
-       \object-list UniVariateCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
   N10, \field Night Ventilation Mode Pressure Rise
        \note Total system fan pressure rise at the fan when in night mode using AvailabilityManager:NightVentilation
        \type real
@@ -21666,11 +21565,10 @@ OS:Fan:OnOff,
        \object-list ConnectionNames
   A6, \field Fan Power Ratio Function of Speed Ratio Curve Name
        \type object-list
-       \object-list ExponentCurves
-       \object-list CubicCurves
+       \object-list UnivariateFunctions
   A7, \field Fan Efficiency Ratio Function of Speed Ratio Curve Name
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   A8; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
@@ -21821,91 +21719,78 @@ OS:Fan:ComponentModel,
   A7 , \field Fan Pressure Rise Curve Name
        \required-field
        \type object-list
-       \object-list FanPressureRiseCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
        \note Pressure rise depends on volumetric flow, system resistances,
        \note system leakage, and duct static pressure set point
   A8 , \field Duct Static Pressure Reset Curve Name
        \required-field
        \type object-list
-       \object-list LinearCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Function of fan volumetric flow
        \note Minimum and maximum fan airflows correspond respectively to
        \note minimum and maximum duct static pressure set points
   A9 , \field Normalized Fan Static Efficiency Curve Name-Non-Stall Region
        \required-field
        \type object-list
-       \object-list ExponentialSkewNormalCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note xfan <= 0
        \note Curve should have maximum of 1.0
   A10, \field Normalized Fan Static Efficiency Curve Name-Stall Region
        \required-field
        \type object-list
-       \object-list ExponentialSkewNormalCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note xfan > 0
        \note Curve should have maximum of 1.0
   A11 , \field Normalized Dimensionless Airflow Curve Name-Non-Stall Region
         \required-field
         \type object-list
-        \object-list SigmoidCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note xspd <= 0
         \note Curve should have maximum of 1.0
   A12 , \field Normalized Dimensionless Airflow Curve Name-Stall Region
         \required-field
         \type object-list
-        \object-list SigmoidCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note xspd > 0
         \note Curve should have maximum of 1.0
   A13 , \field Maximum Belt Efficiency Curve Name
         \type object-list
-        \object-list QuarticCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Determines maximum fan drive belt efficiency in log space
         \note as function of xbelt,max
         \note Curve should have minimum of -4.6 and maximum of 0.0
         \note If field blank, assumes output of curve is always 1.0
   A14 , \field Normalized Belt Efficiency Curve Name - Region 1
         \type object-list
-        \object-list RectangularHyperbola2Curves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Region 1 (0 <= xbelt < xbelt,trans)
         \note Curve should have minimum > 0.0 and maximum of 1.0
         \note If field blank, assumes output of curve is always 1.0 in Region 1
   A15 , \field Normalized Belt Efficiency Curve Name - Region 2
         \type object-list
-        \object-list ExponentialDecayCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Region 2 (xbelt,trans <= xbelt <= 1)
         \note Curve should have minimum > 0.0 and maximum of 1.0
         \note If field blank, assumes output of curve is always 1.0 in Region 2
   A16 , \field Normalized Belt Efficiency Curve Name - Region 3
         \type object-list
-        \object-list RectangularHyperbola2Curves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Determines normalized drive belt efficiency Region 3 (xbelt > 1)
         \note Curve should have minimum > 0.0 and maximum of 1.0
         \note If field blank, assumes output of curve is always 1.0 in Region 3
   A17 , \field Maximum Motor Efficiency Curve Name
         \type object-list
-        \object-list RectangularHyperbola1Curves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Curve should have minimum > 0.0 and maximum of 1.0
         \note If field blank, assumes output of curve is always 1.0
   A18 , \field Normalized Motor Efficiency Curve Name
         \type object-list
-        \object-list RectangularHyperbola2Curves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Curve should have minimum > 0.0 and maximum of 1.0
         \note If field blank, assumes output of curve is always 1.0
   A19 , \field VFD Efficiency Curve Name
         \type object-list
-        \object-list RectangularHyperbola2Curves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Determines VFD efficiency as function of motor load or speed fraction
         \note Curve should have minimum > 0.0 and maximum of 1.0
         \note If field blank, assumes constant VFD efficiency (0.97)
@@ -22808,7 +22693,7 @@ OS:Pump:ConstantSpeed,
         \object-list ScheduleNames
   A7 , \field Pump Curve
         \type object-list
-        \object-list AllCurves
+        \object-list UnivariateFunctions
         \note This references any single independent variable polynomial curve in order to
         \note  do pressure vs. flow calculations for this pump.  The available types are then:
         \note  Linear, Quadratic, Cubic, and Quartic
@@ -22943,7 +22828,7 @@ OS:Pump:VariableSpeed,
        \note delP = rho * ((N/60)^2) * (D^2) * psi
        \note mdot = rho * (N/60) * (D^3) * phi
        \type object-list
-       \object-list AllCurves
+       \object-list UnivariateFunctions
   N11, \field Impeller Diameter
        \note "D" in above expression in field A6
        \type real
@@ -26521,18 +26406,15 @@ OS:ZoneHVAC:Dehumidifier:DX,
    A6,  \field Water Removal Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
    A7,  \field Energy Factor Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
    A8,  \field Part Load Fraction Correlation Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    N4,  \field Minimum Dry-Bulb Temperature for Dehumidifier Operation
         \required-field
         \type real
@@ -26654,8 +26536,7 @@ OS:ZoneHVAC:EnergyRecoveryVentilator:Controller,
        \note No input or blank input means this limit is not operative
   A3 , \field Electronic Enthalpy Limit Curve Name
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Enter the name of a quadratic or cubic curve which defines the maximum outdoor
        \note humidity ratio (function of outdoor dry-bulb temperature) for economizer operation.
        \note No input or blank input means this limit is not operative
@@ -27059,7 +26940,7 @@ OS:WaterHeater:Mixed,
        \maximum 1.0
   A6 , \field Part Load Factor Curve Name
        \type object-list
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
   N9 , \field Off Cycle Parasitic Fuel Consumption Rate
        \type real
        \units W
@@ -27578,8 +27459,8 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
   A11, \field Heating Capacity Function of Temperature Curve
        \type object-list
-       \object-list BiquadraticCubicCurves
-       \object-list BiVariateTables
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
        \required-field
        \note Heating capacity modifier curve (function of temperature) should be biquadratic or cubic.
        \note Biquadratic curve = a + b(ta) + c(ta)^2 + d(tw) + e(tw)^2 + f(ta)(tw).
@@ -27591,8 +27472,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   A12, \field Heating Capacity Function of Air Flow Fraction Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Heating capacity modifier curve (function of air flow fraction) should be quadratic or cubic.
        \note Quadratic curve = a + b(ff) + c(ff)^2.
        \note Cubic curve = a + b(ff) + c(ff)^2 + d(ff)^3.
@@ -27602,8 +27482,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   A13, \field Heating Capacity Function of Water Flow Fraction Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Heating capacity modifier curve (function of water flow fraction) should be quadratic or cubic.
        \note Quadratic curve = a + b(ff) + c(ff)^2.
        \note Cubic curve = a + b(ff) + c(ff)^2 + d(ff)^3.
@@ -27612,8 +27491,8 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note due to variations in water flow rate fraction.
   A14, \field Heating COP Function of Temperature Curve
        \type object-list
-       \object-list BiquadraticCubicCurves
-       \object-list BiVariateTables
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
        \required-field
        \note Heating COP modifier curve (function of temperature) should be biquadratic or cubic.
        \note Biquadratic curve = a + b(ta) + c(ta)^2 + d(tw) + e(tw)^2 + f(ta)(tw).
@@ -27624,8 +27503,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
        \note is used as the evaporator inlet air temperature (ta).
   A15, \field Heating COP Function of Air Flow Fraction Curve
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \required-field
        \note Heating COP modifier curve (function of air flow fraction) should be quadratic or cubic.
        \note Quadratic curve = a + b(ff) + c(ff)^2.
@@ -27636,8 +27514,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   A16, \field Heating COP Function of Water Flow Fraction Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Heating COP modifier curve (function of water flow fraction) should be quadratic or cubic.
        \note Quadratic curve = a + b(ff) + c(ff)^2.
        \note Cubic curve = a + b(ff) + c(ff)^2 + d(ff)^3.
@@ -27647,8 +27524,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   A17; \field Part Load Fraction Correlation Curve
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
        \note Quadratic curve = a + b(PLR) + c(PLR)^2.
        \note Cubic curve = a + b(PLR) + c(PLR)^2 + d(PLR)^3.
@@ -28012,8 +27888,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
   A11, \field Part Load Fraction Correlation Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Table:Lookup object can also be used
        \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
        \note Quadratic curve = a + b(PLR) + c(PLR)^2.
@@ -28079,8 +27954,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
   A3,  \field Total Water Heating Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
        \note Table:Lookup object can also be used
        \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
        \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
@@ -28088,8 +27962,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
   A4,  \field Total Water Heating Capacity Function of Air Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffa + c*ffa**2
        \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
@@ -28097,8 +27970,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
   A5,  \field Total Water Heating Capacity Function of Water Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffw + c*ffw**2
        \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
@@ -28106,8 +27978,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
   A6,  \field COP Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BiquadraticCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
        \note Table:Lookup object can also be used
        \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
        \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
@@ -28115,8 +27986,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
   A7,  \field COP Function of Air Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffa + c*ffa**2
        \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
@@ -28124,8 +27994,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
   A8;  \field COP Function of Water Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffw + c*ffw**2
        \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
@@ -28243,8 +28112,8 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
   A7,  \field Heating Capacity Function of Temperature Curve Name
        \type object-list
-       \object-list BiquadraticCubicCurves
-       \object-list BiVariateTables
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
        \required-field
        \note Heating capacity modifier curve (function of temperature) should be biquadratic or cubic.
        \note Biquadratic curve = a + b(ta) + c(ta)^2 + d(tw) + e(tw)^2 + f(ta)(tw).
@@ -28256,8 +28125,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
   A8,  \field Heating Capacity Function of Air Flow Fraction Curve Name
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Heating capacity modifier curve (function of air flow fraction) should be quadratic or cubic.
        \note Quadratic curve = a + b(ff) + c(ff)^2.
        \note Cubic curve = a + b(ff) + c(ff)^2 + d(ff)^3.
@@ -28267,8 +28135,8 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
   A9,  \field Heating COP Function of Temperature Curve Name
        \type object-list
        \required-field
-       \object-list BiquadraticCubicCurves
-       \object-list BiVariateTables
+       \object-list UnivariateFunctions
+       \object-list BivariateFunctions
        \note Heating COP modifier curve (function of temperature) should be biquadratic or cubic.
        \note Biquadratic curve = a + b(ta) + c(ta)^2 + d(tw) + e(tw)^2 + f(ta)(tw).
        \note Cubic curve = a + b(ta) + c(ta)^2 + d(ta)^3.
@@ -28279,8 +28147,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
   A10,  \field Heating COP Function of Air Flow Fraction Curve Name
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Heating COP modifier curve (function of air flow fraction) should be quadratic or cubic.
        \note Quadratic curve = a + b(ff) + c(ff)^2.
        \note Cubic curve = a + b(ff) + c(ff)^2 + d(ff)^3.
@@ -28290,8 +28157,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
   A11; \field Part Load Fraction Correlation Curve Name
        \type object-list
        \required-field
-       \object-list QuadraticCubicCurves
-       \object-list UniVariateTables
+       \object-list UnivariateFunctions
        \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
        \note Quadratic curve = a + b(PLR) + c(PLR)^2.
        \note Cubic curve = a + b(PLR) + c(PLR)^2 + d(PLR)^3.
@@ -28915,9 +28781,7 @@ OS:ThermalStorage:Ice:Detailed,
   A7 , \field Discharging Curve
        \type object-list
        \required-field
-       \object-list QuadraticLinearCurves
-       \object-list CubicLinearCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   A8 , \field Charging Curve Variable Specifications
        \required-field
        \type choice
@@ -28928,9 +28792,7 @@ OS:ThermalStorage:Ice:Detailed,
   A9 , \field Charging Curve
        \type object-list
        \required-field
-       \object-list QuadraticLinearCurves
-       \object-list CubicLinearCurves
-       \object-list BiVariateTables
+       \object-list BivariateFunctions
   N2 , \field Timestep of the Curve Data
        \units hr
        \required-field
@@ -29972,22 +29834,21 @@ OS:Generator:MicroTurbine,
   A4, \field Electrical Power Function of Temperature and Elevation Curve Name
       \required-field
       \type object-list
-      \object-list BiquadraticCurves
-      \object-list BiVariateTables
+      \object-list BivariateFunctions
       \note curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev
       \note T = combustion air inlet temperature (C)
       \note Elev = elevation (m)
   A5, \field Electrical Efficiency Function of Temperature Curve Name
       \required-field
       \type object-list
-      \object-list QuadraticCubicCurves
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*T + c*T**2
       \note Cubic curve = a + b*T + c*T**2 + d*T**3
       \note T = combustion air inlet temperature (C)
   A6, \field Electrical Efficiency Function of Part Load Ratio Curve Name
       \required-field
       \type object-list
-      \object-list QuadraticCubicCurves
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*PLR + c*PLR**2
       \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
       \note PLR = ratio of Generator Load to steady state Electrical Power Output at
@@ -30031,8 +29892,7 @@ OS:Generator:MicroTurbine,
       \note already deducted). Input value is positive, but indicates negative electric generation.
   A8, \field Ancillary Power Function of Fuel Input Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*mdot + c*mdot**2
       \note mdot = fuel mass flow rate (kg/s)
       \note If left blank, model assumes ancillary power defined in previous field is constant
@@ -30054,16 +29914,14 @@ OS:Generator:MicroTurbine,
       \minimum> 0.0
  A12, \field Exhaust Air Flow Rate Function of Temperature Curve Name
       \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*T + c*T**2
       \note Cubic curve = a + b*T + c*T**2 + d*T**3
       \note T = combustion air inlet temperature (C)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
  A13, \field Exhaust Air Flow Rate Function of Part Load Ratio Curve Name
       \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*PLR + c*PLR**2
       \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
       \note PLR = ratio of Generator Load to steady state Electrical Power Output at
@@ -30074,16 +29932,14 @@ OS:Generator:MicroTurbine,
       \note Exhaust air outlet temperature at reference conditions.
  A14, \field Exhaust Air Temperature Function of Temperature Curve Name
       \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*T + c*T**2
       \note Cubic curve = a + b*T + c*T**2 + d*T**3
       \note T = combustion air inlet temperature (C)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
  A15; \field Exhaust Air Temperature Function of Part Load Ratio Curve Name
       \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*PLR + c*PLR**2
       \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
       \note PLR = ratio of Generator Load to steady state Electrical Power Output at
@@ -30142,8 +29998,7 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \minimum> 0.0
  A6 , \field Heat Recovery Water Flow Rate Function of Temperature and Power Curve Name
       \type object-list
-      \object-list BiquadraticCurves
-      \object-list BiVariateTables
+      \object-list BivariateFunctions
       \note curve = a + b*T + c*T**2 + d*Pnet + e*Pnet + f*T*Pnet
       \note T = heat recovery inlet water temperature
       \note Pnet = net power output = electric power output - ancillary power
@@ -30151,8 +30006,7 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \note generator is operating, at the Reference HR Water Flow Rate defined in the previous field.
  A7 , \field Thermal Efficiency Function of Temperature and Elevation Curve Name
       \type object-list
-      \object-list BicubicBiquadraticCurves
-      \object-list BiVariateTables
+      \object-list BivariateFunctions
       \note Bicubic curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev + g*T**3 + h*Elev**3 + i*T**2*Elev + j*T*Elev**2
       \note Biquadratic curve = a + b*T + c*T**2 + d*Elev + e*Elev**2 + f*T*Elev
       \note T = combustion air inlet temperature (C)
@@ -30160,8 +30014,7 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
  A8 , \field Heat Recovery Rate Function of Part Load Ratio Curve Name
       \type object-list
-      \object-list QuadraticCubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*PLR + c*PLR**2
       \note Cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
       \note PLR = ratio of Generator Load to steady state Electrical Power Output at
@@ -30169,15 +30022,13 @@ OS:Generator:MicroTurbine:HeatRecovery,
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
  A9 , \field Heat Recovery Rate Function of Inlet Water Temperature Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*T + c*T**2
       \note T = inlet water temperature (C)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
  A10, \field Heat Recovery Rate Function of Water Flow Rate Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Quadratic curve = a + b*Flow + c*Flow**2
       \note Flow = flow rate of water through the heat exchanger (m3/s)
       \note If field is left blank, model assumes this modifier equals 1 for entire simulation.
@@ -30650,8 +30501,7 @@ OS:Generator:FuelCell:PowerModule,
       \key Normalized
   A4, \field Efficiency Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \required-field
   N1, \field Nominal Efficiency
       \note This field is not used.
@@ -30709,8 +30559,7 @@ OS:Generator:FuelCell:PowerModule,
       \units W/K
   A7, \field Skin Loss Quadratic Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note curve is function of fuel use rate
   N22,\field Dilution Air Flow Rate
       \units kmol/s
@@ -30742,8 +30591,7 @@ OS:Generator:FuelCell:AirSupply,
       \object-list Node
   A4, \field Blower Power Curve Name
       \type object-list
-      \object-list CubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
   N1, \field Blower Heat Loss Factor
       \minimum 0.0
       \maximum 1.0
@@ -30758,13 +30606,11 @@ OS:Generator:FuelCell:AirSupply,
       \note the value entered is incremented by 1 in the model.
   A6, \field Air Rate Function of Electric Power Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
   N3, \field Air Rate Air Temperature Coefficient
   A7, \field Air Rate Function of Fuel Rate Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
   A8, \field Air Intake Heat Recovery Mode
       \required-field
       \type choice
@@ -30806,13 +30652,11 @@ OS:Generator:FuelCell:WaterSupply,
       \reference ConnectionObject
   A3, \field Reformer Water Flow Rate Function of Fuel Rate Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \required-field
   A4, \field Reformer Water Pump Power Function of Fuel Rate Curve Name
       \type object-list
-      \object-list CubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \required-field
   N1, \field Pump Heat Loss Factor
   A5, \field Water Temperature Modeling Mode
@@ -30961,8 +30805,7 @@ OS:Generator:FuelCell:Inverter,
       \maximum 1.0
   A4; \field Efficiency Function of DC Power Curve Name
       \type object-list
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
 
  OS:Generator:FuelCell:StackCooler,
       \memo This object is optional and is used to define details needed to model the stack cooler
@@ -31032,8 +30875,7 @@ OS:Generator:FuelSupply,
       \object-list ScheduleNames
   A6, \field Compressor Power Multiplier Function of Fuel Rate Curve Name
       \type object-list
-      \object-list CubicCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
   N1, \field Compressor Heat Loss Factor
       \minimum 0.0
       \maximum 1.0
@@ -31869,8 +31711,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note The "x" input for curve or table is the ratio of current input power divided by design power in the previous field
         \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
         \type object-list
-        \object-list UniVariateCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
    N3 , \field Ancillary Power Consumed In Standby
         \note Optional standby power consumed when converter is available but no power is being conditioned.
         \type real
@@ -34642,8 +34483,7 @@ OS:AirflowNetworkExternalNode,
   A3, \field Wind Pressure Coefficient Curve Name
       \required-field
       \type object-list
-      \object-list UniVariateCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note The name of the AirflowNetwork:MultiZone:WindPressureCoefficientValues, curve, or table object specifying the wind pressure coefficient.
       \note object-list WPCValueNames is not supported
   A4, \field Symmetric Wind Pressure Coefficient Curve
@@ -35051,9 +34891,7 @@ OS:AirflowNetworkOccupantVentilationControl,
       \default 0.0
   A3, \field Thermal Comfort Low Temperature Curve Name
       \type object-list
-      \object-list LinearCurves
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Enter a curve name that represents thermal comfort temperature as a
       \note function of outdoor dry-bulb temperature. Up to two curves are allowed if the
       \note performance cannot be represented by a single curve.
@@ -35067,9 +34905,7 @@ OS:AirflowNetworkOccupantVentilationControl,
       \note curves. If a single performance curve is used, leave this field blank.
   A4, \field Thermal Comfort High Temperature Curve Name
       \type object-list
-      \object-list LinearCurves
-      \object-list QuadraticCurves
-      \object-list UniVariateTables
+      \object-list UnivariateFunctions
       \note Enter a curve name that represents thermal comfort temperature as a
       \note function of outdoor dry-bulb temperature. Up to two curves are allowed if the
       \note performance cannot be represented by a single curve.
