@@ -18377,7 +18377,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    A6,  \field Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list UnivariateFunctions
+        \object-list BivariateFunctions
    A7,  \field Energy Input Ratio Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
@@ -18394,7 +18394,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    A9;  \field Waste Heat Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list UnivariateFunctions
+        \object-list BivariateFunctions
 
 OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \min-fields 15
