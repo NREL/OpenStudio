@@ -442,19 +442,7 @@ namespace model {
     }
 
     bool PumpVariableSpeed_Impl::setPumpCurve(const Curve& curve) {
-
-      Curve wcurve = curve;
-      bool cloneOccured = false;
-      if (wcurve.parent()) {
-        wcurve = curve.clone().cast<Curve>();
-        cloneOccured = true;
-      }
-      bool ok = setPointer(OS_Pump_VariableSpeedFields::PumpCurveName, wcurve.handle());
-      if (!ok && cloneOccured) {
-        wcurve.remove();
-      }
-
-      return ok;
+      return setPointer(OS_Pump_VariableSpeedFields::PumpCurveName, curve.handle());
     }
 
     void PumpVariableSpeed_Impl::resetPumpCurve() {
