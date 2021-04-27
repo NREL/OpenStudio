@@ -431,10 +431,6 @@ TEST_F(ModelFixture, FanOnOff_Test_Setters_and_Getters) {
 
   CurveCubic newCurve3(m);
   EXPECT_TRUE(testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(newCurve3));
-
-  EXPECT_FALSE(testObject.setFanPowerRatioFunctionofSpeedRatioCurve(newCurve2));
-  EXPECT_TRUE(testObject.setFanPowerRatioFunctionofSpeedRatioCurve(newCurve3));
-  EXPECT_FALSE(testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(newCurve1));
 }
 
 TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACWaterToAirHeatPump) {
