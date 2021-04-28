@@ -28,8 +28,12 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   message(STATUS "openstudio: RUNNING CONAN")
 
   # Add NREL remote and place it first in line, since we vendored dependencies to NREL's repo, they will be picked first
-  conan_add_remote(NAME nrel INDEX 0
-    URL https://api.bintray.com/conan/commercialbuilding/nrel)
+  # TJC 2021-04-27 bintray.com is decommissioned as of 2021-05-01. See commercialbuildings as replacement below. 
+  #  conan_add_remote(NAME nrel INDEX 0
+  #   URL https://api.bintray.com/conan/commercialbuilding/nrel)
+
+  conan_add_remote(NAME commercialbuildings 
+     URL https://conan.commercialbuildings.dev/artifactory/api/conan/openstudio)
 
   conan_add_remote(NAME bincrafters
     URL https://api.bintray.com/conan/bincrafters/public-conan)
