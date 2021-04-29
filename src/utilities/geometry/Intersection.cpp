@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -89,6 +89,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
   boost::geometry::simplify(resultExpand, result, amount);
 
+  // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
   if (result.size() == 0) {
     solution.push_back(polygon);
