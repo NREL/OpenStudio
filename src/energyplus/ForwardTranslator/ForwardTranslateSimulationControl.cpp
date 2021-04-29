@@ -36,12 +36,23 @@ namespace energyplus {
       simCon.setName(*s);
     }
 
-    unsigned numSizingPeriods = modelObject.model().getModelObjects<SizingPeriod>().size();
+    const unsigned numSizingPeriods = modelObject.model().getModelObjects<SizingPeriod>().size();
+
+    auto hasZoneEquipment = [](const Model& m) {
+      auto zones = m.getConcreteModelObjects<ThermalZone>();
+      return std::any_of(zones.cbegin(), zones.cend(), [](const auto& z) { return !z.equipment().empty(); });
+    };
 
     if (modelObject.doZoneSizingCalculation()) {
       simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "Yes");
-    } else if ((numSizingPeriods > 0) && (!modelObject.model().getConcreteModelObjects<ThermalZone>().empty())) {
-      simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "Yes");
+    } else if ((numSizingPeriods > 0) && hasZoneEquipment(modelObject.model())) {
+      if (modelObject.isDoZoneSizingCalculationDefaulted()) {
+        LOG(Info, "You have zonal equipment and design days, and SimulationControl::DoZoneSizingCalculation is defaulted: turning on.");
+        simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "Yes");
+      } else {
+        LOG(Warn, "You have zonal equipment and design days, it's possible you should enable SimulationControl::DoZoneSizingCalculation");
+        simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "No");
+      }
     } else {
       simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "No");
     }
@@ -49,7 +60,13 @@ namespace energyplus {
     if (modelObject.doSystemSizingCalculation()) {
       simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "Yes");
     } else if ((numSizingPeriods > 0) && (!modelObject.model().getConcreteModelObjects<AirLoopHVAC>().empty())) {
-      simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "Yes");
+      if (modelObject.isDoSystemSizingCalculationDefaulted()) {
+        LOG(Info, "You have AirLoopHVACs and design days, and SimulationControl::DoSystemSizingCalculation is defaulted: turning it on.");
+        simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "Yes");
+      } else {
+        LOG(Warn, "You have AirLoopHVACs and design days, it's possible you should enable SimulationControl::DoSystemSizingCalculation");
+        simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "No");
+      }
     } else {
       simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "No");
     }
@@ -57,7 +74,13 @@ namespace energyplus {
     if (modelObject.doPlantSizingCalculation()) {
       simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "Yes");
     } else if ((numSizingPeriods > 0) && (!modelObject.model().getConcreteModelObjects<PlantLoop>().empty())) {
-      simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "Yes");
+      if (modelObject.isDoPlantSizingCalculationDefaulted()) {
+        LOG(Info, "You have PlantLoops and design days, and SimulationControl::DoPlantSizingCalculation is defaulted: turning it on.");
+        simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "Yes");
+      } else {
+        LOG(Warn, "You have PlantLoops and design days, it's possible you should enable SimulationControl::DoPlantSizingCalculation");
+        simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "No");
+      }
     } else {
       simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "No");
     }
