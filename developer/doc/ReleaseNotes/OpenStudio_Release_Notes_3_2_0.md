@@ -1,6 +1,6 @@
 # OpenStudio Version 3.2.0
 
-_Release Notes - <strong style='color: red;'>TDB</strong>/2021_
+_Release Notes - 05/04/2021_
 
 These release notes describe version 3.2.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
@@ -32,7 +32,7 @@ __**OpenStudio SDK 3.2.0**__
 
 # Installation Notes
 
-OpenStudio SDK 3.2.0 is supported on 64-bit Windows 7 – 10, OS X 10.14 – 10.15, and Ubuntu 18.04. <strong style='color: red;'>TODO: update to 20.04?</strong>
+OpenStudio SDK 3.2.0 is supported on 64-bit Windows 7 – 10, OS X 10.14 – 10.15, and Ubuntu 18.04, 20.04
 
 OpenStudio SDK 3.2.0 supports [EnergyPlus Release 9.5](https://github.com/NREL/EnergyPlus/releases/tag/v9.5.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.2.0.
 
@@ -56,8 +56,7 @@ For help with common installation problems please visit, http://nrel.github.io/O
 # OpenStudio SDK: Changelog
 
 The 3.2.0 is a major release. This update includes several new features, performance improvements, and bug fixes.
-You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2020-10-16..2021-04-15+).
-<strong style='color: red;'>TODO: update link</strong>
+You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2020-10-16..2021-05-04+).
 
 ## New Features, Major Fixes and API-breaking changes
 
@@ -99,7 +98,6 @@ A number of new features and API-breaking changes have been implemented in OpenS
     + boost::optional<HVACComponent> coolingCoil() const;
     ```
 
-**PENDING Merge**:
 
 * [#4221](https://github.com/NREL/OpenStudio/pull/4221) - Geometry improvements including fixing intersection issues
 
@@ -112,13 +110,8 @@ A number of new features and API-breaking changes have been implemented in OpenS
 * [#4188](https://github.com/NREL/OpenStudio/pull/4188) - Fix #4187 - speed up `IdfFile::save` (and derived, such as `Model::save`) and general serialization to string by using '\n' instead of `std::endl`
 * [#4239](https://github.com/NREL/OpenStudio/pull/4239) -Fix #4226 - add int argument for ScheduleFile.setMinutesperItem method
 
-
-**PENDING Merge**:
-
 * [#4061](https://github.com/NREL/OpenStudio/pull/4061) - Fix Cloning a DualDuct AirLoopHVAC breaks the existing loop
 * [#4081](https://github.com/NREL/OpenStudio/pull/4081) - #4077 Remove name field from common HVAC data objects that are not visible to user
-
-* [#4270](https://github.com/NREL/OpenStudio/pull/4270) - #4260 - Add ability to turn off ScheduleTypeLimits enforcement when already assigned
 
 
 ## Minor Bug Fixes
@@ -130,20 +123,22 @@ A number of new features and API-breaking changes have been implemented in OpenS
 * [#4211](https://github.com/NREL/OpenStudio/pull/4211) - Fix #4205 - WorkspaceObject::setString allows setting invalid names for ModelObjects 
 * [#4218](https://github.com/NREL/OpenStudio/pull/4218) - Fix #4217 - Do not make an PlantEqOperationUncontrolled for a Component that is already on a PlantEquipmentOperationComponentSetpoint
 * [#4245](https://github.com/NREL/OpenStudio/pull/4245) - Fix #4166 - Merging FloorSpaceJS can delete unique model Objects such as Facility, Building, Site (and children)
-
-
-**PENDING Merge**:
-
 * [#4235](https://github.com/NREL/OpenStudio/pull/4235) - Fix #4111 - Shading:Building is improperly mapped when "World" coordinates are used for Rectangular Surfaces
 * [#4256](https://github.com/NREL/OpenStudio/pull/4256) - Fix #4254 - Set ComponentType::COOLING for EvaporativeFluidCoolerTwoSpeed
-
 * [#4243](https://github.com/NREL/OpenStudio/pull/4243) - Fix #4240 (and more): add missing \ip-units gal/min via a script
 
 ### OpenStudio Standards vX.Y.Z
 
-<strong style='color: red;'>TODO</strong>
+* Fixed a bug related to the implementation of DCV requirements which now impacts many more buildings
+* Zone HVAC equipment now defaults to the zone occupancy schedule if it provides ventilation, otherwise it cycles
+* Added the ability to export standards .json data to a separate repository https://github.com/NREL/BuildingStandardsData
+* Refactored PSZ systems to use the unitary system object for all PSZ types
+* Clarified the distinction between and added support for fluid coolers and closed cooling towers
+* Added standards 90.1-2016 and 90.1-2016 methods and data
+* Included several updates to ComStock versions of standards for commercial stock modeling
 
-### OpenStudio Server vX.Y.Z
+
+### OpenStudio Server v3.2.0
 
 
 <strong style='color: red;'>TODO</strong>
@@ -151,4 +146,5 @@ A number of new features and API-breaking changes have been implemented in OpenS
 
 ## Issue Statistics Since Previous Release
 
-<strong style='color: red;'>TODO</strong>
+184 Closed Issues  
+86  New issues
