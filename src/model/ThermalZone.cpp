@@ -164,9 +164,8 @@ namespace model {
 
       // DLM: temporarily add supplyZoneMixing as children so we can see them in IG
       // remove once we have gridview for these
-      for (const auto& mixing : supplyZoneMixing()) {
-        result.push_back(mixing);
-      }
+      auto mixings = this->supplyZoneMixing();
+      result.insert(result.end(), mixings.begin(), mixings.end());
 
       boost::optional<AirflowNetworkZone> afnz = airflowNetworkZone();
       if (afnz) {
@@ -189,12 +188,12 @@ namespace model {
     }
 
     std::vector<IddObjectType> ThermalZone_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
       // DLM: this does not seem to agree with implementation of children()
-      result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
-      result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
-      result.push_back(IddObjectType::OS_ZoneHVAC_EquipmentList);
-      return result;
+      return std::vector<IddObjectType> {
+        IddObjectType::OS_ThermostatSetpoint_DualSetpoint,
+        IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint,
+        IddObjectType::OS_ZoneHVAC_EquipmentList,
+      };
     }
 
     const std::vector<std::string>& ThermalZone_Impl::outputVariableNames() const {

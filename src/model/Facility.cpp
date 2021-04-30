@@ -62,6 +62,8 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 
+#include <algorithm>
+
 using openstudio::Handle;
 using openstudio::OptionalHandle;
 using openstudio::HandleVector;
@@ -138,13 +140,13 @@ namespace model {
 
     /// get meter requests for the facility
     std::vector<OutputMeter> Facility_Impl::meters() const {
-      OutputMeterVector result;
-      OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
-      for (const OutputMeter& meter : meters) {
-        if (meter.installLocationType() && (InstallLocationType::Facility == meter.installLocationType().get().value())) {
-          result.push_back(meter);
-        }
-      }
+      auto filterOutMeter = [](const auto& meter) {
+        auto instalLocType_ = meter.installLocationType();
+        return instalLocType_ && (InstallLocationType::Facility != instalLocType_.get().value());
+      };
+
+      OutputMeterVector result = this->model().getConcreteModelObjects<OutputMeter>();
+      result.erase(std::remove_if(result.begin(), result.end(), filterOutMeter), result.end());
       return result;
     }
 
