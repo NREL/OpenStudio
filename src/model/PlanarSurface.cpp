@@ -116,7 +116,7 @@ namespace model {
       if (!m_cachedVertices) {
         Point3dVector result;
 
-        for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+        for (const auto& group : extensibleGroups()) {
           OptionalDouble x = group.getDouble(0);
           OptionalDouble y = group.getDouble(1);
           OptionalDouble z = group.getDouble(2);
@@ -183,12 +183,13 @@ namespace model {
         //  }
         //}
 
-        std::vector<std::string> values;
-        values.push_back(toString(vertex.x()));
-        values.push_back(toString(vertex.y()));
-        values.push_back(toString(vertex.z()));
+        std::vector<std::string> values {
+          toString(vertex.x()),
+          toString(vertex.y()),
+          toString(vertex.z())
+        };
 
-        ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(values, false);
         OS_ASSERT(!group.empty());
       }
 
@@ -218,13 +219,11 @@ namespace model {
       OptionalConstructionBase oConstruction = this->construction();
       if (oConstruction && oConstruction->isModelPartition()) {
 
-        boost::optional<ConstructionAirBoundary> constructionAirBoundary = oConstruction->optionalCast<ConstructionAirBoundary>();
-        if (constructionAirBoundary) {
+        if (boost::optional<ConstructionAirBoundary> constructionAirBoundary = oConstruction->optionalCast<ConstructionAirBoundary>()) {
           return true;
         }
 
-        boost::optional<LayeredConstruction> construction = oConstruction->optionalCast<LayeredConstruction>();
-        if (construction) {
+        if (boost::optional<LayeredConstruction> construction = oConstruction->optionalCast<LayeredConstruction>()) {
           if (construction->numLayers() == 1) {
             MaterialVector layers = construction->layers();
             OS_ASSERT(layers.size() == 1u);
@@ -538,7 +537,7 @@ namespace model {
 
         std::vector<std::vector<Point3d>> faceTriangulation = computeTriangulation(faceVertices, faceHoles);
 
-        for (std::vector<Point3d> faceTriangle : faceTriangulation) {
+        for (std::vector<Point3d>& faceTriangle : faceTriangulation) {
           std::reverse(faceTriangle.begin(), faceTriangle.end());
           m_cachedTriangulation.push_back(faceTransformation * faceTriangle);
         }

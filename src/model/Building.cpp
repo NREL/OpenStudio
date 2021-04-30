@@ -262,11 +262,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> Building_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Space);
-      result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
-      result.push_back(IddObjectType::OS_ThermalZone);
-      return result;
+      return std::vector<IddObjectType> { IddObjectType::OS_Space, IddObjectType::OS_ShadingSurfaceGroup, IddObjectType::OS_ThermalZone };
     }
 
     const std::vector<std::string>& Building_Impl::outputVariableNames() const {
@@ -609,7 +605,7 @@ namespace model {
 
     ShadingSurfaceGroupVector Building_Impl::shadingSurfaceGroups() const {
       ShadingSurfaceGroupVector result;
-      for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()) {
+      for (const ShadingSurfaceGroup& shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()) {
         if (istringEqual(shadingGroup.shadingSurfaceType(), "Building")) {
           result.push_back(shadingGroup);
         }
@@ -651,8 +647,7 @@ namespace model {
     double Building_Impl::floorArea() const {
       double result = 0;
       for (const Space& space : spaces()) {
-        bool partofTotalFloorArea = space.partofTotalFloorArea();
-        if (partofTotalFloorArea) {
+        if (space.partofTotalFloorArea()) {
           result += space.multiplier() * space.floorArea();
         }
       }
