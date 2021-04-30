@@ -87,7 +87,7 @@ A number of new features and API-breaking changes have been implemented in OpenS
 
 * [#4180](https://github.com/NREL/OpenStudio/pull/4180) - Fixes [#4175](https://github.com/NREL/OpenStudio/issues/4175), issues with ft for ElectricLoadCenter:Distribution
     * `ElectricLoadCenterDistribution` objects are now possible with no generators / transformers
-    * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts
+    * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts`
 
 * [#4153](https://github.com/NREL/OpenStudio/pull/4153) - Fix #3532 #4152 - Make heating/cooling coils optional for ZoneHVACLowTempVariableFlow and add missing fields to coils
     * This is an API breaking change, the coils are now optional so the getters have been modified to account for this.
