@@ -112,6 +112,7 @@
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 
+#include <algorithm>
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
@@ -1208,8 +1209,10 @@ namespace model {
       double sumOutdoorAirRate = 0.0;
       double sumOutdoorAirForVolume = 0.0;
 
-      // Quick check to see what kind of ventilation methods are used
-      for (Space space : spaces) {
+      // find common variables for the new space
+      for (const Space& space : spaces) {
+
+        // Quick check to see what kind of ventilation methods are used
         if (boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = space.designSpecificationOutdoorAir()) {
           if (istringEqual("Maximum", designSpecificationOutdoorAir->outdoorAirMethod())) {
             anyMaxOutdoorAirMethod = true;
@@ -1217,10 +1220,6 @@ namespace model {
             anySumOutdoorAirMethod = true;
           }
         }
-      }
-
-      // find common variables for the new space
-      for (Space space : spaces) {
 
         // if all spaces are on the same building story use that, otherwise clear it
         if (space.buildingStory()) {
@@ -1354,8 +1353,8 @@ namespace model {
       // if all spaces share a common space type, ensure that there are no absolute loads
       if (spaceType) {
         for (const auto& child : spaceType->children()) {
-          if (child.optionalCast<SpaceLoad>()) {
-            if (child.cast<SpaceLoad>().isAbsolute()) {
+          if (auto load_ = child.optionalCast<SpaceLoad>()) {
+            if (load_->isAbsolute()) {
               LOG(Warn, "SpaceType '" << spaceType->nameString() << "' contains absolute loads, cannot be shared by combined spaces.")
               spaceType.reset();
               break;
@@ -1414,7 +1413,7 @@ namespace model {
       Transformation newTransformation = newSpace.transformation();
 
       // set common variables for the new space
-      for (Space space : spaces) {
+      for (Space& space : spaces) {
 
         // shift the geometry
         space.changeTransformation(newTransformation);
@@ -1430,15 +1429,15 @@ namespace model {
 
         // first hard size any space loads, do this before removing surfaces as
         // hard sizing may require space geometry
-        for (ModelObject child : children) {
-          if (child.optionalCast<SpaceLoad>()) {
-            child.cast<SpaceLoad>().hardSize();
-            child.cast<SpaceLoad>().hardApplySchedules();
+        for (ModelObject& child : children) {
+          if (auto load_ = child.optionalCast<SpaceLoad>()) {
+            load_->hardSize();
+            load_->hardApplySchedules();
           }
         }
 
         // now move costs over to the new space
-        for (LifeCycleCost cost : space.lifeCycleCosts()) {
+        for (const LifeCycleCost& cost : space.lifeCycleCosts()) {
           // new costs are in absolute units as space area is changing in the merge
           LifeCycleCost newCost(newSpace);
           newCost.setName(cost.name().get());
@@ -1459,8 +1458,8 @@ namespace model {
           }
         }
 
-        // now move everything over to the new space
-        for (ModelObject child : children) {
+        for (ModelObject& child : children) {
+          // now move everything over to the new space
           child.setParent(newSpace);
         }
 
@@ -1476,15 +1475,14 @@ namespace model {
       std::vector<Surface> surfaces = newSpace.surfaces();
       std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
 
-      for (Surface surface : surfaces) {
+      for (const Surface& surface : surfaces) {
 
         auto it = mergedSurfaces.find(surface);
         if (it != mergedSurfaces.end()) {
           continue;
         }
 
-        boost::optional<Surface> adjacentSurface = surface.adjacentSurface();
-        if (adjacentSurface) {
+        if (boost::optional<Surface> adjacentSurface = surface.adjacentSurface()) {
           boost::optional<Space> adjacentSpace = adjacentSurface->space();
           if (adjacentSpace && (newSpace.handle() == adjacentSpace->handle())) {
 
@@ -1518,17 +1516,15 @@ namespace model {
             interiorPartitionSurface.setName("Merged " + surface.name().get() + " - " + adjacentSurface->name().get());
             interiorPartitionSurface.setInteriorPartitionSurfaceGroup(*interiorPartitionSurfaceGroup);
 
-            boost::optional<ConstructionBase> construction = surface.construction();
-            if (construction) {
+            if (boost::optional<ConstructionBase> construction = surface.construction()) {
               interiorPartitionSurface.setConstruction(*construction);
             }
           }
         }
       }
 
-      for (Surface mergedSurface : mergedSurfaces) {
-        mergedSurface.remove();
-      }
+      // std::set has const keys... so I have to make a copy here (can't take by ref)
+      std::for_each(std::begin(mergedSurfaces), std::end(mergedSurfaces), [](auto s) { s.remove(); });
 
       // if there is a common designSpecificationOutdoorAir
       if (designSpecificationOutdoorAir) {
