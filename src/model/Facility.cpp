@@ -1648,14 +1648,14 @@ namespace model {
   }
 
   std::vector<FuelType> Facility::fossilFuels() {
-    FuelTypeVector result;
-    result.push_back(FuelType(FuelType::Gas));
-    result.push_back(FuelType(FuelType::Gasoline));
-    result.push_back(FuelType(FuelType::Diesel));
-    result.push_back(FuelType(FuelType::FuelOil_1));
-    result.push_back(FuelType(FuelType::FuelOil_2));
-    result.push_back(FuelType(FuelType::Propane));
-    return result;
+    return FuelTypeVector {
+      FuelType(FuelType::Gas),
+      FuelType(FuelType::Gasoline),
+      FuelType(FuelType::Diesel),
+      FuelType(FuelType::FuelOil_1),
+      FuelType(FuelType::FuelOil_2),
+      FuelType(FuelType::Propane)
+    };
   }
 
   IddObjectType Facility::iddObjectType() {

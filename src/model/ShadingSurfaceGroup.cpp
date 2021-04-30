@@ -130,7 +130,8 @@ namespace model {
     openstudio::Transformation ShadingSurfaceGroup_Impl::buildingTransformation() const {
       Transformation transformation;
 
-      if (istringEqual("Space", this->shadingSurfaceType())) {
+      auto shadingSurfaceType =this->shadingSurfaceType();
+      if (istringEqual("Space", shadingSurfaceType)) {
 
         boost::optional<Space> space = this->space();
         if (space) {
@@ -139,11 +140,11 @@ namespace model {
           transformation = this->transformation();
         }
 
-      } else if (istringEqual("Building", this->shadingSurfaceType())) {
+      } else if (istringEqual("Building", shadingSurfaceType)) {
 
         transformation = this->transformation();
 
-      } else if (istringEqual("Site", this->shadingSurfaceType())) {
+      } else if (istringEqual("Site", shadingSurfaceType)) {
 
         boost::optional<Building> building = this->model().building();
         if (building) {
