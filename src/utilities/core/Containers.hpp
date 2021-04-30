@@ -63,9 +63,9 @@ UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std:
 template <typename T, typename U>
 std::vector<T> castVector(const std::vector<U>& objects) {
   std::vector<T> result;
+  result.reserve(objects.size());
   for (auto& object : objects) {
-    T castObject = object.template cast<T>();
-    result.push_back(castObject);
+    result.emplace_back(object.template cast<T>());
   }
   return result;
 }

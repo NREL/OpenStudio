@@ -1279,12 +1279,7 @@ namespace model {
   }
 
   std::vector<ModelObject> Model::modelObjects(bool sorted) const {
-    // can't use resize because ModelObject has no default ctor
-    std::vector<ModelObject> result;
-    for (WorkspaceObject object : this->objects(sorted)) {
-      result.push_back(object.cast<ModelObject>());
-    }
-    return result;
+    return castVector<ModelObject>(this->objects(sorted));
   }
 
   boost::optional<ComponentData> Model::insertComponent(const Component& component) {
