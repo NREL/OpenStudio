@@ -665,9 +665,9 @@ namespace model {
     }
 
     void SpaceType_Impl::hardApplySpaceLoadSchedules() {
-      for (ModelObject child : this->children()) {
-        if (child.optionalCast<SpaceLoad>()) {
-          child.cast<SpaceLoad>().hardApplySchedules();
+      for (const ModelObject& child : this->children()) {
+        if (auto load_ = child.optionalCast<SpaceLoad>()) {
+          load_->hardApplySchedules();
         }
       }
     }

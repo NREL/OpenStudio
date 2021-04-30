@@ -2034,9 +2034,9 @@ namespace model {
         spaceType->hardApplySpaceLoadSchedules();
 
         // Move space loads from space type to space if there is a space type
-        for (ModelObject child : spaceType->children()) {
-          if (child.optionalCast<SpaceLoad>()) {
-            bool test = child.cast<SpaceLoad>().setSpace(space);
+        for (const ModelObject& child : spaceType->children()) {
+          if (auto load_ = child.optionalCast<SpaceLoad>()) {
+            bool test = load_->setSpace(space);
             OS_ASSERT(test);
           }
         }
@@ -2065,9 +2065,9 @@ namespace model {
 
       // If hard sizing loads, make each space load refer to unique definition and hard size it
       if (hardSizeLoads) {
-        for (ModelObject child : this->children()) {
-          if (child.optionalCast<SpaceLoad>()) {
-            child.cast<SpaceLoad>().hardSize();
+        for (const ModelObject& child : this->children()) {
+          if (auto load_ = child.optionalCast<SpaceLoad>()) {
+            load_->hardSize();
           }
         }
       }
@@ -2079,40 +2079,37 @@ namespace model {
     }
 
     void Space_Impl::hardApplySpaceLoadSchedules() {
-      for (ModelObject child : this->children()) {
-        if (child.optionalCast<SpaceLoad>()) {
-          child.cast<SpaceLoad>().hardApplySchedules();
+      for (const ModelObject& child : this->children()) {
+        if (auto load_ = child.optionalCast<SpaceLoad>()) {
+          load_->hardApplySchedules();
         }
       }
     }
 
     void Space_Impl::hardApplyConstructions() {
 
-      for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()) {
-        for (ShadingSurface shadingSurface : shadingSurfaceGroup.shadingSurfaces()) {
-          boost::optional<ConstructionBase> construction = shadingSurface.construction();
-          if (construction) {
+      for (const ShadingSurfaceGroup& shadingSurfaceGroup : this->shadingSurfaceGroups()) {
+        for (ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()) {
+          if (boost::optional<ConstructionBase> construction = shadingSurface.construction()) {
             shadingSurface.setConstruction(*construction);
           }
         }
       }
 
-      for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
-        for (InteriorPartitionSurface interiorPartitionSurface : interiorPartitionSurfaceGroup.interiorPartitionSurfaces()) {
-          boost::optional<ConstructionBase> construction = interiorPartitionSurface.construction();
-          if (construction) {
+      for (const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
+        for (InteriorPartitionSurface& interiorPartitionSurface : interiorPartitionSurfaceGroup.interiorPartitionSurfaces()) {
+          if (boost::optional<ConstructionBase> construction = interiorPartitionSurface.construction()) {
             interiorPartitionSurface.setConstruction(*construction);
           }
         }
       }
 
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         boost::optional<ConstructionBase> construction = surface.construction();
         if (construction) {
           surface.setConstruction(*construction);
         } else {
-          boost::optional<Surface> adjacentSurface = surface.adjacentSurface();
-          if (adjacentSurface) {
+          if (boost::optional<Surface> adjacentSurface = surface.adjacentSurface()) {
             construction = adjacentSurface->construction();
             if (construction) {
               surface.setConstruction(*construction);
@@ -2120,13 +2117,12 @@ namespace model {
           }
         }
 
-        for (SubSurface subSurface : surface.subSurfaces()) {
+        for (SubSurface& subSurface : surface.subSurfaces()) {
           boost::optional<ConstructionBase> construction = subSurface.construction();
           if (construction) {
             subSurface.setConstruction(*construction);
           } else {
-            boost::optional<SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
-            if (adjacentSubSurface) {
+            if (boost::optional<SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface()) {
               construction = adjacentSubSurface->construction();
               if (construction) {
                 subSurface.setConstruction(*construction);
