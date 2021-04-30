@@ -74,6 +74,8 @@
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <algorithm>
+
 namespace openstudio {
 namespace model {
 
@@ -579,13 +581,13 @@ namespace model {
     }
 
     OutputMeterVector Building_Impl::meters() const {
-      OutputMeterVector result;
-      OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
-      for (const OutputMeter& meter : meters) {
-        if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())) {
-          result.push_back(meter);
-        }
-      }
+      auto filterOutMeter = [](const auto& meter) {
+        auto instalLocType_ = meter.installLocationType();
+        return instalLocType_ && (InstallLocationType::Building != instalLocType_.get().value());
+      };
+
+      OutputMeterVector result = this->model().getConcreteModelObjects<OutputMeter>();
+      result.erase(std::remove_if(result.begin(), result.end(), filterOutMeter), result.end());
       return result;
     }
 
@@ -619,28 +621,25 @@ namespace model {
     }
 
     std::vector<Surface> Building_Impl::exteriorWalls() const {
-      SurfaceVector result;
-      SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
-      for (const Surface& candidate : candidates) {
-        std::string surfaceType = candidate.surfaceType();
-        std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
-        if (openstudio::istringEqual(surfaceType, "Wall") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
-          result.push_back(candidate);
-        }
-      }
+
+      auto isNotExtWall= [](const Surface& s) -> bool {
+        return !openstudio::istringEqual(s.surfaceType(), "Wall") || !openstudio::istringEqual(s.outsideBoundaryCondition(), "Outdoors");
+      };
+
+      SurfaceVector result = model().getConcreteModelObjects<Surface>();
+      result.erase(std::remove_if(result.begin(), result.end(), isNotExtWall), result.end());
+
       return result;
     }
 
     std::vector<Surface> Building_Impl::roofs() const {
-      SurfaceVector result;
-      SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
-      for (const Surface& candidate : candidates) {
-        std::string surfaceType = candidate.surfaceType();
-        std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
-        if (openstudio::istringEqual(surfaceType, "RoofCeiling") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
-          result.push_back(candidate);
-        }
-      }
+      auto isNotExtRoof = [](const Surface& s) -> bool {
+        return !openstudio::istringEqual(s.surfaceType(), "RoofCeiling") || !openstudio::istringEqual(s.outsideBoundaryCondition(), "Outdoors");
+      };
+
+      SurfaceVector result = model().getConcreteModelObjects<Surface>();
+      result.erase(std::remove_if(result.begin(), result.end(), isNotExtRoof), result.end());
+
       return result;
     }
 
