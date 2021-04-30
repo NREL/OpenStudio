@@ -179,7 +179,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> Surface_Impl::allowableChildTypes() const {
-      return std::vector<IddObjectType> { IddObjectType::OS_SubSurface };
+      return std::vector<IddObjectType>{IddObjectType::OS_SubSurface};
     }
 
     const std::vector<std::string>& Surface_Impl::outputVariableNames() const {
@@ -925,7 +925,7 @@ namespace model {
     boost::optional<SurfacePropertyConvectionCoefficients> Surface_Impl::surfacePropertyConvectionCoefficients() const {
       std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
       auto thisHandle = this->handle();
-      auto isNotPointingToMe = [&thisHandle](const auto& spcc)  {
+      auto isNotPointingToMe = [&thisHandle](const auto& spcc) {
         OptionalSurface surface = spcc.surfaceAsSurface();
         return !surface || !(surface->handle() == thisHandle);
       };
@@ -1820,12 +1820,8 @@ namespace model {
           continue;
         }
 
-        masks.emplace_back(Point3dVector{
-          Point3d(xmax + expand, ymax + expand, 0),
-          Point3d(xmax + expand, ymin - expand, 0),
-          Point3d(xmin - expand, ymin - expand, 0),
-          Point3d(xmin - expand, ymax + expand, 0)
-        });
+        masks.emplace_back(Point3dVector{Point3d(xmax + expand, ymax + expand, 0), Point3d(xmax + expand, ymin - expand, 0),
+                                         Point3d(xmin - expand, ymin - expand, 0), Point3d(xmin - expand, ymax + expand, 0)});
       }
 
       // join masks

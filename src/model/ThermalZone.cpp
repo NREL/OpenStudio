@@ -189,7 +189,7 @@ namespace model {
 
     std::vector<IddObjectType> ThermalZone_Impl::allowableChildTypes() const {
       // DLM: this does not seem to agree with implementation of children()
-      return std::vector<IddObjectType> {
+      return std::vector<IddObjectType>{
         IddObjectType::OS_ThermostatSetpoint_DualSetpoint,
         IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint,
         IddObjectType::OS_ZoneHVAC_EquipmentList,

@@ -306,7 +306,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> Building_Impl::allowableChildTypes() const {
-      return std::vector<IddObjectType> { IddObjectType::OS_Space, IddObjectType::OS_ShadingSurfaceGroup, IddObjectType::OS_ThermalZone };
+      return std::vector<IddObjectType>{IddObjectType::OS_Space, IddObjectType::OS_ShadingSurfaceGroup, IddObjectType::OS_ThermalZone};
     }
 
     const std::vector<std::string>& Building_Impl::outputVariableNames() const {
@@ -664,7 +664,7 @@ namespace model {
 
     std::vector<Surface> Building_Impl::exteriorWalls() const {
 
-      auto isNotExtWall= [](const Surface& s) -> bool {
+      auto isNotExtWall = [](const Surface& s) -> bool {
         return !openstudio::istringEqual(s.surfaceType(), "Wall") || !openstudio::istringEqual(s.outsideBoundaryCondition(), "Outdoors");
       };
 

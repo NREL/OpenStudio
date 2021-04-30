@@ -239,7 +239,7 @@ namespace model {
       boost::optional<RefrigerationSystem> result;
 
       RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
-      for (const RefrigerationSystem &refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         if (auto cond = refrigerationSystem.refrigerationCondenser()) {
           if (cond.get() == refrigerationCondenserCascade) {
             result = refrigerationSystem;

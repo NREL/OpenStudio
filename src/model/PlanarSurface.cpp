@@ -183,11 +183,7 @@ namespace model {
         //  }
         //}
 
-        std::vector<std::string> values {
-          toString(vertex.x()),
-          toString(vertex.y()),
-          toString(vertex.z())
-        };
+        std::vector<std::string> values{toString(vertex.x()), toString(vertex.y()), toString(vertex.z())};
 
         auto group = pushExtensibleGroup(values, false);
         OS_ASSERT(!group.empty());

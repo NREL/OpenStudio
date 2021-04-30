@@ -141,15 +141,13 @@ namespace model {
 
   std::vector<LogMessage> ThreeJSReverseTranslator::warnings() const {
     std::vector<LogMessage> result = m_logSink.logMessages();
-    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() != Warn; }),
-                 result.end());
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() != Warn; }), result.end());
     return result;
   }
 
   std::vector<LogMessage> ThreeJSReverseTranslator::errors() const {
     std::vector<LogMessage> result = m_logSink.logMessages();
-    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() <= Warn; }),
-                 result.end());
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() <= Warn; }), result.end());
     return result;
   }
 

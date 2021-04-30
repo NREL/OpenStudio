@@ -876,7 +876,7 @@ namespace model {
     boost::optional<SurfacePropertyConvectionCoefficients> SubSurface_Impl::surfacePropertyConvectionCoefficients() const {
       std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
       auto thisHandle = this->handle();
-      auto isNotPointingToMe = [&thisHandle](const auto& spcc)  {
+      auto isNotPointingToMe = [&thisHandle](const auto& spcc) {
         OptionalSubSurface surface = spcc.surfaceAsSubSurface();
         return !surface || !(surface->handle() == thisHandle);
       };
