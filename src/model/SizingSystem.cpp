@@ -747,7 +747,7 @@ namespace model {
 
       // Query each row of the Intialization Summary -> System Sizing table
       // that contains this component to get the desired value.
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
 
         std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings
@@ -834,7 +834,7 @@ namespace model {
 
       // Query each row of the Intialization Summary -> System Sizing table
       // that contains this component to get the desired value.
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
 
         std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings

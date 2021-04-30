@@ -426,7 +426,7 @@ namespace model {
         }
       }
 
-      for (IdfExtensibleGroup group : this->extensibleGroups()) {
+      for (const IdfExtensibleGroup& group : this->extensibleGroups()) {
         boost::optional<int> month;
         boost::optional<int> day;
 

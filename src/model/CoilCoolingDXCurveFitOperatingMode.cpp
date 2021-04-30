@@ -216,7 +216,7 @@ namespace model {
     std::vector<CoilCoolingDXCurveFitSpeed> CoilCoolingDXCurveFitOperatingMode_Impl::speeds() const {
       std::vector<CoilCoolingDXCurveFitSpeed> result;
       auto groups = extensibleGroups();
-      for (auto group : groups) {
+      for (const auto& group : groups) {
         auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed);
         if (target) {
           if (auto speed = target->optionalCast<CoilCoolingDXCurveFitSpeed>()) {

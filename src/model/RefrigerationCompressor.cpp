@@ -331,7 +331,7 @@ namespace model {
       boost::optional<RefrigerationSystem> result;
 
       RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
-      for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationCompressorVector refrigerationCompressors = refrigerationSystem.compressors();
         if (!refrigerationCompressors.empty()
             && std::find(refrigerationCompressors.begin(), refrigerationCompressors.end(), refrigerationCompressor)

@@ -538,7 +538,7 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
       RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
         if (!refrigerationWalkIns.empty()
             && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
@@ -551,7 +551,7 @@ namespace model {
     boost::optional<RefrigerationSecondarySystem> RefrigerationWalkIn_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
       RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+      for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationSecondarySystem.walkins();
         if (!refrigerationWalkIns.empty()
             && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
@@ -564,7 +564,7 @@ namespace model {
     boost::optional<RefrigerationCompressorRack> RefrigerationWalkIn_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
       RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+      for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationCompressorRack.walkins();
         if (!refrigerationWalkIns.empty()
             && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {

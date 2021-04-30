@@ -140,9 +140,9 @@ namespace model {
 
     std::vector<Generator> ElectricLoadCenterDistribution_Impl::generators() const {
       std::vector<Generator> result;
-      for (auto modelObject : generatorModelObjectList().modelObjects()) {
-        if (modelObject.optionalCast<Generator>()) {
-          result.push_back(modelObject.cast<Generator>());
+      for (const auto& modelObject : generatorModelObjectList().modelObjects()) {
+        if (auto generator_ = modelObject.optionalCast<Generator>()) {
+          result.push_back(generator_.get());
         }
       }
       return result;

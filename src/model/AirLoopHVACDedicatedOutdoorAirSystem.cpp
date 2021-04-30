@@ -154,7 +154,7 @@ namespace model {
     std::vector<AirLoopHVAC> AirLoopHVACDedicatedOutdoorAirSystem_Impl::airLoops() const {
       std::vector<AirLoopHVAC> result;
       auto groups = extensibleGroups();
-      for (auto group : groups) {
+      for (const auto& group : groups) {
         auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoop);
         if (target) {
           if (auto airLoop = target->optionalCast<AirLoopHVAC>()) {

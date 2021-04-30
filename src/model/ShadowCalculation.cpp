@@ -309,7 +309,7 @@ namespace model {
 
     void ShadowCalculation_Impl::removeAllShadingZoneGroups() {
 
-      for (auto eg : extensibleGroups()) {
+      for (const auto& eg : extensibleGroups()) {
         ModelExtensibleGroup group = eg.cast<ModelExtensibleGroup>();
         if (boost::optional<ModelObjectList> _mo_list =
               group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup)) {

@@ -168,7 +168,7 @@ namespace model {
 
       Transformation childTransformation = transformation.inverse() * oldTransformation;
 
-      for (ShadingSurface shadingSurface : this->shadingSurfaces()) {
+      for (ShadingSurface& shadingSurface : this->shadingSurfaces()) {
         bool test = shadingSurface.setVertices(childTransformation * shadingSurface.vertices());
         if (!test) {
           LOG(Error, "Could not transform vertices for ShadingSurface '" << shadingSurface.name().get() << "'.");
@@ -180,7 +180,7 @@ namespace model {
 
     openstudio::BoundingBox ShadingSurfaceGroup_Impl::boundingBox() const {
       BoundingBox result;
-      for (ShadingSurface shadingSurface : this->shadingSurfaces()) {
+      for (ShadingSurface& shadingSurface : this->shadingSurfaces()) {
         result.addPoints(shadingSurface.vertices());
       }
       return result;

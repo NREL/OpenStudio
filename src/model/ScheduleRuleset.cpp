@@ -92,7 +92,7 @@ namespace model {
         OS_ASSERT(test);
       }
 
-      for (ScheduleRule scheduleRule : scheduleRules()) {
+      for (const ScheduleRule& scheduleRule : scheduleRules()) {
         ModelObject newScheduleRule = scheduleRule.clone(model);
         test = newScheduleRule.setParent(newScheduleRuleset);
         OS_ASSERT(test);
@@ -147,9 +147,8 @@ namespace model {
         result.push_back(this->holidaySchedule());
       }
 
-      for (ScheduleRule scheduleRule : this->scheduleRules()) {
-        result.push_back(scheduleRule);
-      }
+      auto schRules = this->scheduleRules();
+      result.insert(result.end(), schRules.begin(), schRules.end());
 
       return result;
     }
@@ -541,7 +540,7 @@ namespace model {
     }
 
     void ScheduleRuleset_Impl::ensureNoLeapDays() {
-      for (ScheduleRule scheduleRule : this->scheduleRules()) {
+      for (ScheduleRule& scheduleRule : this->scheduleRules()) {
         scheduleRule.ensureNoLeapDays();
       }
     }

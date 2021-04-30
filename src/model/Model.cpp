@@ -967,7 +967,7 @@ namespace model {
     }
 
     void Model_Impl::autosize() {
-      for (auto optModelObj : objects()) {
+      for (auto& optModelObj : objects()) {
         if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) {  // HVACComponent
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<Loop>()) {  // Loop
@@ -998,7 +998,7 @@ namespace model {
     }
 
     void Model_Impl::applySizingValues() {
-      for (auto optModelObj : objects()) {
+      for (auto& optModelObj : objects()) {
         if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) {  // HVACComponent
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<Loop>()) {  // Loop

@@ -302,7 +302,7 @@ namespace model {
     std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::controlThermalZones() const {
       ModelObjectList mo_list = controlThermalZoneList();
       std::vector<ThermalZone> result;
-      for (ModelObject mo : mo_list.modelObjects()) {
+      for (const ModelObject& mo : mo_list.modelObjects()) {
         boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
         if (thermalZone) {
           result.push_back(thermalZone.get());
@@ -319,7 +319,7 @@ namespace model {
       bool result = false;
 
       ModelObjectList mo_list = controlThermalZoneList();
-      for (ThermalZone thermalZone : thermalZones) {
+      for (const ThermalZone& thermalZone : thermalZones) {
         result = mo_list.addModelObject(thermalZone);
         if (!result) {
           LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to ControlThermalZones failed for " << briefDescription());
@@ -352,7 +352,7 @@ namespace model {
     std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::coolingControlThermalZones() const {
       ModelObjectList mo_list = coolingControlThermalZoneList();
       std::vector<ThermalZone> result;
-      for (ModelObject mo : mo_list.modelObjects()) {
+      for (const ModelObject& mo : mo_list.modelObjects()) {
         boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
         if (thermalZone) {
           result.push_back(thermalZone.get());
@@ -369,7 +369,7 @@ namespace model {
       bool result = false;
 
       ModelObjectList mo_list = coolingControlThermalZoneList();
-      for (ThermalZone thermalZone : thermalZones) {
+      for (const ThermalZone& thermalZone : thermalZones) {
         result = mo_list.addModelObject(thermalZone);
         if (!result) {
           LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to CoolingControlThermalZones failed for " << briefDescription());
@@ -402,7 +402,7 @@ namespace model {
     std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::heatingControlThermalZones() const {
       ModelObjectList mo_list = heatingControlThermalZoneList();
       std::vector<ThermalZone> result;
-      for (ModelObject mo : mo_list.modelObjects()) {
+      for (const ModelObject& mo : mo_list.modelObjects()) {
         boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
         if (thermalZone) {
           result.push_back(thermalZone.get());
@@ -419,7 +419,7 @@ namespace model {
       bool result = false;
 
       ModelObjectList mo_list = heatingControlThermalZoneList();
-      for (ThermalZone thermalZone : thermalZones) {
+      for (const ThermalZone& thermalZone : thermalZones) {
         result = mo_list.addModelObject(thermalZone);
         if (!result) {
           LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to HeatingControlThermalZones failed for " << briefDescription());
@@ -453,7 +453,7 @@ namespace model {
     std::vector<ThermalZone> AvailabilityManagerNightCycle_Impl::heatingZoneFansOnlyThermalZones() const {
       ModelObjectList mo_list = heatingZoneFansOnlyThermalZoneList();
       std::vector<ThermalZone> result;
-      for (ModelObject mo : mo_list.modelObjects()) {
+      for (const ModelObject& mo : mo_list.modelObjects()) {
         boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
         if (thermalZone) {
           result.push_back(thermalZone.get());
@@ -469,7 +469,7 @@ namespace model {
       clearHeatingZoneFansOnlyThermalZoneList();
       bool result = false;
       ModelObjectList mo_list = heatingZoneFansOnlyThermalZoneList();
-      for (ThermalZone thermalZone : thermalZones) {
+      for (const ThermalZone& thermalZone : thermalZones) {
         result = mo_list.addModelObject(thermalZone);
         if (!result) {
           LOG_AND_THROW("Adding " << thermalZone.briefDescription() << " to HeatingZoneFansOnlyThermalZones failed for " << briefDescription());
@@ -616,11 +616,7 @@ namespace model {
   bool AvailabilityManagerNightCycle::setControlThermalZone(const ThermalZone& thermalZone) {
     LOG(Warn, "AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, "
               "please use AvailabilityManagerNightCycle::setControlThermalZones instead");
-
-    std::vector<ThermalZone> thermalZones;
-    thermalZones.push_back(thermalZone);
-
-    return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setControlThermalZones(thermalZones);
+    return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setControlThermalZones(std::vector<ThermalZone>{thermalZone});
   }
   // Deprecated
   void AvailabilityManagerNightCycle::resetControlThermalZone() {

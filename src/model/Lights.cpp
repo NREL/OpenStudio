@@ -119,7 +119,7 @@ namespace model {
       this->makeUnique();
 
       LightsDefinition lightsDefinition = this->lightsDefinition();
-      for (LifeCycleCost cost : lightsDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : lightsDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

@@ -99,7 +99,7 @@ namespace model {
       this->makeUnique();
 
       LuminaireDefinition definition = this->luminaireDefinition();
-      for (LifeCycleCost cost : definition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : definition.lifeCycleCosts()) {
         // DLM: is this appropriate for a luminaire?
         cost.convertToCostPerEach();
       }

@@ -54,7 +54,7 @@ namespace model {
     std::vector<openstudio::IdfObject> SpaceLoadDefinition_Impl::remove() {
       std::vector<openstudio::IdfObject> temp1;
       std::vector<SpaceLoadInstance> instances = this->instances();
-      for (SpaceLoadInstance instance : instances) {
+      for (SpaceLoadInstance& instance : instances) {
         std::vector<openstudio::IdfObject> temp2 = instance.remove();
         temp1.insert(temp1.end(), temp2.begin(), temp2.end());
       }

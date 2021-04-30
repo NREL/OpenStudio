@@ -621,7 +621,7 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationCase_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
       RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
         if (!refrigerationCases.empty()
             && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
@@ -634,7 +634,7 @@ namespace model {
     boost::optional<RefrigerationSecondarySystem> RefrigerationCase_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
       RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+      for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationCaseVector refrigerationCases = refrigerationSecondarySystem.cases();
         if (!refrigerationCases.empty()
             && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
@@ -647,7 +647,7 @@ namespace model {
     boost::optional<RefrigerationCompressorRack> RefrigerationCase_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
       RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+      for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationCaseVector refrigerationCases = refrigerationCompressorRack.cases();
         if (!refrigerationCases.empty()
             && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {

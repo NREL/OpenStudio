@@ -121,7 +121,7 @@ namespace model {
       this->makeUnique();
 
       ElectricEquipmentDefinition electricEquipmentDefinition = this->electricEquipmentDefinition();
-      for (LifeCycleCost cost : electricEquipmentDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : electricEquipmentDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

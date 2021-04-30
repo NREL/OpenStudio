@@ -305,12 +305,12 @@ namespace model {
 
       Transformation childTransformation = transformation.inverse() * oldTransformation;
 
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         bool test = surface.setVertices(childTransformation * surface.vertices());
         if (!test) {
           LOG(Error, "Could not transform vertices for Surface '" << surface.name().get() << "'.");
         }
-        for (SubSurface subSurface : surface.subSurfaces()) {
+        for (SubSurface& subSurface : surface.subSurfaces()) {
           test = subSurface.setVertices(childTransformation * subSurface.vertices());
           if (!test) {
             LOG(Error, "Could not transform vertices for SubSurface '" << subSurface.name().get() << "'.");
@@ -318,27 +318,27 @@ namespace model {
         }
       }
 
-      for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()) {
+      for (ShadingSurfaceGroup& shadingSurfaceGroup : this->shadingSurfaceGroups()) {
         bool test = shadingSurfaceGroup.setTransformation(childTransformation * shadingSurfaceGroup.transformation());
         OS_ASSERT(test);
       }
 
-      for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
+      for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
         bool test = interiorPartitionSurfaceGroup.setTransformation(childTransformation * interiorPartitionSurfaceGroup.transformation());
         OS_ASSERT(test);
       }
 
-      for (Luminaire luminaire : this->luminaires()) {
+      for (Luminaire& luminaire : this->luminaires()) {
         bool test = luminaire.setTransformation(childTransformation * luminaire.transformation());
         OS_ASSERT(test);
       }
 
-      for (DaylightingControl daylightingControl : this->daylightingControls()) {
+      for (DaylightingControl& daylightingControl : this->daylightingControls()) {
         bool test = daylightingControl.setTransformation(childTransformation * daylightingControl.transformation());
         OS_ASSERT(test);
       }
 
-      for (IlluminanceMap illuminanceMap : this->illuminanceMaps()) {
+      for (IlluminanceMap& illuminanceMap : this->illuminanceMaps()) {
         bool test = illuminanceMap.setTransformation(childTransformation * illuminanceMap.transformation());
         OS_ASSERT(test);
       }
@@ -349,31 +349,31 @@ namespace model {
     BoundingBox Space_Impl::boundingBox() const {
       BoundingBox result;
 
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         result.addPoints(surface.vertices());
       }
 
-      for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()) {
+      for (ShadingSurfaceGroup& shadingSurfaceGroup : this->shadingSurfaceGroups()) {
         result.addPoints(shadingSurfaceGroup.transformation() * shadingSurfaceGroup.boundingBox().corners());
       }
 
-      for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
+      for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()) {
         result.addPoints(interiorPartitionSurfaceGroup.transformation() * interiorPartitionSurfaceGroup.boundingBox().corners());
       }
 
-      for (Luminaire luminaire : this->luminaires()) {
+      for (Luminaire& luminaire : this->luminaires()) {
         result.addPoint(luminaire.position());
       }
 
-      for (DaylightingControl daylightingControl : this->daylightingControls()) {
+      for (DaylightingControl& daylightingControl : this->daylightingControls()) {
         result.addPoint(daylightingControl.position());
       }
 
-      for (IlluminanceMap illuminanceMap : this->illuminanceMaps()) {
+      for (IlluminanceMap& illuminanceMap : this->illuminanceMaps()) {
         result.addPoints(illuminanceMap.transformation() * illuminanceMap.corners());
       }
 
-      for (GlareSensor glareSensor : this->glareSensors()) {
+      for (GlareSensor& glareSensor : this->glareSensors()) {
         result.addPoint(glareSensor.position());
       }
 
@@ -2134,14 +2134,14 @@ namespace model {
     }
 
     void Space_Impl::unmatchSurfaces() {
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
         boost::optional<Surface> adjacentSurface = surface.adjacentSurface();
         if (adjacentSurface) {
           surface.resetAdjacentSurface();
           adjacentSurface->resetAdjacentSurface();
         }
 
-        for (SubSurface subSurface : surface.subSurfaces()) {
+        for (SubSurface& subSurface : surface.subSurfaces()) {
           boost::optional<SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
           if (adjacentSubSurface) {
             subSurface.resetAdjacentSubSurface();
@@ -2161,7 +2161,7 @@ namespace model {
       // transform from other to this coordinates
       Transformation transformation = this->transformation().inverse() * other.transformation();
 
-      for (Surface surface : this->surfaces()) {
+      for (Surface& surface : this->surfaces()) {
 
         std::vector<Point3d> vertices = removeCollinear(surface.vertices());
 
@@ -2170,7 +2170,7 @@ namespace model {
           continue;
         }
 
-        for (Surface otherSurface : other.surfaces()) {
+        for (Surface& otherSurface : other.surfaces()) {
 
           std::vector<Point3d> otherVertices = removeCollinear(transformation * otherSurface.vertices());
 
@@ -2194,11 +2194,11 @@ namespace model {
             otherSurface.setAdjacentSurface(surface);
 
             // once surfaces are matched, check subsurfaces
-            for (SubSurface subSurface : surface.subSurfaces()) {
+            for (SubSurface& subSurface : surface.subSurfaces()) {
 
               vertices = removeCollinear(subSurface.vertices());
 
-              for (SubSurface otherSubSurface : otherSurface.subSurfaces()) {
+              for (SubSurface& otherSubSurface : otherSurface.subSurfaces()) {
 
                 otherVertices = removeCollinear(transformation * otherSubSurface.vertices());
                 std::reverse(otherVertices.begin(), otherVertices.end());

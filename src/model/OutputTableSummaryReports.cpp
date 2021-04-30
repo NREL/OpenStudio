@@ -139,7 +139,7 @@ namespace model {
 
     bool OutputTableSummaryReports_Impl::addSummaryReports(const std::vector<std::string>& summaryReports) {
       bool result = true;
-      for (std::string summaryReport : summaryReports) {
+      for (const std::string& summaryReport : summaryReports) {
         result &= addSummaryReport(summaryReport);
       }
       return result;

@@ -183,7 +183,7 @@ namespace model {
 
     std::vector<DetailedOpeningFactorData> AirflowNetworkDetailedOpening_Impl::openingFactors() const {
       std::vector<DetailedOpeningFactorData> results;
-      for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+      for (const auto& group : extensibleGroups()) {
         OptionalDouble openingFactor = group.getDouble(0);
         OptionalDouble dischargeCoefficient = group.getDouble(1);
         OptionalDouble widthFactor = group.getDouble(2);
@@ -252,14 +252,15 @@ namespace model {
         return false;
       }
       clearExtensibleGroups(false);
-      for (auto factor : factors) {
-        std::vector<std::string> values;
-        values.push_back(toString(factor.openingFactor()));
-        values.push_back(toString(factor.dischargeCoefficient()));
-        values.push_back(toString(factor.widthFactor()));
-        values.push_back(toString(factor.heightFactor()));
-        values.push_back(toString(factor.startHeightFactor()));
-        ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+      for (const auto& factor : factors) {
+        std::vector<std::string> values {
+          toString(factor.openingFactor()),
+          toString(factor.dischargeCoefficient()),
+          toString(factor.widthFactor()),
+          toString(factor.heightFactor()),
+          toString(factor.startHeightFactor())
+        };
+        auto group = pushExtensibleGroup(values, false);
         OS_ASSERT(!group.empty());
       }
       return true;
