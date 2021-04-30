@@ -253,13 +253,8 @@ namespace model {
       }
       clearExtensibleGroups(false);
       for (const auto& factor : factors) {
-        std::vector<std::string> values {
-          toString(factor.openingFactor()),
-          toString(factor.dischargeCoefficient()),
-          toString(factor.widthFactor()),
-          toString(factor.heightFactor()),
-          toString(factor.startHeightFactor())
-        };
+        std::vector<std::string> values{toString(factor.openingFactor()), toString(factor.dischargeCoefficient()), toString(factor.widthFactor()),
+                                        toString(factor.heightFactor()), toString(factor.startHeightFactor())};
         auto group = pushExtensibleGroup(values, false);
         OS_ASSERT(!group.empty());
       }

@@ -193,11 +193,8 @@ namespace model {
           bool doEmit = (i == (N - 1));
 
           // push back just this schedule/date pair
-          std::vector<std::string> groupValues {
-            boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
-            boost::lexical_cast<std::string>(untilDate.dayOfMonth()),
-            scheduleWeek.name().get()
-          };
+          std::vector<std::string> groupValues{boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
+                                               boost::lexical_cast<std::string>(untilDate.dayOfMonth()), scheduleWeek.name().get()};
 
           auto group = pushExtensibleGroup(groupValues, doEmit);
           OS_ASSERT(!group.empty());
@@ -210,11 +207,8 @@ namespace model {
           if ((untilDate < dates[i]) && !inserted) {
 
             // push back this schedule/date pair
-            std::vector<std::string> groupValues {
-              boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
-              boost::lexical_cast<std::string>(untilDate.dayOfMonth()),
-              scheduleWeek.name().get()
-            };
+            std::vector<std::string> groupValues{boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
+                                                 boost::lexical_cast<std::string>(untilDate.dayOfMonth()), scheduleWeek.name().get()};
 
             auto group = pushExtensibleGroup(groupValues, false);
             OS_ASSERT(!group.empty());
@@ -225,11 +219,8 @@ namespace model {
           bool doEmit = (i == (N - 1)) && inserted;
 
           // insert existing schedule/date pair
-          std::vector<std::string> groupValues {
-            boost::lexical_cast<std::string>(dates[i].monthOfYear().value()),
-            boost::lexical_cast<std::string>(dates[i].dayOfMonth()),
-            scheduleWeeks[i].name().get()
-          };
+          std::vector<std::string> groupValues{boost::lexical_cast<std::string>(dates[i].monthOfYear().value()),
+                                               boost::lexical_cast<std::string>(dates[i].dayOfMonth()), scheduleWeeks[i].name().get()};
 
           auto group = pushExtensibleGroup(groupValues, doEmit);
           OS_ASSERT(!group.empty());
@@ -238,11 +229,8 @@ namespace model {
 
       if (!inserted) {
         // push back this schedule/date pair
-        std::vector<std::string> groupValues {
-          boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
-          boost::lexical_cast<std::string>(untilDate.dayOfMonth()),
-          scheduleWeek.name().get()
-        };
+        std::vector<std::string> groupValues{boost::lexical_cast<std::string>(untilDate.monthOfYear().value()),
+                                             boost::lexical_cast<std::string>(untilDate.dayOfMonth()), scheduleWeek.name().get()};
 
         auto group = pushExtensibleGroup(groupValues, true);
         OS_ASSERT(!group.empty());

@@ -73,7 +73,6 @@ static void Proposed(benchmark::State& state) {
   state.SetComplexityN(state.range(0));
 }
 
-
 static void ProposedPushBackNoName(benchmark::State& state) {
 
   Model m = makeModelWithNSurfaces(state.range(0));
@@ -120,16 +119,24 @@ static void ProposedEmplace(benchmark::State& state) {
 // Normal load: 1024 takes 33s
 BENCHMARK(Current)
   // ->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(2)->Range(4, 8192)->Complexity();
+  ->RangeMultiplier(2)
+  ->Range(4, 8192)
+  ->Complexity();
 
 BENCHMARK(Proposed)
   // ->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(2)->Range(4, 8192)->Complexity();
+  ->RangeMultiplier(2)
+  ->Range(4, 8192)
+  ->Complexity();
 
 BENCHMARK(ProposedPushBackNoName)
   // ->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(2)->Range(4, 8192)->Complexity();
+  ->RangeMultiplier(2)
+  ->Range(4, 8192)
+  ->Complexity();
 
 BENCHMARK(ProposedEmplace)
   // ->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(2)->Range(4, 8192)->Complexity();
+  ->RangeMultiplier(2)
+  ->Range(4, 8192)
+  ->Complexity();

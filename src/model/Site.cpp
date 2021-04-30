@@ -179,21 +179,19 @@ namespace model {
     }
 
     std::vector<IddObjectType> Site_Impl::allowableChildTypes() const {
-      return std::vector<IddObjectType> {
-        ClimateZones::iddObjectType(),
-        DesignDay::iddObjectType(),
-        SkyTemperature::iddObjectType(),
-        WeatherFile::iddObjectType(),
-        WeatherFileConditionType::iddObjectType(),
-        WeatherFileDays::iddObjectType(),
-        SiteGroundReflectance::iddObjectType(),
-        SiteGroundTemperatureBuildingSurface::iddObjectType(),
-        SiteGroundTemperatureDeep::iddObjectType(),
-        SiteGroundTemperatureShallow::iddObjectType(),
-        SiteGroundTemperatureFCfactorMethod::iddObjectType(),
-        SiteWaterMainsTemperature::iddObjectType(),
-        ShadingSurfaceGroup::iddObjectType()
-      };
+      return std::vector<IddObjectType>{ClimateZones::iddObjectType(),
+                                        DesignDay::iddObjectType(),
+                                        SkyTemperature::iddObjectType(),
+                                        WeatherFile::iddObjectType(),
+                                        WeatherFileConditionType::iddObjectType(),
+                                        WeatherFileDays::iddObjectType(),
+                                        SiteGroundReflectance::iddObjectType(),
+                                        SiteGroundTemperatureBuildingSurface::iddObjectType(),
+                                        SiteGroundTemperatureDeep::iddObjectType(),
+                                        SiteGroundTemperatureShallow::iddObjectType(),
+                                        SiteGroundTemperatureFCfactorMethod::iddObjectType(),
+                                        SiteWaterMainsTemperature::iddObjectType(),
+                                        ShadingSurfaceGroup::iddObjectType()};
     }
 
     const std::vector<std::string>& Site_Impl::outputVariableNames() const {
@@ -345,8 +343,7 @@ namespace model {
 
     ShadingSurfaceGroupVector Site_Impl::shadingSurfaceGroups() const {
       ShadingSurfaceGroupVector result = this->model().getConcreteModelObjects<ShadingSurfaceGroup>();
-      result.erase(std::remove_if(result.begin(),
-                                  result.end(),
+      result.erase(std::remove_if(result.begin(), result.end(),
                                   [](const auto& shadingGroup) { return !istringEqual(shadingGroup.shadingSurfaceType(), "Site"); }),
                    result.end());
       return result;

@@ -98,7 +98,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> YearDescription_Impl::allowableChildTypes() const {
-      return IddObjectTypeVector {
+      return IddObjectTypeVector{
         RunPeriodControlDaylightSavingTime::iddObjectType(),
         RunPeriodControlSpecialDays::iddObjectType(),
       };

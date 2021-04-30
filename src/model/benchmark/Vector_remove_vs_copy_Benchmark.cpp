@@ -36,7 +36,7 @@ model::Model makeModelWithNSurfaces(size_t nSurfaces) {
 
 static void Current(benchmark::State& state) {
 
-    Model m = makeModelWithNSurfaces(state.range(0));
+  Model m = makeModelWithNSurfaces(state.range(0));
 
   // Code inside this loop is measured repeatedly
   for (auto _ : state) {
@@ -60,14 +60,11 @@ static void Proposed(benchmark::State& state) {
 
   Model m = makeModelWithNSurfaces(state.range(0));
 
-
   auto isRoof = [](const Surface& s) -> bool {
-    return openstudio::istringEqual(s.surfaceType(), "RoofCeiling") &&
-      openstudio::istringEqual(s.outsideBoundaryCondition(), "Outdoors");
+    return openstudio::istringEqual(s.surfaceType(), "RoofCeiling") && openstudio::istringEqual(s.outsideBoundaryCondition(), "Outdoors");
   };
 
-
-    // Code inside this loop is measured repeatedly
+  // Code inside this loop is measured repeatedly
   for (auto _ : state) {
     SurfaceVector result = m.getConcreteModelObjects<Surface>();
     result.erase(std::remove_if(result.begin(), result.end(), isRoof), result.end());
@@ -81,7 +78,13 @@ static void Proposed(benchmark::State& state) {
 // Normal load: 1024 takes 33s
 BENCHMARK(Current)
   // ->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(2)->Range(4, 8192)->Complexity();;
+  ->RangeMultiplier(2)
+  ->Range(4, 8192)
+  ->Complexity();
+;
 BENCHMARK(Proposed)
   // ->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(2)->Range(4, 8192)->Complexity();;
+  ->RangeMultiplier(2)
+  ->Range(4, 8192)
+  ->Complexity();
+;
