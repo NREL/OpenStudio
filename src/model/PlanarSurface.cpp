@@ -825,7 +825,7 @@ namespace model {
     Vector3d north(0.0, 1.0, 0.0);
 
     // inputs ok, loop over surfaces
-    for (const PlanarSurface& planarSurface : planarSurfaces) {
+    for (const auto& planarSurface : planarSurfaces) {
 
       // find the transformation to site coordinates
       Transformation siteTransformation;

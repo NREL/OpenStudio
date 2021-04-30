@@ -2238,7 +2238,7 @@ namespace model {
         std::vector<Surface> newSurfaces;
         std::vector<Surface> newOtherSurfaces;
 
-        for (Surface surface : surfaces) {
+        for (Surface& surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
 
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
@@ -2250,7 +2250,7 @@ namespace model {
             continue;
           }
 
-          for (Surface otherSurface : otherSurfaces) {
+          for (Surface& otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
@@ -2287,8 +2287,8 @@ namespace model {
               std::vector<Surface> ineligibleOtherSurfaces;
               ineligibleOtherSurfaces.push_back(otherSurface);
               ineligibleOtherSurfaces.insert(ineligibleOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
-              for (Surface ineligibleSurface : ineligibleSurfaces) {
-                for (Surface ineligibleOtherSurface : ineligibleOtherSurfaces) {
+              for (Surface& ineligibleSurface : ineligibleSurfaces) {
+                for (Surface& ineligibleOtherSurface : ineligibleOtherSurfaces) {
                   std::string ineligibleIntersectionKey = toString(ineligibleSurface.handle()) + toString(ineligibleOtherSurface.handle());
                   completedIntersections.insert(ineligibleIntersectionKey);
                 }
