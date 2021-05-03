@@ -194,7 +194,7 @@ namespace detail {
     /** Returns the first object found that is in at least one of the reference lists in
      *  referenceNames and named name (case insensitive, but exact match). Does not look for
      *  conflicts. */
-    boost::optional<WorkspaceObject> getObjectByNameAndReference(std::string name, const std::vector<std::string>& referenceNames) const;
+    boost::optional<WorkspaceObject> getObjectByNameAndReference(const std::string& name, const std::vector<std::string>& referenceNames) const;
 
     /** Returns true if fast naming is enabled. */
     bool fastNaming() const;
@@ -577,7 +577,7 @@ namespace detail {
 
     std::vector<std::vector<WorkspaceObject>> nameConflicts(const std::vector<WorkspaceObject>& candidates) const;
 
-    bool potentialNameConflict(std::string& currentName, const IddObject& iddObject) const;
+    bool potentialNameConflict(const std::string& currentName, const IddObject& iddObject) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.idf.Workspace");

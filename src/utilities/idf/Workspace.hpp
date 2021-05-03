@@ -220,7 +220,7 @@ class UTILITIES_API Workspace
   /** Returns the first object found that is in at least one of the reference lists in
    *  referenceNames and named name (case insensitive, but exact match). Does not look for
    *  conflicts. */
-  boost::optional<WorkspaceObject> getObjectByNameAndReference(std::string name, const std::vector<std::string>& referenceNames) const;
+  boost::optional<WorkspaceObject> getObjectByNameAndReference(const std::string& name, const std::vector<std::string>& referenceNames) const;
 
   /** Overloaded functions that take in a std::string instead of an IddObjectType.
    *  They will internally create an IddObjectType (which may throw!) then forward to the overload method that takes IddObjectType

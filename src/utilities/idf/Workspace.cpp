@@ -432,7 +432,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(std::string name,
+  boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(const std::string& name,
                                                                                const std::vector<std::string>& referenceNames) const {
     for (const WorkspaceObject& object : getObjectsByReference(referenceNames)) {
       OptionalString candidate = object.name();
@@ -2320,7 +2320,7 @@ namespace detail {
     return result;
   }
 
-  bool Workspace_Impl::potentialNameConflict(std::string& currentName, const IddObject& iddObject) const {
+  bool Workspace_Impl::potentialNameConflict(const std::string& currentName, const IddObject& iddObject) const {
     bool result = false;
     WorkspaceObjectVector candidates = getObjectsByName(currentName);
     if (candidates.size() == 0) {
@@ -2537,7 +2537,7 @@ std::vector<WorkspaceObject> Workspace::getObjectsByReference(const std::vector<
   return m_impl->getObjectsByReference(referenceNames);
 }
 
-boost::optional<WorkspaceObject> Workspace::getObjectByNameAndReference(std::string name, const StringVector& referenceNames) const {
+boost::optional<WorkspaceObject> Workspace::getObjectByNameAndReference(const std::string& name, const StringVector& referenceNames) const {
   return m_impl->getObjectByNameAndReference(name, referenceNames);
 }
 
