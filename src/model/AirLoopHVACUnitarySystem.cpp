@@ -1872,7 +1872,7 @@ namespace model {
   }
 
   bool AirLoopHVACUnitarySystem::setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
-    std::string supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
+    const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
       supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
   }

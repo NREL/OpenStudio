@@ -103,15 +103,16 @@ namespace model {
     }
 
     bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(const std::string& scheme) {
+      auto thisScheme = scheme;
       // Backward compat
-      if (istringEqual(scheme, "Sequential")) {
-        scheme = "SequentialLoad";
-      } else if (istringEqual(scheme, "Uniform")) {
-        scheme = "UniformLoad";
+      if (istringEqual(thisScheme, "Sequential")) {
+        thisScheme = "SequentialLoad";
+      } else if (istringEqual(thisScheme, "Uniform")) {
+        thisScheme = "UniformLoad";
       }
 
       // Reset the Sequential Cooling/Heating fractions if not 'SequentialLoad'
-      if (!istringEqual(scheme, "SequentialLoad")) {
+      if (!istringEqual(thisScheme, "SequentialLoad")) {
         for (IdfExtensibleGroup& eg : extensibleGroups()) {
           eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, "");
           eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, "");
@@ -119,7 +120,7 @@ namespace model {
         }
       }
 
-      return setString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme, scheme);
+      return setString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme, thisScheme);
     }
 
     bool ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject& equipment) {

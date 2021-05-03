@@ -775,12 +775,13 @@ namespace model {
     }
 
     bool PlantLoop_Impl::setLoadDistributionScheme(const std::string& scheme) {
-      if (istringEqual(scheme, "Sequential")) {
-        scheme = "SequentialLoad";
-      } else if (istringEqual(scheme, "Uniform")) {
-        scheme = "UniformLoad";
+      auto thisScheme = scheme;
+      if (istringEqual(thisScheme, "Sequential")) {
+        thisScheme = "SequentialLoad";
+      } else if (istringEqual(thisScheme, "Uniform")) {
+        thisScheme = "UniformLoad";
       }
-      return setString(OS_PlantLoopFields::LoadDistributionScheme, scheme);
+      return setString(OS_PlantLoopFields::LoadDistributionScheme, thisScheme);
     }
 
     double PlantLoop_Impl::maximumLoopTemperature() {

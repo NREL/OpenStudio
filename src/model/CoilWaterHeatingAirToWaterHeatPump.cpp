@@ -357,7 +357,7 @@ namespace model {
     }
 
     bool CoilWaterHeatingAirToWaterHeatPump_Impl::setEvaporatorAirTemperatureTypeforCurveObjects(
-      std::string evaporatorAirTemperatureTypeforCurveObjects) {
+      const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
       bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPumpFields::EvaporatorAirTemperatureTypeforCurveObjects,
                               evaporatorAirTemperatureTypeforCurveObjects);
       return result;

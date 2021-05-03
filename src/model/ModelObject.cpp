@@ -869,7 +869,7 @@ namespace model {
   ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p) : WorkspaceObject(std::move(p)) {}
 
   /** Gets the autosized component value from the sql file **/
-  boost::optional<double> ModelObject::getAutosizedValue(const std::string& valueName, std::string units) const {
+  boost::optional<double> ModelObject::getAutosizedValue(const std::string& valueName, const std::string& units) const {
     return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
   }
 
