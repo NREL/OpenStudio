@@ -90,7 +90,7 @@ namespace model {
 
       void resetCalendarYear();
 
-      bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+      bool setDayofWeekforStartDay(const std::string& dayofWeekforStartDay);
 
       void resetDayofWeekforStartDay();
 

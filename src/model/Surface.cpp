@@ -410,11 +410,11 @@ namespace model {
       return result;
     }
 
-    bool Surface_Impl::setSurfaceType(std::string surfaceType) {
+    bool Surface_Impl::setSurfaceType(const std::string& surfaceType) {
       return setSurfaceType(surfaceType, true);
     }
 
-    bool Surface_Impl::setSurfaceType(std::string surfaceType, bool driverMethod) {
+    bool Surface_Impl::setSurfaceType(const std::string& surfaceType, bool driverMethod) {
       bool result = setString(OS_SurfaceFields::SurfaceType, surfaceType, true);
       if (driverMethod) {
         this->emitChangeSignals();  // emit signals here
@@ -422,11 +422,11 @@ namespace model {
       return result;
     }
 
-    bool Surface_Impl::setOutsideBoundaryCondition(std::string outsideBoundaryCondition) {
+    bool Surface_Impl::setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition) {
       return setOutsideBoundaryCondition(outsideBoundaryCondition, true);
     }
 
-    bool Surface_Impl::setOutsideBoundaryCondition(std::string outsideBoundaryCondition, bool driverMethod) {
+    bool Surface_Impl::setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition, bool driverMethod) {
       bool result = false;
 
       boost::optional<Surface> adjacentSurface = this->adjacentSurface();
@@ -491,11 +491,11 @@ namespace model {
       return result;
     }
 
-    bool Surface_Impl::setSunExposure(std::string sunExposure) {
+    bool Surface_Impl::setSunExposure(const std::string& sunExposure) {
       return setSunExposure(sunExposure, true);
     }
 
-    bool Surface_Impl::setSunExposure(std::string sunExposure, bool driverMethod) {
+    bool Surface_Impl::setSunExposure(const std::string& sunExposure, bool driverMethod) {
       bool result = setString(OS_SurfaceFields::SunExposure, sunExposure, true);
       if (driverMethod) {
         this->emitChangeSignals();  // emit signals here
@@ -508,11 +508,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Surface_Impl::setWindExposure(std::string windExposure) {
+    bool Surface_Impl::setWindExposure(const std::string& windExposure) {
       return setWindExposure(windExposure, true);
     }
 
-    bool Surface_Impl::setWindExposure(std::string windExposure, bool driverMethod) {
+    bool Surface_Impl::setWindExposure(const std::string& windExposure, bool driverMethod) {
       bool result = setString(OS_SurfaceFields::WindExposure, windExposure, true);
       if (driverMethod) {
         this->emitChangeSignals();  // emit signals here
@@ -2200,15 +2200,15 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->isNumberofVerticesAutocalculated();
   }
 
-  bool Surface::setSurfaceType(std::string surfaceType) {
+  bool Surface::setSurfaceType(const std::string& surfaceType) {
     return getImpl<detail::Surface_Impl>()->setSurfaceType(surfaceType);
   }
 
-  bool Surface::setOutsideBoundaryCondition(std::string outsideBoundaryCondition) {
+  bool Surface::setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition) {
     return getImpl<detail::Surface_Impl>()->setOutsideBoundaryCondition(outsideBoundaryCondition);
   }
 
-  bool Surface::setSunExposure(std::string sunExposure) {
+  bool Surface::setSunExposure(const std::string& sunExposure) {
     return getImpl<detail::Surface_Impl>()->setSunExposure(sunExposure);
   }
 
@@ -2216,7 +2216,7 @@ namespace model {
     getImpl<detail::Surface_Impl>()->resetSunExposure();
   }
 
-  bool Surface::setWindExposure(std::string windExposure) {
+  bool Surface::setWindExposure(const std::string& windExposure) {
     return getImpl<detail::Surface_Impl>()->setWindExposure(windExposure);
   }
 

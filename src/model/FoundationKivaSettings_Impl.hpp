@@ -149,7 +149,7 @@ namespace model {
 
       void resetFarFieldWidth();
 
-      bool setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition);
+      bool setDeepGroundBoundaryCondition(const std::string& deepGroundBoundaryCondition);
 
       void resetDeepGroundBoundaryCondition();
 
@@ -165,7 +165,7 @@ namespace model {
 
       void resetMaximumCellGrowthCoefficient();
 
-      bool setSimulationTimestep(std::string simulationTimestep);
+      bool setSimulationTimestep(const std::string& simulationTimestep);
 
       void resetSimulationTimestep();
 

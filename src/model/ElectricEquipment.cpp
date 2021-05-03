@@ -190,7 +190,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool ElectricEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -392,7 +392,7 @@ namespace model {
     getImpl<detail::ElectricEquipment_Impl>()->resetMultiplier();
   }
 
-  bool ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ElectricEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

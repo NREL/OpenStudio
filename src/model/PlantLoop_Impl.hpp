@@ -83,7 +83,7 @@ namespace model {
 
       std::string loadDistributionScheme();
 
-      bool setLoadDistributionScheme(std::string scheme);
+      bool setLoadDistributionScheme(const std::string& scheme);
 
       std::string fluidType();
 

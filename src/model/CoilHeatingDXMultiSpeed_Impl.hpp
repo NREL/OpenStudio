@@ -143,9 +143,9 @@ namespace model {
 
       bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
 
-      bool setDefrostStrategy(std::string defrostStrategy);
+      bool setDefrostStrategy(const std::string& defrostStrategy);
 
-      bool setDefrostControl(std::string defrostControl);
+      bool setDefrostControl(const std::string& defrostControl);
 
       bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
@@ -155,7 +155,7 @@ namespace model {
 
       bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
-      bool setFuelType(std::string fuelType);
+      bool setFuelType(const std::string& fuelType);
 
       bool setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF);
 

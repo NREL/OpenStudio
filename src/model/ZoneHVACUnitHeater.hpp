@@ -98,7 +98,7 @@ namespace model {
 
     void autosizeMaximumSupplyAirFlowRate();
 
-    bool setFanControlType(std::string fanControlType);
+    bool setFanControlType(const std::string& fanControlType);
 
     bool setHeatingCoil(const HVACComponent& heatingCoil);
 

@@ -92,7 +92,7 @@ namespace model {
 
       void resetDemandControlledVentilation();
 
-      bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+      bool setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod);
 
       void resetSystemOutdoorAirMethod();
 

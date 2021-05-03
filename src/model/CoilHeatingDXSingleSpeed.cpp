@@ -312,7 +312,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilHeatingDXSingleSpeed_Impl::setDefrostStrategy(std::string defrostStrategy) {
+    bool CoilHeatingDXSingleSpeed_Impl::setDefrostStrategy(const std::string& defrostStrategy) {
       bool result = setString(OS_Coil_Heating_DX_SingleSpeedFields::DefrostStrategy, defrostStrategy);
       return result;
     }
@@ -322,7 +322,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilHeatingDXSingleSpeed_Impl::setDefrostControl(std::string defrostControl) {
+    bool CoilHeatingDXSingleSpeed_Impl::setDefrostControl(const std::string& defrostControl) {
       bool result = setString(OS_Coil_Heating_DX_SingleSpeedFields::DefrostControl, defrostControl);
       return result;
     }
@@ -951,7 +951,7 @@ namespace model {
     getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->resetMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
   }
 
-  bool CoilHeatingDXSingleSpeed::setDefrostStrategy(std::string defrostStrategy) {
+  bool CoilHeatingDXSingleSpeed::setDefrostStrategy(const std::string& defrostStrategy) {
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setDefrostStrategy(defrostStrategy);
   }
 
@@ -959,7 +959,7 @@ namespace model {
     getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->resetDefrostStrategy();
   }
 
-  bool CoilHeatingDXSingleSpeed::setDefrostControl(std::string defrostControl) {
+  bool CoilHeatingDXSingleSpeed::setDefrostControl(const std::string& defrostControl) {
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setDefrostControl(defrostControl);
   }
 

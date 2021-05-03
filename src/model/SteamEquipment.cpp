@@ -228,7 +228,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool SteamEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_SteamEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -369,7 +369,7 @@ namespace model {
     getImpl<detail::SteamEquipment_Impl>()->resetMultiplier();
   }
 
-  bool SteamEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool SteamEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::SteamEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

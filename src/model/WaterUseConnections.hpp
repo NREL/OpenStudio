@@ -83,11 +83,11 @@ namespace model {
 
     std::string drainWaterHeatExchangerType() const;
 
-    bool setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType);
+    bool setDrainWaterHeatExchangerType(const std::string& drainWaterHeatExchangerType);
 
     std::string drainWaterHeatExchangerDestination() const;
 
-    bool setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination);
+    bool setDrainWaterHeatExchangerDestination(const std::string& drainWaterHeatExchangerDestination);
 
     boost::optional<double> drainWaterHeatExchangerUFactorTimesArea() const;
 

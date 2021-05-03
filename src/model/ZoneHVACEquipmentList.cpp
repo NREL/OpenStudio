@@ -102,7 +102,7 @@ namespace model {
       return value.get();
     }
 
-    bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(std::string scheme) {
+    bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(const std::string& scheme) {
       // Backward compat
       if (istringEqual(scheme, "Sequential")) {
         scheme = "SequentialLoad";
@@ -606,7 +606,7 @@ namespace model {
     return loadDistributionSchemeValues();
   }
 
-  bool ZoneHVACEquipmentList::setLoadDistributionScheme(std::string scheme) {
+  bool ZoneHVACEquipmentList::setLoadDistributionScheme(const std::string& scheme) {
     return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setLoadDistributionScheme(scheme);
   }
 

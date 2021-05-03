@@ -152,7 +152,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ExteriorLights_Impl::setControlOption(std::string controlOption) {
+    bool ExteriorLights_Impl::setControlOption(const std::string& controlOption) {
       bool result = setString(OS_Exterior_LightsFields::ControlOption, controlOption);
       return result;
     }
@@ -172,7 +172,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ExteriorLights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool ExteriorLights_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Exterior_LightsFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -342,7 +342,7 @@ namespace model {
     getImpl<detail::ExteriorLights_Impl>()->resetSchedule();
   }
 
-  bool ExteriorLights::setControlOption(std::string controlOption) {
+  bool ExteriorLights::setControlOption(const std::string& controlOption) {
     return getImpl<detail::ExteriorLights_Impl>()->setControlOption(controlOption);
   }
 
@@ -358,7 +358,7 @@ namespace model {
     getImpl<detail::ExteriorLights_Impl>()->resetMultiplier();
   }
 
-  bool ExteriorLights::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ExteriorLights::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::ExteriorLights_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

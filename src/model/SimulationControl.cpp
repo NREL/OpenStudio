@@ -394,7 +394,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool SimulationControl_Impl::setSolarDistribution(std::string solarDistribution) {
+    bool SimulationControl_Impl::setSolarDistribution(const std::string& solarDistribution) {
       bool result = setString(OS_SimulationControlFields::SolarDistribution, solarDistribution);
       return result;
     }
@@ -785,7 +785,7 @@ namespace model {
     getImpl<detail::SimulationControl_Impl>()->resetTemperatureConvergenceToleranceValue();
   }
 
-  bool SimulationControl::setSolarDistribution(std::string solarDistribution) {
+  bool SimulationControl::setSolarDistribution(const std::string& solarDistribution) {
     return getImpl<detail::SimulationControl_Impl>()->setSolarDistribution(solarDistribution);
   }
 

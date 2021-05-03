@@ -119,7 +119,7 @@ namespace model {
     /** Sets the value of the PerformanceInputMethod field.
    *  Options are UFactorTimesAreaAndDesignWaterFlowRate and NominalCapacity.
    */
-    bool setPerformanceInputMethod(std::string value);
+    bool setPerformanceInputMethod(const std::string& value);
 
     /** Returns the value of the RatedCapacity field. **/
     boost::optional<double> ratedCapacity();

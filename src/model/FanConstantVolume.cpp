@@ -178,7 +178,7 @@ namespace model {
       return this->getString(OS_Fan_ConstantVolumeFields::EndUseSubcategory).get();
     }
 
-    bool FanConstantVolume_Impl::setEndUseSubcategory(std::string val) {
+    bool FanConstantVolume_Impl::setEndUseSubcategory(const std::string& val) {
       return this->setString(OS_Fan_ConstantVolumeFields::EndUseSubcategory, val);
     }
 
@@ -524,7 +524,7 @@ namespace model {
     return getImpl<detail::FanConstantVolume_Impl>()->endUseSubcategory();
   }
 
-  bool FanConstantVolume::setEndUseSubcategory(std::string val) {
+  bool FanConstantVolume::setEndUseSubcategory(const std::string& val) {
     return getImpl<detail::FanConstantVolume_Impl>()->setEndUseSubcategory(val);
   }
 

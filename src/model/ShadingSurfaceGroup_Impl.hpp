@@ -112,7 +112,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setShadingSurfaceType(std::string shadingSurfaceType);
+      bool setShadingSurfaceType(const std::string& shadingSurfaceType);
 
       virtual bool setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
 

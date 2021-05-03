@@ -157,7 +157,7 @@ namespace model {
 
     void autosizeDesignCondenserWaterFlowRate();
 
-    bool setChillerFlowMode(std::string chillerFlowMode);
+    bool setChillerFlowMode(const std::string& chillerFlowMode);
 
     bool setGeneratorHeatInputFunctionofPartLoadRatioCurve(const Curve& curve);
 
@@ -174,7 +174,7 @@ namespace model {
     bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
     // Will not accept "Steam" if chiller is connected to a Generator Loop as we do not support Steam Loops (yet)
-    bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
+    bool setGeneratorHeatSourceType(const std::string& generatorHeatSourceType);
 
     bool setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate);
 

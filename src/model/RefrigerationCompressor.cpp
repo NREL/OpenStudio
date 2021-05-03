@@ -266,7 +266,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationCompressor_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_CompressorFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -511,7 +511,7 @@ namespace model {
     getImpl<detail::RefrigerationCompressor_Impl>()->resetRatedSubcooling();
   }
 
-  bool RefrigerationCompressor::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCompressor::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationCompressor_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

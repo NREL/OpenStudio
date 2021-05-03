@@ -332,7 +332,7 @@ namespace model {
       return getDouble(OS_WindowMaterial_GasFields::SpecificHeatRatio, true);
     }
 
-    bool Gas_Impl::setGasType(std::string gasType) {
+    bool Gas_Impl::setGasType(const std::string& gasType) {
       bool result = setString(OS_WindowMaterial_GasFields::GasType, gasType);
       return result;
     }
@@ -674,7 +674,7 @@ namespace model {
     return getImpl<detail::Gas_Impl>()->specificHeatRatio();
   }
 
-  bool Gas::setGasType(std::string gasType) {
+  bool Gas::setGasType(const std::string& gasType) {
     return getImpl<detail::Gas_Impl>()->setGasType(gasType);
   }
 

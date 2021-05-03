@@ -372,7 +372,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ChillerAbsorptionIndirect_Impl::setChillerFlowMode(std::string chillerFlowMode) {
+    bool ChillerAbsorptionIndirect_Impl::setChillerFlowMode(const std::string& chillerFlowMode) {
       bool result = setString(OS_Chiller_Absorption_IndirectFields::ChillerFlowMode, chillerFlowMode);
       return result;
     }
@@ -413,7 +413,7 @@ namespace model {
       return result;
     }
 
-    bool ChillerAbsorptionIndirect_Impl::setGeneratorHeatSourceType(std::string generatorHeatSourceType) {
+    bool ChillerAbsorptionIndirect_Impl::setGeneratorHeatSourceType(const std::string& generatorHeatSourceType) {
       bool ok = false;
       if (istringEqual("Steam", generatorHeatSourceType) && (this->generatorLoop())) {
         // We don't support Steam loops in OS right now
@@ -953,7 +953,7 @@ namespace model {
     getImpl<detail::ChillerAbsorptionIndirect_Impl>()->autosizeDesignCondenserWaterFlowRate();
   }
 
-  bool ChillerAbsorptionIndirect::setChillerFlowMode(std::string chillerFlowMode) {
+  bool ChillerAbsorptionIndirect::setChillerFlowMode(const std::string& chillerFlowMode) {
     return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setChillerFlowMode(chillerFlowMode);
   }
 
@@ -985,7 +985,7 @@ namespace model {
     return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(curve);
   }
 
-  bool ChillerAbsorptionIndirect::setGeneratorHeatSourceType(std::string generatorHeatSourceType) {
+  bool ChillerAbsorptionIndirect::setGeneratorHeatSourceType(const std::string& generatorHeatSourceType) {
     return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setGeneratorHeatSourceType(generatorHeatSourceType);
   }
 

@@ -158,19 +158,19 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setSurfaceType(std::string surfaceType);
-      bool setSurfaceType(std::string surfaceType, bool driverMethod);
+      bool setSurfaceType(const std::string& surfaceType);
+      bool setSurfaceType(const std::string& surfaceType, bool driverMethod);
 
-      bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition);
-      bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition, bool driverMethod);
+      bool setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition);
+      bool setOutsideBoundaryCondition(const std::string& outsideBoundaryCondition, bool driverMethod);
 
-      bool setSunExposure(std::string sunExposure);
-      bool setSunExposure(std::string sunExposure, bool driverMethod);
+      bool setSunExposure(const std::string& sunExposure);
+      bool setSunExposure(const std::string& sunExposure, bool driverMethod);
 
       void resetSunExposure();
 
-      bool setWindExposure(std::string windExposure);
-      bool setWindExposure(std::string windExposure, bool driverMethod);
+      bool setWindExposure(const std::string& windExposure);
+      bool setWindExposure(const std::string& windExposure, bool driverMethod);
 
       void resetWindExposure();
 

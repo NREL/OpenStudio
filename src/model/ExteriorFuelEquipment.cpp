@@ -153,7 +153,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ExteriorFuelEquipment_Impl::setFuelType(std::string fuelType) {
+    bool ExteriorFuelEquipment_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Exterior_FuelEquipmentFields::FuelUseType, fuelType);
       return result;
     }
@@ -168,7 +168,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ExteriorFuelEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool ExteriorFuelEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Exterior_FuelEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -324,7 +324,7 @@ namespace model {
     getImpl<detail::ExteriorFuelEquipment_Impl>()->resetSchedule();
   }
 
-  bool ExteriorFuelEquipment::setFuelType(std::string fuelType) {
+  bool ExteriorFuelEquipment::setFuelType(const std::string& fuelType) {
     return getImpl<detail::ExteriorFuelEquipment_Impl>()->setFuelType(fuelType);
   }
 
@@ -336,7 +336,7 @@ namespace model {
     getImpl<detail::ExteriorFuelEquipment_Impl>()->resetMultiplier();
   }
 
-  bool ExteriorFuelEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ExteriorFuelEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::ExteriorFuelEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

@@ -175,7 +175,7 @@ namespace model {
     /** If gasType() == "Custom", specifies the molecular weight of the gas. */
     bool setCustomMolecularWeight(double value);
 
-    bool setGasType(std::string gasType);
+    bool setGasType(const std::string& gasType);
 
     bool setThickness(double thickness);
 

@@ -163,7 +163,7 @@ namespace model {
 
     void resetRefrigeratedCaseAndWalkInList();
 
-    bool setCirculatingFluidName(std::string circulatingFluidName);
+    bool setCirculatingFluidName(const std::string& circulatingFluidName);
 
     bool setGlycolConcentration(int glycolConcentration);
 
@@ -205,7 +205,7 @@ namespace model {
 
     void resetPhaseChangeCirculatingRate();
 
-    bool setPumpDriveType(std::string pumpDriveType);
+    bool setPumpDriveType(const std::string& pumpDriveType);
 
     void resetPumpDriveType();
 
@@ -237,7 +237,7 @@ namespace model {
 
     void resetEvaporatorRefrigerantInventory();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 

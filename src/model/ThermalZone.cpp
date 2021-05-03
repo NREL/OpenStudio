@@ -618,7 +618,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalZone_Impl::setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm) {
+    bool ThermalZone_Impl::setZoneInsideConvectionAlgorithm(const std::string& zoneInsideConvectionAlgorithm) {
       bool result = setString(OS_ThermalZoneFields::ZoneInsideConvectionAlgorithm, zoneInsideConvectionAlgorithm);
       return result;
     }
@@ -638,7 +638,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalZone_Impl::setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm) {
+    bool ThermalZone_Impl::setZoneOutsideConvectionAlgorithm(const std::string& zoneOutsideConvectionAlgorithm) {
       bool result = setString(OS_ThermalZoneFields::ZoneOutsideConvectionAlgorithm, zoneOutsideConvectionAlgorithm);
       return result;
     }
@@ -648,7 +648,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+    bool ThermalZone_Impl::setZoneConditioningEquipmentListName(const std::string& zoneConditioningEquipmentListName) {
       bool result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
       OS_ASSERT(result);
       return result;
@@ -2079,7 +2079,7 @@ namespace model {
       return zoneHVACEquipmentList().loadDistributionScheme();
     }
 
-    bool ThermalZone_Impl::setLoadDistributionScheme(std::string scheme) {
+    bool ThermalZone_Impl::setLoadDistributionScheme(const std::string& scheme) {
       return zoneHVACEquipmentList().setLoadDistributionScheme(scheme);
     }
 
@@ -2773,7 +2773,7 @@ namespace model {
     return getImpl<detail::ThermalZone_Impl>()->setZoneInsideConvectionAlgorithm(zoneInsideConvectionAlgorithm);
   }
 
-  bool ThermalZone::setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm) {
+  bool ThermalZone::setZoneInsideConvectionAlgorithm(const std::string& zoneInsideConvectionAlgorithm) {
     return getImpl<detail::ThermalZone_Impl>()->setZoneInsideConvectionAlgorithm(zoneInsideConvectionAlgorithm);
   }
 
@@ -2785,7 +2785,7 @@ namespace model {
     return getImpl<detail::ThermalZone_Impl>()->setZoneOutsideConvectionAlgorithm(zoneOutsideConvectionAlgorithm);
   }
 
-  bool ThermalZone::setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm) {
+  bool ThermalZone::setZoneOutsideConvectionAlgorithm(const std::string& zoneOutsideConvectionAlgorithm) {
     return getImpl<detail::ThermalZone_Impl>()->setZoneOutsideConvectionAlgorithm(zoneOutsideConvectionAlgorithm);
   }
 
@@ -2793,7 +2793,7 @@ namespace model {
     getImpl<detail::ThermalZone_Impl>()->resetZoneOutsideConvectionAlgorithm();
   }
 
-  bool ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  bool ThermalZone::setZoneConditioningEquipmentListName(const std::string& zoneConditioningEquipmentListName) {
     return getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
   }
 
@@ -3123,7 +3123,7 @@ namespace model {
     return getImpl<detail::ThermalZone_Impl>()->loadDistributionScheme();
   }
 
-  bool ThermalZone::setLoadDistributionScheme(std::string scheme) {
+  bool ThermalZone::setLoadDistributionScheme(const std::string& scheme) {
     return getImpl<detail::ThermalZone_Impl>()->setLoadDistributionScheme(scheme);
   }
 

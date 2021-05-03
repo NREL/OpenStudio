@@ -215,7 +215,7 @@ namespace model {
 
     void resetMaximumTemperatureLimit();
 
-    bool setHeaterControlType(std::string heaterControlType);
+    bool setHeaterControlType(const std::string& heaterControlType);
 
     void resetHeaterControlType();
 
@@ -237,7 +237,7 @@ namespace model {
 
     void resetHeaterIgnitionDelay();
 
-    bool setHeaterFuelType(std::string heaterFuelType);
+    bool setHeaterFuelType(const std::string& heaterFuelType);
 
     bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
 
@@ -271,7 +271,7 @@ namespace model {
 
     void resetOnCycleParasiticHeatFractiontoTank();
 
-    bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
+    bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
 
     bool setAmbientTemperatureSchedule(Schedule& ambientTemperatureSchedule);
 

@@ -232,7 +232,7 @@ namespace model {
       return isEmpty(OS_ShadingSurfaceGroupFields::ZOrigin);
     }
 
-    bool ShadingSurfaceGroup_Impl::setShadingSurfaceType(std::string shadingSurfaceType) {
+    bool ShadingSurfaceGroup_Impl::setShadingSurfaceType(const std::string& shadingSurfaceType) {
       bool result = false;
 
       if (istringEqual("Site", shadingSurfaceType)) {
@@ -463,7 +463,7 @@ namespace model {
     return getImpl<detail::ShadingSurfaceGroup_Impl>()->shadingSurfaceType();
   }
 
-  bool ShadingSurfaceGroup::setShadingSurfaceType(std::string shadingSurfaceType) {
+  bool ShadingSurfaceGroup::setShadingSurfaceType(const std::string& shadingSurfaceType) {
     return getImpl<detail::ShadingSurfaceGroup_Impl>()->setShadingSurfaceType(shadingSurfaceType);
   }
 

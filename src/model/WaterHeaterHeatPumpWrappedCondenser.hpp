@@ -149,7 +149,7 @@ namespace model {
 
     void autocalculateEvaporatorAirFlowRate();
 
-    bool setInletAirConfiguration(std::string inletAirConfiguration);
+    bool setInletAirConfiguration(const std::string& inletAirConfiguration);
 
     bool setInletAirTemperatureSchedule(Schedule& schedule);
 
@@ -167,7 +167,7 @@ namespace model {
 
     bool setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation);
 
-    bool setCompressorLocation(std::string compressorLocation);
+    bool setCompressorLocation(const std::string& compressorLocation);
 
     bool setCompressorAmbientTemperatureSchedule(Schedule& schedule);
 
@@ -175,19 +175,19 @@ namespace model {
 
     bool setFan(const HVACComponent& fansOnOff);
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
     bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
-    bool setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation);
+    bool setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation);
 
     bool setInletAirMixerSchedule(Schedule& schedule);
 
     void resetInletAirMixerSchedule();
 
-    bool setTankElementControlLogic(std::string tankElementControlLogic);
+    bool setTankElementControlLogic(const std::string& tankElementControlLogic);
 
     bool setControlSensor1HeightInStratifiedTank(double controlSensor1HeightInStratifiedTank);
 

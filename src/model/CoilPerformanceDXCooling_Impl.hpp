@@ -177,7 +177,7 @@ namespace model {
 
       void resetCondenserAirInletNode();
 
-      bool setCondenserType(std::string condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
       bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 

@@ -216,7 +216,7 @@ namespace model {
       return result;
     }
 
-    bool OutputMeter_Impl::setName(std::string name) {
+    bool OutputMeter_Impl::setName(const std::string& name) {
       return setString(OS_Output_MeterFields::Name, name);
     }
 
@@ -526,7 +526,7 @@ namespace model {
     return getImpl<detail::OutputMeter_Impl>()->specificInstallLocation();
   }
 
-  bool OutputMeter::setName(std::string name) {
+  bool OutputMeter::setName(const std::string& name) {
     return getImpl<detail::OutputMeter_Impl>()->setName(name);
   }
 

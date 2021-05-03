@@ -218,11 +218,11 @@ namespace model {
 
     void resetLightingSchedule();
 
-    bool setDefrostType(std::string defrostType);
+    bool setDefrostType(const std::string& defrostType);
 
     void resetDefrostType();
 
-    bool setDefrostControlType(std::string defrostControlType);
+    bool setDefrostControlType(const std::string& defrostControlType);
 
     void resetDefrostControlType();
 

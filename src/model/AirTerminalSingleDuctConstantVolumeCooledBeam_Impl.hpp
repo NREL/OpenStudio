@@ -151,7 +151,7 @@ namespace model {
 
       bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam);
 
-      bool setCooledBeamType(std::string cooledBeamType);
+      bool setCooledBeamType(const std::string& cooledBeamType);
 
       bool setSupplyAirVolumetricFlowRate(boost::optional<double> supplyAirVolumetricFlowRate);
 

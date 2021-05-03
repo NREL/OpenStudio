@@ -115,11 +115,11 @@ namespace model {
 
     std::string heatExchangerType() const;
 
-    bool setHeatExchangerType(std::string heatExchangerType);
+    bool setHeatExchangerType(const std::string& heatExchangerType);
 
     std::string frostControlType() const;
 
-    bool setFrostControlType(std::string frostControlType);
+    bool setFrostControlType(const std::string& frostControlType);
 
     double thresholdTemperature() const;
 

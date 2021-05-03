@@ -91,7 +91,7 @@ namespace model {
 
     bool setRatedWaterMassFlowRate(double ratedWaterMassFlowRate);
 
-    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+    bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
 
     bool setHeatingDesignCapacity(double heatingDesignCapacity);
 

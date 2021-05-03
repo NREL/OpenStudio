@@ -123,7 +123,7 @@ namespace model {
 
       bool setRatedWaterMassFlowRate(double ratedWaterMassFlowRate);
 
-      bool setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod);
+      bool setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod);
 
       bool setCoolingDesignCapacity(boost::optional<double> coolingDesignCapacity);
 
@@ -137,7 +137,7 @@ namespace model {
 
       void autosizeMaximumChilledWaterFlowRate();
 
-      bool setControlType(std::string controlType);
+      bool setControlType(const std::string& controlType);
 
       bool setCoolingControlThrottlingRange(double coolingControlThrottlingRange);
 
@@ -145,7 +145,7 @@ namespace model {
 
       void resetCoolingControlTemperatureSchedule();
 
-      bool setCondensationControlType(std::string condensationControlType);
+      bool setCondensationControlType(const std::string& condensationControlType);
 
       bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 

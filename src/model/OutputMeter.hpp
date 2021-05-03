@@ -138,7 +138,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setName(std::string name);
+    bool setName(const std::string& name);
 
     bool setReportingFrequency(const std::string& reportingFrequency);
 

@@ -183,7 +183,7 @@ namespace model {
       return result;
     }
 
-    bool CoilHeatingWaterBaseboardRadiant_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+    bool CoilHeatingWaterBaseboardRadiant_Impl::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
       bool result = setString(OS_Coil_Heating_Water_Baseboard_RadiantFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
       return result;
     }
@@ -349,7 +349,7 @@ namespace model {
     return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setRatedWaterMassFlowRate(ratedWaterMassFlowRate);
   }
 
-  bool CoilHeatingWaterBaseboardRadiant::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+  bool CoilHeatingWaterBaseboardRadiant::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
     return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
   }
 

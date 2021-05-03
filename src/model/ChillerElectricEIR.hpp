@@ -226,7 +226,7 @@ namespace model {
 
     void resetMinimumUnloadingRatio();
 
-    bool setCondenserType(std::string condenserType);
+    bool setCondenserType(const std::string& condenserType);
 
     void resetCondenserType();
 
@@ -242,7 +242,7 @@ namespace model {
 
     void resetLeavingChilledWaterLowerTemperatureLimit();
 
-    bool setChillerFlowMode(std::string chillerFlowMode);
+    bool setChillerFlowMode(const std::string& chillerFlowMode);
 
     void resetChillerFlowMode();
 

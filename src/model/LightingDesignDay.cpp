@@ -91,7 +91,7 @@ namespace model {
       return isEmpty(OS_LightingDesignDayFields::SnowIndicator);
     }
 
-    bool LightingDesignDay_Impl::setCIESkyModel(std::string cIESkyModel) {
+    bool LightingDesignDay_Impl::setCIESkyModel(const std::string& cIESkyModel) {
       bool result = setString(OS_LightingDesignDayFields::CIESkyModel, cIESkyModel);
       return result;
     }
@@ -219,7 +219,7 @@ namespace model {
     return getImpl<detail::LightingDesignDay_Impl>()->isSnowIndicatorDefaulted();
   }
 
-  bool LightingDesignDay::setCIESkyModel(std::string cIESkyModel) {
+  bool LightingDesignDay::setCIESkyModel(const std::string& cIESkyModel) {
     return getImpl<detail::LightingDesignDay_Impl>()->setCIESkyModel(cIESkyModel);
   }
 

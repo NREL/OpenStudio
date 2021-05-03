@@ -226,7 +226,7 @@ namespace model {
       return result;
     }
 
-    bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setAirOutlet(std::string airOutlet) {
+    bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setAirOutlet(const std::string& airOutlet) {
       bool result = setString(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirOutlet, airOutlet);
       OS_ASSERT(result);
       return result;

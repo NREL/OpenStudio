@@ -350,7 +350,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilPerformanceDXCooling_Impl::setCondenserType(std::string condenserType) {
+    bool CoilPerformanceDXCooling_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_CoilPerformance_DX_CoolingFields::CondenserType, condenserType);
       return result;
     }
@@ -834,7 +834,7 @@ namespace model {
     getImpl<detail::CoilPerformanceDXCooling_Impl>()->resetCondenserAirInletNode();
   }
 
-  bool CoilPerformanceDXCooling::setCondenserType(std::string condenserType) {
+  bool CoilPerformanceDXCooling::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::CoilPerformanceDXCooling_Impl>()->setCondenserType(condenserType);
   }
 

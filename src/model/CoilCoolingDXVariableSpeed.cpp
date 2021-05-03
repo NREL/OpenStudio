@@ -333,7 +333,7 @@ namespace model {
     //   OS_ASSERT(result);
     // }
 
-    bool CoilCoolingDXVariableSpeed_Impl::setCondenserType(std::string condenserType) {
+    bool CoilCoolingDXVariableSpeed_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::CondenserType, condenserType);
       return result;
     }
@@ -893,7 +893,7 @@ namespace model {
   //   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetCondenserAirInletNodeName();
   // }
 
-  bool CoilCoolingDXVariableSpeed::setCondenserType(std::string condenserType) {
+  bool CoilCoolingDXVariableSpeed::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setCondenserType(condenserType);
   }
 

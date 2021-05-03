@@ -174,7 +174,7 @@ namespace model {
 
     void resetAvailabilitySchedule();
 
-    bool setCapacityRatingType(std::string capacityRatingType);
+    bool setCapacityRatingType(const std::string& capacityRatingType);
 
     bool setRatedUnitLoadFactor(double ratedUnitLoadFactor);
 
@@ -223,7 +223,7 @@ namespace model {
 
     void resetHeatingPowerSchedule();
 
-    bool setFanSpeedControlType(std::string fanSpeedControlType);
+    bool setFanSpeedControlType(const std::string& fanSpeedControlType);
 
     void resetFanSpeedControlType();
 
@@ -237,11 +237,11 @@ namespace model {
 
     void resetMinimumFanAirFlowRatio();
 
-    bool setDefrostType(std::string defrostType);
+    bool setDefrostType(const std::string& defrostType);
 
     void resetDefrostType();
 
-    bool setDefrostControlType(std::string defrostControlType);
+    bool setDefrostControlType(const std::string& defrostControlType);
 
     void resetDefrostControlType();
 

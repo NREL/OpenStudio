@@ -95,7 +95,7 @@ namespace model {
       return isEmpty(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm);
     }
 
-    bool OutsideSurfaceConvectionAlgorithm_Impl::setAlgorithm(std::string algorithm) {
+    bool OutsideSurfaceConvectionAlgorithm_Impl::setAlgorithm(const std::string& algorithm) {
       bool result = setString(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm, algorithm);
       return result;
     }
@@ -136,7 +136,7 @@ namespace model {
     return getImpl<detail::OutsideSurfaceConvectionAlgorithm_Impl>()->isAlgorithmDefaulted();
   }
 
-  bool OutsideSurfaceConvectionAlgorithm::setAlgorithm(std::string algorithm) {
+  bool OutsideSurfaceConvectionAlgorithm::setAlgorithm(const std::string& algorithm) {
     return getImpl<detail::OutsideSurfaceConvectionAlgorithm_Impl>()->setAlgorithm(algorithm);
   }
 

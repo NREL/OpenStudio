@@ -683,12 +683,12 @@ namespace model {
       return result;
     }
 
-    bool RefrigerationSystem_Impl::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
+    bool RefrigerationSystem_Impl::setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType) {
       bool result = setString(OS_Refrigeration_SystemFields::RefrigerationSystemWorkingFluidType, refrigerationSystemWorkingFluidType);
       return result;
     }
 
-    bool RefrigerationSystem_Impl::setSuctionTemperatureControlType(std::string suctionTemperatureControlType) {
+    bool RefrigerationSystem_Impl::setSuctionTemperatureControlType(const std::string& suctionTemperatureControlType) {
       bool result = setString(OS_Refrigeration_SystemFields::SuctionTemperatureControlType, suctionTemperatureControlType);
       return result;
     }
@@ -770,7 +770,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationSystem_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_SystemFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -781,7 +781,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSystem_Impl::setIntercoolerType(std::string intercoolerType) {
+    bool RefrigerationSystem_Impl::setIntercoolerType(const std::string& intercoolerType) {
       bool result = setString(OS_Refrigeration_SystemFields::IntercoolerType, intercoolerType);
       return result;
     }
@@ -1081,11 +1081,11 @@ namespace model {
     return getImpl<detail::RefrigerationSystem_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
   }
 
-  bool RefrigerationSystem::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
+  bool RefrigerationSystem::setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType) {
     return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationSystemWorkingFluidType(refrigerationSystemWorkingFluidType);
   }
 
-  bool RefrigerationSystem::setSuctionTemperatureControlType(std::string suctionTemperatureControlType) {
+  bool RefrigerationSystem::setSuctionTemperatureControlType(const std::string& suctionTemperatureControlType) {
     return getImpl<detail::RefrigerationSystem_Impl>()->setSuctionTemperatureControlType(suctionTemperatureControlType);
   }
 
@@ -1125,7 +1125,7 @@ namespace model {
     getImpl<detail::RefrigerationSystem_Impl>()->resetSuctionPipingZone();
   }
 
-  bool RefrigerationSystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSystem::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 
@@ -1133,7 +1133,7 @@ namespace model {
     getImpl<detail::RefrigerationSystem_Impl>()->resetEndUseSubcategory();
   }
 
-  bool RefrigerationSystem::setIntercoolerType(std::string intercoolerType) {
+  bool RefrigerationSystem::setIntercoolerType(const std::string& intercoolerType) {
     return getImpl<detail::RefrigerationSystem_Impl>()->setIntercoolerType(intercoolerType);
   }
 

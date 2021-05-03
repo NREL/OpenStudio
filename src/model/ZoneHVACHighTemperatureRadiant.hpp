@@ -105,7 +105,7 @@ namespace model {
 
     void autosizeMaximumPowerInput();
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     bool setCombustionEfficiency(double combustionEfficiency);
 
@@ -115,7 +115,7 @@ namespace model {
 
     bool setFractionofInputthatIsLost(double fractionofInputthatIsLost);
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+    bool setTemperatureControlType(const std::string& temperatureControlType);
 
     bool setHeatingThrottlingRange(double heatingThrottlingRange);
 

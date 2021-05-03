@@ -149,11 +149,11 @@ namespace model {
 
       std::string typeOfAnalysis();
 
-      bool setTypeOfAnalysis(std::string value);
+      bool setTypeOfAnalysis(const std::string& value);
 
       std::string heatExchangerConfiguration();
 
-      bool setHeatExchangerConfiguration(std::string value);
+      bool setHeatExchangerConfiguration(const std::string& value);
 
       AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 

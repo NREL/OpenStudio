@@ -114,7 +114,7 @@ namespace model {
 
     void autosizeMaximumSupplyAirFlowRate();
 
-    bool setOutdoorAirControlType(std::string outdoorAirControlType);
+    bool setOutdoorAirControlType(const std::string& outdoorAirControlType);
 
     bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
 

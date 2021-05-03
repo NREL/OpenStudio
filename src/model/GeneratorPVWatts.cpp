@@ -181,7 +181,7 @@ namespace model {
       return result;
     }
 
-    bool GeneratorPVWatts_Impl::setModuleType(std::string moduleType) {
+    bool GeneratorPVWatts_Impl::setModuleType(const std::string& moduleType) {
       bool result = setString(OS_Generator_PVWattsFields::ModuleType, moduleType);
       OS_ASSERT(result);
       return result;
@@ -192,7 +192,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool GeneratorPVWatts_Impl::setArrayType(std::string arrayType) {
+    bool GeneratorPVWatts_Impl::setArrayType(const std::string& arrayType) {
       bool result = setString(OS_Generator_PVWattsFields::ArrayType, arrayType);
       OS_ASSERT(result);
       return result;
@@ -369,7 +369,7 @@ namespace model {
     return getImpl<detail::GeneratorPVWatts_Impl>()->setDCSystemCapacity(dcSystemCapacity);
   }
 
-  bool GeneratorPVWatts::setModuleType(std::string moduleType) {
+  bool GeneratorPVWatts::setModuleType(const std::string& moduleType) {
     return getImpl<detail::GeneratorPVWatts_Impl>()->setModuleType(moduleType);
   }
 
@@ -377,7 +377,7 @@ namespace model {
     getImpl<detail::GeneratorPVWatts_Impl>()->resetModuleType();
   }
 
-  bool GeneratorPVWatts::setArrayType(std::string arrayType) {
+  bool GeneratorPVWatts::setArrayType(const std::string& arrayType) {
     return getImpl<detail::GeneratorPVWatts_Impl>()->setArrayType(arrayType);
   }
 

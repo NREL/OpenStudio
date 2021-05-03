@@ -80,7 +80,7 @@ namespace model {
     //@{
 
     /// this will fail if "Space" and space is not set, use setSpace instead
-    bool setShadingSurfaceType(std::string shadingSurfaceType);
+    bool setShadingSurfaceType(const std::string& shadingSurfaceType);
 
     //@}
 

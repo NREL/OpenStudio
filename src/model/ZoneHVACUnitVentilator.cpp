@@ -302,7 +302,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACUnitVentilator_Impl::setOutdoorAirControlType(std::string outdoorAirControlType) {
+    bool ZoneHVACUnitVentilator_Impl::setOutdoorAirControlType(const std::string& outdoorAirControlType) {
       bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType, outdoorAirControlType);
       return result;
     }
@@ -638,7 +638,7 @@ namespace model {
     getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMaximumSupplyAirFlowRate();
   }
 
-  bool ZoneHVACUnitVentilator::setOutdoorAirControlType(std::string outdoorAirControlType) {
+  bool ZoneHVACUnitVentilator::setOutdoorAirControlType(const std::string& outdoorAirControlType) {
     return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setOutdoorAirControlType(outdoorAirControlType);
   }
 

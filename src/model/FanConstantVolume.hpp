@@ -110,7 +110,7 @@ namespace model {
     bool setMotorInAirstreamFraction(double value);
 
     /** Sets the value of the EndUseSubcategory field. **/
-    bool setEndUseSubcategory(std::string value);
+    bool setEndUseSubcategory(const std::string& value);
 
     //@}
 

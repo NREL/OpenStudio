@@ -677,7 +677,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACWaterToAirHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
+    bool ZoneHVACWaterToAirHeatPump_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -687,7 +687,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode) {
+    bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpCoilWaterFlowMode(const std::string& heatPumpCoilWaterFlowMode) {
       bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode, heatPumpCoilWaterFlowMode);
       return result;
     }
@@ -1284,7 +1284,7 @@ namespace model {
     getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   }
 
-  bool ZoneHVACWaterToAirHeatPump::setFanPlacement(std::string fanPlacement) {
+  bool ZoneHVACWaterToAirHeatPump::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -1292,7 +1292,7 @@ namespace model {
     getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetFanPlacement();
   }
 
-  bool ZoneHVACWaterToAirHeatPump::setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode) {
+  bool ZoneHVACWaterToAirHeatPump::setHeatPumpCoilWaterFlowMode(const std::string& heatPumpCoilWaterFlowMode) {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpCoilWaterFlowMode(heatPumpCoilWaterFlowMode);
   }
 

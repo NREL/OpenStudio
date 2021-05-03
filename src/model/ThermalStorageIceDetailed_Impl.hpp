@@ -122,7 +122,7 @@ namespace model {
 
       bool setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium);
 
-      bool setThawProcessIndicator(std::string thawProcessIndicator);
+      bool setThawProcessIndicator(const std::string& thawProcessIndicator);
 
       //@}
       /** @name Other */

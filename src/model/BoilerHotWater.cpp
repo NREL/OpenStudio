@@ -227,7 +227,7 @@ namespace model {
       return isEmpty(OS_Boiler_HotWaterFields::SizingFactor);
     }
 
-    bool BoilerHotWater_Impl::setFuelType(std::string fuelType) {
+    bool BoilerHotWater_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Boiler_HotWaterFields::FuelType, fuelType);
       return result;
     }
@@ -349,7 +349,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool BoilerHotWater_Impl::setBoilerFlowMode(std::string boilerFlowMode) {
+    bool BoilerHotWater_Impl::setBoilerFlowMode(const std::string& boilerFlowMode) {
       bool result = false;
       if (istringEqual(boilerFlowMode, "VariableFlow")) {
         // Support legacy key
@@ -586,7 +586,7 @@ namespace model {
     return getImpl<detail::BoilerHotWater_Impl>()->isSizingFactorDefaulted();
   }
 
-  bool BoilerHotWater::setFuelType(std::string fuelType) {
+  bool BoilerHotWater::setFuelType(const std::string& fuelType) {
     return getImpl<detail::BoilerHotWater_Impl>()->setFuelType(fuelType);
   }
 
@@ -666,7 +666,7 @@ namespace model {
     getImpl<detail::BoilerHotWater_Impl>()->resetWaterOutletUpperTemperatureLimit();
   }
 
-  bool BoilerHotWater::setBoilerFlowMode(std::string boilerFlowMode) {
+  bool BoilerHotWater::setBoilerFlowMode(const std::string& boilerFlowMode) {
     return getImpl<detail::BoilerHotWater_Impl>()->setBoilerFlowMode(boilerFlowMode);
   }
 

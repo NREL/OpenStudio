@@ -208,7 +208,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool Lights_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_LightsFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -412,7 +412,7 @@ namespace model {
     getImpl<detail::Lights_Impl>()->resetMultiplier();
   }
 
-  bool Lights::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool Lights::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::Lights_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

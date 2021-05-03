@@ -266,12 +266,12 @@ namespace model {
       return result;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::setDefrostStrategy(std::string defrostStrategy) {
+    bool CoilHeatingDXMultiSpeed_Impl::setDefrostStrategy(const std::string& defrostStrategy) {
       bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::DefrostStrategy, defrostStrategy);
       return result;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::setDefrostControl(std::string defrostControl) {
+    bool CoilHeatingDXMultiSpeed_Impl::setDefrostControl(const std::string& defrostControl) {
       bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::DefrostControl, defrostControl);
       return result;
     }
@@ -300,7 +300,7 @@ namespace model {
       ;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::setFuelType(std::string fuelType) {
+    bool CoilHeatingDXMultiSpeed_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::FuelType, fuelType);
       return result;
     }
@@ -683,11 +683,11 @@ namespace model {
       maximumOutdoorDryBulbTemperatureforDefrostOperation);
   }
 
-  bool CoilHeatingDXMultiSpeed::setDefrostStrategy(std::string defrostStrategy) {
+  bool CoilHeatingDXMultiSpeed::setDefrostStrategy(const std::string& defrostStrategy) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setDefrostStrategy(defrostStrategy);
   }
 
-  bool CoilHeatingDXMultiSpeed::setDefrostControl(std::string defrostControl) {
+  bool CoilHeatingDXMultiSpeed::setDefrostControl(const std::string& defrostControl) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setDefrostControl(defrostControl);
   }
 
@@ -707,7 +707,7 @@ namespace model {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setApplyPartLoadFractiontoSpeedsGreaterthan1(applyPartLoadFractiontoSpeedsGreaterthan1);
   }
 
-  bool CoilHeatingDXMultiSpeed::setFuelType(std::string fuelType) {
+  bool CoilHeatingDXMultiSpeed::setFuelType(const std::string& fuelType) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setFuelType(fuelType);
   }
 

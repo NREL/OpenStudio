@@ -111,17 +111,17 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setAirflowNetworkControl(std::string airflowNetworkControl);
+      bool setAirflowNetworkControl(const std::string& airflowNetworkControl);
       void resetAirflowNetworkControl();
-      bool setWindPressureCoefficientType(std::string type);
+      bool setWindPressureCoefficientType(const std::string& type);
       void resetWindPressureCoefficientType();
-      bool setHeightSelectionforLocalWindPressureCalculation(std::string height);
+      bool setHeightSelectionforLocalWindPressureCalculation(const std::string& height);
       void resetHeightSelectionforLocalWindPressureCalculation();
-      bool setBuildingType(std::string type);
+      bool setBuildingType(const std::string& type);
       void resetBuildingType();
       bool setMaximumNumberofIterations(int number);
       void resetMaximumNumberofIterations();
-      bool setInitializationType(std::string type);
+      bool setInitializationType(const std::string& type);
       void resetInitializationType();
       bool setRelativeAirflowConvergenceTolerance(double tolerance);
       void resetRelativeAirflowConvergenceTolerance();

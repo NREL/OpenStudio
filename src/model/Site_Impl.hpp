@@ -131,7 +131,7 @@ namespace model {
 
       void resetElevation();
 
-      bool setTerrain(std::string terrain);
+      bool setTerrain(const std::string& terrain);
 
       void resetTerrain();
 

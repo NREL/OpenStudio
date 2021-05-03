@@ -184,7 +184,7 @@ namespace model {
 
       void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-      bool setFanPlacement(std::string fanPlacement);
+      bool setFanPlacement(const std::string& fanPlacement);
 
       void resetFanPlacement();
 
@@ -192,7 +192,7 @@ namespace model {
 
       void resetSupplyAirFanOperatingModeSchedule();
 
-      bool setDehumidificationControlType(std::string dehumidificationControlType);
+      bool setDehumidificationControlType(const std::string& dehumidificationControlType);
 
       void resetDehumidificationControlType();
 

@@ -156,11 +156,11 @@ namespace model {
 
     void resetMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
 
-    bool setDefrostStrategy(std::string defrostStrategy);
+    bool setDefrostStrategy(const std::string& defrostStrategy);
 
     void resetDefrostStrategy();
 
-    bool setDefrostControl(std::string defrostControl);
+    bool setDefrostControl(const std::string& defrostControl);
 
     void resetDefrostControl();
 

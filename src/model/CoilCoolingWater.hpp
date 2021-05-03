@@ -182,7 +182,7 @@ namespace model {
     /** Sets the value of the TypeOfAnalysis field.
    *  Options are SimpleAnalysis and DetailedAnalysis
    */
-    bool setTypeOfAnalysis(std::string value);
+    bool setTypeOfAnalysis(const std::string& value);
 
     /** Returns the value of the HeatExchangerConfiguration field. **/
     std::string heatExchangerConfiguration();
@@ -190,7 +190,7 @@ namespace model {
     /** Sets the value of the HeatExchangerConfiguration field.
    *  Options are CrossFlow and CounterFlow.
    */
-    bool setHeatExchangerConfiguration(std::string value);
+    bool setHeatExchangerConfiguration(const std::string& value);
 
     /** Returns the optional ControllerWaterCoil associated with this coil.
    */

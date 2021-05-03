@@ -447,7 +447,7 @@ namespace model {
       return getDouble(OS_WindowMaterial_GasMixtureFields::Gas4Fraction, true);
     }
 
-    bool GasMixture_Impl::setGas1Type(std::string gas1Type) {
+    bool GasMixture_Impl::setGas1Type(const std::string& gas1Type) {
       bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas1Type, gas1Type);
       return result;
     }
@@ -457,7 +457,7 @@ namespace model {
       return result;
     }
 
-    bool GasMixture_Impl::setGas2Type(std::string gas2Type) {
+    bool GasMixture_Impl::setGas2Type(const std::string& gas2Type) {
       bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas2Type, gas2Type);
       return result;
     }
@@ -736,7 +736,7 @@ namespace model {
     return getImpl<detail::GasMixture_Impl>()->gas4Fraction();
   }
 
-  bool GasMixture::setGas1Type(std::string gas1Type) {
+  bool GasMixture::setGas1Type(const std::string& gas1Type) {
     return getImpl<detail::GasMixture_Impl>()->setGas1Type(gas1Type);
   }
 
@@ -752,7 +752,7 @@ namespace model {
     getImpl<detail::GasMixture_Impl>()->resetGas1Fraction();
   }
 
-  bool GasMixture::setGas2Type(std::string gas2Type) {
+  bool GasMixture::setGas2Type(const std::string& gas2Type) {
     return getImpl<detail::GasMixture_Impl>()->setGas2Type(gas2Type);
   }
 

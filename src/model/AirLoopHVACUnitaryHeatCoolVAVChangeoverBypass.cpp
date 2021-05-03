@@ -363,7 +363,7 @@ namespace model {
       return result;
     }
 
-    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setSupplyAirFanPlacement(std::string supplyAirFanPlacement) {
+    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::SupplyAirFanPlacement, supplyAirFanPlacement);
       return result;
     }
@@ -389,7 +389,7 @@ namespace model {
       return result;
     }
 
-    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setPriorityControlMode(std::string priorityControlMode) {
+    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setPriorityControlMode(const std::string& priorityControlMode) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PriorityControlMode, priorityControlMode);
       return result;
     }
@@ -408,7 +408,7 @@ namespace model {
       return result;
     }
 
-    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
+    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setDehumidificationControlType(const std::string& dehumidificationControlType) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::DehumidificationControlType, dehumidificationControlType);
       return result;
     }
@@ -893,7 +893,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setSupplyAirFan(fansCVandOnOff);
   }
 
-  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setSupplyAirFanPlacement(std::string supplyAirFanPlacement) {
+  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
     return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setSupplyAirFanPlacement(supplyAirFanPlacement);
   }
 
@@ -913,7 +913,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setHeatingCoil(heatingCoilName);
   }
 
-  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setPriorityControlMode(std::string priorityControlMode) {
+  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setPriorityControlMode(const std::string& priorityControlMode) {
     return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setPriorityControlMode(priorityControlMode);
   }
 
@@ -929,7 +929,7 @@ namespace model {
       maximumOutletAirTemperatureDuringHeatingOperation);
   }
 
-  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setDehumidificationControlType(std::string dehumidificationControlType) {
+  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setDehumidificationControlType(const std::string& dehumidificationControlType) {
     return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setDehumidificationControlType(dehumidificationControlType);
   }
 

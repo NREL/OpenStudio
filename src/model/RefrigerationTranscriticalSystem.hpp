@@ -163,7 +163,7 @@ namespace model {
 
     void resetSubcoolerEffectiveness();
 
-    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+    bool setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType);
 
     bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
@@ -181,7 +181,7 @@ namespace model {
 
     void resetLowTemperatureSuctionPipingZone();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 

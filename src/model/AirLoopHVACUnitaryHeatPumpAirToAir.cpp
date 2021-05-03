@@ -480,7 +480,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setFanPlacement(std::string fanPlacement) {
+    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -501,7 +501,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
+    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setDehumidificationControlType(const std::string& dehumidificationControlType) {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::DehumidificationControlType, dehumidificationControlType);
       return result;
     }
@@ -858,7 +858,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   }
 
-  bool AirLoopHVACUnitaryHeatPumpAirToAir::setFanPlacement(std::string fanPlacement) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAir::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -874,7 +874,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->resetSupplyAirFanOperatingModeSchedule();
   }
 
-  bool AirLoopHVACUnitaryHeatPumpAirToAir::setDehumidificationControlType(std::string dehumidificationControlType) {
+  bool AirLoopHVACUnitaryHeatPumpAirToAir::setDehumidificationControlType(const std::string& dehumidificationControlType) {
     return getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>()->setDehumidificationControlType(dehumidificationControlType);
   }
 

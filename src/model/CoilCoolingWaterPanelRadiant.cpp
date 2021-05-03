@@ -221,7 +221,7 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingWaterPanelRadiant_Impl::setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod) {
+    bool CoilCoolingWaterPanelRadiant_Impl::setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod) {
       bool result = setString(OS_Coil_Cooling_Water_Panel_RadiantFields::CoolingDesignCapacityMethod, coolingDesignCapacityMethod);
       return result;
     }
@@ -264,7 +264,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingWaterPanelRadiant_Impl::setControlType(std::string controlType) {
+    bool CoilCoolingWaterPanelRadiant_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_Coil_Cooling_Water_Panel_RadiantFields::ControlType, controlType);
       return result;
     }
@@ -285,7 +285,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingWaterPanelRadiant_Impl::setCondensationControlType(std::string condensationControlType) {
+    bool CoilCoolingWaterPanelRadiant_Impl::setCondensationControlType(const std::string& condensationControlType) {
       bool result = setString(OS_Coil_Cooling_Water_Panel_RadiantFields::CondensationControlType, condensationControlType);
       return result;
     }
@@ -445,7 +445,7 @@ namespace model {
     return getImpl<detail::CoilCoolingWaterPanelRadiant_Impl>()->setRatedWaterMassFlowRate(ratedWaterMassFlowRate);
   }
 
-  bool CoilCoolingWaterPanelRadiant::setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod) {
+  bool CoilCoolingWaterPanelRadiant::setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod) {
     return getImpl<detail::CoilCoolingWaterPanelRadiant_Impl>()->setCoolingDesignCapacityMethod(coolingDesignCapacityMethod);
   }
 
@@ -474,7 +474,7 @@ namespace model {
     getImpl<detail::CoilCoolingWaterPanelRadiant_Impl>()->autosizeMaximumChilledWaterFlowRate();
   }
 
-  bool CoilCoolingWaterPanelRadiant::setControlType(std::string controlType) {
+  bool CoilCoolingWaterPanelRadiant::setControlType(const std::string& controlType) {
     return getImpl<detail::CoilCoolingWaterPanelRadiant_Impl>()->setControlType(controlType);
   }
 
@@ -490,7 +490,7 @@ namespace model {
     getImpl<detail::CoilCoolingWaterPanelRadiant_Impl>()->resetCoolingControlTemperatureSchedule();
   }
 
-  bool CoilCoolingWaterPanelRadiant::setCondensationControlType(std::string condensationControlType) {
+  bool CoilCoolingWaterPanelRadiant::setCondensationControlType(const std::string& condensationControlType) {
     return getImpl<detail::CoilCoolingWaterPanelRadiant_Impl>()->setCondensationControlType(condensationControlType);
   }
 

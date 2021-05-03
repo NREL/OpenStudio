@@ -151,7 +151,7 @@ namespace model {
 
       void autosizeLoopSupplySideDesignFlowRate();
 
-      bool setHeatExchangeModelType(std::string heatExchangeModelType);
+      bool setHeatExchangeModelType(const std::string& heatExchangeModelType);
 
       void resetHeatExchangeModelType();
 
@@ -159,7 +159,7 @@ namespace model {
 
       void autosizeHeatExchangerUFactorTimesAreaValue();
 
-      bool setControlType(std::string controlType);
+      bool setControlType(const std::string& controlType);
 
       void resetControlType();
 
@@ -167,7 +167,7 @@ namespace model {
 
       void resetMinimumTemperatureDifferencetoActivateHeatExchanger();
 
-      bool setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType);
+      bool setHeatTransferMeteringEndUseType(const std::string& heatTransferMeteringEndUseType);
 
       void resetHeatTransferMeteringEndUseType();
 

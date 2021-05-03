@@ -162,7 +162,7 @@ namespace model {
 
     bool setSupplyAirFan(const HVACComponent& fan);
 
-    bool setSupplyAirFanPlacement(std::string supplyAirFanPlacement);
+    bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
 
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 

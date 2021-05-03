@@ -75,7 +75,7 @@ namespace model {
 
     bool isSystemOutdoorAirMethodDefaulted() const;
 
-    bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+    bool setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod);
 
     void resetSystemOutdoorAirMethod();
 

@@ -117,7 +117,7 @@ namespace model {
 
     void resetRatedSubcooling();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 

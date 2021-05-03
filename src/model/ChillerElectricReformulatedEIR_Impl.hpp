@@ -246,7 +246,7 @@ namespace model {
 
       void resetLeavingChilledWaterLowerTemperatureLimit();
 
-      bool setChillerFlowMode(std::string chillerFlowMode);
+      bool setChillerFlowMode(const std::string& chillerFlowMode);
 
       void resetChillerFlowMode();
 

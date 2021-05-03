@@ -474,7 +474,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ChillerElectricReformulatedEIR_Impl::setChillerFlowMode(std::string chillerFlowMode) {
+    bool ChillerElectricReformulatedEIR_Impl::setChillerFlowMode(const std::string& chillerFlowMode) {
       bool result = false;
       if (istringEqual(chillerFlowMode, "VariableFlow")) {
         // Support legacy key
@@ -1083,7 +1083,7 @@ namespace model {
     getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->resetLeavingChilledWaterLowerTemperatureLimit();
   }
 
-  bool ChillerElectricReformulatedEIR::setChillerFlowMode(std::string chillerFlowMode) {
+  bool ChillerElectricReformulatedEIR::setChillerFlowMode(const std::string& chillerFlowMode) {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setChillerFlowMode(chillerFlowMode);
   }
 

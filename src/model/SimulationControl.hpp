@@ -167,7 +167,7 @@ namespace model {
 
     void resetTemperatureConvergenceToleranceValue();
 
-    bool setSolarDistribution(std::string solarDistribution);
+    bool setSolarDistribution(const std::string& solarDistribution);
 
     void resetSolarDistribution();
 

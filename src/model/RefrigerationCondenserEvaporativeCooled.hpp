@@ -160,7 +160,7 @@ namespace model {
 
     void resetRatedSubcoolingTemperatureDifference();
 
-    bool setFanSpeedControlType(std::string fanSpeedControlType);
+    bool setFanSpeedControlType(const std::string& fanSpeedControlType);
 
     void resetFanSpeedControlType();
 
@@ -226,7 +226,7 @@ namespace model {
 
     void resetEvaporativeCondenserAvailabilitySchedule();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 

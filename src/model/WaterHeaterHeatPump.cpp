@@ -319,7 +319,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterHeatPump_Impl::setInletAirConfiguration(std::string inletAirConfiguration) {
+    bool WaterHeaterHeatPump_Impl::setInletAirConfiguration(const std::string& inletAirConfiguration) {
       bool result = setString(OS_WaterHeater_HeatPumpFields::InletAirConfiguration, inletAirConfiguration);
       return result;
     }
@@ -368,7 +368,7 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterHeatPump_Impl::setCompressorLocation(std::string compressorLocation) {
+    bool WaterHeaterHeatPump_Impl::setCompressorLocation(const std::string& compressorLocation) {
       bool result = setString(OS_WaterHeater_HeatPumpFields::CompressorLocation, compressorLocation);
       return result;
     }
@@ -389,7 +389,7 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
+    bool WaterHeaterHeatPump_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_WaterHeater_HeatPumpFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -404,7 +404,7 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterHeatPump_Impl::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
+    bool WaterHeaterHeatPump_Impl::setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation) {
       bool result = setString(OS_WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation, parasiticHeatRejectionLocation);
       return result;
     }
@@ -414,7 +414,7 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterHeatPump_Impl::setControlSensorLocationInStratifiedTank(std::string controlSensorLocationInStratifiedTank) {
+    bool WaterHeaterHeatPump_Impl::setControlSensorLocationInStratifiedTank(const std::string& controlSensorLocationInStratifiedTank) {
       bool result = setString(OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank, controlSensorLocationInStratifiedTank);
       return result;
     }
@@ -783,7 +783,7 @@ namespace model {
     getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizeEvaporatorAirFlowRate();
   }
 
-  bool WaterHeaterHeatPump::setInletAirConfiguration(std::string inletAirConfiguration) {
+  bool WaterHeaterHeatPump::setInletAirConfiguration(const std::string& inletAirConfiguration) {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirConfiguration(inletAirConfiguration);
   }
 
@@ -821,7 +821,7 @@ namespace model {
       maximumInletAirTemperatureforCompressorOperation);
   }
 
-  bool WaterHeaterHeatPump::setCompressorLocation(std::string compressorLocation) {
+  bool WaterHeaterHeatPump::setCompressorLocation(const std::string& compressorLocation) {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCompressorLocation(compressorLocation);
   }
 
@@ -837,7 +837,7 @@ namespace model {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setFan(fan);
   }
 
-  bool WaterHeaterHeatPump::setFanPlacement(std::string fanPlacement) {
+  bool WaterHeaterHeatPump::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -849,7 +849,7 @@ namespace model {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setOffCycleParasiticElectricLoad(offCycleParasiticElectricLoad);
   }
 
-  bool WaterHeaterHeatPump::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
+  bool WaterHeaterHeatPump::setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation) {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setParasiticHeatRejectionLocation(parasiticHeatRejectionLocation);
   }
 
@@ -857,7 +857,7 @@ namespace model {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirMixerSchedule(schedule);
   }
 
-  bool WaterHeaterHeatPump::setControlSensorLocationInStratifiedTank(std::string controlSensorLocationInStratifiedTank) {
+  bool WaterHeaterHeatPump::setControlSensorLocationInStratifiedTank(const std::string& controlSensorLocationInStratifiedTank) {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setControlSensorLocationInStratifiedTank(controlSensorLocationInStratifiedTank);
   }
 

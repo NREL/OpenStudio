@@ -130,9 +130,9 @@ namespace model {
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setRotorType(std::string rotorType);
+      bool setRotorType(const std::string& rotorType);
 
-      bool setPowerControl(std::string powerControl);
+      bool setPowerControl(const std::string& powerControl);
 
       bool setRatedRotorSpeed(double ratedRotorSpeed);
 

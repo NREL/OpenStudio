@@ -166,7 +166,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ControllerMechanicalVentilation_Impl::setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod) {
+    bool ControllerMechanicalVentilation_Impl::setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod) {
       bool result = setString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, systemOutdoorAirMethod);
       return result;
     }
@@ -268,7 +268,7 @@ namespace model {
     getImpl<detail::ControllerMechanicalVentilation_Impl>()->resetDemandControlledVentilation();
   }
 
-  bool ControllerMechanicalVentilation::setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod) {
+  bool ControllerMechanicalVentilation::setSystemOutdoorAirMethod(const std::string& systemOutdoorAirMethod) {
     return getImpl<detail::ControllerMechanicalVentilation_Impl>()->setSystemOutdoorAirMethod(systemOutdoorAirMethod);
   }
 

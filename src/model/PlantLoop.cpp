@@ -774,7 +774,7 @@ namespace model {
       return value.get();
     }
 
-    bool PlantLoop_Impl::setLoadDistributionScheme(std::string scheme) {
+    bool PlantLoop_Impl::setLoadDistributionScheme(const std::string& scheme) {
       if (istringEqual(scheme, "Sequential")) {
         scheme = "SequentialLoad";
       } else if (istringEqual(scheme, "Uniform")) {
@@ -1476,7 +1476,7 @@ namespace model {
     return getImpl<detail::PlantLoop_Impl>()->loadDistributionScheme();
   }
 
-  bool PlantLoop::setLoadDistributionScheme(std::string scheme) {
+  bool PlantLoop::setLoadDistributionScheme(const std::string& scheme) {
     return getImpl<detail::PlantLoop_Impl>()->setLoadDistributionScheme(scheme);
   }
 

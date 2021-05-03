@@ -94,7 +94,7 @@ namespace model {
       return isEmpty(OS_SurfaceConvectionAlgorithm_InsideFields::Algorithm);
     }
 
-    bool InsideSurfaceConvectionAlgorithm_Impl::setAlgorithm(std::string algorithm) {
+    bool InsideSurfaceConvectionAlgorithm_Impl::setAlgorithm(const std::string& algorithm) {
       bool result = setString(OS_SurfaceConvectionAlgorithm_InsideFields::Algorithm, algorithm);
       return result;
     }
@@ -123,7 +123,7 @@ namespace model {
     return getImpl<detail::InsideSurfaceConvectionAlgorithm_Impl>()->isAlgorithmDefaulted();
   }
 
-  bool InsideSurfaceConvectionAlgorithm::setAlgorithm(std::string algorithm) {
+  bool InsideSurfaceConvectionAlgorithm::setAlgorithm(const std::string& algorithm) {
     return getImpl<detail::InsideSurfaceConvectionAlgorithm_Impl>()->setAlgorithm(algorithm);
   }
 

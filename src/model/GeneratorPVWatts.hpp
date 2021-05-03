@@ -103,11 +103,11 @@ namespace model {
 
     bool setDCSystemCapacity(double dcSystemCapacity);
 
-    bool setModuleType(std::string moduleType);
+    bool setModuleType(const std::string& moduleType);
 
     void resetModuleType();
 
-    bool setArrayType(std::string arrayType);
+    bool setArrayType(const std::string& arrayType);
 
     void resetArrayType();
 

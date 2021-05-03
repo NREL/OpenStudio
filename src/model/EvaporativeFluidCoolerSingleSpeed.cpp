@@ -456,7 +456,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool EvaporativeFluidCoolerSingleSpeed_Impl::setCapacityControl(std::string capacityControl) {
+    bool EvaporativeFluidCoolerSingleSpeed_Impl::setCapacityControl(const std::string& capacityControl) {
       bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::CapacityControl, capacityControl);
       return result;
     }
@@ -476,7 +476,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossMode(std::string evaporationLossMode) {
+    bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossMode(const std::string& evaporationLossMode) {
       bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossMode, evaporationLossMode);
       return result;
     }
@@ -514,7 +514,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+    bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
       bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode, blowdownCalculationMode);
       return result;
     }
@@ -889,7 +889,7 @@ namespace model {
     getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDesignEnteringAirWetbulbTemperature();
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setCapacityControl(std::string capacityControl) {
+  bool EvaporativeFluidCoolerSingleSpeed::setCapacityControl(const std::string& capacityControl) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setCapacityControl(capacityControl);
   }
 
@@ -905,7 +905,7 @@ namespace model {
     getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetSizingFactor();
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossMode(std::string evaporationLossMode) {
+  bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossMode(const std::string& evaporationLossMode) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
   }
 
@@ -929,7 +929,7 @@ namespace model {
     getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDriftLossPercent();
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+  bool EvaporativeFluidCoolerSingleSpeed::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setBlowdownCalculationMode(blowdownCalculationMode);
   }
 

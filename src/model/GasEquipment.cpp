@@ -190,7 +190,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool GasEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -378,7 +378,7 @@ namespace model {
     getImpl<detail::GasEquipment_Impl>()->resetMultiplier();
   }
 
-  bool GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool GasEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

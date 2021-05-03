@@ -117,13 +117,13 @@ namespace model {
 
       void resetMaximumFlowRate();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       bool setFlowFractionSchedule(Schedule& schedule);
 
       void resetFlowFractionSchedule();
 
-      bool setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode);
+      bool setSystemAvailabilityManagerCouplingMode(const std::string& systemAvailabilityManagerCouplingMode);
 
       bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
 

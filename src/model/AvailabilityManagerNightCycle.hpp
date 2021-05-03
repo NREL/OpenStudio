@@ -69,7 +69,7 @@ namespace model {
     boost::optional<Schedule> fanSchedule() const;
 
     std::string controlType() const;
-    bool setControlType(std::string controlType);
+    bool setControlType(const std::string& controlType);
     void resetControlType();
     bool isControlTypeDefaulted() const;
 
@@ -86,7 +86,7 @@ namespace model {
     static std::vector<std::string> cyclingRunTimeControlTypeValues();
     std::string cyclingRunTimeControlType() const;
     bool isCyclingRunTimeControlTypeDefaulted() const;
-    bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+    bool setCyclingRunTimeControlType(const std::string& cyclingRunTimeControlType);
     void resetCyclingRunTimeControlType();
 
     /** \deprecated AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::controlThermalZones\n

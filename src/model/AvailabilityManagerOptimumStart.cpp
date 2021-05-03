@@ -157,7 +157,7 @@ namespace model {
       return result;
     }
 
-    bool AvailabilityManagerOptimumStart_Impl::setControlType(std::string controlType) {
+    bool AvailabilityManagerOptimumStart_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_AvailabilityManager_OptimumStartFields::ControlType, controlType);
       return result;
     }
@@ -184,7 +184,7 @@ namespace model {
       return result;
     }
 
-    bool AvailabilityManagerOptimumStart_Impl::setControlAlgorithm(std::string controlAlgorithm) {
+    bool AvailabilityManagerOptimumStart_Impl::setControlAlgorithm(const std::string& controlAlgorithm) {
       bool result = setString(OS_AvailabilityManager_OptimumStartFields::ControlAlgorithm, controlAlgorithm);
       return result;
     }
@@ -314,7 +314,7 @@ namespace model {
     return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setApplicabilitySchedule(schedule);
   }
 
-  bool AvailabilityManagerOptimumStart::setControlType(std::string controlType) {
+  bool AvailabilityManagerOptimumStart::setControlType(const std::string& controlType) {
     return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setControlType(controlType);
   }
 
@@ -330,7 +330,7 @@ namespace model {
     return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setMaximumValueforOptimumStartTime(maximumValueforOptimumStartTime);
   }
 
-  bool AvailabilityManagerOptimumStart::setControlAlgorithm(std::string controlAlgorithm) {
+  bool AvailabilityManagerOptimumStart::setControlAlgorithm(const std::string& controlAlgorithm) {
     return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setControlAlgorithm(controlAlgorithm);
   }
 

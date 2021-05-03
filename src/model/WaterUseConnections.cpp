@@ -261,7 +261,7 @@ namespace model {
       return value.get();
     }
 
-    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType) {
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerType(const std::string& drainWaterHeatExchangerType) {
       bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerType, drainWaterHeatExchangerType);
       return result;
     }
@@ -272,7 +272,7 @@ namespace model {
       return value.get();
     }
 
-    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination) {
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerDestination(const std::string& drainWaterHeatExchangerDestination) {
       bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerDestination, drainWaterHeatExchangerDestination);
       return result;
     }
@@ -353,7 +353,7 @@ namespace model {
     return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerType();
   }
 
-  bool WaterUseConnections::setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType) {
+  bool WaterUseConnections::setDrainWaterHeatExchangerType(const std::string& drainWaterHeatExchangerType) {
     return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerType(drainWaterHeatExchangerType);
   }
 
@@ -361,7 +361,7 @@ namespace model {
     return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerDestination();
   }
 
-  bool WaterUseConnections::setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination) {
+  bool WaterUseConnections::setDrainWaterHeatExchangerDestination(const std::string& drainWaterHeatExchangerDestination) {
     return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerDestination(drainWaterHeatExchangerDestination);
   }
 

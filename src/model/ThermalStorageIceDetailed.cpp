@@ -242,7 +242,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalStorageIceDetailed_Impl::setThawProcessIndicator(std::string thawProcessIndicator) {
+    bool ThermalStorageIceDetailed_Impl::setThawProcessIndicator(const std::string& thawProcessIndicator) {
       bool result = setString(OS_ThermalStorage_Ice_DetailedFields::ThawProcessIndicator, thawProcessIndicator);
       return result;
     }
@@ -440,7 +440,7 @@ namespace model {
     return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setFreezingTemperatureofStorageMedium(freezingTemperatureofStorageMedium);
   }
 
-  bool ThermalStorageIceDetailed::setThawProcessIndicator(std::string thawProcessIndicator) {
+  bool ThermalStorageIceDetailed::setThawProcessIndicator(const std::string& thawProcessIndicator) {
     return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setThawProcessIndicator(thawProcessIndicator);
   }
 

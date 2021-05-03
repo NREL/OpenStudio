@@ -129,7 +129,7 @@ namespace model {
 
     bool setReferenceInletWaterTemperature(double referenceInletWaterTemperature);
 
-    bool setHeatRecoveryWaterFlowOperatingMode(std::string heatRecoveryWaterFlowOperatingMode);
+    bool setHeatRecoveryWaterFlowOperatingMode(const std::string& heatRecoveryWaterFlowOperatingMode);
     void resetHeatRecoveryWaterFlowOperatingMode();
 
     bool setReferenceHeatRecoveryWaterFlowRate(double referenceHeatRecoveryWaterFlowRate);

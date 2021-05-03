@@ -190,9 +190,9 @@ namespace model {
 
       bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
-      bool setChillerFlowMode(std::string chillerFlowMode);
+      bool setChillerFlowMode(const std::string& chillerFlowMode);
 
-      bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
+      bool setGeneratorHeatSourceType(const std::string& generatorHeatSourceType);
 
       bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
 

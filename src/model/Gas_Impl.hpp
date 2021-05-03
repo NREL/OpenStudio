@@ -149,7 +149,7 @@ namespace model {
 
       bool setCustomMolecularWeight(double value);
 
-      bool setGasType(std::string gasType);
+      bool setGasType(const std::string& gasType);
 
       bool setConductivityCoefficientA(boost::optional<double> conductivityCoefficientA);
 

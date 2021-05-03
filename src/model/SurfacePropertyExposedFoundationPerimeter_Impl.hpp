@@ -81,7 +81,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod);
+      bool setExposedPerimeterCalculationMethod(const std::string& exposedPerimeterCalculationMethod);
 
       bool setTotalExposedPerimeter(double totalExposedPerimeter);
 

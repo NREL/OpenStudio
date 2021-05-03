@@ -253,11 +253,11 @@ namespace model {
     // DLM: this appears to not be implemented
     //bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     void resetFanPlacement();
 
-    bool setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode);
+    bool setHeatPumpCoilWaterFlowMode(const std::string& heatPumpCoilWaterFlowMode);
 
     void resetHeatPumpCoilWaterFlowMode();
 

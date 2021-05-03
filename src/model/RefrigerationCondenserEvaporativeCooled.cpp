@@ -354,7 +354,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCondenserEvaporativeCooled_Impl::setFanSpeedControlType(std::string fanSpeedControlType) {
+    bool RefrigerationCondenserEvaporativeCooled_Impl::setFanSpeedControlType(const std::string& fanSpeedControlType) {
       bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::FanSpeedControlType, fanSpeedControlType);
       return result;
     }
@@ -543,7 +543,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCondenserEvaporativeCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationCondenserEvaporativeCooled_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -828,7 +828,7 @@ namespace model {
     getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetRatedSubcoolingTemperatureDifference();
   }
 
-  bool RefrigerationCondenserEvaporativeCooled::setFanSpeedControlType(std::string fanSpeedControlType) {
+  bool RefrigerationCondenserEvaporativeCooled::setFanSpeedControlType(const std::string& fanSpeedControlType) {
     return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setFanSpeedControlType(fanSpeedControlType);
   }
 
@@ -960,7 +960,7 @@ void RefrigerationCondenserEvaporativeCooled::resetEvaporativeWaterSupplyTank() 
     getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetEvaporativeCondenserAvailabilitySchedule();
   }
 
-  bool RefrigerationCondenserEvaporativeCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserEvaporativeCooled::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

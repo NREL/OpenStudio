@@ -173,7 +173,7 @@ namespace model {
       updateModelLeapYear(wasLeapYear, isLeapYear);
     }
 
-    bool YearDescription_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+    bool YearDescription_Impl::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
       bool result = false;
       if (!this->calendarYear()) {
         result = setString(OS_YearDescriptionFields::DayofWeekforStartDay, dayofWeekforStartDay);
@@ -365,7 +365,7 @@ namespace model {
     getImpl<detail::YearDescription_Impl>()->resetCalendarYear();
   }
 
-  bool YearDescription::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+  bool YearDescription::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
     return getImpl<detail::YearDescription_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
   }
 

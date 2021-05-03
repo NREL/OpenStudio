@@ -1065,7 +1065,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setMasterThermostatPriorityControlType(const std::string& masterThermostatPriorityControlType) {
       bool result =
         setString(OS_AirConditioner_VariableRefrigerantFlowFields::MasterThermostatPriorityControlType, masterThermostatPriorityControlType);
       return result;
@@ -1189,12 +1189,12 @@ namespace model {
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostStrategy(std::string defrostStrategy) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostStrategy(const std::string& defrostStrategy) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::DefrostStrategy, defrostStrategy);
       return result;
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostControl(std::string defrostControl) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setDefrostControl(const std::string& defrostControl) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::DefrostControl, defrostControl);
       return result;
     }
@@ -1311,7 +1311,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirConditionerVariableRefrigerantFlow_Impl::setFuelType(std::string fuelType) {
+    bool AirConditionerVariableRefrigerantFlow_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::FuelType, fuelType);
       return result;
     }
@@ -2929,7 +2929,7 @@ namespace model {
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->resetZoneforMasterThermostatLocation();
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType) {
+  bool AirConditionerVariableRefrigerantFlow::setMasterThermostatPriorityControlType(const std::string& masterThermostatPriorityControlType) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setMasterThermostatPriorityControlType(masterThermostatPriorityControlType);
   }
 
@@ -3010,11 +3010,11 @@ namespace model {
       maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setDefrostStrategy(std::string defrostStrategy) {
+  bool AirConditionerVariableRefrigerantFlow::setDefrostStrategy(const std::string& defrostStrategy) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setDefrostStrategy(defrostStrategy);
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setDefrostControl(std::string defrostControl) {
+  bool AirConditionerVariableRefrigerantFlow::setDefrostControl(const std::string& defrostControl) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setDefrostControl(defrostControl);
   }
 
@@ -3089,7 +3089,7 @@ namespace model {
     getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool AirConditionerVariableRefrigerantFlow::setFuelType(std::string fuelType) {
+  bool AirConditionerVariableRefrigerantFlow::setFuelType(const std::string& fuelType) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setFuelType(fuelType);
   }
 

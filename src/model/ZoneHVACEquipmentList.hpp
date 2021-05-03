@@ -61,7 +61,7 @@ namespace model {
 
     std::string loadDistributionScheme() const;
 
-    bool setLoadDistributionScheme(std::string scheme);
+    bool setLoadDistributionScheme(const std::string& scheme);
 
     /** Add new equipment setting the heating and cooling priorities
    *  to the next available priority level.

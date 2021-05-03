@@ -408,7 +408,7 @@ namespace model {
       m_cachedYearDescription->resetCalendarYear();
     }
 
-    bool Model_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+    bool Model_Impl::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
       if (!m_cachedYearDescription) {
         m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
       }
@@ -1175,7 +1175,7 @@ namespace model {
     getImpl<detail::Model_Impl>()->resetCalendarYear();
   }
 
-  bool Model::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+  bool Model::setDayofWeekforStartDay(const std::string& dayofWeekforStartDay) {
     return getImpl<detail::Model_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
   }
 

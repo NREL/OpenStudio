@@ -209,7 +209,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlType(std::string condensationControlType) {
+    bool CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlType(const std::string& condensationControlType) {
       bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlType, condensationControlType);
       return result;
     }
@@ -440,7 +440,7 @@ namespace model {
     getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>()->resetCoolingLowControlTemperatureSchedule();
   }
 
-  bool CoilCoolingLowTempRadiantConstFlow::setCondensationControlType(std::string condensationControlType) {
+  bool CoilCoolingLowTempRadiantConstFlow::setCondensationControlType(const std::string& condensationControlType) {
     return getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>()->setCondensationControlType(condensationControlType);
   }
 

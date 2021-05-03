@@ -597,7 +597,7 @@ namespace model {
         OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setControlType(std::string controlType) {
+    bool AirLoopHVACUnitarySystem_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
       return result;
     }
@@ -623,7 +623,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
+    bool AirLoopHVACUnitarySystem_Impl::setDehumidificationControlType(const std::string& dehumidificationControlType) {
       bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DehumidificationControlType, dehumidificationControlType);
       return result;
     }
@@ -754,7 +754,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitarySystem_Impl::setLatentLoadControl(std::string latentLoadControl) {
+    bool AirLoopHVACUnitarySystem_Impl::setLatentLoadControl(const std::string& latentLoadControl) {
       bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl, latentLoadControl);
       return result;
     }
@@ -1656,7 +1656,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedObject();
   }
 
-  bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
+  bool AirLoopHVACUnitarySystem::setControlType(const std::string& controlType) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
   }
 
@@ -1672,7 +1672,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetControllingZoneorThermostatLocation();
   }
 
-  bool AirLoopHVACUnitarySystem::setDehumidificationControlType(std::string dehumidificationControlType) {
+  bool AirLoopHVACUnitarySystem::setDehumidificationControlType(const std::string& dehumidificationControlType) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDehumidificationControlType(dehumidificationControlType);
   }
 
@@ -1757,7 +1757,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
   }
 
-  bool AirLoopHVACUnitarySystem::setLatentLoadControl(std::string latentLoadControl) {
+  bool AirLoopHVACUnitarySystem::setLatentLoadControl(const std::string& latentLoadControl) {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setLatentLoadControl(latentLoadControl);
   }
 

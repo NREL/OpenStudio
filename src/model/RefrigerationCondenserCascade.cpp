@@ -145,7 +145,7 @@ namespace model {
       return result;
     }
 
-    bool RefrigerationCondenserCascade_Impl::setCondensingTemperatureControlType(std::string condensingTemperatureControlType) {
+    bool RefrigerationCondenserCascade_Impl::setCondensingTemperatureControlType(const std::string& condensingTemperatureControlType) {
       bool result = setString(OS_Refrigeration_Condenser_CascadeFields::CondensingTemperatureControlType, condensingTemperatureControlType);
       return result;
     }
@@ -345,7 +345,7 @@ namespace model {
     return getImpl<detail::RefrigerationCondenserCascade_Impl>()->setRatedEffectiveTotalHeatRejectionRate(ratedEffectiveTotalHeatRejectionRate);
   }
 
-  bool RefrigerationCondenserCascade::setCondensingTemperatureControlType(std::string condensingTemperatureControlType) {
+  bool RefrigerationCondenserCascade::setCondensingTemperatureControlType(const std::string& condensingTemperatureControlType) {
     return getImpl<detail::RefrigerationCondenserCascade_Impl>()->setCondensingTemperatureControlType(condensingTemperatureControlType);
   }
 

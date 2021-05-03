@@ -225,7 +225,7 @@ namespace model {
       return isEmpty(OS_AvailabilityManager_NightCycleFields::CyclingRunTime);
     }
 
-    bool AvailabilityManagerNightCycle_Impl::setControlType(std::string controlType) {
+    bool AvailabilityManagerNightCycle_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_AvailabilityManager_NightCycleFields::ControlType, controlType);
       return result;
     }
@@ -274,7 +274,7 @@ namespace model {
       return isEmpty(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType);
     }
 
-    bool AvailabilityManagerNightCycle_Impl::setCyclingRunTimeControlType(std::string cyclingRunTimeControlType) {
+    bool AvailabilityManagerNightCycle_Impl::setCyclingRunTimeControlType(const std::string& cyclingRunTimeControlType) {
       bool result = setString(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType, cyclingRunTimeControlType);
       return result;
     }
@@ -571,7 +571,7 @@ namespace model {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->isCyclingRunTimeDefaulted();
   }
 
-  bool AvailabilityManagerNightCycle::setControlType(std::string controlType) {
+  bool AvailabilityManagerNightCycle::setControlType(const std::string& controlType) {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setControlType(controlType);
   }
 
@@ -679,7 +679,7 @@ namespace model {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->isCyclingRunTimeControlTypeDefaulted();
   }
 
-  bool AvailabilityManagerNightCycle::setCyclingRunTimeControlType(std::string cyclingRunTimeControlType) {
+  bool AvailabilityManagerNightCycle::setCyclingRunTimeControlType(const std::string& cyclingRunTimeControlType) {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCyclingRunTimeControlType(cyclingRunTimeControlType);
   }
 

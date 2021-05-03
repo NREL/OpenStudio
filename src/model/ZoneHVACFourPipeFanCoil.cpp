@@ -348,7 +348,7 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACFourPipeFanCoil_Impl::setCapacityControlMethod(std::string capacityControlMethod) {
+    bool ZoneHVACFourPipeFanCoil_Impl::setCapacityControlMethod(const std::string& capacityControlMethod) {
       bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::CapacityControlMethod, capacityControlMethod);
       return result;
     }
@@ -411,12 +411,12 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
       bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
       return result;
     }
 
-    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+    bool ZoneHVACFourPipeFanCoil_Impl::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
       bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::OutdoorAirMixerName, outdoorAirMixerName);
       OS_ASSERT(result);
       return result;
@@ -964,7 +964,7 @@ namespace model {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool ZoneHVACFourPipeFanCoil::setCapacityControlMethod(std::string capacityControlMethod) {
+  bool ZoneHVACFourPipeFanCoil::setCapacityControlMethod(const std::string& capacityControlMethod) {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setCapacityControlMethod(capacityControlMethod);
   }
 
@@ -1008,11 +1008,11 @@ namespace model {
     getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->resetOutdoorAirSchedule();
   }
 
-  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
   }
 
-  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACFourPipeFanCoil::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
     return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
   }
 

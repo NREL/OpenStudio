@@ -503,7 +503,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationTranscriticalSystem_Impl::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
+    bool RefrigerationTranscriticalSystem_Impl::setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType) {
       bool result = setString(OS_Refrigeration_TranscriticalSystemFields::RefrigerationSystemWorkingFluidType, refrigerationSystemWorkingFluidType);
       return result;
     }
@@ -564,7 +564,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationTranscriticalSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationTranscriticalSystem_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_TranscriticalSystemFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -796,7 +796,7 @@ namespace model {
     getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetSubcoolerEffectiveness();
   }
 
-  bool RefrigerationTranscriticalSystem::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
+  bool RefrigerationTranscriticalSystem::setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType) {
     return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationSystemWorkingFluidType(refrigerationSystemWorkingFluidType);
   }
 
@@ -834,7 +834,7 @@ namespace model {
     getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->resetLowTemperatureSuctionPipingZone();
   }
 
-  bool RefrigerationTranscriticalSystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationTranscriticalSystem::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

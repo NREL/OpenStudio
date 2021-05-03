@@ -122,7 +122,7 @@ namespace model {
 
     void resetRatedTotalHeatRejectionRateCurve();
 
-    bool setGasCoolerFanSpeedControlType(std::string gasCoolerFanSpeedControlType);
+    bool setGasCoolerFanSpeedControlType(const std::string& gasCoolerFanSpeedControlType);
 
     void resetGasCoolerFanSpeedControlType();
 
@@ -154,7 +154,7 @@ namespace model {
 
     // void resetAirInletNode();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 

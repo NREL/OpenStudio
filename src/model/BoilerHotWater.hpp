@@ -118,7 +118,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     bool setNominalCapacity(double nominalCapacity);
 
@@ -158,7 +158,7 @@ namespace model {
 
     void resetWaterOutletUpperTemperatureLimit();
 
-    bool setBoilerFlowMode(std::string boilerFlowMode);
+    bool setBoilerFlowMode(const std::string& boilerFlowMode);
 
     void resetBoilerFlowMode();
 

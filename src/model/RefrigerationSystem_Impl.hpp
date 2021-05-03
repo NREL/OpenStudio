@@ -214,9 +214,9 @@ namespace model {
 
       bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
-      bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+      bool setRefrigerationSystemWorkingFluidType(const std::string& refrigerationSystemWorkingFluidType);
 
-      bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
+      bool setSuctionTemperatureControlType(const std::string& suctionTemperatureControlType);
 
       void resetSuctionTemperatureControlType();
 
@@ -236,11 +236,11 @@ namespace model {
 
       void resetSuctionPipingZone();
 
-      bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
       void resetEndUseSubcategory();
 
-      bool setIntercoolerType(std::string intercoolerType);
+      bool setIntercoolerType(const std::string& intercoolerType);
 
       void resetIntercoolerType();
 

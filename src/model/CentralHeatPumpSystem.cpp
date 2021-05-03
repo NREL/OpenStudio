@@ -307,7 +307,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CentralHeatPumpSystemFields::AncillaryOperationScheduleName);
     }
 
-    bool CentralHeatPumpSystem_Impl::setControlMethod(std::string controlMethod) {
+    bool CentralHeatPumpSystem_Impl::setControlMethod(const std::string& controlMethod) {
       bool result = setString(OS_CentralHeatPumpSystemFields::ControlMethod, controlMethod);
       return result;
     }
@@ -368,7 +368,7 @@ namespace model {
     return getImpl<detail::CentralHeatPumpSystem_Impl>()->ancillaryOperationSchedule();
   }
 
-  bool CentralHeatPumpSystem::setControlMethod(std::string controlMethod) {
+  bool CentralHeatPumpSystem::setControlMethod(const std::string& controlMethod) {
     return getImpl<detail::CentralHeatPumpSystem_Impl>()->setControlMethod(controlMethod);
   }
 

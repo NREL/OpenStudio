@@ -440,7 +440,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setCapacityRatingType(std::string capacityRatingType) {
+    bool RefrigerationAirChiller_Impl::setCapacityRatingType(const std::string& capacityRatingType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::CapacityRatingType, capacityRatingType);
       return result;
     }
@@ -592,7 +592,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setFanSpeedControlType(std::string fanSpeedControlType) {
+    bool RefrigerationAirChiller_Impl::setFanSpeedControlType(const std::string& fanSpeedControlType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::FanSpeedControlType, fanSpeedControlType);
       return result;
     }
@@ -628,7 +628,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setDefrostType(std::string defrostType) {
+    bool RefrigerationAirChiller_Impl::setDefrostType(const std::string& defrostType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::DefrostType, defrostType);
       return result;
     }
@@ -638,7 +638,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setDefrostControlType(std::string defrostControlType) {
+    bool RefrigerationAirChiller_Impl::setDefrostControlType(const std::string& defrostControlType) {
       bool result = setString(OS_Refrigeration_AirChillerFields::DefrostControlType, defrostControlType);
       return result;
     }
@@ -698,7 +698,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationAirChiller_Impl::setVerticalLocation(std::string verticalLocation) {
+    bool RefrigerationAirChiller_Impl::setVerticalLocation(const std::string& verticalLocation) {
       bool result = setString(OS_Refrigeration_AirChillerFields::VerticalLocation, verticalLocation);
       return result;
     }
@@ -1002,7 +1002,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetAvailabilitySchedule();
   }
 
-  bool RefrigerationAirChiller::setCapacityRatingType(std::string capacityRatingType) {
+  bool RefrigerationAirChiller::setCapacityRatingType(const std::string& capacityRatingType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityRatingType(capacityRatingType);
   }
 
@@ -1100,7 +1100,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetHeatingPowerSchedule();
   }
 
-  bool RefrigerationAirChiller::setFanSpeedControlType(std::string fanSpeedControlType) {
+  bool RefrigerationAirChiller::setFanSpeedControlType(const std::string& fanSpeedControlType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setFanSpeedControlType(fanSpeedControlType);
   }
 
@@ -1128,7 +1128,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetMinimumFanAirFlowRatio();
   }
 
-  bool RefrigerationAirChiller::setDefrostType(std::string defrostType) {
+  bool RefrigerationAirChiller::setDefrostType(const std::string& defrostType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostType(defrostType);
   }
 
@@ -1136,7 +1136,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostType();
   }
 
-  bool RefrigerationAirChiller::setDefrostControlType(std::string defrostControlType) {
+  bool RefrigerationAirChiller::setDefrostControlType(const std::string& defrostControlType) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostControlType(defrostControlType);
   }
 

@@ -84,7 +84,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setCalculationMethod(std::string calculationMethod);
+      bool setCalculationMethod(const std::string& calculationMethod);
 
       bool setTemperatureSchedule(Schedule& schedule);
 

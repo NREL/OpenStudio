@@ -111,7 +111,7 @@ namespace model {
 
       std::string performanceInputMethod();
 
-      bool setPerformanceInputMethod(std::string value);
+      bool setPerformanceInputMethod(const std::string& value);
 
       boost::optional<double> ratedCapacity();
 

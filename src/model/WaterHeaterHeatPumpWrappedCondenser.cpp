@@ -318,7 +318,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setInletAirConfiguration(std::string inletAirConfiguration) {
+    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setInletAirConfiguration(const std::string& inletAirConfiguration) {
       bool result = setString(OS_WaterHeater_HeatPump_WrappedCondenserFields::InletAirConfiguration, inletAirConfiguration);
       return result;
     }
@@ -369,7 +369,7 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setCompressorLocation(std::string compressorLocation) {
+    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setCompressorLocation(const std::string& compressorLocation) {
       bool result = setString(OS_WaterHeater_HeatPump_WrappedCondenserFields::CompressorLocation, compressorLocation);
       return result;
     }
@@ -390,7 +390,7 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setFanPlacement(std::string fanPlacement) {
+    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_WaterHeater_HeatPump_WrappedCondenserFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -405,7 +405,7 @@ namespace model {
       return result;
     }
 
-    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
+    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation) {
       bool result = setString(OS_WaterHeater_HeatPump_WrappedCondenserFields::ParasiticHeatRejectionLocation, parasiticHeatRejectionLocation);
       return result;
     }
@@ -421,7 +421,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setTankElementControlLogic(std::string tankElementControlLogic) {
+    bool WaterHeaterHeatPumpWrappedCondenser_Impl::setTankElementControlLogic(const std::string& tankElementControlLogic) {
       bool result = setString(OS_WaterHeater_HeatPump_WrappedCondenserFields::TankElementControlLogic, tankElementControlLogic);
       return result;
     }
@@ -815,7 +815,7 @@ namespace model {
     getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->autocalculateEvaporatorAirFlowRate();
   }
 
-  bool WaterHeaterHeatPumpWrappedCondenser::setInletAirConfiguration(std::string inletAirConfiguration) {
+  bool WaterHeaterHeatPumpWrappedCondenser::setInletAirConfiguration(const std::string& inletAirConfiguration) {
     return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setInletAirConfiguration(inletAirConfiguration);
   }
 
@@ -855,7 +855,7 @@ namespace model {
       maximumInletAirTemperatureforCompressorOperation);
   }
 
-  bool WaterHeaterHeatPumpWrappedCondenser::setCompressorLocation(std::string compressorLocation) {
+  bool WaterHeaterHeatPumpWrappedCondenser::setCompressorLocation(const std::string& compressorLocation) {
     return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setCompressorLocation(compressorLocation);
   }
 
@@ -871,7 +871,7 @@ namespace model {
     return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setFan(fan);
   }
 
-  bool WaterHeaterHeatPumpWrappedCondenser::setFanPlacement(std::string fanPlacement) {
+  bool WaterHeaterHeatPumpWrappedCondenser::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -883,7 +883,7 @@ namespace model {
     return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setOffCycleParasiticElectricLoad(offCycleParasiticElectricLoad);
   }
 
-  bool WaterHeaterHeatPumpWrappedCondenser::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
+  bool WaterHeaterHeatPumpWrappedCondenser::setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation) {
     return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setParasiticHeatRejectionLocation(parasiticHeatRejectionLocation);
   }
 
@@ -895,7 +895,7 @@ namespace model {
     getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->resetInletAirMixerSchedule();
   }
 
-  bool WaterHeaterHeatPumpWrappedCondenser::setTankElementControlLogic(std::string tankElementControlLogic) {
+  bool WaterHeaterHeatPumpWrappedCondenser::setTankElementControlLogic(const std::string& tankElementControlLogic) {
     return getImpl<detail::WaterHeaterHeatPumpWrappedCondenser_Impl>()->setTankElementControlLogic(tankElementControlLogic);
   }
 

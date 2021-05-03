@@ -178,7 +178,7 @@ namespace model {
       bool isIsLeapYearDefaulted() const;
       bool setCalendarYear(int calendarYear);
       void resetCalendarYear();
-      bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+      bool setDayofWeekforStartDay(const std::string& dayofWeekforStartDay);
       void resetDayofWeekforStartDay();
       bool setIsLeapYear(bool isLeapYear);
       void resetIsLeapYear();

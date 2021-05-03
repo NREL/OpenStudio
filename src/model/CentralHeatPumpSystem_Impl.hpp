@@ -107,7 +107,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setControlMethod(std::string controlMethod);
+      bool setControlMethod(const std::string& controlMethod);
 
       bool setAncillaryPower(double ancillaryPower);
 

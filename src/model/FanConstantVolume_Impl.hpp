@@ -115,7 +115,7 @@ namespace model {
       std::string endUseSubcategory() const;
 
       // Set EndUseSubcategory
-      bool setEndUseSubcategory(std::string val);
+      bool setEndUseSubcategory(const std::string& val);
 
       boost::optional<double> maximumFlowRate() const;
 

@@ -288,7 +288,7 @@ namespace model {
       return getString(openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, true).get();
     }
 
-    bool CoilCoolingWater_Impl::setTypeOfAnalysis(std::string value) {
+    bool CoilCoolingWater_Impl::setTypeOfAnalysis(const std::string& value) {
       return setString(openstudio::OS_Coil_Cooling_WaterFields::TypeofAnalysis, value);
       ;
     }
@@ -297,7 +297,7 @@ namespace model {
       return getString(openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, true).get();
     }
 
-    bool CoilCoolingWater_Impl::setHeatExchangerConfiguration(std::string value) {
+    bool CoilCoolingWater_Impl::setHeatExchangerConfiguration(const std::string& value) {
       return setString(openstudio::OS_Coil_Cooling_WaterFields::HeatExchangerConfiguration, value);
       ;
     }
@@ -703,7 +703,7 @@ namespace model {
     return getImpl<detail::CoilCoolingWater_Impl>()->typeOfAnalysis();
   }
 
-  bool CoilCoolingWater::setTypeOfAnalysis(std::string value) {
+  bool CoilCoolingWater::setTypeOfAnalysis(const std::string& value) {
     return getImpl<detail::CoilCoolingWater_Impl>()->setTypeOfAnalysis(value);
   }
 
@@ -711,7 +711,7 @@ namespace model {
     return getImpl<detail::CoilCoolingWater_Impl>()->heatExchangerConfiguration();
   }
 
-  bool CoilCoolingWater::setHeatExchangerConfiguration(std::string value) {
+  bool CoilCoolingWater::setHeatExchangerConfiguration(const std::string& value) {
     return getImpl<detail::CoilCoolingWater_Impl>()->setHeatExchangerConfiguration(value);
   }
 

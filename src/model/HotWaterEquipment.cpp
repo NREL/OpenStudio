@@ -190,7 +190,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool HotWaterEquipment_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -354,7 +354,7 @@ namespace model {
     getImpl<detail::HotWaterEquipment_Impl>()->resetMultiplier();
   }
 
-  bool HotWaterEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool HotWaterEquipment::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::HotWaterEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

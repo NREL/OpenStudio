@@ -299,7 +299,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Site_Impl::setTerrain(std::string terrain) {
+    bool Site_Impl::setTerrain(const std::string& terrain) {
       bool result = setString(OS_SiteFields::Terrain, terrain);
       return result;
     }
@@ -479,7 +479,7 @@ namespace model {
     getImpl<detail::Site_Impl>()->resetElevation();
   }
 
-  bool Site::setTerrain(std::string terrain) {
+  bool Site::setTerrain(const std::string& terrain) {
     return getImpl<detail::Site_Impl>()->setTerrain(terrain);
   }
 

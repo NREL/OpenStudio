@@ -77,7 +77,7 @@ namespace model {
 
       std::string loadDistributionScheme() const;
 
-      bool setLoadDistributionScheme(std::string scheme);
+      bool setLoadDistributionScheme(const std::string& scheme);
 
       ThermalZone thermalZone() const;
 

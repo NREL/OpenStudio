@@ -99,7 +99,7 @@ namespace model {
 
       bool setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate);
 
-      bool setCondensingTemperatureControlType(std::string condensingTemperatureControlType);
+      bool setCondensingTemperatureControlType(const std::string& condensingTemperatureControlType);
 
       void resetCondensingTemperatureControlType();
 

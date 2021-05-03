@@ -294,7 +294,7 @@ namespace model {
 
       void resetCaseOperatingTemperature();
 
-      bool setLatentCaseCreditCurveType(std::string latentCaseCreditCurveType);
+      bool setLatentCaseCreditCurveType(const std::string& latentCaseCreditCurveType);
 
       void resetLatentCaseCreditCurveType();
 
@@ -332,7 +332,7 @@ namespace model {
 
       void resetMinimumAntiSweatHeaterPowerperUnitLength();
 
-      bool setAntiSweatHeaterControlType(std::string antiSweatHeaterControlType);
+      bool setAntiSweatHeaterControlType(const std::string& antiSweatHeaterControlType);
 
       void resetAntiSweatHeaterControlType();
 
@@ -352,7 +352,7 @@ namespace model {
 
       void resetCaseDefrostPowerperUnitLength();
 
-      bool setCaseDefrostType(std::string caseDefrostType);
+      bool setCaseDefrostType(const std::string& caseDefrostType);
 
       void resetCaseDefrostType();
 
@@ -364,7 +364,7 @@ namespace model {
 
       void resetCaseDefrostDripDownSchedule();
 
-      bool setDefrostEnergyCorrectionCurveType(std::string defrostEnergyCorrectionCurveType);
+      bool setDefrostEnergyCorrectionCurveType(const std::string& defrostEnergyCorrectionCurveType);
 
       void resetDefrostEnergyCorrectionCurveType();
 
@@ -428,7 +428,7 @@ namespace model {
 
       void resetCaseDefrostPowerperDoor();
 
-      bool setUnitType(std::string unitType);
+      bool setUnitType(const std::string& unitType);
 
       void resetUnitType();
 

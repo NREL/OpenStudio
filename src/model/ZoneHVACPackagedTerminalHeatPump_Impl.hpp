@@ -169,9 +169,9 @@ namespace model {
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
+      bool setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType);
 
-      bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
+      bool setOutdoorAirMixerName(const std::string& outdoorAirMixerName);
 
       bool setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation);
 
@@ -229,7 +229,7 @@ namespace model {
 
       void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-      bool setFanPlacement(std::string fanPlacement);
+      bool setFanPlacement(const std::string& fanPlacement);
 
       void resetFanPlacement();
 

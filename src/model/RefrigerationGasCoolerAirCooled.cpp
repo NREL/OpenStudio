@@ -239,7 +239,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerFanSpeedControlType(std::string gasCoolerFanSpeedControlType) {
+    bool RefrigerationGasCoolerAirCooled_Impl::setGasCoolerFanSpeedControlType(const std::string& gasCoolerFanSpeedControlType) {
       bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::GasCoolerFanSpeedControlType, gasCoolerFanSpeedControlType);
       return result;
     }
@@ -330,7 +330,7 @@ namespace model {
     //   OS_ASSERT(result);
     // }
 
-    bool RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationGasCoolerAirCooled_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_GasCooler_AirCooledFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -511,7 +511,7 @@ namespace model {
     getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetRatedTotalHeatRejectionRateCurve();
   }
 
-  bool RefrigerationGasCoolerAirCooled::setGasCoolerFanSpeedControlType(std::string gasCoolerFanSpeedControlType) {
+  bool RefrigerationGasCoolerAirCooled::setGasCoolerFanSpeedControlType(const std::string& gasCoolerFanSpeedControlType) {
     return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setGasCoolerFanSpeedControlType(gasCoolerFanSpeedControlType);
   }
 
@@ -575,7 +575,7 @@ namespace model {
   //   getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->resetAirInletNode();
   // }
 
-  bool RefrigerationGasCoolerAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationGasCoolerAirCooled::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

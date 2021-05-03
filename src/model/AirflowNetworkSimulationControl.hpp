@@ -181,22 +181,22 @@ namespace model {
     //@{
 
     /** Sets the airflow network control type. */
-    bool setAirflowNetworkControl(std::string airflowNetworkControl);
+    bool setAirflowNetworkControl(const std::string& airflowNetworkControl);
     /** Resets the airflow network control type. */
     void resetAirflowNetworkControl();
 
     /** Sets the wind pressure coefficient type. */
-    bool setWindPressureCoefficientType(std::string type);
+    bool setWindPressureCoefficientType(const std::string& type);
     /** Resets the wind pressure coefficient type. */
     void resetWindPressureCoefficientType();
 
     /** Sets the height selection procedure. */
-    bool setHeightSelectionforLocalWindPressureCalculation(std::string height);
+    bool setHeightSelectionforLocalWindPressureCalculation(const std::string& height);
     /** Resets the height selection procedure. */
     void resetHeightSelectionforLocalWindPressureCalculation();
 
     /** Sets the building type. */
-    bool setBuildingType(std::string type);
+    bool setBuildingType(const std::string& type);
     /** Resets the building type. */
     void resetBuildingType();
 
@@ -206,7 +206,7 @@ namespace model {
     void resetMaximumNumberofIterations();
 
     /** Sets the initialization type. */
-    bool setInitializationType(std::string type);
+    bool setInitializationType(const std::string& type);
     /** Resets the initialization type. */
     void resetInitializationType();
 

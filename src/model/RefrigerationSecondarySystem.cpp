@@ -459,7 +459,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSecondarySystem_Impl::setCirculatingFluidName(std::string circulatingFluidName) {
+    bool RefrigerationSecondarySystem_Impl::setCirculatingFluidName(const std::string& circulatingFluidName) {
       bool result = setString(OS_Refrigeration_SecondarySystemFields::CirculatingFluidName, circulatingFluidName);
       return result;
     }
@@ -611,7 +611,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSecondarySystem_Impl::setPumpDriveType(std::string pumpDriveType) {
+    bool RefrigerationSecondarySystem_Impl::setPumpDriveType(const std::string& pumpDriveType) {
       bool result = setString(OS_Refrigeration_SecondarySystemFields::PumpDriveType, pumpDriveType);
       return result;
     }
@@ -712,7 +712,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationSecondarySystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationSecondarySystem_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_SecondarySystemFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -957,7 +957,7 @@ namespace model {
     getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetRefrigeratedCaseAndWalkInList();
   }
 
-  bool RefrigerationSecondarySystem::setCirculatingFluidName(std::string circulatingFluidName) {
+  bool RefrigerationSecondarySystem::setCirculatingFluidName(const std::string& circulatingFluidName) {
     return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setCirculatingFluidName(circulatingFluidName);
   }
 
@@ -1041,7 +1041,7 @@ namespace model {
     getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetPhaseChangeCirculatingRate();
   }
 
-  bool RefrigerationSecondarySystem::setPumpDriveType(std::string pumpDriveType) {
+  bool RefrigerationSecondarySystem::setPumpDriveType(const std::string& pumpDriveType) {
     return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setPumpDriveType(pumpDriveType);
   }
 
@@ -1105,7 +1105,7 @@ namespace model {
     getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEvaporatorRefrigerantInventory();
   }
 
-  bool RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSecondarySystem::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationSecondarySystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

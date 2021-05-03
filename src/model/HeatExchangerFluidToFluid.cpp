@@ -253,7 +253,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool HeatExchangerFluidToFluid_Impl::setHeatExchangeModelType(std::string heatExchangeModelType) {
+    bool HeatExchangerFluidToFluid_Impl::setHeatExchangeModelType(const std::string& heatExchangeModelType) {
       bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType, heatExchangeModelType);
       return result;
     }
@@ -276,7 +276,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool HeatExchangerFluidToFluid_Impl::setControlType(std::string controlType) {
+    bool HeatExchangerFluidToFluid_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_HeatExchanger_FluidToFluidFields::ControlType, controlType);
       return result;
     }
@@ -298,7 +298,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool HeatExchangerFluidToFluid_Impl::setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType) {
+    bool HeatExchangerFluidToFluid_Impl::setHeatTransferMeteringEndUseType(const std::string& heatTransferMeteringEndUseType) {
       bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType, heatTransferMeteringEndUseType);
       return result;
     }
@@ -605,7 +605,7 @@ namespace model {
     getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeLoopSupplySideDesignFlowRate();
   }
 
-  bool HeatExchangerFluidToFluid::setHeatExchangeModelType(std::string heatExchangeModelType) {
+  bool HeatExchangerFluidToFluid::setHeatExchangeModelType(const std::string& heatExchangeModelType) {
     return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatExchangeModelType(heatExchangeModelType);
   }
 
@@ -621,7 +621,7 @@ namespace model {
     getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeHeatExchangerUFactorTimesAreaValue();
   }
 
-  bool HeatExchangerFluidToFluid::setControlType(std::string controlType) {
+  bool HeatExchangerFluidToFluid::setControlType(const std::string& controlType) {
     return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setControlType(controlType);
   }
 
@@ -638,7 +638,7 @@ namespace model {
     getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetMinimumTemperatureDifferencetoActivateHeatExchanger();
   }
 
-  bool HeatExchangerFluidToFluid::setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType) {
+  bool HeatExchangerFluidToFluid::setHeatTransferMeteringEndUseType(const std::string& heatTransferMeteringEndUseType) {
     return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatTransferMeteringEndUseType(heatTransferMeteringEndUseType);
   }
 

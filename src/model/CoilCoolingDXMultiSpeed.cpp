@@ -195,7 +195,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::setCondenserType(std::string condenserType) {
+    bool CoilCoolingDXMultiSpeed_Impl::setCondenserType(const std::string& condenserType) {
       bool result = setString(OS_Coil_Cooling_DX_MultiSpeedFields::CondenserType, condenserType);
       return result;
     }
@@ -256,7 +256,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::setFuelType(std::string fuelType) {
+    bool CoilCoolingDXMultiSpeed_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Coil_Cooling_DX_MultiSpeedFields::FuelType, fuelType);
       return result;
     }
@@ -560,7 +560,7 @@ namespace model {
     getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->resetAvailabilitySchedule();
   }
 
-  bool CoilCoolingDXMultiSpeed::setCondenserType(std::string condenserType) {
+  bool CoilCoolingDXMultiSpeed::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setCondenserType(condenserType);
   }
 
@@ -602,7 +602,7 @@ namespace model {
     getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool CoilCoolingDXMultiSpeed::setFuelType(std::string fuelType) {
+  bool CoilCoolingDXMultiSpeed::setFuelType(const std::string& fuelType) {
     return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setFuelType(fuelType);
   }
 

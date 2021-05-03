@@ -98,7 +98,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setAlgorithm(std::string algorithm);
+      bool setAlgorithm(const std::string& algorithm);
 
       void resetAlgorithm();
 

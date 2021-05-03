@@ -83,7 +83,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setCIESkyModel(std::string cIESkyModel);
+      bool setCIESkyModel(const std::string& cIESkyModel);
 
       bool setSnowIndicator(int snowIndicator);
 

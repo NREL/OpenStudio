@@ -114,7 +114,7 @@ namespace model {
 
     void resetCoolingLowControlTemperatureSchedule();
 
-    bool setCondensationControlType(std::string condensationControlType);
+    bool setCondensationControlType(const std::string& condensationControlType);
 
     void resetCondensationControlType();
 

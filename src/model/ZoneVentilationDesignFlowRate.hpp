@@ -135,7 +135,7 @@ namespace model {
 
     bool setAirChangesperHour(double airChangesperHour);
 
-    bool setVentilationType(std::string ventilationType);
+    bool setVentilationType(const std::string& ventilationType);
 
     bool setFanPressureRise(double fanPressureRise);
 

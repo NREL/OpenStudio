@@ -242,7 +242,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACUnitHeater_Impl::setFanControlType(std::string fanControlType) {
+    bool ZoneHVACUnitHeater_Impl::setFanControlType(const std::string& fanControlType) {
       bool result = setString(OS_ZoneHVAC_UnitHeaterFields::FanControlType, fanControlType);
       return result;
     }
@@ -497,7 +497,7 @@ namespace model {
     getImpl<detail::ZoneHVACUnitHeater_Impl>()->autosizeMaximumSupplyAirFlowRate();
   }
 
-  bool ZoneHVACUnitHeater::setFanControlType(std::string fanControlType) {
+  bool ZoneHVACUnitHeater::setFanControlType(const std::string& fanControlType) {
     return getImpl<detail::ZoneHVACUnitHeater_Impl>()->setFanControlType(fanControlType);
   }
 

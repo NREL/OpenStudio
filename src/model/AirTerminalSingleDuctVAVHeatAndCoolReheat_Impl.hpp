@@ -122,7 +122,7 @@ namespace model {
 
       bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
-      bool setAirOutlet(std::string airOutlet);
+      bool setAirOutlet(const std::string& airOutlet);
 
       bool setConvergenceTolerance(double convergenceTolerance);
 

@@ -149,7 +149,7 @@ namespace model {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setCapacityControlMethod(std::string capacityControlMethod);
+    bool setCapacityControlMethod(const std::string& capacityControlMethod);
 
     bool setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
 
@@ -171,9 +171,9 @@ namespace model {
 
     void resetOutdoorAirSchedule();
 
-    bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
+    bool setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType);
 
-    bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
+    bool setOutdoorAirMixerName(const std::string& outdoorAirMixerName);
 
     bool setSupplyAirFan(HVACComponent& fan);
 

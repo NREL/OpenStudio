@@ -150,7 +150,7 @@ namespace model {
 
     bool setNumberofGasesinMixture(int numberofGasesinMixture);
 
-    bool setGas1Type(std::string gas1Type);
+    bool setGas1Type(const std::string& gas1Type);
 
     void resetGas1Type();
 
@@ -158,7 +158,7 @@ namespace model {
 
     void resetGas1Fraction();
 
-    bool setGas2Type(std::string gas2Type);
+    bool setGas2Type(const std::string& gas2Type);
 
     void resetGas2Type();
 

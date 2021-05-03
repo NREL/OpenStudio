@@ -652,7 +652,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationWalkIn_Impl::setDefrostType(std::string defrostType) {
+    bool RefrigerationWalkIn_Impl::setDefrostType(const std::string& defrostType) {
       bool result = setString(OS_Refrigeration_WalkInFields::DefrostType, defrostType);
       return result;
     }
@@ -662,7 +662,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationWalkIn_Impl::setDefrostControlType(std::string defrostControlType) {
+    bool RefrigerationWalkIn_Impl::setDefrostControlType(const std::string& defrostControlType) {
       bool result = setString(OS_Refrigeration_WalkInFields::DefrostControlType, defrostControlType);
       return result;
     }
@@ -1293,7 +1293,7 @@ namespace model {
     getImpl<detail::RefrigerationWalkIn_Impl>()->resetLightingSchedule();
   }
 
-  bool RefrigerationWalkIn::setDefrostType(std::string defrostType) {
+  bool RefrigerationWalkIn::setDefrostType(const std::string& defrostType) {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrostType(defrostType);
   }
 
@@ -1301,7 +1301,7 @@ namespace model {
     getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrostType();
   }
 
-  bool RefrigerationWalkIn::setDefrostControlType(std::string defrostControlType) {
+  bool RefrigerationWalkIn::setDefrostControlType(const std::string& defrostControlType) {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrostControlType(defrostControlType);
   }
 

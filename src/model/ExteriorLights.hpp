@@ -102,7 +102,7 @@ namespace model {
 
     void resetSchedule();
 
-    bool setControlOption(std::string controlOption);
+    bool setControlOption(const std::string& controlOption);
 
     void resetControlOption();
 
@@ -110,7 +110,7 @@ namespace model {
 
     void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 

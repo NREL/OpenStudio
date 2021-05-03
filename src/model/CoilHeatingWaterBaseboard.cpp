@@ -177,7 +177,7 @@ namespace model {
       return isEmpty(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance);
     }
 
-    bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+    bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
       bool result = setString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
       return result;
     }
@@ -403,7 +403,7 @@ namespace model {
     return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isConvergenceToleranceDefaulted();
   }
 
-  bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+  bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
     return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
   }
 

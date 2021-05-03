@@ -370,7 +370,7 @@ namespace model {
 
       void resetZoneforMasterThermostatLocation();
 
-      bool setMasterThermostatPriorityControlType(std::string masterThermostatPriorityControlType);
+      bool setMasterThermostatPriorityControlType(const std::string& masterThermostatPriorityControlType);
 
       bool setThermostatPrioritySchedule(Schedule& schedule);
 
@@ -406,9 +406,9 @@ namespace model {
 
       bool setMaximumOutdoorDrybulbTemperatureforCrankcaseHeater(double maximumOutdoorDrybulbTemperatureforCrankcaseHeater);
 
-      bool setDefrostStrategy(std::string defrostStrategy);
+      bool setDefrostStrategy(const std::string& defrostStrategy);
 
-      bool setDefrostControl(std::string defrostControl);
+      bool setDefrostControl(const std::string& defrostControl);
 
       bool setDefrostEnergyInputRatioModifierFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
 
@@ -444,7 +444,7 @@ namespace model {
 
       void resetBasinHeaterOperatingSchedule();
 
-      bool setFuelType(std::string fuelType);
+      bool setFuelType(const std::string& fuelType);
 
       bool setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode);
 

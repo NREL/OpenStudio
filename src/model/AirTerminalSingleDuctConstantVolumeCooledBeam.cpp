@@ -374,7 +374,7 @@ namespace model {
       return result;
     }
 
-    bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCooledBeamType(std::string cooledBeamType) {
+    bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCooledBeamType(const std::string& cooledBeamType) {
       bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CooledBeamType, cooledBeamType);
       return result;
     }
@@ -728,7 +728,7 @@ namespace model {
     return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCooledBeamType(std::string cooledBeamType) {
+  bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCooledBeamType(const std::string& cooledBeamType) {
     return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setCooledBeamType(cooledBeamType);
   }
 
