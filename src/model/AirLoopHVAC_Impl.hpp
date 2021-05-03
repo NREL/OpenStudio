@@ -204,7 +204,7 @@ namespace model {
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setNightCycleControlType(std::string const& nightCycle);
+      bool setNightCycleControlType(const std::string& nightCycle);
 
       std::string nightCycleControlType() const;
 

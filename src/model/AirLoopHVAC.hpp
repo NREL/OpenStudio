@@ -289,7 +289,7 @@ namespace model {
     /** Configure the system to night cycle
     * This is a convenience for creating and attaching a new AvailabilityManagerNightCycle.
     * Valid options are StayOff, CycleOnAny, and CycleOnAnyZoneFansOnly **/
-    bool setNightCycleControlType(std::string const& controlType);
+    bool setNightCycleControlType(const std::string& controlType);
 
     /** Returns a string indicating if the system is configured to night cycle
     * If there is no AvailabilityManagerNightCycle this method will return StayOff **/
