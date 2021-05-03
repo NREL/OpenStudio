@@ -967,7 +967,7 @@ namespace model {
     }
 
     bool AirConditionerVariableRefrigerantFlow_Impl::setHeatingPerformanceCurveOutdoorTemperatureType(
-      std::string heatingPerformanceCurveOutdoorTemperatureType) {
+      const std::string& heatingPerformanceCurveOutdoorTemperatureType) {
       bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::HeatingPerformanceCurveOutdoorTemperatureType,
                               heatingPerformanceCurveOutdoorTemperatureType);
       return result;
@@ -2880,7 +2880,7 @@ namespace model {
   }
 
   bool AirConditionerVariableRefrigerantFlow::setHeatingPerformanceCurveOutdoorTemperatureType(
-    std::string heatingPerformanceCurveOutdoorTemperatureType) {
+    const std::string& heatingPerformanceCurveOutdoorTemperatureType) {
     return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setHeatingPerformanceCurveOutdoorTemperatureType(
       heatingPerformanceCurveOutdoorTemperatureType);
   }

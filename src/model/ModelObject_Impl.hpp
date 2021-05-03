@@ -188,7 +188,7 @@ namespace model {
       //@}
 
       /** Gets the autosized component value from the sql file **/
-      boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
+      boost::optional<double> getAutosizedValue(const std::string& valueName, const std::string& unitString) const;
 
      protected:
       ModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);

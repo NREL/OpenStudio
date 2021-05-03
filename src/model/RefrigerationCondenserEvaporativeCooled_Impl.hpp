@@ -200,7 +200,7 @@ namespace model {
 
       void resetMaximumCapacityFactor();
 
-      //bool setAirInletNode(std::string airInletNode);
+      //bool setAirInletNode(const std::string& airInletNode);
 
       //void resetAirInletNode();
 

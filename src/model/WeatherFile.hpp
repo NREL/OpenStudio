@@ -136,13 +136,13 @@ namespace model {
 
     //bool setUrl(boost::optional<std::string> url);
 
-    //bool setUrl(std::string url);
+    //bool setUrl(const std::string& url);
 
     //void resetUrl();
 
     //bool setChecksum(boost::optional<std::string> checksum);
 
-    //bool setChecksum(std::string checksum);
+    //bool setChecksum(const std::string& checksum);
 
     //void resetChecksum();
 

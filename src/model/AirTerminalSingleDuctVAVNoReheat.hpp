@@ -102,7 +102,7 @@ namespace model {
 
     void autosizeMaximumAirFlowRate();
 
-    bool setZoneMinimumAirFlowInputMethod(std::string zoneMinimumAirFlowInputMethod);
+    bool setZoneMinimumAirFlowInputMethod(const std::string& zoneMinimumAirFlowInputMethod);
 
     void resetZoneMinimumAirFlowInputMethod();
 

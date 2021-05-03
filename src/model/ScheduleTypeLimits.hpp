@@ -65,6 +65,7 @@ namespace model {
 
     static std::vector<std::string> unitTypeValues();
 
+    // std::string by val on purpose (boost::to_lower)
     static boost::optional<Unit> units(std::string unitType, bool returnIP = false);
 
     /** @name Getters */

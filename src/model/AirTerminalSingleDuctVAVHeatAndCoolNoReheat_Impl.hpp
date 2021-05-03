@@ -99,8 +99,8 @@ namespace model {
 
       void resetAvailabilitySchedule();
 
-      // bool setAirOutlet(std::string airOutlet);
-      // bool setAirInlet(std::string airInlet);
+      // bool setAirOutlet(const std::string& airOutlet);
+      // bool setAirInlet(const std::string& airInlet);
 
       bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
 

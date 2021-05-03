@@ -379,21 +379,21 @@ namespace model {
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setEvaporatorFanPowerIncludedinRatedCOP(
-      std::string evaporatorFanPowerIncludedinRatedCOP) {
+      const std::string& evaporatorFanPowerIncludedinRatedCOP) {
       bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorFanPowerIncludedinRatedCOP,
                               evaporatorFanPowerIncludedinRatedCOP);
       return result;
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setCondenserPumpPowerIncludedinRatedCOP(
-      std::string condenserPumpPowerIncludedinRatedCOP) {
+      const std::string& condenserPumpPowerIncludedinRatedCOP) {
       bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserPumpPowerIncludedinRatedCOP,
                               condenserPumpPowerIncludedinRatedCOP);
       return result;
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(
-      std::string condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP) {
+      const std::string& condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP) {
       bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP,
                               condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
       return result;
@@ -418,7 +418,7 @@ namespace model {
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setEvaporatorAirTemperatureTypeforCurveObjects(
-      std::string evaporatorAirTemperatureTypeforCurveObjects) {
+      const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
       bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirTemperatureTypeforCurveObjects,
                               evaporatorAirTemperatureTypeforCurveObjects);
       return result;
@@ -671,18 +671,20 @@ namespace model {
     getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->autocalculateRatedCondenserWaterFlowRate();
   }
 
-  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setEvaporatorFanPowerIncludedinRatedCOP(std::string evaporatorFanPowerIncludedinRatedCOP) {
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setEvaporatorFanPowerIncludedinRatedCOP(
+    const std::string& evaporatorFanPowerIncludedinRatedCOP) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setEvaporatorFanPowerIncludedinRatedCOP(
       evaporatorFanPowerIncludedinRatedCOP);
   }
 
-  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setCondenserPumpPowerIncludedinRatedCOP(std::string condenserPumpPowerIncludedinRatedCOP) {
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setCondenserPumpPowerIncludedinRatedCOP(
+    const std::string& condenserPumpPowerIncludedinRatedCOP) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setCondenserPumpPowerIncludedinRatedCOP(
       condenserPumpPowerIncludedinRatedCOP);
   }
 
   bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(
-    std::string condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP) {
+    const std::string& condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(
       condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
   }
@@ -703,7 +705,7 @@ namespace model {
   }
 
   bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setEvaporatorAirTemperatureTypeforCurveObjects(
-    std::string evaporatorAirTemperatureTypeforCurveObjects) {
+    const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setEvaporatorAirTemperatureTypeforCurveObjects(
       evaporatorAirTemperatureTypeforCurveObjects);
   }

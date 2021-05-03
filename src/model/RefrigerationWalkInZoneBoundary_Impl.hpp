@@ -158,7 +158,7 @@ namespace model {
 
       void resetStockingDoorOpeningScheduleFacingZone();
 
-      bool setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone);
+      bool setStockingDoorOpeningProtectionTypeFacingZone(const std::string& stockingDoorOpeningProtectionTypeFacingZone);
 
       void resetStockingDoorOpeningProtectionTypeFacingZone();
 

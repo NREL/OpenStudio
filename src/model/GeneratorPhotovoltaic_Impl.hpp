@@ -36,10 +36,11 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class AllShadingAndHTSurfName;
   class PVModules;
   class Schedule;
+  class PlanarSurface;
+  class PhotovoltaicPerformance;
 
   namespace detail {
 

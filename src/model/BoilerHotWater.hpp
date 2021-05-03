@@ -128,7 +128,7 @@ namespace model {
 
     bool setNominalThermalEfficiency(double nominalThermalEfficiency);
 
-    bool setEfficiencyCurveTemperatureEvaluationVariable(std::string efficiencyCurveTemperatureEvaluationVariable);
+    bool setEfficiencyCurveTemperatureEvaluationVariable(const std::string& efficiencyCurveTemperatureEvaluationVariable);
 
     void resetEfficiencyCurveTemperatureEvaluationVariable();
 

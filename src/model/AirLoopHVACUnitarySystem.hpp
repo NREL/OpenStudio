@@ -253,7 +253,7 @@ namespace model {
 
     void resetSupplyFan();
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     void resetFanPlacement();
 
@@ -293,7 +293,7 @@ namespace model {
 
     void resetSupplementalHeatingCoil();
 
-    bool setSupplyAirFlowRateMethodDuringCoolingOperation(std::string supplyAirFlowRateMethodDuringCoolingOperation);
+    bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
 
     void resetSupplyAirFlowRateMethodDuringCoolingOperation();
 
@@ -315,7 +315,7 @@ namespace model {
 
     void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
 
-    bool setSupplyAirFlowRateMethodDuringHeatingOperation(std::string supplyAirFlowRateMethodDuringHeatingOperation);
+    bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
 
     void resetSupplyAirFlowRateMethodDuringHeatingOperation();
 
@@ -337,7 +337,7 @@ namespace model {
 
     void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
 
-    bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(std::string supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
+    bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
 
     void resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
 
@@ -381,7 +381,7 @@ namespace model {
 
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-    bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
+    bool setOutdoorDryBulbTemperatureSensorNodeName(const std::string& outdoorDryBulbTemperatureSensorNodeName);
 
     void resetOutdoorDryBulbTemperatureSensorNodeName();
 

@@ -162,7 +162,7 @@ namespace model {
 
     void resetComponentOverrideLoopDemandSideInletNode();
 
-    bool setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode);
+    bool setComponentOverrideCoolingControlTemperatureMode(const std::string& componentOverrideCoolingControlTemperatureMode);
 
     void resetComponentOverrideCoolingControlTemperatureMode();
 

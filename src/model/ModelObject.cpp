@@ -226,7 +226,7 @@ namespace model {
     }
 
     /** Gets the autosized component value from the sql file **/
-    boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) const {
+    boost::optional<double> ModelObject_Impl::getAutosizedValue(const std::string& valueName, const std::string& unitString) const {
       boost::optional<double> result;
 
       // Get the object name
@@ -329,10 +329,10 @@ namespace model {
 
       // Query each row of the Intialization Summary -> Component Sizing table
       // that contains this component to get the desired value.
-      std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
-      if (units == "") {
+      std::string valueNameAndUnits = valueName + std::string(" [") + unitString + std::string("]");
+      if (unitString == "") {
         valueNameAndUnits = valueName;
-      } else if (units == "typo_in_energyplus") {
+      } else if (unitString == "typo_in_energyplus") {
         valueNameAndUnits = valueName + std::string(" []");
       }
 
@@ -869,7 +869,7 @@ namespace model {
   ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p) : WorkspaceObject(std::move(p)) {}
 
   /** Gets the autosized component value from the sql file **/
-  boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const {
+  boost::optional<double> ModelObject::getAutosizedValue(const std::string& valueName, std::string units) const {
     return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
   }
 

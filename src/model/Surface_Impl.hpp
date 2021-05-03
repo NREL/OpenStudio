@@ -49,6 +49,7 @@ namespace model {
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertyConfectionCoefficients;
+  class SurfacePropertyExposedFoundationPerimeter;
   class FoundationKiva;
 
   namespace detail {
@@ -276,7 +277,7 @@ namespace model {
 
       // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
       boost::optional<SurfacePropertyExposedFoundationPerimeter>
-        createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
+        createSurfacePropertyExposedFoundationPerimeter(const std::string& exposedPerimeterCalculationMethod, double exposedPerimeter);
 
       // returns the surface property exposed foundation perimeter if set
       boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;

@@ -901,7 +901,7 @@ namespace model {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->sizingFactor();
   }
 
-  bool CoolingTowerVariableSpeed::setModelType(std::string modelType) {
+  bool CoolingTowerVariableSpeed::setModelType(const std::string& modelType) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setModelType(modelType);
   }
 
@@ -1014,7 +1014,7 @@ namespace model {
     getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool CoolingTowerVariableSpeed::setEvaporationLossMode(std::string evaporationLossMode) {
+  bool CoolingTowerVariableSpeed::setEvaporationLossMode(const std::string& evaporationLossMode) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
   }
 
@@ -1038,7 +1038,7 @@ namespace model {
     getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetDriftLossPercent();
   }
 
-  bool CoolingTowerVariableSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+  bool CoolingTowerVariableSpeed::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setBlowdownCalculationMode(blowdownCalculationMode);
   }
 
@@ -1070,7 +1070,7 @@ namespace model {
     getImpl<detail::CoolingTowerVariableSpeed_Impl>()->resetNumberofCells();
   }
 
-  bool CoolingTowerVariableSpeed::setCellControl(std::string cellControl) {
+  bool CoolingTowerVariableSpeed::setCellControl(const std::string& cellControl) {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->setCellControl(cellControl);
   }
 

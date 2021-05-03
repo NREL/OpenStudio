@@ -539,7 +539,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
+    // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType) {
     //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType, capacityCorrectionCurveType);
     //   return result;
     // }
@@ -1064,7 +1064,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetRefrigerantCorrectionFactor();
   }
 
-  // bool RefrigerationAirChiller::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
+  // bool RefrigerationAirChiller::setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType) {
   //   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityCorrectionCurveType(capacityCorrectionCurveType);
   // }
 
@@ -1172,7 +1172,7 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetTemperatureTerminationDefrostFractiontoIce();
   }
 
-  // bool RefrigerationAirChiller::setVerticalLocation(std::string verticalLocation) {
+  // bool RefrigerationAirChiller::setVerticalLocation(const std::string& verticalLocation) {
   //   return getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation(verticalLocation);
   // }
 

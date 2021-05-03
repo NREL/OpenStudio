@@ -205,7 +205,7 @@ namespace model {
 
     void resetRefrigerantCorrectionFactor();
 
-    // bool setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType);
+    // bool setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType);
 
     // void resetCapacityCorrectionCurveType();
 
@@ -259,7 +259,7 @@ namespace model {
 
     void resetTemperatureTerminationDefrostFractiontoIce();
 
-    // bool setVerticalLocation(std::string verticalLocation);
+    // bool setVerticalLocation(const std::string& verticalLocation);
 
     // void resetVerticalLocation();
 

@@ -343,7 +343,7 @@ namespace model {
   //  return getImpl<detail::GeneratorPhotovoltaic_Impl>()->setModulePerformance(pVModules);
   //}
 
-  bool GeneratorPhotovoltaic::setHeatTransferIntegrationMode(std::string heatTransferIntegrationMode) {
+  bool GeneratorPhotovoltaic::setHeatTransferIntegrationMode(const std::string& heatTransferIntegrationMode) {
     return getImpl<detail::GeneratorPhotovoltaic_Impl>()->setHeatTransferIntegrationMode(heatTransferIntegrationMode);
   }
 

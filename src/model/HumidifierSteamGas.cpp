@@ -479,7 +479,7 @@ namespace model {
   //   getImpl<detail::HumidifierSteamGas_Impl>()->resetWaterStorageTank();
   // }
 
-  bool HumidifierSteamGas::setInletWaterTemperatureOption(std::string inletWaterTemperatureOption) {
+  bool HumidifierSteamGas::setInletWaterTemperatureOption(const std::string& inletWaterTemperatureOption) {
     return getImpl<detail::HumidifierSteamGas_Impl>()->setInletWaterTemperatureOption(inletWaterTemperatureOption);
   }
 

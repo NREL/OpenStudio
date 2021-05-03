@@ -816,7 +816,7 @@ namespace model {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignSprayWaterFlowRate(designSprayWaterFlowRate);
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
+  bool EvaporativeFluidCoolerSingleSpeed::setPerformanceInputMethod(const std::string& performanceInputMethod) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
   }
 

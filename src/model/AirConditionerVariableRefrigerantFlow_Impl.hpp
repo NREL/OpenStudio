@@ -346,7 +346,7 @@ namespace model {
 
       void resetHeatingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
 
-      bool setHeatingPerformanceCurveOutdoorTemperatureType(std::string heatingPerformanceCurveOutdoorTemperatureType);
+      bool setHeatingPerformanceCurveOutdoorTemperatureType(const std::string& heatingPerformanceCurveOutdoorTemperatureType);
 
       bool setHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(const boost::optional<Curve>& curve);
 

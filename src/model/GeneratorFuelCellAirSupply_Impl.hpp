@@ -73,7 +73,7 @@ namespace model {
 
       //extensible fields.
       bool addConstituent(const AirSupplyConstituent& constituent);
-      bool addConstituent(std::string name, double molarFraction);
+      bool addConstituent(const std::string& name, double molarFraction);
 
       bool removeConstituent(unsigned groupIndex);
 

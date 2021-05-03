@@ -130,7 +130,7 @@ namespace model {
 
       void resetEndUseSubcategory();
 
-      // bool setModeofOperation(std::string modeofOperation);
+      // bool setModeofOperation(const std::string& modeofOperation);
 
       // void resetModeofOperation();
 

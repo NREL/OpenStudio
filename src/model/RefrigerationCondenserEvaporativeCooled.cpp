@@ -441,7 +441,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    // bool RefrigerationCondenserEvaporativeCooled_Impl::setAirInletNode(std::string airInletNode) {
+    // bool RefrigerationCondenserEvaporativeCooled_Impl::setAirInletNode(const std::string& airInletNode) {
     //   bool result = setString(OS_Refrigeration_Condenser_EvaporativeCooledFields::AirInletNodeName, airInletNode);
     //   return result;
     // }
@@ -896,7 +896,7 @@ namespace model {
     getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetMaximumCapacityFactor();
   }
 
-  // bool RefrigerationCondenserEvaporativeCooled::setAirInletNode(std::string airInletNode) {
+  // bool RefrigerationCondenserEvaporativeCooled::setAirInletNode(const std::string& airInletNode) {
   //   return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->setAirInletNode(airInletNode);
   // }
 

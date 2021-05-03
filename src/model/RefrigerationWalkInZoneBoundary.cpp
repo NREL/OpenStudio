@@ -309,8 +309,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool
-      RefrigerationWalkInZoneBoundary_Impl::setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone) {
+    bool RefrigerationWalkInZoneBoundary_Impl::setStockingDoorOpeningProtectionTypeFacingZone(
+      const std::string& stockingDoorOpeningProtectionTypeFacingZone) {
       bool result = setString(OS_Refrigeration_WalkIn_ZoneBoundaryFields::StockingDoorOpeningProtectionTypeFacingZone,
                               stockingDoorOpeningProtectionTypeFacingZone);
       return result;
@@ -510,7 +510,8 @@ namespace model {
     getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->resetStockingDoorOpeningScheduleFacingZone();
   }
 
-  bool RefrigerationWalkInZoneBoundary::setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone) {
+  bool
+    RefrigerationWalkInZoneBoundary::setStockingDoorOpeningProtectionTypeFacingZone(const std::string& stockingDoorOpeningProtectionTypeFacingZone) {
     return getImpl<detail::RefrigerationWalkInZoneBoundary_Impl>()->setStockingDoorOpeningProtectionTypeFacingZone(
       stockingDoorOpeningProtectionTypeFacingZone);
   }

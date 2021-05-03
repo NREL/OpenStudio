@@ -340,8 +340,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool
-      HeatExchangerFluidToFluid_Impl::setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode) {
+    bool HeatExchangerFluidToFluid_Impl::setComponentOverrideCoolingControlTemperatureMode(
+      const std::string& componentOverrideCoolingControlTemperatureMode) {
       bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode,
                               componentOverrideCoolingControlTemperatureMode);
       return result;
@@ -662,7 +662,8 @@ namespace model {
     getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetComponentOverrideLoopDemandSideInletNode();
   }
 
-  bool HeatExchangerFluidToFluid::setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode) {
+  bool
+    HeatExchangerFluidToFluid::setComponentOverrideCoolingControlTemperatureMode(const std::string& componentOverrideCoolingControlTemperatureMode) {
     return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setComponentOverrideCoolingControlTemperatureMode(
       componentOverrideCoolingControlTemperatureMode);
   }

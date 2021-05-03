@@ -251,7 +251,7 @@ namespace model {
 
     void resetOffCycleParasiticFuelConsumptionRate();
 
-    bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
+    bool setOffCycleParasiticFuelType(const std::string& offCycleParasiticFuelType);
 
     void resetOffCycleParasiticFuelType();
 
@@ -263,7 +263,7 @@ namespace model {
 
     void resetOnCycleParasiticFuelConsumptionRate();
 
-    bool setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType);
+    bool setOnCycleParasiticFuelType(const std::string& onCycleParasiticFuelType);
 
     void resetOnCycleParasiticFuelType();
 
@@ -281,7 +281,7 @@ namespace model {
 
     void resetAmbientTemperatureThermalZone();
 
-    bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+    bool setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName);
 
     void resetAmbientTemperatureOutdoorAirNodeName();
 

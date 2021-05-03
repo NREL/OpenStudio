@@ -768,7 +768,7 @@ namespace model {
     getImpl<detail::GasMixture_Impl>()->resetGas2Fraction();
   }
 
-  bool GasMixture::setGas3Type(std::string gas3Type) {
+  bool GasMixture::setGas3Type(const std::string& gas3Type) {
     return getImpl<detail::GasMixture_Impl>()->setGas3Type(gas3Type);
   }
 
@@ -784,7 +784,7 @@ namespace model {
     getImpl<detail::GasMixture_Impl>()->resetGas3Fraction();
   }
 
-  bool GasMixture::setGas4Type(std::string gas4Type) {
+  bool GasMixture::setGas4Type(const std::string& gas4Type) {
     return getImpl<detail::GasMixture_Impl>()->setGas4Type(gas4Type);
   }
 

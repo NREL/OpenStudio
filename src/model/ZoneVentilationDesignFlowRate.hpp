@@ -125,7 +125,7 @@ namespace model {
     /** \deprecated ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, \n
    *  the design flow rate calculation method is set during the call to setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour, etc
    **/
-    OS_DEPRECATED bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
+    OS_DEPRECATED bool setDesignFlowRateCalculationMethod(const std::string& designFlowRateCalculationMethod);
 
     bool setDesignFlowRate(double designFlowRate);
 

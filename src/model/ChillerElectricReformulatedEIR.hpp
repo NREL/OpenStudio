@@ -188,7 +188,7 @@ namespace model {
 
     bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve&);
 
-    bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(std::string electricInputToCoolingOutputRatioFunctionOfPLRType);
+    bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(const std::string& electricInputToCoolingOutputRatioFunctionOfPLRType);
 
     void resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
 

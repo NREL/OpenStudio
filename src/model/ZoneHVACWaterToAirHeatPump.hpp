@@ -251,7 +251,7 @@ namespace model {
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
     // DLM: this appears to not be implemented
-    //bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
+    //bool setOutdoorDryBulbTemperatureSensorNodeName(const std::string& outdoorDryBulbTemperatureSensorNodeName);
 
     bool setFanPlacement(const std::string& fanPlacement);
 

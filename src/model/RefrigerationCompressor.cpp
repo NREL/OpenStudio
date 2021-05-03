@@ -277,7 +277,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    // bool RefrigerationCompressor_Impl::setModeofOperation(std::string modeofOperation) {
+    // bool RefrigerationCompressor_Impl::setModeofOperation(const std::string& modeofOperation) {
     //  bool result = setString(OS_Refrigeration_CompressorFields::ModeofOperation, modeofOperation);
     //  return result;
     // }
@@ -519,7 +519,7 @@ namespace model {
     getImpl<detail::RefrigerationCompressor_Impl>()->resetEndUseSubcategory();
   }
 
-  // bool RefrigerationCompressor::setModeofOperation(std::string modeofOperation) {
+  // bool RefrigerationCompressor::setModeofOperation(const std::string& modeofOperation) {
   //   return getImpl<detail::RefrigerationCompressor_Impl>()->setModeofOperation(modeofOperation);
   // }
 

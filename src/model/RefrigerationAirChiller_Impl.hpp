@@ -212,7 +212,7 @@ namespace model {
 
       void resetRefrigerantCorrectionFactor();
 
-      // bool setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType);
+      // bool setCapacityCorrectionCurveType(const std::string& capacityCorrectionCurveType);
 
       // void resetCapacityCorrectionCurveType();
 

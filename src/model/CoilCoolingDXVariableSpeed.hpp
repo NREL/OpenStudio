@@ -131,7 +131,7 @@ namespace model {
 
     bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    // bool setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
+    // bool setCondenserAirInletNodeName(const std::string& condenserAirInletNodeName);
 
     // void resetCondenserAirInletNodeName();
 

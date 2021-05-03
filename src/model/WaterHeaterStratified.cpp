@@ -1725,7 +1725,7 @@ namespace model {
     getImpl<detail::WaterHeaterStratified_Impl>()->resetAmbientTemperatureThermalZone();
   }
 
-  bool WaterHeaterStratified::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  bool WaterHeaterStratified::setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName) {
     return getImpl<detail::WaterHeaterStratified_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
   }
 

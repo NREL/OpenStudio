@@ -107,7 +107,7 @@ namespace model {
 
     void resetSurface();
 
-    bool setHeatTransferIntegrationMode(std::string heatTransferIntegrationMode);
+    bool setHeatTransferIntegrationMode(const std::string& heatTransferIntegrationMode);
 
     void resetHeatTransferIntegrationMode();
 

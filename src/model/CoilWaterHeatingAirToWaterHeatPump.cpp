@@ -804,7 +804,8 @@ namespace model {
       maximumAmbientTemperatureforCrankcaseHeaterOperation);
   }
 
-  bool CoilWaterHeatingAirToWaterHeatPump::setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects) {
+  bool CoilWaterHeatingAirToWaterHeatPump::setEvaporatorAirTemperatureTypeforCurveObjects(
+    const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPump_Impl>()->setEvaporatorAirTemperatureTypeforCurveObjects(
       evaporatorAirTemperatureTypeforCurveObjects);
   }

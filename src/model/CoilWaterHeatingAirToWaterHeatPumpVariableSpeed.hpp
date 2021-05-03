@@ -120,11 +120,11 @@ namespace model {
 
     void autocalculateRatedCondenserWaterFlowRate();
 
-    bool setEvaporatorFanPowerIncludedinRatedCOP(std::string evaporatorFanPowerIncludedinRatedCOP);
+    bool setEvaporatorFanPowerIncludedinRatedCOP(const std::string& evaporatorFanPowerIncludedinRatedCOP);
 
-    bool setCondenserPumpPowerIncludedinRatedCOP(std::string condenserPumpPowerIncludedinRatedCOP);
+    bool setCondenserPumpPowerIncludedinRatedCOP(const std::string& condenserPumpPowerIncludedinRatedCOP);
 
-    bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(std::string condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
+    bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(const std::string& condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
 
     bool setFractionofCondenserPumpHeattoWater(double fractionofCondenserPumpHeattoWater);
 
@@ -132,7 +132,7 @@ namespace model {
 
     bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
 
-    bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
+    bool setEvaporatorAirTemperatureTypeforCurveObjects(const std::string& evaporatorAirTemperatureTypeforCurveObjects);
 
     bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
 

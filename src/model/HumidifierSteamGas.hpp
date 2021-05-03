@@ -130,7 +130,7 @@ namespace model {
 
     // void resetWaterStorageTank();
 
-    bool setInletWaterTemperatureOption(std::string inletWaterTemperatureOption);
+    bool setInletWaterTemperatureOption(const std::string& inletWaterTemperatureOption);
 
     void resetInletWaterTemperatureOption();
 

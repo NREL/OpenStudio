@@ -166,7 +166,7 @@ namespace model {
 
     void resetGas2Fraction();
 
-    bool setGas3Type(std::string gas3Type);
+    bool setGas3Type(const std::string& gas3Type);
 
     void resetGas3Type();
 
@@ -174,7 +174,7 @@ namespace model {
 
     void resetGas3Fraction();
 
-    bool setGas4Type(std::string gas4Type);
+    bool setGas4Type(const std::string& gas4Type);
 
     void resetGas4Type();
 

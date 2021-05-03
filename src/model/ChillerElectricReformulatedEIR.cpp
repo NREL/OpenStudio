@@ -397,7 +397,7 @@ namespace model {
     }
 
     bool ChillerElectricReformulatedEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLRType(
-      std::string electricInputToCoolingOutputRatioFunctionOfPLRType) {
+      const std::string& electricInputToCoolingOutputRatioFunctionOfPLRType) {
       return setString(OS_Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveType,
                        electricInputToCoolingOutputRatioFunctionOfPLRType);
     }
@@ -865,7 +865,7 @@ namespace model {
   }
 
   bool ChillerElectricReformulatedEIR::setElectricInputToCoolingOutputRatioFunctionOfPLRType(
-    std::string electricInputToCoolingOutputRatioFunctionOfPLRType) {
+    const std::string& electricInputToCoolingOutputRatioFunctionOfPLRType) {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfPLRType(
       electricInputToCoolingOutputRatioFunctionOfPLRType);
   }

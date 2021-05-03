@@ -56,7 +56,7 @@
 namespace openstudio {
 namespace model {
 
-  AirSupplyConstituent::AirSupplyConstituent(std::string constituentName, double molarFraction)
+  AirSupplyConstituent::AirSupplyConstituent(const std::string& constituentName, double molarFraction)
     : m_name(constituentName), m_molarFraction(molarFraction) {
 
     if ((m_molarFraction < 0) || (m_molarFraction > 1)) {
@@ -75,7 +75,7 @@ namespace model {
     return m_molarFraction;
   }
 
-  bool AirSupplyConstituent::isValid(std::string constituentName) {
+  bool AirSupplyConstituent::isValid(const std::string& constituentName) {
     std::vector<std::string> validConstituentNames = constituentNameValues();
     return std::find_if(validConstituentNames.begin(), validConstituentNames.end(), std::bind(istringEqual, constituentName, std::placeholders::_1))
            != validConstituentNames.end();
@@ -360,7 +360,7 @@ namespace model {
       return result;
     }
 
-    bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
+    bool GeneratorFuelCellAirSupply_Impl::addConstituent(const std::string& name, double molarFraction) {
       // Make a constituent (which will check for validity), and then call the above function
       AirSupplyConstituent constituent(name, molarFraction);
       return addConstituent(constituent);
@@ -576,7 +576,7 @@ namespace model {
     return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(constituent);
   }
 
-  bool GeneratorFuelCellAirSupply::addConstituent(std::string name, double molarFraction) {
+  bool GeneratorFuelCellAirSupply::addConstituent(const std::string& name, double molarFraction) {
     return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(name, molarFraction);
   }
 
