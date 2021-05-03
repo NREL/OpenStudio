@@ -57,6 +57,10 @@ class DataError;
 class Quantity;
 class OSOptionalQuantity;
 
+namespace osversion {
+  class VersionTranslator;
+}
+
 // private namespace
 namespace detail {
 
@@ -80,7 +84,7 @@ namespace detail {
 
     /** Constructor from underlying data. Used by WorkspaceObject_Impl. */
     IdfObject_Impl(const Handle& handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
-                   const StringVector& fieldComments);
+                   const StringVector& fieldComments, bool doResizeToMinFields = true);
 
     virtual ~IdfObject_Impl() {}
 
@@ -380,7 +384,7 @@ namespace detail {
 
    protected:
     friend class openstudio::IdfObject;
-
+    friend class openstudio::osversion::VersionTranslator;
     // handle
     Handle m_handle;
 

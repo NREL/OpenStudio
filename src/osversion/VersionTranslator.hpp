@@ -279,6 +279,9 @@ namespace osversion {
     std::shared_ptr<InterobjectIssueInformation> fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model);
 
     void fixInterobjectIssuesStage2_0_8_3_to_0_8_4(model::Model& model, std::shared_ptr<InterobjectIssueInformation>& info);
+
+    // Indexes must be sorted...
+    IdfObject intializeFromObjectDeletedFields(IdfObject& oldObject, IddObject& newIddObject, std::vector<unsigned>& indexes);
   };
 
 }  // namespace osversion

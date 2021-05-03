@@ -56,6 +56,10 @@ class Quantity;
 class OSOptionalQuantity;
 struct IdfObjectImplLess;
 
+namespace osversion {
+  class VersionTranslator;
+}
+
 namespace detail {
   class IdfObject_Impl;
   class WorkspaceObject_Impl;
@@ -410,13 +414,16 @@ class UTILITIES_API IdfObject
   friend class detail::Workspace_Impl;        // for finding IdfObjects in a workspace
   friend class WorkspaceObject;               // for WorkspaceObject::idfObject()
   friend class Workspace;                     // for toIdfFile completion (constructs IdfObject from impl)
+  // For performance reasons, to avoid constructing a blank object then copying stuff over one by one
+  friend class openstudio::osversion::VersionTranslator;
 
   /** Protected constructor from impl. */
   IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl);
 
+  std::shared_ptr<detail::IdfObject_Impl> m_impl;
+
  private:
   // pointer to impl
-  std::shared_ptr<detail::IdfObject_Impl> m_impl;
 
   // configure logging
   REGISTER_LOGGER("utilities.idf.IdfObject");

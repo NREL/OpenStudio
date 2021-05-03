@@ -116,9 +116,11 @@ namespace detail {
   }
 
   IdfObject_Impl::IdfObject_Impl(const Handle& handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
-                                 const StringVector& fieldComments)
+                                 const StringVector& fieldComments, bool doResizeToMinFields)
     : m_handle(handle), m_comment(comment), m_iddObject(iddObject), m_fields(fields), m_fieldComments(fieldComments) {
-    resizeToMinFields();
+    if (doResizeToMinFields) {
+      resizeToMinFields();
+    }
   }
 
   // GETTERS

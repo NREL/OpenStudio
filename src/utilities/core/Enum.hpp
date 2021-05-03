@@ -75,8 +75,9 @@
   OPENSTUDIO_ENUM_BUILD_STRINGS_PART(_enum_name :: BOOST_PP_SEQ_ELEM(0, _elem), _elem, 1)
  * \endcode
  */
-#define OPENSTUDIO_ENUM_BUILD_ARRAY(_r, _enum_name, _elem) \
-  {_enum_name ::BOOST_PP_SEQ_ELEM(0, _elem) BOOST_PP_COMMA() BOOST_PP_STRINGIZE(BOOST_PP_SEQ_ELEM(0, _elem)) BOOST_PP_COMMA() "" BOOST_PP_SEQ_FOR_EACH_I(OPENSTUDIO_ENUM_BUILD_ARRAY_PART, 0, _elem)} BOOST_PP_COMMA()
+#define OPENSTUDIO_ENUM_BUILD_ARRAY(_r, _enum_name, _elem)                                                   \
+  {_enum_name ::BOOST_PP_SEQ_ELEM(0, _elem) BOOST_PP_COMMA() BOOST_PP_STRINGIZE(BOOST_PP_SEQ_ELEM(0, _elem)) \
+     BOOST_PP_COMMA() "" BOOST_PP_SEQ_FOR_EACH_I(OPENSTUDIO_ENUM_BUILD_ARRAY_PART, 0, _elem)} BOOST_PP_COMMA()
 
 /**
  * Helper macro used by OPENSTUDIO_ENUM_DOMAIN_ELEM

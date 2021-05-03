@@ -59,6 +59,7 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
+#include "utilities/idf/IdfObject_Impl.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -353,22 +354,14 @@ namespace osversion {
   }
 
   std::vector<LogMessage> VersionTranslator::warnings() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() != Warn; }), result.end());
     return result;
   }
 
   std::vector<LogMessage> VersionTranslator::errors() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() <= Warn; }), result.end());
     return result;
   }
 
@@ -734,7 +727,7 @@ namespace osversion {
     ss << targetIdf.versionObject().get();
 
     // all other objects
-    for (IdfObject object : idf_0_7_3.objects()) {
+    for (IdfObject& object : idf_0_7_3.objects()) {
       if (istringEqual(object.iddObject().name(), "OS:ComponentData:Tags")) {
         m_deprecated.push_back(object);
         continue;
@@ -6187,6 +6180,21 @@ namespace osversion {
 
   }  // end update_3_0_1_to_3_1_0
 
+  IdfObject VersionTranslator::intializeFromObjectDeletedFields(IdfObject& oldObject, IddObject& newIddObject, std::vector<unsigned>& indexes) {
+    // Delete fields
+    auto& impl = oldObject.m_impl;  // getImpl<openstudio::detail::IdfObject_Impl>();
+    auto& fields = impl->m_fields;
+    auto& fieldComments = impl->m_fieldComments;
+
+    for (auto it = indexes.rbegin(); it != indexes.rend(); ++it) {
+      fields.erase(fields.begin() + *it);
+      fieldComments.erase(fieldComments.begin() + *it);
+    }
+
+    // Construct objects with these fields, but with the new iddObject
+    return IdfObject(std::make_shared<detail::IdfObject_Impl>(impl->m_handle, impl->m_comment, newIddObject, fields, fieldComments, false));
+  }
+
   std::string VersionTranslator::update_3_1_0_to_3_2_0(const IdfFile& idf_3_1_0, const IddFileAndFactoryWrapper& idd_3_2_0) {
     std::stringstream ss;
     boost::optional<std::string> value;
@@ -6296,20 +6304,19 @@ namespace osversion {
         // * Solar and Daylighting Method = 2
         // * Radiant Exchange Method = 3
 
-        auto iddObject = idd_3_2_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
+        // Delete fields
+        auto& impl = object.m_impl;  // getImpl<openstudio::detail::IdfObject_Impl>();
+        auto fields = impl->m_fields;
 
-        for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i))) {
-            if (i < 2) {
-              newObject.setString(i, value.get());
-            } else if (i == 2 || i == 3) {
-              // No-op
-            } else {
-              newObject.setString(i - 2, value.get());
-            }
-          }
+        auto fieldComments = impl->m_fieldComments;
+        fields.erase(fields.begin() + 2, fields.begin() + 4);
+        if (fieldComments.size() >= 4u) {
+          fieldComments.erase(fieldComments.begin() + 2, fieldComments.begin() + 4);
         }
+
+        // Construct objects with these fields, but with the new iddObject
+        auto iddObject = idd_3_2_0.getObject(iddname);
+        IdfObject newObject(std::make_shared<detail::IdfObject_Impl>(impl->m_handle, impl->m_comment, iddObject.get(), fields, fieldComments, false));
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
