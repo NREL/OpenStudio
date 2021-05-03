@@ -216,10 +216,6 @@ namespace model {
       return result;
     }
 
-    bool OutputMeter_Impl::setName(const std::string& name) {
-      return setString(OS_Output_MeterFields::Name, name);
-    }
-
     bool OutputMeter_Impl::setReportingFrequency(const std::string& reportingFrequency) {
       return setString(OS_Output_MeterFields::ReportingFrequency, reportingFrequency);
     }
@@ -524,10 +520,6 @@ namespace model {
 
   boost::optional<std::string> OutputMeter::specificInstallLocation() const {
     return getImpl<detail::OutputMeter_Impl>()->specificInstallLocation();
-  }
-
-  bool OutputMeter::setName(const std::string& name) {
-    return getImpl<detail::OutputMeter_Impl>()->setName(name);
   }
 
   bool OutputMeter::setReportingFrequency(const std::string& reportingFrequency) {

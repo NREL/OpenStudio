@@ -111,8 +111,6 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setName(const std::string& name);
-
       bool setReportingFrequency(const std::string& reportingFrequency);
 
       void resetReportingFrequency();
