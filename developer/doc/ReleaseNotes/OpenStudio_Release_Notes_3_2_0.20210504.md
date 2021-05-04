@@ -71,7 +71,7 @@ New for OpenStudio SDK is support for Python bindings ( [#4122](https://github.c
 
 `pip install openstudio==3.2.0` 
 
- Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for further instructions on how to install. You can also visit the test channel at https://test.pypi.org/project/openstudio/ if you want to install development bindings. 
+ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for further instructions on how to install. Users can also visit the test channel at https://test.pypi.org/project/openstudio/ to install development bindings. 
 
 
 ## New Features, Major Fixes and API-breaking changes
