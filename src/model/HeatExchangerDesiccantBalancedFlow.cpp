@@ -54,20 +54,19 @@ namespace model {
 
   namespace detail {
 
-    HeatExchangerDesiccantBalancedFlow_Impl::HeatExchangerDesiccantBalancedFlow_Impl(const IdfObject& idfObject, Model_Impl* model,
-                                                                                             bool keepHandle)
+    HeatExchangerDesiccantBalancedFlow_Impl::HeatExchangerDesiccantBalancedFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : AirToAirComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == HeatExchangerDesiccantBalancedFlow::iddObjectType());
     }
 
     HeatExchangerDesiccantBalancedFlow_Impl::HeatExchangerDesiccantBalancedFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                             Model_Impl* model, bool keepHandle)
+                                                                                     Model_Impl* model, bool keepHandle)
       : AirToAirComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == HeatExchangerDesiccantBalancedFlow::iddObjectType());
     }
 
     HeatExchangerDesiccantBalancedFlow_Impl::HeatExchangerDesiccantBalancedFlow_Impl(const HeatExchangerDesiccantBalancedFlow_Impl& other,
-                                                                                             Model_Impl* model, bool keepHandle)
+                                                                                     Model_Impl* model, bool keepHandle)
       : AirToAirComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatExchangerDesiccantBalancedFlow_Impl::outputVariableNames() const {
@@ -395,8 +394,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool
-      HeatExchangerDesiccantBalancedFlow_Impl::setRateofDefrostTimeFractionIncrease(boost::optional<double> rateofDefrostTimeFractionIncrease) {
+    bool HeatExchangerDesiccantBalancedFlow_Impl::setRateofDefrostTimeFractionIncrease(boost::optional<double> rateofDefrostTimeFractionIncrease) {
       bool result(false);
       if (rateofDefrostTimeFractionIncrease) {
         result =
@@ -743,8 +741,7 @@ namespace model {
   }
 
   /// @cond
-  HeatExchangerDesiccantBalancedFlow::HeatExchangerDesiccantBalancedFlow(
-    std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlow_Impl> impl)
+  HeatExchangerDesiccantBalancedFlow::HeatExchangerDesiccantBalancedFlow(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlow_Impl> impl)
     : AirToAirComponent(std::move(impl)) {}
   /// @endcond
 
