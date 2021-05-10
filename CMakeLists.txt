@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.0.1)
+project(OpenStudio VERSION 3.2.0)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "beta")
+set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -187,15 +187,15 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 3)
+set(ENERGYPLUS_VERSION_MINOR 5)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "baff08990c")
+set(ENERGYPLUS_BUILD_SHA "de239b2e5f")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.3.0")
+set(ENERGYPLUS_RELEASE_NAME "v9.5.0")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -254,6 +254,22 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
 
+option(BUILD_BENCHMARK "Build benchmarking targets" OFF)
+
+option(BUILD_RUBY_BINDINGS "Build Ruby bindings" ON)
+mark_as_advanced(BUILD_RUBY_BINDINGS)
+if(CMAKE_SIZEOF_VOID_P EQUAL 4) # 32 bit
+  set(BUILD_RUBY_BINDINGS OFF CACHE BOOL "Override option" FORCE)
+  message("Ruby bindings are not support on 32 bit platforms, forcing BUILD_RUBY_BINDINGS OFF")
+endif()
+
+option(BUILD_CLI "Build OpenStudio command line interface" ON)
+mark_as_advanced(BUILD_CLI)
+if(NOT BUILD_RUBY_BINDINGS)
+  set(BUILD_CLI OFF CACHE BOOL "Override option" FORCE)
+  message("OpenStudio CLI depends on Ruby bindings which are disabled, therefore BUILD_CLI is also disabled")
+endif()
+
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
@@ -302,7 +318,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(WIN32)
-  if(CMAKE_CL_64)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
   else()
@@ -369,7 +385,9 @@ endmacro()
 
 ###############################################################################
 
-get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+if(BUILD_RUBY_BINDINGS)
+  get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+endif()
 
 # Export to Parent
 if(hasParent)
@@ -410,12 +428,10 @@ endif()
 # Compiler and system specific options
 if(UNIX)
 
-  #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fno-strict-aliasing")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
 
   # all warnings
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC -fno-strict-aliasing -Winvalid-pch")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
   # Treat all warnings as errors
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   if(APPLE)
@@ -480,9 +496,12 @@ if(MSVC)
 
   add_definitions(/bigobj)
 
-  if(CMAKE_CL_64)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     # ignore conversion from size_t to int for now
     add_definitions(/wd4267)
+  else()
+    # ignore conversion from 'type1' to 'type2', possible loss of data
+    add_definitions(/wd4244)
   endif()
 
   # treat warnings as errors
@@ -513,30 +532,51 @@ endif()
 # Dependencies
 
 # If Linux, check LSB_RELEASE globally so we can use it after
-if(UNIX AND NOT APPLE)
-
+# But also infer the new E+ package names (starting at 9.4.0)
+if(APPLE)
+  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
+elseif(UNIX)
+  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
   find_program(LSB_RELEASE lsb_release)
   # -rs outputs only 16.04, or 18.04
   execute_process(COMMAND ${LSB_RELEASE} -rs
+    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  # -is outputs "Ubuntu" or "Fedora"
+  execute_process(COMMAND ${LSB_RELEASE} -is
     OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+
+  # eg: `-Ubuntu18.04`
+  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+
+  message(STATUS "LSB_RELEASE_ID_SHORT=${LSB_RELEASE_ID_SHORT}, LSB_RELEASE_VERSION_SHORT=${LSB_RELEASE_VERSION_SHORT}")
+
+elseif(MSVC)
+  # no-op
+  set(ENERGYPLUS_SYSTEM_VERSION "")
 endif()
 
 # EnergyPlus
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 20c12af58cb9ed8b3c30c206f7123498)
-    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
+    set(ENERGYPLUS_EXPECTED_HASH df5fa54b8260ecd0b0cf59e8e54454b9)
+    set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH d146ddaef57b79ca9272cd64bc75babd)
-    set(ENERGYPLUS_PLATFORM "Linux-x86_64")
+    if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
+      set(ENERGYPLUS_EXPECTED_HASH eb9767db7e1b28163816fd38a6ea33de)
+    else() # 18.04
+      set(ENERGYPLUS_EXPECTED_HASH 4a0359505b6faa5bd6af583c7fb155b5)
+    endif()
+    set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
@@ -544,6 +584,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
+    message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
 
     if(EXISTS "/etc/redhat-release")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
@@ -557,21 +598,19 @@ if(UNIX)
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
 
-    # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
 
 elseif(WIN32)
-  if(CMAKE_CL_64)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 0d47ac399199de733a6efc548f474f55)
+    set(ENERGYPLUS_EXPECTED_HASH 3bdcceaa51a7ddbbd6c24a8a8efe41e5)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
-    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_a2cbd995acd1928a7baa18407bb8e949)
+    set(ENERGYPLUS_EXPECTED_HASH 40b9f5cb25313e72a155e723652abbd7)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -584,12 +623,29 @@ elseif(WIN32)
          SHOW_PROGRESS
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
-    # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
 
 endif()
+
+if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
+  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+  if(NOT "${OLD_ENERGYPLUS_EXTRACTED_DIR}" MATCHES ".*${ENERGYPLUS_PATH}.*")
+
+    message(STATUS "Removing old extracted dir = ${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    # Remove the old extracted dir
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+
+    # Unset variables so that FindEnergyPlus is called again
+    unset(ENERGYPLUS_FOUND CACHE)
+    unset(ENERGYPLUS_EXE CACHE)
+    unset(ENERGYPLUS_IDD CACHE)
+    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
+  endif()
+endif()
+
 
 # Allows placing the archive manually in the build dir too
 if (NOT EXISTS "${ENERGYPLUS_PATH}")
@@ -641,11 +697,11 @@ if(UNIX)
     file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
   endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+
   endif()
   set(RADIANCE_LOCATION "${PROJECT_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/usr/local/radiance")
 elseif(WIN32)
-  if(CMAKE_CL_64)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(RADIANCE_ARCH 64)
     set(RADIANCE_EXPECTED_HASH 7bd7a418d181365b4153c8bc146ede06)
   else()
@@ -665,9 +721,17 @@ elseif(WIN32)
     message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
     file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
   set(RADIANCE_LOCATION "${PROJECT_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/")
+endif()
+
+# Allows placing the archive manually in the build dir too
+if (NOT EXISTS "${PROJECT_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}")
+  if (UNIX)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  else()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  endif()
 endif()
 
 # Perl
@@ -681,44 +745,44 @@ endif()
 include(FetchRubyMinGW.cmake)
 FetchRubyMinGW()
 
-# openstudio gems
-# CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
-# need to  update the MD5sum for each platform and url below
-if(UNIX)
-   if(APPLE)
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-darwin.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4212a009d37e38b087aad51b4b2800e0")
-   else()
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-linux.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "eb52b76926b82f6c0505fb57d2f46c5b")
-   endif()
-elseif(WIN32)
-  if(CMAKE_CL_64)
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "52c80458909142726b1287dabe0da7a3")
+if(BUILD_CLI)
+  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
+  # need to  update the MD5sum for each platform and url below
+  if(UNIX)
+     if(APPLE)
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f05343ac87c2e3e6fa37cf5515f6bf39")
+     else()
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8fd4e9ac409f56541c6932e0cbf47c83")
+     endif()
+  elseif(WIN32)
+    # OpenStudio gems are only supported on 64 bit windows
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d2d7591b60a5a3dab255d3bc9e413e43")
   endif()
-endif()
 
-set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
-set(OPENSTUDIO_GEMS_DIR "${PROJECT_BINARY_DIR}/openstudio-gems")
-set(OPENSTUDIO_GEMS_TARGETS_FILE "${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
-set(OPENSTUDIO_GEMS_INIT_FILE "${OPENSTUDIO_GEMS_DIR}/init-extensions.cpp")
-if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
-  file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
-endif()
+  set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+  set(OPENSTUDIO_GEMS_DIR "${PROJECT_BINARY_DIR}/openstudio-gems")
+  set(OPENSTUDIO_GEMS_TARGETS_FILE "${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
+  set(OPENSTUDIO_GEMS_INIT_FILE "${OPENSTUDIO_GEMS_DIR}/init-extensions.cpp")
+  if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
+    file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
+  endif()
 
-if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
-  message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
-  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
-    ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
-    INACTIVITY_TIMEOUT 300 # 5 minute timeout
-    SHOW_PROGRESS
-    EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
+  if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+      ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 300 # 5 minute timeout
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
-  file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+    file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-  file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
+    file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
+  endif()
 endif()
 
 # SWIG
@@ -729,9 +793,9 @@ endif()
 # set(SWIG_EXECUTABLE swig)
 # But will have the probblem with the swiglib anyways.
 # Plus, it doesn't appear to work on windows either, the PATH doesn't include it.
-#find_program(SWIG_EXECUTABLE swig PATHS CURRENT_CONAN_SWIG_INSTALLER_ROOT NO_DEFAULT_PATH)
+#find_program(SWIG_EXECUTABLE swig PATHS CURRENT_CONAN_SWIG_ROOT NO_DEFAULT_PATH)
 #if(NOT SWIG_EXECUTABLE)
-#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_INSTALLER_ROOT_RELEASE=${CONAN_SWIG_INSTALLER_ROOT_RELEASE}, CURRENT_CONAN_SWIG_INSTALLER_ROOT=${CURRENT_CONAN_SWIG_INSTALLER_ROOT}, ${ENV{SWIG_LIB}}, ${ENV{SWIG_INSTALLER_ROOT}}")
+#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_ROOT_RELEASE=${CONAN_SWIG_ROOT_RELEASE}, CURRENT_CONAN_SWIG_ROOT=${CURRENT_CONAN_SWIG_ROOT}, ${ENV{SWIG_LIB}}, ${ENV{SWIG_INSTALLER_ROOT}}")
 #endif()
 
 # Another thing I tried is to use the `virtualenv` generator (`conan_cmake_run( ... GENERATORS virtualenv)`),
@@ -740,12 +804,12 @@ endif()
 # I also tried using CMake to extract the value from the activate.sh script on all plaftorms but it seems even more of a hack
 
 # So instead, we use a generator expression to find the right value. At least it makes sense, and should be robust.
-FindValue(CONAN_SWIG_INSTALLER_ROOT)
+FindValue(CONAN_SWIG_ROOT)
 
-set(SWIG_EXECUTABLE "${CURRENT_CONAN_SWIG_INSTALLER_ROOT}/bin/swig")
+set(SWIG_EXECUTABLE "${CURRENT_CONAN_SWIG_ROOT}/bin/swig")
 
 # The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
-set(SWIG_LIB "${CURRENT_CONAN_SWIG_INSTALLER_ROOT}/share/swig/4.0.1")
+set(SWIG_LIB "${CURRENT_CONAN_SWIG_ROOT}/bin/swiglib")
 
 # Export SWIG to parent scope
 if(hasParent)
@@ -795,14 +859,40 @@ if(BUILD_NODE_MODULES)
 endif()
 
 if(BUILD_PYTHON_BINDINGS)
+  option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
 
-  find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  # find_package(Python) has the problem that on github actions in particular it'll pick up the most recent python (eg 3.9) from the tool cache
+  # even if you have used the setup-python action and set it to 3.8
+  if (PYTHON_VERSION)
+    find_package(Python ${PYTHON_VERSION} EXACT COMPONENTS Interpreter Development REQUIRED)
+  else()
+    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  endif()
 
   include_directories(SYSTEM ${Python_INCLUDE_DIRS})
-  set(ALL_PYTHON_BINDINGS "") # global list of python bindings
+  set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
   set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
+  set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
+
+  if(BUILD_PYTHON_PIP_PACKAGE)
+
+    set(PipRepositoryValues "testpypi;pypi" CACHE INTERNAL
+      "List of possible values for which repository to upload to")
+    set(PYTHON_PIP_REPOSITORY "testpypi" CACHE STRING "Which pip repository to use for upload")
+    set_property(CACHE PYTHON_PIP_REPOSITORY PROPERTY STRINGS ${PipRepositoryValues})
+
+    if(NOT PYTHON_PIP_REPOSITORY IN_LIST PipRepositoryValues)
+      message(FATAL_ERROR "PYTHON_PIP_REPOSITORY must be one of ${PipRepositoryValues}")
+    endif()
+
+    set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
+    file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
+    set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
+    set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "") # global list of generated .py files for pyhton_package
+
+  endif()
 endif()
 
 # Threading library
@@ -852,6 +942,7 @@ set(project_directories
   utilities
   model
   energyplus
+  epjson
   radiance
   gbxml
   airflow
@@ -860,19 +951,27 @@ set(project_directories
   measure
   sdd
   lib
-  cli
   install_utility
 )
 
-# Include the resources, should happen after find EnergyPlus
+# resources must be added after find EnergyPlus
 add_subdirectory(resources)
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
 
-add_subdirectory(ruby)
+if(BUILD_RUBY_BINDINGS)
+  add_subdirectory(ruby)
+endif()
 
+if(BUILD_CLI)
+  add_subdirectory(src/cli)
+endif()
+
+add_dependencies(openstudio_utilities
+  CreateEmbeddedSource
+)
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -898,12 +997,14 @@ endif()
 
 ###############################################################################
 # Targets that combine all bindings targets
-add_custom_target(ALL_RUBY_BINDINGS)
-add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
+if(BUILD_RUBY_BINDINGS)
+  add_custom_target(ALL_RUBY_BINDINGS)
+  add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
+endif()
 
 if(BUILD_PYTHON_BINDINGS)
   add_custom_target(ALL_PYTHON_BINDINGS)
-  #add_dependencies(ALL_PYTHON_BINDINGS python_sdk ${ALL_PYTHON_BINDING_TARGETS})
+  add_dependencies(ALL_PYTHON_BINDINGS ${ALL_PYTHON_BINDING_TARGETS})
 endif()
 
 
@@ -996,9 +1097,6 @@ if(BUILD_DOCUMENTATION)
   endforeach()
 
   # Set up dependencies after all targets have been created
-  add_dependencies(openstudio_utilities
-    CreateEmbeddedSource
-  )
   add_dependencies(openstudio_utilities_doc
     openstudio_utilities_idd_doc
   )
@@ -1006,11 +1104,6 @@ if(BUILD_DOCUMENTATION)
     openstudio_utilities_doc
     openstudio_utilities_idd_doc
   )
-
-endif()
-
-
-if(BUILD_DOCUMENTATION)
 
   add_custom_target(ALL_DOXYGEN)
   add_dependencies(ALL_DOXYGEN ${ALL_CPP_DOC_TARGETS})
@@ -1046,32 +1139,6 @@ endif()
 ###############################################################################
 # Export targets and generate OpenStudioCoreConfig.cmake
 
-set(all_lib_targets
-  openstudio_osversion
-  openstudio_model
-  openstudio_utilities
-  openstudio_energyplus
-  openstudio_measure
-  openstudio_radiance
-  openstudio_gbxml
-  openstudio_isomodel
-  openstudio_sdd
-  openstudio_airflow
-  ${ALL_RUBY_BINDING_TARGETS}
-)
-
-set(all_exe_targets
-  GenerateIddFactory
-  #gbXMLToIdf
-  openstudio
-)
-
-if(UNIX AND NOT APPLE)
-  foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
-    set_target_properties(${targ} PROPERTIES VERSION ${OpenStudio_VERSION})
-  endforeach()
-endif()
-
 configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${PROJECT_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
 
@@ -1082,7 +1149,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_0_0_20200424.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_1_0_20201014.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
@@ -1121,6 +1188,7 @@ if(APPLE)
   set(CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/)
 elseif(UNIX)
   # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
+  set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
   set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
@@ -1172,9 +1240,11 @@ if(WIN32)
   set(CPACK_BINARY_NSIS OFF CACHE BOOL "Enable to build NSIS packages")
 endif()
 
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+if (BUILD_CLI)
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+endif()
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1182,15 +1252,24 @@ file(GLOB ENERGYPLUS_LIB_FILES "${ENERGYPLUS_DIR}/libenergyplus*")
 file(GLOB EXPAND_OBJECTS "${ENERGYPLUS_DIR}/ExpandObjects*")
 
 install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+# Get epJSON schema too
+string(REPLACE ".idd" ".schema.epJSON" ENERGYPLUS_EPJSON_SCHEMA ${ENERGYPLUS_IDD})
+install(FILES "${ENERGYPLUS_EPJSON_SCHEMA}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(DIRECTORY "${ENERGYPLUS_DIR}/python_standard_lib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(DIRECTORY "${ENERGYPLUS_DIR}/pyenergyplus" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
+  foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+    install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
 elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
@@ -1208,11 +1287,17 @@ elseif(WIN32)
   foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)
     install(PROGRAMS "${msapi_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
-  install(PROGRAMS "${ENERGYPLUS_DIR}/python37.dll" DESTINATION ./EnergyPlus/)
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
+  # python37.dll
+  file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/python*.dll")
+  foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+    install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
+  #install(PROGRAMS "${ENERGYPLUS_DIR}/concrt140.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(UNIX)
-	install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/)
+    file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
+    foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+      install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    endforeach()
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
@@ -1235,34 +1320,26 @@ if(BUILD_PAT AND APPLE)
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
-export(TARGETS
-         openstudio_airflow
-         openstudio_model
-         openstudio_energyplus
-         openstudio_measure
-         openstudio_osversion
-         openstudio_sdd
-         openstudio_isomodel
-         openstudio_gbxml
-         openstudio_radiance
-         openstudio_utilities
-         openstudiolib
-         openstudio_rb
-       NAMESPACE "openstudio::"
-       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
-       )
-
-install(EXPORT openstudio
-        DESTINATION lib/cmake/openstudio
-        NAMESPACE "openstudio::"
-        COMPONENT "CPPAPI"
-        FILE openstudioConfig.cmake)
-
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${PROJECT_BINARY_DIR}/openstudioConfigVersion.cmake"
   VERSION ${CMAKE_PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
+)
+
+export(
+  EXPORT
+  openstudio
+       NAMESPACE "openstudio::"
+       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
+       )
+
+install(
+  EXPORT openstudio
+        DESTINATION lib/cmake/openstudio
+        NAMESPACE "openstudio::"
+        COMPONENT "CPPAPI"
+  FILE openstudioConfig.cmake
 )
 
 install(
@@ -1363,7 +1440,6 @@ if( BUILD_NUGET_PACKAGE AND NOT BUILD_CSHARP_BINDINGS)
   # Rest moved to csharp/CMakeLists.txt
 endif()
 
-
 if (MSVC)
   if (NOT USE_LTO)
     message(WARNING "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
@@ -1378,8 +1454,14 @@ if (MSVC)
 
     # The potential inefficiency goes away if we use LTO linking
     target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
-    target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
-    target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8) # only applies to 64 bit windows platforms
+      if (BUILD_RUBY_BINDINGS)
+        target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+      endif()
+      if (BUILD_CLI)
+        target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+      endif()
+    endif()
   endif()
 endif()
 

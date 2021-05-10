@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,30 +58,29 @@
 namespace openstudio {
 namespace gbxml {
 
-  openstudio::model::ScheduleTypeLimits getScheduleTypeLimits(const std::string& type, openstudio::model::Model& model)
-  {
+  openstudio::model::ScheduleTypeLimits getScheduleTypeLimits(const std::string& type, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ScheduleTypeLimits> result = model.getModelObjectByName<openstudio::model::ScheduleTypeLimits>(type);
 
-    if (result){
+    if (result) {
       return *result;
     }
 
     result = openstudio::model::ScheduleTypeLimits(model);
     result->setName(type);
 
-    if (type == "Temp"){
+    if (type == "Temp") {
       result->setString(OS_ScheduleTypeLimitsFields::UnitType, "Temperature");
-    }else if(type == "Fraction"){
+    } else if (type == "Fraction") {
       result->setString(OS_ScheduleTypeLimitsFields::UnitType, "Dimensionless");
-    }else if(type == "OnOff"){
+    } else if (type == "OnOff") {
       result->setString(OS_ScheduleTypeLimitsFields::UnitType, "Control");
     }
 
     return *result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleDay(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleDay(const pugi::xml_node& element,
+                                                                                          openstudio::model::Model& model) {
     std::string id = element.attribute("id").value();
     std::string type = element.attribute("type").value();
 
@@ -96,21 +95,21 @@ namespace gbxml {
     result.setScheduleTypeLimits(scheduleTypeLimits);
 
     auto valueElements = element.children("ScheduleValue");
-    auto N{ std::distance(valueElements.begin(), valueElements.end()) };
+    auto N{std::distance(valueElements.begin(), valueElements.end())};
     openstudio::Time dt(1.0 / ((double)N));
 
     auto valEl = *valueElements.begin();
     for (int i = 0; i < N; i++) {
       double value = valEl.text().as_double();
-      result.addValue(dt*(i + 1), value);
+      result.addValue(dt * (i + 1), value);
       valEl = valEl.next_sibling("ScheduleValue");
     }
 
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleWeek(const pugi::xml_node& element, const pugi::xml_node& root, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleWeek(const pugi::xml_node& element, const pugi::xml_node& root,
+                                                                                           openstudio::model::Model& model) {
     std::string id = element.attribute("id").value();
     std::string type = element.attribute("type").value();
 
@@ -123,13 +122,13 @@ namespace gbxml {
 
     // don't need to translate type
 
-    for (auto &dayElement : element.children("Day")) {
+    for (auto& dayElement : element.children("Day")) {
 
       std::string dayType = dayElement.attribute("dayType").value();
       std::string dayScheduleIdRef = dayElement.attribute("dayScheduleIdRef").value();
 
       // this can be made more efficient using QXPath in QXmlPatterns later
-      for(auto &dayScheduleElement : root.children("DaySchedule")) {
+      for (auto& dayScheduleElement : root.children("DaySchedule")) {
         std::string thisId = dayScheduleElement.attribute("id").value();
         if (thisId == dayScheduleIdRef) {
 
@@ -181,8 +180,8 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(const pugi::xml_node& element, const pugi::xml_node& root, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(const pugi::xml_node& element, const pugi::xml_node& root,
+                                                                                       openstudio::model::Model& model) {
     std::string id = element.attribute("id").value();
     std::string type = element.attribute("type").value();
 
@@ -198,10 +197,10 @@ namespace gbxml {
 
     openstudio::model::YearDescription yd = model.getUniqueModelObject<openstudio::model::YearDescription>();
 
-    auto first{ true };
-    for(auto &scheduleYearElement :element.children("YearSchedule")) {
+    auto first{true};
+    for (auto& scheduleYearElement : element.children("YearSchedule")) {
       std::string beginDateString = scheduleYearElement.child("BeginDate").text().as_string();
-      auto beginDateParts = splitString(beginDateString, '-'); // 2011-01-01
+      auto beginDateParts = splitString(beginDateString, '-');  // 2011-01-01
       OS_ASSERT(beginDateParts.size() == 3);
       yd.setCalendarYear(std::stoi(beginDateParts.at(0)));
       openstudio::Date beginDate = yd.makeDate(std::stoi(beginDateParts.at(1)), std::stoi(beginDateParts.at(2)));
@@ -213,7 +212,7 @@ namespace gbxml {
       first = false;
 
       std::string endDateString = scheduleYearElement.child("EndDate").text().as_string();
-      auto endDateParts = splitString(endDateString, '-'); // 2011-12-31
+      auto endDateParts = splitString(endDateString, '-');  // 2011-12-31
       OS_ASSERT(endDateParts.size() == 3);
       OS_ASSERT(yd.calendarYear());
       OS_ASSERT(yd.calendarYear().get() == std::stoi(endDateParts.at(0)));
@@ -222,7 +221,7 @@ namespace gbxml {
       std::string weekScheduleId = element.child("WeekScheduleId").attribute("weekScheduleIdRef").value();
 
       // this can be made more efficient using QXPath in QXmlPatterns later
-      for (auto &scheduleWeekElement : root.children("WeekSchedule")) {
+      for (auto& scheduleWeekElement : root.children("WeekSchedule")) {
         std::string thisId = scheduleWeekElement.attribute("id").value();
         if (thisId == weekScheduleId) {
 
@@ -243,6 +242,5 @@ namespace gbxml {
     return result;
   }
 
-
-} // gbxml
-} // openstudio
+}  // namespace gbxml
+}  // namespace openstudio

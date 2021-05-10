@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,117 +47,100 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateFanConstantVolume( FanConstantVolume& modelObject )
-{
-  OptionalString s;
-  OptionalDouble d;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translateFanConstantVolume(FanConstantVolume& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
+    OptionalModelObject temp;
 
-  // Create a new IddObjectType::Fan_ConstantVolume
-  IdfObject idfObject(IddObjectType::Fan_ConstantVolume);
+    // Create a new IddObjectType::Fan_ConstantVolume
+    IdfObject idfObject(IddObjectType::Fan_ConstantVolume);
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Name ////////////////////////////////////////////////////////////
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
-  }
-  ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Name ////////////////////////////////////////////////////////////
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+    ///////////////////////////////////////////////////////////////////////////
 
+    // hook up required objects
+    try {
+      if (boost::optional<model::AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC()) {
+        Schedule sched = airLoopHVAC->availabilitySchedule();
+        boost::optional<IdfObject> schedIdf = translateAndMapModelObject(sched);
+        if (schedIdf) {
+          idfObject.setString(Fan_ConstantVolumeFields::AvailabilityScheduleName, schedIdf->name().get());
+        }
+      } else {
+        Schedule sched = modelObject.availabilitySchedule();
+        translateAndMapModelObject(sched);
+        idfObject.setString(Fan_ConstantVolumeFields::AvailabilityScheduleName, sched.name().get());
+      }
+    } catch (std::exception& e) {
+      LOG(Error, "Could not translate " << modelObject.briefDescription() << ", because " << e.what() << ".");
+      return boost::none;
+    }
 
-  // hook up required objects
-  try {
-    if( boost::optional<model::AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC() )
-    {
-      Schedule sched = airLoopHVAC->availabilitySchedule();
-      boost::optional<IdfObject> schedIdf = translateAndMapModelObject(sched);
-      if( schedIdf )
-      {
-        idfObject.setString(Fan_ConstantVolumeFields::AvailabilityScheduleName,schedIdf->name().get());
+    ///////////////////////////////////////////////////////////////////////////
+    // Fan Total Efficiency ///////////////////////////////////////////////////
+    idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::FanTotalEfficiency, modelObject.fanEfficiency());
+    ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Pressure Rise //////////////////////////////////////////////////////////
+    idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::PressureRise, modelObject.pressureRise());
+    ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Maximum Flow Rate //////////////////////////////////////////////////////
+    d = modelObject.maximumFlowRate();
+    if (d) {
+      idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::MaximumFlowRate, *d);
+    } else {
+      idfObject.setString(openstudio::Fan_ConstantVolumeFields::MaximumFlowRate, "AutoSize");
+    }
+    ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Motor Efficiency ///////////////////////////////////////////////////////
+    idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::MotorEfficiency, modelObject.motorEfficiency());
+    ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Motor In Airstream Fraction ////////////////////////////////////////////
+    idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::MotorInAirstreamFraction, modelObject.motorInAirstreamFraction());
+    ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Air Inlet Node Name ////////////////////////////////////////////////////
+    temp = modelObject.inletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(openstudio::Fan_ConstantVolumeFields::AirInletNodeName, *s);
       }
     }
-    else
-    {
-      Schedule sched = modelObject.availabilitySchedule();
-      translateAndMapModelObject(sched);
-      idfObject.setString(Fan_ConstantVolumeFields::AvailabilityScheduleName,sched.name().get());
+    ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Air Outlet Node Name ///////////////////////////////////////////////////
+    temp = modelObject.outletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(openstudio::Fan_ConstantVolumeFields::AirOutletNodeName, *s);
+      }
     }
+    ///
+    ////////////////////////////////////////////////////////////////////////
+
+    // End Use Subcategory
+    idfObject.setString(Fan_ConstantVolumeFields::EndUseSubcategory, modelObject.endUseSubcategory());
+
+    m_idfObjects.push_back(idfObject);
+    return idfObject;
   }
-  catch (std::exception& e) {
-    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because "
-        << e.what() << ".");
-    return boost::none;
-  }
 
+}  // namespace energyplus
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Fan Total Efficiency ///////////////////////////////////////////////////
-  idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::FanTotalEfficiency,modelObject.fanEfficiency());
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Pressure Rise //////////////////////////////////////////////////////////
-  idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::PressureRise,modelObject.pressureRise());
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Maximum Flow Rate //////////////////////////////////////////////////////
-  d = modelObject.maximumFlowRate();
-  if(d)
-  {
-    idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::MaximumFlowRate,*d);
-  }
-  else
-  {
-    idfObject.setString(openstudio::Fan_ConstantVolumeFields::MaximumFlowRate,"AutoSize");
-  }
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Motor Efficiency ///////////////////////////////////////////////////////
-  idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::MotorEfficiency,modelObject.motorEfficiency());
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Motor In Airstream Fraction ////////////////////////////////////////////
-  idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::MotorInAirstreamFraction,modelObject.motorInAirstreamFraction());
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Air Inlet Node Name ////////////////////////////////////////////////////
-  temp = modelObject.inletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Fan_ConstantVolumeFields::AirInletNodeName,*s);
-    }
-  }
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Air Outlet Node Name ///////////////////////////////////////////////////
-  temp = modelObject.outletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::Fan_ConstantVolumeFields::AirOutletNodeName,*s);
-    }
-  }
-  ///
-  ////////////////////////////////////////////////////////////////////////
-
-  // End Use Subcategory
-  idfObject.setString(Fan_ConstantVolumeFields::EndUseSubcategory, modelObject.endUseSubcategory());
-
-  m_idfObjects.push_back(idfObject);
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

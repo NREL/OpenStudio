@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,85 +37,85 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class PhotovoltaicPerformanceSimple_Impl;
+    class PhotovoltaicPerformanceSimple_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PhotovoltaicPerformanceSimple is a PhotovoltaicPerformance that wraps the OpenStudio IDD object 'OS:PhotovoltaicPerformance:Simple'. */
-class MODEL_API PhotovoltaicPerformanceSimple : public PhotovoltaicPerformance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PhotovoltaicPerformanceSimple is a PhotovoltaicPerformance that wraps the OpenStudio IDD object 'OS:PhotovoltaicPerformance:Simple'. */
+  class MODEL_API PhotovoltaicPerformanceSimple : public PhotovoltaicPerformance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PhotovoltaicPerformanceSimple(const Model& model);
+    explicit PhotovoltaicPerformanceSimple(const Model& model);
 
-  virtual ~PhotovoltaicPerformanceSimple() {}
+    virtual ~PhotovoltaicPerformanceSimple() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double fractionOfSurfaceAreaWithActiveSolarCells() const;
+    double fractionOfSurfaceAreaWithActiveSolarCells() const;
 
-  bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
+    bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
 
-  std::string conversionEfficiencyInputMode() const;
+    std::string conversionEfficiencyInputMode() const;
 
-  boost::optional<double> fixedEfficiency() const;
+    boost::optional<double> fixedEfficiency() const;
 
-  boost::optional<Schedule> efficiencySchedule() const;
+    boost::optional<Schedule> efficiencySchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells);
+    bool setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells);
 
-  void resetFractionOfSurfaceAreaWithActiveSolarCells();
+    void resetFractionOfSurfaceAreaWithActiveSolarCells();
 
-  bool setFixedEfficiency(double fixedEfficiency);
+    bool setFixedEfficiency(double fixedEfficiency);
 
-  void resetFixedEfficiency();
+    void resetFixedEfficiency();
 
-  bool setEfficiencySchedule(Schedule& schedule);
+    bool setEfficiencySchedule(Schedule& schedule);
 
-  void resetEfficiencySchedule();
+    void resetEfficiencySchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PhotovoltaicPerformanceSimple_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PhotovoltaicPerformanceSimple_Impl ImplType;
 
-  explicit PhotovoltaicPerformanceSimple(std::shared_ptr<detail::PhotovoltaicPerformanceSimple_Impl> impl);
+    explicit PhotovoltaicPerformanceSimple(std::shared_ptr<detail::PhotovoltaicPerformanceSimple_Impl> impl);
 
-  friend class detail::PhotovoltaicPerformanceSimple_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceSimple");
-};
+    friend class detail::PhotovoltaicPerformanceSimple_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceSimple");
+  };
 
-/** \relates PhotovoltaicPerformanceSimple*/
-typedef boost::optional<PhotovoltaicPerformanceSimple> OptionalPhotovoltaicPerformanceSimple;
+  /** \relates PhotovoltaicPerformanceSimple*/
+  typedef boost::optional<PhotovoltaicPerformanceSimple> OptionalPhotovoltaicPerformanceSimple;
 
-/** \relates PhotovoltaicPerformanceSimple*/
-typedef std::vector<PhotovoltaicPerformanceSimple> PhotovoltaicPerformanceSimpleVector;
+  /** \relates PhotovoltaicPerformanceSimple*/
+  typedef std::vector<PhotovoltaicPerformanceSimple> PhotovoltaicPerformanceSimpleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PHOTOVOLTAICPERFORMANCESIMPLE_HPP
-
+#endif  // MODEL_PHOTOVOLTAICPERFORMANCESIMPLE_HPP

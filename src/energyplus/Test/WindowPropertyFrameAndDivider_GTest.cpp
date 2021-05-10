@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,8 +61,7 @@ using namespace openstudio;
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 
-TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider)
-{
+TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
 
   Model model;
 
@@ -136,6 +135,4 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider)
   EXPECT_DOUBLE_EQ(0.0, vertices[0].x());
   EXPECT_DOUBLE_EQ(0.0, vertices[0].y());
   EXPECT_DOUBLE_EQ(1.0, vertices[0].z());
-
 }
-

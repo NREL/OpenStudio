@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,83 +36,82 @@
 namespace openstudio {
 namespace model {
 
-class SubSurface;
-class InteriorPartitionSurface;
-class ShadingSurface;
+  class SubSurface;
+  class InteriorPartitionSurface;
+  class ShadingSurface;
 
-namespace detail {
+  namespace detail {
 
-  class DaylightingDeviceShelf_Impl;
+    class DaylightingDeviceShelf_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DaylightingDeviceShelf is a ModelObject that wraps the OpenStudio IDD object 'OS_DaylightingDevice_Shelf'. */
-class MODEL_API DaylightingDeviceShelf : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** DaylightingDeviceShelf is a ModelObject that wraps the OpenStudio IDD object 'OS_DaylightingDevice_Shelf'. */
+  class MODEL_API DaylightingDeviceShelf : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit DaylightingDeviceShelf(const SubSurface& subSurface);
+    explicit DaylightingDeviceShelf(const SubSurface& subSurface);
 
-  virtual ~DaylightingDeviceShelf() {}
+    virtual ~DaylightingDeviceShelf() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  boost::optional<InteriorPartitionSurface> insideShelf() const;
+    boost::optional<InteriorPartitionSurface> insideShelf() const;
 
-  boost::optional<ShadingSurface> outsideShelf() const;
+    boost::optional<ShadingSurface> outsideShelf() const;
 
-  boost::optional<double> viewFactortoOutsideShelf() const;
+    boost::optional<double> viewFactortoOutsideShelf() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInsideShelf(const InteriorPartitionSurface& insideShelf);
+    bool setInsideShelf(const InteriorPartitionSurface& insideShelf);
 
-  bool setOutsideShelf(const ShadingSurface& outsideShelf);
+    bool setOutsideShelf(const ShadingSurface& outsideShelf);
 
-  bool setViewFactortoOutsideShelf(double viewFactortoOutsideShelf);
+    bool setViewFactortoOutsideShelf(double viewFactortoOutsideShelf);
 
-  void resetViewFactortoOutsideShelf();
+    void resetViewFactortoOutsideShelf();
 
-  //@}
+    //@}
 
-  /// Get the related sub surface.
-  SubSurface subSurface() const;
+    /// Get the related sub surface.
+    SubSurface subSurface() const;
 
- protected:
-  /// @cond
-  typedef detail::DaylightingDeviceShelf_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::DaylightingDeviceShelf_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit DaylightingDeviceShelf(std::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl);
+    explicit DaylightingDeviceShelf(std::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.DaylightingDeviceShelf");
+  };
 
-  REGISTER_LOGGER("openstudio.model.DaylightingDeviceShelf");
-};
+  /** \relates DaylightingDeviceShelf*/
+  typedef boost::optional<DaylightingDeviceShelf> OptionalDaylightingDeviceShelf;
 
-/** \relates DaylightingDeviceShelf*/
-typedef boost::optional<DaylightingDeviceShelf> OptionalDaylightingDeviceShelf;
+  /** \relates DaylightingDeviceShelf*/
+  typedef std::vector<DaylightingDeviceShelf> DaylightingDeviceShelfVector;
 
-/** \relates DaylightingDeviceShelf*/
-typedef std::vector<DaylightingDeviceShelf> DaylightingDeviceShelfVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_DAYLIGHTINGDEVICESHELF_HPP
-
+#endif  // MODEL_DAYLIGHTINGDEVICESHELF_HPP

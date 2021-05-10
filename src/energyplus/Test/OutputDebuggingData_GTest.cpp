@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,8 +71,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
     WorkspaceObject idf_debugging(idfObjs[0]);
 
     // E+ uses a numeric field to store this.. I'm using getInt to avoid float comparisons
-    EXPECT_EQ(1, idf_debugging.getInt(Output_DebuggingDataFields::ReportDebuggingData).get());
-    EXPECT_EQ(0, idf_debugging.getInt(Output_DebuggingDataFields::ReportDuringWarmup).get());
+    EXPECT_EQ("Yes", idf_debugging.getString(Output_DebuggingDataFields::ReportDebuggingData).get());
+    EXPECT_EQ("No", idf_debugging.getString(Output_DebuggingDataFields::ReportDuringWarmup).get());
   }
 
   {
@@ -87,8 +87,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
     WorkspaceObject idf_debugging(idfObjs[0]);
 
     // E+ uses a numeric field to store this..
-    EXPECT_EQ(0, idf_debugging.getInt(Output_DebuggingDataFields::ReportDebuggingData).get());
-    EXPECT_EQ(1, idf_debugging.getInt(Output_DebuggingDataFields::ReportDuringWarmup).get());
+    EXPECT_EQ("No", idf_debugging.getString(Output_DebuggingDataFields::ReportDebuggingData).get());
+    EXPECT_EQ("Yes", idf_debugging.getString(Output_DebuggingDataFields::ReportDuringWarmup).get());
   }
 }
 
@@ -108,8 +108,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
   ASSERT_TRUE(_i_outputDebuggingData);
 
   {
-    EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDebuggingData, 1.0));
-    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDuringWarmup, "")); // empty is false
+    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDebuggingData, "Yes"));
+    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDuringWarmup, "No"));
 
     Model m = rt.translateWorkspace(w);
 
@@ -120,8 +120,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
   }
 
   {
-    EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDebuggingData, 0.0)); // Anything but 1.0 is false
-    EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDuringWarmup, 1.0));
+    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDebuggingData, "No"));
+    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDuringWarmup, "Yes"));
 
     Model m = rt.translateWorkspace(w);
 

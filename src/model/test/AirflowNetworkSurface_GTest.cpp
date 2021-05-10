@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -108,8 +108,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices)
-{
+TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices) {
   Model model;
 
   Point3dVector points;
@@ -152,7 +151,6 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices)
   AirflowNetworkExternalNode extnode(model);
   ASSERT_TRUE(afnsurf.setExternalNode(extnode));
   EXPECT_EQ(extnode, afnsurf.externalNode());
-
 }
 
 TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
@@ -160,10 +158,10 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
 
   // construct Surface
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
   Surface surface(vertices, model);
 
   AirflowNetworkCrack crack0(model, 1.0, 0.5);
@@ -192,18 +190,16 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   ASSERT_TRUE(optsurf2);
   ASSERT_TRUE(optsurf2.get().leakageComponent());
   EXPECT_EQ(crack0, optsurf2.get().leakageComponent().get());
-
 }
 
-TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
-{
+TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,3));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(3,0,0));
-  vertices.push_back(Point3d(3,0,3));
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -270,8 +266,7 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
   ASSERT_FALSE(optsurf);
 }
 
-TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface)
-{
+TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface) {
   Model model;
 
   std::vector<Point3d> vertices;
@@ -360,5 +355,4 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface)
   EXPECT_EQ(afnsurf, optsurf.get());
   optsurf = window2.airflowNetworkSurface();
   ASSERT_FALSE(optsurf);
-
 }

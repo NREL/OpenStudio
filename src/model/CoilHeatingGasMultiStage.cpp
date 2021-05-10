@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,247 +50,225 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilHeatingGasMultiStage_Impl::CoilHeatingGasMultiStage_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model,
-                                                               bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingGasMultiStage::iddObjectType());
-  }
-
-  CoilHeatingGasMultiStage_Impl::CoilHeatingGasMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                               Model_Impl* model,
-                                                               bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilHeatingGasMultiStage::iddObjectType());
-  }
-
-  CoilHeatingGasMultiStage_Impl::CoilHeatingGasMultiStage_Impl(const CoilHeatingGasMultiStage_Impl& other,
-                                                               Model_Impl* model,
-                                                               bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& CoilHeatingGasMultiStage_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Heating Coil Energy",
-      "Heating Coil Rate",
-      "Heating Coil Gas Consumption",
-      "Heating Coil Gas Consumption Rate",
-      "Heating Coil Electric Consumption",
-      "Heating Coil Electric Power",
-      "Heating Coil Runtime Fraction",
-      "Heating Coil Parasitic Gas Consumption",
-      "Heating Coil Parasitic Gas Consumption Rate"
-    };
-    return result;
-  }
-
-  IddObjectType CoilHeatingGasMultiStage_Impl::iddObjectType() const {
-    return CoilHeatingGasMultiStage::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> CoilHeatingGasMultiStage_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("CoilHeatingGasMultiStage","Availability Schedule"));
+    CoilHeatingGasMultiStage_Impl::CoilHeatingGasMultiStage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilHeatingGasMultiStage::iddObjectType());
     }
-    return result;
-  }
 
-  boost::optional<Schedule> CoilHeatingGasMultiStage_Impl::availabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule);
-  }
-
-  boost::optional<Curve> CoilHeatingGasMultiStage_Impl::partLoadFractionCorrelationCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurve);
-  }
-
-  boost::optional<double> CoilHeatingGasMultiStage_Impl::parasiticGasLoad() const {
-    return getDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad,true);
-  }
-
-  bool CoilHeatingGasMultiStage_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule,
-                              "CoilHeatingGasMultiStage",
-                              "Availability Schedule",
-                              schedule);
-    return result;
-  }
-
-  void CoilHeatingGasMultiStage_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule, "");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingGasMultiStage_Impl::setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      result = setPointer(OS_Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurve, curve.get().handle());
+    CoilHeatingGasMultiStage_Impl::CoilHeatingGasMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                 bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilHeatingGasMultiStage::iddObjectType());
     }
-    else {
-      resetPartLoadFractionCorrelationCurve();
-      result = true;
+
+    CoilHeatingGasMultiStage_Impl::CoilHeatingGasMultiStage_Impl(const CoilHeatingGasMultiStage_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& CoilHeatingGasMultiStage_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Heating Coil Energy",
+                                                   "Heating Coil Rate",
+                                                   "Heating Coil Gas Consumption",
+                                                   "Heating Coil Gas Consumption Rate",
+                                                   "Heating Coil Electric Consumption",
+                                                   "Heating Coil Electricity Rate",
+                                                   "Heating Coil Runtime Fraction",
+                                                   "Heating Coil Parasitic Gas Consumption",
+                                                   "Heating Coil Parasitic Gas Consumption Rate"};
+      return result;
     }
-    return result;
-  }
 
-  void CoilHeatingGasMultiStage_Impl::resetPartLoadFractionCorrelationCurve() {
-    bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurve, "");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingGasMultiStage_Impl::setParasiticGasLoad(boost::optional<double> parasiticGasLoad) {
-    bool result(false);
-    if (parasiticGasLoad) {
-      result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, parasiticGasLoad.get());
+    IddObjectType CoilHeatingGasMultiStage_Impl::iddObjectType() const {
+      return CoilHeatingGasMultiStage::iddObjectType();
     }
-    else {
-      resetParasiticGasLoad();
-      result = true;
+
+    std::vector<ScheduleTypeKey> CoilHeatingGasMultiStage_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule) != e) {
+        result.push_back(ScheduleTypeKey("CoilHeatingGasMultiStage", "Availability Schedule"));
+      }
+      return result;
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void CoilHeatingGasMultiStage_Impl::resetParasiticGasLoad() {
-    bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, "");
-    OS_ASSERT(result);
-  }
-
-  unsigned CoilHeatingGasMultiStage_Impl::inletPort() const {
-    return OS_Coil_Heating_Gas_MultiStageFields::AirInletNode;
-  }
-
-  unsigned CoilHeatingGasMultiStage_Impl::outletPort() const {
-    return OS_Coil_Heating_Gas_MultiStageFields::AirOutletNode;
-  }
-
-  ModelObject CoilHeatingGasMultiStage_Impl::clone(Model model) const {
-    auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingGasMultiStage>();
-
-    auto t_stages = stages();
-    for( auto stage: t_stages ) {
-      auto stageClone = stage.clone(model).cast<CoilHeatingGasMultiStageStageData>();
-      t_clone.addStage(stageClone);
+    boost::optional<Schedule> CoilHeatingGasMultiStage_Impl::availabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule);
     }
-    return t_clone;
-  }
 
-  std::vector<ModelObject> CoilHeatingGasMultiStage_Impl::children() const {
-    return subsetCastVector<ModelObject>(stages());
-  }
+    boost::optional<Curve> CoilHeatingGasMultiStage_Impl::partLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurve);
+    }
 
-  std::vector<CoilHeatingGasMultiStageStageData> CoilHeatingGasMultiStage_Impl::stages() const {
-    std::vector<CoilHeatingGasMultiStageStageData> result;
-    auto groups = extensibleGroups();
-    for( auto group: groups ) {
-      auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_Gas_MultiStageExtensibleFields::Stage);
-      if( target ) {
-        if( auto stage = target->optionalCast<CoilHeatingGasMultiStageStageData>() ) {
-          result.push_back(stage.get());
+    boost::optional<double> CoilHeatingGasMultiStage_Impl::parasiticGasLoad() const {
+      return getDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, true);
+    }
+
+    bool CoilHeatingGasMultiStage_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule, "CoilHeatingGasMultiStage", "Availability Schedule", schedule);
+      return result;
+    }
+
+    void CoilHeatingGasMultiStage_Impl::resetAvailabilitySchedule() {
+      bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingGasMultiStage_Impl::setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(OS_Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurve, curve.get().handle());
+      } else {
+        resetPartLoadFractionCorrelationCurve();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilHeatingGasMultiStage_Impl::resetPartLoadFractionCorrelationCurve() {
+      bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurve, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingGasMultiStage_Impl::setParasiticGasLoad(boost::optional<double> parasiticGasLoad) {
+      bool result(false);
+      if (parasiticGasLoad) {
+        result = setDouble(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, parasiticGasLoad.get());
+      } else {
+        resetParasiticGasLoad();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingGasMultiStage_Impl::resetParasiticGasLoad() {
+      bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, "");
+      OS_ASSERT(result);
+    }
+
+    unsigned CoilHeatingGasMultiStage_Impl::inletPort() const {
+      return OS_Coil_Heating_Gas_MultiStageFields::AirInletNode;
+    }
+
+    unsigned CoilHeatingGasMultiStage_Impl::outletPort() const {
+      return OS_Coil_Heating_Gas_MultiStageFields::AirOutletNode;
+    }
+
+    ModelObject CoilHeatingGasMultiStage_Impl::clone(Model model) const {
+      auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingGasMultiStage>();
+
+      auto t_stages = stages();
+      for (auto stage : t_stages) {
+        auto stageClone = stage.clone(model).cast<CoilHeatingGasMultiStageStageData>();
+        t_clone.addStage(stageClone);
+      }
+      return t_clone;
+    }
+
+    std::vector<ModelObject> CoilHeatingGasMultiStage_Impl::children() const {
+      return subsetCastVector<ModelObject>(stages());
+    }
+
+    std::vector<CoilHeatingGasMultiStageStageData> CoilHeatingGasMultiStage_Impl::stages() const {
+      std::vector<CoilHeatingGasMultiStageStageData> result;
+      auto groups = extensibleGroups();
+      for (auto group : groups) {
+        auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_Gas_MultiStageExtensibleFields::Stage);
+        if (target) {
+          if (auto stage = target->optionalCast<CoilHeatingGasMultiStageStageData>()) {
+            result.push_back(stage.get());
+          }
         }
       }
+      return result;
     }
-    return result;
-  }
 
-  void CoilHeatingGasMultiStage_Impl::addStage(CoilHeatingGasMultiStageStageData& stage) {
-    auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    group.setPointer(OS_Coil_Heating_Gas_MultiStageExtensibleFields::Stage,stage.handle());
-  }
+    void CoilHeatingGasMultiStage_Impl::addStage(CoilHeatingGasMultiStageStageData& stage) {
+      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      group.setPointer(OS_Coil_Heating_Gas_MultiStageExtensibleFields::Stage, stage.handle());
+    }
 
-  boost::optional<HVACComponent> CoilHeatingGasMultiStage_Impl::containingHVACComponent() const
-  {
-    // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
-    {
-      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+    boost::optional<HVACComponent> CoilHeatingGasMultiStage_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+      {
+        auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
-      for( const auto & system : systems ) {
-        auto coolingCoil = system.coolingCoil();
-        if( coolingCoil.handle() == this->handle() ) {
-          return system;
+        for (const auto& system : systems) {
+          auto coolingCoil = system.coolingCoil();
+          if (coolingCoil.handle() == this->handle()) {
+            return system;
+          }
         }
       }
+
+      return boost::none;
     }
 
-    return boost::none;
+    bool CoilHeatingGasMultiStage_Impl::addToNode(Node& node) {
+      return false;
+    }
+
+  }  // namespace detail
+
+  CoilHeatingGasMultiStage::CoilHeatingGasMultiStage(const Model& model) : StraightComponent(CoilHeatingGasMultiStage::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilHeatingGasMultiStage_Impl>());
   }
 
-  bool CoilHeatingGasMultiStage_Impl::addToNode(Node & node)
-  {
-    return false;
+  IddObjectType CoilHeatingGasMultiStage::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage);
   }
 
-} // detail
+  boost::optional<Schedule> CoilHeatingGasMultiStage::availabilitySchedule() const {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->availabilitySchedule();
+  }
 
-CoilHeatingGasMultiStage::CoilHeatingGasMultiStage(const Model& model)
-  : StraightComponent(CoilHeatingGasMultiStage::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilHeatingGasMultiStage_Impl>());
-}
+  boost::optional<Curve> CoilHeatingGasMultiStage::partLoadFractionCorrelationCurve() const {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->partLoadFractionCorrelationCurve();
+  }
 
-IddObjectType CoilHeatingGasMultiStage::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage);
-}
+  boost::optional<double> CoilHeatingGasMultiStage::parasiticGasLoad() const {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->parasiticGasLoad();
+  }
 
-boost::optional<Schedule> CoilHeatingGasMultiStage::availabilitySchedule() const {
-  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->availabilitySchedule();
-}
+  bool CoilHeatingGasMultiStage::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-boost::optional<Curve> CoilHeatingGasMultiStage::partLoadFractionCorrelationCurve() const {
-  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->partLoadFractionCorrelationCurve();
-}
+  void CoilHeatingGasMultiStage::resetAvailabilitySchedule() {
+    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetAvailabilitySchedule();
+  }
 
-boost::optional<double> CoilHeatingGasMultiStage::parasiticGasLoad() const {
-  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->parasiticGasLoad();
-}
+  bool CoilHeatingGasMultiStage::setPartLoadFractionCorrelationCurve(const Curve& curve) {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setPartLoadFractionCorrelationCurve(curve);
+  }
 
-bool CoilHeatingGasMultiStage::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setAvailabilitySchedule(schedule);
-}
+  void CoilHeatingGasMultiStage::resetPartLoadFractionCorrelationCurve() {
+    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetPartLoadFractionCorrelationCurve();
+  }
 
-void CoilHeatingGasMultiStage::resetAvailabilitySchedule() {
-  getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetAvailabilitySchedule();
-}
+  bool CoilHeatingGasMultiStage::setParasiticGasLoad(double parasiticGasLoad) {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setParasiticGasLoad(parasiticGasLoad);
+  }
 
-bool CoilHeatingGasMultiStage::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setPartLoadFractionCorrelationCurve(curve);
-}
+  void CoilHeatingGasMultiStage::resetParasiticGasLoad() {
+    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetParasiticGasLoad();
+  }
 
-void CoilHeatingGasMultiStage::resetPartLoadFractionCorrelationCurve() {
-  getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetPartLoadFractionCorrelationCurve();
-}
+  std::vector<CoilHeatingGasMultiStageStageData> CoilHeatingGasMultiStage::stages() const {
+    return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->stages();
+  }
 
-bool CoilHeatingGasMultiStage::setParasiticGasLoad(double parasiticGasLoad) {
-  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setParasiticGasLoad(parasiticGasLoad);
-}
+  void CoilHeatingGasMultiStage::addStage(CoilHeatingGasMultiStageStageData& stage) {
+    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->addStage(stage);
+  }
 
-void CoilHeatingGasMultiStage::resetParasiticGasLoad() {
-  getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetParasiticGasLoad();
-}
+  /// @cond
+  CoilHeatingGasMultiStage::CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilHeatingGasMultiStage_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-std::vector<CoilHeatingGasMultiStageStageData> CoilHeatingGasMultiStage::stages() const {
-  return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->stages();
-}
-
-void CoilHeatingGasMultiStage::addStage(CoilHeatingGasMultiStageStageData& stage) {
-  getImpl<detail::CoilHeatingGasMultiStage_Impl>()->addStage(stage);
-}
-
-/// @cond
-CoilHeatingGasMultiStage::CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilHeatingGasMultiStage_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

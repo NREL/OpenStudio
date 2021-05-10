@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,22 +39,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ModelObjectList_DefaultConstructor)
-{
+TEST_F(ModelFixture, ModelObjectList_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    ModelObjectList testObject = ModelObjectList(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      ModelObjectList testObject = ModelObjectList(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, ModelObjectList_Remove)
-{
+TEST_F(ModelFixture, ModelObjectList_Remove) {
   Model model;
   ModelObjectList testObject = ModelObjectList(model);
   Connection connection = Connection(model);
@@ -76,8 +74,7 @@ TEST_F(ModelFixture, ModelObjectList_Remove)
   EXPECT_EQ(0, modelObjects.size());
 }
 
-TEST_F(ModelFixture, ModelObjectList_CloneOneModel)
-{
+TEST_F(ModelFixture, ModelObjectList_CloneOneModel) {
   Model model;
   ModelObjectList testObject = ModelObjectList(model);
   Connection connection = Connection(model);
@@ -94,8 +91,7 @@ TEST_F(ModelFixture, ModelObjectList_CloneOneModel)
   EXPECT_NE(modelObjectsClone[0].handle(), modelObjects[0].handle());
 }
 
-TEST_F(ModelFixture, ModelObjectList_CloneTwoModels)
-{
+TEST_F(ModelFixture, ModelObjectList_CloneTwoModels) {
   Model model;
   ModelObjectList testObject = ModelObjectList(model);
   Connection connection = Connection(model);
@@ -120,8 +116,7 @@ TEST_F(ModelFixture, ModelObjectList_CloneTwoModels)
   EXPECT_NE(modelObjects[0].handle(), modelObjectsClone2[0].handle());
 }
 
-TEST_F(ModelFixture, ModelObjectList_ModelObjects)
-{
+TEST_F(ModelFixture, ModelObjectList_ModelObjects) {
   Model model;
   ModelObjectList testObject = ModelObjectList(model);
 
@@ -129,8 +124,7 @@ TEST_F(ModelFixture, ModelObjectList_ModelObjects)
   EXPECT_TRUE(modelObjects.empty());
 }
 
-TEST_F(ModelFixture, ModelObjectList_AddModelObject)
-{
+TEST_F(ModelFixture, ModelObjectList_AddModelObject) {
   Model model;
   ModelObjectList testObject = ModelObjectList(model);
   Connection connection = Connection(model);
@@ -141,8 +135,7 @@ TEST_F(ModelFixture, ModelObjectList_AddModelObject)
   EXPECT_EQ(1, modelObjects.size());
 }
 
-TEST_F(ModelFixture, ModelObjectList_RemoveModelObject)
-{
+TEST_F(ModelFixture, ModelObjectList_RemoveModelObject) {
   Model model;
   ModelObjectList testObject = ModelObjectList(model);
   Connection connection1 = Connection(model);
@@ -166,8 +159,7 @@ TEST_F(ModelFixture, ModelObjectList_RemoveModelObject)
   EXPECT_TRUE(modelObjects.empty());
 }
 
-TEST_F(ModelFixture, ModelObjectList_RemoveAllModelObjects)
-{
+TEST_F(ModelFixture, ModelObjectList_RemoveAllModelObjects) {
   Model model;
   ModelObjectList testObject = ModelObjectList(model);
   Connection connection1 = Connection(model);

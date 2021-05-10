@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,43 +44,41 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateStandardOpaqueMaterial( StandardOpaqueMaterial & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::Material );
+  boost::optional<IdfObject> ForwardTranslator::translateStandardOpaqueMaterial(StandardOpaqueMaterial& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Material);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(openstudio::MaterialFields::Name, modelObject.name().get());
+    idfObject.setString(openstudio::MaterialFields::Name, modelObject.name().get());
 
-  idfObject.setString(openstudio::MaterialFields::Roughness, modelObject.roughness());
+    idfObject.setString(openstudio::MaterialFields::Roughness, modelObject.roughness());
 
-  idfObject.setDouble(openstudio::MaterialFields::Thickness, modelObject.thickness());
+    idfObject.setDouble(openstudio::MaterialFields::Thickness, modelObject.thickness());
 
-  idfObject.setDouble(openstudio::MaterialFields::Conductivity, modelObject.thermalConductivity());
+    idfObject.setDouble(openstudio::MaterialFields::Conductivity, modelObject.thermalConductivity());
 
-  idfObject.setDouble( openstudio::MaterialFields::Density, modelObject.density());
+    idfObject.setDouble(openstudio::MaterialFields::Density, modelObject.density());
 
-  idfObject.setDouble(openstudio::MaterialFields::SpecificHeat, modelObject.specificHeat());
+    idfObject.setDouble(openstudio::MaterialFields::SpecificHeat, modelObject.specificHeat());
 
-  OptionalDouble d = modelObject.thermalAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::MaterialFields::ThermalAbsorptance, *d);
+    OptionalDouble d = modelObject.thermalAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::MaterialFields::ThermalAbsorptance, *d);
+    }
+
+    d = modelObject.solarAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::MaterialFields::SolarAbsorptance, *d);
+    }
+
+    d = modelObject.visibleAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::MaterialFields::VisibleAbsorptance, *d);
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  d = modelObject.solarAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::MaterialFields::SolarAbsorptance, *d);
-  }
+}  // namespace energyplus
 
-  d = modelObject.visibleAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::MaterialFields::VisibleAbsorptance, *d);
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

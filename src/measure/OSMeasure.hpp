@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,62 +38,63 @@
 namespace openstudio {
 namespace measure {
 
-class OSArgument;
-class OSOutput;
-class OSRunner;
+  class OSArgument;
+  class OSOutput;
+  class OSRunner;
 
-/** OSMeasure is an abstract base class for a user script. There are derived types that operate
+  /** OSMeasure is an abstract base class for a user script. There are derived types that operate
  *  on OpenStudio Models and EnergyPlus Workspaces. */
-class MEASURE_API OSMeasure {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MEASURE_API OSMeasure
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OSMeasure();
+    virtual ~OSMeasure();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /// user facing name of this measure, defaults to empty
-  virtual std::string name() const;
+    /// user facing name of this measure, defaults to empty
+    virtual std::string name() const;
 
-  /// user facing description of this measure, defaults to empty
-  virtual std::string description() const;
+    /// user facing description of this measure, defaults to empty
+    virtual std::string description() const;
 
-  /// user facing BCL taxonomy of this measure, defaults to empty
-  virtual std::string taxonomy() const;
+    /// user facing BCL taxonomy of this measure, defaults to empty
+    virtual std::string taxonomy() const;
 
-  /// user facing technical description of this measure, defaults to empty
-  virtual std::string modeler_description() const;
+    /// user facing technical description of this measure, defaults to empty
+    virtual std::string modeler_description() const;
 
-  //@}
-  /** @name Actions */
-  //@{
+    //@}
+    /** @name Actions */
+    //@{
 
-  /** Register this script with SketchUp. Deprecated in favor of registerWithApplication().
+    /** Register this script with SketchUp. Deprecated in favor of registerWithApplication().
    *  Base class implementation does nothing and returns false. \deprecated */
-  OS_DEPRECATED virtual bool registerWithSketchUp() const;
+    OS_DEPRECATED virtual bool registerWithSketchUp() const;
 
-  /** Register this script with an Application. Base class implementation does nothing and
+    /** Register this script with an Application. Base class implementation does nothing and
    *  returns false. \deprecated */
-  OS_DEPRECATED virtual bool registerWithApplication() const;
+    OS_DEPRECATED virtual bool registerWithApplication() const;
 
- protected:
-  OSMeasure() {}
+   protected:
+    OSMeasure() {}
 
-  //@}
- private:
-  REGISTER_LOGGER("openstudio.measure.OSMeasure");
-};
+    //@}
+   private:
+    REGISTER_LOGGER("openstudio.measure.OSMeasure");
+  };
 
-/** \relates OSMeasure */
-typedef boost::optional<OSMeasure> OptionalOSMeasure;
+  /** \relates OSMeasure */
+  typedef boost::optional<OSMeasure> OptionalOSMeasure;
 
-/** \relates OSMeasure */
-typedef std::vector<OSMeasure> OSMeasureVector;
+  /** \relates OSMeasure */
+  typedef std::vector<OSMeasure> OSMeasureVector;
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio
 
-#endif // MEASURE_OSMEASURE_HPP
+#endif  // MEASURE_OSMEASURE_HPP

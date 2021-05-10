@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,70 +40,61 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerFollowOutdoorAirTemperature(
-                              SetpointManagerFollowOutdoorAirTemperature & modelObject )
-{
-  boost::optional<Node> node;
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSetpointManagerFollowOutdoorAirTemperature(SetpointManagerFollowOutdoorAirTemperature& modelObject) {
+    boost::optional<Node> node;
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  IdfObject idfObject(IddObjectType::SetpointManager_FollowOutdoorAirTemperature);
+    IdfObject idfObject(IddObjectType::SetpointManager_FollowOutdoorAirTemperature);
 
-  // Name
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::Name,s.get());
+    // Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::Name, s.get());
+    }
+
+    // ControlVariable
+    s = modelObject.controlVariable();
+    if (s) {
+      idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable, s.get());
+    }
+
+    // SetpointNodeorNodeListName
+    node = modelObject.setpointNode();
+    if (node) {
+      idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    // ReferenceTemperatureType
+    s = modelObject.referenceTemperatureType();
+    if (s) {
+      idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType, s.get());
+    }
+
+    // OffsetTemperatureDifference
+    d = modelObject.offsetTemperatureDifference();
+    if (d) {
+      idfObject.setDouble(SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference, d.get());
+    }
+
+    // MaximumSetpointTemperature
+    d = modelObject.maximumSetpointTemperature();
+    if (d) {
+      idfObject.setDouble(SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature, d.get());
+    }
+
+    // MinimumSetpointTemperature
+    d = modelObject.minimumSetpointTemperature();
+    if (d) {
+      idfObject.setDouble(SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature, d.get());
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return idfObject;
   }
 
-  // ControlVariable
-  s = modelObject.controlVariable();
-  if( s )
-  {
-    idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,s.get());
-  }
+}  // namespace energyplus
 
-  // SetpointNodeorNodeListName
-  node = modelObject.setpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,node->name().get());
-  }
-
-  // ReferenceTemperatureType
-  s = modelObject.referenceTemperatureType();
-  if( s )
-  {
-    idfObject.setString(SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType,s.get());
-  }
-
-  // OffsetTemperatureDifference
-  d = modelObject.offsetTemperatureDifference();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference,d.get());
-  }
-
-  // MaximumSetpointTemperature
-  d = modelObject.maximumSetpointTemperature();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature,d.get());
-  }
-
-  // MinimumSetpointTemperature
-  d = modelObject.minimumSetpointTemperature();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature,d.get());
-  }
-
-  m_idfObjects.push_back(idfObject);
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

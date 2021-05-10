@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -135,7 +135,6 @@ TEST_F(ModelFixture, LifeCycleCostParameters) {
   EXPECT_FALSE(lifeCycleCostParameters.nominalDiscountRate());
   EXPECT_FALSE(lifeCycleCostParameters.inflation());
 
-
   // cant be more than 25 years under FEMP
   EXPECT_FALSE(lifeCycleCostParameters.setLengthOfStudyPeriodInYears(30));
   EXPECT_EQ(25, lifeCycleCostParameters.lengthOfStudyPeriodInYears());
@@ -214,9 +213,7 @@ TEST_F(ModelFixture, LifeCycleCostParameters) {
   EXPECT_FALSE(lifeCycleCostParameters.isLengthOfStudyPeriodInYearsDefaulted());
 }
 
-
-TEST_F(ModelFixture, LifeCycleCost_BadNames)
-{
+TEST_F(ModelFixture, LifeCycleCost_BadNames) {
   Model model1;
   Model model2;
 
@@ -292,7 +289,8 @@ TEST_F(ModelFixture, LifeCycleCost_BadNames)
 
   {
     // &#33;
-    boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Exclamation! In! Name", building, 1000.0, "CostPerEach", "Construction");
+    boost::optional<LifeCycleCost> cost =
+      LifeCycleCost::createLifeCycleCost("Exclamation! In! Name", building, 1000.0, "CostPerEach", "Construction");
     ASSERT_TRUE(cost);
     EXPECT_EQ("Exclamation! In! Name", cost->nameString());
     ASSERT_TRUE(cost->getString(OS_LifeCycleCostFields::Name));
@@ -314,7 +312,8 @@ TEST_F(ModelFixture, LifeCycleCost_BadNames)
   }
 
   {
-    boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", building, 1000.0, "CostPerEach", "Construction");
+    boost::optional<LifeCycleCost> cost =
+      LifeCycleCost::createLifeCycleCost("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", building, 1000.0, "CostPerEach", "Construction");
     ASSERT_TRUE(cost);
     EXPECT_EQ("Crazy Name !@#$%^&*(),.?;'{}|-_+=<>:\"[]~`", cost->nameString());
     ASSERT_TRUE(cost->getString(OS_LifeCycleCostFields::Name));

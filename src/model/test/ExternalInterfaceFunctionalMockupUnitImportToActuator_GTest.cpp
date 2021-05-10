@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -91,7 +91,6 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
   EXPECT_TRUE(fanActuator.setFMUFile(eifmui2));
   EXPECT_EQ(eifmui2, fanActuator.fMUFile());
 
-
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
 
@@ -114,8 +113,9 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
   ElectricEquipmentDefinition definition(model);
   ElectricEquipment electricEquipment(definition);
   ComponentType = "ElectricEquipment";
-  std::string equipControlType = "Electric Power Level";
-  ExternalInterfaceFunctionalMockupUnitImportToActuator equipActuator(electricEquipment, ComponentType, equipControlType, eifmui, "FMU", "electric FMU", 1);
+  std::string equipControlType = "Electricity Rate";
+  ExternalInterfaceFunctionalMockupUnitImportToActuator equipActuator(electricEquipment, ComponentType, equipControlType, eifmui, "FMU",
+                                                                      "electric FMU", 1);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
 
@@ -129,6 +129,4 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
 
   equipActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
-
 }
-

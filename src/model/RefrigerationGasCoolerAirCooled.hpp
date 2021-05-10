@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,165 +37,166 @@ namespace openstudio {
 
 namespace model {
 
-class CurveLinear;
-// class ThermalZone;
+  class CurveLinear;
+  // class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationGasCoolerAirCooled_Impl;
+    class RefrigerationGasCoolerAirCooled_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationGasCoolerAirCooled is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:GasCooler:AirCooled'. */
-class MODEL_API RefrigerationGasCoolerAirCooled : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationGasCoolerAirCooled is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:GasCooler:AirCooled'. */
+  class MODEL_API RefrigerationGasCoolerAirCooled : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationGasCoolerAirCooled(const Model& model);
+    explicit RefrigerationGasCoolerAirCooled(const Model& model);
 
-  virtual ~RefrigerationGasCoolerAirCooled() {}
+    virtual ~RefrigerationGasCoolerAirCooled() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> gasCoolerFanSpeedControlTypeValues();
+    static std::vector<std::string> gasCoolerFanSpeedControlTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<CurveLinear> ratedTotalHeatRejectionRateCurve() const;
+    boost::optional<CurveLinear> ratedTotalHeatRejectionRateCurve() const;
 
-  std::string gasCoolerFanSpeedControlType() const;
+    std::string gasCoolerFanSpeedControlType() const;
 
-  bool isGasCoolerFanSpeedControlTypeDefaulted() const;
+    bool isGasCoolerFanSpeedControlTypeDefaulted() const;
 
-  double ratedFanPower() const;
+    double ratedFanPower() const;
 
-  bool isRatedFanPowerDefaulted() const;
+    bool isRatedFanPowerDefaulted() const;
 
-  double minimumFanAirFlowRatio() const;
+    double minimumFanAirFlowRatio() const;
 
-  bool isMinimumFanAirFlowRatioDefaulted() const;
+    bool isMinimumFanAirFlowRatioDefaulted() const;
 
-  double transitionTemperature() const;
+    double transitionTemperature() const;
 
-  bool isTransitionTemperatureDefaulted() const;
+    bool isTransitionTemperatureDefaulted() const;
 
-  double transcriticalApproachTemperature() const;
+    double transcriticalApproachTemperature() const;
 
-  bool isTranscriticalApproachTemperatureDefaulted() const;
+    bool isTranscriticalApproachTemperatureDefaulted() const;
 
-  double subcriticalTemperatureDifference() const;
+    double subcriticalTemperatureDifference() const;
 
-  bool isSubcriticalTemperatureDifferenceDefaulted() const;
+    bool isSubcriticalTemperatureDifferenceDefaulted() const;
 
-  double minimumCondensingTemperature() const;
+    double minimumCondensingTemperature() const;
 
-  bool isMinimumCondensingTemperatureDefaulted() const;
+    bool isMinimumCondensingTemperatureDefaulted() const;
 
-  // boost::optional<ThermalZone> airInletNode() const;
+    // boost::optional<ThermalZone> airInletNode() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  double gasCoolerRefrigerantOperatingChargeInventory() const;
+    double gasCoolerRefrigerantOperatingChargeInventory() const;
 
-  bool isGasCoolerRefrigerantOperatingChargeInventoryDefaulted() const;
+    bool isGasCoolerRefrigerantOperatingChargeInventoryDefaulted() const;
 
-  double gasCoolerReceiverRefrigerantInventory() const;
+    double gasCoolerReceiverRefrigerantInventory() const;
 
-  bool isGasCoolerReceiverRefrigerantInventoryDefaulted() const;
+    bool isGasCoolerReceiverRefrigerantInventoryDefaulted() const;
 
-  double gasCoolerOutletPipingRefrigerantInventory() const;
+    double gasCoolerOutletPipingRefrigerantInventory() const;
 
-  bool isGasCoolerOutletPipingRefrigerantInventoryDefaulted() const;
+    bool isGasCoolerOutletPipingRefrigerantInventoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setRatedTotalHeatRejectionRateCurve(const CurveLinear& curveLinear);
+    bool setRatedTotalHeatRejectionRateCurve(const CurveLinear& curveLinear);
 
-  void resetRatedTotalHeatRejectionRateCurve();
+    void resetRatedTotalHeatRejectionRateCurve();
 
-  bool setGasCoolerFanSpeedControlType(std::string gasCoolerFanSpeedControlType);
+    bool setGasCoolerFanSpeedControlType(std::string gasCoolerFanSpeedControlType);
 
-  void resetGasCoolerFanSpeedControlType();
+    void resetGasCoolerFanSpeedControlType();
 
-  bool setRatedFanPower(double ratedFanPower);
+    bool setRatedFanPower(double ratedFanPower);
 
-  void resetRatedFanPower();
+    void resetRatedFanPower();
 
-  bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
+    bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
 
-  void resetMinimumFanAirFlowRatio();
+    void resetMinimumFanAirFlowRatio();
 
-  bool setTransitionTemperature(double transitionTemperature);
+    bool setTransitionTemperature(double transitionTemperature);
 
-  void resetTransitionTemperature();
+    void resetTransitionTemperature();
 
-  bool setTranscriticalApproachTemperature(double transcriticalApproachTemperature);
+    bool setTranscriticalApproachTemperature(double transcriticalApproachTemperature);
 
-  void resetTranscriticalApproachTemperature();
+    void resetTranscriticalApproachTemperature();
 
-  bool setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference);
+    bool setSubcriticalTemperatureDifference(double subcriticalTemperatureDifference);
 
-  void resetSubcriticalTemperatureDifference();
+    void resetSubcriticalTemperatureDifference();
 
-  bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
+    bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
-  void resetMinimumCondensingTemperature();
+    void resetMinimumCondensingTemperature();
 
-  // bool setAirInletNode(const ThermalZone& thermalZone);
+    // bool setAirInletNode(const ThermalZone& thermalZone);
 
-  // void resetAirInletNode();
+    // void resetAirInletNode();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  bool setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory);
+    bool setGasCoolerRefrigerantOperatingChargeInventory(double gasCoolerRefrigerantOperatingChargeInventory);
 
-  void resetGasCoolerRefrigerantOperatingChargeInventory();
+    void resetGasCoolerRefrigerantOperatingChargeInventory();
 
-  bool setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory);
+    bool setGasCoolerReceiverRefrigerantInventory(double gasCoolerReceiverRefrigerantInventory);
 
-  void resetGasCoolerReceiverRefrigerantInventory();
+    void resetGasCoolerReceiverRefrigerantInventory();
 
-  bool setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory);
+    bool setGasCoolerOutletPipingRefrigerantInventory(double gasCoolerOutletPipingRefrigerantInventory);
 
-  void resetGasCoolerOutletPipingRefrigerantInventory();
+    void resetGasCoolerOutletPipingRefrigerantInventory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationGasCoolerAirCooled_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationGasCoolerAirCooled_Impl ImplType;
 
-  explicit RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl);
+    explicit RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl);
 
-  friend class detail::RefrigerationGasCoolerAirCooled_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationGasCoolerAirCooled");
-};
+    friend class detail::RefrigerationGasCoolerAirCooled_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationGasCoolerAirCooled");
+  };
 
-/** \relates RefrigerationGasCoolerAirCooled*/
-typedef boost::optional<RefrigerationGasCoolerAirCooled> OptionalRefrigerationGasCoolerAirCooled;
+  /** \relates RefrigerationGasCoolerAirCooled*/
+  typedef boost::optional<RefrigerationGasCoolerAirCooled> OptionalRefrigerationGasCoolerAirCooled;
 
-/** \relates RefrigerationGasCoolerAirCooled*/
-typedef std::vector<RefrigerationGasCoolerAirCooled> RefrigerationGasCoolerAirCooledVector;
+  /** \relates RefrigerationGasCoolerAirCooled*/
+  typedef std::vector<RefrigerationGasCoolerAirCooled> RefrigerationGasCoolerAirCooledVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP
+#endif  // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP

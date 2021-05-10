@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,113 +32,122 @@
 
 #include <model/ModelAPI.hpp>
 #include "ConstructionBase.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
+  // TODO: Check the following class names against object getters and setters.
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class ConstructionAirBoundary_Impl;
+    class ConstructionAirBoundary_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ConstructionAirBoundary is a ConstructionBase that wraps the OpenStudio IDD object 'OS:Construction:AirBoundary'. */
-class MODEL_API ConstructionAirBoundary : public ConstructionBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ConstructionAirBoundary is a ConstructionBase that wraps the OpenStudio IDD object 'OS:Construction:AirBoundary'. */
+  class MODEL_API ConstructionAirBoundary : public ConstructionBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ConstructionAirBoundary(const Model& model);
+    explicit ConstructionAirBoundary(const Model& model);
 
-  virtual ~ConstructionAirBoundary() {}
+    virtual ~ConstructionAirBoundary() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> solarAndDaylightingMethodValues();
+    OS_DEPRECATED static std::vector<std::string> solarAndDaylightingMethodValues();
 
-  static std::vector<std::string> radiantExchangeMethodValues();
+    OS_DEPRECATED static std::vector<std::string> radiantExchangeMethodValues();
 
-  static std::vector<std::string> airExchangeMethodValues();
+    static std::vector<std::string> airExchangeMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string solarAndDaylightingMethod() const;
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED std::string solarAndDaylightingMethod() const;
 
-  bool isSolarAndDaylightingMethodDefaulted() const;
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED bool isSolarAndDaylightingMethodDefaulted() const;
 
-  std::string radiantExchangeMethod() const;
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED std::string radiantExchangeMethod() const;
 
-  bool isRadiantExchangeMethodDefaulted() const;
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED bool isRadiantExchangeMethodDefaulted() const;
 
-  std::string airExchangeMethod() const;
+    std::string airExchangeMethod() const;
 
-  bool isAirExchangeMethodDefaulted() const;
+    bool isAirExchangeMethodDefaulted() const;
 
-  double simpleMixingAirChangesPerHour() const;
+    double simpleMixingAirChangesPerHour() const;
 
-  bool isSimpleMixingAirChangesPerHourDefaulted() const;
+    bool isSimpleMixingAirChangesPerHourDefaulted() const;
 
-  boost::optional<Schedule> simpleMixingSchedule() const;
+    boost::optional<Schedule> simpleMixingSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
 
-  void resetSolarAndDaylightingMethod();
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED void resetSolarAndDaylightingMethod();
 
-  bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
 
-  void resetRadiantExchangeMethod();
+    // cppcheck-suppress functionStatic
+    OS_DEPRECATED void resetRadiantExchangeMethod();
 
-  bool setAirExchangeMethod(const std::string& airExchangeMethod);
+    bool setAirExchangeMethod(const std::string& airExchangeMethod);
 
-  void resetAirExchangeMethod();
+    void resetAirExchangeMethod();
 
-  bool setSimpleMixingAirChangesPerHour(double simpleMixingAirChangesPerHour);
+    bool setSimpleMixingAirChangesPerHour(double simpleMixingAirChangesPerHour);
 
-  void resetSimpleMixingAirChangesPerHour();
+    void resetSimpleMixingAirChangesPerHour();
 
-  bool setSimpleMixingSchedule(Schedule& schedule);
+    bool setSimpleMixingSchedule(Schedule& schedule);
 
-  void resetSimpleMixingSchedule();
+    void resetSimpleMixingSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ConstructionAirBoundary_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ConstructionAirBoundary_Impl ImplType;
 
-  explicit ConstructionAirBoundary(std::shared_ptr<detail::ConstructionAirBoundary_Impl> impl);
+    explicit ConstructionAirBoundary(std::shared_ptr<detail::ConstructionAirBoundary_Impl> impl);
 
-  friend class detail::ConstructionAirBoundary_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ConstructionAirBoundary");
-};
+    friend class detail::ConstructionAirBoundary_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ConstructionAirBoundary");
+  };
 
-/** \relates ConstructionAirBoundary*/
-typedef boost::optional<ConstructionAirBoundary> OptionalConstructionAirBoundary;
+  /** \relates ConstructionAirBoundary*/
+  typedef boost::optional<ConstructionAirBoundary> OptionalConstructionAirBoundary;
 
-/** \relates ConstructionAirBoundary*/
-typedef std::vector<ConstructionAirBoundary> ConstructionAirBoundaryVector;
+  /** \relates ConstructionAirBoundary*/
+  typedef std::vector<ConstructionAirBoundary> ConstructionAirBoundaryVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_CONSTRUCTIONAIRBOUNDARY_HPP
-
+#endif  // MODEL_CONSTRUCTIONAIRBOUNDARY_HPP

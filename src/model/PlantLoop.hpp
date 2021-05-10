@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,43 +38,43 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
-  class PlantLoop_Impl;
-};
+  namespace detail {
+    class PlantLoop_Impl;
+  };
 
-class Node;
-class Splitter;
-class Mixer;
-class HVACComponent;
-class SizingPlant;
-class PlantEquipmentOperationScheme;
-class PlantEquipmentOperationHeatingLoad;
-class PlantEquipmentOperationCoolingLoad;
-class Schedule;
-class AvailabilityManager;
+  class Node;
+  class Splitter;
+  class Mixer;
+  class HVACComponent;
+  class SizingPlant;
+  class PlantEquipmentOperationScheme;
+  class PlantEquipmentOperationHeatingLoad;
+  class PlantEquipmentOperationCoolingLoad;
+  class Schedule;
+  class AvailabilityManager;
 
-/** PlantLoop is an interface to the EnergyPlus IDD object
+  /** PlantLoop is an interface to the EnergyPlus IDD object
  *  named "PlantLoop"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus PlantLoop object.
  */
-class MODEL_API PlantLoop : public Loop {
+  class MODEL_API PlantLoop : public Loop
+  {
 
-  public:
-
-  /** Constructs a new PlantLoop object and places it inside the
+   public:
+    /** Constructs a new PlantLoop object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.
    */
-  explicit PlantLoop(Model& model);
+    explicit PlantLoop(Model& model);
 
-  virtual ~PlantLoop() {}
+    virtual ~PlantLoop() {}
 
-  static std::vector<std::string> loadDistributionSchemeValues();
+    static std::vector<std::string> loadDistributionSchemeValues();
 
-  static std::vector<std::string> fluidTypeValues();
+    static std::vector<std::string> fluidTypeValues();
 
-  /** Prior to OS 1.11.0 the options where
+    /** Prior to OS 1.11.0 the options where
       Optimal, Sequential, and Uniform.
       E+ changed the available options to.
       Optimal, SequentialLoad, UniformLoad, UniformPLR, SequentialUniformPLR
@@ -90,61 +90,61 @@ class MODEL_API PlantLoop : public Loop {
       The current options supported by OS are now consisitent with E+,
       Optimal, SequentialLoad, UniformLoad, UniformPLR, SequentialUniformPLR
   **/
-  std::string loadDistributionScheme();
+    std::string loadDistributionScheme();
 
-  bool setLoadDistributionScheme(std::string scheme);
+    bool setLoadDistributionScheme(std::string scheme);
 
-  std::string fluidType();
+    std::string fluidType();
 
-  bool setFluidType( const std::string & value );
+    bool setFluidType(const std::string& value);
 
-  bool setGlycolConcentration(int glycolConcentration);
+    bool setGlycolConcentration(int glycolConcentration);
 
-  int glycolConcentration() const;
+    int glycolConcentration() const;
 
-  Node loopTemperatureSetpointNode();
+    Node loopTemperatureSetpointNode();
 
-  bool setLoopTemperatureSetpointNode( Node & node );
+    bool setLoopTemperatureSetpointNode(Node& node);
 
-  double maximumLoopTemperature();
+    double maximumLoopTemperature();
 
-  bool setMaximumLoopTemperature( double value );
+    bool setMaximumLoopTemperature(double value);
 
-  double minimumLoopTemperature();
+    double minimumLoopTemperature();
 
-  bool setMinimumLoopTemperature( double value );
+    bool setMinimumLoopTemperature(double value);
 
-  boost::optional<double> maximumLoopFlowRate();
+    boost::optional<double> maximumLoopFlowRate();
 
-  bool setMaximumLoopFlowRate( double value );
+    bool setMaximumLoopFlowRate(double value);
 
-  bool isMaximumLoopFlowRateAutosized();
+    bool isMaximumLoopFlowRateAutosized();
 
-  void autosizeMaximumLoopFlowRate();
+    void autosizeMaximumLoopFlowRate();
 
-  boost::optional<double> minimumLoopFlowRate();
+    boost::optional<double> minimumLoopFlowRate();
 
-  bool setMinimumLoopFlowRate( double value );
+    bool setMinimumLoopFlowRate(double value);
 
-  bool isMinimumLoopFlowRateAutosized();
+    bool isMinimumLoopFlowRateAutosized();
 
-  void autosizeMinimumLoopFlowRate();
+    void autosizeMinimumLoopFlowRate();
 
-  boost::optional<double> plantLoopVolume();
+    boost::optional<double> plantLoopVolume();
 
-  bool setPlantLoopVolume( double value );
+    bool setPlantLoopVolume(double value);
 
-  bool isPlantLoopVolumeAutocalculated();
+    bool isPlantLoopVolumeAutocalculated();
 
-  void autocalculatePlantLoopVolume();
+    void autocalculatePlantLoopVolume();
 
-  boost::optional<std::string> commonPipeSimulation() const;
+    boost::optional<std::string> commonPipeSimulation() const;
 
-  bool setCommonPipeSimulation(const std::string & value);
+    bool setCommonPipeSimulation(const std::string& value);
 
-  void resetCommonPipeSimulation();
+    void resetCommonPipeSimulation();
 
-  /** In OpenStudio there are three levels of "priority" for PlantEquipmentOperationScheme instances.
+    /** In OpenStudio there are three levels of "priority" for PlantEquipmentOperationScheme instances.
     * Priority here means that if there are multiple operation schemes that list the same equipment,
     * the one with the highest priority will define operation for that equipment.
     * The operation scheme defined for primaryPlantEquipmentOperationScheme() is the highest priority,
@@ -160,216 +160,211 @@ class MODEL_API PlantLoop : public Loop {
     * node will trigger OpenStudio to produce a component setpoint operation scheme on export to EnergyPlus.
     * This component setpoint behavior is in place even if there are other primary, heating load, or cooling load schemes defined.
     */
-  boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
+    boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
 
-  bool setPlantEquipmentOperationHeatingLoad(const PlantEquipmentOperationHeatingLoad& plantOperation);
+    bool setPlantEquipmentOperationHeatingLoad(const PlantEquipmentOperationHeatingLoad& plantOperation);
 
-  void resetPlantEquipmentOperationHeatingLoad();
+    void resetPlantEquipmentOperationHeatingLoad();
 
-  /** Set the hours of operation for which the PlantEquipmentOperationHeatingLoad, if any, applies. **/
-  bool setPlantEquipmentOperationHeatingLoadSchedule(Schedule &);
+    /** Set the hours of operation for which the PlantEquipmentOperationHeatingLoad, if any, applies. **/
+    bool setPlantEquipmentOperationHeatingLoadSchedule(Schedule&);
 
-  void resetPlantEquipmentOperationHeatingLoadSchedule();
+    void resetPlantEquipmentOperationHeatingLoadSchedule();
 
-  boost::optional<Schedule> plantEquipmentOperationHeatingLoadSchedule() const;
+    boost::optional<Schedule> plantEquipmentOperationHeatingLoadSchedule() const;
 
-  boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
+    boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
 
-  bool setPlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& plantOperation);
+    bool setPlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& plantOperation);
 
-  void resetPlantEquipmentOperationCoolingLoad();
+    void resetPlantEquipmentOperationCoolingLoad();
 
-  /** Set the hours of operation for which the PlantEquipmentOperationCoolingLoad, if any, applies. **/
-  bool setPlantEquipmentOperationCoolingLoadSchedule(Schedule &);
+    /** Set the hours of operation for which the PlantEquipmentOperationCoolingLoad, if any, applies. **/
+    bool setPlantEquipmentOperationCoolingLoadSchedule(Schedule&);
 
-  boost::optional<Schedule> plantEquipmentOperationCoolingLoadSchedule() const;
+    boost::optional<Schedule> plantEquipmentOperationCoolingLoadSchedule() const;
 
-  void resetPlantEquipmentOperationCoolingLoadSchedule();
+    void resetPlantEquipmentOperationCoolingLoadSchedule();
 
-  boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
+    boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
 
-  bool setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& plantOperation);
+    bool setPrimaryPlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& plantOperation);
 
-  void resetPrimaryPlantEquipmentOperationScheme();
+    void resetPrimaryPlantEquipmentOperationScheme();
 
-  /** Set the hours of operation for which the PrimaryPlantEquipmentOperationScheme, if any, applies. **/
-  bool setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule &);
+    /** Set the hours of operation for which the PrimaryPlantEquipmentOperationScheme, if any, applies. **/
+    bool setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule&);
 
-  void resetPrimaryPlantEquipmentOperationSchemeSchedule();
+    void resetPrimaryPlantEquipmentOperationSchemeSchedule();
 
-  boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
+    boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
 
-  /** Set the hours of operation for which the ComponentSetpointOperationScheme, if any, applies.
+    /** Set the hours of operation for which the ComponentSetpointOperationScheme, if any, applies.
    *  The existance of ComponentSetpointOperationSchemes is controlled by the existance of
    *  setpoint managers on the plant component outlet nodes.
   **/
-  bool setComponentSetpointOperationSchemeSchedule(Schedule &);
+    bool setComponentSetpointOperationSchemeSchedule(Schedule&);
 
-  void resetComponentSetpointOperationSchemeSchedule();
+    void resetComponentSetpointOperationSchemeSchedule();
 
-  boost::optional<Schedule> componentSetpointOperationSchemeSchedule() const;
+    boost::optional<Schedule> componentSetpointOperationSchemeSchedule() const;
 
-  Node supplyInletNode() const override;
+    Node supplyInletNode() const override;
 
-  Node supplyOutletNode() const override;
+    Node supplyOutletNode() const override;
 
-  std::vector<Node> supplyOutletNodes() const override;
+    std::vector<Node> supplyOutletNodes() const override;
 
-  Node demandInletNode() const override;
+    Node demandInletNode() const override;
 
-  std::vector<Node> demandInletNodes() const override;
+    std::vector<Node> demandInletNodes() const override;
 
-  Node demandOutletNode() const override;
+    Node demandOutletNode() const override;
 
-  /** Returns the supply side Mixer. **/
-  Mixer supplyMixer() const;
+    /** Returns the supply side Mixer. **/
+    Mixer supplyMixer() const;
 
-  /** Returns the supply side Splitter. **/
-  Splitter supplySplitter() const;
+    /** Returns the supply side Splitter. **/
+    Splitter supplySplitter() const;
 
-  /** Returns the demand side Mixer. **/
-  Mixer demandMixer();
+    /** Returns the demand side Mixer. **/
+    Mixer demandMixer();
 
-  /** Returns the demand side Splitter. **/
-  Splitter demandSplitter();
+    /** Returns the demand side Splitter. **/
+    Splitter demandSplitter();
 
-  /** Adds a new demand branch for component and returns a bool indicating success.
+    /** Adds a new demand branch for component and returns a bool indicating success.
    */
-  bool addSupplyBranchForComponent( HVACComponent hvacComponent );
+    bool addSupplyBranchForComponent(HVACComponent hvacComponent);
 
-  /** Removes the demand side branch that contains the specified hvacComponent.
+    /** Removes the demand side branch that contains the specified hvacComponent.
    *  Does not remove the component from the model, but may remove surrounding,
    *  components on the branch if they are not attached to other HVAC objects.
    */
-  bool removeSupplyBranchWithComponent( HVACComponent hvacComponent );
+    bool removeSupplyBranchWithComponent(HVACComponent hvacComponent);
 
-  /** Adds a new demand branch for component and returns a bool indicating success.
+    /** Adds a new demand branch for component and returns a bool indicating success.
    * This method will create a new ControllerWaterCoil if hvacComponent is a
    * CoilCoolingWater or a CoilHeatingWater.
    */
-  bool addDemandBranchForComponent( HVACComponent hvacComponent, bool tertiary = false );
+    bool addDemandBranchForComponent(HVACComponent hvacComponent, bool tertiary = false);
 
-  /** Removes the demand side branch that contains the specified hvacComponent.
+    /** Removes the demand side branch that contains the specified hvacComponent.
    *  Does not remove the component from the model, but may remove surrounding,
    *  components on the branch if they are not attached to other HVAC objects.
    */
-  bool removeDemandBranchWithComponent( HVACComponent hvacComponent );
+    bool removeDemandBranchWithComponent(HVACComponent hvacComponent);
 
-  virtual std::vector<openstudio::IdfObject> remove() override;
+    virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual ModelObject clone(Model model) const override;
+    virtual ModelObject clone(Model model) const override;
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  SizingPlant sizingPlant() const;
+    SizingPlant sizingPlant() const;
 
-  boost::optional<double> autosizedMaximumLoopFlowRate() const ;
+    boost::optional<double> autosizedMaximumLoopFlowRate() const;
 
-  boost::optional<double> autosizedPlantLoopVolume() const;
+    boost::optional<double> autosizedPlantLoopVolume() const;
 
-  /*
+    /*
    * Return all AvailabilityManagers assigned to this list, in the priority order
    *  AvailabilityManagers are used to override the system availabilitySchedule() with one of OpenStudio's
    *  supported AvailabilityManager types.
    */
-  std::vector<AvailabilityManager> availabilityManagers() const;
+    std::vector<AvailabilityManager> availabilityManagers() const;
 
-  /*
+    /*
    * Add a new AvailabilityManager at the end of the list (priority = last).
    */
-  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+    bool addAvailabilityManager(const AvailabilityManager& availabilityManager);
 
-  /*
+    /*
    * Add a new AvailabilityManager to the list which a given priority (1 to x).
    * Internally calls addAvailabilityManager then setPriority, see remarks there
    */
-  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+    bool addAvailabilityManager(const AvailabilityManager& availabilityManager, unsigned priority);
 
-
-  /*
+    /*
    * Set all availabilityManagers using a list of AvailabilityManagers
    */
-  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+    bool setAvailabilityManagers(const std::vector<AvailabilityManager>& avms);
 
-   /*
+    /*
    * Removes all AvailabilityManagers assigned (TODO: should that affect the availabilitySchedule?)
    */
-  void resetAvailabilityManagers();
+    void resetAvailabilityManagers();
 
-  /*
+    /*
    * Remove the given AvailabilityManager from this AvailabilityManagerAssignmentList
    */
-  bool removeAvailabilityManager(const AvailabilityManager& avm);
+    bool removeAvailabilityManager(const AvailabilityManager& avm);
 
-  /*
+    /*
    * Remove the availabilityManager at the given priority
    * Returns false if the priority isn't between 1 and the number of AVMs
    */
-  bool removeAvailabilityManager(unsigned priority);
+    bool removeAvailabilityManager(unsigned priority);
 
-  /*
+    /*
    * You can shuffle the priority of a given AvailabilityManager after having added it
    * If priority is below 1, it's reset to 1.
    * If priority is greater than the number of availability managers, will reset to last
    */
-  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+    bool setAvailabilityManagerPriority(const AvailabilityManager& availabilityManager, unsigned priority);
 
-  /*
+    /*
    * Get the priority of the AvailabilityManager given as argument
    */
-  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
+    unsigned availabilityManagerPriority(const AvailabilityManager& availabilityManager) const;
 
-
-  // TODO: DEPRECATED SECTION Remove in the future (deprecated around 2.3.0)
-  /*
+    // TODO: DEPRECATED SECTION Remove in the future (deprecated around 2.3.0)
+    /*
    * Returns the first availability Manager used
    */
-  OS_DEPRECATED boost::optional<AvailabilityManager> availabilityManager() const;
+    OS_DEPRECATED boost::optional<AvailabilityManager> availabilityManager() const;
 
-  /* Deprecated, kept for backward compatibility with existing scripts, will be removed in a future version
+    /* Deprecated, kept for backward compatibility with existing scripts, will be removed in a future version
    * Behavior is that it will remove all AVMs assigned to this loop, and replace it with the one passed as argument
    */
-  OS_DEPRECATED bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
+    OS_DEPRECATED bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
 
-  /*
+    /*
    * Clears all AVMs (forwards to resetAvailabilabilityManagers
    **/
-  OS_DEPRECATED void resetAvailabilityManager();
-  // END DEPRECATED
+    OS_DEPRECATED void resetAvailabilityManager();
+    // END DEPRECATED
 
- protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @cond
 
-  /// @cond
+    typedef detail::PlantLoop_Impl ImplType;
 
-  typedef detail::PlantLoop_Impl ImplType;
+    explicit PlantLoop(std::shared_ptr<ImplType> impl);
 
-  explicit PlantLoop(std::shared_ptr<ImplType> impl);
+   private:
+    unsigned supplyInletPort() const;
 
- private:
+    unsigned supplyOutletPort() const;
 
-  unsigned supplyInletPort() const;
+    unsigned demandInletPort() const;
 
-  unsigned supplyOutletPort() const;
+    unsigned demandOutletPort() const;
 
-  unsigned demandInletPort() const;
+    REGISTER_LOGGER("openstudio.model.PlantLoop");
 
-  unsigned demandOutletPort() const;
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.PlantLoop");
+  /** \relates PlantLoop */
+  typedef boost::optional<PlantLoop> OptionalPlantLoop;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates PlantLoop */
-typedef boost::optional<PlantLoop> OptionalPlantLoop;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTLOOP_HPP
+#endif  // MODEL_PLANTLOOP_HPP

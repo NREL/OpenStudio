@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,24 +31,33 @@
 #define AIRFLOW_WINDPRESSURE_HPP
 
 #if _WIN32 || _MSC_VER
-#define WIND_API __declspec(dllexport)
+#  define WIND_API __declspec(dllexport)
 #else
-#define WIND_API
+#  define WIND_API
 #endif
 
 #include <string>
 
-namespace openstudio{
-namespace wind{
+namespace openstudio {
+namespace wind {
 
-// These classes are a mixture of definitions from the CONTAM docs and old
-// Fundamentals handbooks - references are needed
-enum ShelterClass { Default, Urban, Suburban, Airport, LargeObstruction15ft,
-LargeObstruction40ft, LargeObstruction100ft, FlatTerrain };
+  // These classes are a mixture of definitions from the CONTAM docs and old
+  // Fundamentals handbooks - references are needed
+  enum ShelterClass
+  {
+    Default,
+    Urban,
+    Suburban,
+    Airport,
+    LargeObstruction15ft,
+    LargeObstruction40ft,
+    LargeObstruction100ft,
+    FlatTerrain
+  };
 
-double WIND_API pressureModifier(ShelterClass shelter, double H, double Href=10.0);
+  double WIND_API pressureModifier(ShelterClass shelter, double H, double Href = 10.0);
 
-} // wind
-} // openstudio
+}  // namespace wind
+}  // namespace openstudio
 
-#endif // AIRFLOW_WINDPRESSURE_HPP
+#endif  // AIRFLOW_WINDPRESSURE_HPP

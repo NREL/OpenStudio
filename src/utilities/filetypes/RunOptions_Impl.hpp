@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,13 +40,12 @@
 
 #include <nano/nano_signal_slot.hpp>
 
-namespace openstudio{
+namespace openstudio {
 namespace detail {
 
   class UTILITIES_API RunOptions_Impl
   {
-  public:
-
+   public:
     RunOptions_Impl();
 
     virtual ~RunOptions_Impl();
@@ -84,12 +83,10 @@ namespace detail {
     // Emitted on any change
     Nano::Signal<void()> onChange;
 
-  protected:
-
+   protected:
     void onUpdate();
 
-  private:
-
+   private:
     // configure logging
     REGISTER_LOGGER("openstudio.RunOptions");
 
@@ -102,7 +99,7 @@ namespace detail {
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP

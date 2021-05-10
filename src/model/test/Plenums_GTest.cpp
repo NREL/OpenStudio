@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,20 +50,19 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,Plenums)
-{
+TEST_F(ModelFixture, Plenums) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::AirLoopHVACReturnPlenum returnPlenum(m);
-     model::AirLoopHVACSupplyPlenum supplyPlenum(m);
+      model::AirLoopHVACReturnPlenum returnPlenum(m);
+      model::AirLoopHVACSupplyPlenum supplyPlenum(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
   {
     Model m;
@@ -80,7 +79,7 @@ TEST_F(ModelFixture,Plenums)
     ASSERT_TRUE(airLoop.addBranchForZone(conditionedZone1));
     ASSERT_TRUE(airLoop.addBranchForZone(conditionedZone2));
 
-    ASSERT_EQ(10u,airLoop.demandComponents().size());
+    ASSERT_EQ(10u, airLoop.demandComponents().size());
 
     ASSERT_TRUE(supplyPlenumZone.canBePlenum());
     ASSERT_TRUE(conditionedZone1.setSupplyPlenum(supplyPlenumZone));
@@ -88,17 +87,17 @@ TEST_F(ModelFixture,Plenums)
     ASSERT_TRUE(returnPlenumZone.canBePlenum());
     ASSERT_TRUE(conditionedZone1.setReturnPlenum(returnPlenumZone));
 
-    ASSERT_EQ(14u,airLoop.demandComponents().size());
+    ASSERT_EQ(14u, airLoop.demandComponents().size());
 
     ASSERT_TRUE(conditionedZone2.setSupplyPlenum(supplyPlenumZone));
     ASSERT_TRUE(conditionedZone2.setReturnPlenum(returnPlenumZone));
 
-    ASSERT_EQ(14u,airLoop.demandComponents().size());
-    ASSERT_EQ(1u,airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
-    ASSERT_EQ(1u,airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
+    ASSERT_EQ(14u, airLoop.demandComponents().size());
+    ASSERT_EQ(1u, airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
+    ASSERT_EQ(1u, airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
 
     ASSERT_TRUE(airLoop.addBranchForZone(conditionedZone3));
-    ASSERT_EQ(17u,airLoop.demandComponents().size());
+    ASSERT_EQ(17u, airLoop.demandComponents().size());
 
     ThermalZone supplyPlenumZone2(m);
     ThermalZone returnPlenumZone2(m);
@@ -108,7 +107,7 @@ TEST_F(ModelFixture,Plenums)
 
     ASSERT_TRUE(airLoop.addBranchForZone(conditionedZone4));
     ASSERT_TRUE(airLoop.addBranchForZone(conditionedZone5));
-    ASSERT_EQ(23u,airLoop.demandComponents().size());
+    ASSERT_EQ(23u, airLoop.demandComponents().size());
 
     ASSERT_TRUE(conditionedZone4.setSupplyPlenum(supplyPlenumZone2));
     ASSERT_TRUE(conditionedZone4.setReturnPlenum(returnPlenumZone2));
@@ -116,35 +115,35 @@ TEST_F(ModelFixture,Plenums)
     ASSERT_TRUE(conditionedZone5.setSupplyPlenum(supplyPlenumZone2));
     ASSERT_TRUE(conditionedZone5.setReturnPlenum(returnPlenumZone2));
 
-    ASSERT_EQ(27u,airLoop.demandComponents().size());
-    ASSERT_EQ(2u,airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
-    ASSERT_EQ(2u,airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
+    ASSERT_EQ(27u, airLoop.demandComponents().size());
+    ASSERT_EQ(2u, airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
+    ASSERT_EQ(2u, airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
 
     ASSERT_TRUE(conditionedZone4.setSupplyPlenum(supplyPlenumZone));
     ASSERT_TRUE(conditionedZone4.setReturnPlenum(returnPlenumZone));
-    ASSERT_EQ(27u,airLoop.demandComponents().size());
-    ASSERT_EQ(2u,airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
-    ASSERT_EQ(2u,airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
+    ASSERT_EQ(27u, airLoop.demandComponents().size());
+    ASSERT_EQ(2u, airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
+    ASSERT_EQ(2u, airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
 
     ASSERT_TRUE(conditionedZone5.setSupplyPlenum(supplyPlenumZone));
     ASSERT_TRUE(conditionedZone5.setReturnPlenum(returnPlenumZone));
-    ASSERT_EQ(23u,airLoop.demandComponents().size());
-    ASSERT_EQ(1u,airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
-    ASSERT_EQ(1u,airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
+    ASSERT_EQ(23u, airLoop.demandComponents().size());
+    ASSERT_EQ(1u, airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).size());
+    ASSERT_EQ(1u, airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).size());
 
     airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).front().remove();
     airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).front().remove();
 
     ASSERT_TRUE(airLoop.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType()).empty());
     ASSERT_TRUE(airLoop.demandComponents(AirLoopHVACReturnPlenum::iddObjectType()).empty());
-    ASSERT_EQ(19u,airLoop.demandComponents().size());
+    ASSERT_EQ(19u, airLoop.demandComponents().size());
   }
 
   // Plenum on dual duct
   {
     Model m;
 
-    AirLoopHVAC airLoop(m,true); // <-- true makes it a dual duct
+    AirLoopHVAC airLoop(m, true);  // <-- true makes it a dual duct
 
     ThermalZone supplyPlenumZone(m);
     ThermalZone returnPlenumZone(m);
@@ -154,47 +153,44 @@ TEST_F(ModelFixture,Plenums)
     ThermalZone conditionedZone3(m);
 
     AirTerminalDualDuctVAV terminal(m);
-    airLoop.addBranchForZone(conditionedZone1,terminal);
-    EXPECT_EQ(12u,airLoop.demandComponents().size());
-
+    airLoop.addBranchForZone(conditionedZone1, terminal);
+    EXPECT_EQ(12u, airLoop.demandComponents().size());
 
     {
       auto t_zoneSplitters = airLoop.zoneSplitters();
-      EXPECT_EQ(2u,t_zoneSplitters.size());
-      EXPECT_EQ(airLoop.zoneSplitter(),t_zoneSplitters.front());
-      EXPECT_EQ(2u,airLoop.demandInletNodes().size());
+      EXPECT_EQ(2u, t_zoneSplitters.size());
+      EXPECT_EQ(airLoop.zoneSplitter(), t_zoneSplitters.front());
+      EXPECT_EQ(2u, airLoop.demandInletNodes().size());
     }
 
-    ASSERT_EXIT (
-    {
-      conditionedZone1.removeSupplyPlenum();
-      conditionedZone1.removeSupplyPlenum(0);
-      conditionedZone1.removeSupplyPlenum(1);
-      exit(0);
-    } ,
-      ::testing::ExitedWithCode(0), "" );
+    ASSERT_EXIT(
+      {
+        conditionedZone1.removeSupplyPlenum();
+        conditionedZone1.removeSupplyPlenum(0);
+        conditionedZone1.removeSupplyPlenum(1);
+        exit(0);
+      },
+      ::testing::ExitedWithCode(0), "");
 
     EXPECT_TRUE(conditionedZone1.setSupplyPlenum(supplyPlenumZone));
-    EXPECT_EQ(14u,airLoop.demandComponents().size());
+    EXPECT_EQ(14u, airLoop.demandComponents().size());
 
     auto zoneSplitters = airLoop.zoneSplitters();
-    EXPECT_EQ(2u,zoneSplitters.size());
+    EXPECT_EQ(2u, zoneSplitters.size());
 
     {
-      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1);
+      auto demandComps = airLoop.demandComponents(zoneSplitters[0], conditionedZone1);
       auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(demandComps);
-      EXPECT_EQ(1u,plenums.size());
+      EXPECT_EQ(1u, plenums.size());
     }
 
     conditionedZone1.removeSupplyPlenum();
-    EXPECT_EQ(12u,airLoop.demandComponents().size());
+    EXPECT_EQ(12u, airLoop.demandComponents().size());
 
     {
-      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1);
+      auto demandComps = airLoop.demandComponents(zoneSplitters[0], conditionedZone1);
       auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(demandComps);
-      EXPECT_EQ(0u,plenums.size());
+      EXPECT_EQ(0u, plenums.size());
     }
-
   }
 }
-

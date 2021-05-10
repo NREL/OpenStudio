@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,34 +57,29 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::measure;
 
-class TestOSRunner : public OSRunner {
+class TestOSRunner : public OSRunner
+{
  public:
-   TestOSRunner(const WorkflowJSON& workflow)
-     : OSRunner(workflow)
-   {}
+  TestOSRunner(const WorkflowJSON& workflow) : OSRunner(workflow) {}
 
   virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const override {
     return false;
   }
-
 };
 
 // derive some test classes
-class TestModelUserScript1 : public ModelMeasure {
+class TestModelUserScript1 : public ModelMeasure
+{
  public:
-
   virtual std::string name() const override {
     return "TestModelUserScript1";
   }
 
   // remove all spaces and add a new one
-  virtual bool run(Model& model,
-                   OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const override
-  {
-    ModelMeasure::run(model,runner,user_arguments);
+  virtual bool run(Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const override {
+    ModelMeasure::run(model, runner, user_arguments);
 
-    if (!runner.validateUserArguments(arguments(model), user_arguments)){
+    if (!runner.validateUserArguments(arguments(model), user_arguments)) {
       return false;
     }
 
@@ -97,7 +92,8 @@ class TestModelUserScript1 : public ModelMeasure {
       ++count;
     }
     ss << "Initial model had " << count << " spaces.";
-    runner.registerInitialCondition(ss.str()); ss.str("");
+    runner.registerInitialCondition(ss.str());
+    ss.str("");
 
     // add a new one
     openstudio::model::Space space(model);
@@ -108,9 +104,7 @@ class TestModelUserScript1 : public ModelMeasure {
     // success
     return true;
   }
-
 };
-
 
 TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   TestModelUserScript1 script;
@@ -134,13 +128,13 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   WorkflowStepResult result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
-  EXPECT_EQ(0u,result.stepErrors().size());
-  EXPECT_EQ(0u,result.stepWarnings().size());
-  EXPECT_EQ(0u,result.stepInfo().size());
+  EXPECT_EQ(0u, result.stepErrors().size());
+  EXPECT_EQ(0u, result.stepWarnings().size());
+  EXPECT_EQ(0u, result.stepInfo().size());
   ASSERT_TRUE(result.initialCondition());
-  EXPECT_EQ("Initial model had 0 spaces.",result.initialCondition()->logMessage());
+  EXPECT_EQ("Initial model had 0 spaces.", result.initialCondition()->logMessage());
   ASSERT_TRUE(result.finalCondition());
-  EXPECT_EQ("Removed the 0 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
+  EXPECT_EQ("Removed the 0 original spaces, and added one new one named 'Space 1'.", result.finalCondition()->logMessage());
 
   // test with populated model
   openstudio::model::Model model2;
@@ -153,32 +147,29 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript1) {
   result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
-  EXPECT_EQ(0u,result.stepErrors().size());
-  EXPECT_EQ(0u,result.stepWarnings().size());
-  EXPECT_EQ(0u,result.stepInfo().size());
+  EXPECT_EQ(0u, result.stepErrors().size());
+  EXPECT_EQ(0u, result.stepWarnings().size());
+  EXPECT_EQ(0u, result.stepInfo().size());
   ASSERT_TRUE(result.initialCondition());
-  EXPECT_EQ("Initial model had 2 spaces.",result.initialCondition()->logMessage());
+  EXPECT_EQ("Initial model had 2 spaces.", result.initialCondition()->logMessage());
   ASSERT_TRUE(result.finalCondition());
-  EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.",result.finalCondition()->logMessage());
+  EXPECT_EQ("Removed the 2 original spaces, and added one new one named 'Space 1'.", result.finalCondition()->logMessage());
 }
 
-class TestModelUserScript2 : public ModelMeasure {
+class TestModelUserScript2 : public ModelMeasure
+{
  public:
   virtual std::string name() const override {
     return "TestModelUserScript2";
   }
 
-  virtual std::vector<OSArgument> arguments(const Model& model) const override
-  {
+  virtual std::vector<OSArgument> arguments(const Model& model) const override {
     std::vector<OSArgument> result;
 
-    OSArgument arg = makeChoiceArgumentOfWorkspaceObjects(
-                         "lights_definition",
-                         IddObjectType::OS_Lights_Definition,
-                         model);
+    OSArgument arg = makeChoiceArgumentOfWorkspaceObjects("lights_definition", IddObjectType::OS_Lights_Definition, model);
     result.push_back(arg);
 
-    arg = OSArgument::makeDoubleArgument("multiplier",false);
+    arg = OSArgument::makeDoubleArgument("multiplier", false);
     arg.setDefaultValue(0.8);
     result.push_back(arg);
 
@@ -186,19 +177,16 @@ class TestModelUserScript2 : public ModelMeasure {
   }
 
   // remove all spaces and add a new one
-  virtual bool run(Model& model,
-                   OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const override
-  {
-    ModelMeasure::run(model,runner,user_arguments); // initializes runner
+  virtual bool run(Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const override {
+    ModelMeasure::run(model, runner, user_arguments);  // initializes runner
 
     // calls runner.registerAttribute for 'lights_definition' and 'multiplier'
-    if (!runner.validateUserArguments(arguments(model),user_arguments)) {
+    if (!runner.validateUserArguments(arguments(model), user_arguments)) {
       return false;
     }
 
     // lights_definition argument value will be object handle
-    Handle h = toUUID(runner.getStringArgumentValue("lights_definition",user_arguments));
+    Handle h = toUUID(runner.getStringArgumentValue("lights_definition", user_arguments));
 
     OptionalWorkspaceObject wo = model.getObject(h);
     if (!wo) {
@@ -216,7 +204,7 @@ class TestModelUserScript2 : public ModelMeasure {
       return false;
     }
     // save name of lights definition
-    runner.registerValue("lights_definition_name",lightsDef->name().get());
+    runner.registerValue("lights_definition_name", lightsDef->name().get());
 
     if (!(lightsDef->designLevelCalculationMethod() == "Watts/Area")) {
       std::stringstream ss;
@@ -227,7 +215,7 @@ class TestModelUserScript2 : public ModelMeasure {
       return true;
     }
 
-    double multiplier = runner.getDoubleArgumentValue("multiplier",user_arguments);
+    double multiplier = runner.getDoubleArgumentValue("multiplier", user_arguments);
 
     if (multiplier < 0.0) {
       std::stringstream ss;
@@ -249,23 +237,20 @@ class TestModelUserScript2 : public ModelMeasure {
     ss << "The lighting power density of " << lightsDef->briefDescription();
     ss << ", which is used by " << lightsDef->quantity() << " instances covering ";
     ss << lightsDef->floorArea() << " m^2 of floor area, was " << originalValue << ".";
-    runner.registerInitialCondition(ss.str()); ss.str("");
+    runner.registerInitialCondition(ss.str());
+    ss.str("");
     ss << "The lighting power density of " << lightsDef->briefDescription();
     ss << " has been changed to " << newValue << ".";
-    runner.registerFinalCondition(ss.str()); ss.str("");
+    runner.registerFinalCondition(ss.str());
+    ss.str("");
 
     // machine-readable
-    runner.registerValue("lpd_in","Input Lighting Power Density",originalValue,"W/m^2");
-    runner.registerValue("lpd_out","Output Lighting Power Density",newValue,"W/m^2");
-    runner.registerValue("lights_definition_num_instances",lightsDef->quantity());
-    runner.registerValue("lights_definition_floor_area",
-                         "Floor Area using this Lights Definition (SI)",
-                         lightsDef->floorArea(),
-                         "m^2");
-    runner.registerValue("lights_definition_floor_area_ip",
-                         "Floor Area using this Lights Definition (IP)",
-                         convert(lightsDef->floorArea(),"m^2","ft^2").get(),
-                         "ft^2");
+    runner.registerValue("lpd_in", "Input Lighting Power Density", originalValue, "W/m^2");
+    runner.registerValue("lpd_out", "Output Lighting Power Density", newValue, "W/m^2");
+    runner.registerValue("lights_definition_num_instances", lightsDef->quantity());
+    runner.registerValue("lights_definition_floor_area", "Floor Area using this Lights Definition (SI)", lightsDef->floorArea(), "m^2");
+    runner.registerValue("lights_definition_floor_area_ip", "Floor Area using this Lights Definition (IP)",
+                         convert(lightsDef->floorArea(), "m^2", "ft^2").get(), "ft^2");
 
     return true;
   }
@@ -290,14 +275,14 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   // call with no arguments
   TestOSRunner runner(workflow);
   std::map<std::string, OSArgument> user_arguments;
-  bool ok = script.run(model,runner,user_arguments);
+  bool ok = script.run(model, runner, user_arguments);
   EXPECT_FALSE(ok);
   WorkflowStepResult result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Fail);
-  EXPECT_EQ(2u,result.stepErrors().size()); // missing required and defaulted arguments
-  EXPECT_EQ(0u,result.stepWarnings().size());
-  EXPECT_EQ(0u,result.stepInfo().size());
+  EXPECT_EQ(2u, result.stepErrors().size());  // missing required and defaulted arguments
+  EXPECT_EQ(0u, result.stepWarnings().size());
+  EXPECT_EQ(0u, result.stepInfo().size());
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
   EXPECT_TRUE(result.stepValues().empty());
@@ -311,18 +296,18 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   arg.setValue(toString(lightsDef.handle()));
   user_arguments["lights_definition"] = arg;
   lightsDef.remove();
-  EXPECT_EQ(0u,model.numObjects());
-  ok = script.run(model,runner,user_arguments);
+  EXPECT_EQ(0u, model.numObjects());
+  ok = script.run(model, runner, user_arguments);
   EXPECT_FALSE(ok);
   result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Fail);
-  EXPECT_EQ(1u,result.stepErrors().size()); // object not in model
-  EXPECT_EQ(0u,result.stepWarnings().size());
-  EXPECT_EQ(0u,result.stepInfo().size());
+  EXPECT_EQ(1u, result.stepErrors().size());  // object not in model
+  EXPECT_EQ(0u, result.stepWarnings().size());
+  EXPECT_EQ(0u, result.stepInfo().size());
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
-  EXPECT_EQ(2u,result.stepValues().size()); // registers argument values
+  EXPECT_EQ(2u, result.stepValues().size());  // registers argument values
 
   // call properly using default multiplier, but lights definition not Watts/Area
   runner.reset();
@@ -333,54 +318,53 @@ TEST_F(MeasureFixture, UserScript_TestModelUserScript2) {
   arg = definitions[0];
   arg.setValue(toString(lightsDef.handle()));
   user_arguments["lights_definition"] = arg;
-  ok = script.run(model,runner,user_arguments);
+  ok = script.run(model, runner, user_arguments);
   EXPECT_TRUE(ok);
   result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::NA);
-  EXPECT_EQ(0u,result.stepErrors().size());
-  EXPECT_EQ(0u,result.stepWarnings().size());
-  EXPECT_EQ(1u,result.stepInfo().size()); // Measure not applicable as called
+  EXPECT_EQ(0u, result.stepErrors().size());
+  EXPECT_EQ(0u, result.stepWarnings().size());
+  EXPECT_EQ(1u, result.stepInfo().size());  // Measure not applicable as called
   EXPECT_FALSE(result.initialCondition());
   EXPECT_FALSE(result.finalCondition());
-  EXPECT_EQ(3u,result.stepValues().size()); // Registers lights definition name, then fails
+  EXPECT_EQ(3u, result.stepValues().size());  // Registers lights definition name, then fails
 
   // call properly using default multiplier
   runner.reset();
   lightsDef.setWattsperSpaceFloorArea(10.0);
-  ok = script.run(model,runner,user_arguments);
+  ok = script.run(model, runner, user_arguments);
   EXPECT_TRUE(ok);
   result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
-  EXPECT_EQ(0u,result.stepErrors().size());
-  EXPECT_EQ(0u,result.stepWarnings().size());
-  EXPECT_EQ(0u,result.stepInfo().size());
-  EXPECT_TRUE(result.initialCondition()); // describes original state
-  EXPECT_TRUE(result.finalCondition());   // describes changes
-  EXPECT_EQ(8u,result.stepValues().size());
+  EXPECT_EQ(0u, result.stepErrors().size());
+  EXPECT_EQ(0u, result.stepWarnings().size());
+  EXPECT_EQ(0u, result.stepInfo().size());
+  EXPECT_TRUE(result.initialCondition());  // describes original state
+  EXPECT_TRUE(result.finalCondition());    // describes changes
+  EXPECT_EQ(8u, result.stepValues().size());
 
-  EXPECT_DOUBLE_EQ(8.0,lightsDef.wattsperSpaceFloorArea().get());
+  EXPECT_DOUBLE_EQ(8.0, lightsDef.wattsperSpaceFloorArea().get());
 
   // call properly using different multiplier
   runner.reset();
   arg = definitions[1];
   arg.setValue(0.5);
   user_arguments["multiplier"] = arg;
-  ok = script.run(model,runner,user_arguments);
+  ok = script.run(model, runner, user_arguments);
   EXPECT_TRUE(ok);
   result = runner.result();
   ASSERT_TRUE(result.stepResult());
   EXPECT_TRUE(result.stepResult()->value() == StepResult::Success);
-  EXPECT_EQ(0u,result.stepErrors().size());
-  EXPECT_EQ(0u,result.stepWarnings().size());
-  EXPECT_EQ(0u,result.stepInfo().size());
-  EXPECT_TRUE(result.initialCondition()); // describes original state
-  EXPECT_TRUE(result.finalCondition());   // describes changes
-  EXPECT_EQ(8u,result.stepValues().size());
+  EXPECT_EQ(0u, result.stepErrors().size());
+  EXPECT_EQ(0u, result.stepWarnings().size());
+  EXPECT_EQ(0u, result.stepInfo().size());
+  EXPECT_TRUE(result.initialCondition());  // describes original state
+  EXPECT_TRUE(result.finalCondition());    // describes changes
+  EXPECT_EQ(8u, result.stepValues().size());
 
-  EXPECT_DOUBLE_EQ(4.0,lightsDef.wattsperSpaceFloorArea().get());
-
+  EXPECT_DOUBLE_EQ(4.0, lightsDef.wattsperSpaceFloorArea().get());
 }
 
 TEST_F(MeasureFixture, RegisterValueNames) {

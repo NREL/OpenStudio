@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,37 +50,38 @@ namespace openstudio {
  *  IddFactory\endlink (the current versions of the EnergyPlus and OpenStudio IDDs, and all
  *  objects in the factory). */
 #ifdef SWIG
+  // cppcheck-suppress syntaxError
   OPENSTUDIO_ENUM(IddFileType, )
 #else
-struct UTILITIES_API IddFileType: public ::EnumBase<IddFileType> {
+struct UTILITIES_API IddFileType : public ::EnumBase<IddFileType>
+{
  public:
   enum domain : int;
 
-  IddFileType()
-   : EnumBase<IddFileType>(0) {}
-  IddFileType(const std::string &t_name)
-   : EnumBase<IddFileType>(t_name) {}
-  IddFileType(int t_value)
-   : EnumBase<IddFileType>(t_value) {}
+  IddFileType() : EnumBase<IddFileType>(0) {}
+  IddFileType(const std::string& t_name) : EnumBase<IddFileType>(t_name) {}
+  IddFileType(int t_value) : EnumBase<IddFileType>(t_value) {}
 
-  static std::string enumName()
-  { return "IddFileType"; }
-
-  domain value() const { return static_cast<domain>(EnumBase<IddFileType>::value()); }
-
-   private:
-    friend class EnumBase<IddFileType>;
-    typedef std::pair<std::string, int> PT;
-    typedef std::vector<PT> VecType;
-    static VecType buildStringVec(bool isd);
-  };
-
-  inline std::ostream &operator<<(std::ostream &os, const IddFileType &e)
-  {
-    return os << e.valueName() << "(" << e.value() << ")";
+  static std::string enumName() {
+    return "IddFileType";
   }
 
-  typedef boost::optional<IddFileType> OptionalIddFileType ;
+  domain value() const {
+    return static_cast<domain>(EnumBase<IddFileType>::value());
+  }
+
+ private:
+  friend class EnumBase<IddFileType>;
+  typedef std::pair<std::string, int> PT;
+  typedef std::vector<PT> VecType;
+  static VecType buildStringVec(bool isd);
+};
+
+inline std::ostream& operator<<(std::ostream& os, const IddFileType& e) {
+  return os << e.valueName() << "(" << e.value() << ")";
+}
+
+typedef boost::optional<IddFileType> OptionalIddFileType;
 #endif
 /** \relates IddFileType */
 typedef std::vector<IddFileType> IddFileTypeVector;
@@ -88,11 +89,9 @@ typedef std::vector<IddFileType> IddFileTypeVector;
 typedef std::set<IddFileType> IddFileTypeSet;
 
 /** \relates IddFileType */
-typedef boost::optional<std::vector<IddFileType> > OptionalIddFileTypeVector;
+typedef boost::optional<std::vector<IddFileType>> OptionalIddFileTypeVector;
 /** \relates IddFileType */
-typedef boost::optional<std::set<IddFileType> > OptionalIddFileTypeSet;
-
-
+typedef boost::optional<std::set<IddFileType>> OptionalIddFileTypeSet;
 
 /** \class IddObjectType
  *  \brief Enumeration of the \link openstudio::IddObject IddObject\endlink types available
@@ -110,35 +109,35 @@ typedef boost::optional<std::set<IddFileType> > OptionalIddFileTypeSet;
 #ifdef SWIG
   OPENSTUDIO_ENUM(IddObjectType, )
 #else
-struct UTILITIES_API IddObjectType: public ::EnumBase<IddObjectType> {
+struct UTILITIES_API IddObjectType : public ::EnumBase<IddObjectType>
+{
  public:
   enum domain : int;
 
-  IddObjectType()
-   : EnumBase<IddObjectType>(0) {}
-  IddObjectType(const std::string &t_name)
-   : EnumBase<IddObjectType>(t_name) {}
-  IddObjectType(int t_value)
-   : EnumBase<IddObjectType>(t_value) {}
+  IddObjectType() : EnumBase<IddObjectType>(0) {}
+  IddObjectType(const std::string& t_name) : EnumBase<IddObjectType>(t_name) {}
+  IddObjectType(int t_value) : EnumBase<IddObjectType>(t_value) {}
 
-  static std::string enumName()
-  { return "IddObjectType"; }
-
-  domain value() const { return static_cast<domain>(EnumBase<IddObjectType>::value()); }
-
-   private:
-    friend class EnumBase<IddObjectType>;
-    typedef std::pair<std::string, int> PT;
-    typedef std::vector<PT> VecType;
-    static VecType buildStringVec(bool isd);
-  };
-
-  inline std::ostream &operator<<(std::ostream &os, const IddObjectType &e)
-  {
-    return os << e.valueName() << "(" << e.value() << ")";
+  static std::string enumName() {
+    return "IddObjectType";
   }
 
-  typedef boost::optional<IddObjectType> OptionalIddObjectType ;
+  domain value() const {
+    return static_cast<domain>(EnumBase<IddObjectType>::value());
+  }
+
+ private:
+  friend class EnumBase<IddObjectType>;
+  typedef std::pair<std::string, int> PT;
+  typedef std::vector<PT> VecType;
+  static VecType buildStringVec(bool isd);
+};
+
+inline std::ostream& operator<<(std::ostream& os, const IddObjectType& e) {
+  return os << e.valueName() << "(" << e.value() << ")";
+}
+
+typedef boost::optional<IddObjectType> OptionalIddObjectType;
 #endif
 /** \relates IddObjectType */
 typedef std::vector<IddObjectType> IddObjectTypeVector;
@@ -146,10 +145,10 @@ typedef std::vector<IddObjectType> IddObjectTypeVector;
 typedef std::set<IddObjectType> IddObjectTypeSet;
 
 /** \relates IddObjectType */
-typedef boost::optional<std::vector<IddObjectType> > OptionalIddObjectTypeVector;
+typedef boost::optional<std::vector<IddObjectType>> OptionalIddObjectTypeVector;
 /** \relates IddObjectType */
-typedef boost::optional<std::set<IddObjectType> > OptionalIddObjectTypeSet;
+typedef boost::optional<std::set<IddObjectType>> OptionalIddObjectTypeSet;
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDENUMS_HXX
+#endif  // UTILITIES_IDD_IDDENUMS_HXX

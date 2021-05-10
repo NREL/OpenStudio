@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,44 +36,45 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class GasLayer_Impl;
-}
+  namespace detail {
+    class GasLayer_Impl;
+  }
 
-/** GasLayer is a FenestrationMaterial that serves as a base class for gaseous layers in
+  /** GasLayer is a FenestrationMaterial that serves as a base class for gaseous layers in
  *  fenestration \link LayeredConstruction LayeredConstructions \endlink. The base class is used
  *  to determine if EnergyPlus's rules for relative placement of fenestration layers are
  *  satisfied. */
-class MODEL_API GasLayer : public FenestrationMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API GasLayer : public FenestrationMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~GasLayer() {}
+    virtual ~GasLayer() {}
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GasLayer_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GasLayer_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::GasLayer_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::GasLayer_Impl;
 
-  GasLayer(IddObjectType type,const Model& model);
+    GasLayer(IddObjectType type, const Model& model);
 
-  explicit GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl);
+    explicit GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GasLayer");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GasLayer");
+  };
 
-typedef boost::optional<GasLayer> OptionalGasLayer;
+  typedef boost::optional<GasLayer> OptionalGasLayer;
 
-typedef std::vector<GasLayer> GasLayerVector;
+  typedef std::vector<GasLayer> GasLayerVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GASLAYER_HPP
+#endif  // MODEL_GASLAYER_HPP

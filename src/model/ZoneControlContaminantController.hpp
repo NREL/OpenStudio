@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,96 +36,96 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class Schedule;
+  class ThermalZone;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneControlContaminantController_Impl;
+    class ZoneControlContaminantController_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneControlContaminantController is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneControl:ContaminantController'. */
-class MODEL_API ZoneControlContaminantController : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneControlContaminantController is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneControl:ContaminantController'. */
+  class MODEL_API ZoneControlContaminantController : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneControlContaminantController(const Model& model);
+    explicit ZoneControlContaminantController(const Model& model);
 
-  virtual ~ZoneControlContaminantController() {}
+    virtual ~ZoneControlContaminantController() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<ThermalZone> controlledZone() const;
+    boost::optional<ThermalZone> controlledZone() const;
 
-  boost::optional<Schedule> carbonDioxideControlAvailabilitySchedule() const;
+    boost::optional<Schedule> carbonDioxideControlAvailabilitySchedule() const;
 
-  boost::optional<Schedule> carbonDioxideSetpointSchedule() const;
+    boost::optional<Schedule> carbonDioxideSetpointSchedule() const;
 
-  boost::optional<Schedule> minimumCarbonDioxideConcentrationSchedule() const;
+    boost::optional<Schedule> minimumCarbonDioxideConcentrationSchedule() const;
 
-  boost::optional<Schedule> genericContaminantControlAvailabilitySchedule() const;
+    boost::optional<Schedule> genericContaminantControlAvailabilitySchedule() const;
 
-  boost::optional<Schedule> genericContaminantSetpointSchedule() const;
+    boost::optional<Schedule> genericContaminantSetpointSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCarbonDioxideControlAvailabilitySchedule(Schedule& schedule);
+    bool setCarbonDioxideControlAvailabilitySchedule(Schedule& schedule);
 
-  void resetCarbonDioxideControlAvailabilitySchedule();
+    void resetCarbonDioxideControlAvailabilitySchedule();
 
-  bool setCarbonDioxideSetpointSchedule(Schedule& schedule);
+    bool setCarbonDioxideSetpointSchedule(Schedule& schedule);
 
-  void resetCarbonDioxideSetpointSchedule();
+    void resetCarbonDioxideSetpointSchedule();
 
-  bool setMinimumCarbonDioxideConcentrationSchedule(Schedule& schedule);
+    bool setMinimumCarbonDioxideConcentrationSchedule(Schedule& schedule);
 
-  void resetMinimumCarbonDioxideConcentrationSchedule();
+    void resetMinimumCarbonDioxideConcentrationSchedule();
 
-  bool setGenericContaminantControlAvailabilitySchedule(Schedule& schedule);
+    bool setGenericContaminantControlAvailabilitySchedule(Schedule& schedule);
 
-  void resetGenericContaminantControlAvailabilitySchedule();
+    void resetGenericContaminantControlAvailabilitySchedule();
 
-  bool setGenericContaminantSetpointSchedule(Schedule& schedule);
+    bool setGenericContaminantSetpointSchedule(Schedule& schedule);
 
-  void resetGenericContaminantSetpointSchedule();
+    void resetGenericContaminantSetpointSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneControlContaminantController_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneControlContaminantController_Impl ImplType;
 
-  explicit ZoneControlContaminantController(std::shared_ptr<detail::ZoneControlContaminantController_Impl> impl);
+    explicit ZoneControlContaminantController(std::shared_ptr<detail::ZoneControlContaminantController_Impl> impl);
 
-  friend class detail::ZoneControlContaminantController_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneControlContaminantController");
-};
+    friend class detail::ZoneControlContaminantController_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneControlContaminantController");
+  };
 
-/** \relates ZoneControlContaminantController*/
-typedef boost::optional<ZoneControlContaminantController> OptionalZoneControlContaminantController;
+  /** \relates ZoneControlContaminantController*/
+  typedef boost::optional<ZoneControlContaminantController> OptionalZoneControlContaminantController;
 
-/** \relates ZoneControlContaminantController*/
-typedef std::vector<ZoneControlContaminantController> ZoneControlContaminantControllerVector;
+  /** \relates ZoneControlContaminantController*/
+  typedef std::vector<ZoneControlContaminantController> ZoneControlContaminantControllerVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONECONTROLCONTAMINANTCONTROLLER_HPP
-
+#endif  // MODEL_ZONECONTROLCONTAMINANTCONTROLLER_HPP

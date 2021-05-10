@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,69 +44,60 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateDistrictCooling( DistrictCooling& modelObject )
-{
-  OptionalString s;
-  OptionalDouble d;
-  OptionalModelObject temp;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateDistrictCooling(DistrictCooling& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
+    OptionalModelObject temp;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::DistrictCooling);
+    IdfObject idfObject(IddObjectType::DistrictCooling);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Name ////////////////////////////////////////////////////////////
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
-  }
-  ///////////////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Inlet Node Name ////////////////////////////////////////////////////
-  temp = modelObject.inletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::DistrictCoolingFields::ChilledWaterInletNodeName,*s);
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Name ////////////////////////////////////////////////////////////
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
-  ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Outlet Node Name ///////////////////////////////////////////////////
-  temp = modelObject.outletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(openstudio::DistrictCoolingFields::ChilledWaterOutletNodeName,*s);
+    ///////////////////////////////////////////////////////////////////////////
+    // Inlet Node Name ////////////////////////////////////////////////////
+    temp = modelObject.inletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(openstudio::DistrictCoolingFields::ChilledWaterInletNodeName, *s);
+      }
     }
+    ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Outlet Node Name ///////////////////////////////////////////////////
+    temp = modelObject.outletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(openstudio::DistrictCoolingFields::ChilledWaterOutletNodeName, *s);
+      }
+    }
+    ///
+    ////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
+    //Nominal Capacity ///////////////////////////////////////////////////
+    if (modelObject.isNominalCapacityAutosized()) {
+      idfObject.setString(DistrictCoolingFields::NominalCapacity, "Autosize");
+    } else if ((value = modelObject.nominalCapacity())) {
+      idfObject.setDouble(DistrictCoolingFields::NominalCapacity, value.get());
+    }
+    //
+    ////////////////////////////////////////////////////////////////////////
+
+    return boost::optional<IdfObject>(idfObject);
   }
-  ///
-  ////////////////////////////////////////////////////////////////////////
 
-  ///////////////////////////////////////////////////////////////////////////
-  //Nominal Capacity ///////////////////////////////////////////////////
-  if( modelObject.isNominalCapacityAutosized() ) {
-    idfObject.setString(DistrictCoolingFields::NominalCapacity,"Autosize");
-  } else if( (value = modelObject.nominalCapacity()) ) {
-    idfObject.setDouble(DistrictCoolingFields::NominalCapacity,value.get());
-  }
-  //
-  ////////////////////////////////////////////////////////////////////////
+}  // namespace energyplus
 
-
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

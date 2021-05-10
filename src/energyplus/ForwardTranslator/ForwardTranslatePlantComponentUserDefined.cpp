@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,89 +52,79 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePlantComponentUserDefined( PlantComponentUserDefined & modelObject )
-{
-  boost::optional<std::string> s;
+  boost::optional<IdfObject> ForwardTranslator::translatePlantComponentUserDefined(PlantComponentUserDefined& modelObject) {
+    boost::optional<std::string> s;
 
-  IdfObject idfObject(IddObjectType::PlantComponent_UserDefined);
+    IdfObject idfObject(IddObjectType::PlantComponent_UserDefined);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
+    // Name
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // PlantConnection1LoadingMode
-
-  if ((s = modelObject.plantLoadingMode()))
-  {
-    idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1LoadingMode, s.get());
-  }
-
-  // PlantConnection1LoopFlowRequestMode
-
-  if ((s = modelObject.plantLoopFlowRequestMode())) {
-    idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1LoopFlowRequestMode, s.get());
-  }
-
-  // NumberofPlantLoopConnections
-  // value is 1 since its a StraightComponent
-  idfObject.setInt(PlantComponent_UserDefinedFields::NumberofPlantLoopConnections, 1);
-
-
-  // MainModelProgramCallingManagerName
-
-  if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.mainModelProgramCallingManager()) {
-    idfObject.setString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, pcm->name().get());
-  }
-
-  // PlantConnection1InitializationProgramCallingManagerName
-  
-  if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.plantInitializationProgramCallingManager())
-  {
-    idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, pcm->name().get());
-  }
-
-  // PlantConnection1SimulationProgramCallingManagerName
-
-  if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.plantSimulationProgramCallingManager()) {
-    idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, pcm->name().get());
-  }
-
-  // PlantConnection1InletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1InletNodeName, node->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // PlantConnection1OutletNodeName
+    // PlantConnection1LoadingMode
 
-  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1OutletNodeName, node->name().get());
+    if ((s = modelObject.plantLoadingMode())) {
+      idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1LoadingMode, s.get());
     }
+
+    // PlantConnection1LoopFlowRequestMode
+
+    if ((s = modelObject.plantLoopFlowRequestMode())) {
+      idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1LoopFlowRequestMode, s.get());
+    }
+
+    // NumberofPlantLoopConnections
+    // value is 1 since its a StraightComponent
+    idfObject.setInt(PlantComponent_UserDefinedFields::NumberofPlantLoopConnections, 1);
+
+    // MainModelProgramCallingManagerName
+
+    if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.mainModelProgramCallingManager()) {
+      idfObject.setString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, pcm->name().get());
+    }
+
+    // PlantConnection1InitializationProgramCallingManagerName
+
+    if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.plantInitializationProgramCallingManager()) {
+      idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, pcm->name().get());
+    }
+
+    // PlantConnection1SimulationProgramCallingManagerName
+
+    if (boost::optional<EnergyManagementSystemProgramCallingManager> pcm = modelObject.plantSimulationProgramCallingManager()) {
+      idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, pcm->name().get());
+    }
+
+    // PlantConnection1InletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1InletNodeName, node->name().get());
+      }
+    }
+
+    // PlantConnection1OutletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(PlantComponent_UserDefinedFields::PlantConnection1OutletNodeName, node->name().get());
+      }
+    }
+
+    // AmbientZoneName
+
+    if (boost::optional<ThermalZone> tz = modelObject.ambientZone()) {
+      idfObject.setString(PlantComponent_UserDefinedFields::AmbientZoneName, tz->name().get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // AmbientZoneName
+}  // namespace energyplus
 
-  if (boost::optional<ThermalZone> tz = modelObject.ambientZone()) {
-    idfObject.setString(PlantComponent_UserDefinedFields::AmbientZoneName, tz->name().get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

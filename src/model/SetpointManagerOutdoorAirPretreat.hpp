@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,129 +37,129 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerOutdoorAirPretreat_Impl;
+    class SetpointManagerOutdoorAirPretreat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerOutdoorAirPretreat is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:OutdoorAirPretreat'. */
-class MODEL_API SetpointManagerOutdoorAirPretreat : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerOutdoorAirPretreat is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:OutdoorAirPretreat'. */
+  class MODEL_API SetpointManagerOutdoorAirPretreat : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerOutdoorAirPretreat(const Model& model);
+    explicit SetpointManagerOutdoorAirPretreat(const Model& model);
 
-  virtual ~SetpointManagerOutdoorAirPretreat() {}
+    virtual ~SetpointManagerOutdoorAirPretreat() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  double minimumSetpointTemperature() const;
+    double minimumSetpointTemperature() const;
 
-  bool isMinimumSetpointTemperatureDefaulted() const;
+    bool isMinimumSetpointTemperatureDefaulted() const;
 
-  double maximumSetpointTemperature() const;
+    double maximumSetpointTemperature() const;
 
-  bool isMaximumSetpointTemperatureDefaulted() const;
+    bool isMaximumSetpointTemperatureDefaulted() const;
 
-  double minimumSetpointHumidityRatio() const;
+    double minimumSetpointHumidityRatio() const;
 
-  bool isMinimumSetpointHumidityRatioDefaulted() const;
+    bool isMinimumSetpointHumidityRatioDefaulted() const;
 
-  double maximumSetpointHumidityRatio() const;
+    double maximumSetpointHumidityRatio() const;
 
-  bool isMaximumSetpointHumidityRatioDefaulted() const;
+    bool isMaximumSetpointHumidityRatioDefaulted() const;
 
-  boost::optional<Node> referenceSetpointNode() const;
+    boost::optional<Node> referenceSetpointNode() const;
 
-  boost::optional<Node> mixedAirStreamNode() const;
+    boost::optional<Node> mixedAirStreamNode() const;
 
-  boost::optional<Node> outdoorAirStreamNode() const;
+    boost::optional<Node> outdoorAirStreamNode() const;
 
-  boost::optional<Node> returnAirStreamNode() const;
+    boost::optional<Node> returnAirStreamNode() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  void resetControlVariable();
+    void resetControlVariable();
 
-  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-  void resetMinimumSetpointTemperature();
+    void resetMinimumSetpointTemperature();
 
-  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  void resetMaximumSetpointTemperature();
+    void resetMaximumSetpointTemperature();
 
-  bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
+    bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
 
-  void resetMinimumSetpointHumidityRatio();
+    void resetMinimumSetpointHumidityRatio();
 
-  bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
+    bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
-  void resetMaximumSetpointHumidityRatio();
+    void resetMaximumSetpointHumidityRatio();
 
-  bool setReferenceSetpointNode(const Node& node);
+    bool setReferenceSetpointNode(const Node& node);
 
-  void resetReferenceSetpointNode();
+    void resetReferenceSetpointNode();
 
-  bool setMixedAirStreamNode(const Node& node);
+    bool setMixedAirStreamNode(const Node& node);
 
-  void resetMixedAirStreamNode();
+    void resetMixedAirStreamNode();
 
-  bool setOutdoorAirStreamNode(const Node& node);
+    bool setOutdoorAirStreamNode(const Node& node);
 
-  void resetOutdoorAirStreamNode();
+    void resetOutdoorAirStreamNode();
 
-  bool setReturnAirStreamNode(const Node& node);
+    bool setReturnAirStreamNode(const Node& node);
 
-  void resetReturnAirStreamNode();
+    void resetReturnAirStreamNode();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerOutdoorAirPretreat_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerOutdoorAirPretreat_Impl ImplType;
 
-  explicit SetpointManagerOutdoorAirPretreat(std::shared_ptr<detail::SetpointManagerOutdoorAirPretreat_Impl> impl);
+    explicit SetpointManagerOutdoorAirPretreat(std::shared_ptr<detail::SetpointManagerOutdoorAirPretreat_Impl> impl);
 
-  friend class detail::SetpointManagerOutdoorAirPretreat_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerOutdoorAirPretreat");
-};
+    friend class detail::SetpointManagerOutdoorAirPretreat_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerOutdoorAirPretreat");
+  };
 
-/** \relates SetpointManagerOutdoorAirPretreat*/
-typedef boost::optional<SetpointManagerOutdoorAirPretreat> OptionalSetpointManagerOutdoorAirPretreat;
+  /** \relates SetpointManagerOutdoorAirPretreat*/
+  typedef boost::optional<SetpointManagerOutdoorAirPretreat> OptionalSetpointManagerOutdoorAirPretreat;
 
-/** \relates SetpointManagerOutdoorAirPretreat*/
-typedef std::vector<SetpointManagerOutdoorAirPretreat> SetpointManagerOutdoorAirPretreatVector;
+  /** \relates SetpointManagerOutdoorAirPretreat*/
+  typedef std::vector<SetpointManagerOutdoorAirPretreat> SetpointManagerOutdoorAirPretreatVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGEROUTDOORAIRPRETREAT_HPP
-
+#endif  // MODEL_SETPOINTMANAGEROUTDOORAIRPRETREAT_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,177 +36,161 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class SpaceInfiltrationDesignFlowRate_Impl;
+    class SpaceInfiltrationDesignFlowRate_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SpaceInfiltrationDesignFlowRate is a SpaceLoad that wraps the OpenStudio IDD
+  /** SpaceInfiltrationDesignFlowRate is a SpaceLoad that wraps the OpenStudio IDD
  *  object 'OS:SpaceInfiltration:DesignFlowRate'. */
-class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SpaceInfiltrationDesignFlowRate(const Model& model);
+    explicit SpaceInfiltrationDesignFlowRate(const Model& model);
 
-  virtual ~SpaceInfiltrationDesignFlowRate() {}
+    virtual ~SpaceInfiltrationDesignFlowRate() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validDesignFlowRateCalculationMethodValues();
+    static std::vector<std::string> validDesignFlowRateCalculationMethodValues();
 
-  /** \deprecated */
-  static std::vector<std::string> designFlowRateCalculationMethodValues();
+    /** \deprecated */
+    static std::vector<std::string> designFlowRateCalculationMethodValues();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /** Returns the (fractional) infiltration schedule.  If this object does not
+    /** Returns the (fractional) infiltration schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  std::string designFlowRateCalculationMethod() const;
+    std::string designFlowRateCalculationMethod() const;
 
-  boost::optional<double> designFlowRate() const;
+    boost::optional<double> designFlowRate() const;
 
-  boost::optional<double> flowperSpaceFloorArea() const;
+    boost::optional<double> flowperSpaceFloorArea() const;
 
-  boost::optional<double> flowperExteriorSurfaceArea() const;
+    boost::optional<double> flowperExteriorSurfaceArea() const;
 
-  boost::optional<double> flowperExteriorWallArea() const;
+    boost::optional<double> flowperExteriorWallArea() const;
 
-  boost::optional<double> airChangesperHour() const;
+    boost::optional<double> airChangesperHour() const;
 
-  double constantTermCoefficient() const;
+    double constantTermCoefficient() const;
 
-  bool isConstantTermCoefficientDefaulted() const;
+    bool isConstantTermCoefficientDefaulted() const;
 
-  double temperatureTermCoefficient() const;
+    double temperatureTermCoefficient() const;
 
-  bool isTemperatureTermCoefficientDefaulted() const;
+    bool isTemperatureTermCoefficientDefaulted() const;
 
-  double velocityTermCoefficient() const;
+    double velocityTermCoefficient() const;
 
-  bool isVelocityTermCoefficientDefaulted() const;
+    bool isVelocityTermCoefficientDefaulted() const;
 
-  double velocitySquaredTermCoefficient() const;
+    double velocitySquaredTermCoefficient() const;
 
-  bool isVelocitySquaredTermCoefficientDefaulted() const;
+    bool isVelocitySquaredTermCoefficientDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setDesignFlowRate(double designFlowRate);
+    bool setDesignFlowRate(double designFlowRate);
 
-  bool setFlowperSpaceFloorArea(double flowperSpaceFloorArea);
+    bool setFlowperSpaceFloorArea(double flowperSpaceFloorArea);
 
-  bool setFlowperExteriorSurfaceArea(double flowperExteriorSurfaceArea);
+    bool setFlowperExteriorSurfaceArea(double flowperExteriorSurfaceArea);
 
-  bool setFlowperExteriorWallArea(double flowperExteriorWallArea);
+    bool setFlowperExteriorWallArea(double flowperExteriorWallArea);
 
-  bool setAirChangesperHour(double airChangesperHour);
+    bool setAirChangesperHour(double airChangesperHour);
 
-  bool setConstantTermCoefficient(double constantTermCoefficient);
+    bool setConstantTermCoefficient(double constantTermCoefficient);
 
-  void resetConstantTermCoefficient();
+    void resetConstantTermCoefficient();
 
-  bool setTemperatureTermCoefficient(double temperatureTermCoefficient);
+    bool setTemperatureTermCoefficient(double temperatureTermCoefficient);
 
-  void resetTemperatureTermCoefficient();
+    void resetTemperatureTermCoefficient();
 
-  bool setVelocityTermCoefficient(double velocityTermCoefficient);
+    bool setVelocityTermCoefficient(double velocityTermCoefficient);
 
-  void resetVelocityTermCoefficient();
+    void resetVelocityTermCoefficient();
 
-  bool setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient);
+    bool setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient);
 
-  void resetVelocitySquaredTermCoefficient();
+    void resetVelocitySquaredTermCoefficient();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the design flow rate (m^3/s) based on the floorArea (m^2),
+    /** Returns the design flow rate (m^3/s) based on the floorArea (m^2),
    *  exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and airVolume (m^3). */
-  double getDesignFlowRate(double floorArea,
-                           double exteriorSurfaceArea,
-                           double exteriorWallArea,
-                           double airVolume) const;
+    double getDesignFlowRate(double floorArea, double exteriorSurfaceArea, double exteriorWallArea, double airVolume) const;
 
-  /** Returns the design flow per space floor area (m^3/m^2*s) based on the
+    /** Returns the design flow per space floor area (m^3/m^2*s) based on the
    *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
    *  airVolume (m^3). */
-  double getFlowPerSpaceFloorArea(double floorArea,
-                                  double exteriorSurfaceArea,
-                                  double exteriorWallArea,
-                                  double airVolume) const;
+    double getFlowPerSpaceFloorArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea, double airVolume) const;
 
-  /** Returns the design flow per exterior surface area (m^3/m^2*s) based on the
+    /** Returns the design flow per exterior surface area (m^3/m^2*s) based on the
    *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
    *  airVolume (m^3). */
-  double getFlowPerExteriorSurfaceArea(double floorArea,
-                                       double exteriorSurfaceArea,
-                                       double exteriorWallArea,
-                                       double airVolume) const;
+    double getFlowPerExteriorSurfaceArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea, double airVolume) const;
 
-  /** Returns the design flow per exterior wall area (m^3/m^2*s) based on the
+    /** Returns the design flow per exterior wall area (m^3/m^2*s) based on the
    *  floorArea (m^2), exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and
    *  airVolume (m^3). */
-  double getFlowPerExteriorWallArea(double floorArea,
-                                    double exteriorSurfaceArea,
-                                    double exteriorWallArea,
-                                    double airVolume) const;
+    double getFlowPerExteriorWallArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea, double airVolume) const;
 
-  /** Returns the design air changes per hour (1/h) based on the floorArea (m^2),
+    /** Returns the design air changes per hour (1/h) based on the floorArea (m^2),
    *  exteriorSurfaceArea (m^2), exteriorWallArea (m^2), and airVolume (m^3). */
-  double getAirChangesPerHour(double floorArea,
-                              double exteriorSurfaceArea,
-                              double exteriorWallArea,
-                              double airVolume) const;
+    double getAirChangesPerHour(double floorArea, double exteriorSurfaceArea, double exteriorWallArea, double airVolume) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SpaceInfiltrationDesignFlowRate_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SpaceInfiltrationDesignFlowRate_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit SpaceInfiltrationDesignFlowRate(std::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl);
+    explicit SpaceInfiltrationDesignFlowRate(std::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SpaceInfiltrationDesignFlowRate");
+  };
 
-  REGISTER_LOGGER("openstudio.model.SpaceInfiltrationDesignFlowRate");
-};
+  /** \relates SpaceInfiltrationDesignFlowRate*/
+  typedef boost::optional<SpaceInfiltrationDesignFlowRate> OptionalSpaceInfiltrationDesignFlowRate;
 
-/** \relates SpaceInfiltrationDesignFlowRate*/
-typedef boost::optional<SpaceInfiltrationDesignFlowRate> OptionalSpaceInfiltrationDesignFlowRate;
+  /** \relates SpaceInfiltrationDesignFlowRate*/
+  typedef std::vector<SpaceInfiltrationDesignFlowRate> SpaceInfiltrationDesignFlowRateVector;
 
-/** \relates SpaceInfiltrationDesignFlowRate*/
-typedef std::vector<SpaceInfiltrationDesignFlowRate> SpaceInfiltrationDesignFlowRateVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SPACEINFILTRATIONDESIGNFLOWRATE_HPP
-
+#endif  // MODEL_SPACEINFILTRATIONDESIGNFLOWRATE_HPP

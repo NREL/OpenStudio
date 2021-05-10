@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,65 +48,62 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellElectricalStorage(GeneratorFuelCellElectricalStorage & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellElectricalStorage(GeneratorFuelCellElectricalStorage& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_ElectricalStorage, modelObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    pcm.setName(*s);
+    IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_ElectricalStorage, modelObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      pcm.setName(*s);
+    }
+
+    //ChoiceofModel
+    s = modelObject.choiceofModel();
+    if (s) {
+      pcm.setString(Generator_FuelCell_ElectricalStorageFields::ChoiceofModel, s.get());
+    }
+
+    //NominalChargingEnergeticEfficiency
+    d = modelObject.nominalChargingEnergeticEfficiency();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::NominalChargingEnergeticEfficiency, d.get());
+    }
+
+    //NominalDischargingEnergeticEfficiency
+    d = modelObject.nominalDischargingEnergeticEfficiency();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::NominalDischargingEnergeticEfficiency, d.get());
+    }
+
+    //SimpleMaximumCapacity
+    d = modelObject.simpleMaximumCapacity();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumCapacity, d.get());
+    }
+
+    //SimpleMaximumPowerDraw
+    d = modelObject.simpleMaximumPowerDraw();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerDraw, d.get());
+    }
+
+    //SimpleMaximumPowerStore
+    d = modelObject.simpleMaximumPowerStore();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerStore, d.get());
+    }
+
+    //InitialChargeState
+    d = modelObject.initialChargeState();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::InitialChargeState, d.get());
+    }
+
+    return pcm;
   }
 
-  //ChoiceofModel
-  s = modelObject.choiceofModel();
-  if (s) {
-    pcm.setString(Generator_FuelCell_ElectricalStorageFields::ChoiceofModel, s.get());
-  }
+}  // namespace energyplus
 
-  //NominalChargingEnergeticEfficiency
-  d = modelObject.nominalChargingEnergeticEfficiency();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::NominalChargingEnergeticEfficiency, d.get());
-  }
-
-  //NominalDischargingEnergeticEfficiency
-  d = modelObject.nominalDischargingEnergeticEfficiency();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::NominalDischargingEnergeticEfficiency, d.get());
-  }
-
-  //SimpleMaximumCapacity
-  d = modelObject.simpleMaximumCapacity();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumCapacity, d.get());
-  }
-
-  //SimpleMaximumPowerDraw
-  d = modelObject.simpleMaximumPowerDraw();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerDraw, d.get());
-  }
-
-  //SimpleMaximumPowerStore
-  d = modelObject.simpleMaximumPowerStore();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::SimpleMaximumPowerStore, d.get());
-  }
-
-  //InitialChargeState
-  d = modelObject.initialChargeState();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_ElectricalStorageFields::InitialChargeState, d.get());
-  }
-
-  return pcm;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

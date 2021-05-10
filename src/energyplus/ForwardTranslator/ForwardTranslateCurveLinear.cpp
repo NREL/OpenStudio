@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,39 +43,37 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveLinear(
-    CurveLinear& modelObject)
-{
-  IdfObject idfObject(IddObjectType::Curve_Linear);
+  boost::optional<IdfObject> ForwardTranslator::translateCurveLinear(CurveLinear& modelObject) {
+    IdfObject idfObject(IddObjectType::Curve_Linear);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = modelObject.name())) {
-    idfObject.setName(*s);
+    if ((s = modelObject.name())) {
+      idfObject.setName(*s);
+    }
+
+    idfObject.setDouble(Curve_LinearFields::Coefficient1Constant, modelObject.coefficient1Constant());
+    idfObject.setDouble(Curve_LinearFields::Coefficient2x, modelObject.coefficient2x());
+    idfObject.setDouble(Curve_LinearFields::MinimumValueofx, modelObject.minimumValueofx());
+    idfObject.setDouble(Curve_LinearFields::MaximumValueofx, modelObject.maximumValueofx());
+    if ((d = modelObject.minimumCurveOutput())) {
+      idfObject.setDouble(Curve_LinearFields::MinimumCurveOutput, *d);
+    }
+    if ((d = modelObject.maximumCurveOutput())) {
+      idfObject.setDouble(Curve_LinearFields::MaximumCurveOutput, *d);
+    }
+    if (!modelObject.isInputUnitTypeforXDefaulted()) {
+      idfObject.setString(Curve_LinearFields::InputUnitTypeforX, modelObject.inputUnitTypeforX());
+    }
+    if (!modelObject.isOutputUnitTypeDefaulted()) {
+      idfObject.setString(Curve_LinearFields::OutputUnitType, modelObject.outputUnitType());
+    }
+
+    return idfObject;
   }
 
-  idfObject.setDouble(Curve_LinearFields::Coefficient1Constant,modelObject.coefficient1Constant());
-  idfObject.setDouble(Curve_LinearFields::Coefficient2x,modelObject.coefficient2x());
-  idfObject.setDouble(Curve_LinearFields::MinimumValueofx,modelObject.minimumValueofx());
-  idfObject.setDouble(Curve_LinearFields::MaximumValueofx,modelObject.maximumValueofx());
-  if ((d = modelObject.minimumCurveOutput())) {
-    idfObject.setDouble(Curve_LinearFields::MinimumCurveOutput,*d);
-  }
-  if ((d = modelObject.maximumCurveOutput())) {
-    idfObject.setDouble(Curve_LinearFields::MaximumCurveOutput,*d);
-  }
-  if (!modelObject.isInputUnitTypeforXDefaulted()) {
-    idfObject.setString(Curve_LinearFields::InputUnitTypeforX,modelObject.inputUnitTypeforX());
-  }
-  if (!modelObject.isOutputUnitTypeDefaulted()) {
-    idfObject.setString(Curve_LinearFields::OutputUnitType,modelObject.outputUnitType());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,9 +59,7 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_CoilCoolingDXCurveFitSpeed) {
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model model;
@@ -206,12 +204,10 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_coilCoolingDXCurveFitPerformance
   EXPECT_EQ(2u, speed.directUseCount());
   coilCoolingDXCurveFitOperatingModes = speed.coilCoolingDXCurveFitOperatingModes();
   ASSERT_EQ(2u, coilCoolingDXCurveFitOperatingModes.size());
-  EXPECT_TRUE(std::find(coilCoolingDXCurveFitOperatingModes.begin(),
-                        coilCoolingDXCurveFitOperatingModes.end(),
-                        operatingMode1) != coilCoolingDXCurveFitOperatingModes.end());
-  EXPECT_TRUE(std::find(coilCoolingDXCurveFitOperatingModes.begin(),
-                        coilCoolingDXCurveFitOperatingModes.end(),
-                        operatingMode2) != coilCoolingDXCurveFitOperatingModes.end());
+  EXPECT_TRUE(std::find(coilCoolingDXCurveFitOperatingModes.begin(), coilCoolingDXCurveFitOperatingModes.end(), operatingMode1)
+              != coilCoolingDXCurveFitOperatingModes.end());
+  EXPECT_TRUE(std::find(coilCoolingDXCurveFitOperatingModes.begin(), coilCoolingDXCurveFitOperatingModes.end(), operatingMode2)
+              != coilCoolingDXCurveFitOperatingModes.end());
 }
 
 TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_remove) {
@@ -250,5 +246,4 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_remove) {
   EXPECT_EQ(0u, operatingMode2.speeds().size());
 
   EXPECT_EQ(speed2, operatingMode1.speeds()[0]);
-
 }

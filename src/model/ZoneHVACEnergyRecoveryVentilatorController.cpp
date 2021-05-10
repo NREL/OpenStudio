@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,390 +45,382 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ZoneHVACEnergyRecoveryVentilatorController_Impl::ZoneHVACEnergyRecoveryVentilatorController_Impl(const IdfObject& idfObject,
-                                                                                                   Model_Impl* model,
-                                                                                                   bool keepHandle)
-    : ParentObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACEnergyRecoveryVentilatorController::iddObjectType());
-  }
+    ZoneHVACEnergyRecoveryVentilatorController_Impl::ZoneHVACEnergyRecoveryVentilatorController_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                     bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ZoneHVACEnergyRecoveryVentilatorController::iddObjectType());
+    }
 
-  ZoneHVACEnergyRecoveryVentilatorController_Impl::ZoneHVACEnergyRecoveryVentilatorController_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                   Model_Impl* model,
-                                                                                                   bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ZoneHVACEnergyRecoveryVentilatorController::iddObjectType());
-  }
+    ZoneHVACEnergyRecoveryVentilatorController_Impl::ZoneHVACEnergyRecoveryVentilatorController_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ZoneHVACEnergyRecoveryVentilatorController::iddObjectType());
+    }
 
-  ZoneHVACEnergyRecoveryVentilatorController_Impl::ZoneHVACEnergyRecoveryVentilatorController_Impl(const ZoneHVACEnergyRecoveryVentilatorController_Impl& other,
-                                                                                                   Model_Impl* model,
-                                                                                                   bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {}
+    ZoneHVACEnergyRecoveryVentilatorController_Impl::ZoneHVACEnergyRecoveryVentilatorController_Impl(
+      const ZoneHVACEnergyRecoveryVentilatorController_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& ZoneHVACEnergyRecoveryVentilatorController_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+    const std::vector<std::string>& ZoneHVACEnergyRecoveryVentilatorController_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate
-    return result;
-  }
-
-  IddObjectType ZoneHVACEnergyRecoveryVentilatorController_Impl::iddObjectType() const {
-    return ZoneHVACEnergyRecoveryVentilatorController::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ZoneHVACEnergyRecoveryVentilatorController_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACEnergyRecoveryVentilatorController","Time of Day Economizer Flow Control"));
+      return result;
     }
-    return result;
-  }
 
-  std::vector<ModelObject> ZoneHVACEnergyRecoveryVentilatorController_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    if (auto const intermediate = electronicEnthalpyLimitCurve()) {
-      result.push_back(intermediate.get());
+    IddObjectType ZoneHVACEnergyRecoveryVentilatorController_Impl::iddObjectType() const {
+      return ZoneHVACEnergyRecoveryVentilatorController::iddObjectType();
     }
-    return result;
-  }
 
-  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::temperatureHighLimit() const {
-    return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureHighLimit,true);
-  }
-
-  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::temperatureLowLimit() const {
-    return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureLowLimit,true);
-  }
-
-  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::enthalpyHighLimit() const {
-    return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::EnthalpyHighLimit,true);
-  }
-
-  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::dewpointTemperatureLimit() const {
-    return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::DewpointTemperatureLimit,true);
-  }
-
-  boost::optional<Curve> ZoneHVACEnergyRecoveryVentilatorController_Impl::electronicEnthalpyLimitCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ElectronicEnthalpyLimitCurveName);
-  }
-
-  std::string ZoneHVACEnergyRecoveryVentilatorController_Impl::exhaustAirTemperatureLimit() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirTemperatureLimit,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ZoneHVACEnergyRecoveryVentilatorController_Impl::exhaustAirEnthalpyLimit() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirEnthalpyLimit,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<Schedule> ZoneHVACEnergyRecoveryVentilatorController_Impl::timeofDayEconomizerFlowControlSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName);
-  }
-
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::highHumidityControlFlag() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityControlFlag,true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
-  }
-
-  double ZoneHVACEnergyRecoveryVentilatorController_Impl::highHumidityOutdoorAirFlowRatio() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityOutdoorAirFlowRatio,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::controlHighIndoorHumidityBasedonOutdoorHumidityRatio() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
-  }
-
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureHighLimit(boost::optional<double> temperatureHighLimit) {
-    bool result(false);
-    if (temperatureHighLimit) {
-      result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureHighLimit, temperatureHighLimit.get());
+    std::vector<ScheduleTypeKey> ZoneHVACEnergyRecoveryVentilatorController_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACEnergyRecoveryVentilatorController", "Time of Day Economizer Flow Control"));
+      }
+      return result;
     }
-    else {
-      resetTemperatureHighLimit();
-      result = true;
+
+    std::vector<ModelObject> ZoneHVACEnergyRecoveryVentilatorController_Impl::children() const {
+      std::vector<ModelObject> result;
+      if (auto const intermediate = electronicEnthalpyLimitCurve()) {
+        result.push_back(intermediate.get());
+      }
+      return result;
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTemperatureHighLimit() {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureHighLimit, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureLowLimit(boost::optional<double> temperatureLowLimit) {
-    bool result(false);
-    if (temperatureLowLimit) {
-      result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureLowLimit, temperatureLowLimit.get());
+    boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::temperatureHighLimit() const {
+      return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureHighLimit, true);
     }
-    else {
-      resetTemperatureLowLimit();
-      result = true;
+
+    boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::temperatureLowLimit() const {
+      return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureLowLimit, true);
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTemperatureLowLimit() {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureLowLimit, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setEnthalpyHighLimit(boost::optional<double> enthalpyHighLimit) {
-    bool result(false);
-    if (enthalpyHighLimit) {
-      result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::EnthalpyHighLimit, enthalpyHighLimit.get());
+    boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::enthalpyHighLimit() const {
+      return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::EnthalpyHighLimit, true);
     }
-    else {
-      resetEnthalpyHighLimit();
-      result = true;
+
+    boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController_Impl::dewpointTemperatureLimit() const {
+      return getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::DewpointTemperatureLimit, true);
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetEnthalpyHighLimit() {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::EnthalpyHighLimit, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setDewpointTemperatureLimit(boost::optional<double> dewpointTemperatureLimit) {
-    bool result(false);
-    if (dewpointTemperatureLimit) {
-      result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::DewpointTemperatureLimit, dewpointTemperatureLimit.get());
+    boost::optional<Curve> ZoneHVACEnergyRecoveryVentilatorController_Impl::electronicEnthalpyLimitCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ElectronicEnthalpyLimitCurveName);
     }
-    else {
-      resetDewpointTemperatureLimit();
-      result = true;
+
+    std::string ZoneHVACEnergyRecoveryVentilatorController_Impl::exhaustAirTemperatureLimit() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirTemperatureLimit, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetDewpointTemperatureLimit() {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::DewpointTemperatureLimit, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setElectronicEnthalpyLimitCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      result = setPointer(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ElectronicEnthalpyLimitCurveName, curve.get().handle());
+    std::string ZoneHVACEnergyRecoveryVentilatorController_Impl::exhaustAirEnthalpyLimit() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirEnthalpyLimit, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    else {
-      resetElectronicEnthalpyLimitCurve();
-      result = true;
+
+    boost::optional<Schedule> ZoneHVACEnergyRecoveryVentilatorController_Impl::timeofDayEconomizerFlowControlSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName);
     }
-    return result;
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::highHumidityControlFlag() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityControlFlag, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    double ZoneHVACEnergyRecoveryVentilatorController_Impl::highHumidityOutdoorAirFlowRatio() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityOutdoorAirFlowRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::controlHighIndoorHumidityBasedonOutdoorHumidityRatio() const {
+      boost::optional<std::string> value =
+        getString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureHighLimit(boost::optional<double> temperatureHighLimit) {
+      bool result(false);
+      if (temperatureHighLimit) {
+        result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureHighLimit, temperatureHighLimit.get());
+      } else {
+        resetTemperatureHighLimit();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTemperatureHighLimit() {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureHighLimit, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTemperatureLowLimit(boost::optional<double> temperatureLowLimit) {
+      bool result(false);
+      if (temperatureLowLimit) {
+        result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureLowLimit, temperatureLowLimit.get());
+      } else {
+        resetTemperatureLowLimit();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTemperatureLowLimit() {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TemperatureLowLimit, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setEnthalpyHighLimit(boost::optional<double> enthalpyHighLimit) {
+      bool result(false);
+      if (enthalpyHighLimit) {
+        result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::EnthalpyHighLimit, enthalpyHighLimit.get());
+      } else {
+        resetEnthalpyHighLimit();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetEnthalpyHighLimit() {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::EnthalpyHighLimit, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setDewpointTemperatureLimit(boost::optional<double> dewpointTemperatureLimit) {
+      bool result(false);
+      if (dewpointTemperatureLimit) {
+        result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::DewpointTemperatureLimit, dewpointTemperatureLimit.get());
+      } else {
+        resetDewpointTemperatureLimit();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetDewpointTemperatureLimit() {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::DewpointTemperatureLimit, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setElectronicEnthalpyLimitCurve(const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ElectronicEnthalpyLimitCurveName, curve.get().handle());
+      } else {
+        resetElectronicEnthalpyLimitCurve();
+        result = true;
+      }
+      return result;
+    }
+
+    void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetElectronicEnthalpyLimitCurve() {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ElectronicEnthalpyLimitCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirTemperatureLimit(const std::string& exhaustAirTemperatureLimit) {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirTemperatureLimit, exhaustAirTemperatureLimit);
+      return result;
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirEnthalpyLimit(const std::string& exhaustAirEnthalpyLimit) {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirEnthalpyLimit, exhaustAirEnthalpyLimit);
+      return result;
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTimeofDayEconomizerFlowControlSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName,
+                                "ZoneHVACEnergyRecoveryVentilatorController", "Time of Day Economizer Flow Control", schedule);
+      return result;
+    }
+
+    void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTimeofDayEconomizerFlowControlSchedule() {
+      bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setHighHumidityControlFlag(bool highHumidityControlFlag) {
+      return setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityControlFlag, highHumidityControlFlag);
+      ;
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio) {
+      bool result =
+        setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityOutdoorAirFlowRatio, highHumidityOutdoorAirFlowRatio);
+      return result;
+    }
+
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(
+      bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
+      return setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,
+                                  controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
+      ;
+    }
+
+  }  // namespace detail
+
+  ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorController(const Model& model)
+    : ParentObject(ZoneHVACEnergyRecoveryVentilatorController::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>());
+
+    bool ok = true;
+    ok = setExhaustAirTemperatureLimit("NoExhaustAirTemperatureLimit");
+    OS_ASSERT(ok);
+    ok = setExhaustAirEnthalpyLimit("NoExhaustAirEnthalpyLimit");
+    OS_ASSERT(ok);
+    setHighHumidityControlFlag(false);
+    ok = setHighHumidityOutdoorAirFlowRatio(1.0);
+    OS_ASSERT(ok);
+    setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(true);
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetElectronicEnthalpyLimitCurve() {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ElectronicEnthalpyLimitCurveName, "");
-    OS_ASSERT(result);
+  IddObjectType ZoneHVACEnergyRecoveryVentilatorController::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator_Controller);
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirTemperatureLimit(std::string exhaustAirTemperatureLimit) {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirTemperatureLimit, exhaustAirTemperatureLimit);
-    return result;
+  std::vector<std::string> ZoneHVACEnergyRecoveryVentilatorController::exhaustAirTemperatureLimitValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirTemperatureLimit);
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirEnthalpyLimit(std::string exhaustAirEnthalpyLimit) {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirEnthalpyLimit, exhaustAirEnthalpyLimit);
-    return result;
+  std::vector<std::string> ZoneHVACEnergyRecoveryVentilatorController::exhaustAirEnthalpyLimitValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirEnthalpyLimit);
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setTimeofDayEconomizerFlowControlSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName,
-                              "ZoneHVACEnergyRecoveryVentilatorController",
-                              "Time of Day Economizer Flow Control",
-                              schedule);
-    return result;
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::temperatureHighLimit() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->temperatureHighLimit();
   }
 
-  void ZoneHVACEnergyRecoveryVentilatorController_Impl::resetTimeofDayEconomizerFlowControlSchedule() {
-    bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName, "");
-    OS_ASSERT(result);
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::temperatureLowLimit() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->temperatureLowLimit();
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setHighHumidityControlFlag(bool highHumidityControlFlag) {
-    return setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityControlFlag, highHumidityControlFlag);;
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::enthalpyHighLimit() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->enthalpyHighLimit();
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio) {
-    bool result = setDouble(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::HighHumidityOutdoorAirFlowRatio, highHumidityOutdoorAirFlowRatio);
-    return result;
+  boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::dewpointTemperatureLimit() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->dewpointTemperatureLimit();
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
-    return setBooleanFieldValue(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, controlHighIndoorHumidityBasedonOutdoorHumidityRatio);;
+  boost::optional<Curve> ZoneHVACEnergyRecoveryVentilatorController::electronicEnthalpyLimitCurve() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->electronicEnthalpyLimitCurve();
   }
 
-} // detail
+  std::string ZoneHVACEnergyRecoveryVentilatorController::exhaustAirTemperatureLimit() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->exhaustAirTemperatureLimit();
+  }
 
-ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorController(const Model& model)
-  : ParentObject(ZoneHVACEnergyRecoveryVentilatorController::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>());
+  std::string ZoneHVACEnergyRecoveryVentilatorController::exhaustAirEnthalpyLimit() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->exhaustAirEnthalpyLimit();
+  }
 
-  bool ok = true;
-  ok = setExhaustAirTemperatureLimit( "NoExhaustAirTemperatureLimit" );
-  OS_ASSERT(ok);
-  ok = setExhaustAirEnthalpyLimit( "NoExhaustAirEnthalpyLimit" );
-  OS_ASSERT(ok);
-  setHighHumidityControlFlag( false );
-  ok = setHighHumidityOutdoorAirFlowRatio( 1.0 );
-  OS_ASSERT(ok);
-  setControlHighIndoorHumidityBasedonOutdoorHumidityRatio( true );
-}
+  boost::optional<Schedule> ZoneHVACEnergyRecoveryVentilatorController::timeofDayEconomizerFlowControlSchedule() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->timeofDayEconomizerFlowControlSchedule();
+  }
 
-IddObjectType ZoneHVACEnergyRecoveryVentilatorController::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator_Controller);
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::highHumidityControlFlag() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->highHumidityControlFlag();
+  }
 
-std::vector<std::string> ZoneHVACEnergyRecoveryVentilatorController::exhaustAirTemperatureLimitValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirTemperatureLimit);
-}
+  double ZoneHVACEnergyRecoveryVentilatorController::highHumidityOutdoorAirFlowRatio() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->highHumidityOutdoorAirFlowRatio();
+  }
 
-std::vector<std::string> ZoneHVACEnergyRecoveryVentilatorController::exhaustAirEnthalpyLimitValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirEnthalpyLimit);
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::controlHighIndoorHumidityBasedonOutdoorHumidityRatio() const {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->controlHighIndoorHumidityBasedonOutdoorHumidityRatio();
+  }
 
-boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::temperatureHighLimit() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->temperatureHighLimit();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setTemperatureHighLimit(double temperatureHighLimit) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureHighLimit(temperatureHighLimit);
+  }
 
-boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::temperatureLowLimit() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->temperatureLowLimit();
-}
+  void ZoneHVACEnergyRecoveryVentilatorController::resetTemperatureHighLimit() {
+    getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTemperatureHighLimit();
+  }
 
-boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::enthalpyHighLimit() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->enthalpyHighLimit();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setTemperatureLowLimit(double temperatureLowLimit) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureLowLimit(temperatureLowLimit);
+  }
 
-boost::optional<double> ZoneHVACEnergyRecoveryVentilatorController::dewpointTemperatureLimit() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->dewpointTemperatureLimit();
-}
+  void ZoneHVACEnergyRecoveryVentilatorController::resetTemperatureLowLimit() {
+    getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTemperatureLowLimit();
+  }
 
-boost::optional<Curve> ZoneHVACEnergyRecoveryVentilatorController::electronicEnthalpyLimitCurve() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->electronicEnthalpyLimitCurve();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setEnthalpyHighLimit(double enthalpyHighLimit) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setEnthalpyHighLimit(enthalpyHighLimit);
+  }
 
-std::string ZoneHVACEnergyRecoveryVentilatorController::exhaustAirTemperatureLimit() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->exhaustAirTemperatureLimit();
-}
+  void ZoneHVACEnergyRecoveryVentilatorController::resetEnthalpyHighLimit() {
+    getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetEnthalpyHighLimit();
+  }
 
-std::string ZoneHVACEnergyRecoveryVentilatorController::exhaustAirEnthalpyLimit() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->exhaustAirEnthalpyLimit();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setDewpointTemperatureLimit(double dewpointTemperatureLimit) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setDewpointTemperatureLimit(dewpointTemperatureLimit);
+  }
 
-boost::optional<Schedule> ZoneHVACEnergyRecoveryVentilatorController::timeofDayEconomizerFlowControlSchedule() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->timeofDayEconomizerFlowControlSchedule();
-}
+  void ZoneHVACEnergyRecoveryVentilatorController::resetDewpointTemperatureLimit() {
+    getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetDewpointTemperatureLimit();
+  }
 
-bool ZoneHVACEnergyRecoveryVentilatorController::highHumidityControlFlag() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->highHumidityControlFlag();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setElectronicEnthalpyLimitCurve(const Curve& curve) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setElectronicEnthalpyLimitCurve(curve);
+  }
 
-double ZoneHVACEnergyRecoveryVentilatorController::highHumidityOutdoorAirFlowRatio() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->highHumidityOutdoorAirFlowRatio();
-}
+  void ZoneHVACEnergyRecoveryVentilatorController::resetElectronicEnthalpyLimitCurve() {
+    getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetElectronicEnthalpyLimitCurve();
+  }
 
-bool ZoneHVACEnergyRecoveryVentilatorController::controlHighIndoorHumidityBasedonOutdoorHumidityRatio() const {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->controlHighIndoorHumidityBasedonOutdoorHumidityRatio();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirTemperatureLimit(const std::string& exhaustAirTemperatureLimit) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setExhaustAirTemperatureLimit(exhaustAirTemperatureLimit);
+  }
 
-bool ZoneHVACEnergyRecoveryVentilatorController::setTemperatureHighLimit(double temperatureHighLimit) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureHighLimit(temperatureHighLimit);
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirEnthalpyLimit(const std::string& exhaustAirEnthalpyLimit) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setExhaustAirEnthalpyLimit(exhaustAirEnthalpyLimit);
+  }
 
-void ZoneHVACEnergyRecoveryVentilatorController::resetTemperatureHighLimit() {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTemperatureHighLimit();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setTimeofDayEconomizerFlowControlSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTimeofDayEconomizerFlowControlSchedule(schedule);
+  }
 
-bool ZoneHVACEnergyRecoveryVentilatorController::setTemperatureLowLimit(double temperatureLowLimit) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTemperatureLowLimit(temperatureLowLimit);
-}
+  void ZoneHVACEnergyRecoveryVentilatorController::resetTimeofDayEconomizerFlowControlSchedule() {
+    getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTimeofDayEconomizerFlowControlSchedule();
+  }
 
-void ZoneHVACEnergyRecoveryVentilatorController::resetTemperatureLowLimit() {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTemperatureLowLimit();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setHighHumidityControlFlag(bool highHumidityControlFlag) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setHighHumidityControlFlag(highHumidityControlFlag);
+  }
 
-bool ZoneHVACEnergyRecoveryVentilatorController::setEnthalpyHighLimit(double enthalpyHighLimit) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setEnthalpyHighLimit(enthalpyHighLimit);
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setHighHumidityOutdoorAirFlowRatio(highHumidityOutdoorAirFlowRatio);
+  }
 
-void ZoneHVACEnergyRecoveryVentilatorController::resetEnthalpyHighLimit() {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetEnthalpyHighLimit();
-}
+  bool ZoneHVACEnergyRecoveryVentilatorController::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(
+    bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
+    return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(
+      controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
+  }
 
-bool ZoneHVACEnergyRecoveryVentilatorController::setDewpointTemperatureLimit(double dewpointTemperatureLimit) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setDewpointTemperatureLimit(dewpointTemperatureLimit);
-}
+  /// @cond
+  ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorController(
+    std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl> impl)
+    : ParentObject(std::move(impl)) {}
+  /// @endcond
 
-void ZoneHVACEnergyRecoveryVentilatorController::resetDewpointTemperatureLimit() {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetDewpointTemperatureLimit();
-}
-
-bool ZoneHVACEnergyRecoveryVentilatorController::setElectronicEnthalpyLimitCurve(const Curve& curve) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setElectronicEnthalpyLimitCurve(curve);
-}
-
-void ZoneHVACEnergyRecoveryVentilatorController::resetElectronicEnthalpyLimitCurve() {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetElectronicEnthalpyLimitCurve();
-}
-
-bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirTemperatureLimit(std::string exhaustAirTemperatureLimit) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setExhaustAirTemperatureLimit(exhaustAirTemperatureLimit);
-}
-
-bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirEnthalpyLimit(std::string exhaustAirEnthalpyLimit) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setExhaustAirEnthalpyLimit(exhaustAirEnthalpyLimit);
-}
-
-bool ZoneHVACEnergyRecoveryVentilatorController::setTimeofDayEconomizerFlowControlSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setTimeofDayEconomizerFlowControlSchedule(schedule);
-}
-
-void ZoneHVACEnergyRecoveryVentilatorController::resetTimeofDayEconomizerFlowControlSchedule() {
-  getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetTimeofDayEconomizerFlowControlSchedule();
-}
-
-bool ZoneHVACEnergyRecoveryVentilatorController::setHighHumidityControlFlag(bool highHumidityControlFlag) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setHighHumidityControlFlag(highHumidityControlFlag);
-}
-
-bool ZoneHVACEnergyRecoveryVentilatorController::setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setHighHumidityOutdoorAirFlowRatio(highHumidityOutdoorAirFlowRatio);
-}
-
-bool ZoneHVACEnergyRecoveryVentilatorController::setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio) {
-  return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
-}
-
-/// @cond
-ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorController(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

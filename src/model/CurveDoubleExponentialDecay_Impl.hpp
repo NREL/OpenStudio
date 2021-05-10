@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,130 +36,113 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** CurveDoubleExponentialDecay_Impl is a Curve_Impl that is the implementation class for CurveDoubleExponentialDecay.*/
-  class MODEL_API CurveDoubleExponentialDecay_Impl : public Curve_Impl {
+    /** CurveDoubleExponentialDecay_Impl is a Curve_Impl that is the implementation class for CurveDoubleExponentialDecay.*/
+    class MODEL_API CurveDoubleExponentialDecay_Impl : public Curve_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      CurveDoubleExponentialDecay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      CurveDoubleExponentialDecay_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      CurveDoubleExponentialDecay_Impl(const CurveDoubleExponentialDecay_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~CurveDoubleExponentialDecay_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual int numVariables() const override;
 
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
+      double coefficient1C1() const;
 
+      double coefficient2C2() const;
 
-   public:
+      double coefficient3C3() const;
 
-    /** @name Constructors and Destructors */
-    //@{
+      double coefficient4C4() const;
 
-    CurveDoubleExponentialDecay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      double coefficient5C5() const;
 
-    CurveDoubleExponentialDecay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      double minimumValueofx() const;
 
-    CurveDoubleExponentialDecay_Impl(const CurveDoubleExponentialDecay_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      double maximumValueofx() const;
 
-    virtual ~CurveDoubleExponentialDecay_Impl() {}
+      boost::optional<double> minimumCurveOutput() const;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      boost::optional<double> maximumCurveOutput() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      std::string inputUnitTypeforx() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isInputUnitTypeforxDefaulted() const;
 
-    virtual int numVariables() const override;
+      std::string outputUnitType() const;
 
-    virtual double evaluate(const std::vector<double>& x) const override;
+      bool isOutputUnitTypeDefaulted() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    double coefficient1C1() const;
+      bool setCoefficient1C1(double coefficient1C1);
 
-    double coefficient2C2() const;
+      bool setCoefficient2C2(double coefficient2C2);
 
-    double coefficient3C3() const;
+      bool setCoefficient3C3(double coefficient3C3);
 
-    double coefficient3C4() const;
+      bool setCoefficient4C4(double coefficient4C4);
 
-    double coefficient3C5() const;
+      bool setCoefficient5C5(double coefficient5C5);
 
-    double minimumValueofx() const;
+      bool setMinimumValueofx(double minimumValueofx);
 
-    double maximumValueofx() const;
+      bool setMaximumValueofx(double maximumValueofx);
 
-    boost::optional<double> minimumCurveOutput() const;
+      bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
-    boost::optional<double> maximumCurveOutput() const;
+      void resetMinimumCurveOutput();
 
-    std::string inputUnitTypeforx() const;
+      bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
-    bool isInputUnitTypeforxDefaulted() const;
+      void resetMaximumCurveOutput();
 
-    std::string outputUnitType() const;
+      bool setInputUnitTypeforx(const std::string& inputUnitTypeforx);
 
-    bool isOutputUnitTypeDefaulted() const;
+      void resetInputUnitTypeforx();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setOutputUnitType(const std::string& outputUnitType);
 
-    bool setCoefficient1C1(double coefficient1C1);
+      void resetOutputUnitType();
 
-    bool setCoefficient2C2(double coefficient2C2);
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setCoefficient3C3(double coefficient3C3);
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CurveDoubleExponentialDecay");
+    };
 
-    bool setCoefficient3C4(double coefficient3C4);
+  }  // namespace detail
 
-    bool setCoefficient3C5(double coefficient3C5);
+}  // namespace model
+}  // namespace openstudio
 
-    bool setMinimumValueofx(double minimumValueofx);
-
-    bool setMaximumValueofx(double maximumValueofx);
-
-    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
-
-    void resetMinimumCurveOutput();
-
-    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
-
-    void resetMaximumCurveOutput();
-
-    bool setInputUnitTypeforx(std::string inputUnitTypeforx);
-
-    void resetInputUnitTypeforx();
-
-    bool setOutputUnitType(std::string outputUnitType);
-
-    void resetOutputUnitType();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CurveDoubleExponentialDecay");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_IMPL_HPP
+#endif  // MODEL_CURVEDOUBLEEXPONENTIALDECAY_IMPL_HPP

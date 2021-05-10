@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,257 +45,255 @@ class Date;
 
 namespace model {
 
-class OutputMeter;
+  class OutputMeter;
 
-namespace detail {
+  namespace detail {
 
-  class UtilityBill_Impl;
+    class UtilityBill_Impl;
 
-} // detail
+  }  // namespace detail
 
-
-/** BillingPeriod is a ModelExtensibleGroup that represents a single billing period in the
+  /** BillingPeriod is a ModelExtensibleGroup that represents a single billing period in the
     UtilityBill ModelObject. */
-class MODEL_API BillingPeriod : public ModelExtensibleGroup {
- public:
-  /** @name Getters */
-  //@{
+  class MODEL_API BillingPeriod : public ModelExtensibleGroup
+  {
+   public:
+    /** @name Getters */
+    //@{
 
-  /** The date that the billing period starts. */
-  Date startDate() const;
+    /** The date that the billing period starts. */
+    Date startDate() const;
 
-  /** The date that the billing period ends. */
-  Date endDate() const;
+    /** The date that the billing period ends. */
+    Date endDate() const;
 
-  /** The duration of the billing period in days. */
-  unsigned numberOfDays() const;
+    /** The duration of the billing period in days. */
+    unsigned numberOfDays() const;
 
-  /** Returns the consumption in billing units. */
-  boost::optional<double> consumption() const;
+    /** Returns the consumption in billing units. */
+    boost::optional<double> consumption() const;
 
-  /** Returns the peak demand in billing units. */
-  boost::optional<double> peakDemand() const;
+    /** Returns the peak demand in billing units. */
+    boost::optional<double> peakDemand() const;
 
-  /** Returns the total cost of the bill in dollars. */
-  boost::optional<double> totalCost() const;
+    /** Returns the total cost of the bill in dollars. */
+    boost::optional<double> totalCost() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the start date.  If startDate is before endDate then endDate is retained.
+    /** Sets the start date.  If startDate is before endDate then endDate is retained.
       If startDate is after endDate then numberOfDays is retained. */
-  bool setStartDate(const Date& startDate);
+    bool setStartDate(const Date& startDate);
 
-  /** Sets the end date.  If endDate is after startDate then startDate is retained.
+    /** Sets the end date.  If endDate is after startDate then startDate is retained.
       If endDate is before startDate then numberOfDays is retained. */
-  bool setEndDate(const Date& endDate);
+    bool setEndDate(const Date& endDate);
 
-  /** Sets the number of days in billing period, startDate is always retained. */
-  bool setNumberOfDays(unsigned numberOfDays);
+    /** Sets the number of days in billing period, startDate is always retained. */
+    bool setNumberOfDays(unsigned numberOfDays);
 
-  /** Sets the consumption in billing units. */
-  bool setConsumption(double consumption);
+    /** Sets the consumption in billing units. */
+    bool setConsumption(double consumption);
 
-  void resetConsumption();
+    void resetConsumption();
 
-  /** Sets the peak demand in billing units. */
-  bool setPeakDemand(double peakDemand);
+    /** Sets the peak demand in billing units. */
+    bool setPeakDemand(double peakDemand);
 
-  void resetPeakDemand();
+    void resetPeakDemand();
 
-  /** Sets the total cost of the bill in dollars. */
-  bool setTotalCost(double totalCost);
+    /** Sets the total cost of the bill in dollars. */
+    bool setTotalCost(double totalCost);
 
-  void resetTotalCost();
+    void resetTotalCost();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns true if this billing period is strictly within the model's run period.*/
-  bool withinRunPeriod() const;
+    /** Returns true if this billing period is strictly within the model's run period.*/
+    bool withinRunPeriod() const;
 
-  /** Returns true if this billing period is within the model's run period assuming periodic boundary conditions.*/
-  bool withinPeriodicRunPeriod() const;
+    /** Returns true if this billing period is within the model's run period assuming periodic boundary conditions.*/
+    bool withinPeriodicRunPeriod() const;
 
-  /** Returns true if this billing period is partially within the model's run period.*/
-  bool overlapsRunPeriod() const;
+    /** Returns true if this billing period is partially within the model's run period.*/
+    bool overlapsRunPeriod() const;
 
-  /** Returns the consumption for each day in billing period from simulation in model units. */
-  Vector modelConsumptionValues() const;
+    /** Returns the consumption for each day in billing period from simulation in model units. */
+    Vector modelConsumptionValues() const;
 
-  /** Returns the sum of modelConsumptionValues if it is not empty. */
-  boost::optional<double> modelConsumption() const;
+    /** Returns the sum of modelConsumptionValues if it is not empty. */
+    boost::optional<double> modelConsumption() const;
 
-  /** Returns the maximum peak over the billing period if available. */
-  boost::optional<double> modelPeakDemand() const;
+    /** Returns the maximum peak over the billing period if available. */
+    boost::optional<double> modelPeakDemand() const;
 
-  /** Returns total energy cost over the billing period if available. */
-  boost::optional<double> modelTotalCost() const;
+    /** Returns total energy cost over the billing period if available. */
+    boost::optional<double> modelTotalCost() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::UtilityBill_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::UtilityBill_Impl ImplType;
 
-  friend class IdfExtensibleGroup;
-  friend class detail::UtilityBill_Impl;
+    friend class IdfExtensibleGroup;
+    friend class detail::UtilityBill_Impl;
 
-  BillingPeriod(std::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index);
+    BillingPeriod(std::shared_ptr<detail::UtilityBill_Impl> impl, unsigned index);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.BillingPeriod");
+  };
 
-  REGISTER_LOGGER("openstudio.model.BillingPeriod");
-};
+  /** \relates BillingPeriod */
+  typedef std::vector<BillingPeriod> BillingPeriodVector;
 
-/** \relates BillingPeriod */
-typedef std::vector<BillingPeriod> BillingPeriodVector;
-
-
-/** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'.
+  /** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'.
     This object allows the user to enter in actual fuel usage for model calibration.
 */
-class MODEL_API UtilityBill : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API UtilityBill : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit UtilityBill(const FuelType& fuelType, const Model& model);
+    explicit UtilityBill(const FuelType& fuelType, const Model& model);
 
-  virtual ~UtilityBill() {}
+    virtual ~UtilityBill() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  std::vector<std::string> consumptionUnitValues();
+    std::vector<std::string> consumptionUnitValues();
 
-  std::vector<std::string> peakDemandUnitValues();
+    std::vector<std::string> peakDemandUnitValues();
 
-  static std::vector<std::string> calibrationGuidelines();
+    static std::vector<std::string> calibrationGuidelines();
 
-  static boost::optional<double> maxNMBE(const std::string& calibrationGuideline);
+    static boost::optional<double> maxNMBE(const std::string& calibrationGuideline);
 
-  static boost::optional<double> maxCVRMSE(const std::string& calibrationGuideline);
+    static boost::optional<double> maxCVRMSE(const std::string& calibrationGuideline);
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  FuelType fuelType() const;
+    FuelType fuelType() const;
 
-  InstallLocationType meterInstallLocation() const;
+    InstallLocationType meterInstallLocation() const;
 
-  bool isMeterInstallLocationDefaulted() const;
+    bool isMeterInstallLocationDefaulted() const;
 
-  boost::optional<std::string> meterSpecificInstallLocation() const;
+    boost::optional<std::string> meterSpecificInstallLocation() const;
 
-  boost::optional<EndUseCategoryType> meterEndUseCategory() const;
+    boost::optional<EndUseCategoryType> meterEndUseCategory() const;
 
-  boost::optional<std::string> meterSpecificEndUse() const;
+    boost::optional<std::string> meterSpecificEndUse() const;
 
-  std::string consumptionUnit() const;
+    std::string consumptionUnit() const;
 
-  boost::optional<std::string> consumptionUnitDescription() const;
+    boost::optional<std::string> consumptionUnitDescription() const;
 
-  double consumptionUnitConversionFactor() const;
+    double consumptionUnitConversionFactor() const;
 
-  bool isConsumptionUnitConversionFactorDefaulted() const;
+    bool isConsumptionUnitConversionFactorDefaulted() const;
 
-  boost::optional<std::string> peakDemandUnit() const;
+    boost::optional<std::string> peakDemandUnit() const;
 
-  boost::optional<std::string> peakDemandUnitDescription() const;
+    boost::optional<std::string> peakDemandUnitDescription() const;
 
-  boost::optional<double> peakDemandUnitConversionFactor() const;
+    boost::optional<double> peakDemandUnitConversionFactor() const;
 
-  boost::optional<unsigned> timestepsInPeakDemandWindow() const;
+    boost::optional<unsigned> timestepsInPeakDemandWindow() const;
 
-  bool isTimestepsInPeakDemandWindowDefaulted() const;
+    bool isTimestepsInPeakDemandWindowDefaulted() const;
 
-  boost::optional<double> minutesInPeakDemandWindow() const;
+    boost::optional<double> minutesInPeakDemandWindow() const;
 
-  std::vector<BillingPeriod> billingPeriods() const;
+    std::vector<BillingPeriod> billingPeriods() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
+    bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
 
-  void resetMeterInstallLocation();
+    void resetMeterInstallLocation();
 
-  bool setMeterSpecificInstallLocation(const std::string& meterSpecificInstallLocation);
+    bool setMeterSpecificInstallLocation(const std::string& meterSpecificInstallLocation);
 
-  void resetMeterSpecificInstallLocation();
+    void resetMeterSpecificInstallLocation();
 
-  bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
+    bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
 
-  void resetMeterEndUseCategory();
+    void resetMeterEndUseCategory();
 
-  bool setMeterSpecificEndUse(const std::string& meterSpecificEndUse);
+    bool setMeterSpecificEndUse(const std::string& meterSpecificEndUse);
 
-  void resetMeterSpecificEndUse();
+    void resetMeterSpecificEndUse();
 
-  bool setConsumptionUnit(const std::string& consumptionUnit);
+    bool setConsumptionUnit(const std::string& consumptionUnit);
 
-  bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
+    bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
 
-  void resetConsumptionUnitConversionFactor();
+    void resetConsumptionUnitConversionFactor();
 
-  bool setPeakDemandUnit(const std::string& peakDemandUnit);
+    bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
-  bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
+    bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
 
-  void resetTimestepsInPeakDemandWindow();
+    void resetTimestepsInPeakDemandWindow();
 
-  void clearBillingPeriods();
+    void clearBillingPeriods();
 
-  BillingPeriod addBillingPeriod();
+    BillingPeriod addBillingPeriod();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Gets the meter associated with consumption for this UtilityBill, creates it if it does not exist.*/
-  OutputMeter consumptionMeter() const;
+    /** Gets the meter associated with consumption for this UtilityBill, creates it if it does not exist.*/
+    OutputMeter consumptionMeter() const;
 
-  /** Gets the meter associated with peak demand for this UtilityBill, creates it if it does not exist.*/
-  boost::optional<OutputMeter> peakDemandMeter() const;
+    /** Gets the meter associated with peak demand for this UtilityBill, creates it if it does not exist.*/
+    boost::optional<OutputMeter> peakDemandMeter() const;
 
-  /** Number of billing periods used to compute CVRMSE or NMBE.*/
-  unsigned numberBillingPeriodsInCalculations() const;
+    /** Number of billing periods used to compute CVRMSE or NMBE.*/
+    unsigned numberBillingPeriodsInCalculations() const;
 
-  /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
-  boost::optional<double> CVRMSE() const;
+    /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
+    boost::optional<double> CVRMSE() const;
 
-  /** Normalized mean bias error, see ASHRAE 14-2002 5.2.11.3.*/
-  boost::optional<double> NMBE() const;
+    /** Normalized mean bias error, see ASHRAE 14-2002 5.2.11.3.*/
+    boost::optional<double> NMBE() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::UtilityBill_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::UtilityBill_Impl ImplType;
 
-  explicit UtilityBill(std::shared_ptr<detail::UtilityBill_Impl> impl);
+    explicit UtilityBill(std::shared_ptr<detail::UtilityBill_Impl> impl);
 
-  friend class detail::UtilityBill_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.UtilityBill");
-};
+    friend class detail::UtilityBill_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.UtilityBill");
+  };
 
-/** \relates UtilityBill*/
-typedef boost::optional<UtilityBill> OptionalUtilityBill;
+  /** \relates UtilityBill*/
+  typedef boost::optional<UtilityBill> OptionalUtilityBill;
 
-/** \relates UtilityBill*/
-typedef std::vector<UtilityBill> UtilityBillVector;
+  /** \relates UtilityBill*/
+  typedef std::vector<UtilityBill> UtilityBillVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_UTILITYBILL_HPP
-
+#endif  // MODEL_UTILITYBILL_HPP

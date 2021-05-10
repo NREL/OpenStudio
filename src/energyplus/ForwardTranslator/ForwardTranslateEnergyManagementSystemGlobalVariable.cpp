@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,24 +53,22 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemGlobalVariable(EnergyManagementSystemGlobalVariable & modelObject)
-{
-  boost::optional<std::string> s;
-  //TODO add all the global variables to one object in the IDF
-  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable);
-  m_idfObjects.push_back(idfObject);
-  //m_map.insert(std::make_pair(modelObject.handle(), idfObject));
+  boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemGlobalVariable(EnergyManagementSystemGlobalVariable& modelObject) {
+    boost::optional<std::string> s;
+    //TODO add all the global variables to one object in the IDF
+    IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_GlobalVariable);
+    m_idfObjects.push_back(idfObject);
+    //m_map.insert(std::make_pair(modelObject.handle(), idfObject));
 
-  //AddErlVariable
-  s = modelObject.name();
-  if (s) {
-    idfObject.setString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, s.get());
+    //AddErlVariable
+    s = modelObject.name();
+    if (s) {
+      idfObject.setString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, s.get());
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

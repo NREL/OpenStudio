@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,383 +42,370 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model,
-                                                               bool keepHandle)
-    : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == OtherEquipmentDefinition::iddObjectType());
-  }
+    OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SpaceLoadDefinition_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == OtherEquipmentDefinition::iddObjectType());
+    }
 
-  OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == OtherEquipmentDefinition::iddObjectType());
-  }
+    OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                 bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == OtherEquipmentDefinition::iddObjectType());
+    }
 
-  OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(
-      const OtherEquipmentDefinition_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {}
+    OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const OtherEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& OtherEquipmentDefinition_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+    const std::vector<std::string>& OtherEquipmentDefinition_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate: output is listed in OtherEquipment instead
-    return result;
-  }
-
-  IddObjectType OtherEquipmentDefinition_Impl::iddObjectType() const {
-    return OtherEquipmentDefinition::iddObjectType();
-  }
-
-  std::string OtherEquipmentDefinition_Impl::designLevelCalculationMethod() const {
-    boost::optional<std::string> value = getString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> OtherEquipmentDefinition_Impl::designLevel() const {
-    return getDouble(OS_OtherEquipment_DefinitionFields::DesignLevel,true);
-  }
-
-  boost::optional<double> OtherEquipmentDefinition_Impl::wattsperSpaceFloorArea() const {
-    return getDouble(OS_OtherEquipment_DefinitionFields::WattsperSpaceFloorArea,true);
-  }
-
-  boost::optional<double> OtherEquipmentDefinition_Impl::wattsperPerson() const {
-    return getDouble(OS_OtherEquipment_DefinitionFields::WattsperPerson,true);
-  }
-
-  double OtherEquipmentDefinition_Impl::fractionLatent() const {
-    boost::optional<double> value = getDouble(OS_OtherEquipment_DefinitionFields::FractionLatent,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool OtherEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
-    return isEmpty(OS_OtherEquipment_DefinitionFields::FractionLatent);
-  }
-
-  double OtherEquipmentDefinition_Impl::fractionRadiant() const {
-    boost::optional<double> value = getDouble(OS_OtherEquipment_DefinitionFields::FractionRadiant,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool OtherEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
-    return isEmpty(OS_OtherEquipment_DefinitionFields::FractionRadiant);
-  }
-
-  double OtherEquipmentDefinition_Impl::fractionLost() const {
-    boost::optional<double> value = getDouble(OS_OtherEquipment_DefinitionFields::FractionLost,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool OtherEquipmentDefinition_Impl::isFractionLostDefaulted() const {
-    return isEmpty(OS_OtherEquipment_DefinitionFields::FractionLost);
-  }
-
-  bool OtherEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
-    bool result = false;
-    if (designLevel) {
-      result = setString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod,"EquipmentLevel");
-      OS_ASSERT(result);
-      result = setDouble(OS_OtherEquipment_DefinitionFields::DesignLevel, designLevel.get());
-      OS_ASSERT(result);
-      result = setWattsperSpaceFloorArea(boost::none);
-      OS_ASSERT(result);
-      result = setWattsperPerson(boost::none);
-    } else {
-      result = setString(OS_OtherEquipment_DefinitionFields::DesignLevel, "");
+      return result;
     }
 
-    return result;
-  }
-
-  bool OtherEquipmentDefinition_Impl::setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea) {
-    bool result = false;
-    if (wattsperSpaceFloorArea) {
-      result = setString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod,"Watts/Area");
-      OS_ASSERT(result);
-      setDesignLevel(boost::none);
-      result = setDouble(OS_OtherEquipment_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
-      OS_ASSERT(result);
-      result = setWattsperPerson(boost::none);
-    } else {
-      result = setString(OS_OtherEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
-    }
-    return result;
-  }
-
-  bool OtherEquipmentDefinition_Impl::setWattsperPerson(boost::optional<double> wattsperPerson) {
-    bool result = false;
-    if (wattsperPerson) {
-      result = setString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod,"Watts/Person");
-      OS_ASSERT(result);
-      setDesignLevel(boost::none);
-      result = setWattsperSpaceFloorArea(boost::none);
-      OS_ASSERT(result);
-      result = setDouble(OS_OtherEquipment_DefinitionFields::WattsperPerson, wattsperPerson.get());
-    } else {
-      result = setString(OS_OtherEquipment_DefinitionFields::WattsperPerson, "");
-    }
-    return result;
-  }
-
-  bool OtherEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
-    bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLatent, fractionLatent);
-    return result;
-  }
-
-  void OtherEquipmentDefinition_Impl::resetFractionLatent() {
-    bool result = setString(OS_OtherEquipment_DefinitionFields::FractionLatent, "");
-    OS_ASSERT(result);
-  }
-
-  bool OtherEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
-    bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
-    return result;
-  }
-
-  void OtherEquipmentDefinition_Impl::resetFractionRadiant() {
-    bool result = setString(OS_OtherEquipment_DefinitionFields::FractionRadiant, "");
-    OS_ASSERT(result);
-  }
-
-  bool OtherEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
-    bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLost, fractionLost);
-    return result;
-  }
-
-  void OtherEquipmentDefinition_Impl::resetFractionLost() {
-    bool result = setString(OS_OtherEquipment_DefinitionFields::FractionLost, "");
-    OS_ASSERT(result);
-  }
-
-  double OtherEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const {
-    std::string method = designLevelCalculationMethod();
-
-    if (openstudio::istringEqual("EquipmentLevel", method)) {
-      return designLevel().get();
-    }
-    else if (openstudio::istringEqual("Watts/Area", method)) {
-      return wattsperSpaceFloorArea().get() * floorArea;
-    }
-    else if (openstudio::istringEqual("Watts/Person", method)) {
-      return wattsperPerson().get() * numPeople;
+    IddObjectType OtherEquipmentDefinition_Impl::iddObjectType() const {
+      return OtherEquipmentDefinition::iddObjectType();
     }
 
-    OS_ASSERT(false);
-    return 0.0;
-  }
+    std::string OtherEquipmentDefinition_Impl::designLevelCalculationMethod() const {
+      boost::optional<std::string> value = getString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  double OtherEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
-                                                                  double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
+    boost::optional<double> OtherEquipmentDefinition_Impl::designLevel() const {
+      return getDouble(OS_OtherEquipment_DefinitionFields::DesignLevel, true);
+    }
 
-    if (openstudio::istringEqual("EquipmentLevel", method)) {
-      if (equal(floorArea,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
+    boost::optional<double> OtherEquipmentDefinition_Impl::wattsperSpaceFloorArea() const {
+      return getDouble(OS_OtherEquipment_DefinitionFields::WattsperSpaceFloorArea, true);
+    }
+
+    boost::optional<double> OtherEquipmentDefinition_Impl::wattsperPerson() const {
+      return getDouble(OS_OtherEquipment_DefinitionFields::WattsperPerson, true);
+    }
+
+    double OtherEquipmentDefinition_Impl::fractionLatent() const {
+      boost::optional<double> value = getDouble(OS_OtherEquipment_DefinitionFields::FractionLatent, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool OtherEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
+      return isEmpty(OS_OtherEquipment_DefinitionFields::FractionLatent);
+    }
+
+    double OtherEquipmentDefinition_Impl::fractionRadiant() const {
+      boost::optional<double> value = getDouble(OS_OtherEquipment_DefinitionFields::FractionRadiant, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool OtherEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
+      return isEmpty(OS_OtherEquipment_DefinitionFields::FractionRadiant);
+    }
+
+    double OtherEquipmentDefinition_Impl::fractionLost() const {
+      boost::optional<double> value = getDouble(OS_OtherEquipment_DefinitionFields::FractionLost, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool OtherEquipmentDefinition_Impl::isFractionLostDefaulted() const {
+      return isEmpty(OS_OtherEquipment_DefinitionFields::FractionLost);
+    }
+
+    bool OtherEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
+      bool result = false;
+      if (designLevel) {
+        result = setString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod, "EquipmentLevel");
+        OS_ASSERT(result);
+        result = setDouble(OS_OtherEquipment_DefinitionFields::DesignLevel, designLevel.get());
+        OS_ASSERT(result);
+        result = setWattsperSpaceFloorArea(boost::none);
+        OS_ASSERT(result);
+        result = setWattsperPerson(boost::none);
+      } else {
+        result = setString(OS_OtherEquipment_DefinitionFields::DesignLevel, "");
       }
-      return designLevel().get() / floorArea;
+
+      return result;
     }
-    else if (openstudio::istringEqual("Watts/Area", method)) {
-      return wattsperSpaceFloorArea().get();
-    }
-    else if (openstudio::istringEqual("Watts/Person", method)) {
-      if (equal(floorArea,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
+
+    bool OtherEquipmentDefinition_Impl::setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea) {
+      bool result = false;
+      if (wattsperSpaceFloorArea) {
+        result = setString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
+        OS_ASSERT(result);
+        setDesignLevel(boost::none);
+        result = setDouble(OS_OtherEquipment_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
+        OS_ASSERT(result);
+        result = setWattsperPerson(boost::none);
+      } else {
+        result = setString(OS_OtherEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
       }
-      return wattsperPerson().get() * numPeople / floorArea;
+      return result;
     }
 
-    OS_ASSERT(false);
-    return 0.0;
-  }
-
-  double OtherEquipmentDefinition_Impl::getPowerPerPerson(double floorArea, double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
-
-    if (openstudio::istringEqual("EquipmentLevel", method)) {
-      if (equal(numPeople,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
+    bool OtherEquipmentDefinition_Impl::setWattsperPerson(boost::optional<double> wattsperPerson) {
+      bool result = false;
+      if (wattsperPerson) {
+        result = setString(OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
+        OS_ASSERT(result);
+        setDesignLevel(boost::none);
+        result = setWattsperSpaceFloorArea(boost::none);
+        OS_ASSERT(result);
+        result = setDouble(OS_OtherEquipment_DefinitionFields::WattsperPerson, wattsperPerson.get());
+      } else {
+        result = setString(OS_OtherEquipment_DefinitionFields::WattsperPerson, "");
       }
-      return designLevel().get() / numPeople;
+      return result;
     }
-    else if (openstudio::istringEqual("Watts/Area", method)) {
-      if (equal(numPeople,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
+
+    bool OtherEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
+
+      double fractionRadiantAndLost = fractionRadiant() + fractionLost();
+      if ((fractionLatent + fractionRadiantAndLost) > 1.0) {
+        LOG(Error, "Radiant Fraction and Lost Fraction sum to " << fractionRadiantAndLost << " and you supplied a Latent Fraction of "
+                                                                << fractionLatent << " which would result in a sum greater than 1.0");
+        return false;
       }
-      return wattsperSpaceFloorArea().get() * floorArea / numPeople;
-    }
-    else if (openstudio::istringEqual("Watts/Person", method)) {
-      return wattsperPerson().get();
+      bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLatent, fractionLatent);
+      return result;
     }
 
-    OS_ASSERT(false);
-    return 0.0;
+    void OtherEquipmentDefinition_Impl::resetFractionLatent() {
+      bool result = setString(OS_OtherEquipment_DefinitionFields::FractionLatent, "");
+      OS_ASSERT(result);
+    }
+
+    bool OtherEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
+
+      double fractionLatentAndLost = fractionLatent() + fractionLost();
+      if ((fractionRadiant + fractionLatentAndLost) > 1.0) {
+        LOG(Error, "Latent Fraction and Lost Fraction sum to " << fractionLatentAndLost << " and you supplied a Radiant Fraction of "
+                                                               << fractionRadiant << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
+      return result;
+    }
+
+    void OtherEquipmentDefinition_Impl::resetFractionRadiant() {
+      bool result = setString(OS_OtherEquipment_DefinitionFields::FractionRadiant, "");
+      OS_ASSERT(result);
+    }
+
+    bool OtherEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
+
+      double fractionLatentAndRadiant = fractionLatent() + fractionRadiant();
+      if ((fractionLost + fractionLatentAndRadiant) > 1.0) {
+        LOG(Error, "Latent Fraction and Radiant Fraction sum to " << fractionLatentAndRadiant << " and you supplied a Lost Fraction of "
+                                                                  << fractionLost << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_OtherEquipment_DefinitionFields::FractionLost, fractionLost);
+      return result;
+    }
+
+    void OtherEquipmentDefinition_Impl::resetFractionLost() {
+      bool result = setString(OS_OtherEquipment_DefinitionFields::FractionLost, "");
+      OS_ASSERT(result);
+    }
+
+    double OtherEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (openstudio::istringEqual("EquipmentLevel", method)) {
+        return designLevel().get();
+      } else if (openstudio::istringEqual("Watts/Area", method)) {
+        return wattsperSpaceFloorArea().get() * floorArea;
+      } else if (openstudio::istringEqual("Watts/Person", method)) {
+        return wattsperPerson().get() * numPeople;
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    double OtherEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (openstudio::istringEqual("EquipmentLevel", method)) {
+        if (equal(floorArea, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return designLevel().get() / floorArea;
+      } else if (openstudio::istringEqual("Watts/Area", method)) {
+        return wattsperSpaceFloorArea().get();
+      } else if (openstudio::istringEqual("Watts/Person", method)) {
+        if (equal(floorArea, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return wattsperPerson().get() * numPeople / floorArea;
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    double OtherEquipmentDefinition_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (openstudio::istringEqual("EquipmentLevel", method)) {
+        if (equal(numPeople, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return designLevel().get() / numPeople;
+      } else if (openstudio::istringEqual("Watts/Area", method)) {
+        if (equal(numPeople, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return wattsperSpaceFloorArea().get() * floorArea / numPeople;
+      } else if (openstudio::istringEqual("Watts/Person", method)) {
+        return wattsperPerson().get();
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    bool OtherEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople) {
+      if (openstudio::istringEqual("equipmentlevel", method)) {
+        setDesignLevel(getDesignLevel(floorArea, numPeople));
+        return true;
+      } else if (openstudio::istringEqual("watts/area", method)) {
+        return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea, numPeople));
+      } else if (openstudio::istringEqual("watts/person", method)) {
+        return setWattsperPerson(getPowerPerPerson(floorArea, numPeople));
+      }
+
+      return false;
+    }
+
+    std::vector<EMSActuatorNames> OtherEquipmentDefinition_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"OtherEquipment", "Power Level"}};
+      return actuators;
+    }
+
+    std::vector<std::string> OtherEquipmentDefinition_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types{"Other Equipment Design Level"};
+      return types;
+    }
+
+  }  // namespace detail
+
+  OtherEquipmentDefinition::OtherEquipmentDefinition(const Model& model) : SpaceLoadDefinition(OtherEquipmentDefinition::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::OtherEquipmentDefinition_Impl>());
+    setDesignLevel(0.0);
   }
 
-  bool OtherEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                                      double floorArea,
-                                                                      double numPeople)
-  {
-    if (openstudio::istringEqual("equipmentlevel", method)) {
-      setDesignLevel(getDesignLevel(floorArea,numPeople));
-      return true;
-    }
-    else if (openstudio::istringEqual("watts/area", method)) {
-      return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea,numPeople));
-    }
-    else if (openstudio::istringEqual("watts/person", method)) {
-      return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
-    }
-
-    return false;
+  IddObjectType OtherEquipmentDefinition::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_OtherEquipment_Definition);
+    return result;
   }
 
-  std::vector<EMSActuatorNames> OtherEquipmentDefinition_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "OtherEquipment", "Power Level" } };
-    return actuators;
+  std::vector<std::string> OtherEquipmentDefinition::validDesignLevelCalculationMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod);
   }
 
-  std::vector<std::string> OtherEquipmentDefinition_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{ "Other Equipment Design Level" };
-    return types;
+  std::string OtherEquipmentDefinition::designLevelCalculationMethod() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->designLevelCalculationMethod();
   }
 
-} // detail
+  boost::optional<double> OtherEquipmentDefinition::designLevel() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->designLevel();
+  }
 
-OtherEquipmentDefinition::OtherEquipmentDefinition(const Model& model)
-  : SpaceLoadDefinition(OtherEquipmentDefinition::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::OtherEquipmentDefinition_Impl>());
-  setDesignLevel(0.0);
-}
+  boost::optional<double> OtherEquipmentDefinition::wattsperSpaceFloorArea() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->wattsperSpaceFloorArea();
+  }
 
-IddObjectType OtherEquipmentDefinition::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_OtherEquipment_Definition);
-  return result;
-}
+  boost::optional<double> OtherEquipmentDefinition::wattsperPerson() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->wattsperPerson();
+  }
 
-std::vector<std::string> OtherEquipmentDefinition::validDesignLevelCalculationMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_OtherEquipment_DefinitionFields::DesignLevelCalculationMethod);
-}
+  double OtherEquipmentDefinition::fractionLatent() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->fractionLatent();
+  }
 
-std::string OtherEquipmentDefinition::designLevelCalculationMethod() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->designLevelCalculationMethod();
-}
+  bool OtherEquipmentDefinition::isFractionLatentDefaulted() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionLatentDefaulted();
+  }
 
-boost::optional<double> OtherEquipmentDefinition::designLevel() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->designLevel();
-}
+  double OtherEquipmentDefinition::fractionRadiant() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->fractionRadiant();
+  }
 
-boost::optional<double> OtherEquipmentDefinition::wattsperSpaceFloorArea() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->wattsperSpaceFloorArea();
-}
+  bool OtherEquipmentDefinition::isFractionRadiantDefaulted() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionRadiantDefaulted();
+  }
 
-boost::optional<double> OtherEquipmentDefinition::wattsperPerson() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->wattsperPerson();
-}
+  double OtherEquipmentDefinition::fractionLost() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->fractionLost();
+  }
 
-double OtherEquipmentDefinition::fractionLatent() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->fractionLatent();
-}
+  bool OtherEquipmentDefinition::isFractionLostDefaulted() const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionLostDefaulted();
+  }
 
-bool OtherEquipmentDefinition::isFractionLatentDefaulted() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionLatentDefaulted();
-}
+  bool OtherEquipmentDefinition::setDesignLevel(double designLevel) {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
+  }
 
-double OtherEquipmentDefinition::fractionRadiant() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->fractionRadiant();
-}
+  bool OtherEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
+  }
 
-bool OtherEquipmentDefinition::isFractionRadiantDefaulted() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionRadiantDefaulted();
-}
+  bool OtherEquipmentDefinition::setWattsperPerson(double wattsperPerson) {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->setWattsperPerson(wattsperPerson);
+  }
 
-double OtherEquipmentDefinition::fractionLost() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->fractionLost();
-}
+  bool OtherEquipmentDefinition::setFractionLatent(double fractionLatent) {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->setFractionLatent(fractionLatent);
+  }
 
-bool OtherEquipmentDefinition::isFractionLostDefaulted() const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionLostDefaulted();
-}
+  void OtherEquipmentDefinition::resetFractionLatent() {
+    getImpl<detail::OtherEquipmentDefinition_Impl>()->resetFractionLatent();
+  }
 
-bool OtherEquipmentDefinition::setDesignLevel(double designLevel) {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
-}
+  bool OtherEquipmentDefinition::setFractionRadiant(double fractionRadiant) {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->setFractionRadiant(fractionRadiant);
+  }
 
-bool OtherEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
-}
+  void OtherEquipmentDefinition::resetFractionRadiant() {
+    getImpl<detail::OtherEquipmentDefinition_Impl>()->resetFractionRadiant();
+  }
 
-bool OtherEquipmentDefinition::setWattsperPerson(double wattsperPerson) {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setWattsperPerson(wattsperPerson);
-}
+  bool OtherEquipmentDefinition::setFractionLost(double fractionLost) {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->setFractionLost(fractionLost);
+  }
 
-bool OtherEquipmentDefinition::setFractionLatent(double fractionLatent) {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setFractionLatent(fractionLatent);
-}
+  void OtherEquipmentDefinition::resetFractionLost() {
+    getImpl<detail::OtherEquipmentDefinition_Impl>()->resetFractionLost();
+  }
 
-void OtherEquipmentDefinition::resetFractionLatent() {
-  getImpl<detail::OtherEquipmentDefinition_Impl>()->resetFractionLatent();
-}
+  double OtherEquipmentDefinition::getDesignLevel(double floorArea, double numPeople) const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->getDesignLevel(floorArea, numPeople);
+  }
 
-bool OtherEquipmentDefinition::setFractionRadiant(double fractionRadiant) {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setFractionRadiant(fractionRadiant);
-}
+  double OtherEquipmentDefinition::getPowerPerFloorArea(double floorArea, double numPeople) const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->getPowerPerFloorArea(floorArea, numPeople);
+  }
 
-void OtherEquipmentDefinition::resetFractionRadiant() {
-  getImpl<detail::OtherEquipmentDefinition_Impl>()->resetFractionRadiant();
-}
+  double OtherEquipmentDefinition::getPowerPerPerson(double floorArea, double numPeople) const {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea, numPeople);
+  }
 
-bool OtherEquipmentDefinition::setFractionLost(double fractionLost) {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setFractionLost(fractionLost);
-}
+  bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople) {
+    return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method, floorArea, numPeople);
+  }
 
-void OtherEquipmentDefinition::resetFractionLost() {
-  getImpl<detail::OtherEquipmentDefinition_Impl>()->resetFractionLost();
-}
+  /// @cond
+  OtherEquipmentDefinition::OtherEquipmentDefinition(std::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl)
+    : SpaceLoadDefinition(std::move(impl)) {}
+  /// @endcond
 
-double OtherEquipmentDefinition::getDesignLevel(double floorArea, double numPeople) const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->getDesignLevel(floorArea,numPeople);
-}
-
-double OtherEquipmentDefinition::getPowerPerFloorArea(double floorArea, double numPeople) const
-{
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->getPowerPerFloorArea(floorArea,numPeople);
-}
-
-double OtherEquipmentDefinition::getPowerPerPerson(double floorArea, double numPeople) const {
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
-}
-
-bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
-                                     double floorArea,
-                                     double numPeople)
-{
-  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
-}
-
-/// @cond
-OtherEquipmentDefinition::OtherEquipmentDefinition(std::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

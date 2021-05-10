@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,10 +35,10 @@
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
 
-namespace openstudio{
-  class Point3d;
-  class Vector3d;
-}
+namespace openstudio {
+class Point3d;
+class Vector3d;
+}  // namespace openstudio
 
 bool pointEqual(const openstudio::Point3d& a, const openstudio::Point3d& b);
 
@@ -46,13 +46,13 @@ bool pointsEqual(const std::vector<openstudio::Point3d>& a, const std::vector<op
 
 bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b);
 
-double totalArea(const std::vector<std::vector<openstudio::Point3d> >& polygons);
+double totalArea(const std::vector<std::vector<openstudio::Point3d>>& polygons);
 
-bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<openstudio::Point3d> >& polygons);
+bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<openstudio::Point3d>>& polygons);
 
-class GeometryFixture : public ::testing::Test {
-protected:
-
+class GeometryFixture : public ::testing::Test
+{
+ protected:
   // initialize for each test
   virtual void SetUp() override;
 
@@ -65,12 +65,11 @@ protected:
   // tear down static members
   static void TearDownTestSuite();
 
-public:
-
+ public:
   // set up logging
   REGISTER_LOGGER("GeometryFixture");
 
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // UTILITIES_GEOMETRY_TEST_GEOMETRYFIXTURE_HPP
+#endif  // UTILITIES_GEOMETRY_TEST_GEOMETRYFIXTURE_HPP

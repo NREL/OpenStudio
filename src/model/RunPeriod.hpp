@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,106 +36,102 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class RunPeriod_Impl;
-} // detail
+  namespace detail {
+    class RunPeriod_Impl;
+  }  // namespace detail
 
-
-/** RunPeriod derives from ParentObject and is an interface to the unique OpenStudio IDD object named "RunPeriod".
+  /** RunPeriod derives from ParentObject and is an interface to the unique OpenStudio IDD object named "RunPeriod".
  *
  *  RunPeriod defines a period of time over which to run an EnergyPlus weather file simulation.  Some applications
  *  require a full annual EnergyPlus simulation, others do not.
  */
-class MODEL_API RunPeriod : public ParentObject {
- public:
+  class MODEL_API RunPeriod : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~RunPeriod() {}
 
-  virtual ~RunPeriod() {}
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    // DLM@20110607: these should all have 'get' removed
+    // DLM@20110614: I would prefer to not abbreviate names like 'NumTimePeriodRepeats'
 
-  // DLM@20110607: these should all have 'get' removed
-  // DLM@20110614: I would prefer to not abbreviate names like 'NumTimePeriodRepeats'
+    int getBeginMonth() const;
+    int getBeginDayOfMonth() const;
+    int getEndMonth() const;
+    int getEndDayOfMonth() const;
+    bool getUseWeatherFileHolidays() const;
+    bool getUseWeatherFileDaylightSavings() const;
+    bool getApplyWeekendHolidayRule() const;
+    bool getUseWeatherFileRainInd() const;
+    bool getUseWeatherFileSnowInd() const;
+    int getNumTimePeriodRepeats() const;
 
-  int getBeginMonth() const;
-  int getBeginDayOfMonth() const;
-  int getEndMonth() const;
-  int getEndDayOfMonth() const;
-  bool getUseWeatherFileHolidays() const;
-  bool getUseWeatherFileDaylightSavings() const;
-  bool getApplyWeekendHolidayRule() const;
-  bool getUseWeatherFileRainInd() const;
-  bool getUseWeatherFileSnowInd() const;
-  int getNumTimePeriodRepeats() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    // DLM@20110607: should all these sets return bool?
 
-  // DLM@20110607: should all these sets return bool?
+    bool setBeginMonth(int month);
+    bool setBeginDayOfMonth(int day);
+    bool setEndMonth(int month);
+    bool setEndDayOfMonth(int day);
+    bool setUseWeatherFileHolidays(bool use);
+    bool setUseWeatherFileDaylightSavings(bool use);
+    bool setApplyWeekendHolidayRule(bool apply);
+    bool setUseWeatherFileRainInd(bool rainInd);
+    bool setUseWeatherFileSnowInd(bool snowInd);
+    bool setNumTimePeriodRepeats(int numRepeats);
 
-  bool setBeginMonth(int month);
-  bool setBeginDayOfMonth(int day);
-  bool setEndMonth(int month);
-  bool setEndDayOfMonth(int day);
-  bool setUseWeatherFileHolidays(bool use);
-  bool setUseWeatherFileDaylightSavings(bool use);
-  bool setApplyWeekendHolidayRule(bool apply);
-  bool setUseWeatherFileRainInd(bool rainInd);
-  bool setUseWeatherFileSnowInd(bool snowInd);
-  bool setNumTimePeriodRepeats(int numRepeats);
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
 
-  // ensure that this object does not contain the date 2/29
-  void ensureNoLeapDays();
+    //@}
 
-  //@}
+    /// Returns the IddObjectType.
+    static IddObjectType iddObjectType();
 
-  /// Returns the IddObjectType.
-  static IddObjectType iddObjectType();
+    /// Returns true if RunPeriod specifies run between 1/1-12/31.
+    bool isAnnual() const;
 
-  /// Returns true if RunPeriod specifies run between 1/1-12/31.
-  bool isAnnual() const;
+    /// Returns true if not annual simulation.
+    bool isPartialYear() const;
 
-  /// Returns true if not annual simulation.
-  bool isPartialYear() const;
+    /// Returns true if numTimePeriodRepeats is greater than 1.
+    bool isRepeated() const;
 
-  /// Returns true if numTimePeriodRepeats is greater than 1.
-  bool isRepeated() const;
+   protected:
+    /// @cond
 
- protected:
+    typedef detail::RunPeriod_Impl ImplType;
 
-  /// @cond
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  typedef detail::RunPeriod_Impl ImplType;
+    // constructor
+    explicit RunPeriod(std::shared_ptr<detail::RunPeriod_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    /** Constructor adds a new RunPeriod object to model. */
+    explicit RunPeriod(const Model& model);
 
-  // constructor
-  explicit RunPeriod(std::shared_ptr<detail::RunPeriod_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.RunPeriod");
 
-  /** Constructor adds a new RunPeriod object to model. */
-  explicit RunPeriod(const Model& model);
+    /// @endcond
+  };
 
- private:
+  /** \relates RunPeriod */
+  typedef boost::optional<RunPeriod> OptionalRunPeriod;
 
-  REGISTER_LOGGER("openstudio.model.RunPeriod");
+  /** \relates RunPeriod */
+  typedef std::vector<RunPeriod> RunPeriodVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates RunPeriod */
-typedef boost::optional<RunPeriod> OptionalRunPeriod;
-
-/** \relates RunPeriod */
-typedef std::vector<RunPeriod> RunPeriodVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_RUNPERIOD_HPP
+#endif  // MODEL_RUNPERIOD_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,22 +38,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerMultiZoneMinimumHumidityAverage testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerMultiZoneMinimumHumidityAverage testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -75,7 +73,8 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMultiZoneMinimumHumidityAverage> setpointManagerMultiZoneMinimumHumidityAverages = m.getModelObjects<SetpointManagerMultiZoneMinimumHumidityAverage>();
+  std::vector<SetpointManagerMultiZoneMinimumHumidityAverage> setpointManagerMultiZoneMinimumHumidityAverages =
+    m.getModelObjects<SetpointManagerMultiZoneMinimumHumidityAverage>();
   EXPECT_EQ(3, setpointManagerMultiZoneMinimumHumidityAverages.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode());
@@ -89,8 +88,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_addToNode)
   EXPECT_EQ(2, setpointManagerMultiZoneMinimumHumidityAverages.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_remove)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -102,7 +100,8 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMultiZoneMinimumHumidityAverage> SetpointManagerMultiZoneMinimumHumidityAverages = m.getModelObjects<SetpointManagerMultiZoneMinimumHumidityAverage>();
+  std::vector<SetpointManagerMultiZoneMinimumHumidityAverage> SetpointManagerMultiZoneMinimumHumidityAverages =
+    m.getModelObjects<SetpointManagerMultiZoneMinimumHumidityAverage>();
   EXPECT_EQ(1, SetpointManagerMultiZoneMinimumHumidityAverages.size());
 
   spm.remove();
@@ -113,8 +112,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_remove)
   EXPECT_EQ(0, SetpointManagerMultiZoneMinimumHumidityAverages.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_clone)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -137,8 +135,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_clone)
   EXPECT_EQ(0.012, testObjectClone.maximumSetpointHumidityRatio());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMinimumHumidityAverage_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();

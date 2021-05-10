@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,11 +33,9 @@
 
 #include "../BCLMeasure.hpp"
 
-
 using namespace openstudio;
 
-TEST_F(BCLFixture, BCLMeasure)
-{
+TEST_F(BCLFixture, BCLMeasure) {
   openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/");
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
@@ -45,8 +43,17 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_EQ("Set Window to Wall Ratio by Facade", measure->name());
   EXPECT_EQ("f347ae80-48b4-4c40-bfd4-6c5139b38136", measure->uid());
   EXPECT_EQ("a0e33012-0183-45a0-8898-11f93f55164e", measure->versionId());
-  EXPECT_EQ("This measure will set the window to wall ratio for exterior surfaces with a specified orientation. If one or more windows exist on an affected wall, they will be removed and replaced with a single ribbon window. Doors will not be removed. If the requested ratio can't be achieved then the wall will remain untouched.", measure->description());
-  EXPECT_EQ("This measure identifies exterior surfaces of the proper orientation. Then it runs a method that removes existing windows and applies a new window with a specified window to wall ratio and sill height. The construction chosen for the new window is defaulted to what is assigned to the space, or inherited from a higher level object, such as the building. If the baseline model uses hard assigned constructions you may not get the expected results. The measure doesn't have any cost or lifecycle arguments, however if lifecycle objects exist for exterior wall and window constructions, then this measure will be able to calculate the economic impact of change in window to wall ratio.", measure->modelerDescription());
+  EXPECT_EQ("This measure will set the window to wall ratio for exterior surfaces with a specified orientation. If one or more windows exist on an "
+            "affected wall, they will be removed and replaced with a single ribbon window. Doors will not be removed. If the requested ratio can't "
+            "be achieved then the wall will remain untouched.",
+            measure->description());
+  EXPECT_EQ(
+    "This measure identifies exterior surfaces of the proper orientation. Then it runs a method that removes existing windows and applies a new "
+    "window with a specified window to wall ratio and sill height. The construction chosen for the new window is defaulted to what is assigned to "
+    "the space, or inherited from a higher level object, such as the building. If the baseline model uses hard assigned constructions you may not "
+    "get the expected results. The measure doesn't have any cost or lifecycle arguments, however if lifecycle objects exist for exterior wall and "
+    "window constructions, then this measure will be able to calculate the economic impact of change in window to wall ratio.",
+    measure->modelerDescription());
 
   EXPECT_EQ(MeasureType::ModelMeasure, measure->measureType().value());
   EXPECT_TRUE(measure->primaryRubyScriptPath());
@@ -59,7 +66,7 @@ TEST_F(BCLFixture, BCLMeasure)
   }
 
   openstudio::path dir2 = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade2/");
-  if (openstudio::filesystem::exists(dir2)){
+  if (openstudio::filesystem::exists(dir2)) {
     ASSERT_TRUE(removeDirectory(dir2));
   }
   // If this assertion fails, check that you don't have an Explorer window opened to the SetWindowToWallRatioByFacade2 directory
@@ -74,9 +81,9 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_TRUE(dir2 == measure2->directory());
   EXPECT_EQ(6u, measure2->files().size());
 
-  measure2->setName("New Measure"); // this would normally be initiated by a change from the measure
+  measure2->setName("New Measure");  // this would normally be initiated by a change from the measure
   EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_FALSE(measure2->checkForUpdatesXML()); // name change does not trigger xml update
+  EXPECT_FALSE(measure2->checkForUpdatesXML());  // name change does not trigger xml update
   EXPECT_FALSE(*measure == *measure2);
   measure2->save();
   EXPECT_FALSE(measure2->checkForUpdatesFiles());
@@ -106,8 +113,8 @@ TEST_F(BCLFixture, BCLMeasure)
   std::string className = BCLMeasure::makeClassName("Another Measure");
   EXPECT_EQ("AnotherMeasure", className);
 
-  EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration",
-    MeasureType::ReportingMeasure, "Description", "Modeler Description") );
+  EXPECT_NO_THROW(measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration", MeasureType::ReportingMeasure, "Description",
+                                        "Modeler Description"));
   ASSERT_TRUE(measure2);
   ASSERT_TRUE(exists(dir2));
   EXPECT_EQ("another_measure", measure2->name());
@@ -122,10 +129,9 @@ TEST_F(BCLFixture, BCLMeasure)
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
 }
 
-TEST_F(BCLFixture, BCLMeasure_CTor)
-{
+TEST_F(BCLFixture, BCLMeasure_CTor) {
   openstudio::path dir = openstudio::filesystem::system_complete(toPath("./TestMeasure/"));
-  if(exists(dir)){
+  if (exists(dir)) {
     removeDirectory(dir);
   }
   ASSERT_FALSE(exists(dir));
@@ -140,10 +146,9 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   ASSERT_FALSE(className3.empty());
   EXPECT_EQ('A', className3[0]);
 
-  try{
-    BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration",
-                       MeasureType::ModelMeasure, "Description", "Modeler Description");
-  }catch(const std::exception &e){
+  try {
+    BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration", MeasureType::ModelMeasure, "Description", "Modeler Description");
+  } catch (const std::exception& e) {
     LOG_FREE(Error, "BCLFixture", "exception during measure creation: " << e.what());
     ASSERT_TRUE(false);
   }

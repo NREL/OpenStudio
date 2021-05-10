@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,87 +37,88 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class CoilHeatingGasMultiStageStageData;
-class Curve;
+  class Schedule;
+  class CoilHeatingGasMultiStageStageData;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingGasMultiStage_Impl;
+    class CoilHeatingGasMultiStage_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingGasMultiStage is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Gas:MultiStage'.
+  /** CoilHeatingGasMultiStage is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Gas:MultiStage'.
  * Performance data for each stage is contained in a separate ModelObject called OS:Coil:Heating:Gas:MultiStage:StageData **/
-class MODEL_API CoilHeatingGasMultiStage : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API CoilHeatingGasMultiStage : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilHeatingGasMultiStage(const Model& model);
+    explicit CoilHeatingGasMultiStage(const Model& model);
 
-  virtual ~CoilHeatingGasMultiStage() {}
+    virtual ~CoilHeatingGasMultiStage() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
-  boost::optional<double> parasiticGasLoad() const;
+    boost::optional<double> parasiticGasLoad() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  void resetPartLoadFractionCorrelationCurve();
+    void resetPartLoadFractionCorrelationCurve();
 
-  bool setParasiticGasLoad(double parasiticGasLoad);
+    bool setParasiticGasLoad(double parasiticGasLoad);
 
-  void resetParasiticGasLoad();
+    void resetParasiticGasLoad();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  std::vector<CoilHeatingGasMultiStageStageData> stages() const;
+    std::vector<CoilHeatingGasMultiStageStageData> stages() const;
 
-  void addStage(CoilHeatingGasMultiStageStageData& stage);
+    void addStage(CoilHeatingGasMultiStageStageData& stage);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilHeatingGasMultiStage_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingGasMultiStage_Impl ImplType;
 
-  explicit CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilHeatingGasMultiStage_Impl> impl);
+    explicit CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilHeatingGasMultiStage_Impl> impl);
 
-  friend class detail::CoilHeatingGasMultiStage_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
-};
+    friend class detail::CoilHeatingGasMultiStage_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
+  };
 
-/** \relates CoilHeatingGasMultiStage*/
-typedef boost::optional<CoilHeatingGasMultiStage> OptionalCoilHeatingGasMultiStage;
+  /** \relates CoilHeatingGasMultiStage*/
+  typedef boost::optional<CoilHeatingGasMultiStage> OptionalCoilHeatingGasMultiStage;
 
-/** \relates CoilHeatingGasMultiStage*/
-typedef std::vector<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageVector;
+  /** \relates CoilHeatingGasMultiStage*/
+  typedef std::vector<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGGASMULTISTAGE_HPP
+#endif  // MODEL_COILHEATINGGASMULTISTAGE_HPP

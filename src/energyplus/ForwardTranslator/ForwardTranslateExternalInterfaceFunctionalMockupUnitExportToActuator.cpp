@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,44 +46,43 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunctionalMockupUnitExportToActuator(ExternalInterfaceFunctionalMockupUnitExportToActuator & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunctionalMockupUnitExportToActuator(
+    ExternalInterfaceFunctionalMockupUnitExportToActuator& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_FunctionalMockupUnitExport_To_Actuator);
-  m_idfObjects.push_back(idfObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_FunctionalMockupUnitExport_To_Actuator);
+    m_idfObjects.push_back(idfObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    const ModelObject m = modelObject.actuatedComponentUnique();
+    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
+
+    s = modelObject.actuatedComponentType();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentType, s.get());
+    }
+    s = modelObject.actuatedComponentControlType();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentControlType, s.get());
+    }
+    s = modelObject.fMUVariableName();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::FMUVariableName, s.get());
+    }
+
+    d = modelObject.initialValue();
+    if (d.is_initialized()) {
+      idfObject.setDouble(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, d.get());
+    }
+
+    return idfObject;
   }
 
-  const ModelObject m = modelObject.actuatedComponentUnique();
-  idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName, m.nameString());
+}  // namespace energyplus
 
-  s = modelObject.actuatedComponentType();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentType, s.get());
-  }
-  s = modelObject.actuatedComponentControlType();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentControlType, s.get());
-  }
-  s = modelObject.fMUVariableName();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::FMUVariableName, s.get());
-  }
-
-  d = modelObject.initialValue();
-  if (d.is_initialized()) {
-    idfObject.setDouble(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, d.get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

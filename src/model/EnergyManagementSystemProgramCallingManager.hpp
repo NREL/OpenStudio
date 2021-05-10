@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,82 +37,81 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemProgramCallingManager_Impl;
+    class EnergyManagementSystemProgramCallingManager_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemProgramCallingManager is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:ProgramCallingManager'. */
-class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemProgramCallingManager is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:ProgramCallingManager'. */
+  class MODEL_API EnergyManagementSystemProgramCallingManager : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemProgramCallingManager(const Model& model);
+    explicit EnergyManagementSystemProgramCallingManager(const Model& model);
 
-  virtual ~EnergyManagementSystemProgramCallingManager() {}
+    virtual ~EnergyManagementSystemProgramCallingManager() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validCallingPointValues();
+    static std::vector<std::string> validCallingPointValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string callingPoint() const;
+    std::string callingPoint() const;
 
-  std::vector<EnergyManagementSystemProgram> programs() const;
+    std::vector<EnergyManagementSystemProgram> programs() const;
 
-  boost::optional<EnergyManagementSystemProgram> getProgram(unsigned index) const;
+    boost::optional<EnergyManagementSystemProgram> getProgram(unsigned index) const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCallingPoint(const std::string& callingPoint);
+    bool setCallingPoint(const std::string& callingPoint);
 
-  bool eraseProgram(unsigned index);
+    bool eraseProgram(unsigned index);
 
-  void erasePrograms();
+    void erasePrograms();
 
-  bool addProgram(const EnergyManagementSystemProgram& program);
+    bool addProgram(const EnergyManagementSystemProgram& program);
 
-  bool setProgram(const EnergyManagementSystemProgram& program, unsigned index);
+    bool setProgram(const EnergyManagementSystemProgram& program, unsigned index);
 
-  bool setPrograms(const std::vector<EnergyManagementSystemProgram>& programs);
+    bool setPrograms(const std::vector<EnergyManagementSystemProgram>& programs);
 
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemProgramCallingManager_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemProgramCallingManager_Impl ImplType;
+    explicit EnergyManagementSystemProgramCallingManager(std::shared_ptr<detail::EnergyManagementSystemProgramCallingManager_Impl> impl);
 
-  explicit EnergyManagementSystemProgramCallingManager(std::shared_ptr<detail::EnergyManagementSystemProgramCallingManager_Impl> impl);
+    friend class detail::EnergyManagementSystemProgramCallingManager_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemProgramCallingManager");
+  };
 
-  friend class detail::EnergyManagementSystemProgramCallingManager_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemProgramCallingManager");
-};
+  /** \relates EnergyManagementSystemProgramCallingManager*/
+  typedef boost::optional<EnergyManagementSystemProgramCallingManager> OptionalEnergyManagementSystemProgramCallingManager;
 
-/** \relates EnergyManagementSystemProgramCallingManager*/
-typedef boost::optional<EnergyManagementSystemProgramCallingManager> OptionalEnergyManagementSystemProgramCallingManager;
+  /** \relates EnergyManagementSystemProgramCallingManager*/
+  typedef std::vector<EnergyManagementSystemProgramCallingManager> EnergyManagementSystemProgramCallingManagerVector;
 
-/** \relates EnergyManagementSystemProgramCallingManager*/
-typedef std::vector<EnergyManagementSystemProgramCallingManager> EnergyManagementSystemProgramCallingManagerVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMPROGRAMCALLINGMANAGER_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMPROGRAMCALLINGMANAGER_HPP

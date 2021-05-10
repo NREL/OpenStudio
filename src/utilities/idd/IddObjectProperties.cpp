@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,88 +33,77 @@
 
 namespace openstudio {
 
-  /// default constructor
-  IddObjectProperties::IddObjectProperties():
-    unique(false),
+/// default constructor
+IddObjectProperties::IddObjectProperties()
+  : unique(false),
     required(false),
     obsolete(false),
     hasURL(false),
     extensible(false),
     numExtensible(0),
     numExtensibleGroupsRequired(0),
-    minFields(0)
-  {}
+    minFields(0) {}
 
-  // ETH@20100329 Is the purpose to identify exactly equal properties, or objects that behave
-  // the same? If the latter, might ignore memo, and even numExtensibleGroupsRequired, and
-  // minFields. Keeping it simple for now.
-  /// equality operator
-  bool IddObjectProperties::operator==(const IddObjectProperties& other) const
-  {
+// ETH@20100329 Is the purpose to identify exactly equal properties, or objects that behave
+// the same? If the latter, might ignore memo, and even numExtensibleGroupsRequired, and
+// minFields. Keeping it simple for now.
+/// equality operator
+bool IddObjectProperties::operator==(const IddObjectProperties& other) const {
 
-    return ((this == &other) ||
-            ((memo == other.memo) &&
-             (unique == other.unique) &&
-             (required == other.required) &&
-             (obsolete == other.obsolete) &&
-             (hasURL == other.hasURL) &&
-             (extensible == other.extensible) &&
-             (numExtensible == other.numExtensible) &&
-             (numExtensibleGroupsRequired == other.numExtensibleGroupsRequired) &&
-             (format == other.format) &&
-             (minFields == other.minFields) &&
-             (maxFields == other.maxFields)));
+  return ((this == &other)
+          || ((memo == other.memo) && (unique == other.unique) && (required == other.required) && (obsolete == other.obsolete)
+              && (hasURL == other.hasURL) && (extensible == other.extensible) && (numExtensible == other.numExtensible)
+              && (numExtensibleGroupsRequired == other.numExtensibleGroupsRequired) && (format == other.format) && (minFields == other.minFields)
+              && (maxFields == other.maxFields)));
+}
+
+bool IddObjectProperties::operator!=(const IddObjectProperties& other) const {
+  return !(*this == other);
+}
+
+/// print
+std::ostream& IddObjectProperties::print(std::ostream& os) const {
+  if (!memo.empty()) {
+    std::stringstream ss(memo);
+    std::string line;
+    while (!ss.eof()) {
+      std::getline(ss, line);
+      os << "       \\memo " << line << '\n';
+    }
   }
 
-  bool IddObjectProperties::operator!=(const IddObjectProperties& other) const {
-    return !(*this == other);
+  if (unique) {
+    os << "       \\unique-object" << '\n';
   }
 
-  /// print
-  std::ostream& IddObjectProperties::print(std::ostream& os) const
-  {
-    if (!memo.empty()){
-      std::stringstream ss(memo);
-      std::string line;
-      while (! ss.eof() ) {
-        std::getline(ss,line);
-        os << "       \\memo " << line << std::endl;
-      }
-    }
-
-    if (unique){
-      os << "       \\unique-object" << std::endl;
-    }
-
-    if (required){
-      os << "       \\required-object" << std::endl;
-    }
-
-    if (obsolete){
-      os << "       \\obsolete" << std::endl;
-    }
-
-    if (hasURL)
-    {
-      os << "       \\url-object" << std::endl;
-    }
-    if (extensible){
-      os << "       \\extensible:" << numExtensible << std::endl;
-    }
-
-    if (!format.empty()){
-      os << "       \\format " << format << std::endl;
-    }
-
-    if (minFields > 0){
-      os << "       \\min-fields " << minFields << std::endl;
-    }
-
-    if (maxFields) {
-      os << "       \\max-fields " << *maxFields << std::endl;
-    }
-
-    return os;
+  if (required) {
+    os << "       \\required-object" << '\n';
   }
 
-} // openstudio
+  if (obsolete) {
+    os << "       \\obsolete" << '\n';
+  }
+
+  if (hasURL) {
+    os << "       \\url-object" << '\n';
+  }
+  if (extensible) {
+    os << "       \\extensible:" << numExtensible << '\n';
+  }
+
+  if (!format.empty()) {
+    os << "       \\format " << format << '\n';
+  }
+
+  if (minFields > 0) {
+    os << "       \\min-fields " << minFields << '\n';
+  }
+
+  if (maxFields) {
+    os << "       \\max-fields " << *maxFields << '\n';
+  }
+
+  return os;
+}
+
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,205 +40,173 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObject & workspaceObject )
-{
-  boost::optional<WorkspaceObject> _airLoopHVAC = workspaceObject.getTarget(Sizing_SystemFields::AirLoopName);
+  OptionalModelObject ReverseTranslator::translateSizingSystem(const WorkspaceObject& workspaceObject) {
+    boost::optional<WorkspaceObject> _airLoopHVAC = workspaceObject.getTarget(Sizing_SystemFields::AirLoopName);
 
-  boost::optional<AirLoopHVAC> airLoopHVAC;
+    boost::optional<AirLoopHVAC> airLoopHVAC;
 
-  if( _airLoopHVAC )
-  {
-    boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_airLoopHVAC.get());
+    if (_airLoopHVAC) {
+      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_airLoopHVAC.get());
 
-    if( mo )
-    {
-      airLoopHVAC = mo->optionalCast<AirLoopHVAC>();
+      if (mo) {
+        airLoopHVAC = mo->optionalCast<AirLoopHVAC>();
+      }
     }
+
+    if (!airLoopHVAC) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription() << " Can't find associated AirLoopHVAC.");
+
+      return boost::none;
+    }
+
+    openstudio::model::SizingSystem sizingSystem = airLoopHVAC->sizingSystem();
+
+    boost::optional<std::string> s;
+    boost::optional<double> value;
+
+    // TypeofLoadtoSizeOn
+
+    s = workspaceObject.getString(Sizing_SystemFields::TypeofLoadtoSizeOn);
+    if (s) {
+      sizingSystem.setTypeofLoadtoSizeOn(s.get());
+    }
+
+    // DesignOutdoorAirFlowRate
+
+    s = workspaceObject.getString(Sizing_SystemFields::DesignOutdoorAirFlowRate);
+    value = workspaceObject.getDouble(Sizing_SystemFields::DesignOutdoorAirFlowRate);
+    if (value) {
+      sizingSystem.setDesignOutdoorAirFlowRate(value.get());
+    } else if (s && istringEqual(s.get(), "Autosize")) {
+      sizingSystem.autosizeDesignOutdoorAirFlowRate();
+    }
+
+    // CentralHeatingMaximumSystemAirFlowRatio
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio);
+    if (value) {
+      sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(value.get());
+    }
+
+    // PreheatDesignTemperature
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::PreheatDesignTemperature);
+    if (value) {
+      sizingSystem.setPreheatDesignTemperature(value.get());
+    }
+
+    // PreheatDesignHumidityRatio
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::PreheatDesignHumidityRatio);
+    if (value) {
+      sizingSystem.setPreheatDesignHumidityRatio(value.get());
+    }
+
+    // PrecoolDesignTemperature
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::PrecoolDesignTemperature);
+    if (value) {
+      sizingSystem.setPrecoolDesignTemperature(value.get());
+    }
+
+    // PrecoolDesignHumidityRatio
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::PrecoolDesignHumidityRatio);
+    if (value) {
+      sizingSystem.setPrecoolDesignHumidityRatio(value.get());
+    }
+
+    // CentralCoolingDesignSupplyAirTemperature
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature);
+    if (value) {
+      sizingSystem.setCentralCoolingDesignSupplyAirTemperature(value.get());
+    }
+
+    // CentralHeatingDesignSupplyAirTemperature
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature);
+    if (value) {
+      sizingSystem.setCentralHeatingDesignSupplyAirTemperature(value.get());
+    }
+
+    // SizingOption
+
+    s = workspaceObject.getString(Sizing_SystemFields::TypeofZoneSumtoUse);
+    if (s) {
+      sizingSystem.setSizingOption(s.get());
+    }
+
+    // AllOutdoorAirinCooling
+
+    s = workspaceObject.getString(Sizing_SystemFields::AllOutdoorAirinCooling);
+    if (s && istringEqual(s.get(), "Yes")) {
+      sizingSystem.setAllOutdoorAirinCooling(true);
+    } else if (s && istringEqual(s.get(), "No")) {
+      sizingSystem.setAllOutdoorAirinCooling(false);
+    }
+
+    // AllOutdoorAirinHeating
+
+    s = workspaceObject.getString(Sizing_SystemFields::AllOutdoorAirinHeating);
+    if (s && istringEqual(s.get(), "Yes")) {
+      sizingSystem.setAllOutdoorAirinHeating(true);
+    } else if (s && istringEqual(s.get(), "No")) {
+      sizingSystem.setAllOutdoorAirinHeating(false);
+    }
+
+    // CentralCoolingDesignSupplyAirHumidityRatio
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio);
+    if (value) {
+      sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(value.get());
+    }
+
+    // CentralHeatingDesignSupplyAirHumidityRatio
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio);
+    if (value) {
+      sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(value.get());
+    }
+
+    // CoolingDesignAirFlowMethod
+
+    s = workspaceObject.getString(Sizing_SystemFields::CoolingSupplyAirFlowRateMethod);
+    if (s) {
+      sizingSystem.setCoolingDesignAirFlowMethod(s.get());
+    }
+
+    // CoolingDesignAirFlowRate
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::CoolingSupplyAirFlowRate);
+    if (value) {
+      sizingSystem.setCoolingDesignAirFlowRate(value.get());
+    }
+
+    // HeatingDesignAirFlowMethod
+
+    s = workspaceObject.getString(Sizing_SystemFields::HeatingSupplyAirFlowRateMethod);
+    if (s) {
+      sizingSystem.setHeatingDesignAirFlowMethod(s.get());
+    }
+
+    // HeatingDesignAirFlowRate
+
+    value = workspaceObject.getDouble(Sizing_SystemFields::HeatingSupplyAirFlowRate);
+    if (value) {
+      sizingSystem.setHeatingDesignAirFlowRate(value.get());
+    }
+
+    // SystemOutdoorAirMethod
+
+    s = workspaceObject.getString(Sizing_SystemFields::SystemOutdoorAirMethod);
+    if (s) {
+      sizingSystem.setSystemOutdoorAirMethod(s.get());
+    }
+
+    return sizingSystem;
   }
 
-  if( ! airLoopHVAC )
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             << " Can't find associated AirLoopHVAC.");
+}  // namespace energyplus
 
-    return boost::none;
-  }
-
-  openstudio::model::SizingSystem sizingSystem = airLoopHVAC->sizingSystem();
-
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-
-  // TypeofLoadtoSizeOn
-
-  s = workspaceObject.getString(Sizing_SystemFields::TypeofLoadtoSizeOn);
-  if( s )
-  {
-    sizingSystem.setTypeofLoadtoSizeOn(s.get());
-  }
-
-  // DesignOutdoorAirFlowRate
-
-  s = workspaceObject.getString(Sizing_SystemFields::DesignOutdoorAirFlowRate);
-  value = workspaceObject.getDouble(Sizing_SystemFields::DesignOutdoorAirFlowRate);
-  if( value )
-  {
-    sizingSystem.setDesignOutdoorAirFlowRate(value.get());
-  }
-  else if( s && istringEqual(s.get(),"Autosize") )
-  {
-    sizingSystem.autosizeDesignOutdoorAirFlowRate();
-  }
-
-  // CentralHeatingMaximumSystemAirFlowRatio
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio);
-  if( value )
-  {
-    sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(value.get());
-  }
-
-  // PreheatDesignTemperature
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::PreheatDesignTemperature);
-  if( value )
-  {
-    sizingSystem.setPreheatDesignTemperature(value.get());
-  }
-
-  // PreheatDesignHumidityRatio
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::PreheatDesignHumidityRatio);
-  if( value )
-  {
-    sizingSystem.setPreheatDesignHumidityRatio(value.get());
-  }
-
-  // PrecoolDesignTemperature
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::PrecoolDesignTemperature);
-  if( value )
-  {
-    sizingSystem.setPrecoolDesignTemperature(value.get());
-  }
-
-  // PrecoolDesignHumidityRatio
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::PrecoolDesignHumidityRatio);
-  if( value )
-  {
-    sizingSystem.setPrecoolDesignHumidityRatio(value.get());
-  }
-
-  // CentralCoolingDesignSupplyAirTemperature
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature);
-  if( value )
-  {
-    sizingSystem.setCentralCoolingDesignSupplyAirTemperature(value.get());
-  }
-
-  // CentralHeatingDesignSupplyAirTemperature
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature);
-  if( value )
-  {
-    sizingSystem.setCentralHeatingDesignSupplyAirTemperature(value.get());
-  }
-
-  // SizingOption
-
-  s = workspaceObject.getString(Sizing_SystemFields::TypeofZoneSumtoUse);
-  if( s )
-  {
-    sizingSystem.setSizingOption(s.get());
-  }
-
-  // AllOutdoorAirinCooling
-
-  s = workspaceObject.getString(Sizing_SystemFields::AllOutdoorAirinCooling);
-  if( s && istringEqual(s.get(),"Yes") )
-  {
-    sizingSystem.setAllOutdoorAirinCooling(true);
-  }
-  else if( s && istringEqual(s.get(),"No") )
-  {
-    sizingSystem.setAllOutdoorAirinCooling(false);
-  }
-
-  // AllOutdoorAirinHeating
-
-  s = workspaceObject.getString(Sizing_SystemFields::AllOutdoorAirinHeating);
-  if( s && istringEqual(s.get(),"Yes")  )
-  {
-    sizingSystem.setAllOutdoorAirinHeating(true);
-  }
-  else if( s && istringEqual(s.get(),"No") )
-  {
-    sizingSystem.setAllOutdoorAirinHeating(false);
-  }
-
-  // CentralCoolingDesignSupplyAirHumidityRatio
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio);
-  if( value )
-  {
-    sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(value.get());
-  }
-
-  // CentralHeatingDesignSupplyAirHumidityRatio
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio);
-  if( value )
-  {
-    sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(value.get());
-  }
-
-  // CoolingDesignAirFlowMethod
-
-  s = workspaceObject.getString(Sizing_SystemFields::CoolingSupplyAirFlowRateMethod);
-  if( s )
-  {
-    sizingSystem.setCoolingDesignAirFlowMethod(s.get());
-  }
-
-  // CoolingDesignAirFlowRate
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::CoolingSupplyAirFlowRate);
-  if( value )
-  {
-    sizingSystem.setCoolingDesignAirFlowRate(value.get());
-  }
-
-  // HeatingDesignAirFlowMethod
-
-  s = workspaceObject.getString(Sizing_SystemFields::HeatingSupplyAirFlowRateMethod);
-  if( s )
-  {
-    sizingSystem.setHeatingDesignAirFlowMethod(s.get());
-  }
-
-  // HeatingDesignAirFlowRate
-
-  value = workspaceObject.getDouble(Sizing_SystemFields::HeatingSupplyAirFlowRate);
-  if( value )
-  {
-    sizingSystem.setHeatingDesignAirFlowRate(value.get());
-  }
-
-  // SystemOutdoorAirMethod
-
-  s = workspaceObject.getString(Sizing_SystemFields::SystemOutdoorAirMethod);
-  if( s )
-  {
-    sizingSystem.setSystemOutdoorAirMethod(s.get());
-  }
-
-  return sizingSystem;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

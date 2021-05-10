@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,89 +36,83 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerScheduledDualSetpoint_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerScheduledDualSetpoint.*/
-  class MODEL_API SetpointManagerScheduledDualSetpoint_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerScheduledDualSetpoint_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerScheduledDualSetpoint.*/
+    class MODEL_API SetpointManagerScheduledDualSetpoint_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerScheduledDualSetpoint_Impl(const IdfObject& idfObject,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      SetpointManagerScheduledDualSetpoint_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerScheduledDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      SetpointManagerScheduledDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerScheduledDualSetpoint_Impl(const SetpointManagerScheduledDualSetpoint_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      SetpointManagerScheduledDualSetpoint_Impl(const SetpointManagerScheduledDualSetpoint_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerScheduledDualSetpoint_Impl() {}
+      virtual ~SetpointManagerScheduledDualSetpoint_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    // virtual bool addToNode(Node & node) override;
+      // virtual bool addToNode(Node & node) override;
 
-    virtual bool isAllowedOnPlantLoop() const override;
+      virtual bool isAllowedOnPlantLoop() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    boost::optional<Schedule> highSetpointSchedule() const;
+      boost::optional<Schedule> highSetpointSchedule() const;
 
-    boost::optional<Schedule> lowSetpointSchedule() const;
+      boost::optional<Schedule> lowSetpointSchedule() const;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setHighSetpointSchedule(Schedule& schedule);
+      bool setHighSetpointSchedule(Schedule& schedule);
 
-    void resetHighSetpointSchedule();
+      void resetHighSetpointSchedule();
 
-    bool setLowSetpointSchedule(Schedule& schedule);
+      bool setLowSetpointSchedule(Schedule& schedule);
 
-    void resetLowSetpointSchedule();
+      void resetLowSetpointSchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode( const Node & node ) override;
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual void resetSetpointNode() override;
+      virtual void resetSetpointNode() override;
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerScheduledDualSetpoint");
-  };
+      REGISTER_LOGGER("openstudio.model.SetpointManagerScheduledDualSetpoint");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSCHEDULEDDUALSETPOINT_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERSCHEDULEDDUALSETPOINT_IMPL_HPP

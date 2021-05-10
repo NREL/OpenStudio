@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,76 +51,74 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGasMultiStage( CoilHeatingGasMultiStage & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGasMultiStage(CoilHeatingGasMultiStage& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_Gas_MultiStage, modelObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_Gas_MultiStage, modelObject);
 
-  // AvailabilityScheduleName
-  if( auto schedule = modelObject.availabilitySchedule() ) {
-    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
-      idfObject.setString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName,_schedule->name().get());
-    }
-  }
-
-  // AirInletNodeName
-  if( auto node = modelObject.inletModelObject() ) {
-    idfObject.setString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName,node->name().get());
-  }
-
-  // AirOutletNodeName
-  // TemperatureSetpointNodeName
-  if( auto node = modelObject.outletModelObject() ) {
-    idfObject.setString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName,node->name().get());
-    idfObject.setString(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName,node->name().get());
-  }
-
-  // PartLoadFractionCorrelationCurveName
-  if( auto curve = modelObject.partLoadFractionCorrelationCurve() ) {
-    if( auto _curve = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName,_curve->name().get());
-    }
-  }
-
-  // ParasiticGasLoad
-  if( (value = modelObject.parasiticGasLoad()) ) {
-    idfObject.setDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad,value.get());
-  }
-
-  // NumberofStages
-  {
-    auto num = modelObject.stages().size();
-    idfObject.setInt(Coil_Heating_Gas_MultiStageFields::NumberofStages,num);
-  }
-
-  for( auto stage: modelObject.stages() ) {
-    auto eg = idfObject.pushExtensibleGroup();
-
-    // Stage1GasBurnerEfficiency
-    if( (value = stage.gasBurnerEfficiency()) ) {
-      eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency,value.get());
+    // AvailabilityScheduleName
+    if (auto schedule = modelObject.availabilitySchedule()) {
+      if (auto _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, _schedule->name().get());
+      }
     }
 
-    // Stage1NominalCapacity
-    if( stage.isNominalCapacityAutosized() ) {
-      eg.setString(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity,"AutoSize");
-    } else if( (value = stage.nominalCapacity()) ) {
-      eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity,value.get());
+    // AirInletNodeName
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName, node->name().get());
     }
 
-    // Stage1ParasiticElectricLoad
-    if( (value = stage.parasiticElectricLoad()) ) {
-      eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad,value.get());
+    // AirOutletNodeName
+    // TemperatureSetpointNodeName
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName, node->name().get());
+      idfObject.setString(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName, node->name().get());
     }
+
+    // PartLoadFractionCorrelationCurveName
+    if (auto curve = modelObject.partLoadFractionCorrelationCurve()) {
+      if (auto _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
+      }
+    }
+
+    // ParasiticGasLoad
+    if ((value = modelObject.parasiticGasLoad())) {
+      idfObject.setDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, value.get());
+    }
+
+    // NumberofStages
+    {
+      auto num = modelObject.stages().size();
+      idfObject.setInt(Coil_Heating_Gas_MultiStageFields::NumberofStages, num);
+    }
+
+    for (auto stage : modelObject.stages()) {
+      auto eg = idfObject.pushExtensibleGroup();
+
+      // Stage1GasBurnerEfficiency
+      if ((value = stage.gasBurnerEfficiency())) {
+        eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency, value.get());
+      }
+
+      // Stage1NominalCapacity
+      if (stage.isNominalCapacityAutosized()) {
+        eg.setString(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity, "AutoSize");
+      } else if ((value = stage.nominalCapacity())) {
+        eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity, value.get());
+      }
+
+      // Stage1ParasiticElectricLoad
+      if ((value = stage.parasiticElectricLoad())) {
+        eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad, value.get());
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

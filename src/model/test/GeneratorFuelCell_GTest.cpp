@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,8 +57,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, FuelCell)
-{
+TEST_F(ModelFixture, FuelCell) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -78,13 +77,12 @@ TEST_F(ModelFixture, FuelCell)
   EXPECT_EQ(2.26e-008, curveQ.coefficient3xPOW2());
   EXPECT_EQ("Annex42", fCPM.efficiencyCurveMode());
 
-
   // check default Airsupply
   GeneratorFuelCellAirSupply fAS = fuelcell.airSupply();
-  EXPECT_EQ("AirRatiobyStoics",fAS.airSupplyRateCalculationMode());
-  EXPECT_EQ(1.0,fAS.stoichiometricRatio());
-  EXPECT_EQ("NoRecovery",fAS.airIntakeHeatRecoveryMode());
-  EXPECT_EQ("AmbientAir",fAS.airSupplyConstituentMode());
+  EXPECT_EQ("AirRatiobyStoics", fAS.airSupplyRateCalculationMode());
+  EXPECT_EQ(1.0, fAS.stoichiometricRatio());
+  EXPECT_EQ("NoRecovery", fAS.airIntakeHeatRecoveryMode());
+  EXPECT_EQ("AmbientAir", fAS.airSupplyConstituentMode());
 
   // check default fuel supply
   GeneratorFuelSupply fS = fuelcell.fuelSupply();
@@ -106,7 +104,6 @@ TEST_F(ModelFixture, FuelCell)
 
   // check default optional stackcooler
   boost::optional<GeneratorFuelCellStackCooler> fSC = fuelcell.stackCooler();
-
 }
 
 TEST_F(ModelFixture, FuelCell2) {
@@ -138,20 +135,20 @@ TEST_F(ModelFixture, FuelCell2) {
   EXPECT_EQ(elecStorage, fuelcell.electricalStorage());
   EXPECT_EQ(inverter, fuelcell.inverter());
   EXPECT_EQ(fuelSupply, fuelcell.fuelSupply());
-  //should be 1 default ELCD attached to FC
+  //should be 0 default ELCD attached to FC
   std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
-  EXPECT_EQ(1u, elcd.size());
-  EXPECT_EQ(1u, elcd[0].generators().size());
-  std::vector<Generator> generators = elcd[0].generators();
-  EXPECT_EQ(generators[0].handle(), fuelcell.handle());
-  EXPECT_TRUE(fuelcell.electricLoadCenterDistribution());
-  EXPECT_EQ(elcd[0].handle(), fuelcell.electricLoadCenterDistribution().get().handle());
+  EXPECT_EQ(0u, elcd.size());
+  EXPECT_FALSE(fuelcell.electricLoadCenterDistribution());
+  //Add a ELCD
+  ElectricLoadCenterDistribution elcd1(model);
+  EXPECT_TRUE(elcd1.addGenerator(fuelcell));
+  EXPECT_EQ(elcd1.handle(), fuelcell.electricLoadCenterDistribution().get().handle());
   //Add another ELCD
   ElectricLoadCenterDistribution elcd2(model);
   EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
   //Add the FC to it which should remove the existing one attached to FC
   EXPECT_TRUE(elcd2.addGenerator(fuelcell));
-  EXPECT_EQ(0, elcd[0].generators().size());
+  EXPECT_EQ(0, elcd1.generators().size());
   EXPECT_EQ(elcd2.handle(), fuelcell.electricLoadCenterDistribution().get().handle());
 }
 

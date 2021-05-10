@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,72 +35,70 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class AirGap_Impl;
+    class AirGap_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirGap is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:AirGap'. */
-class MODEL_API AirGap : public OpaqueMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirGap is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:AirGap'. */
+  class MODEL_API AirGap : public OpaqueMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirGap(const Model& model,
-    double thermalResistance = 0.1);
+    explicit AirGap(const Model& model, double thermalResistance = 0.1);
 
-  virtual ~AirGap() {}
+    virtual ~AirGap() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double thermalResistance() const;
+    double thermalResistance() const;
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setThermalResistance(double thermalResistance);
 
-  bool setThermalResistance(double thermalResistance);
+    // Resets the thermal resistance to the default of 0.1 m2-K/W
+    void resetThermalResistance();
 
-  // Resets the thermal resistance to the default of 0.1 m2-K/W
-  void resetThermalResistance();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirGap_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirGap_Impl ImplType;
+    explicit AirGap(std::shared_ptr<detail::AirGap_Impl> impl);
 
-  explicit AirGap(std::shared_ptr<detail::AirGap_Impl> impl);
+    friend class detail::AirGap_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirGap");
+  };
 
-  friend class detail::AirGap_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirGap");
-};
+  /** \relates AirGap*/
+  typedef boost::optional<AirGap> OptionalAirGap;
 
-/** \relates AirGap*/
-typedef boost::optional<AirGap> OptionalAirGap;
+  /** \relates AirGap*/
+  typedef std::vector<AirGap> AirGapVector;
 
-/** \relates AirGap*/
-typedef std::vector<AirGap> AirGapVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRGAP_HPP
+#endif  // MODEL_AIRGAP_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,77 +36,77 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemSubroutine_Impl;
+    class EnergyManagementSystemSubroutine_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemSubroutine is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Subroutine'. */
-class MODEL_API EnergyManagementSystemSubroutine : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemSubroutine is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Subroutine'. */
+  class MODEL_API EnergyManagementSystemSubroutine : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemSubroutine(const Model& model);
+    explicit EnergyManagementSystemSubroutine(const Model& model);
 
-  virtual ~EnergyManagementSystemSubroutine() {}
+    virtual ~EnergyManagementSystemSubroutine() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string body() const;
+    std::string body() const;
 
-  std::vector<std::string> lines() const;
+    std::vector<std::string> lines() const;
 
-  std::vector<ModelObject> referencedObjects() const;
+    std::vector<ModelObject> referencedObjects() const;
 
-  std::vector<std::string> invalidReferencedObjects() const;
+    std::vector<std::string> invalidReferencedObjects() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setBody(const std::string& body);
+    bool setBody(const std::string& body);
 
-  bool resetBody();
+    bool resetBody();
 
-  bool addLine(const std::string& body);
+    bool addLine(const std::string& body);
 
-  bool setLines(const std::vector<std::string>& body);
+    bool setLines(const std::vector<std::string>& body);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemSubroutine_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemSubroutine_Impl ImplType;
 
-  explicit EnergyManagementSystemSubroutine(std::shared_ptr<detail::EnergyManagementSystemSubroutine_Impl> impl);
+    explicit EnergyManagementSystemSubroutine(std::shared_ptr<detail::EnergyManagementSystemSubroutine_Impl> impl);
 
-  friend class detail::EnergyManagementSystemSubroutine_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSubroutine");
-};
+    friend class detail::EnergyManagementSystemSubroutine_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSubroutine");
+  };
 
-/** \relates EnergyManagementSystemSubroutine*/
-typedef boost::optional<EnergyManagementSystemSubroutine> OptionalEnergyManagementSystemSubroutine;
+  /** \relates EnergyManagementSystemSubroutine*/
+  typedef boost::optional<EnergyManagementSystemSubroutine> OptionalEnergyManagementSystemSubroutine;
 
-/** \relates EnergyManagementSystemSubroutine*/
-typedef std::vector<EnergyManagementSystemSubroutine> EnergyManagementSystemSubroutineVector;
+  /** \relates EnergyManagementSystemSubroutine*/
+  typedef std::vector<EnergyManagementSystemSubroutine> EnergyManagementSystemSubroutineVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMSUBROUTINE_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMSUBROUTINE_HPP

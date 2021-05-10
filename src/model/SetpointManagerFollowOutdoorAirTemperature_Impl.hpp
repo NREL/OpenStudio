@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,77 +37,73 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API SetpointManagerFollowOutdoorAirTemperature_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API SetpointManagerFollowOutdoorAirTemperature_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SetpointManagerFollowOutdoorAirTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      SetpointManagerFollowOutdoorAirTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl(const SetpointManagerFollowOutdoorAirTemperature_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandles);
+      SetpointManagerFollowOutdoorAirTemperature_Impl(const SetpointManagerFollowOutdoorAirTemperature_Impl& other, Model_Impl* model,
+                                                      bool keepHandles);
 
-    virtual ~SetpointManagerFollowOutdoorAirTemperature_Impl();
+      virtual ~SetpointManagerFollowOutdoorAirTemperature_Impl();
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    // virtual bool addToNode(Node & node) override;
+      // virtual bool addToNode(Node & node) override;
 
-    virtual bool isAllowedOnPlantLoop() const override;
+      virtual bool isAllowedOnPlantLoop() const override;
 
-    //@}
-    /** @name Getters and Setters */
-    //@{
+      //@}
+      /** @name Getters and Setters */
+      //@{
 
-    std::string referenceTemperatureType() const;
+      std::string referenceTemperatureType() const;
 
-    bool setReferenceTemperatureType(const std::string & value);
+      bool setReferenceTemperatureType(const std::string& value);
 
-    double offsetTemperatureDifference() const;
+      double offsetTemperatureDifference() const;
 
-    bool setOffsetTemperatureDifference(double value);
+      bool setOffsetTemperatureDifference(double value);
 
-    double maximumSetpointTemperature() const;
+      double maximumSetpointTemperature() const;
 
-    bool setMaximumSetpointTemperature(double value);
+      bool setMaximumSetpointTemperature(double value);
 
-    double minimumSetpointTemperature() const;
+      double minimumSetpointTemperature() const;
 
-    bool setMinimumSetpointTemperature(double value);
+      bool setMinimumSetpointTemperature(double value);
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    virtual bool setControlVariable(const std::string & value) override;
+      virtual bool setControlVariable(const std::string& value) override;
 
-    //@}
-   private:
+      //@}
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual bool setSetpointNode(const Node & node ) override;
+      virtual void resetSetpointNode() override;
+    };
 
-    virtual void resetSetpointNode() override;
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,31 +37,32 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class ElectricLoadCenterInverterPVWatts_Impl;
+    class ElectricLoadCenterInverterPVWatts_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ElectricLoadCenterInverterPVWatts is a Inverter that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Inverter:PVWatts'. */
-class MODEL_API ElectricLoadCenterInverterPVWatts : public Inverter {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ElectricLoadCenterInverterPVWatts is a Inverter that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Inverter:PVWatts'. */
+  class MODEL_API ElectricLoadCenterInverterPVWatts : public Inverter
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ElectricLoadCenterInverterPVWatts(const Model& model);
+    explicit ElectricLoadCenterInverterPVWatts(const Model& model);
 
-  virtual ~ElectricLoadCenterInverterPVWatts() {}
+    virtual ~ElectricLoadCenterInverterPVWatts() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
     double dcToACSizeRatio() const;
 
@@ -71,9 +72,9 @@ class MODEL_API ElectricLoadCenterInverterPVWatts : public Inverter {
 
     bool isInverterEfficiencyDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
     bool setDCToACSizeRatio(double dcToACSizeRatio);
 
@@ -83,34 +84,33 @@ class MODEL_API ElectricLoadCenterInverterPVWatts : public Inverter {
 
     void resetInverterEfficiency();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ElectricLoadCenterInverterPVWatts_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ElectricLoadCenterInverterPVWatts_Impl ImplType;
 
-  explicit ElectricLoadCenterInverterPVWatts(std::shared_ptr<detail::ElectricLoadCenterInverterPVWatts_Impl> impl);
+    explicit ElectricLoadCenterInverterPVWatts(std::shared_ptr<detail::ElectricLoadCenterInverterPVWatts_Impl> impl);
 
-  friend class detail::ElectricLoadCenterInverterPVWatts_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterPVWatts");
-};
+    friend class detail::ElectricLoadCenterInverterPVWatts_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterPVWatts");
+  };
 
-/** \relates ElectricLoadCenterInverterPVWatts*/
-typedef boost::optional<ElectricLoadCenterInverterPVWatts> OptionalElectricLoadCenterInverterPVWatts;
+  /** \relates ElectricLoadCenterInverterPVWatts*/
+  typedef boost::optional<ElectricLoadCenterInverterPVWatts> OptionalElectricLoadCenterInverterPVWatts;
 
-/** \relates ElectricLoadCenterInverterPVWatts*/
-typedef std::vector<ElectricLoadCenterInverterPVWatts> ElectricLoadCenterInverterPVWattsVector;
+  /** \relates ElectricLoadCenterInverterPVWatts*/
+  typedef std::vector<ElectricLoadCenterInverterPVWatts> ElectricLoadCenterInverterPVWattsVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERINVERTERPVWATTS_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERINVERTERPVWATTS_HPP

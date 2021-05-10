@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,161 +37,156 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACUnitVentilator_Impl;
+    class ZoneHVACUnitVentilator_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACUnitVentilator is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:UnitVentilator'. */
-class MODEL_API ZoneHVACUnitVentilator : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACUnitVentilator is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:UnitVentilator'. */
+  class MODEL_API ZoneHVACUnitVentilator : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneHVACUnitVentilator(const Model& model);
+    explicit ZoneHVACUnitVentilator(const Model& model);
 
-  explicit ZoneHVACUnitVentilator(
-    const Model& model,
-    const HVACComponent& supplyAirFan
-  );
+    explicit ZoneHVACUnitVentilator(const Model& model, const HVACComponent& supplyAirFan);
 
-  virtual ~ZoneHVACUnitVentilator() {}
+    virtual ~ZoneHVACUnitVentilator() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> outdoorAirControlTypeValues();
+    static std::vector<std::string> outdoorAirControlTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  boost::optional<double> maximumSupplyAirFlowRate() const;
+    boost::optional<double> maximumSupplyAirFlowRate() const;
 
-  bool isMaximumSupplyAirFlowRateAutosized() const;
+    bool isMaximumSupplyAirFlowRateAutosized() const;
 
-  std::string outdoorAirControlType() const;
+    std::string outdoorAirControlType() const;
 
-  boost::optional<double> minimumOutdoorAirFlowRate() const;
+    boost::optional<double> minimumOutdoorAirFlowRate() const;
 
-  bool isMinimumOutdoorAirFlowRateAutosized() const;
+    bool isMinimumOutdoorAirFlowRateAutosized() const;
 
-  Schedule minimumOutdoorAirSchedule() const;
+    Schedule minimumOutdoorAirSchedule() const;
 
-  boost::optional<double> maximumOutdoorAirFlowRate() const;
+    boost::optional<double> maximumOutdoorAirFlowRate() const;
 
-  bool isMaximumOutdoorAirFlowRateAutosized() const;
+    bool isMaximumOutdoorAirFlowRateAutosized() const;
 
-  Schedule maximumOutdoorAirFractionorTemperatureSchedule() const;
+    Schedule maximumOutdoorAirFractionorTemperatureSchedule() const;
 
-  HVACComponent supplyAirFan() const;
+    HVACComponent supplyAirFan() const;
 
-  boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-  boost::optional<HVACComponent> heatingCoil() const;
+    boost::optional<HVACComponent> heatingCoil() const;
 
-  double heatingConvergenceTolerance() const;
+    double heatingConvergenceTolerance() const;
 
-  boost::optional<HVACComponent> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
-  double coolingConvergenceTolerance() const;
+    double coolingConvergenceTolerance() const;
 
-  // boost::optional<ModelObject> availabilityManagerList() const;
+    // boost::optional<ModelObject> availabilityManagerList() const;
 
-  // boost::optional<ModelObject> designSpecificationZoneHVACSizingObject() const;
+    // boost::optional<ModelObject> designSpecificationZoneHVACSizingObject() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
+    bool setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
 
-  void autosizeMaximumSupplyAirFlowRate();
+    void autosizeMaximumSupplyAirFlowRate();
 
-  bool setOutdoorAirControlType(std::string outdoorAirControlType);
+    bool setOutdoorAirControlType(std::string outdoorAirControlType);
 
-  bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
+    bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
 
-  void autosizeMinimumOutdoorAirFlowRate();
+    void autosizeMinimumOutdoorAirFlowRate();
 
-  bool setMinimumOutdoorAirSchedule(Schedule& schedule);
+    bool setMinimumOutdoorAirSchedule(Schedule& schedule);
 
-  bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
+    bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
 
-  void autosizeMaximumOutdoorAirFlowRate();
+    void autosizeMaximumOutdoorAirFlowRate();
 
-  bool setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule);
+    bool setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule);
 
-  bool setSupplyAirFan(const HVACComponent& supplyAirFan);
+    bool setSupplyAirFan(const HVACComponent& supplyAirFan);
 
-  bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
+    bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-  void resetSupplyAirFanOperatingModeSchedule();
+    void resetSupplyAirFanOperatingModeSchedule();
 
-  bool setHeatingCoil(const HVACComponent& heatingCoil);
+    bool setHeatingCoil(const HVACComponent& heatingCoil);
 
-  void resetHeatingCoil();
+    void resetHeatingCoil();
 
-  bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
+    bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
 
-  bool setCoolingCoil(const HVACComponent& coolingCoil);
+    bool setCoolingCoil(const HVACComponent& coolingCoil);
 
-  void resetCoolingCoil();
+    void resetCoolingCoil();
 
-  bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
+    bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 
-  // bool setAvailabilityManagerList(const ModelObject& systemAvailabilityManagerLists);
+    // bool setAvailabilityManagerList(const ModelObject& systemAvailabilityManagerLists);
 
-  // void resetAvailabilityManagerList();
+    // void resetAvailabilityManagerList();
 
-  // bool setDesignSpecificationZoneHVACSizingObject(const ModelObject& designSpecificationZoneHVACSizingName);
+    // bool setDesignSpecificationZoneHVACSizingObject(const ModelObject& designSpecificationZoneHVACSizingName);
 
-  // void resetDesignSpecificationZoneHVACSizingObject();
+    // void resetDesignSpecificationZoneHVACSizingObject();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedMaximumSupplyAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumSupplyAirFlowRate() const;
 
-  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+    boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACUnitVentilator_Impl ImplType;
 
+    explicit ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACUnitVentilator_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACUnitVentilator_Impl ImplType;
+    friend class detail::ZoneHVACUnitVentilator_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACUnitVentilator");
+  };
 
-  explicit ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACUnitVentilator_Impl> impl);
+  /** \relates ZoneHVACUnitVentilator*/
+  typedef boost::optional<ZoneHVACUnitVentilator> OptionalZoneHVACUnitVentilator;
 
-  friend class detail::ZoneHVACUnitVentilator_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACUnitVentilator");
-};
+  /** \relates ZoneHVACUnitVentilator*/
+  typedef std::vector<ZoneHVACUnitVentilator> ZoneHVACUnitVentilatorVector;
 
-/** \relates ZoneHVACUnitVentilator*/
-typedef boost::optional<ZoneHVACUnitVentilator> OptionalZoneHVACUnitVentilator;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ZoneHVACUnitVentilator*/
-typedef std::vector<ZoneHVACUnitVentilator> ZoneHVACUnitVentilatorVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACUNITVENTILATOR_HPP
-
+#endif  // MODEL_ZONEHVACUNITVENTILATOR_HPP

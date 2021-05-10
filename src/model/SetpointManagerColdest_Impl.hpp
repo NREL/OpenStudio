@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,82 +36,76 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerColdest_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerColdest.*/
-  class MODEL_API SetpointManagerColdest_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerColdest_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerColdest.*/
+    class MODEL_API SetpointManagerColdest_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerColdest_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      SetpointManagerColdest_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerColdest_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      SetpointManagerColdest_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerColdest_Impl(const SetpointManagerColdest_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      SetpointManagerColdest_Impl(const SetpointManagerColdest_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerColdest_Impl() {}
+      virtual ~SetpointManagerColdest_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    double minimumSetpointTemperature() const;
+      double minimumSetpointTemperature() const;
 
-    double maximumSetpointTemperature() const;
+      double maximumSetpointTemperature() const;
 
-    std::string strategy() const;
+      std::string strategy() const;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+      bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+      bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-    bool setStrategy(const std::string& strategy);
+      bool setStrategy(const std::string& strategy);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode(const Node& node) override;
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual void resetSetpointNode() override;
+      virtual void resetSetpointNode() override;
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerColdest");
-  };
+      REGISTER_LOGGER("openstudio.model.SetpointManagerColdest");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERCOLDEST_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERCOLDEST_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,98 +35,89 @@
 namespace openstudio {
 namespace model {
 
-class Space;
-class RenderingColor;
-class BuildingUnit;
+  class Space;
+  class RenderingColor;
+  class BuildingUnit;
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
- public:
+    class MODEL_API BuildingUnit_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+      BuildingUnit_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  BuildingUnit_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      BuildingUnit_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  BuildingUnit_Impl(
-          const openstudio::detail::WorkspaceObject_Impl& other,
-          Model_Impl* model,
-          bool keepHandle
-  );
+      BuildingUnit_Impl(const BuildingUnit_Impl& other, Model_Impl* model, bool keepHandle);
 
-  BuildingUnit_Impl(
-          const BuildingUnit_Impl& other,
-          Model_Impl* model,
-          bool keepHandle
-  );
+      virtual ~BuildingUnit_Impl() {}
 
-  virtual ~BuildingUnit_Impl() {}
+      //@}
 
-  //@}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      /** @name Getters */
+      //@{
 
-  /** @name Getters */
-  //@{
+      boost::optional<RenderingColor> renderingColor() const;
 
-  boost::optional<RenderingColor> renderingColor() const;
+      std::string buildingUnitType() const;
 
-  std::string buildingUnitType() const;
+      std::vector<Space> spaces() const;
 
-  std::vector<Space> spaces() const;
+      std::vector<std::string> featureNames() const;
 
-  std::vector<std::string> featureNames() const;
+      boost::optional<std::string> getFeatureDataType(const std::string& name) const;
 
-  boost::optional<std::string> getFeatureDataType(const std::string& name) const;
+      boost::optional<std::string> getFeatureAsString(const std::string& name) const;
 
-  boost::optional<std::string> getFeatureAsString(const std::string& name) const;
+      boost::optional<double> getFeatureAsDouble(const std::string& name) const;
 
-  boost::optional<double> getFeatureAsDouble(const std::string& name) const;
+      boost::optional<int> getFeatureAsInteger(const std::string& name) const;
 
-  boost::optional<int> getFeatureAsInteger(const std::string& name) const;
+      boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
+      std::vector<std::string> suggestedFeatures() const;
 
-  std::vector<std::string> suggestedFeatures() const;
+      //@}
 
-  //@}
+      /** @name Setters */
+      //@{
 
-  /** @name Setters */
-  //@{
+      bool setRenderingColor(const RenderingColor& renderingColor);
 
-  bool setRenderingColor(const RenderingColor& renderingColor);
+      void resetRenderingColor();
 
-  void resetRenderingColor();
+      bool setBuildingUnitType(const std::string& buildingUnitType);
 
-  bool setBuildingUnitType(const std::string& buildingUnitType);
+      void resetBuildingUnitType();
 
-  void resetBuildingUnitType();
+      bool setFeature(const std::string& name, const std::string& value);
 
-  bool setFeature(const std::string& name, const std::string& value);
+      bool setFeature(const std::string& name, const char* value);
 
-  bool setFeature(const std::string& name, const char* value);
+      bool setFeature(const std::string& name, double value);
 
-  bool setFeature(const std::string& name, double value);
+      bool setFeature(const std::string& name, int value);
 
-  bool setFeature(const std::string& name, int value);
+      bool setFeature(const std::string& name, bool value);
 
-  bool setFeature(const std::string& name, bool value);
+      bool resetFeature(const std::string& name);
 
-  bool resetFeature(const std::string& name);
+      //@}
 
-  //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.BuildingUnit")
+    };
 
- protected:
- private:
-  REGISTER_LOGGER("openstudio.model.BuildingUnit")
+  }  // namespace detail
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-} // detail
-} // model
-} // openstudio
-
-#endif //MODEL_BUILDINGUNIT_IMPL_HPP
+#endif  //MODEL_BUILDINGUNIT_IMPL_HPP

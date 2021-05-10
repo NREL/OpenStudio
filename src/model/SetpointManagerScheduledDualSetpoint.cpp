@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,183 +48,160 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SetpointManagerScheduledDualSetpoint_Impl::SetpointManagerScheduledDualSetpoint_Impl(const IdfObject& idfObject,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : SetpointManager_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SetpointManagerScheduledDualSetpoint::iddObjectType());
-  }
-
-  SetpointManagerScheduledDualSetpoint_Impl::SetpointManagerScheduledDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : SetpointManager_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SetpointManagerScheduledDualSetpoint::iddObjectType());
-  }
-
-  SetpointManagerScheduledDualSetpoint_Impl::SetpointManagerScheduledDualSetpoint_Impl(const SetpointManagerScheduledDualSetpoint_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : SetpointManager_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& SetpointManagerScheduledDualSetpoint_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType SetpointManagerScheduledDualSetpoint_Impl::iddObjectType() const {
-    return SetpointManagerScheduledDualSetpoint::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> SetpointManagerScheduledDualSetpoint_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("SetpointManagerScheduledDualSetpoint","High Setpoint"));
+    SetpointManagerScheduledDualSetpoint_Impl::SetpointManagerScheduledDualSetpoint_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                         bool keepHandle)
+      : SetpointManager_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SetpointManagerScheduledDualSetpoint::iddObjectType());
     }
-    if (std::find(b,e,OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("SetpointManagerScheduledDualSetpoint","Low Setpoint"));
+
+    SetpointManagerScheduledDualSetpoint_Impl::SetpointManagerScheduledDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
+      : SetpointManager_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SetpointManagerScheduledDualSetpoint::iddObjectType());
     }
-    return result;
+
+    SetpointManagerScheduledDualSetpoint_Impl::SetpointManagerScheduledDualSetpoint_Impl(const SetpointManagerScheduledDualSetpoint_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
+      : SetpointManager_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& SetpointManagerScheduledDualSetpoint_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType SetpointManagerScheduledDualSetpoint_Impl::iddObjectType() const {
+      return SetpointManagerScheduledDualSetpoint::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> SetpointManagerScheduledDualSetpoint_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("SetpointManagerScheduledDualSetpoint", "High Setpoint"));
+      }
+      if (std::find(b, e, OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("SetpointManagerScheduledDualSetpoint", "Low Setpoint"));
+      }
+      return result;
+    }
+
+    /** This SPM is allowed on a PlantLoop */
+    bool SetpointManagerScheduledDualSetpoint_Impl::isAllowedOnPlantLoop() const {
+      return true;
+    }
+
+    std::string SetpointManagerScheduledDualSetpoint_Impl::controlVariable() const {
+      boost::optional<std::string> value = getString(OS_SetpointManager_Scheduled_DualSetpointFields::ControlVariable, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Schedule> SetpointManagerScheduledDualSetpoint_Impl::highSetpointSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName);
+    }
+
+    boost::optional<Schedule> SetpointManagerScheduledDualSetpoint_Impl::lowSetpointSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName);
+    }
+
+    boost::optional<Node> SetpointManagerScheduledDualSetpoint_Impl::setpointNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_Scheduled_DualSetpointFields::SetpointNodeorNodeListName);
+    }
+
+    bool SetpointManagerScheduledDualSetpoint_Impl::setControlVariable(const std::string& controlVariable) {
+      bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::ControlVariable, controlVariable);
+      return result;
+    }
+
+    bool SetpointManagerScheduledDualSetpoint_Impl::setHighSetpointSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName, "SetpointManagerScheduledDualSetpoint",
+                                "High Setpoint", schedule);
+      return result;
+    }
+
+    void SetpointManagerScheduledDualSetpoint_Impl::resetHighSetpointSchedule() {
+      bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool SetpointManagerScheduledDualSetpoint_Impl::setLowSetpointSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName, "SetpointManagerScheduledDualSetpoint",
+                                "Low Setpoint", schedule);
+      return result;
+    }
+
+    void SetpointManagerScheduledDualSetpoint_Impl::resetLowSetpointSchedule() {
+      bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool SetpointManagerScheduledDualSetpoint_Impl::setSetpointNode(const Node& node) {
+      return setPointer(OS_SetpointManager_Scheduled_DualSetpointFields::SetpointNodeorNodeListName, node.handle());
+    }
+
+    void SetpointManagerScheduledDualSetpoint_Impl::resetSetpointNode() {
+      bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::SetpointNodeorNodeListName, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  SetpointManagerScheduledDualSetpoint::SetpointManagerScheduledDualSetpoint(const Model& model)
+    : SetpointManager(SetpointManagerScheduledDualSetpoint::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>());
   }
 
-  /** This SPM is allowed on a PlantLoop */
-  bool SetpointManagerScheduledDualSetpoint_Impl::isAllowedOnPlantLoop() const {
-    return true;
+  IddObjectType SetpointManagerScheduledDualSetpoint::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint);
   }
 
-  std::string SetpointManagerScheduledDualSetpoint_Impl::controlVariable() const {
-    boost::optional<std::string> value = getString(OS_SetpointManager_Scheduled_DualSetpointFields::ControlVariable,true);
-    OS_ASSERT(value);
-    return value.get();
+  std::vector<std::string> SetpointManagerScheduledDualSetpoint::controlVariableValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_SetpointManager_Scheduled_DualSetpointFields::ControlVariable);
   }
 
-  boost::optional<Schedule> SetpointManagerScheduledDualSetpoint_Impl::highSetpointSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName);
+  std::string SetpointManagerScheduledDualSetpoint::controlVariable() const {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->controlVariable();
   }
 
-  boost::optional<Schedule> SetpointManagerScheduledDualSetpoint_Impl::lowSetpointSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName);
+  boost::optional<Schedule> SetpointManagerScheduledDualSetpoint::highSetpointSchedule() const {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->highSetpointSchedule();
   }
 
-  boost::optional<Node> SetpointManagerScheduledDualSetpoint_Impl::setpointNode() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_Scheduled_DualSetpointFields::SetpointNodeorNodeListName);
+  boost::optional<Schedule> SetpointManagerScheduledDualSetpoint::lowSetpointSchedule() const {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->lowSetpointSchedule();
   }
 
-  bool SetpointManagerScheduledDualSetpoint_Impl::setControlVariable(const std::string& controlVariable) {
-    bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::ControlVariable, controlVariable);
-    return result;
+  boost::optional<Node> SetpointManagerScheduledDualSetpoint::setpointNode() const {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setpointNode();
   }
 
-  bool SetpointManagerScheduledDualSetpoint_Impl::setHighSetpointSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName,
-                              "SetpointManagerScheduledDualSetpoint",
-                              "High Setpoint",
-                              schedule);
-    return result;
+  bool SetpointManagerScheduledDualSetpoint::setControlVariable(const std::string& controlVariable) {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setControlVariable(controlVariable);
   }
 
-  void SetpointManagerScheduledDualSetpoint_Impl::resetHighSetpointSchedule()
-  {
-    bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::HighSetpointScheduleName,"");
-    OS_ASSERT(result);
+  bool SetpointManagerScheduledDualSetpoint::setHighSetpointSchedule(Schedule& schedule) {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setHighSetpointSchedule(schedule);
   }
 
-  bool SetpointManagerScheduledDualSetpoint_Impl::setLowSetpointSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName,
-                              "SetpointManagerScheduledDualSetpoint",
-                              "Low Setpoint",
-                              schedule);
-    return result;
+  void SetpointManagerScheduledDualSetpoint::resetHighSetpointSchedule() {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->resetHighSetpointSchedule();
   }
 
-  void SetpointManagerScheduledDualSetpoint_Impl::resetLowSetpointSchedule()
-  {
-    bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::LowSetpointScheduleName,"");
-    OS_ASSERT(result);
+  bool SetpointManagerScheduledDualSetpoint::setLowSetpointSchedule(Schedule& schedule) {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setLowSetpointSchedule(schedule);
   }
 
-  bool SetpointManagerScheduledDualSetpoint_Impl::setSetpointNode( const Node & node )
-  {
-    return setPointer(OS_SetpointManager_Scheduled_DualSetpointFields::SetpointNodeorNodeListName,node.handle());
+  void SetpointManagerScheduledDualSetpoint::resetLowSetpointSchedule() {
+    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->resetLowSetpointSchedule();
   }
 
-  void SetpointManagerScheduledDualSetpoint_Impl::resetSetpointNode()
-  {
-    bool result = setString(OS_SetpointManager_Scheduled_DualSetpointFields::SetpointNodeorNodeListName,"");
-    OS_ASSERT(result);
-  }
+  /// @cond
+  SetpointManagerScheduledDualSetpoint::SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl)
+    : SetpointManager(std::move(impl)) {}
+  /// @endcond
 
-} // detail
-
-SetpointManagerScheduledDualSetpoint::SetpointManagerScheduledDualSetpoint(const Model& model)
-  : SetpointManager(SetpointManagerScheduledDualSetpoint::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>());
-}
-
-IddObjectType SetpointManagerScheduledDualSetpoint::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint);
-}
-
-std::vector<std::string> SetpointManagerScheduledDualSetpoint::controlVariableValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_SetpointManager_Scheduled_DualSetpointFields::ControlVariable);
-}
-
-std::string SetpointManagerScheduledDualSetpoint::controlVariable() const {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->controlVariable();
-}
-
-boost::optional<Schedule> SetpointManagerScheduledDualSetpoint::highSetpointSchedule() const {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->highSetpointSchedule();
-}
-
-boost::optional<Schedule> SetpointManagerScheduledDualSetpoint::lowSetpointSchedule() const {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->lowSetpointSchedule();
-}
-
-boost::optional<Node> SetpointManagerScheduledDualSetpoint::setpointNode() const {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setpointNode();
-}
-
-bool SetpointManagerScheduledDualSetpoint::setControlVariable(const std::string& controlVariable) {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setControlVariable(controlVariable);
-}
-
-bool SetpointManagerScheduledDualSetpoint::setHighSetpointSchedule(Schedule& schedule) {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setHighSetpointSchedule(schedule);
-}
-
-void SetpointManagerScheduledDualSetpoint::resetHighSetpointSchedule() {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->resetHighSetpointSchedule();
-}
-
-bool SetpointManagerScheduledDualSetpoint::setLowSetpointSchedule(Schedule& schedule) {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setLowSetpointSchedule(schedule);
-}
-
-void SetpointManagerScheduledDualSetpoint::resetLowSetpointSchedule() {
-  return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->resetLowSetpointSchedule();
-}
-
-/// @cond
-SetpointManagerScheduledDualSetpoint::SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl)
-  : SetpointManager(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

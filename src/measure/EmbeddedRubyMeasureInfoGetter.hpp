@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,12 +40,11 @@ namespace measure {
 
   /** Should only be instantiated in C++ Applications. For an example of how to use this, see
    *  src/measure/test/EmbeddedRuby_GTest.cpp. */
-  template<typename RubyInterpreterType>
-  class EmbeddedRubyMeasureInfoGetter : public OSMeasureInfoGetter {
+  template <typename RubyInterpreterType>
+  class EmbeddedRubyMeasureInfoGetter : public OSMeasureInfoGetter
+  {
    public:
-    EmbeddedRubyMeasureInfoGetter(const std::shared_ptr<RubyInterpreterType>& rubyInterpreter)
-      : m_rubyInterpreter(rubyInterpreter)
-    {
+    EmbeddedRubyMeasureInfoGetter(const std::shared_ptr<RubyInterpreterType>& rubyInterpreter) : m_rubyInterpreter(rubyInterpreter) {
       m_rubyInterpreter->template registerType<openstudio::BCLMeasure>("openstudio::BCLMeasure");
       m_rubyInterpreter->template registerType<openstudio::Workspace>("openstudio::Workspace");
       m_rubyInterpreter->template registerType<openstudio::model::Model>("openstudio::model::Model");
@@ -58,34 +57,28 @@ namespace measure {
     virtual ~EmbeddedRubyMeasureInfoGetter() {}
 
     OSMeasureInfo getInfo(const BCLMeasure& measure) override {
-      return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>(
-          "infoExtractor", measure, model::OptionalModel(), OptionalWorkspace());
+      return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>("infoExtractor", measure, model::OptionalModel(), OptionalWorkspace());
     }
 
     OSMeasureInfo getInfo(const BCLMeasure& measure, const Workspace& workspace) override {
       if (model::OptionalModel model = workspace.optionalCast<model::Model>()) {
-        return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>(
-              "infoExtractor", measure, model::OptionalModel(model), OptionalWorkspace());
-      }
-      else {
-        return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>(
-            "infoExtractor", measure, model::OptionalModel(), OptionalWorkspace(workspace));
+        return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>("infoExtractor", measure, model::OptionalModel(model), OptionalWorkspace());
+      } else {
+        return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>("infoExtractor", measure, model::OptionalModel(),
+                                                                         OptionalWorkspace(workspace));
       }
     }
 
-    OSMeasureInfo getInfo(const BCLMeasure& measure,
-                               const model::Model& model,
-                               const Workspace& workspace) override
-    {
-      return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>(
-          "infoExtractor", measure, model::OptionalModel(model), OptionalWorkspace(workspace));
+    OSMeasureInfo getInfo(const BCLMeasure& measure, const model::Model& model, const Workspace& workspace) override {
+      return m_rubyInterpreter->template execWithReturn<OSMeasureInfo>("infoExtractor", measure, model::OptionalModel(model),
+                                                                       OptionalWorkspace(workspace));
     }
 
    private:
     std::shared_ptr<RubyInterpreterType> m_rubyInterpreter;
   };
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio
 
-#endif // MEASURE_EMBEDDEDRUBYMEASUREINFOGETTER_HPP
+#endif  // MEASURE_EMBEDDEDRUBYMEASUREINFOGETTER_HPP

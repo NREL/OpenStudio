@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,7 +45,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilHeatingWaterBaseboardRadiant_addToNode) {
+TEST_F(ModelFixture, CoilHeatingWaterBaseboardRadiant_addToNode) {
   Model m;
   CoilHeatingWaterBaseboardRadiant testObject(m);
 
@@ -54,7 +54,7 @@ TEST_F(ModelFixture,CoilHeatingWaterBaseboardRadiant_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -64,14 +64,14 @@ TEST_F(ModelFixture,CoilHeatingWaterBaseboardRadiant_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   CoilHeatingWaterBaseboardRadiant testObject2(m);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(testObject2));
-  EXPECT_EQ( 9u, plantLoop.demandComponents().size() );
+  EXPECT_EQ(9u, plantLoop.demandComponents().size());
 }

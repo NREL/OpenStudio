@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,108 +41,108 @@ namespace energyplus {
 
 namespace model {
 
-namespace detail {
-  class UnitarySystemPerformanceMultispeed_Impl;
-} // detail
+  namespace detail {
+    class UnitarySystemPerformanceMultispeed_Impl;
+  }  // namespace detail
 
+  class MODEL_API SupplyAirflowRatioField
+  {
+   public:
+    /// Default Constructor. Autosizes both heating and cooling.
+    SupplyAirflowRatioField();
 
-class MODEL_API SupplyAirflowRatioField {
- public:
+    /// Constructor that sets values for both heating and cooling.
+    SupplyAirflowRatioField(double heatingRatio, double coolingRatio);
 
-  /// Default Constructor. Autosizes both heating and cooling.
-  SupplyAirflowRatioField();
+    /// "Constructor" that autosizes cooling ratio and sets heating ratio.
+    static SupplyAirflowRatioField fromHeatingRatio(double heatingRatio);
 
-  /// Constructor that sets values for both heating and cooling.
-  SupplyAirflowRatioField(double heatingRatio, double coolingRatio);
+    /// "Constructor" that autosizes heating ration and sets cooling ratio.
+    static SupplyAirflowRatioField fromCoolingRatio(double coolingRatio);
 
-  /// "Constructor" that autosizes cooling ratio and sets heating ratio.
-  static SupplyAirflowRatioField fromHeatingRatio(double heatingRatio);
+    /** @name Getters */
+    //@{
+    boost::optional<double> heatingRatio() const;
+    boost::optional<double> coolingRatio() const;
+    bool isHeatingRatioAutosized() const;
+    bool isCoolingRatioAutosized() const;
+    //@}
 
-  /// "Constructor" that autosizes heating ration and sets cooling ratio.
-  static SupplyAirflowRatioField fromCoolingRatio(double coolingRatio);
+   protected:
+    std::vector<std::string> getHeatingCoolingRatiosAsStrings() const;
 
-  /** @name Getters */
-  //@{
-  boost::optional<double> heatingRatio();
-  boost::optional<double> coolingRatio();
-  bool isHeatingRatioAutosized();
-  bool isCoolingRatioAutosized();
-  //@}
+    friend class detail::UnitarySystemPerformanceMultispeed_Impl;
+    friend class openstudio::energyplus::ForwardTranslator;
 
- protected:
-  std::vector<std::string> getHeatingCoolingRatiosAsStrings() const;
+   private:
+    SupplyAirflowRatioField(bool isHeating, double value);
+    boost::optional<double> m_heatingRatio;  // implementation detail, boost::none if autosized, otherwise the value
+    boost::optional<double> m_coolingRatio;
+  };
 
-  friend class detail::UnitarySystemPerformanceMultispeed_Impl;
-  friend class openstudio::energyplus::ForwardTranslator;
+  /** UnitarySystemPerformanceMultispeed is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:UnitarySystemPerformance:Multispeed'. */
+  class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    explicit UnitarySystemPerformanceMultispeed(const Model& model);
 
- private:
-  SupplyAirflowRatioField(bool isHeating, double value);
-  boost::optional<double> m_heatingRatio; // implementation detail, boost::none if autosized, otherwise the value
-  boost::optional<double> m_coolingRatio;
-};
+    virtual ~UnitarySystemPerformanceMultispeed() {}
+    //@}
 
-/** UnitarySystemPerformanceMultispeed is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:UnitarySystemPerformance:Multispeed'. */
-class MODEL_API UnitarySystemPerformanceMultispeed : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-  explicit UnitarySystemPerformanceMultispeed(const Model& model);
+    static IddObjectType iddObjectType();
 
-  virtual ~UnitarySystemPerformanceMultispeed() {}
-  //@}
+    /** @name Getters */
+    //@{
 
-  static IddObjectType iddObjectType();
+    bool singleModeOperation() const;
 
-  /** @name Getters */
-  //@{
+    std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields() const;
 
-  bool singleModeOperation() const;
+    //@}
 
-  std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields();
+    //** @name Setters */
 
-  //@}
+    bool setSingleModeOperation(bool singleMode);
 
-  //** @name Setters */
+    void resetSingleModeOperation();
 
-  bool setSingleModeOperation(bool singleMode);
+    bool setSupplyAirflowRatioFields(const std::vector<SupplyAirflowRatioField>& airflowRatioFields);
 
-  void resetSingleModeOperation();
+    bool addSupplyAirflowRatioField(const SupplyAirflowRatioField& airflowRatio);
 
-  bool setSupplyAirflowRatioFields(const std::vector<SupplyAirflowRatioField>& airflowRatioFields);
+    bool addSupplyAirflowRatioField(double heatingRatio, double coolingRatio);
 
-  bool addSupplyAirflowRatioField(const SupplyAirflowRatioField& airflowRatio);
+    void resetSupplyAirflowRatioFields();
 
-  bool addSupplyAirflowRatioField(double heatingRatio, double coolingRatio);
+    //@{
 
-  void resetSupplyAirflowRatioFields();
+    //@}
 
-  //@{
+   protected:
+    /// @cond
+    typedef detail::UnitarySystemPerformanceMultispeed_Impl ImplType;
 
-  //@}
+    explicit UnitarySystemPerformanceMultispeed(std::shared_ptr<detail::UnitarySystemPerformanceMultispeed_Impl> impl);
 
- protected:
-  /// @cond
-  typedef detail::UnitarySystemPerformanceMultispeed_Impl ImplType;
+    friend class detail::UnitarySystemPerformanceMultispeed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
-  explicit UnitarySystemPerformanceMultispeed(std::shared_ptr<detail::UnitarySystemPerformanceMultispeed_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.UnitarySystemPerformanceMultispeed");
+  };
 
-  friend class detail::UnitarySystemPerformanceMultispeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
+  /** \relates UnitarySystemPerformanceMultispeed */
+  typedef boost::optional<UnitarySystemPerformanceMultispeed> OptionalUnitarySystemPerformanceMultispeed;
 
- private:
-  REGISTER_LOGGER("openstudio.model.UnitarySystemPerformanceMultispeed");
-};
+  /** \relates UnitarySystemPerformanceMultispeed */
+  typedef std::vector<UnitarySystemPerformanceMultispeed> UnitarySystemPerformanceMultispeedVector;
 
-/** \relates UnitarySystemPerformanceMultispeed */
-typedef boost::optional<UnitarySystemPerformanceMultispeed> OptionalUnitarySystemPerformanceMultispeed;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates UnitarySystemPerformanceMultispeed */
-typedef std::vector<UnitarySystemPerformanceMultispeed> UnitarySystemPerformanceMultispeedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_UNITARYSYSTEMPERFORMANCEMULTISPEED_HPP
+#endif  // MODEL_UNITARYSYSTEMPERFORMANCEMULTISPEED_HPP

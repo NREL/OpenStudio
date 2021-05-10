@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,7 +49,8 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportFromVariable) {
   std::string fMUVariableName = "fMUVariableName";
   std::string fMUInstanceName = "fMUInstanceName";
 
-  ExternalInterfaceFunctionalMockupUnitImportFromVariable variable(model, outputVariableIndexKeyName, outputVariableName, eifmui, fMUInstanceName, fMUVariableName);
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable variable(model, outputVariableIndexKeyName, outputVariableName, eifmui, fMUInstanceName,
+                                                                   fMUVariableName);
   EXPECT_EQ(outputVariableIndexKeyName, variable.outputVariableIndexKeyName());
   EXPECT_EQ(outputVariableName, variable.outputVariableName());
   EXPECT_EQ(fMUVariableName, variable.fMUVariableName());
@@ -69,4 +70,3 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportFromVariable) {
   EXPECT_TRUE(variable.setFMUFile(eifmui2));
   EXPECT_EQ(eifmui2, variable.fMUFile());
 }
-

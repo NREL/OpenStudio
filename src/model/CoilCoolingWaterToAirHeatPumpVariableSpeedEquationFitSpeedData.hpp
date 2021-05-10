@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,126 +37,124 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl;
+    class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData is a ParentObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData'. */
-class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData is a ParentObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData'. */
+  class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(const Model& model);
+    explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(const Model& model);
 
-  explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
-    const Model& model,
-    const Curve& totalCoolingCapacityFunctionofTemperature,
-    const Curve& totalCoolingCapacityFunctionofAirFlowFraction,
-    const Curve& totalCoolingCapacityFunctionofWaterFlowFraction,
-    const Curve& energyInputRatioFunctionofTemperature,
-    const Curve& energyInputRatioFunctionofAirFlowFraction,
-    const Curve& energyInputRatioFunctionofWaterFlowFraction,
-    const Curve& wasteHeatFunctionofTemperature
-  );
+    explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
+      const Model& model, const Curve& totalCoolingCapacityFunctionofTemperature, const Curve& totalCoolingCapacityFunctionofAirFlowFraction,
+      const Curve& totalCoolingCapacityFunctionofWaterFlowFraction, const Curve& energyInputRatioFunctionofTemperature,
+      const Curve& energyInputRatioFunctionofAirFlowFraction, const Curve& energyInputRatioFunctionofWaterFlowFraction,
+      const Curve& wasteHeatFunctionofTemperature);
 
-  virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() {}
+    virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double referenceUnitGrossRatedTotalCoolingCapacity() const;
+    double referenceUnitGrossRatedTotalCoolingCapacity() const;
 
-  double referenceUnitGrossRatedSensibleHeatRatio() const;
+    double referenceUnitGrossRatedSensibleHeatRatio() const;
 
-  double referenceUnitGrossRatedCoolingCOP() const;
+    double referenceUnitGrossRatedCoolingCOP() const;
 
-  double referenceUnitRatedAirFlowRate() const;
+    double referenceUnitRatedAirFlowRate() const;
 
-  double referenceUnitRatedWaterFlowRate() const;
+    double referenceUnitRatedWaterFlowRate() const;
 
-  Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
+    Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
-  Curve totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
+    Curve totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
 
-  Curve totalCoolingCapacityFunctionofWaterFlowFractionCurve() const;
+    Curve totalCoolingCapacityFunctionofWaterFlowFractionCurve() const;
 
-  Curve energyInputRatioFunctionofTemperatureCurve() const;
+    Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-  Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
 
-  Curve energyInputRatioFunctionofWaterFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofWaterFlowFractionCurve() const;
 
-  double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions() const;
+    double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions() const;
 
-  Curve wasteHeatFunctionofTemperatureCurve() const;
+    Curve wasteHeatFunctionofTemperatureCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setReferenceUnitGrossRatedTotalCoolingCapacity(double referenceUnitGrossRatedTotalCoolingCapacity);
+    bool setReferenceUnitGrossRatedTotalCoolingCapacity(double referenceUnitGrossRatedTotalCoolingCapacity);
 
-  bool setReferenceUnitGrossRatedSensibleHeatRatio(double referenceUnitGrossRatedSensibleHeatRatio);
+    bool setReferenceUnitGrossRatedSensibleHeatRatio(double referenceUnitGrossRatedSensibleHeatRatio);
 
-  bool setReferenceUnitGrossRatedCoolingCOP(double referenceUnitGrossRatedCoolingCOP);
+    bool setReferenceUnitGrossRatedCoolingCOP(double referenceUnitGrossRatedCoolingCOP);
 
-  bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
+    bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
 
-  bool setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate);
+    bool setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate);
 
-  bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
+    bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
+    bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-  bool setTotalCoolingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve);
+    bool setTotalCoolingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
+    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
+    bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve);
+    bool setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve);
 
-  bool setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions);
+    bool setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions);
 
-  bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
+    bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl ImplType;
 
-  explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl> impl);
+    explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
+      std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl> impl);
 
-  friend class detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData");
-};
+    friend class detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData");
+  };
 
-/** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
-typedef boost::optional<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> OptionalCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
+  /** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
+  typedef boost::optional<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>
+    OptionalCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
 
-/** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
-typedef std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedDataVector;
+  /** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
+  typedef std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>
+    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedDataVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFITSPEEDDATA_HPP
-
+#endif  // MODEL_COILCOOLINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFITSPEEDDATA_HPP

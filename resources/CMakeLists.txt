@@ -13,6 +13,8 @@ set(utilities_resources_src
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/component.xml"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/files/USA_PA_Philadelphia_TMY2.epw"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/images/noimage_100px.png"
+  utilities/BCL/Components/323_wrongXMLType_float/component.xml
+  utilities/BCL/Components/323_wrongXMLType_int/component.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
@@ -46,6 +48,8 @@ set(utilities_resources_src
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Filetypes/test_csv.csv
+  utilities/Filetypes/Floorspace_Issue4036_BeforeMerge.json
+  utilities/Filetypes/Floorspace_Issue4036_AfterMerge.json
   utilities/Geometry/floorplan.json
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_doors.json
@@ -85,6 +89,8 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-1-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-2-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-3-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-4-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/Zip/test1.zip
 )
 
@@ -107,6 +113,11 @@ set(ENERGYPLUS_OUTPUTS "")
 set(model_resources_src
   model/OpenStudio.idd
   model/schedulefile.csv
+
+  model/two_stories_pre_intersect.osm
+  model/floorplan_school.osm
+  model/7-7_Windows_Complete.osm
+  model/15023_Model12.osm
 )
 
 
@@ -202,6 +213,8 @@ set(energyplus_resources_src
   energyplus/TranslatorV2_Tests/Simple_Construction.idf
   energyplus/RefLargeOffice/RefBldgLargeOfficeNew2004_Chicago.idf
   energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
+  energyplus/SmallOffice/SmallOffice.idf
+  energyplus/AllFuelTypes/in.idf
 )
 
 # update the resources
@@ -212,6 +225,7 @@ RUN_ENERGYPLUS("in.idf" "energyplus/5ZoneAirCooled" "USA_IL_Chicago-OHare.Intl.A
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_Office" "USA_CO_Golden-NREL.724666_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_School" "USA_CO_Golden-NREL.724666_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Office_With_Many_HVAC_Types" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
+RUN_ENERGYPLUS("in.idf" "energyplus/AllFuelTypes" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 
 # add target
 add_custom_target(openstudio_energyplus_resources
@@ -240,37 +254,6 @@ add_custom_target(openstudio_radiance_resources
 )
 
 CREATE_SRC_GROUPS("${radiance_resources_src}")
-
-########################################################
-# resultsviewer resources
-
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(ResultsViewer_resources_src
-  resultsviewer/1ZoneEvapCooler/in.idf
-  resultsviewer/1ZoneUncontrolled/in.idf
-  resultsviewer/DaylightingDeviceShelf/in.idf
-  resultsviewer/QkSvcRest/in.idf
-  resultsviewer/SmallOffice/SmallOffice.idf
-  resultsviewer/SolarCollectorFlatPlateWater/in.idf
-)
-
-# update the resources
-UPDATE_RESOURCES("${ResultsViewer_resources_src}")
-
-# add runs
-RUN_ENERGYPLUS("in.idf" "resultsviewer/QkSvcRest" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
-RUN_ENERGYPLUS("SmallOffice.idf" "resultsviewer/SmallOffice" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
-
-# add target
-add_custom_target(ResultsViewer_resources
-  DEPENDS ${ResultsViewer_resources_src} ${ENERGYPLUS_OUTPUTS}
-
-  SOURCES ${ResultsViewer_resources_src}
-)
-
-CREATE_SRC_GROUPS("${ResultsViewer_resources_src}")
 
 ########################################################
 # gbxml resources

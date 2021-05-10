@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,45 +52,37 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvectiveElectric(
-    ZoneHVACBaseboardConvectiveElectric & modelObject )
-{
-  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
-  // the final file. Also set's the idfObject's name.
-  IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_Baseboard_Convective_Electric,modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvectiveElectric(ZoneHVACBaseboardConvectiveElectric& modelObject) {
+    // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
+    // the final file. Also set's the idfObject's name.
+    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_Baseboard_Convective_Electric, modelObject);
 
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-  boost::optional<ModelObject> temp;
+    boost::optional<std::string> s;
+    boost::optional<double> value;
+    boost::optional<ModelObject> temp;
 
-  // AvailabilityScheduleName
-  Schedule availabilitySchedule = modelObject.availabilitySchedule();
-  translateAndMapModelObject(availabilitySchedule);
-  idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::AvailabilityScheduleName,
-                      availabilitySchedule.name().get() );
+    // AvailabilityScheduleName
+    Schedule availabilitySchedule = modelObject.availabilitySchedule();
+    translateAndMapModelObject(availabilitySchedule);
+    idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::AvailabilityScheduleName, availabilitySchedule.name().get());
 
-  // NominalCapacity
+    // NominalCapacity
 
-  if( modelObject.isNominalCapacityAutosized() )
-  {
-    idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity,"Autosize");
-  }
-  else if( (value = modelObject.nominalCapacity()) )
-  {
-    idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity,value.get());
-  }
+    if (modelObject.isNominalCapacityAutosized()) {
+      idfObject.setString(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity, "Autosize");
+    } else if ((value = modelObject.nominalCapacity())) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::HeatingDesignCapacity, value.get());
+    }
 
-  // Efficiency
+    // Efficiency
 
-  if( (value = modelObject.efficiency()) )
-  {
-    idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency,value.get());
+    if ((value = modelObject.efficiency())) {
+      idfObject.setDouble(ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency, value.get());
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

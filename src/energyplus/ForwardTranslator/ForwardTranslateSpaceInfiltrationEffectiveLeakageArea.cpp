@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,48 +54,46 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationEffectiveLeakageArea( SpaceInfiltrationEffectiveLeakageArea& modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::ZoneInfiltration_EffectiveLeakageArea );
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationEffectiveLeakageArea(SpaceInfiltrationEffectiveLeakageArea& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::ZoneInfiltration_EffectiveLeakageArea);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::Name, modelObject.name().get());
+    idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::Name, modelObject.name().get());
 
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, thermalZone->name().get());
+    boost::optional<Space> space = modelObject.space();
+    boost::optional<SpaceType> spaceType = modelObject.spaceType();
+    if (space) {
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
+      if (thermalZone) {
+        idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, thermalZone->name().get());
+      }
+    } else if (spaceType) {
+      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, spaceType->name().get());
     }
-  }else if (spaceType){
-    idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, spaceType->name().get());
+
+    boost::optional<Schedule> schedule = modelObject.schedule();
+    if (schedule) {
+      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ScheduleName, schedule->name().get());
+    }
+
+    OptionalDouble d = modelObject.effectiveAirLeakageArea();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea, *d);
+    }
+
+    d = modelObject.stackCoefficient();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::StackCoefficient, *d);
+    }
+
+    d = modelObject.windCoefficient();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::WindCoefficient, *d);
+    }
+
+    return idfObject;
   }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
-    idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ScheduleName, schedule->name().get());
-  }
+}  // namespace energyplus
 
-  OptionalDouble d = modelObject.effectiveAirLeakageArea();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea, *d);
-  }
-
-  d = modelObject.stackCoefficient();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::StackCoefficient, *d);
-  }
-
-  d = modelObject.windCoefficient();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::WindCoefficient, *d);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

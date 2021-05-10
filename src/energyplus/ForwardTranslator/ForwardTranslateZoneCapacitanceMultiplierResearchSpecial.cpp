@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,34 +41,32 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneCapacitanceMultiplierResearchSpecial( ZoneCapacitanceMultiplierResearchSpecial & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial);
+  boost::optional<IdfObject>
+    ForwardTranslator::translateZoneCapacitanceMultiplierResearchSpecial(ZoneCapacitanceMultiplierResearchSpecial& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // This is a unique model object *in OpenStudio*
-  idfObject.setName("Zone Capacitance Multiplier Research Special");
+    // This is a unique model object *in OpenStudio*
+    idfObject.setName("Zone Capacitance Multiplier Research Special");
 
-  if (!modelObject.isTemperatureCapacityMultiplierDefaulted()) {
-    idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier,
-                        modelObject.temperatureCapacityMultiplier());
+    if (!modelObject.isTemperatureCapacityMultiplierDefaulted()) {
+      idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier,
+                          modelObject.temperatureCapacityMultiplier());
+    }
+
+    if (!modelObject.isHumidityCapacityMultiplierDefaulted()) {
+      idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier, modelObject.humidityCapacityMultiplier());
+    }
+
+    if (!modelObject.isCarbonDioxideCapacityMultiplierDefaulted()) {
+      idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier,
+                          modelObject.carbonDioxideCapacityMultiplier());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  if (!modelObject.isHumidityCapacityMultiplierDefaulted()) {
-    idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier,
-                        modelObject.humidityCapacityMultiplier());
-  }
+}  // namespace energyplus
 
-  if (!modelObject.isCarbonDioxideCapacityMultiplierDefaulted()) {
-    idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier,
-                        modelObject.carbonDioxideCapacityMultiplier());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

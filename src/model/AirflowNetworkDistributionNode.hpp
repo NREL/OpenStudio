@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,98 +38,98 @@ namespace openstudio {
 
 namespace model {
 
-class AirLoopHVACZoneMixer;
-class AirLoopHVACZoneSplitter;
-class AirLoopHVACOutdoorAirSystem;
-//OAMixerOutdoorAirStreamNode
-//OutdoorAir : NodeList
-//OutdoorAir : Node
-class Node;
-
-namespace detail {
-
-  class Node_Impl;
-  class AirLoopHVACZoneMixer_Impl;
-  class AirLoopHVACZoneSplitter_Impl;
-  class AirLoopHVACOutdoorAirSystem_Impl;
-  class AirflowNetworkDistributionNode_Impl;
-
-} // detail
-
-/** AirflowNetworkDistributionNode is a AirflowNetworkNode that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionNode'. */
-class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-
-  AirflowNetworkDistributionNode(const Model& model);
-
-  virtual ~AirflowNetworkDistributionNode() {}
-
-  //@}
-
-  static IddObjectType iddObjectType();
-
-  //static std::vector<std::string> componentObjectTypeorNodeTypeValues();
-
-  /** @name Getters */
-  //@{
-  boost::optional<Node> node() const;
-  boost::optional<AirLoopHVACZoneMixer> airLoopHVACZoneMixer() const;
-  boost::optional<AirLoopHVACZoneSplitter> airLoopHVACZoneSplitter() const;
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+  class AirLoopHVACZoneMixer;
+  class AirLoopHVACZoneSplitter;
+  class AirLoopHVACOutdoorAirSystem;
   //OAMixerOutdoorAirStreamNode
   //OutdoorAir : NodeList
   //OutdoorAir : Node
+  class Node;
 
-  double nodeHeight() const;
+  namespace detail {
 
-  bool isNodeHeightDefaulted() const;
+    class Node_Impl;
+    class AirLoopHVACZoneMixer_Impl;
+    class AirLoopHVACZoneSplitter_Impl;
+    class AirLoopHVACOutdoorAirSystem_Impl;
+    class AirflowNetworkDistributionNode_Impl;
 
-  //@}
-  /** @name Setters */
-  //@{
+  }  // namespace detail
 
-  void setNodeHeight(double nodeHeight);
+  /** AirflowNetworkDistributionNode is a AirflowNetworkNode that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionNode'. */
+  class MODEL_API AirflowNetworkDistributionNode : public AirflowNetworkNode
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  void resetNodeHeight();
+    AirflowNetworkDistributionNode(const Model& model);
 
-  //@}
-  /** @name Other */
-  //@{
+    virtual ~AirflowNetworkDistributionNode() {}
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirflowNetworkDistributionNode_Impl ImplType;
+    //@}
 
-  explicit AirflowNetworkDistributionNode(std::shared_ptr<detail::AirflowNetworkDistributionNode_Impl> impl);
+    static IddObjectType iddObjectType();
 
-  AirflowNetworkDistributionNode(const Model& model, const Handle &handle);
+    //static std::vector<std::string> componentObjectTypeorNodeTypeValues();
 
-  void resetComponent();
+    /** @name Getters */
+    //@{
+    boost::optional<Node> node() const;
+    boost::optional<AirLoopHVACZoneMixer> airLoopHVACZoneMixer() const;
+    boost::optional<AirLoopHVACZoneSplitter> airLoopHVACZoneSplitter() const;
+    boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+    //OAMixerOutdoorAirStreamNode
+    //OutdoorAir : NodeList
+    //OutdoorAir : Node
 
-  friend class detail::Node_Impl;
-  friend class detail::AirLoopHVACZoneMixer_Impl;
-  friend class detail::AirLoopHVACZoneSplitter_Impl;
-  friend class detail::AirLoopHVACOutdoorAirSystem_Impl;
-  friend class detail::AirflowNetworkDistributionNode_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionNode");
-};
+    double nodeHeight() const;
 
-/** \relates AirflowNetworkDistributionNode*/
-typedef boost::optional<AirflowNetworkDistributionNode> OptionalAirflowNetworkDistributionNode;
+    bool isNodeHeightDefaulted() const;
 
-/** \relates AirflowNetworkDistributionNode*/
-typedef std::vector<AirflowNetworkDistributionNode> AirflowNetworkDistributionNodeVector;
+    //@}
+    /** @name Setters */
+    //@{
 
-} // model
-} // openstudio
+    void setNodeHeight(double nodeHeight);
 
-#endif // MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_HPP
+    void resetNodeHeight();
 
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkDistributionNode_Impl ImplType;
+
+    explicit AirflowNetworkDistributionNode(std::shared_ptr<detail::AirflowNetworkDistributionNode_Impl> impl);
+
+    AirflowNetworkDistributionNode(const Model& model, const Handle& handle);
+
+    void resetComponent();
+
+    friend class detail::Node_Impl;
+    friend class detail::AirLoopHVACZoneMixer_Impl;
+    friend class detail::AirLoopHVACZoneSplitter_Impl;
+    friend class detail::AirLoopHVACOutdoorAirSystem_Impl;
+    friend class detail::AirflowNetworkDistributionNode_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionNode");
+  };
+
+  /** \relates AirflowNetworkDistributionNode*/
+  typedef boost::optional<AirflowNetworkDistributionNode> OptionalAirflowNetworkDistributionNode;
+
+  /** \relates AirflowNetworkDistributionNode*/
+  typedef std::vector<AirflowNetworkDistributionNode> AirflowNetworkDistributionNodeVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_HPP

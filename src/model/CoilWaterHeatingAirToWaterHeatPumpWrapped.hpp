@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,132 +37,133 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl;
+    class CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilWaterHeatingAirToWaterHeatPumpWrapped is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped'. */
-class MODEL_API CoilWaterHeatingAirToWaterHeatPumpWrapped : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilWaterHeatingAirToWaterHeatPumpWrapped is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped'. */
+  class MODEL_API CoilWaterHeatingAirToWaterHeatPumpWrapped : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(const Model& model);
+    explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(const Model& model);
 
-  virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> evaporatorAirTemperatureTypeforCurveObjectsValues();
+    static std::vector<std::string> evaporatorAirTemperatureTypeforCurveObjectsValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double ratedHeatingCapacity() const;
+    double ratedHeatingCapacity() const;
 
-  double ratedCOP() const;
+    double ratedCOP() const;
 
-  double ratedSensibleHeatRatio() const;
+    double ratedSensibleHeatRatio() const;
 
-  double ratedEvaporatorInletAirDryBulbTemperature() const;
+    double ratedEvaporatorInletAirDryBulbTemperature() const;
 
-  double ratedEvaporatorInletAirWetBulbTemperature() const;
+    double ratedEvaporatorInletAirWetBulbTemperature() const;
 
-  double ratedCondenserWaterTemperature() const;
+    double ratedCondenserWaterTemperature() const;
 
-  boost::optional<double> ratedEvaporatorAirFlowRate() const;
+    boost::optional<double> ratedEvaporatorAirFlowRate() const;
 
-  bool isRatedEvaporatorAirFlowRateAutocalculated() const;
+    bool isRatedEvaporatorAirFlowRateAutocalculated() const;
 
-  bool evaporatorFanPowerIncludedinRatedCOP() const;
+    bool evaporatorFanPowerIncludedinRatedCOP() const;
 
-  double crankcaseHeaterCapacity() const;
+    double crankcaseHeaterCapacity() const;
 
-  double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
+    double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
 
-  std::string evaporatorAirTemperatureTypeforCurveObjects() const;
+    std::string evaporatorAirTemperatureTypeforCurveObjects() const;
 
-  Curve heatingCapacityFunctionofTemperatureCurve() const;
+    Curve heatingCapacityFunctionofTemperatureCurve() const;
 
-  Curve heatingCapacityFunctionofAirFlowFractionCurve() const;
+    Curve heatingCapacityFunctionofAirFlowFractionCurve() const;
 
-  Curve heatingCOPFunctionofTemperatureCurve() const;
+    Curve heatingCOPFunctionofTemperatureCurve() const;
 
-  Curve heatingCOPFunctionofAirFlowFractionCurve() const;
+    Curve heatingCOPFunctionofAirFlowFractionCurve() const;
 
-  Curve partLoadFractionCorrelationCurve() const;
+    Curve partLoadFractionCorrelationCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setRatedHeatingCapacity(double ratedHeatingCapacity);
+    bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
-  bool setRatedCOP(double ratedCOP);
+    bool setRatedCOP(double ratedCOP);
 
-  bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
+    bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
 
-  bool setRatedEvaporatorInletAirDryBulbTemperature(double ratedEvaporatorInletAirDryBulbTemperature);
+    bool setRatedEvaporatorInletAirDryBulbTemperature(double ratedEvaporatorInletAirDryBulbTemperature);
 
-  bool setRatedEvaporatorInletAirWetBulbTemperature(double ratedEvaporatorInletAirWetBulbTemperature);
+    bool setRatedEvaporatorInletAirWetBulbTemperature(double ratedEvaporatorInletAirWetBulbTemperature);
 
-  bool setRatedCondenserWaterTemperature(double ratedCondenserWaterTemperature);
+    bool setRatedCondenserWaterTemperature(double ratedCondenserWaterTemperature);
 
-  bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
+    bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
 
-  void autocalculateRatedEvaporatorAirFlowRate();
+    void autocalculateRatedEvaporatorAirFlowRate();
 
-  bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
+    bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
 
-  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-  bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
+    bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
 
-  bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
+    bool setEvaporatorAirTemperatureTypeforCurveObjects(const std::string& evaporatorAirTemperatureTypeforCurveObjects);
 
-  bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
+    bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
+    bool setHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-  bool setHeatingCOPFunctionofTemperatureCurve(const Curve& curve);
+    bool setHeatingCOPFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setHeatingCOPFunctionofAirFlowFractionCurve(const Curve& curve);
+    bool setHeatingCOPFunctionofAirFlowFractionCurve(const Curve& curve);
 
-  bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl ImplType;
 
-  explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl> impl);
+    explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl> impl);
 
-  friend class detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpWrapped");
-};
+    friend class detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpWrapped");
+  };
 
-/** \relates CoilWaterHeatingAirToWaterHeatPumpWrapped*/
-typedef boost::optional<CoilWaterHeatingAirToWaterHeatPumpWrapped> OptionalCoilWaterHeatingAirToWaterHeatPumpWrapped;
+  /** \relates CoilWaterHeatingAirToWaterHeatPumpWrapped*/
+  typedef boost::optional<CoilWaterHeatingAirToWaterHeatPumpWrapped> OptionalCoilWaterHeatingAirToWaterHeatPumpWrapped;
 
-/** \relates CoilWaterHeatingAirToWaterHeatPumpWrapped*/
-typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpWrapped> CoilWaterHeatingAirToWaterHeatPumpWrappedVector;
+  /** \relates CoilWaterHeatingAirToWaterHeatPumpWrapped*/
+  typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpWrapped> CoilWaterHeatingAirToWaterHeatPumpWrappedVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPWRAPPED_HPP
+#endif  // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPWRAPPED_HPP

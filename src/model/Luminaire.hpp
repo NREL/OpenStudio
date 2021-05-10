@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,161 +40,161 @@ class Transformation;
 
 namespace model {
 
-class Schedule;
-class LuminaireDefinition;
+  class Schedule;
+  class LuminaireDefinition;
 
-namespace detail {
+  namespace detail {
 
-  class Luminaire_Impl;
+    class Luminaire_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** Luminaire is a SpaceLoadInstance that wraps the OpenStudio IDD object
+  /** Luminaire is a SpaceLoadInstance that wraps the OpenStudio IDD object
  * 'OS:Luminaire'. \sa LuminaireDefinition */
-class MODEL_API Luminaire : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Luminaire : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit Luminaire(const LuminaireDefinition& luminaireDefinition);
+    explicit Luminaire(const LuminaireDefinition& luminaireDefinition);
 
-  virtual ~Luminaire() {}
+    virtual ~Luminaire() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Gets the LuminaireDefinition object. */
-  LuminaireDefinition luminaireDefinition() const;
+    /** Gets the LuminaireDefinition object. */
+    LuminaireDefinition luminaireDefinition() const;
 
-  /** Returns the (fractional) lighting schedule.  If this object does not
+    /** Returns the (fractional) lighting schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  double positionXcoordinate() const;
+    double positionXcoordinate() const;
 
-  double positionYcoordinate() const;
+    double positionYcoordinate() const;
 
-  double positionZcoordinate() const;
+    double positionZcoordinate() const;
 
-  double psiRotationAroundXaxis() const;
+    double psiRotationAroundXaxis() const;
 
-  bool isPsiRotationAroundXaxisDefaulted() const;
+    bool isPsiRotationAroundXaxisDefaulted() const;
 
-  double thetaRotationAroundYaxis() const;
+    double thetaRotationAroundYaxis() const;
 
-  bool isThetaRotationAroundYaxisDefaulted() const;
+    bool isThetaRotationAroundYaxisDefaulted() const;
 
-  double phiRotationAroundZaxis() const;
+    double phiRotationAroundZaxis() const;
 
-  bool isPhiRotationAroundZaxisDefaulted() const;
+    bool isPhiRotationAroundZaxisDefaulted() const;
 
-  double fractionReplaceable() const;
+    double fractionReplaceable() const;
 
-  bool isFractionReplaceableDefaulted() const;
+    bool isFractionReplaceableDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the LuminaireDefinition object. */
-  bool setLuminaireDefinition(const LuminaireDefinition& definition);
+    /** Sets the LuminaireDefinition object. */
+    bool setLuminaireDefinition(const LuminaireDefinition& definition);
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setPositionXcoordinate(double positionXcoordinate);
+    bool setPositionXcoordinate(double positionXcoordinate);
 
-  bool setPositionYcoordinate(double positionYcoordinate);
+    bool setPositionYcoordinate(double positionYcoordinate);
 
-  bool setPositionZcoordinate(double positionZcoordinate);
+    bool setPositionZcoordinate(double positionZcoordinate);
 
-  bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
+    bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
 
-  void resetPsiRotationAroundXaxis();
+    void resetPsiRotationAroundXaxis();
 
-  bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
+    bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
 
-  void resetThetaRotationAroundYaxis();
+    void resetThetaRotationAroundYaxis();
 
-  bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
+    bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
 
-  void resetPhiRotationAroundZaxis();
+    void resetPhiRotationAroundZaxis();
 
-  bool setFractionReplaceable(double fractionReplaceable);
+    bool setFractionReplaceable(double fractionReplaceable);
 
-  void resetFractionReplaceable();
+    void resetFractionReplaceable();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /// Returns a Point3d representing position only in meters relative to the Space.
-  openstudio::Point3d position() const;
+    /// Returns a Point3d representing position only in meters relative to the Space.
+    openstudio::Point3d position() const;
 
-  /// Sets a Point3d representing position only position in meters relative to the Space.
-  /// Does not change the orientation of the Luminaire.
-  bool setPosition(const openstudio::Point3d& position);
+    /// Sets a Point3d representing position only position in meters relative to the Space.
+    /// Does not change the orientation of the Luminaire.
+    bool setPosition(const openstudio::Point3d& position);
 
-  /// Returns a Transformation representing position and orientation in meters relative to the Space.
-  openstudio::Transformation transformation() const;
+    /// Returns a Transformation representing position and orientation in meters relative to the Space.
+    openstudio::Transformation transformation() const;
 
-  /// Sets a Transformation representing position and orientation in meters relative to the Space.
-  bool setTransformation(const openstudio::Transformation& transformation);
+    /// Sets a Transformation representing position and orientation in meters relative to the Space.
+    bool setTransformation(const openstudio::Transformation& transformation);
 
-  /** Returns the design level represented by this instance. */
-  double lightingPower() const;
+    /** Returns the design level represented by this instance. */
+    double lightingPower() const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2). */
-  double getPowerPerFloorArea(double floorArea) const;
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2). */
+    double getPowerPerFloorArea(double floorArea) const;
 
-  /** Returns the watts/person represented by this instance, assuming numPeople. */
-  double getPowerPerPerson(double numPeople) const;
+    /** Returns the watts/person represented by this instance, assuming numPeople. */
+    double getPowerPerPerson(double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Luminaire_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Luminaire_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit Luminaire(std::shared_ptr<detail::Luminaire_Impl> impl);
+    explicit Luminaire(std::shared_ptr<detail::Luminaire_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Luminaire");
+  };
 
-  REGISTER_LOGGER("openstudio.model.Luminaire");
-};
+  /** \relates Luminaire*/
+  typedef boost::optional<Luminaire> OptionalLuminaire;
 
-/** \relates Luminaire*/
-typedef boost::optional<Luminaire> OptionalLuminaire;
+  /** \relates Luminaire*/
+  typedef std::vector<Luminaire> LuminaireVector;
 
-/** \relates Luminaire*/
-typedef std::vector<Luminaire> LuminaireVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_LUMINAIRE_HPP
+#endif  // MODEL_LUMINAIRE_HPP

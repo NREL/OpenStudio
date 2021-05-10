@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,8 +36,6 @@
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
-#include "../../model/ShadingControl.hpp"
-#include "../../model/ShadingControl_Impl.hpp"
 #include "../../model/WindowPropertyFrameAndDivider.hpp"
 #include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
@@ -62,116 +60,114 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSurface & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::FenestrationSurface_Detailed);
+  boost::optional<IdfObject> ForwardTranslator::translateSubSurface(model::SubSurface& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::FenestrationSurface_Detailed);
 
-  idfObject.setString(FenestrationSurface_DetailedFields::Name, modelObject.name().get());
+    idfObject.setString(FenestrationSurface_DetailedFields::Name, modelObject.name().get());
 
-  std::string subSurfaceType = modelObject.subSurfaceType();
-  if (istringEqual("FixedWindow", subSurfaceType)){
-    subSurfaceType = "Window";
-  }else if (istringEqual("OperableWindow", subSurfaceType)){
-    subSurfaceType = "Window";
-  }else if (istringEqual("OverheadDoor", subSurfaceType)){
-    subSurfaceType = "Door";
-  }else if (istringEqual("Skylight", subSurfaceType)){
-    subSurfaceType = "Window";
-  }
-
-  boost::optional<ConstructionBase> construction = modelObject.construction();
-  if (construction){
-    idfObject.setString(FenestrationSurface_DetailedFields::ConstructionName, construction->name().get());
-
-    if (subSurfaceType == "Door" && construction->isFenestration()){
-      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses fenestration construction, changing SubSurfaceType to Door");
-      subSurfaceType = "GlassDoor";
-    } else if (subSurfaceType == "GlassDoor" && !construction->isFenestration()){
-      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses non-fenestration construction, changing SubSurfaceType to GlassDoor");
+    std::string subSurfaceType = modelObject.subSurfaceType();
+    if (istringEqual("FixedWindow", subSurfaceType)) {
+      subSurfaceType = "Window";
+    } else if (istringEqual("OperableWindow", subSurfaceType)) {
+      subSurfaceType = "Window";
+    } else if (istringEqual("OverheadDoor", subSurfaceType)) {
       subSurfaceType = "Door";
-    }
-  }
-
-  idfObject.setString(FenestrationSurface_DetailedFields::SurfaceType, subSurfaceType);
-
-  boost::optional<Surface> surface = modelObject.surface();
-  if (surface){
-    idfObject.setString(FenestrationSurface_DetailedFields::BuildingSurfaceName, surface->name().get());
-  }
-
-  boost::optional<SubSurface> adjacentSubSurface = modelObject.adjacentSubSurface();
-  if (adjacentSubSurface){
-    idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSubSurface->name().get());
-  }
-
-  boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = modelObject.surfacePropertyOtherSideCoefficients();
-  if (surfacePropertyOtherSideCoefficients){
-    boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
-    if (osc && osc->name()){
-      idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, osc->name().get());
-    } else{
-      LOG(Error, "SubSurface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
-    }
-  }
-
-  boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel = modelObject.surfacePropertyOtherSideConditionsModel();
-  if (surfacePropertyOtherSideConditionsModel){
-    boost::optional<IdfObject> oscm = translateAndMapModelObject(*surfacePropertyOtherSideConditionsModel);
-    if (oscm && oscm->name()){
-      idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, oscm->name().get());
-    } else{
-      LOG(Error, "SubSurface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
-    }
-  }
-
-  // Call the translation of the SurfacePropertyConvectionCoefficients, which has two advantages:
-  // * will not translate them if they are orphaned (=not referencing a surface or subsurface), and,
-  // * makes the order of these objects in the IDF deterministic
-  if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
-    translateAndMapModelObject(_sCoefs.get());
-  }
-
-  boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();
-  if (viewFactortoGround){
-    idfObject.setDouble(FenestrationSurface_DetailedFields::ViewFactortoGround, *viewFactortoGround);
-  }
-
-  boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
-  openstudio::Vector3d offset(0, 0, 0);
-  if (frameAndDivider){
-    if (!frameAndDivider->isOutsideRevealDepthDefaulted()){
-      offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
-    }
-    idfObject.setString(FenestrationSurface_DetailedFields::FrameandDividerName, frameAndDivider->name().get());
-  }
-
-  if(!modelObject.isMultiplierDefaulted()){
-    idfObject.setDouble(FenestrationSurface_DetailedFields::Multiplier, modelObject.multiplier());
-  }
-
-  idfObject.clearExtensibleGroups();
-  for (const Point3d& point : modelObject.vertices()){
-    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-    if (group.empty()) {
-      LOG(Error,"Currently unable to translate " << modelObject.briefDescription()
-          << ", because it has more vertices than allowed by EnergyPlus.");
-      return boost::none;
+    } else if (istringEqual("Skylight", subSurfaceType)) {
+      subSurfaceType = "Window";
     }
 
-    Point3d newPoint = point + offset;
+    boost::optional<ConstructionBase> construction = modelObject.construction();
+    if (construction) {
+      idfObject.setString(FenestrationSurface_DetailedFields::ConstructionName, construction->name().get());
 
-    group.setDouble(0, newPoint.x());
-    group.setDouble(1, newPoint.y());
-    group.setDouble(2, newPoint.z());
+      if (subSurfaceType == "Door" && construction->isFenestration()) {
+        LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses fenestration construction, changing SubSurfaceType to GlassDoor");
+        subSurfaceType = "GlassDoor";
+      } else if (subSurfaceType == "GlassDoor" && !construction->isFenestration()) {
+        LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses non-fenestration construction, changing SubSurfaceType to Door");
+        subSurfaceType = "Door";
+      }
+    }
+
+    idfObject.setString(FenestrationSurface_DetailedFields::SurfaceType, subSurfaceType);
+
+    boost::optional<Surface> surface = modelObject.surface();
+    if (surface) {
+      idfObject.setString(FenestrationSurface_DetailedFields::BuildingSurfaceName, surface->name().get());
+    }
+
+    boost::optional<SubSurface> adjacentSubSurface = modelObject.adjacentSubSurface();
+    if (adjacentSubSurface) {
+      idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSubSurface->name().get());
+    }
+
+    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients = modelObject.surfacePropertyOtherSideCoefficients();
+    if (surfacePropertyOtherSideCoefficients) {
+      boost::optional<IdfObject> osc = translateAndMapModelObject(*surfacePropertyOtherSideCoefficients);
+      if (osc && osc->name()) {
+        idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, osc->name().get());
+      } else {
+        LOG(Error, "SubSurface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+      }
+    }
+
+    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel =
+      modelObject.surfacePropertyOtherSideConditionsModel();
+    if (surfacePropertyOtherSideConditionsModel) {
+      boost::optional<IdfObject> oscm = translateAndMapModelObject(*surfacePropertyOtherSideConditionsModel);
+      if (oscm && oscm->name()) {
+        idfObject.setString(FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject, oscm->name().get());
+      } else {
+        LOG(Error, "SubSurface '" << modelObject.name().get() << "', could not translate OutsideBoundaryConditionObject");
+      }
+    }
+
+    // Call the translation of the SurfacePropertyConvectionCoefficients, which has two advantages:
+    // * will not translate them if they are orphaned (=not referencing a surface or subsurface), and,
+    // * makes the order of these objects in the IDF deterministic
+    if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
+      translateAndMapModelObject(_sCoefs.get());
+    }
+
+    boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();
+    if (viewFactortoGround) {
+      idfObject.setDouble(FenestrationSurface_DetailedFields::ViewFactortoGround, *viewFactortoGround);
+    }
+
+    boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
+    openstudio::Vector3d offset(0, 0, 0);
+    if (frameAndDivider) {
+      if (!frameAndDivider->isOutsideRevealDepthDefaulted()) {
+        offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
+      }
+      idfObject.setString(FenestrationSurface_DetailedFields::FrameandDividerName, frameAndDivider->name().get());
+    }
+
+    if (!modelObject.isMultiplierDefaulted()) {
+      idfObject.setDouble(FenestrationSurface_DetailedFields::Multiplier, modelObject.multiplier());
+    }
+
+    idfObject.clearExtensibleGroups();
+    for (const Point3d& point : modelObject.vertices()) {
+      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+      if (group.empty()) {
+        LOG(Error,
+            "Currently unable to translate " << modelObject.briefDescription() << ", because it has more vertices than allowed by EnergyPlus.");
+        return boost::none;
+      }
+
+      Point3d newPoint = point + offset;
+
+      group.setDouble(0, newPoint.x());
+      group.setDouble(1, newPoint.y());
+      group.setDouble(2, newPoint.z());
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return idfObject;
   }
 
-  m_idfObjects.push_back(idfObject);
+}  // namespace energyplus
 
-  return idfObject;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

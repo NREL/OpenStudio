@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,7 +41,6 @@
 
 #include <utilities/idd/IddFactory.hxx>
 
-
 #include <utilities/idd/OS_ZoneHVAC_PackagedTerminalHeatPump_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -50,1141 +49,1117 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ZoneHVACPackagedTerminalHeatPump_Impl::ZoneHVACPackagedTerminalHeatPump_Impl(
-      const IdfObject& idfObject,
-      Model_Impl* model,
-      bool keepHandle)
-    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACPackagedTerminalHeatPump::iddObjectType());
-  }
+    ZoneHVACPackagedTerminalHeatPump_Impl::ZoneHVACPackagedTerminalHeatPump_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ZoneHVACPackagedTerminalHeatPump::iddObjectType());
+    }
 
-  ZoneHVACPackagedTerminalHeatPump_Impl::ZoneHVACPackagedTerminalHeatPump_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ZoneHVACPackagedTerminalHeatPump::iddObjectType());
-  }
+    ZoneHVACPackagedTerminalHeatPump_Impl::ZoneHVACPackagedTerminalHeatPump_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                 Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ZoneHVACPackagedTerminalHeatPump::iddObjectType());
+    }
 
-  ZoneHVACPackagedTerminalHeatPump_Impl::ZoneHVACPackagedTerminalHeatPump_Impl(const ZoneHVACPackagedTerminalHeatPump_Impl& other,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {}
+    ZoneHVACPackagedTerminalHeatPump_Impl::ZoneHVACPackagedTerminalHeatPump_Impl(const ZoneHVACPackagedTerminalHeatPump_Impl& other,
+                                                                                 Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
-  ModelObject ZoneHVACPackagedTerminalHeatPump_Impl::clone(Model model) const
-  {
-    ZoneHVACPackagedTerminalHeatPump pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
+    ModelObject ZoneHVACPackagedTerminalHeatPump_Impl::clone(Model model) const {
+      ZoneHVACPackagedTerminalHeatPump pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
 
-    //Schedule scheduleClone = this->availabilitySchedule().clone(model).cast<Schedule>();
+      //Schedule scheduleClone = this->availabilitySchedule().clone(model).cast<Schedule>();
 
-    HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
-    auto t_heatingCoil = heatingCoil();
-    HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto t_heatingCoil = heatingCoil();
+      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
-    auto t_coolingCoil = coolingCoil();
-    HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto t_coolingCoil = coolingCoil();
+      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
-    HVACComponent supplementalHeatingCoilClone = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
+      HVACComponent supplementalHeatingCoilClone = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
 
-    //pthpClone.setAvailabilitySchedule(scheduleClone);
+      //pthpClone.setAvailabilitySchedule(scheduleClone);
 
-    pthpClone.setSupplyAirFan(supplyFanClone);
+      pthpClone.setSupplyAirFan(supplyFanClone);
 
-    pthpClone.setHeatingCoil(heatingCoilClone);
+      pthpClone.setHeatingCoil(heatingCoilClone);
 
-    pthpClone.setCoolingCoil(coolingCoilClone);
+      pthpClone.setCoolingCoil(coolingCoilClone);
 
-    pthpClone.setSupplementalHeatingCoil(supplementalHeatingCoilClone);
+      pthpClone.setSupplementalHeatingCoil(supplementalHeatingCoilClone);
 
-    if( model == this->model() ) {
-      if( auto waterToAirComponent = t_coolingCoil.optionalCast<WaterToAirComponent>() ) {
-        if( auto plant = waterToAirComponent->plantLoop() ) {
-          plant->addDemandBranchForComponent(coolingCoilClone);
+      if (model == this->model()) {
+        if (auto waterToAirComponent = t_coolingCoil.optionalCast<WaterToAirComponent>()) {
+          if (auto plant = waterToAirComponent->plantLoop()) {
+            plant->addDemandBranchForComponent(coolingCoilClone);
+          }
+        }
+        if (auto waterToAirComponent = t_heatingCoil.optionalCast<WaterToAirComponent>()) {
+          if (auto plant = waterToAirComponent->plantLoop()) {
+            plant->addDemandBranchForComponent(heatingCoilClone);
+          }
         }
       }
-      if( auto waterToAirComponent = t_heatingCoil.optionalCast<WaterToAirComponent>() ) {
-        if( auto plant = waterToAirComponent->plantLoop() ) {
-          plant->addDemandBranchForComponent(heatingCoilClone);
-        }
+
+      return pthpClone;
+    }
+
+    const std::vector<std::string>& ZoneHVACPackagedTerminalHeatPump_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "Zone Packaged Terminal Heat Pump Total Heating Rate",     "Zone Packaged Terminal Heat Pump Total Heating Energy",
+        "Zone Packaged Terminal Heat Pump Total Cooling Rate",     "Zone Packaged Terminal Heat Pump Total Cooling Energy",
+        "Zone Packaged Terminal Heat Pump Sensible Heating Rate",  "Zone Packaged Terminal Heat Pump Sensible Heating Energy",
+        "Zone Packaged Terminal Heat Pump Sensible Cooling Rate",  "Zone Packaged Terminal Heat Pump Sensible Cooling Energy",
+        "Zone Packaged Terminal Heat Pump Latent Heating Rate",    "Zone Packaged Terminal Heat Pump Latent Heating Energy",
+        "Zone Packaged Terminal Heat Pump Latent Cooling Rate",    "Zone Packaged Terminal Heat Pump Latent Cooling Energy",
+        "Zone Packaged Terminal Heat Pump Electricity Rate",       "Zone Packaged Terminal Heat Pump Electricity Energy",
+        "Zone Packaged Terminal Heat Pump Fan Part Load Ratio",    "Zone Packaged Terminal Heat Pump Compressor Part Load Ratio",
+        "Zone Packaged Terminal Heat Pump Fan Availability Status"};
+      return result;
+    }
+
+    IddObjectType ZoneHVACPackagedTerminalHeatPump_Impl::iddObjectType() const {
+      return ZoneHVACPackagedTerminalHeatPump::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> ZoneHVACPackagedTerminalHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump", "Availability"));
       }
+      if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump", "Supply Air Fan Operating Mode"));
+      }
+      return result;
     }
 
-    return pthpClone;
-  }
-
-  const std::vector<std::string>& ZoneHVACPackagedTerminalHeatPump_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Zone Packaged Terminal Heat Pump Total Heating Rate",
-      "Zone Packaged Terminal Heat Pump Total Heating Energy",
-      "Zone Packaged Terminal Heat Pump Total Cooling Rate",
-      "Zone Packaged Terminal Heat Pump Total Cooling Energy",
-      "Zone Packaged Terminal Heat Pump Sensible Heating Rate",
-      "Zone Packaged Terminal Heat Pump Sensible Heating Energy",
-      "Zone Packaged Terminal Heat Pump Sensible Cooling Rate",
-      "Zone Packaged Terminal Heat Pump Sensible Cooling Energy",
-      "Zone Packaged Terminal Heat Pump Latent Heating Rate",
-      "Zone Packaged Terminal Heat Pump Latent Heating Energy",
-      "Zone Packaged Terminal Heat Pump Latent Cooling Rate",
-      "Zone Packaged Terminal Heat Pump Latent Cooling Energy",
-      "Zone Packaged Terminal Heat Pump Electric Power",
-      "Zone Packaged Terminal Heat Pump Electric Energy",
-      "Zone Packaged Terminal Heat Pump Fan Part Load Ratio",
-      "Zone Packaged Terminal Heat Pump Compressor Part Load Ratio",
-      "Zone Packaged Terminal Heat Pump Fan Availability Status"
-    };
-    return result;
-  }
-
-  IddObjectType ZoneHVACPackagedTerminalHeatPump_Impl::iddObjectType() const {
-    return ZoneHVACPackagedTerminalHeatPump::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ZoneHVACPackagedTerminalHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump","Availability"));
+    std::vector<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::children() const {
+      std::vector<ModelObject> result;
+      if (OptionalHVACComponent intermediate = optionalSupplyAirFan()) {
+        result.push_back(*intermediate);
+      }
+      if (OptionalHVACComponent intermediate = optionalHeatingCoil()) {
+        result.push_back(*intermediate);
+      }
+      if (OptionalHVACComponent intermediate = optionalCoolingCoil()) {
+        result.push_back(*intermediate);
+      }
+      if (OptionalHVACComponent intermediate = optionalSupplementalHeatingCoil()) {
+        result.push_back(*intermediate);
+      }
+      return result;
     }
-    if (std::find(b,e,OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump","Supply Air Fan Operating Mode"));
-    }
-    return result;
-  }
 
-  std::vector<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    if (OptionalHVACComponent intermediate = optionalSupplyAirFan()) {
-      result.push_back(*intermediate);
+    unsigned ZoneHVACPackagedTerminalHeatPump_Impl::inletPort() const {
+      return OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AirInletNodeName;
     }
-    if (OptionalHVACComponent intermediate = optionalHeatingCoil()) {
-      result.push_back(*intermediate);
-    }
-    if (OptionalHVACComponent intermediate = optionalCoolingCoil()) {
-      result.push_back(*intermediate);
-    }
-    if (OptionalHVACComponent intermediate = optionalSupplementalHeatingCoil()) {
-      result.push_back(*intermediate);
-    }
-    return result;
-  }
 
-  unsigned ZoneHVACPackagedTerminalHeatPump_Impl::inletPort() const
-  {
-    return OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AirInletNodeName;
-  }
+    unsigned ZoneHVACPackagedTerminalHeatPump_Impl::outletPort() const {
+      return OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AirOutletNodeName;
+    }
 
-  unsigned ZoneHVACPackagedTerminalHeatPump_Impl::outletPort() const
-  {
-    return OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AirOutletNodeName;
-  }
-
-  Schedule ZoneHVACPackagedTerminalHeatPump_Impl::availabilitySchedule() const
-  {
-    boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value){
-      // it is an error if we get here, however we don't want to crash
-      // so we hook up to global always on schedule
-      LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
-      value = this->model().alwaysOnDiscreteSchedule();
+    Schedule ZoneHVACPackagedTerminalHeatPump_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        // it is an error if we get here, however we don't want to crash
+        // so we hook up to global always on schedule
+        LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+        value = this->model().alwaysOnDiscreteSchedule();
+        OS_ASSERT(value);
+        const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setAvailabilitySchedule(*value);
+        value = optionalAvailabilitySchedule();
+      }
       OS_ASSERT(value);
-      const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setAvailabilitySchedule(*value);
-      value = optionalAvailabilitySchedule();
-    }
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirMixerObjectType() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirMixerName() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFlowRateDuringCoolingOperation() const {
-    return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation,true);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isSupplyAirFlowRateDuringCoolingOperationAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFlowRateDuringHeatingOperation() const {
-    return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation,true);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isSupplyAirFlowRateDuringHeatingOperationAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,true);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirFlowRateDuringCoolingOperation() const {
-    return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation,true);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isOutdoorAirFlowRateDuringCoolingOperationAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirFlowRateDuringHeatingOperation() const {
-    return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation,true);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isOutdoorAirFlowRateDuringHeatingOperationAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,true);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autosize");
-    }
-    return result;
-  }
-
-  HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFan() const
-  {
-    boost::optional<HVACComponent> result = optionalSupplyAirFan();
-    OS_ASSERT(result);
-    return result.get();
-  }
-
-  HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::heatingCoil() const
-  {
-    boost::optional<HVACComponent> result = optionalHeatingCoil();
-    OS_ASSERT(result);
-    return result.get();
-  }
-
-  double ZoneHVACPackagedTerminalHeatPump_Impl::heatingConvergenceTolerance() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isHeatingConvergenceToleranceDefaulted() const {
-    return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance);
-  }
-
-  double ZoneHVACPackagedTerminalHeatPump_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-    return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
-  }
-
-  HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::coolingCoil() const
-  {
-    boost::optional<HVACComponent> result = optionalCoolingCoil();
-    OS_ASSERT(result);
-    return result.get();
-  }
-
-  double ZoneHVACPackagedTerminalHeatPump_Impl::coolingConvergenceTolerance() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isCoolingConvergenceToleranceDefaulted() const {
-    return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance);
-  }
-
-  HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::supplementalHeatingCoil() const
-  {
-    boost::optional<HVACComponent> result = optionalSupplementalHeatingCoil();
-    OS_ASSERT(result);
-    return result.get();
-  }
-
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::maximumSupplyAirTemperaturefromSupplementalHeater() const {
-    return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,true);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autosize");
-    }
-    return result;
-  }
-
-  double ZoneHVACPackagedTerminalHeatPump_Impl::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const {
-    return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
-  }
-
-  std::string ZoneHVACPackagedTerminalHeatPump_Impl::fanPlacement() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::isFanPlacementDefaulted() const {
-    return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement);
-  }
-
-  boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanOperatingModeSchedule() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName,
-                              "ZoneHVACPackagedTerminalHeatPump",
-                              "Availability",
-                              schedule);
-    return result;
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
-    return result;
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation) {
-    bool result = false;
-    if (supplyAirFlowRateDuringCoolingOperation) {
-      result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, supplyAirFlowRateDuringCoolingOperation.get());
-    } else {
-      result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, "");
-    }
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeSupplyAirFlowRateDuringCoolingOperation() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFlowRateDuringHeatingOperation(boost::optional<double> supplyAirFlowRateDuringHeatingOperation) {
-    bool result = false;
-    if (supplyAirFlowRateDuringHeatingOperation) {
-      result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, supplyAirFlowRateDuringHeatingOperation.get());
-    } else {
-      result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, "");
-    }
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeSupplyAirFlowRateDuringHeatingOperation() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
-    bool result = false;
-    if (supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
-      result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, supplyAirFlowRateWhenNoCoolingorHeatingisNeeded.get());
-    } else {
-      result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
-    }
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
-    OS_ASSERT(result);
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "Autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirFlowRateDuringCoolingOperation(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation) {
-    bool result = false;
-    if (outdoorAirFlowRateDuringCoolingOperation) {
-      result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, outdoorAirFlowRateDuringCoolingOperation.get());
-    } else {
-      result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, "");
-    }
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeOutdoorAirFlowRateDuringCoolingOperation() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, "Autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirFlowRateDuringHeatingOperation(boost::optional<double> outdoorAirFlowRateDuringHeatingOperation) {
-    bool result = false;
-    if (outdoorAirFlowRateDuringHeatingOperation) {
-      result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, outdoorAirFlowRateDuringHeatingOperation.get());
-    } else {
-      result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, "");
-    }
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeOutdoorAirFlowRateDuringHeatingOperation() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, "Autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
-    bool result = false;
-    if (outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
-      result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded.get());
-    } else {
-      result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
-    }
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
-    OS_ASSERT(result);
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "Autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFan( HVACComponent & fan )
-  {
-    if ((fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) ||
-        (fan.iddObjectType() == IddObjectType::OS_Fan_OnOff) ||
-        (fan.iddObjectType() == IddObjectType::OS_Fan_SystemModel))
-    {
-      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName,fan.handle());
-    } else {
-      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume, FanOnOff or FanSystemModel, not '" << fan.iddObjectType().valueName()
-             << "') for " << briefDescription());
-      return false;
-    }
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingCoil( HVACComponent & hvacComponent )
-  {
-    bool isAllowedType = false;
-
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_DX_SingleSpeed )
-    {
-      isAllowedType = true;
+      return value.get();
     }
 
-    if( isAllowedType ) {
-      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName,hvacComponent.handle());
-    } else {
-      LOG(Warn, "Invalid Cooling Coil Type (expected CoilHeatingDXSingleSpeed, not '" << hvacComponent.iddObjectType().valueName()
-             << "') for " << briefDescription());
-      return false;
-    }
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
-    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance, heatingConvergenceTolerance);
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetHeatingConvergenceTolerance() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingCoil( HVACComponent & hvacComponent )
-  {
-    bool isAllowedType = false;
-
-    if((hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) ||
-       (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)
-      ) {
-      isAllowedType = true;
+    std::string ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirMixerObjectType() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
-    if( isAllowedType ) {
-      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName,hvacComponent.handle());
-    } else {
-      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed, not '" << hvacComponent.iddObjectType().valueName()
-             << "') for " << briefDescription());
-      return false;
+    std::string ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirMixerName() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-  }
 
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
-    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance, coolingConvergenceTolerance);
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetCoolingConvergenceTolerance() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
-  {
-    return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName,hvacComponent.handle());;
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
-    bool result = false;
-    if (maximumSupplyAirTemperaturefromSupplementalHeater) {
-      result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater.get());
-    } else {
-      result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "");
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFlowRateDuringCoolingOperation() const {
+      return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, true);
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "Autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
-    bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, fanPlacement);
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetFanPlacement() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName,
-                              "ZoneHVACPackagedTerminalHeatPump",
-                              "Supply Air Fan Operating Mode",
-                              schedule);
-    return result;
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump_Impl::resetSupplyAirFanOperatingModeSchedule() {
-    bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName);
-  }
-  boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalSupplyAirFan() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName);
-  }
-  boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalHeatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName);
-  }
-  boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalCoolingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName);
-  }
-  boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalSupplementalHeatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName);
-  }
-
-  boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::availabilityScheduleAsModelObject() const {
-    OptionalModelObject result = availabilitySchedule();
-    return result;
-  }
-
-  boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanAsModelObject() const {
-    OptionalModelObject result = supplyAirFan();
-    return result;
-  }
-
-  boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::heatingCoilAsModelObject() const {
-    OptionalModelObject result = heatingCoil();
-    return result;
-  }
-
-  boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::coolingCoilAsModelObject() const {
-    OptionalModelObject result = coolingCoil();
-    return result;
-  }
-
-  boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::supplementalHeatingCoilAsModelObject() const {
-    OptionalModelObject result = supplementalHeatingCoil();
-    return result;
-  }
-
-  boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanOperatingModeScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = supplyAirFanOperatingModeSchedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setAvailabilitySchedule(schedule);
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isSupplyAirFlowRateDuringCoolingOperationAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
       }
+      return result;
     }
-    return false;
-  }
 
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFanAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-      if (intermediate) {
-        setSupplyAirFan(*intermediate);
-        return true;
-      }
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFlowRateDuringHeatingOperation() const {
+      return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, true);
     }
-    return false;
-  }
 
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-      if (intermediate) {
-        setHeatingCoil(*intermediate);
-        return true;
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isSupplyAirFlowRateDuringHeatingOperationAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
       }
+      return result;
     }
-    return false;
-  }
 
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-      if (intermediate) {
-        setCoolingCoil(*intermediate);
-        return true;
-      }
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+      return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, true);
     }
-    return false;
-  }
 
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-      if (intermediate) {
-        setSupplementalHeatingCoil(*intermediate);
-        return true;
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value =
+        getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
       }
+      return result;
     }
-    return false;
-  }
 
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFanOperatingModeScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setSupplyAirFanOperatingModeSchedule(schedule);
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirFlowRateDuringCoolingOperation() const {
+      return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, true);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isOutdoorAirFlowRateDuringCoolingOperationAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
       }
-      else {
+      return result;
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirFlowRateDuringHeatingOperation() const {
+      return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, true);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isOutdoorAirFlowRateDuringHeatingOperationAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+      return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, true);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value =
+        getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFan() const {
+      boost::optional<HVACComponent> result = optionalSupplyAirFan();
+      OS_ASSERT(result);
+      return result.get();
+    }
+
+    HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::heatingCoil() const {
+      boost::optional<HVACComponent> result = optionalHeatingCoil();
+      OS_ASSERT(result);
+      return result.get();
+    }
+
+    double ZoneHVACPackagedTerminalHeatPump_Impl::heatingConvergenceTolerance() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isHeatingConvergenceToleranceDefaulted() const {
+      return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance);
+    }
+
+    double ZoneHVACPackagedTerminalHeatPump_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+      boost::optional<double> value =
+        getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
+      return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
+    }
+
+    HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::coolingCoil() const {
+      boost::optional<HVACComponent> result = optionalCoolingCoil();
+      OS_ASSERT(result);
+      return result.get();
+    }
+
+    double ZoneHVACPackagedTerminalHeatPump_Impl::coolingConvergenceTolerance() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isCoolingConvergenceToleranceDefaulted() const {
+      return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance);
+    }
+
+    HVACComponent ZoneHVACPackagedTerminalHeatPump_Impl::supplementalHeatingCoil() const {
+      boost::optional<HVACComponent> result = optionalSupplementalHeatingCoil();
+      OS_ASSERT(result);
+      return result.get();
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::maximumSupplyAirTemperaturefromSupplementalHeater() const {
+      return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, true);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value =
+        getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    double ZoneHVACPackagedTerminalHeatPump_Impl::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
+      boost::optional<double> value =
+        getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const {
+      return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    }
+
+    std::string ZoneHVACPackagedTerminalHeatPump_Impl::fanPlacement() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::isFanPlacementDefaulted() const {
+      return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement);
+    }
+
+    boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanOperatingModeSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName, "ZoneHVACPackagedTerminalHeatPump",
+                                "Availability", schedule);
+      return result;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
+      return result;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFlowRateDuringCoolingOperation(
+      boost::optional<double> supplyAirFlowRateDuringCoolingOperation) {
+      bool result = false;
+      if (supplyAirFlowRateDuringCoolingOperation) {
+        result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation,
+                           supplyAirFlowRateDuringCoolingOperation.get());
+      } else {
+        result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, "");
+      }
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeSupplyAirFlowRateDuringCoolingOperation() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFlowRateDuringHeatingOperation(
+      boost::optional<double> supplyAirFlowRateDuringHeatingOperation) {
+      bool result = false;
+      if (supplyAirFlowRateDuringHeatingOperation) {
+        result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation,
+                           supplyAirFlowRateDuringHeatingOperation.get());
+      } else {
+        result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, "");
+      }
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeSupplyAirFlowRateDuringHeatingOperation() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(
+      boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+      bool result = false;
+      if (supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+        result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,
+                           supplyAirFlowRateWhenNoCoolingorHeatingisNeeded.get());
+      } else {
+        result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
+      }
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
+      OS_ASSERT(result);
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirFlowRateDuringCoolingOperation(
+      boost::optional<double> outdoorAirFlowRateDuringCoolingOperation) {
+      bool result = false;
+      if (outdoorAirFlowRateDuringCoolingOperation) {
+        result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation,
+                           outdoorAirFlowRateDuringCoolingOperation.get());
+      } else {
+        result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, "");
+      }
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeOutdoorAirFlowRateDuringCoolingOperation() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirFlowRateDuringHeatingOperation(
+      boost::optional<double> outdoorAirFlowRateDuringHeatingOperation) {
+      bool result = false;
+      if (outdoorAirFlowRateDuringHeatingOperation) {
+        result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation,
+                           outdoorAirFlowRateDuringHeatingOperation.get());
+      } else {
+        result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, "");
+      }
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeOutdoorAirFlowRateDuringHeatingOperation() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(
+      boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+      bool result = false;
+      if (outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+        result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,
+                           outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded.get());
+      } else {
+        result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
+      }
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "");
+      OS_ASSERT(result);
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFan(HVACComponent& fan) {
+      if ((fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) || (fan.iddObjectType() == IddObjectType::OS_Fan_OnOff)
+          || (fan.iddObjectType() == IddObjectType::OS_Fan_SystemModel)) {
+        return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName, fan.handle());
+      } else {
+        LOG(Warn, "Invalid Fan Type (expected FanConstantVolume, FanOnOff or FanSystemModel, not '" << fan.iddObjectType().valueName() << "') for "
+                                                                                                    << briefDescription());
         return false;
       }
     }
-    else {
-      resetSupplyAirFanOperatingModeSchedule();
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingCoil(HVACComponent& hvacComponent) {
+      bool isAllowedType = false;
+
+      if ((hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_DX_SingleSpeed)
+          || (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_DX_VariableSpeed)) {
+        isAllowedType = true;
+      }
+
+      if (isAllowedType) {
+        return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName, hvacComponent.handle());
+      } else {
+        LOG(Warn, "Invalid Heating Coil Type (expected CoilHeatingDXSingleSpeed or CoilHeatingDXVariableSpeed, not '"
+                    << hvacComponent.iddObjectType().valueName() << "') for " << briefDescription());
+        return false;
+      }
     }
-    return true;
-  }
 
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
-  }
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
+      bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance, heatingConvergenceTolerance);
+      return result;
+    }
 
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
-  }
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetHeatingConvergenceTolerance() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingConvergenceTolerance, "");
+      OS_ASSERT(result);
+    }
 
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Design Size No Load Supply Air Flow Rate", "m3/s");
-  }
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
+      double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+      bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                              minimumOutdoorDryBulbTemperatureforCompressorOperation);
+      return result;
+    }
 
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
-    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
-  }
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "");
+      OS_ASSERT(result);
+    }
 
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
-    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
-  }
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingCoil(HVACComponent& hvacComponent) {
+      bool isAllowedType = false;
 
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-    return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
-  }
+      if ((hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed)
+          || (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed)
+          || (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)) {
+        isAllowedType = true;
+      }
 
-  boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
-    return getAutosizedValue("Design Size Maximum Supply Air Temperature from Supplemental Heater", "C");
-  }
+      if (isAllowedType) {
+        return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName, hvacComponent.handle());
+      } else {
+        LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed or CoilSystemCoolingDXHeatExchangerAssisted or "
+                  "CoilCoolingDXVariableSpeed, not '"
+                    << hvacComponent.iddObjectType().valueName() << "') for " << briefDescription());
+        return false;
+      }
+    }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::autosize() {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
+      bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance, coolingConvergenceTolerance);
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetCoolingConvergenceTolerance() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingConvergenceTolerance, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoil(HVACComponent& hvacComponent) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName, hvacComponent.handle());
+      ;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(
+      boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater) {
+      bool result = false;
+      if (maximumSupplyAirTemperaturefromSupplementalHeater) {
+        result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,
+                           maximumSupplyAirTemperaturefromSupplementalHeater.get());
+      } else {
+        result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(
+      double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
+      bool result = setDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,
+                              maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, fanPlacement);
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetFanPlacement() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName, "ZoneHVACPackagedTerminalHeatPump",
+                                "Supply Air Fan Operating Mode", schedule);
+      return result;
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::resetSupplyAirFanOperatingModeSchedule() {
+      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump_Impl::optionalAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName);
+    }
+    boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalSupplyAirFan() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName);
+    }
+    boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalHeatingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName);
+    }
+    boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalCoolingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName);
+    }
+    boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalSupplementalHeatingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName);
+    }
+
+    boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::availabilityScheduleAsModelObject() const {
+      OptionalModelObject result = availabilitySchedule();
+      return result;
+    }
+
+    boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanAsModelObject() const {
+      OptionalModelObject result = supplyAirFan();
+      return result;
+    }
+
+    boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::heatingCoilAsModelObject() const {
+      OptionalModelObject result = heatingCoil();
+      return result;
+    }
+
+    boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::coolingCoilAsModelObject() const {
+      OptionalModelObject result = coolingCoil();
+      return result;
+    }
+
+    boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::supplementalHeatingCoilAsModelObject() const {
+      OptionalModelObject result = supplementalHeatingCoil();
+      return result;
+    }
+
+    boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanOperatingModeScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = supplyAirFanOperatingModeSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setAvailabilitySchedule(schedule);
+        }
+      }
+      return false;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFanAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
+        if (intermediate) {
+          setSupplyAirFan(*intermediate);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
+        if (intermediate) {
+          setHeatingCoil(*intermediate);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setCoolingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
+        if (intermediate) {
+          setCoolingCoil(*intermediate);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
+        if (intermediate) {
+          setSupplementalHeatingCoil(*intermediate);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFanOperatingModeScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setSupplyAirFanOperatingModeSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetSupplyAirFanOperatingModeSchedule();
+      }
+      return true;
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+      return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+      return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+      return getAutosizedValue("Design Size No Load Supply Air Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+      return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+      return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+      return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
+      return getAutosizedValue("Design Size Maximum Supply Air Temperature from Supplemental Heater", "C");
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::autosize() {
+      autosizeSupplyAirFlowRateDuringCoolingOperation();
+      autosizeSupplyAirFlowRateDuringHeatingOperation();
+      autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+      autosizeOutdoorAirFlowRateDuringCoolingOperation();
+      autosizeOutdoorAirFlowRateDuringHeatingOperation();
+      autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+      autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+    }
+
+    void ZoneHVACPackagedTerminalHeatPump_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedSupplyAirFlowRateDuringCoolingOperation();
+      if (val) {
+        setSupplyAirFlowRateDuringCoolingOperation(val.get());
+      }
+
+      val = autosizedSupplyAirFlowRateDuringHeatingOperation();
+      if (val) {
+        setSupplyAirFlowRateDuringHeatingOperation(val.get());
+      }
+
+      val = autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+      if (val) {
+        setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+      }
+
+      val = autosizedOutdoorAirFlowRateDuringCoolingOperation();
+      if (val) {
+        setOutdoorAirFlowRateDuringCoolingOperation(val.get());
+      }
+
+      val = autosizedOutdoorAirFlowRateDuringHeatingOperation();
+      if (val) {
+        setOutdoorAirFlowRateDuringHeatingOperation(val.get());
+      }
+
+      val = autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+      if (val) {
+        setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+      }
+
+      val = autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+      if (val) {
+        setMaximumSupplyAirTemperaturefromSupplementalHeater(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan,
+                                                                     HVACComponent& heatingCoil, HVACComponent& coolingCoil,
+                                                                     HVACComponent& supplementalHeatingCoil)
+    : ZoneHVACComponent(ZoneHVACPackagedTerminalHeatPump::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>());
+
+    bool ok = setAvailabilitySchedule(availabilitySchedule);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to " << availabilitySchedule.briefDescription() << ".");
+    }
+    setOutdoorAirMixerObjectType("OutdoorAir:Mixer");
+    setSupplyAirFan(supplyAirFan);
+    setHeatingCoil(heatingCoil);
+    setCoolingCoil(coolingCoil);
+    setSupplementalHeatingCoil(supplementalHeatingCoil);
+
     autosizeSupplyAirFlowRateDuringCoolingOperation();
     autosizeSupplyAirFlowRateDuringHeatingOperation();
-    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
     autosizeOutdoorAirFlowRateDuringCoolingOperation();
     autosizeOutdoorAirFlowRateDuringHeatingOperation();
-    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
     autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
   }
 
-  void ZoneHVACPackagedTerminalHeatPump_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedSupplyAirFlowRateDuringCoolingOperation();
-    if (val) {
-      setSupplyAirFlowRateDuringCoolingOperation(val.get());
-    }
-
-    val = autosizedSupplyAirFlowRateDuringHeatingOperation();
-    if (val) {
-      setSupplyAirFlowRateDuringHeatingOperation(val.get());
-    }
-
-    val = autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    if (val) {
-      setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
-    }
-
-    val = autosizedOutdoorAirFlowRateDuringCoolingOperation();
-    if (val) {
-      setOutdoorAirFlowRateDuringCoolingOperation(val.get());
-    }
-
-    val = autosizedOutdoorAirFlowRateDuringHeatingOperation();
-    if (val) {
-      setOutdoorAirFlowRateDuringHeatingOperation(val.get());
-    }
-
-    val = autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
-    if (val) {
-      setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
-    }
-
-    val = autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
-    if (val) {
-      setMaximumSupplyAirTemperaturefromSupplementalHeater(val.get());
-    }
-
+  IddObjectType ZoneHVACPackagedTerminalHeatPump::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump);
+    return result;
   }
 
-} // detail
-
-ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump( const Model& model,
-                                                                    Schedule & availabilitySchedule,
-                                                                    HVACComponent & supplyAirFan,
-                                                                    HVACComponent & heatingCoil,
-                                                                    HVACComponent & coolingCoil,
-                                                                    HVACComponent & supplementalHeatingCoil )
-  : ZoneHVACComponent(ZoneHVACPackagedTerminalHeatPump::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>());
-
-  bool ok = setAvailabilitySchedule(availabilitySchedule);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to "
-                  << availabilitySchedule.briefDescription() << ".");
+  std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerObjectTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType);
   }
-  setOutdoorAirMixerObjectType("OutdoorAir:Mixer");
-  setSupplyAirFan(supplyAirFan);
-  setHeatingCoil(heatingCoil);
-  setCoolingCoil(coolingCoil);
-  setSupplementalHeatingCoil(supplementalHeatingCoil);
-
-  autosizeSupplyAirFlowRateDuringCoolingOperation();
-  autosizeSupplyAirFlowRateDuringHeatingOperation();
-  autosizeOutdoorAirFlowRateDuringCoolingOperation();
-  autosizeOutdoorAirFlowRateDuringHeatingOperation();
-  autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
-  autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-  autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
-}
-
-IddObjectType ZoneHVACPackagedTerminalHeatPump::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump);
-  return result;
-}
-
-std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerObjectTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType);
-}
-
-std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::validOutdoorAirMixerObjectTypeValues() {
-  return ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerObjectTypeValues();
-}
-
-std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::fanPlacementValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement);
-}
-
-std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::validFanPlacementValues() {
-  return ZoneHVACPackagedTerminalHeatPump::fanPlacementValues();
-}
-
-std::string ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerObjectType() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirMixerObjectType();
-}
-
-std::string ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerName() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirMixerName();
-}
-
-boost::optional<double> ZoneHVACPackagedTerminalHeatPump::supplyAirFlowRateDuringCoolingOperation() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFlowRateDuringCoolingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateDuringCoolingOperationAutosized() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isSupplyAirFlowRateDuringCoolingOperationAutosized();
-}
-
-boost::optional<double> ZoneHVACPackagedTerminalHeatPump::supplyAirFlowRateDuringHeatingOperation() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFlowRateDuringHeatingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateDuringHeatingOperationAutosized() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isSupplyAirFlowRateDuringHeatingOperationAutosized();
-}
-
-boost::optional<double> ZoneHVACPackagedTerminalHeatPump::supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized();
-}
-
-boost::optional<double> ZoneHVACPackagedTerminalHeatPump::outdoorAirFlowRateDuringCoolingOperation() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirFlowRateDuringCoolingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isOutdoorAirFlowRateDuringCoolingOperationAutosized() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isOutdoorAirFlowRateDuringCoolingOperationAutosized();
-}
-
-boost::optional<double> ZoneHVACPackagedTerminalHeatPump::outdoorAirFlowRateDuringHeatingOperation() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirFlowRateDuringHeatingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isOutdoorAirFlowRateDuringHeatingOperationAutosized() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isOutdoorAirFlowRateDuringHeatingOperationAutosized();
-}
-
-boost::optional<double> ZoneHVACPackagedTerminalHeatPump::outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized();
-}
-
-double ZoneHVACPackagedTerminalHeatPump::heatingConvergenceTolerance() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->heatingConvergenceTolerance();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isHeatingConvergenceToleranceDefaulted() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isHeatingConvergenceToleranceDefaulted();
-}
-
-double ZoneHVACPackagedTerminalHeatPump::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted();
-}
-
-double ZoneHVACPackagedTerminalHeatPump::coolingConvergenceTolerance() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->coolingConvergenceTolerance();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isCoolingConvergenceToleranceDefaulted() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isCoolingConvergenceToleranceDefaulted();
-}
-
-boost::optional<double> ZoneHVACPackagedTerminalHeatPump::maximumSupplyAirTemperaturefromSupplementalHeater() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->maximumSupplyAirTemperaturefromSupplementalHeater();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized();
-}
-
-double ZoneHVACPackagedTerminalHeatPump::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted();
-}
-
-std::string ZoneHVACPackagedTerminalHeatPump::fanPlacement() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->fanPlacement();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::isFanPlacementDefaulted() const {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isFanPlacementDefaulted();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFlowRateDuringCoolingOperation(supplyAirFlowRateDuringCoolingOperation);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::autosizeSupplyAirFlowRateDuringCoolingOperation() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeSupplyAirFlowRateDuringCoolingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFlowRateDuringHeatingOperation(supplyAirFlowRateDuringHeatingOperation);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::autosizeSupplyAirFlowRateDuringHeatingOperation() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeSupplyAirFlowRateDuringHeatingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-}
-
-void ZoneHVACPackagedTerminalHeatPump::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirFlowRateDuringCoolingOperation(outdoorAirFlowRateDuringCoolingOperation);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::autosizeOutdoorAirFlowRateDuringCoolingOperation() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeOutdoorAirFlowRateDuringCoolingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirFlowRateDuringHeatingOperation(outdoorAirFlowRateDuringHeatingOperation);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::autosizeOutdoorAirFlowRateDuringHeatingOperation() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeOutdoorAirFlowRateDuringHeatingOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
-}
-
-void ZoneHVACPackagedTerminalHeatPump::autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setHeatingConvergenceTolerance(heatingConvergenceTolerance);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetHeatingConvergenceTolerance() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetHeatingConvergenceTolerance();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setCoolingConvergenceTolerance(coolingConvergenceTolerance);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetCoolingConvergenceTolerance() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetCoolingConvergenceTolerance();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setFanPlacement(std::string fanPlacement) {
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setFanPlacement(fanPlacement);
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetFanPlacement() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetFanPlacement();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setAvailabilitySchedule( Schedule & schedule )
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setAvailabilitySchedule( schedule );
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFanOperatingModeSchedule( Schedule & schedule )
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFanOperatingModeSchedule( schedule );
-}
-
-void ZoneHVACPackagedTerminalHeatPump::resetSupplyAirFanOperatingModeSchedule() {
-  getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetSupplyAirFanOperatingModeSchedule();
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFan( HVACComponent & hvacComponent )
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFan( hvacComponent );
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setHeatingCoil( HVACComponent & hvacComponent )
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setHeatingCoil( hvacComponent );
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setSupplementalHeatingCoil( HVACComponent & hvacComponent )
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplementalHeatingCoil( hvacComponent );
-}
-
-bool ZoneHVACPackagedTerminalHeatPump::setCoolingCoil( HVACComponent & hvacComponent )
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setCoolingCoil( hvacComponent );
-}
-
-Schedule ZoneHVACPackagedTerminalHeatPump::availabilitySchedule() const
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->availabilitySchedule();
-}
-
-boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump::supplyAirFanOperatingModeSchedule() const
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFanOperatingModeSchedule();
-}
-
-HVACComponent ZoneHVACPackagedTerminalHeatPump::supplyAirFan() const
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFan();
-}
-
-HVACComponent ZoneHVACPackagedTerminalHeatPump::heatingCoil() const
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->heatingCoil();
-}
-
-HVACComponent ZoneHVACPackagedTerminalHeatPump::supplementalHeatingCoil() const
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplementalHeatingCoil();
-}
-
-HVACComponent ZoneHVACPackagedTerminalHeatPump::coolingCoil() const
-{
-  return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->coolingCoil();
-}
-
-/// @cond
-ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(std::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl)
-  : ZoneHVACComponent(std::move(impl))
-{}
-/// @endcond
+
+  std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::validOutdoorAirMixerObjectTypeValues() {
+    return ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerObjectTypeValues();
+  }
+
+  std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::fanPlacementValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement);
+  }
+
+  std::vector<std::string> ZoneHVACPackagedTerminalHeatPump::validFanPlacementValues() {
+    return ZoneHVACPackagedTerminalHeatPump::fanPlacementValues();
+  }
+
+  std::string ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerObjectType() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirMixerObjectType();
+  }
+
+  std::string ZoneHVACPackagedTerminalHeatPump::outdoorAirMixerName() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirMixerName();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalHeatPump::supplyAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFlowRateDuringCoolingOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateDuringCoolingOperationAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isSupplyAirFlowRateDuringCoolingOperationAutosized();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalHeatPump::supplyAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFlowRateDuringHeatingOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateDuringHeatingOperationAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isSupplyAirFlowRateDuringHeatingOperationAutosized();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalHeatPump::supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalHeatPump::outdoorAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirFlowRateDuringCoolingOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isOutdoorAirFlowRateDuringCoolingOperationAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isOutdoorAirFlowRateDuringCoolingOperationAutosized();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalHeatPump::outdoorAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirFlowRateDuringHeatingOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isOutdoorAirFlowRateDuringHeatingOperationAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isOutdoorAirFlowRateDuringHeatingOperationAutosized();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalHeatPump::outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized();
+  }
+
+  double ZoneHVACPackagedTerminalHeatPump::heatingConvergenceTolerance() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->heatingConvergenceTolerance();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isHeatingConvergenceToleranceDefaulted() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isHeatingConvergenceToleranceDefaulted();
+  }
+
+  double ZoneHVACPackagedTerminalHeatPump::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted();
+  }
+
+  double ZoneHVACPackagedTerminalHeatPump::coolingConvergenceTolerance() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->coolingConvergenceTolerance();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isCoolingConvergenceToleranceDefaulted() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isCoolingConvergenceToleranceDefaulted();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalHeatPump::maximumSupplyAirTemperaturefromSupplementalHeater() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->maximumSupplyAirTemperaturefromSupplementalHeater();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized();
+  }
+
+  double ZoneHVACPackagedTerminalHeatPump::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted();
+  }
+
+  std::string ZoneHVACPackagedTerminalHeatPump::fanPlacement() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->fanPlacement();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isFanPlacementDefaulted() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isFanPlacementDefaulted();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFlowRateDuringCoolingOperation(
+      supplyAirFlowRateDuringCoolingOperation);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::autosizeSupplyAirFlowRateDuringCoolingOperation() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeSupplyAirFlowRateDuringCoolingOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFlowRateDuringHeatingOperation(
+      supplyAirFlowRateDuringHeatingOperation);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::autosizeSupplyAirFlowRateDuringHeatingOperation() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeSupplyAirFlowRateDuringHeatingOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(
+      supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirFlowRateDuringCoolingOperation(
+      outdoorAirFlowRateDuringCoolingOperation);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::autosizeOutdoorAirFlowRateDuringCoolingOperation() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeOutdoorAirFlowRateDuringCoolingOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirFlowRateDuringHeatingOperation(
+      outdoorAirFlowRateDuringHeatingOperation);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::autosizeOutdoorAirFlowRateDuringHeatingOperation() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeOutdoorAirFlowRateDuringHeatingOperation();
+  }
+
+  bool
+    ZoneHVACPackagedTerminalHeatPump::setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(
+      outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setHeatingConvergenceTolerance(heatingConvergenceTolerance);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetHeatingConvergenceTolerance() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetHeatingConvergenceTolerance();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
+      minimumOutdoorDryBulbTemperatureforCompressorOperation);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setCoolingConvergenceTolerance(coolingConvergenceTolerance);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetCoolingConvergenceTolerance() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetCoolingConvergenceTolerance();
+  }
+
+  bool
+    ZoneHVACPackagedTerminalHeatPump::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(
+      maximumSupplyAirTemperaturefromSupplementalHeater);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(
+    double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(
+      maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setFanPlacement(std::string fanPlacement) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setFanPlacement(fanPlacement);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetFanPlacement() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetFanPlacement();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setAvailabilitySchedule(schedule);
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
+  }
+
+  void ZoneHVACPackagedTerminalHeatPump::resetSupplyAirFanOperatingModeSchedule() {
+    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetSupplyAirFanOperatingModeSchedule();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFan(HVACComponent& hvacComponent) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFan(hvacComponent);
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setHeatingCoil(HVACComponent& hvacComponent) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setHeatingCoil(hvacComponent);
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setSupplementalHeatingCoil(HVACComponent& hvacComponent) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplementalHeatingCoil(hvacComponent);
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setCoolingCoil(HVACComponent& hvacComponent) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setCoolingCoil(hvacComponent);
+  }
+
+  Schedule ZoneHVACPackagedTerminalHeatPump::availabilitySchedule() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->availabilitySchedule();
+  }
+
+  boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump::supplyAirFanOperatingModeSchedule() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFanOperatingModeSchedule();
+  }
+
+  HVACComponent ZoneHVACPackagedTerminalHeatPump::supplyAirFan() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFan();
+  }
+
+  HVACComponent ZoneHVACPackagedTerminalHeatPump::heatingCoil() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->heatingCoil();
+  }
+
+  HVACComponent ZoneHVACPackagedTerminalHeatPump::supplementalHeatingCoil() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplementalHeatingCoil();
+  }
+
+  HVACComponent ZoneHVACPackagedTerminalHeatPump::coolingCoil() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->coolingCoil();
+  }
+
+  /// @cond
+  ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(std::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl)
+    : ZoneHVACComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> ZoneHVACPackagedTerminalHeatPump::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizedSupplyAirFlowRateDuringCoolingOperation();
@@ -1214,5 +1189,5 @@ ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(std::shared_p
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
   }
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

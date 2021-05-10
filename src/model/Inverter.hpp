@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,56 +37,52 @@
 namespace openstudio {
 namespace model {
 
-class ElectricLoadCenterDistribution;
+  class ElectricLoadCenterDistribution;
 
-namespace detail{
-  class Inverter_Impl;
-}
+  namespace detail {
+    class Inverter_Impl;
+  }
 
-/** Inverter is the base class for inverters.
+  /** Inverter is the base class for inverters.
  */
-class MODEL_API Inverter : public ParentObject {
+  class MODEL_API Inverter : public ParentObject
+  {
 
-  public:
+   public:
+    Inverter(IddObjectType type, const Model& model);
 
-  Inverter(IddObjectType type,const Model& model);
+    virtual ~Inverter() {}
 
-  virtual ~Inverter() {}
+    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
-  boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+    virtual boost::optional<ThermalZone> thermalZone() const;
 
-  virtual boost::optional<ThermalZone> thermalZone() const;
+    virtual bool setThermalZone(const ThermalZone& thermalZone);
 
-  virtual bool setThermalZone(const ThermalZone& thermalZone);
+    virtual void resetThermalZone();
 
-  virtual void resetThermalZone();
+   protected:
+    friend class Model;
 
-  protected:
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    /// @cond
 
-  friend class openstudio::IdfObject;
+    typedef detail::Inverter_Impl ImplType;
 
-  /// @cond
+    explicit Inverter(std::shared_ptr<detail::Inverter_Impl> impl);
 
-  typedef detail::Inverter_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.Inverter");
 
-  explicit Inverter(std::shared_ptr<detail::Inverter_Impl> impl);
+    /// @endcond
+  };
 
-  private:
+  typedef boost::optional<Inverter> OptionalInverter;
 
-  REGISTER_LOGGER("openstudio.model.Inverter");
+  typedef std::vector<Inverter> InverterVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-typedef boost::optional<Inverter> OptionalInverter;
-
-typedef std::vector<Inverter> InverterVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_INVERTER_HPP
-
+#endif  // MODEL_INVERTER_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,22 +39,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerWarmest_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerWarmest_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerWarmest testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerWarmest testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerWarmest_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerWarmest_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -90,8 +88,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_addToNode)
   EXPECT_EQ(2, setpointManagerWarmests.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerWarmest_remove)
-{
+TEST_F(ModelFixture, SetpointManagerWarmest_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -114,8 +111,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_remove)
   EXPECT_EQ(0, setpointManagerWarmests.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerWarmest_clone)
-{
+TEST_F(ModelFixture, SetpointManagerWarmest_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -139,8 +135,7 @@ TEST_F(ModelFixture, SetpointManagerWarmest_clone)
   EXPECT_EQ(15.6, testObjectClone.maximumSetpointTemperature());
 }
 
-TEST_F(ModelFixture, SetpointManagerWarmest_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerWarmest_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -177,5 +172,5 @@ TEST_F(ModelFixture, SetpointManagerWarmest_legacy) {
 
   ASSERT_TRUE(node.setpointManagerWarmest());
 
-  ASSERT_EQ(setpointManagerWarmest,node.setpointManagerWarmest().get());
+  ASSERT_EQ(setpointManagerWarmest, node.setpointManagerWarmest().get());
 }

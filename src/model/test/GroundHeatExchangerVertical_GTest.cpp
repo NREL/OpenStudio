@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,40 +40,37 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_DefaultConstructor)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    GroundHeatExchangerVertical testObject = GroundHeatExchangerVertical(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      GroundHeatExchangerVertical testObject = GroundHeatExchangerVertical(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections) {
   Model m;
   GroundHeatExchangerVertical testObject(m);
 
   Node inletNode(m);
   Node outletNode(m);
 
-  m.connect(inletNode,inletNode.outletPort(),testObject,testObject.inletPort());
-  m.connect(testObject,testObject.outletPort(),outletNode,outletNode.inletPort());
+  m.connect(inletNode, inletNode.outletPort(), testObject, testObject.inletPort());
+  m.connect(testObject, testObject.outletPort(), outletNode, outletNode.inletPort());
 
-  ASSERT_TRUE( testObject.inletModelObject() );
-  ASSERT_TRUE( testObject.outletModelObject() );
+  ASSERT_TRUE(testObject.inletModelObject());
+  ASSERT_TRUE(testObject.outletModelObject());
 
-  EXPECT_EQ( inletNode.handle(), testObject.inletModelObject()->handle() );
-  EXPECT_EQ( outletNode.handle(), testObject.outletModelObject()->handle() );
+  EXPECT_EQ(inletNode.handle(), testObject.inletModelObject()->handle());
+  EXPECT_EQ(outletNode.handle(), testObject.outletModelObject()->handle());
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode) {
   Model m;
   GroundHeatExchangerVertical testObject(m);
 
@@ -82,7 +79,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -92,21 +89,20 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForComponent)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForComponent) {
   Model model;
   GroundHeatExchangerVertical testObject(model);
 
@@ -124,8 +120,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForCompone
   EXPECT_NE((unsigned)7, plantLoop.supplyComponents().size());
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_AddDemandBranchForComponent)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_AddDemandBranchForComponent) {
   Model model;
   GroundHeatExchangerVertical testObject(model);
 
@@ -136,8 +131,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_AddDemandBranchForComponent)
   EXPECT_NE((unsigned)7, plantLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeTwoSameObjects)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeTwoSameObjects) {
   Model model;
   GroundHeatExchangerVertical testObject(model);
 
@@ -149,8 +143,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeTwoSameObjects)
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_Remove)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_Remove) {
   Model model;
   GroundHeatExchangerVertical testObject(model);
 
@@ -166,7 +159,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Remove)
 }
 
 //test cloning the object
-TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone){
+TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone) {
   Model m;
   //make an object to clone, and edit some property to make sure the clone worked
   GroundHeatExchangerVertical testObject(m);
@@ -174,23 +167,22 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone){
 
   //clone into the same model
   GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14,testObjectClone.maximumFlowRate());
+  EXPECT_EQ(3.14, testObjectClone.maximumFlowRate());
 
   //clone into another model
   Model m2;
   GroundHeatExchangerVertical testObjectClone2 = testObject.clone(m2).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14,testObjectClone2.maximumFlowRate());
+  EXPECT_EQ(3.14, testObjectClone2.maximumFlowRate());
 
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions)
-{
+TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions) {
   Model model;
   GroundHeatExchangerVertical testObject(model);
 
-  std::vector< GFunction > gFunctions = testObject.gFunctions();
+  std::vector<GFunction> gFunctions = testObject.gFunctions();
   EXPECT_EQ(35, gFunctions.size());
 
   testObject.removeAllGFunctions();
@@ -212,7 +204,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions)
   EXPECT_DOUBLE_EQ(2.5, gFunctions[0].gValue());
 
   testObject.removeAllGFunctions();
-  for (int i=0; i<100; i++) {
+  for (int i = 0; i < 100; i++) {
     testObject.addGFunction(i, i + 0.5);
   }
   gFunctions = testObject.gFunctions();

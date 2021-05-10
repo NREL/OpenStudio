@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,8 +58,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSSensor_EMSSensor)
-{
+TEST_F(ModelFixture, EMSSensor_EMSSensor) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -78,7 +77,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   EXPECT_EQ("OATdb_Sensor", OATdbSensor.nameString());
-  EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle() );
+  EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle());
   EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable());
   EXPECT_EQ("", OATdbSensor.keyName());
 
@@ -97,10 +96,10 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ(zoneTemperature, zoneSensor.outputVariable());
   EXPECT_EQ(zone1.nameString(), zoneSensor.keyName());
 
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
+  // add Zone Lights Electricity Rate to both zones
+  OutputVariable lightsElectricPower("Zone Lights Electricity Rate", model);
   EXPECT_EQ("*", lightsElectricPower.keyValue());
-  EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
+  EXPECT_EQ("Zone Lights Electricity Rate", lightsElectricPower.variableName());
 
   // add light sensor on zone1
   EnergyManagementSystemSensor lights(model, lightsElectricPower);
@@ -148,13 +147,12 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
 
   Building building = model.getUniqueModelObject<Building>();
 
-
   // add output variable 1
-  OutputVariable outvar1("VRF Heat Pump Heating Electric Energy", model);
+  OutputVariable outvar1("VRF Heat Pump Heating Electricity Energy", model);
   outvar1.setName("residential mini split vrf heat energy output var");
   outvar1.setKeyValue("");
   //EXPECT_EQ("", outvar1.keyValue());
-  EXPECT_EQ("VRF Heat Pump Heating Electric Energy", outvar1.variableName());
+  EXPECT_EQ("VRF Heat Pump Heating Electricity Energy", outvar1.variableName());
   EXPECT_EQ("residential mini split vrf heat energy output var", outvar1.nameString());
 
   // add sensor 1
@@ -163,11 +161,11 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
   sensor1.setKeyName("living zone Multi Split Heat Pump");
 
   // add output variable 2
-  OutputVariable outvar2("VRF Heat Pump Heating Electric Energy", model);
+  OutputVariable outvar2("VRF Heat Pump Heating Electricity Energy", model);
   outvar2.setName("residential mini split|unit 2 vrf heat energy output var");
   outvar2.setKeyValue("");
   //EXPECT_EQ("", outvar2.keyValue());
-  EXPECT_EQ("VRF Heat Pump Heating Electric Energy", outvar2.variableName());
+  EXPECT_EQ("VRF Heat Pump Heating Electricity Energy", outvar2.variableName());
   EXPECT_EQ("residential mini split|unit 2 vrf heat energy output var", outvar2.nameString());
 
   // add sensor
@@ -179,7 +177,6 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
 
   outvar1.remove();
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
-
 }
 
 TEST_F(ModelFixture, EMSSensorDelete) {
@@ -209,5 +206,3 @@ TEST_F(ModelFixture, EMSSensorDelete) {
   //sensor still has keyName as avm UUID string (will not FT though eventually)
   EXPECT_EQ(key, sensor.keyName());
 }
-
-

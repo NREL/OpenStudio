@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,104 +37,100 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail{
-  class WaterToAirComponent_Impl;
-}
+  namespace detail {
+    class WaterToAirComponent_Impl;
+  }
 
-class AirLoopHVAC;
+  class AirLoopHVAC;
 
-class PlantLoop;
+  class PlantLoop;
 
-/** WaterToAirComponent is the base class for model objects which interact with
+  /** WaterToAirComponent is the base class for model objects which interact with
  *  an air stream and a water stream.
  *
  *  These objects are typically water coils such as the EnergyPlus IDD objects
  *  named Coil:Heating:Water and Coil:Cooling:Water.
  */
-class MODEL_API WaterToAirComponent : public HVACComponent
-{
-  public:
-  virtual ~WaterToAirComponent() {}
+  class MODEL_API WaterToAirComponent : public HVACComponent
+  {
+   public:
+    virtual ~WaterToAirComponent() {}
 
-  /** Returns the air inlet port. **/
-  virtual unsigned airInletPort() const;
+    /** Returns the air inlet port. **/
+    virtual unsigned airInletPort() const;
 
-  /** Returns the air outlet port. **/
-  virtual unsigned airOutletPort() const;
+    /** Returns the air outlet port. **/
+    virtual unsigned airOutletPort() const;
 
-  /** Returns the optional ModelObject connected to the air inlet port. **/
-  virtual boost::optional<ModelObject> airInletModelObject() const;
+    /** Returns the optional ModelObject connected to the air inlet port. **/
+    virtual boost::optional<ModelObject> airInletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the air outlet port. **/
-  virtual boost::optional<ModelObject> airOutletModelObject() const;
+    /** Returns the optional ModelObject connected to the air outlet port. **/
+    virtual boost::optional<ModelObject> airOutletModelObject() const;
 
-  /** Returns the water inlet port. **/
-  virtual unsigned waterInletPort() const;
+    /** Returns the water inlet port. **/
+    virtual unsigned waterInletPort() const;
 
-  /** Returns the water outlet port. **/
-  virtual unsigned waterOutletPort() const;
+    /** Returns the water outlet port. **/
+    virtual unsigned waterOutletPort() const;
 
-  /** Returns the optional ModelObject connected to the water inlet port. **/
-  virtual boost::optional<ModelObject> waterInletModelObject() const;
+    /** Returns the optional ModelObject connected to the water inlet port. **/
+    virtual boost::optional<ModelObject> waterInletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the water outlet port. **/
-  virtual boost::optional<ModelObject> waterOutletModelObject() const;
+    /** Returns the optional ModelObject connected to the water outlet port. **/
+    virtual boost::optional<ModelObject> waterOutletModelObject() const;
 
-  virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  virtual boost::optional<PlantLoop> plantLoop() const;
+    virtual boost::optional<PlantLoop> plantLoop() const;
 
-  virtual bool addToNode(Node & node);
+    virtual bool addToNode(Node& node);
 
-  virtual bool addToSplitter(Splitter & splitter);
+    virtual bool addToSplitter(Splitter& splitter);
 
-  virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove();
 
-  virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const;
 
-  void disconnectWaterSide();
+    void disconnectWaterSide();
 
-  void disconnectAirSide();
+    void disconnectAirSide();
 
-  /** Removes the component from the airLoopHVAC if one is attached.
+    /** Removes the component from the airLoopHVAC if one is attached.
    *  Repairs the airLoopHVAC connections preserving the integrity of the loop.
    *  Does not remove the component from the model
    */
-  bool removeFromAirLoopHVAC();
+    bool removeFromAirLoopHVAC();
 
-  /** Removes the component from the plantLoop if one is attached.
+    /** Removes the component from the plantLoop if one is attached.
    *  Repairs the plantLoop connections preserving the integrity of the loop.
    *  Does not remove the component from the model
    */
-  bool removeFromPlantLoop();
+    bool removeFromPlantLoop();
 
-  protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /// @cond
 
-  /// @cond
+    typedef detail::WaterToAirComponent_Impl ImplType;
 
-  typedef detail::WaterToAirComponent_Impl ImplType;
+    explicit WaterToAirComponent(std::shared_ptr<detail::WaterToAirComponent_Impl> impl);
 
-  explicit WaterToAirComponent(std::shared_ptr<detail::WaterToAirComponent_Impl> impl);
+    WaterToAirComponent(IddObjectType type, const Model& model);
 
-  WaterToAirComponent(IddObjectType type,const Model& model);
+   private:
+    REGISTER_LOGGER("openstudio.model.WaterToAirComponent");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.WaterToAirComponent");
+  typedef boost::optional<WaterToAirComponent> OptionalWaterToAirComponent;
 
-  /// @endcond
+}  // namespace model
 
-};
+}  // namespace openstudio
 
-typedef boost::optional<WaterToAirComponent> OptionalWaterToAirComponent;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_WATERTOAIRCOMPONENT_HPP
-
+#endif  // MODEL_WATERTOAIRCOMPONENT_HPP

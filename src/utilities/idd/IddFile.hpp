@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,20 +41,21 @@
 #include <ostream>
 #include <vector>
 
-namespace openstudio{
+namespace openstudio {
 
 // forward declarations
 class IddFactorySingleton;
-namespace detail{
+namespace detail {
   class IddFile_Impl;
-} // detail
+}  // namespace detail
 
 class VersionString;
 
 /** IddFile provides parsing and printing of text files in Input Data Definition (IDD) format.
  *  IDD is a schema definition format defined by the EnergyPlus team, adopted with slight
  *  modifications for the OpenStudio project. IddFile is a shared object. */
-class UTILITIES_API IddFile {
+class UTILITIES_API IddFile
+{
  public:
   /** @name Constructors */
   //@{
@@ -130,13 +131,14 @@ class UTILITIES_API IddFile {
   /** Saves file to path p. Will construct the parent folder if necessary and if its parent
    *  folder already exists. Will only overwrite an existing file if overwrite==true. If no
    *  extension is provided will use 'idd'. */
-  bool save(const openstudio::path& p, bool overwrite=false);
+  // cppcheck-suppress functionConst
+  bool save(const openstudio::path& p, bool overwrite = false);
 
   /** Returns the version and build SHA from the given Idd. If build SHA is not present .second will be empty.
    *
    *  \throws an exception with a meaningful error message if something goes wrong
    */
-  static std::pair<VersionString, std::string> parseVersionBuild(const openstudio::path &p);
+  static std::pair<VersionString, std::string> parseVersionBuild(const openstudio::path& p);
 
   //@}
  protected:
@@ -173,6 +175,6 @@ typedef std::vector<IddFile> IddFileVector;
 /** \relates IddFile */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddFile& iddFile);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDFILE_HPP
+#endif  // UTILITIES_IDD_IDDFILE_HPP

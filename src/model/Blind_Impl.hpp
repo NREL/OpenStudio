@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,261 +33,255 @@
 #include "ModelAPI.hpp"
 #include "ShadingMaterial_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** Blind_Impl is a ShadingMaterial_Impl that is the implementation class for Blind.*/
-  class MODEL_API Blind_Impl : public ShadingMaterial_Impl {
+    /** Blind_Impl is a ShadingMaterial_Impl that is the implementation class for Blind.*/
+    class MODEL_API Blind_Impl : public ShadingMaterial_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    Blind_Impl(const IdfObject& idfObject,
-               Model_Impl* model,
-               bool keepHandle);
+      Blind_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Blind_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+      Blind_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    Blind_Impl(const Blind_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+      Blind_Impl(const Blind_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~Blind_Impl() {}
+      virtual ~Blind_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    /** Get the thickness of the material. For now is equivalent to slat thickness. */
-    virtual double thickness() const override;
+      /** Get the thickness of the material. For now is equivalent to slat thickness. */
+      virtual double thickness() const override;
 
-    std::string slatOrientation() const;
-    /** Throws because blind has beam and diffuse visible transmittance. */
-    virtual boost::optional<double> getVisibleTransmittance() const override;
+      std::string slatOrientation() const;
+      /** Throws because blind has beam and diffuse visible transmittance. */
+      virtual boost::optional<double> getVisibleTransmittance() const override;
 
-    bool isSlatOrientationDefaulted() const;
+      bool isSlatOrientationDefaulted() const;
 
-    double slatWidth() const;
+      double slatWidth() const;
 
-    double slatSeparation() const;
+      double slatSeparation() const;
 
-    double slatThickness() const;
+      double slatThickness() const;
 
-    bool isSlatThicknessDefaulted() const;
+      bool isSlatThicknessDefaulted() const;
 
-    double slatAngle() const;
+      double slatAngle() const;
 
-    bool isSlatAngleDefaulted() const;
+      bool isSlatAngleDefaulted() const;
 
-    double slatConductivity() const;
+      double slatConductivity() const;
 
-    bool isSlatConductivityDefaulted() const;
+      bool isSlatConductivityDefaulted() const;
 
-    double slatBeamSolarTransmittance() const;
+      double slatBeamSolarTransmittance() const;
 
-    bool isSlatBeamSolarTransmittanceDefaulted() const;
+      bool isSlatBeamSolarTransmittanceDefaulted() const;
 
-    double frontSideSlatBeamSolarReflectance() const;
+      double frontSideSlatBeamSolarReflectance() const;
 
-    double backSideSlatBeamSolarReflectance() const;
+      double backSideSlatBeamSolarReflectance() const;
 
-    double slatDiffuseSolarTransmittance() const;
+      double slatDiffuseSolarTransmittance() const;
 
-    bool isSlatDiffuseSolarTransmittanceDefaulted() const;
+      bool isSlatDiffuseSolarTransmittanceDefaulted() const;
 
-    double frontSideSlatDiffuseSolarReflectance() const;
+      double frontSideSlatDiffuseSolarReflectance() const;
 
-    double backSideSlatDiffuseSolarReflectance() const;
+      double backSideSlatDiffuseSolarReflectance() const;
 
-    double slatBeamVisibleTransmittance() const;
+      double slatBeamVisibleTransmittance() const;
 
-    boost::optional<double> frontSideSlatBeamVisibleReflectance() const;
+      boost::optional<double> frontSideSlatBeamVisibleReflectance() const;
 
-    boost::optional<double> backSideSlatBeamVisibleReflectance() const;
+      boost::optional<double> backSideSlatBeamVisibleReflectance() const;
 
-    double slatDiffuseVisibleTransmittance() const;
+      double slatDiffuseVisibleTransmittance() const;
 
-    bool isSlatDiffuseVisibleTransmittanceDefaulted() const;
+      bool isSlatDiffuseVisibleTransmittanceDefaulted() const;
 
-    boost::optional<double> frontSideSlatDiffuseVisibleReflectance() const;
+      boost::optional<double> frontSideSlatDiffuseVisibleReflectance() const;
 
-    boost::optional<double> backSideSlatDiffuseVisibleReflectance() const;
+      boost::optional<double> backSideSlatDiffuseVisibleReflectance() const;
 
-    double slatInfraredHemisphericalTransmittance() const;
+      double slatInfraredHemisphericalTransmittance() const;
 
-    bool isSlatInfraredHemisphericalTransmittanceDefaulted() const;
+      bool isSlatInfraredHemisphericalTransmittanceDefaulted() const;
 
-    double frontSideSlatInfraredHemisphericalEmissivity() const;
+      double frontSideSlatInfraredHemisphericalEmissivity() const;
 
-    bool isFrontSideSlatInfraredHemisphericalEmissivityDefaulted() const;
+      bool isFrontSideSlatInfraredHemisphericalEmissivityDefaulted() const;
 
-    double backSideSlatInfraredHemisphericalEmissivity() const;
+      double backSideSlatInfraredHemisphericalEmissivity() const;
 
-    bool isBackSideSlatInfraredHemisphericalEmissivityDefaulted() const;
+      bool isBackSideSlatInfraredHemisphericalEmissivityDefaulted() const;
 
-    double blindtoGlassDistance() const;
+      double blindtoGlassDistance() const;
 
-    bool isBlindtoGlassDistanceDefaulted() const;
+      bool isBlindtoGlassDistanceDefaulted() const;
 
-    double blindTopOpeningMultiplier() const;
+      double blindTopOpeningMultiplier() const;
 
-    bool isBlindTopOpeningMultiplierDefaulted() const;
+      bool isBlindTopOpeningMultiplierDefaulted() const;
 
-    double blindBottomOpeningMultiplier() const;
+      double blindBottomOpeningMultiplier() const;
 
-    bool isBlindBottomOpeningMultiplierDefaulted() const;
+      bool isBlindBottomOpeningMultiplierDefaulted() const;
 
-    double blindLeftSideOpeningMultiplier() const;
+      double blindLeftSideOpeningMultiplier() const;
 
-    bool isBlindLeftSideOpeningMultiplierDefaulted() const;
+      bool isBlindLeftSideOpeningMultiplierDefaulted() const;
 
-    double blindRightSideOpeningMultiplier() const;
+      double blindRightSideOpeningMultiplier() const;
 
-    bool isBlindRightSideOpeningMultiplierDefaulted() const;
+      bool isBlindRightSideOpeningMultiplierDefaulted() const;
 
-    double minimumSlatAngle() const;
+      double minimumSlatAngle() const;
 
-    bool isMinimumSlatAngleDefaulted() const;
+      bool isMinimumSlatAngleDefaulted() const;
 
-    double maximumSlatAngle() const;
+      double maximumSlatAngle() const;
 
-    bool isMaximumSlatAngleDefaulted() const;
+      bool isMaximumSlatAngleDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    /** Set thickness to value (m). For now is equivalent to setting slat thickness. */
-    virtual bool setThickness(double value) override;
+      /** Set thickness to value (m). For now is equivalent to setting slat thickness. */
+      virtual bool setThickness(double value) override;
 
-    bool setSlatOrientation(std::string slatOrientation);
+      bool setSlatOrientation(const std::string& slatOrientation);
 
-    void resetSlatOrientation();
+      void resetSlatOrientation();
 
-    bool setSlatWidth(double slatWidth);
+      bool setSlatWidth(double slatWidth);
 
-    bool setSlatSeparation(double slatSeparation);
+      bool setSlatSeparation(double slatSeparation);
 
-    bool setSlatThickness(double slatThickness);
+      bool setSlatThickness(double slatThickness);
 
-    void resetSlatThickness();
+      void resetSlatThickness();
 
-    bool setSlatAngle(double slatAngle);
+      bool setSlatAngle(double slatAngle);
 
-    void resetSlatAngle();
+      void resetSlatAngle();
 
-    bool setSlatConductivity(double slatConductivity);
+      bool setSlatConductivity(double slatConductivity);
 
-    void resetSlatConductivity();
+      void resetSlatConductivity();
 
-    bool setSlatBeamSolarTransmittance(double slatBeamSolarTransmittance);
+      bool setSlatBeamSolarTransmittance(double slatBeamSolarTransmittance);
 
-    void resetSlatBeamSolarTransmittance();
+      void resetSlatBeamSolarTransmittance();
 
-    bool setFrontSideSlatBeamSolarReflectance(double frontSideSlatBeamSolarReflectance);
+      bool setFrontSideSlatBeamSolarReflectance(double frontSideSlatBeamSolarReflectance);
 
-    bool setBackSideSlatBeamSolarReflectance(double backSideSlatBeamSolarReflectance);
+      bool setBackSideSlatBeamSolarReflectance(double backSideSlatBeamSolarReflectance);
 
-    bool setSlatDiffuseSolarTransmittance(double slatDiffuseSolarTransmittance);
+      bool setSlatDiffuseSolarTransmittance(double slatDiffuseSolarTransmittance);
 
-    void resetSlatDiffuseSolarTransmittance();
+      void resetSlatDiffuseSolarTransmittance();
 
-    bool setFrontSideSlatDiffuseSolarReflectance(double frontSideSlatDiffuseSolarReflectance);
+      bool setFrontSideSlatDiffuseSolarReflectance(double frontSideSlatDiffuseSolarReflectance);
 
-    bool setBackSideSlatDiffuseSolarReflectance(double backSideSlatDiffuseSolarReflectance);
+      bool setBackSideSlatDiffuseSolarReflectance(double backSideSlatDiffuseSolarReflectance);
 
-    bool setSlatBeamVisibleTransmittance(double slatBeamVisibleTransmittance);
+      bool setSlatBeamVisibleTransmittance(double slatBeamVisibleTransmittance);
 
-    bool setFrontSideSlatBeamVisibleReflectance(boost::optional<double> frontSideSlatBeamVisibleReflectance);
+      bool setFrontSideSlatBeamVisibleReflectance(boost::optional<double> frontSideSlatBeamVisibleReflectance);
 
-    void resetFrontSideSlatBeamVisibleReflectance();
+      void resetFrontSideSlatBeamVisibleReflectance();
 
-    bool setBackSideSlatBeamVisibleReflectance(boost::optional<double> backSideSlatBeamVisibleReflectance);
+      bool setBackSideSlatBeamVisibleReflectance(boost::optional<double> backSideSlatBeamVisibleReflectance);
 
-    void resetBackSideSlatBeamVisibleReflectance();
+      void resetBackSideSlatBeamVisibleReflectance();
 
-    bool setSlatDiffuseVisibleTransmittance(double slatDiffuseVisibleTransmittance);
+      bool setSlatDiffuseVisibleTransmittance(double slatDiffuseVisibleTransmittance);
 
-    void resetSlatDiffuseVisibleTransmittance();
+      void resetSlatDiffuseVisibleTransmittance();
 
-    bool setFrontSideSlatDiffuseVisibleReflectance(boost::optional<double> frontSideSlatDiffuseVisibleReflectance);
+      bool setFrontSideSlatDiffuseVisibleReflectance(boost::optional<double> frontSideSlatDiffuseVisibleReflectance);
 
-    void resetFrontSideSlatDiffuseVisibleReflectance();
+      void resetFrontSideSlatDiffuseVisibleReflectance();
 
-    bool setBackSideSlatDiffuseVisibleReflectance(boost::optional<double> backSideSlatDiffuseVisibleReflectance);
+      bool setBackSideSlatDiffuseVisibleReflectance(boost::optional<double> backSideSlatDiffuseVisibleReflectance);
 
-    void resetBackSideSlatDiffuseVisibleReflectance();
+      void resetBackSideSlatDiffuseVisibleReflectance();
 
-    bool setSlatInfraredHemisphericalTransmittance(double slatInfraredHemisphericalTransmittance);
+      bool setSlatInfraredHemisphericalTransmittance(double slatInfraredHemisphericalTransmittance);
 
-    void resetSlatInfraredHemisphericalTransmittance();
+      void resetSlatInfraredHemisphericalTransmittance();
 
-    bool setFrontSideSlatInfraredHemisphericalEmissivity(double frontSideSlatInfraredHemisphericalEmissivity);
+      bool setFrontSideSlatInfraredHemisphericalEmissivity(double frontSideSlatInfraredHemisphericalEmissivity);
 
-    void resetFrontSideSlatInfraredHemisphericalEmissivity();
+      void resetFrontSideSlatInfraredHemisphericalEmissivity();
 
-    bool setBackSideSlatInfraredHemisphericalEmissivity(double backSideSlatInfraredHemisphericalEmissivity);
+      bool setBackSideSlatInfraredHemisphericalEmissivity(double backSideSlatInfraredHemisphericalEmissivity);
 
-    void resetBackSideSlatInfraredHemisphericalEmissivity();
+      void resetBackSideSlatInfraredHemisphericalEmissivity();
 
-    bool setBlindtoGlassDistance(double blindtoGlassDistance);
+      bool setBlindtoGlassDistance(double blindtoGlassDistance);
 
-    void resetBlindtoGlassDistance();
+      void resetBlindtoGlassDistance();
 
-    bool setBlindTopOpeningMultiplier(double blindTopOpeningMultiplier);
+      bool setBlindTopOpeningMultiplier(double blindTopOpeningMultiplier);
 
-    void resetBlindTopOpeningMultiplier();
+      void resetBlindTopOpeningMultiplier();
 
-    bool setBlindBottomOpeningMultiplier(double blindBottomOpeningMultiplier);
+      bool setBlindBottomOpeningMultiplier(double blindBottomOpeningMultiplier);
 
-    void resetBlindBottomOpeningMultiplier();
+      void resetBlindBottomOpeningMultiplier();
 
-    bool setBlindLeftSideOpeningMultiplier(double blindLeftSideOpeningMultiplier);
+      bool setBlindLeftSideOpeningMultiplier(double blindLeftSideOpeningMultiplier);
 
-    void resetBlindLeftSideOpeningMultiplier();
+      void resetBlindLeftSideOpeningMultiplier();
 
-    bool setBlindRightSideOpeningMultiplier(double blindRightSideOpeningMultiplier);
+      bool setBlindRightSideOpeningMultiplier(double blindRightSideOpeningMultiplier);
 
-    void resetBlindRightSideOpeningMultiplier();
+      void resetBlindRightSideOpeningMultiplier();
 
-    bool setMinimumSlatAngle(double minimumSlatAngle);
+      bool setMinimumSlatAngle(double minimumSlatAngle);
 
-    void resetMinimumSlatAngle();
+      void resetMinimumSlatAngle();
 
-    bool setMaximumSlatAngle(double maximumSlatAngle);
+      bool setMaximumSlatAngle(double maximumSlatAngle);
 
-    void resetMaximumSlatAngle();
+      void resetMaximumSlatAngle();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.Blind");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.Blind");
 
-    std::vector<std::string> slatOrientationValues() const;
-  };
+      std::vector<std::string> slatOrientationValues() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_BLIND_IMPL_HPP
+#endif  // MODEL_BLIND_IMPL_HPP

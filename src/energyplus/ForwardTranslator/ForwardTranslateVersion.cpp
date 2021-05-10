@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,25 +43,21 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateVersion( Version& modelObject )
-{
-  IdfObject version(openstudio::IddObjectType::Version);
-  OS_ASSERT(istringEqual(version.iddObject().name(),"Version"));
+  boost::optional<IdfObject> ForwardTranslator::translateVersion(Version& modelObject) {
+    IdfObject version(openstudio::IddObjectType::Version);
+    OS_ASSERT(istringEqual(version.iddObject().name(), "Version"));
 
-  m_idfObjects.push_back(version);
+    m_idfObjects.push_back(version);
 
-  OptionalString s = modelObject.name();
-  if( s )
-  {
-    version.setName(*s);
+    OptionalString s = modelObject.name();
+    if (s) {
+      version.setName(*s);
+    }
+
+    version.setString(openstudio::VersionFields::VersionIdentifier, ENERGYPLUS_VERSION);
+
+    return boost::optional<IdfObject>(version);
   }
 
-  version.setString( openstudio::VersionFields::VersionIdentifier,
-                     ENERGYPLUS_VERSION );
-
-  return boost::optional<IdfObject>(version);
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

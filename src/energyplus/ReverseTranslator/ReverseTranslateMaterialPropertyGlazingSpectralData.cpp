@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,27 +45,25 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateMaterialPropertyGlazingSpectralData(const WorkspaceObject& workspaceObject)
-{
+  boost::optional<ModelObject> ReverseTranslator::translateMaterialPropertyGlazingSpectralData(const WorkspaceObject& workspaceObject) {
 
-  openstudio::model::MaterialPropertyGlazingSpectralData glazingSpectralData(m_model);
+    openstudio::model::MaterialPropertyGlazingSpectralData glazingSpectralData(m_model);
 
-  // get extensible groups for spectral data fields
-  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-    OptionalDouble wavelength = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength);
-    OptionalDouble transmittance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance);
-    OptionalDouble frontReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance);
-    OptionalDouble backReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance);
+    // get extensible groups for spectral data fields
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      OptionalDouble wavelength = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength);
+      OptionalDouble transmittance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance);
+      OptionalDouble frontReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance);
+      OptionalDouble backReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance);
 
-    // add the spectral data field
-    glazingSpectralData.addSpectralDataField(*wavelength, *transmittance, *frontReflectance, *backReflectance);
+      // add the spectral data field
+      glazingSpectralData.addSpectralDataField(*wavelength, *transmittance, *frontReflectance, *backReflectance);
+    }
+
+    return glazingSpectralData;
   }
 
-  return glazingSpectralData;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

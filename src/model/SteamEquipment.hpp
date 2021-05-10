@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,110 +36,108 @@
 namespace openstudio {
 namespace model {
 
-class SteamEquipmentDefinition;
-class Schedule;
+  class SteamEquipmentDefinition;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class SteamEquipment_Impl;
+    class SteamEquipment_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SteamEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
+  /** SteamEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
  *  'OS:SteamEquipment'. \sa SteamEquipmentDefinition
  */
-class MODEL_API SteamEquipment : public SpaceLoadInstance {
- public:
+  class MODEL_API SteamEquipment : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    explicit SteamEquipment(const SteamEquipmentDefinition& definition);
 
-  explicit SteamEquipment(const SteamEquipmentDefinition& definition);
+    virtual ~SteamEquipment() {}
 
-  virtual ~SteamEquipment() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    SteamEquipmentDefinition steamEquipmentDefinition() const;
 
-  SteamEquipmentDefinition steamEquipmentDefinition() const;
-
-  /** Returns the (fractional) equipment schedule.  If this object does not
+    /** Returns the (fractional) equipment schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setSteamEquipmentDefinition(const SteamEquipmentDefinition& definition);
+    bool setSteamEquipmentDefinition(const SteamEquipmentDefinition& definition);
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getDesignLevel(double floorArea, double numPeople) const;
+    double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SteamEquipment_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SteamEquipment_Impl ImplType;
 
-  friend class detail::SteamEquipment_Impl;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class IdfObject;
-  friend class Model;
+    friend class detail::SteamEquipment_Impl;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class IdfObject;
+    friend class Model;
 
-  explicit SteamEquipment(std::shared_ptr<detail::SteamEquipment_Impl> impl);
+    explicit SteamEquipment(std::shared_ptr<detail::SteamEquipment_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SteamEquipment");
+  };
 
-  REGISTER_LOGGER("openstudio.model.SteamEquipment");
-};
+  /** \relates SteamEquipment*/
+  typedef boost::optional<SteamEquipment> OptionalSteamEquipment;
 
-/** \relates SteamEquipment*/
-typedef boost::optional<SteamEquipment> OptionalSteamEquipment;
+  /** \relates SteamEquipment*/
+  typedef std::vector<SteamEquipment> SteamEquipmentVector;
 
-/** \relates SteamEquipment*/
-typedef std::vector<SteamEquipment> SteamEquipmentVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_STEAMEQUIPMENT_HPP
-
+#endif  // MODEL_STEAMEQUIPMENT_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,79 +35,76 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API AirflowNetworkComponent_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API AirflowNetworkComponent_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkComponent_Impl(IddObjectType type, Model_Impl* model);
+      AirflowNetworkComponent_Impl(IddObjectType type, Model_Impl* model);
 
-    AirflowNetworkComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      AirflowNetworkComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      AirflowNetworkComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkComponent_Impl(const AirflowNetworkComponent_Impl& other, Model_Impl* model, bool keepHandles);
+      AirflowNetworkComponent_Impl(const AirflowNetworkComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~AirflowNetworkComponent_Impl() {}
+      virtual ~AirflowNetworkComponent_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //virtual ModelObject clone(Model model) const override;
+      //virtual ModelObject clone(Model model) const override;
 
-    //virtual boost::optional<ParentObject> parent() const override;
+      //virtual boost::optional<ParentObject> parent() const override;
 
-    //virtual std::vector<ModelObject> children() const override;
+      //virtual std::vector<ModelObject> children() const override;
 
-    //virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+      //virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
-    //** Returns the optional ModelObject that this component represents. **/
-    virtual boost::optional<ModelObject> componentModelObject() const;
+      //** Returns the optional ModelObject that this component represents. **/
+      virtual boost::optional<ModelObject> componentModelObject() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // unsigned inletPort() const;
+      // unsigned inletPort() const;
 
-    // unsigned outletPort() const;
+      // unsigned outletPort() const;
 
-    //virtual boost::optional<ModelObject> inletModelObject() const;
+      //virtual boost::optional<ModelObject> inletModelObject() const;
 
-    //virtual boost::optional<ModelObject> outletModelObject() const;
+      //virtual boost::optional<ModelObject> outletModelObject() const;
 
-    //virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
+      //virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
+      //@}
+      /** @name Other */
+      //@{
+      //virtual bool addToNode(Node & node) override;
 
-    //@}
-    /** @name Other */
-    //@{
-    //virtual bool addToNode(Node & node) override;
+      //virtual std::vector<openstudio::IdfObject> remove() override;
 
-    //virtual std::vector<openstudio::IdfObject> remove() override;
+      //bool removeFromLoop();
 
-    //bool removeFromLoop();
+      //void disconnect() override;
 
-    //void disconnect() override;
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkComponent");
+    };
 
-    //@}
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkComponent");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKCOMPONENT_IMPL_HPP
+#endif  // MODEL_AIRFLOWNETWORKCOMPONENT_IMPL_HPP

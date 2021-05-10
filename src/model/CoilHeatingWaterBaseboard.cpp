@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,442 +47,417 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const IdfObject& idfObject,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
-  }
+    CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
+    }
 
-  CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
-  }
+    CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                   bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
+    }
 
-  CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const CoilHeatingWaterBaseboard_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
+    CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const CoilHeatingWaterBaseboard_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& CoilHeatingWaterBaseboard_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
+    const std::vector<std::string>& CoilHeatingWaterBaseboard_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-  IddObjectType CoilHeatingWaterBaseboard_Impl::iddObjectType() const {
-    return CoilHeatingWaterBaseboard::iddObjectType();
-  }
-  unsigned CoilHeatingWaterBaseboard_Impl::inletPort() const
-{
-  return OS_Coil_Heating_Water_BaseboardFields::WaterInletNodeName;
-}
+    IddObjectType CoilHeatingWaterBaseboard_Impl::iddObjectType() const {
+      return CoilHeatingWaterBaseboard::iddObjectType();
+    }
+    unsigned CoilHeatingWaterBaseboard_Impl::inletPort() const {
+      return OS_Coil_Heating_Water_BaseboardFields::WaterInletNodeName;
+    }
 
-  unsigned CoilHeatingWaterBaseboard_Impl::outletPort() const
-{
-  return OS_Coil_Heating_Water_BaseboardFields::WaterOutletNodeName;
-}
+    unsigned CoilHeatingWaterBaseboard_Impl::outletPort() const {
+      return OS_Coil_Heating_Water_BaseboardFields::WaterOutletNodeName;
+    }
 
-  boost::optional<ZoneHVACComponent> CoilHeatingWaterBaseboard_Impl::containingZoneHVACComponent() const
-  {
-    // this coil can only be found in a ZoneHVACBaseboardConvectiveWater
-    // check all ZoneHVACBaseboardConvectiveWaters in the model, seeing if this coil
-    // is inside of one of them.  Return the one it is inside of
+    boost::optional<ZoneHVACComponent> CoilHeatingWaterBaseboard_Impl::containingZoneHVACComponent() const {
+      // this coil can only be found in a ZoneHVACBaseboardConvectiveWater
+      // check all ZoneHVACBaseboardConvectiveWaters in the model, seeing if this coil
+      // is inside of one of them.  Return the one it is inside of
 
-    // declare a vector to hold all of the zoneHVACBaseboardConvectiveWater
-    std::vector<ZoneHVACBaseboardConvectiveWater> zoneHVACBaseboardConvectiveWaters;
-    // populate the vector with all of them
-    zoneHVACBaseboardConvectiveWaters = this->model().getConcreteModelObjects<ZoneHVACBaseboardConvectiveWater>();
-    // loop through each one, seeing if the coil is contained by the zonehvacbaseboard
-    for( const auto & zoneHVACBaseboardConvectiveWater : zoneHVACBaseboardConvectiveWaters )
-    {
-      if( boost::optional<HVACComponent> coil = zoneHVACBaseboardConvectiveWater.heatingCoil() )
-      {
-        if( coil->handle() == this->handle() )  //if the handles match, this coil is inside of a zonehvacbaseboard
-        {
-          return zoneHVACBaseboardConvectiveWater;
+      // declare a vector to hold all of the zoneHVACBaseboardConvectiveWater
+      std::vector<ZoneHVACBaseboardConvectiveWater> zoneHVACBaseboardConvectiveWaters;
+      // populate the vector with all of them
+      zoneHVACBaseboardConvectiveWaters = this->model().getConcreteModelObjects<ZoneHVACBaseboardConvectiveWater>();
+      // loop through each one, seeing if the coil is contained by the zonehvacbaseboard
+      for (const auto& zoneHVACBaseboardConvectiveWater : zoneHVACBaseboardConvectiveWaters) {
+        if (boost::optional<HVACComponent> coil = zoneHVACBaseboardConvectiveWater.heatingCoil()) {
+          if (coil->handle() == this->handle())  //if the handles match, this coil is inside of a zonehvacbaseboard
+          {
+            return zoneHVACBaseboardConvectiveWater;
+          }
         }
       }
+
+      // if the coil isn't inside any zonehvacbaseboards (which currently should never happen), return nothing
+      return boost::none;
     }
 
-    // if the coil isn't inside any zonehvacbaseboards (which currently should never happen), return nothing
-    return boost::none;
-  }
-
-  std::string CoilHeatingWaterBaseboard_Impl::heatingDesignCapacityMethod() const {
-    boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> CoilHeatingWaterBaseboard_Impl::heatingDesignCapacity() const {
-    return getDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity,true);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::isHeatingDesignCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    std::string CoilHeatingWaterBaseboard_Impl::heatingDesignCapacityMethod() const {
+      boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  double CoilHeatingWaterBaseboard_Impl::heatingDesignCapacityPerFloorArea() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityPerFloorArea,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilHeatingWaterBaseboard_Impl::fractionofAutosizedHeatingDesignCapacity() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::FractionofAutosizedHeatingDesignCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> CoilHeatingWaterBaseboard_Impl::uFactorTimesAreaValue() const {
-    return getDouble(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue,true);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::isUFactorTimesAreaValueDefaulted() const {
-    return isEmpty(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::isUFactorTimesAreaValueAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    boost::optional<double> CoilHeatingWaterBaseboard_Impl::heatingDesignCapacity() const {
+      return getDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, true);
     }
-    return result;
-  }
 
-  boost::optional<double> CoilHeatingWaterBaseboard_Impl::maximumWaterFlowRate() const {
-    return getDouble(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate,true);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::isMaximumWaterFlowRateDefaulted() const {
-    return isEmpty(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::isMaximumWaterFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    bool CoilHeatingWaterBaseboard_Impl::isHeatingDesignCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    return result;
-  }
 
-  double CoilHeatingWaterBaseboard_Impl::convergenceTolerance() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-   bool CoilHeatingWaterBaseboard_Impl::isConvergenceToleranceDefaulted() const {
-    return isEmpty(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
-    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
-    return result;
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity) {
-    bool result(false);
-    if (heatingDesignCapacity) {
-      result = setDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, heatingDesignCapacity.get());
+    double CoilHeatingWaterBaseboard_Impl::heatingDesignCapacityPerFloorArea() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityPerFloorArea, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  void CoilHeatingWaterBaseboard_Impl::autosizeHeatingDesignCapacity() {
-    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
-    bool result = setDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityPerFloorArea, heatingDesignCapacityPerFloorArea);
-    return result;
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
-    bool result = setDouble(OS_Coil_Heating_Water_BaseboardFields::FractionofAutosizedHeatingDesignCapacity, fractionofAutosizedHeatingDesignCapacity);
-    return result;
-  }
-
-   bool CoilHeatingWaterBaseboard_Impl::setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue) {
-    bool result(false);
-    if (uFactorTimesAreaValue) {
-      result = setDouble(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, uFactorTimesAreaValue.get());
+    double CoilHeatingWaterBaseboard_Impl::fractionofAutosizedHeatingDesignCapacity() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::FractionofAutosizedHeatingDesignCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    else {
-      resetUFactorTimesAreaValue();
-      result = true;
+
+    boost::optional<double> CoilHeatingWaterBaseboard_Impl::uFactorTimesAreaValue() const {
+      return getDouble(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, true);
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
- void CoilHeatingWaterBaseboard_Impl::resetUFactorTimesAreaValue() {
-    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, "");
-    OS_ASSERT(result);
-  }
-
-  void CoilHeatingWaterBaseboard_Impl::autosizeUFactorTimesAreaValue() {
-    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingWaterBaseboard_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
-    bool result(false);
-    if (maximumWaterFlowRate) {
-      result = setDouble(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, maximumWaterFlowRate.get());
+    bool CoilHeatingWaterBaseboard_Impl::isUFactorTimesAreaValueDefaulted() const {
+      return isEmpty(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue);
     }
-    else {
-      resetMaximumWaterFlowRate();
-      result = true;
+
+    bool CoilHeatingWaterBaseboard_Impl::isUFactorTimesAreaValueAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
- void CoilHeatingWaterBaseboard_Impl::resetMaximumWaterFlowRate() {
-    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, "");
-    OS_ASSERT(result);
-  }
+    boost::optional<double> CoilHeatingWaterBaseboard_Impl::maximumWaterFlowRate() const {
+      return getDouble(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, true);
+    }
 
-  void CoilHeatingWaterBaseboard_Impl::autosizeMaximumWaterFlowRate() {
-    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
+    bool CoilHeatingWaterBaseboard_Impl::isMaximumWaterFlowRateDefaulted() const {
+      return isEmpty(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate);
+    }
 
-  bool CoilHeatingWaterBaseboard_Impl::setConvergenceTolerance(double convergenceTolerance) {
-    bool result = setDouble(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, convergenceTolerance);
-    return result;
-  }
+    bool CoilHeatingWaterBaseboard_Impl::isMaximumWaterFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
 
-  void CoilHeatingWaterBaseboard_Impl::resetConvergenceTolerance() {
-    bool result = setString(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, "");
-    OS_ASSERT(result);
-  }
+    double CoilHeatingWaterBaseboard_Impl::convergenceTolerance() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool CoilHeatingWaterBaseboard_Impl::addToNode(Node & node)
-  {
-    if( boost::optional<PlantLoop> plant = node.plantLoop() )
-    {
-      if( plant->demandComponent(node.handle()) )
-      {
-        return StraightComponent_Impl::addToNode(node);
+    bool CoilHeatingWaterBaseboard_Impl::isConvergenceToleranceDefaulted() const {
+      return isEmpty(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance);
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+      bool result = setString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
+      return result;
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity) {
+      bool result(false);
+      if (heatingDesignCapacity) {
+        result = setDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, heatingDesignCapacity.get());
+      }
+      return result;
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::autosizeHeatingDesignCapacity() {
+      bool result = setString(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
+      bool result = setDouble(OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityPerFloorArea, heatingDesignCapacityPerFloorArea);
+      return result;
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
+      bool result =
+        setDouble(OS_Coil_Heating_Water_BaseboardFields::FractionofAutosizedHeatingDesignCapacity, fractionofAutosizedHeatingDesignCapacity);
+      return result;
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue) {
+      bool result(false);
+      if (uFactorTimesAreaValue) {
+        result = setDouble(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, uFactorTimesAreaValue.get());
+      } else {
+        resetUFactorTimesAreaValue();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::resetUFactorTimesAreaValue() {
+      bool result = setString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, "");
+      OS_ASSERT(result);
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::autosizeUFactorTimesAreaValue() {
+      bool result = setString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
+      bool result(false);
+      if (maximumWaterFlowRate) {
+        result = setDouble(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, maximumWaterFlowRate.get());
+      } else {
+        resetMaximumWaterFlowRate();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::resetMaximumWaterFlowRate() {
+      bool result = setString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::autosizeMaximumWaterFlowRate() {
+      bool result = setString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::setConvergenceTolerance(double convergenceTolerance) {
+      bool result = setDouble(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, convergenceTolerance);
+      return result;
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::resetConvergenceTolerance() {
+      bool result = setString(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingWaterBaseboard_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+        if (plant->demandComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
+    boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedHeatingDesignCapacity() const {
+      boost::optional<double> result;
+      // Get the containing ZoneHVAC equipment and get its autosized value
+      auto parentHVAC = containingZoneHVACComponent();
+      if (!parentHVAC) {
+        return result;
+      }
+      return parentHVAC->getAutosizedValue("Design Size Heating Design Capacity", "W");
+    }
+
+    boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedUFactorTimesAreaValue() const {
+      boost::optional<double> result;
+      // Get the containing ZoneHVAC equipment and get its autosized value
+      auto parentHVAC = containingZoneHVACComponent();
+      if (!parentHVAC) {
+        return result;
+      }
+      return parentHVAC->getAutosizedValue("Design Size U-Factor Times Area Value", "W/K");
+    }
+
+    boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedMaximumWaterFlowRate() const {
+      boost::optional<double> result;
+      // Get the containing ZoneHVAC equipment and get its autosized value
+      auto parentHVAC = containingZoneHVACComponent();
+      if (!parentHVAC) {
+        return result;
+      }
+      return parentHVAC->getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::autosize() {
+      autosizeHeatingDesignCapacity();
+      autosizeUFactorTimesAreaValue();
+      autosizeMaximumWaterFlowRate();
+    }
+
+    void CoilHeatingWaterBaseboard_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedHeatingDesignCapacity();
+      if (val) {
+        setHeatingDesignCapacity(val.get());
+      }
+
+      val = autosizedUFactorTimesAreaValue();
+      if (val) {
+        setUFactorTimesAreaValue(val.get());
+      }
+
+      val = autosizedMaximumWaterFlowRate();
+      if (val) {
+        setMaximumWaterFlowRate(val.get());
       }
     }
 
-    return false;
-  }
+  }  // namespace detail
 
+  CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(const Model& model) : StraightComponent(CoilHeatingWaterBaseboard::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilHeatingWaterBaseboard_Impl>());
 
-  boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedHeatingDesignCapacity() const {
-    boost::optional < double > result;
-    // Get the containing ZoneHVAC equipment and get its autosized value
-    auto parentHVAC = containingZoneHVACComponent();
-    if (!parentHVAC) {
-      return result;
-    }
-    return parentHVAC->getAutosizedValue("Design Size Heating Design Capacity", "W");
-  }
-
-  boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedUFactorTimesAreaValue() const {
-    boost::optional < double > result;
-    // Get the containing ZoneHVAC equipment and get its autosized value
-    auto parentHVAC = containingZoneHVACComponent();
-    if (!parentHVAC) {
-      return result;
-    }
-    return parentHVAC->getAutosizedValue("Design Size U-Factor Times Area Value", "W/K");
-  }
-
-  boost::optional<double> CoilHeatingWaterBaseboard_Impl::autosizedMaximumWaterFlowRate() const {
-    boost::optional < double > result;
-    // Get the containing ZoneHVAC equipment and get its autosized value
-    auto parentHVAC = containingZoneHVACComponent();
-    if (!parentHVAC) {
-      return result;
-    }
-    return parentHVAC->getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
-  }
-
-  void CoilHeatingWaterBaseboard_Impl::autosize() {
+    setHeatingDesignCapacityMethod("HeatingDesignCapacity");
     autosizeHeatingDesignCapacity();
-    autosizeUFactorTimesAreaValue();
-    autosizeMaximumWaterFlowRate();
+    setHeatingDesignCapacityPerFloorArea(0.0);
+    setFractionofAutosizedHeatingDesignCapacity(0.8);
+  }
+  unsigned CoilHeatingWaterBaseboard::inletPort() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->inletPort();
   }
 
-  void CoilHeatingWaterBaseboard_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedHeatingDesignCapacity();
-    if (val) {
-      setHeatingDesignCapacity(val.get());
-    }
-
-    val = autosizedUFactorTimesAreaValue();
-    if (val) {
-      setUFactorTimesAreaValue(val.get());
-    }
-
-    val = autosizedMaximumWaterFlowRate();
-    if (val) {
-      setMaximumWaterFlowRate(val.get());
-    }
-
+  unsigned CoilHeatingWaterBaseboard::outletPort() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->outletPort();
   }
 
-} // detail
+  IddObjectType CoilHeatingWaterBaseboard::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Coil_Heating_Water_Baseboard);
+  }
 
-CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(const Model& model)
-  : StraightComponent(CoilHeatingWaterBaseboard::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilHeatingWaterBaseboard_Impl>());
+  std::vector<std::string> CoilHeatingWaterBaseboard::heatingDesignCapacityMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod);
+  }
 
-  setHeatingDesignCapacityMethod("HeatingDesignCapacity");
-  autosizeHeatingDesignCapacity();
-  setHeatingDesignCapacityPerFloorArea(0.0);
-  setFractionofAutosizedHeatingDesignCapacity(0.8);
-}
-unsigned CoilHeatingWaterBaseboard::inletPort() const
-{
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->inletPort();
-}
+  std::string CoilHeatingWaterBaseboard::heatingDesignCapacityMethod() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacityMethod();
+  }
 
-unsigned CoilHeatingWaterBaseboard::outletPort() const
-{
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->outletPort();
-}
+  boost::optional<double> CoilHeatingWaterBaseboard::heatingDesignCapacity() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacity();
+  }
 
-IddObjectType CoilHeatingWaterBaseboard::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Coil_Heating_Water_Baseboard);
-}
+  bool CoilHeatingWaterBaseboard::isHeatingDesignCapacityAutosized() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isHeatingDesignCapacityAutosized();
+  }
 
-std::vector<std::string> CoilHeatingWaterBaseboard::heatingDesignCapacityMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Coil_Heating_Water_BaseboardFields::HeatingDesignCapacityMethod);
-}
+  double CoilHeatingWaterBaseboard::heatingDesignCapacityPerFloorArea() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacityPerFloorArea();
+  }
 
-std::string CoilHeatingWaterBaseboard::heatingDesignCapacityMethod() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacityMethod();
-}
+  double CoilHeatingWaterBaseboard::fractionofAutosizedHeatingDesignCapacity() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->fractionofAutosizedHeatingDesignCapacity();
+  }
 
-boost::optional<double> CoilHeatingWaterBaseboard::heatingDesignCapacity() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacity();
-}
+  boost::optional<double> CoilHeatingWaterBaseboard::uFactorTimesAreaValue() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->uFactorTimesAreaValue();
+  }
 
-bool CoilHeatingWaterBaseboard::isHeatingDesignCapacityAutosized() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isHeatingDesignCapacityAutosized();
-}
+  bool CoilHeatingWaterBaseboard::isUFactorTimesAreaValueDefaulted() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isUFactorTimesAreaValueDefaulted();
+  }
 
-double CoilHeatingWaterBaseboard::heatingDesignCapacityPerFloorArea() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->heatingDesignCapacityPerFloorArea();
-}
+  bool CoilHeatingWaterBaseboard::isUFactorTimesAreaValueAutosized() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isUFactorTimesAreaValueAutosized();
+  }
 
-double CoilHeatingWaterBaseboard::fractionofAutosizedHeatingDesignCapacity() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->fractionofAutosizedHeatingDesignCapacity();
-}
+  boost::optional<double> CoilHeatingWaterBaseboard::maximumWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->maximumWaterFlowRate();
+  }
 
-boost::optional<double> CoilHeatingWaterBaseboard::uFactorTimesAreaValue() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->uFactorTimesAreaValue();
-}
+  bool CoilHeatingWaterBaseboard::isMaximumWaterFlowRateDefaulted() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isMaximumWaterFlowRateDefaulted();
+  }
 
-bool CoilHeatingWaterBaseboard::isUFactorTimesAreaValueDefaulted() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isUFactorTimesAreaValueDefaulted();
-}
+  bool CoilHeatingWaterBaseboard::isMaximumWaterFlowRateAutosized() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isMaximumWaterFlowRateAutosized();
+  }
 
-bool CoilHeatingWaterBaseboard::isUFactorTimesAreaValueAutosized() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isUFactorTimesAreaValueAutosized();
-}
+  double CoilHeatingWaterBaseboard::convergenceTolerance() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->convergenceTolerance();
+  }
 
-boost::optional<double> CoilHeatingWaterBaseboard::maximumWaterFlowRate() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->maximumWaterFlowRate();
-}
+  bool CoilHeatingWaterBaseboard::isConvergenceToleranceDefaulted() const {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isConvergenceToleranceDefaulted();
+  }
 
-bool CoilHeatingWaterBaseboard::isMaximumWaterFlowRateDefaulted() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isMaximumWaterFlowRateDefaulted();
-}
+  bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
+  }
 
-bool CoilHeatingWaterBaseboard::isMaximumWaterFlowRateAutosized() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isMaximumWaterFlowRateAutosized();
-}
+  bool CoilHeatingWaterBaseboard::setHeatingDesignCapacity(double heatingDesignCapacity) {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacity(heatingDesignCapacity);
+  }
 
-double CoilHeatingWaterBaseboard::convergenceTolerance() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->convergenceTolerance();
-}
+  void CoilHeatingWaterBaseboard::autosizeHeatingDesignCapacity() {
+    getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizeHeatingDesignCapacity();
+  }
 
-bool CoilHeatingWaterBaseboard::isConvergenceToleranceDefaulted() const {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->isConvergenceToleranceDefaulted();
-}
+  bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacityPerFloorArea(heatingDesignCapacityPerFloorArea);
+  }
 
-bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
-}
+  bool CoilHeatingWaterBaseboard::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
+  }
 
-bool CoilHeatingWaterBaseboard::setHeatingDesignCapacity(double heatingDesignCapacity) {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacity(heatingDesignCapacity);
-}
+  bool CoilHeatingWaterBaseboard::setUFactorTimesAreaValue(double uFactorTimesAreaValue) {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setUFactorTimesAreaValue(uFactorTimesAreaValue);
+  }
 
-void CoilHeatingWaterBaseboard::autosizeHeatingDesignCapacity() {
-  getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizeHeatingDesignCapacity();
-}
+  void CoilHeatingWaterBaseboard::resetUFactorTimesAreaValue() {
+    getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetUFactorTimesAreaValue();
+  }
 
-bool CoilHeatingWaterBaseboard::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setHeatingDesignCapacityPerFloorArea(heatingDesignCapacityPerFloorArea);
-}
+  void CoilHeatingWaterBaseboard::autosizeUFactorTimesAreaValue() {
+    getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizeUFactorTimesAreaValue();
+  }
 
-bool CoilHeatingWaterBaseboard::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
-}
+  bool CoilHeatingWaterBaseboard::setMaximumWaterFlowRate(double maximumWaterFlowRate) {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setMaximumWaterFlowRate(maximumWaterFlowRate);
+  }
 
-bool CoilHeatingWaterBaseboard::setUFactorTimesAreaValue(double uFactorTimesAreaValue) {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setUFactorTimesAreaValue(uFactorTimesAreaValue);
-}
+  void CoilHeatingWaterBaseboard::resetMaximumWaterFlowRate() {
+    getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetMaximumWaterFlowRate();
+  }
 
-void CoilHeatingWaterBaseboard::resetUFactorTimesAreaValue() {
-  getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetUFactorTimesAreaValue();
-}
+  void CoilHeatingWaterBaseboard::autosizeMaximumWaterFlowRate() {
+    getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizeMaximumWaterFlowRate();
+  }
 
-void CoilHeatingWaterBaseboard::autosizeUFactorTimesAreaValue() {
-  getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizeUFactorTimesAreaValue();
-}
+  bool CoilHeatingWaterBaseboard::setConvergenceTolerance(double convergenceTolerance) {
+    return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setConvergenceTolerance(convergenceTolerance);
+  }
 
-bool CoilHeatingWaterBaseboard::setMaximumWaterFlowRate(double maximumWaterFlowRate) {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setMaximumWaterFlowRate(maximumWaterFlowRate);
-}
+  void CoilHeatingWaterBaseboard::resetConvergenceTolerance() {
+    getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetConvergenceTolerance();
+  }
 
-void CoilHeatingWaterBaseboard::resetMaximumWaterFlowRate() {
-  getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetMaximumWaterFlowRate();
-}
-
-void CoilHeatingWaterBaseboard::autosizeMaximumWaterFlowRate() {
-  getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizeMaximumWaterFlowRate();
-}
-
-bool CoilHeatingWaterBaseboard::setConvergenceTolerance(double convergenceTolerance) {
-  return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->setConvergenceTolerance(convergenceTolerance);
-}
-
-void CoilHeatingWaterBaseboard::resetConvergenceTolerance() {
-  getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetConvergenceTolerance();
-}
-
-CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(std::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
+  CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(std::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> CoilHeatingWaterBaseboard::autosizedHeatingDesignCapacity() const {
     return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizedHeatingDesignCapacity();
@@ -496,5 +471,5 @@ CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(std::shared_ptr<detail::Coi
     return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->autosizedMaximumWaterFlowRate();
   }
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

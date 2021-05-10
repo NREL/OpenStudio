@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,115 +37,116 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
+  class Schedule;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class ThermalStorageIceDetailed_Impl;
+    class ThermalStorageIceDetailed_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ThermalStorageIceDetailed is a StraightComponent that wraps the OpenStudio IDD object 'OS:ThermalStorage:Ice:Detailed'. */
-class MODEL_API ThermalStorageIceDetailed : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ThermalStorageIceDetailed is a StraightComponent that wraps the OpenStudio IDD object 'OS:ThermalStorage:Ice:Detailed'. */
+  class MODEL_API ThermalStorageIceDetailed : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ThermalStorageIceDetailed(const Model& model);
+    explicit ThermalStorageIceDetailed(const Model& model);
 
-  virtual ~ThermalStorageIceDetailed() {}
+    virtual ~ThermalStorageIceDetailed() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> thawProcessIndicatorValues();
+    static std::vector<std::string> thawProcessIndicatorValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  double capacity() const;
+    double capacity() const;
 
-  std::string dischargingCurveVariableSpecifications() const;
+    std::string dischargingCurveVariableSpecifications() const;
 
-  Curve dischargingCurve() const;
+    Curve dischargingCurve() const;
 
-  std::string chargingCurveVariableSpecifications() const;
+    std::string chargingCurveVariableSpecifications() const;
 
-  Curve chargingCurve() const;
+    Curve chargingCurve() const;
 
-  double timestepoftheCurveData() const;
+    double timestepoftheCurveData() const;
 
-  double parasiticElectricLoadDuringDischarging() const;
+    double parasiticElectricLoadDuringDischarging() const;
 
-  double parasiticElectricLoadDuringCharging() const;
+    double parasiticElectricLoadDuringCharging() const;
 
-  double tankLossCoefficient() const;
+    double tankLossCoefficient() const;
 
-  double freezingTemperatureofStorageMedium() const;
+    double freezingTemperatureofStorageMedium() const;
 
-  std::string thawProcessIndicator() const;
+    std::string thawProcessIndicator() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setCapacity(double capacity);
+    bool setCapacity(double capacity);
 
-  bool setDischargingCurveVariableSpecifications(const std::string& dischargingCurveVariableSpecifications);
+    bool setDischargingCurveVariableSpecifications(const std::string& dischargingCurveVariableSpecifications);
 
-  bool setDischargingCurve(const Curve& dischargingCurve);
+    bool setDischargingCurve(const Curve& dischargingCurve);
 
-  bool setChargingCurveVariableSpecifications(const std::string& chargingCurveVariableSpecifications);
+    bool setChargingCurveVariableSpecifications(const std::string& chargingCurveVariableSpecifications);
 
-  bool setChargingCurve(const Curve& chargingCurve);
+    bool setChargingCurve(const Curve& chargingCurve);
 
-  bool setTimestepoftheCurveData(double timestepoftheCurveData);
+    bool setTimestepoftheCurveData(double timestepoftheCurveData);
 
-  bool setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging);
+    bool setParasiticElectricLoadDuringDischarging(double parasiticElectricLoadDuringDischarging);
 
-  bool setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging);
+    bool setParasiticElectricLoadDuringCharging(double parasiticElectricLoadDuringCharging);
 
-  bool setTankLossCoefficient(double tankLossCoefficient);
+    bool setTankLossCoefficient(double tankLossCoefficient);
 
-  bool setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium);
+    bool setFreezingTemperatureofStorageMedium(double freezingTemperatureofStorageMedium);
 
-  bool setThawProcessIndicator(std::string thawProcessIndicator);
+    bool setThawProcessIndicator(std::string thawProcessIndicator);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ThermalStorageIceDetailed_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ThermalStorageIceDetailed_Impl ImplType;
 
-  explicit ThermalStorageIceDetailed(std::shared_ptr<detail::ThermalStorageIceDetailed_Impl> impl);
+    explicit ThermalStorageIceDetailed(std::shared_ptr<detail::ThermalStorageIceDetailed_Impl> impl);
 
-  friend class detail::ThermalStorageIceDetailed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ThermalStorageIceDetailed");
-};
+    friend class detail::ThermalStorageIceDetailed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ThermalStorageIceDetailed");
+  };
 
-/** \relates ThermalStorageIceDetailed*/
-typedef boost::optional<ThermalStorageIceDetailed> OptionalThermalStorageIceDetailed;
+  /** \relates ThermalStorageIceDetailed*/
+  typedef boost::optional<ThermalStorageIceDetailed> OptionalThermalStorageIceDetailed;
 
-/** \relates ThermalStorageIceDetailed*/
-typedef std::vector<ThermalStorageIceDetailed> ThermalStorageIceDetailedVector;
+  /** \relates ThermalStorageIceDetailed*/
+  typedef std::vector<ThermalStorageIceDetailed> ThermalStorageIceDetailedVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_THERMALSTORAGEICEDETAILED_HPP
+#endif  // MODEL_THERMALSTORAGEICEDETAILED_HPP

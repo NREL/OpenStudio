@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,26 +40,22 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSurfaceConvectionAlgorithmOutside( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::SurfaceConvectionAlgorithm_Outside )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: SurfaceConvectionAlgorithm_Outside");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateSurfaceConvectionAlgorithmOutside(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::SurfaceConvectionAlgorithm_Outside) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: SurfaceConvectionAlgorithm_Outside");
+      return boost::none;
+    }
+
+    OutsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+
+    boost::optional<std::string> s = workspaceObject.getString(SurfaceConvectionAlgorithm_OutsideFields::Algorithm);
+    if (s) {
+      mo.setAlgorithm(s.get());
+    }
+
+    return mo;
   }
 
-  OutsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+}  // namespace energyplus
 
-  boost::optional<std::string> s = workspaceObject.getString(SurfaceConvectionAlgorithm_OutsideFields::Algorithm);
-  if( s )
-  {
-    mo.setAlgorithm(s.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

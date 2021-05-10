@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,228 +36,228 @@
 namespace openstudio {
 namespace model {
 
-class ConstructionBase;
-class Material;
+  class ConstructionBase;
+  class Material;
 
-namespace detail {
-  class ConstructionBase_Impl;
-  class StandardsInformationConstruction_Impl;
-}
+  namespace detail {
+    class ConstructionBase_Impl;
+    class StandardsInformationConstruction_Impl;
+  }  // namespace detail
 
-/** StandardsInformationConstruction is the ModelObject that wraps OpenStudio IDD object
+  /** StandardsInformationConstruction is the ModelObject that wraps OpenStudio IDD object
  *  'OS:StandardsInformation:ConstructionFields'. StandardsInformationConstruction provides a
  *  place to register information about a construction that building energy standards often need
  *  to know, but is irrelevant to simulation. It contains user-specified values that are not
  *  generally checked against input or output data. */
-class MODEL_API StandardsInformationConstruction : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API StandardsInformationConstruction : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~StandardsInformationConstruction() {}
+    virtual ~StandardsInformationConstruction() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static std::vector<std::string> standardPerturbableLayerTypeValues();
+    static std::vector<std::string> standardPerturbableLayerTypeValues();
 
-  static std::vector<std::string> fenestrationTypeValues();
+    static std::vector<std::string> fenestrationTypeValues();
 
-  static std::vector<std::string> fenestrationAssemblyContextValues();
+    static std::vector<std::string> fenestrationAssemblyContextValues();
 
-  static std::vector<std::string> fenestrationNumberOfPanesValues();
+    static std::vector<std::string> fenestrationNumberOfPanesValues();
 
-  static std::vector<std::string> fenestrationFrameTypeValues();
+    static std::vector<std::string> fenestrationFrameTypeValues();
 
-  static std::vector<std::string> fenestrationDividerTypeValues();
+    static std::vector<std::string> fenestrationDividerTypeValues();
 
-  static std::vector<std::string> fenestrationTintValues();
+    static std::vector<std::string> fenestrationTintValues();
 
-  static std::vector<std::string> fenestrationGasFillValues();
+    static std::vector<std::string> fenestrationGasFillValues();
 
-  static std::vector<std::string> intendedSurfaceTypeValues();
+    static std::vector<std::string> intendedSurfaceTypeValues();
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /** Return the ConstructionBase object that this object describes. */
-  ConstructionBase construction() const;
+    /** Return the ConstructionBase object that this object describes. */
+    ConstructionBase construction() const;
 
-  /** Return the surface type to which this construction should be applied. */
-  boost::optional<std::string> intendedSurfaceType() const;
+    /** Return the surface type to which this construction should be applied. */
+    boost::optional<std::string> intendedSurfaceType() const;
 
-  /** This is a freeform field used to identify the construction type for standards.
+    /** This is a freeform field used to identify the construction type for standards.
        \note Standards applied to this model will use this field to determine correct constructions.
        \note More information can be found at https://github.com/NREL/openstudio-standards. */
-  boost::optional<std::string> standardsConstructionType() const;
+    boost::optional<std::string> standardsConstructionType() const;
 
-  /** Returns a list of suggestions for standards construction type based on intendedSurfaceType. */
-  std::vector<std::string> suggestedStandardsConstructionTypes() const;
+    /** Returns a list of suggestions for standards construction type based on intendedSurfaceType. */
+    std::vector<std::string> suggestedStandardsConstructionTypes() const;
 
-  /** Return the layer of construction() whose thickness can be perturbed (usually to reach a
+    /** Return the layer of construction() whose thickness can be perturbed (usually to reach a
    *  certain property value for the overall construction), if the construction() exists and is a
    *  LayeredConstruction. */
-  boost::optional<Material> perturbableLayer() const;
+    boost::optional<Material> perturbableLayer() const;
 
-  /** Return a description of the perturbableLayer(), for instance, 'Insulation'.*/
-  boost::optional<std::string> perturbableLayerType() const;
+    /** Return a description of the perturbableLayer(), for instance, 'Insulation'.*/
+    boost::optional<std::string> perturbableLayerType() const;
 
-  bool isPerturbableLayerTypeDefaulted() const;
+    bool isPerturbableLayerTypeDefaulted() const;
 
-  boost::optional<std::string> otherPerturbableLayerType() const;
+    boost::optional<std::string> otherPerturbableLayerType() const;
 
-  /** Returns a list of suggestions for construction standard. */
-  std::vector<std::string> suggestedConstructionStandards() const;
+    /** Returns a list of suggestions for construction standard. */
+    std::vector<std::string> suggestedConstructionStandards() const;
 
-  /** Identifies the standard which specifies this construction.*/
-  boost::optional<std::string> constructionStandard() const;
+    /** Identifies the standard which specifies this construction.*/
+    boost::optional<std::string> constructionStandard() const;
 
-  /** Returns a list of suggestions for construction standard source based on construction standard. */
-  std::vector<std::string> suggestedConstructionStandardSources() const;
+    /** Returns a list of suggestions for construction standard source based on construction standard. */
+    std::vector<std::string> suggestedConstructionStandardSources() const;
 
-  /** Identifies the table or section in standard which specifies this construction. */
-  boost::optional<std::string> constructionStandardSource() const;
+    /** Identifies the table or section in standard which specifies this construction. */
+    boost::optional<std::string> constructionStandardSource() const;
 
-  /** Specific type of fenestration that this construction represents. */
-  boost::optional<std::string> fenestrationType() const;
+    /** Specific type of fenestration that this construction represents. */
+    boost::optional<std::string> fenestrationType() const;
 
-  /** Where the fenestration assembled. */
-  boost::optional<std::string> fenestrationAssemblyContext() const;
+    /** Where the fenestration assembled. */
+    boost::optional<std::string> fenestrationAssemblyContext() const;
 
-  /** Number of panes for this fenestration construction. */
-  boost::optional<std::string> fenestrationNumberOfPanes() const;
+    /** Number of panes for this fenestration construction. */
+    boost::optional<std::string> fenestrationNumberOfPanes() const;
 
-  /** Type of framing for this fenestration construction. */
-  boost::optional<std::string> fenestrationFrameType() const;
+    /** Type of framing for this fenestration construction. */
+    boost::optional<std::string> fenestrationFrameType() const;
 
-  /** Type of divider for this fenestration construction. */
-  boost::optional<std::string> fenestrationDividerType() const;
+    /** Type of divider for this fenestration construction. */
+    boost::optional<std::string> fenestrationDividerType() const;
 
-  /** Tint of this fenestration construction. */
-  boost::optional<std::string> fenestrationTint() const;
+    /** Tint of this fenestration construction. */
+    boost::optional<std::string> fenestrationTint() const;
 
-  /** Type of gas used between panes of this fenestration construction. */
-  boost::optional<std::string> fenestrationGasFill() const;
+    /** Type of gas used between panes of this fenestration construction. */
+    boost::optional<std::string> fenestrationGasFill() const;
 
-  /** Does this fenestration construction include a low-e coating. */
-  bool fenestrationLowEmissivityCoating() const;
+    /** Does this fenestration construction include a low-e coating. */
+    bool fenestrationLowEmissivityCoating() const;
 
-  //@}
-  /** @name Setters */
-  //@
+    //@}
+    /** @name Setters */
+    //@
 
-  /** Sets the intendedSurfaceType to type. \sa intendedSurfaceTypeValues */
-  bool setIntendedSurfaceType(const std::string& type);
-  void resetIntendedSurfaceType();
+    /** Sets the intendedSurfaceType to type. \sa intendedSurfaceTypeValues */
+    bool setIntendedSurfaceType(const std::string& type);
+    void resetIntendedSurfaceType();
 
-  /** Set the constructionType to type. To be used with standardsinterface, this string should
+    /** Set the constructionType to type. To be used with standardsinterface, this string should
    *  match an appropriate enumeration value in the standardsinterface::DataDictionary. The
    *  enumeration for which this should be a value generally varies by intendedSurfaceType(). */
-  bool setStandardsConstructionType(const std::string& type);
-  void resetStandardsConstructionType();
+    bool setStandardsConstructionType(const std::string& type);
+    void resetStandardsConstructionType();
 
-  /** Set the perturbableLayer to the one at layerIndex. Returns false if construction() is not a
+    /** Set the perturbableLayer to the one at layerIndex. Returns false if construction() is not a
    *  LayeredConstruction or
    *
    *  \code
    *  layerIndex >= construction().get().cast<LayeredConstruction>().numLayers().
    *  \endcode */
-  bool setPerturbableLayer(unsigned layerIndex);
+    bool setPerturbableLayer(unsigned layerIndex);
 
-  /** Set the perturbableLayer to material. Returns false if construction() is not a
+    /** Set the perturbableLayer to material. Returns false if construction() is not a
    *  LayeredConstruction or
    *
    *  \code
    *  MaterialVector layers = construction().get().cast<LayeredConstruction>().layers();
    *  std::find(layers.begin(),layers.end(),material) == layers.end();
    *  \endcode */
-  bool setPerturbableLayer(const Material& material);
+    bool setPerturbableLayer(const Material& material);
 
-  /** Clears all PerturbableLayer information, including type. */
-  void resetPerturbableLayer();
+    /** Clears all PerturbableLayer information, including type. */
+    void resetPerturbableLayer();
 
-  /** Set the perturbableLayerType to type. Can be one of the provided types, or a free-form
+    /** Set the perturbableLayerType to type. Can be one of the provided types, or a free-form
    *  string. \sa standardPerturbableLayerTypeValues */
-  bool setPerturbableLayerType(const std::string& type);
-  void resetPerturbableLayerType();
+    bool setPerturbableLayerType(const std::string& type);
+    void resetPerturbableLayerType();
 
-  bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
-  void resetOtherPerturbableLayerType();
+    bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
+    void resetOtherPerturbableLayerType();
 
-  bool setConstructionStandard(const std::string& constructionStandard);
+    bool setConstructionStandard(const std::string& constructionStandard);
 
-  void resetConstructionStandard();
+    void resetConstructionStandard();
 
-  bool setConstructionStandardSource(const std::string& constructionStandardSource);
+    bool setConstructionStandardSource(const std::string& constructionStandardSource);
 
-  void resetConstructionStandardSource();
+    void resetConstructionStandardSource();
 
-  bool setFenestrationType(const std::string& fenestrationType);
+    bool setFenestrationType(const std::string& fenestrationType);
 
-  void resetFenestrationType();
+    void resetFenestrationType();
 
-  bool setFenestrationAssemblyContext(const std::string& fenestrationAssemblyContext);
+    bool setFenestrationAssemblyContext(const std::string& fenestrationAssemblyContext);
 
-  void resetFenestrationAssemblyContext();
+    void resetFenestrationAssemblyContext();
 
-  bool setFenestrationNumberOfPanes(const std::string& fenestrationNumberofPanes);
+    bool setFenestrationNumberOfPanes(const std::string& fenestrationNumberofPanes);
 
-  void resetFenestrationNumberOfPanes();
+    void resetFenestrationNumberOfPanes();
 
-  bool setFenestrationFrameType(const std::string& fenestrationFrameType);
+    bool setFenestrationFrameType(const std::string& fenestrationFrameType);
 
-  void resetFenestrationFrameType();
+    void resetFenestrationFrameType();
 
-  bool setFenestrationDividerType(const std::string& fenestrationDividerType);
+    bool setFenestrationDividerType(const std::string& fenestrationDividerType);
 
-  void resetFenestrationDividerType();
+    void resetFenestrationDividerType();
 
-  bool setFenestrationTint(const std::string& fenestrationTint);
+    bool setFenestrationTint(const std::string& fenestrationTint);
 
-  void resetFenestrationTint();
+    void resetFenestrationTint();
 
-  bool setFenestrationGasFill(const std::string& fenestrationGasFill);
+    bool setFenestrationGasFill(const std::string& fenestrationGasFill);
 
-  void resetFenestrationGasFill();
+    void resetFenestrationGasFill();
 
-  bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+    bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
 
-  void setFenestrationLowEmissivityCoatingNoFail(bool fenestrationLowEmissivityCoating);
+    void setFenestrationLowEmissivityCoatingNoFail(bool fenestrationLowEmissivityCoating);
 
-  void resetFenestrationLowEmissivityCoating();
+    void resetFenestrationLowEmissivityCoating();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::StandardsInformationConstruction_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::StandardsInformationConstruction_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::StandardsInformationConstruction_Impl;
-  friend class detail::ConstructionBase_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::StandardsInformationConstruction_Impl;
+    friend class detail::ConstructionBase_Impl;
 
-  /** Create new object as child of construction. */
-  explicit StandardsInformationConstruction(const ConstructionBase& construction);
+    /** Create new object as child of construction. */
+    explicit StandardsInformationConstruction(const ConstructionBase& construction);
 
-  explicit StandardsInformationConstruction(
-      std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
-};
+    explicit StandardsInformationConstruction(std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
+  };
 
-/** \relates StandardsInformationConstruction */
-typedef boost::optional<StandardsInformationConstruction> OptionalStandardsInformationConstruction;
+  /** \relates StandardsInformationConstruction */
+  typedef boost::optional<StandardsInformationConstruction> OptionalStandardsInformationConstruction;
 
-/** \relates StandardsInformationConstruction */
-typedef std::vector<StandardsInformationConstruction> StandardsInformationConstructionVector;
+  /** \relates StandardsInformationConstruction */
+  typedef std::vector<StandardsInformationConstruction> StandardsInformationConstructionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP
+#endif  // MODEL_STANDARDSINFORMATIONCONSTRUCTION_HPP

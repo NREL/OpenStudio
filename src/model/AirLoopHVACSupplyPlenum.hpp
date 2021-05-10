@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,75 +36,74 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class AirLoopHVACSupplyPlenum_Impl;
+    class AirLoopHVACSupplyPlenum_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirLoopHVACSupplyPlenum is a Splitter that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:SupplyPlenum'. */
-class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
- public:
+  /** AirLoopHVACSupplyPlenum is a Splitter that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:SupplyPlenum'. */
+  class MODEL_API AirLoopHVACSupplyPlenum : public Splitter
+  {
+   public:
+    explicit AirLoopHVACSupplyPlenum(const Model& model);
 
-  explicit AirLoopHVACSupplyPlenum(const Model& model);
+    virtual ~AirLoopHVACSupplyPlenum() {}
 
-  virtual ~AirLoopHVACSupplyPlenum() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    boost::optional<ThermalZone> thermalZone() const;
 
-  boost::optional<ThermalZone> thermalZone() const;
-
-  /** Establish thermalZone as the plenum zone.
+    /** Establish thermalZone as the plenum zone.
    *  If thermalZone is already conditioned by ThermalZone::equipment(),
    *  then this method will return false.  A ThermalZone cannot be conditioned
    *  by equipment and and be a plenum zone.  Remove any existing ZoneHVACComponent objects,
    *  and associated AirLoopHVAC objects before using this method on thermalZone.
   **/
-  bool setThermalZone(const ThermalZone& thermalZone);
+    bool setThermalZone(const ThermalZone& thermalZone);
 
-  void resetThermalZone();
+    void resetThermalZone();
 
-  unsigned inletPort() const override;
+    unsigned inletPort() const override;
 
-  unsigned outletPort(unsigned branchIndex) const override;
+    unsigned outletPort(unsigned branchIndex) const override;
 
-  unsigned nextOutletPort() const override;
+    unsigned nextOutletPort() const override;
 
-  /** Insert this AirLoopHVACSupplyPlenum into HVAC system at node.
+    /** Insert this AirLoopHVACSupplyPlenum into HVAC system at node.
    *  Node must be immediatly after AirLoopHVACZoneSplitter and there
    *  cannot be an existing AirLoopHVACSupplyPlenum on the node's branch
    */
-  bool addToNode(Node & node);
+    bool addToNode(Node& node);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
+    bool addBranchForZone(openstudio::model::ThermalZone& thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
+    bool addBranchForZone(openstudio::model::ThermalZone& thermalZone, HVACComponent& terminal);
 
- protected:
-  /// @cond
-  typedef detail::AirLoopHVACSupplyPlenum_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::AirLoopHVACSupplyPlenum_Impl ImplType;
 
-  explicit AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
+    explicit AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
 
-  friend class detail::AirLoopHVACSupplyPlenum_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACSupplyPlenum");
-};
+    friend class detail::AirLoopHVACSupplyPlenum_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACSupplyPlenum");
+  };
 
-/** \relates AirLoopHVACSupplyPlenum*/
-typedef boost::optional<AirLoopHVACSupplyPlenum> OptionalAirLoopHVACSupplyPlenum;
+  /** \relates AirLoopHVACSupplyPlenum*/
+  typedef boost::optional<AirLoopHVACSupplyPlenum> OptionalAirLoopHVACSupplyPlenum;
 
-/** \relates AirLoopHVACSupplyPlenum*/
-typedef std::vector<AirLoopHVACSupplyPlenum> AirLoopHVACSupplyPlenumVector;
+  /** \relates AirLoopHVACSupplyPlenum*/
+  typedef std::vector<AirLoopHVACSupplyPlenum> AirLoopHVACSupplyPlenumVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRLOOPHVACSUPPLYPLENUM_HPP
-
+#endif  // MODEL_AIRLOOPHVACSUPPLYPLENUM_HPP

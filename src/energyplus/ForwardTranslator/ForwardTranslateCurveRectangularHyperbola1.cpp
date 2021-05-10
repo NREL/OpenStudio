@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,40 +43,38 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveRectangularHyperbola1(
-    CurveRectangularHyperbola1& modelObject)
-{
-  IdfObject idfObject(IddObjectType::Curve_RectangularHyperbola1);
+  boost::optional<IdfObject> ForwardTranslator::translateCurveRectangularHyperbola1(CurveRectangularHyperbola1& modelObject) {
+    IdfObject idfObject(IddObjectType::Curve_RectangularHyperbola1);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = modelObject.name())) {
-    idfObject.setName(*s);
+    if ((s = modelObject.name())) {
+      idfObject.setName(*s);
+    }
+
+    idfObject.setDouble(Curve_RectangularHyperbola1Fields::Coefficient1C1, modelObject.coefficient1C1());
+    idfObject.setDouble(Curve_RectangularHyperbola1Fields::Coefficient2C2, modelObject.coefficient2C2());
+    idfObject.setDouble(Curve_RectangularHyperbola1Fields::Coefficient3C3, modelObject.coefficient3C3());
+    idfObject.setDouble(Curve_RectangularHyperbola1Fields::MinimumValueofx, modelObject.minimumValueofx());
+    idfObject.setDouble(Curve_RectangularHyperbola1Fields::MaximumValueofx, modelObject.maximumValueofx());
+    if ((d = modelObject.minimumCurveOutput())) {
+      idfObject.setDouble(Curve_RectangularHyperbola1Fields::MinimumCurveOutput, *d);
+    }
+    if ((d = modelObject.maximumCurveOutput())) {
+      idfObject.setDouble(Curve_RectangularHyperbola1Fields::MaximumCurveOutput, *d);
+    }
+    if (!modelObject.isInputUnitTypeforxDefaulted()) {
+      idfObject.setString(Curve_RectangularHyperbola1Fields::InputUnitTypeforx, modelObject.inputUnitTypeforx());
+    }
+    if (!modelObject.isOutputUnitTypeDefaulted()) {
+      idfObject.setString(Curve_RectangularHyperbola1Fields::OutputUnitType, modelObject.outputUnitType());
+    }
+
+    return idfObject;
   }
 
-  idfObject.setDouble(Curve_RectangularHyperbola1Fields::Coefficient1C1,modelObject.coefficient1C1());
-  idfObject.setDouble(Curve_RectangularHyperbola1Fields::Coefficient2C2,modelObject.coefficient2C2());
-  idfObject.setDouble(Curve_RectangularHyperbola1Fields::Coefficient3C3,modelObject.coefficient3C3());
-  idfObject.setDouble(Curve_RectangularHyperbola1Fields::MinimumValueofx,modelObject.minimumValueofx());
-  idfObject.setDouble(Curve_RectangularHyperbola1Fields::MaximumValueofx,modelObject.maximumValueofx());
-  if ((d = modelObject.minimumCurveOutput())) {
-    idfObject.setDouble(Curve_RectangularHyperbola1Fields::MinimumCurveOutput,*d);
-  }
-  if ((d = modelObject.maximumCurveOutput())) {
-    idfObject.setDouble(Curve_RectangularHyperbola1Fields::MaximumCurveOutput,*d);
-  }
-  if (!modelObject.isInputUnitTypeforxDefaulted()) {
-    idfObject.setString(Curve_RectangularHyperbola1Fields::InputUnitTypeforx,modelObject.inputUnitTypeforx());
-  }
-  if (!modelObject.isOutputUnitTypeDefaulted()) {
-    idfObject.setString(Curve_RectangularHyperbola1Fields::OutputUnitType,modelObject.outputUnitType());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

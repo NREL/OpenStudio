@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,88 +37,88 @@ namespace openstudio {
 
 namespace model {
 
-class Surface;
-class Material;
-class Schedule;
+  class Surface;
+  class Material;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class SurfaceControlMovableInsulation_Impl;
+    class SurfaceControlMovableInsulation_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SurfaceControlMovableInsulation is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceControl:MovableInsulation'. */
-class MODEL_API SurfaceControlMovableInsulation : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SurfaceControlMovableInsulation is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceControl:MovableInsulation'. */
+  class MODEL_API SurfaceControlMovableInsulation : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  // Constructor takes required-field arguments Surface and Material. The Schedule is defaulted to alwaysOnContinuousSchedule
-  explicit SurfaceControlMovableInsulation(const Surface& surface, const Material& material);
+    // Constructor takes required-field arguments Surface and Material. The Schedule is defaulted to alwaysOnContinuousSchedule
+    explicit SurfaceControlMovableInsulation(const Surface& surface, const Material& material);
 
-  virtual ~SurfaceControlMovableInsulation() {}
+    virtual ~SurfaceControlMovableInsulation() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> insulationTypeValues();
+    static std::vector<std::string> insulationTypeValues();
 
-  static std::vector<std::string> validInsulationTypeValues();
+    static std::vector<std::string> validInsulationTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string insulationType() const;
+    std::string insulationType() const;
 
-  Surface surface() const;
+    Surface surface() const;
 
-  Material material() const;
+    Material material() const;
 
-  Schedule schedule() const;
+    Schedule schedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInsulationType(const std::string& insulationType);
+    bool setInsulationType(const std::string& insulationType);
 
-  /** Note that if the target surface already has a SurfaceControlMovableInsulation attached to it, it will be removed as there can be only one
+    /** Note that if the target surface already has a SurfaceControlMovableInsulation attached to it, it will be removed as there can be only one
     * SurfaceControlMovableInsulation per Surface. */
-  bool setSurface(const Surface& surface);
+    bool setSurface(const Surface& surface);
 
-  bool setMaterial(const Material& material);
+    bool setMaterial(const Material& material);
 
-  bool setSchedule(Schedule& schedule);
+    bool setSchedule(Schedule& schedule);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SurfaceControlMovableInsulation_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SurfaceControlMovableInsulation_Impl ImplType;
 
-  explicit SurfaceControlMovableInsulation(std::shared_ptr<detail::SurfaceControlMovableInsulation_Impl> impl);
+    explicit SurfaceControlMovableInsulation(std::shared_ptr<detail::SurfaceControlMovableInsulation_Impl> impl);
 
-  friend class detail::SurfaceControlMovableInsulation_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SurfaceControlMovableInsulation");
-};
+    friend class detail::SurfaceControlMovableInsulation_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SurfaceControlMovableInsulation");
+  };
 
-/** \relates SurfaceControlMovableInsulation*/
-typedef boost::optional<SurfaceControlMovableInsulation> OptionalSurfaceControlMovableInsulation;
+  /** \relates SurfaceControlMovableInsulation*/
+  typedef boost::optional<SurfaceControlMovableInsulation> OptionalSurfaceControlMovableInsulation;
 
-/** \relates SurfaceControlMovableInsulation*/
-typedef std::vector<SurfaceControlMovableInsulation> SurfaceControlMovableInsulationVector;
+  /** \relates SurfaceControlMovableInsulation*/
+  typedef std::vector<SurfaceControlMovableInsulation> SurfaceControlMovableInsulationVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SURFACECONTROLMOVABLEINSULATION_HPP
-
+#endif  // MODEL_SURFACECONTROLMOVABLEINSULATION_HPP

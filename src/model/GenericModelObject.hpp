@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,14 +35,14 @@
 
 namespace openstudio {
 namespace model {
-namespace detail {
-  class GenericModelObject_Impl;
-} // detail
+  namespace detail {
+    class GenericModelObject_Impl;
+  }  // namespace detail
 
-/** GenericModelObject is a generic interface for \link ModelObject ModelObjects\endlink
+  /** GenericModelObject is a generic interface for \link ModelObject ModelObjects\endlink
  *  that do not yet have a customized interface. */
 
-/** GenericModelObject derives from ModelObject and is a generic interface to any OpenStudio IDD object..
+  /** GenericModelObject derives from ModelObject and is a generic interface to any OpenStudio IDD object..
  *
  *  GenericModelObject is different from all other \link ModelObject ModelObjects \endlink in that
  *  it does not wrap a specific OpenStudio IDD object.  Instead it is a generic wrapper that can hold
@@ -54,37 +54,35 @@ namespace detail {
  *  so translation to and from EnergyPlus via the implicit translator does not lose data objects.
  *
  */
-class MODEL_API GenericModelObject : public ModelObject {
- public:
-  virtual ~GenericModelObject() {}
+  class MODEL_API GenericModelObject : public ModelObject
+  {
+   public:
+    virtual ~GenericModelObject() {}
 
- protected:
+   protected:
+    /// @cond
 
-  /// @cond
+    typedef detail::GenericModelObject_Impl ImplType;
 
-  typedef detail::GenericModelObject_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    // constructor
+    explicit GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> impl);
 
-  // constructor
-  explicit GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.GenericModelObject");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.GenericModelObject");
+  // optional GenericModelObject
+  typedef boost::optional<GenericModelObject> OptionalGenericModelObject;
 
-  /// @endcond
+  // vector of GenericModelObject
+  typedef std::vector<GenericModelObject> GenericModelObjectVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-// optional GenericModelObject
-typedef boost::optional<GenericModelObject> OptionalGenericModelObject;
-
-// vector of GenericModelObject
-typedef std::vector<GenericModelObject> GenericModelObjectVector;
-
-} // model
-} // openstudio
-
-#endif //MODEL_GENERICMODELOBJECT_HPP
+#endif  //MODEL_GENERICMODELOBJECT_HPP

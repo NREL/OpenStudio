@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,7 +30,7 @@
 #include "init_openstudio.hpp"
 #include <ruby.h>
 #include <stdexcept>
-
+#include <iostream>
 
 extern "C" {
   void Init_openstudioairflow(void);
@@ -39,6 +39,7 @@ extern "C" {
   void Init_openstudioutilitiescore(void);
   void Init_openstudioutilitiesplot(void);
   void Init_openstudioenergyplus(void);
+  void Init_openstudioepjson(void);
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
@@ -70,7 +71,8 @@ extern "C" {
   ////void Init_openstudiomodeleditor(void); # happens separately in openstudio.so only, for SketchUp plug-in
 }
 
-void init_openstudio_internal() {
+void init_openstudio_internal_basic()
+{
   rb_provide("openstudio");
   rb_provide("openstudio.so");
 
@@ -110,6 +112,10 @@ void init_openstudio_internal() {
   Init_openstudioutilities();
   rb_provide("openstudioutilities");
   rb_provide("openstudioutilities.so");
+}
+
+void init_openstudio_internal_extended()
+{
   Init_openstudiomodel();
   rb_provide("openstudiomodel");
   rb_provide("openstudiomodel.so");
@@ -149,9 +155,14 @@ void init_openstudio_internal() {
   Init_openstudiomodelgenerators();
   rb_provide("openstudiomodelgenerators");
   rb_provide("openstudiomodelgenerators.so");
+
+
   Init_openstudioenergyplus();
   rb_provide("openstudioenergyplus");
   rb_provide("openstudioenergyplus.so");
+  Init_openstudioepjson();
+  rb_provide("openstudioepjson");
+  rb_provide("openstudioepjson.so");
   Init_openstudioradiance();
   rb_provide("openstudioradiance");
   rb_provide("openstudioradiance.so");
@@ -173,6 +184,7 @@ void init_openstudio_internal() {
   Init_openstudiosdd();
   rb_provide("openstudiosdd");
   rb_provide("openstudiosdd.so");
+
 
   //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
   //rb_provide("openstudiomodeleditor");
@@ -350,7 +362,12 @@ end # module OpenStudio
 )END";
 
   evalString(ruby_typedef_script);
+}
 
+
+void init_openstudio_internal() {
+  init_openstudio_internal_basic();
+  init_openstudio_internal_extended();
 }
 
 class RubyException : public std::runtime_error

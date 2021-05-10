@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,7 +38,7 @@ namespace detail {
 
   class FahrenheitUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** FahrenheitUnit is a TemperatureUnit that supports absolute temperatures in degrees Fahrenheit.
  *  Rankine and Fahrenheit are the same in situations of relative temperature, that is, when it is the
@@ -47,7 +47,8 @@ namespace detail {
  *  the situation being addressed here. This class is for reporting actual temperatures in degrees
  *  Fahrenheit. Printing out R's as F's in the former situation is a feature that may be added to this
  *  library at a later date. */
-class UTILITIES_API FahrenheitUnit : public TemperatureUnit {
+class UTILITIES_API FahrenheitUnit : public TemperatureUnit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -57,7 +58,7 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit {
    *  \param[in] FExp exponent on baseUnit F.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  FahrenheitUnit(int FExp=0,int scaleExponent=0,const std::string& prettyString="");
+  FahrenheitUnit(int FExp = 0, int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor creates an absolute temperature. Specify the abbreviation of the scale,
    *  rather than its exponent.
@@ -66,9 +67,7 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit {
    *    "k" for kilo.
    *  \param[in] FExp exponent on baseUnit F.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  FahrenheitUnit(const std::string& scaleAbbreviation,
-                 int FExp=0,
-                 const std::string& prettyString="");
+  FahrenheitUnit(const std::string& scaleAbbreviation, int FExp = 0, const std::string& prettyString = "");
 
   virtual ~FahrenheitUnit() {}
 
@@ -91,7 +90,6 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit {
 
   /// @endcond
  private:
-
   REGISTER_LOGGER("openstudio.units.FahrenheitUnit");
 };
 
@@ -109,7 +107,6 @@ UTILITIES_API FahrenheitUnit createFahrenheitTemperature();
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_FAHRENHEITUNIT_HPP
-
+#endif  // UTILITIES_UNITS_FAHRENHEITUNIT_HPP

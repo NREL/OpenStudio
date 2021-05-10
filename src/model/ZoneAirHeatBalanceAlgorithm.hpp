@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,71 +36,71 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ZoneAirHeatBalanceAlgorithm_Impl;
+    class ZoneAirHeatBalanceAlgorithm_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneAirHeatBalanceAlgorithm is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirHeatBalanceAlgorithm'. */
-class MODEL_API ZoneAirHeatBalanceAlgorithm : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneAirHeatBalanceAlgorithm is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirHeatBalanceAlgorithm'. */
+  class MODEL_API ZoneAirHeatBalanceAlgorithm : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ZoneAirHeatBalanceAlgorithm() {}
+    virtual ~ZoneAirHeatBalanceAlgorithm() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validAlgorithmValues();
+    static std::vector<std::string> validAlgorithmValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string algorithm() const;
+    std::string algorithm() const;
 
-  bool isAlgorithmDefaulted() const;
+    bool isAlgorithmDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAlgorithm(std::string algorithm);
+    bool setAlgorithm(std::string algorithm);
 
-  void resetAlgorithm();
+    void resetAlgorithm();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneAirHeatBalanceAlgorithm_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneAirHeatBalanceAlgorithm_Impl ImplType;
 
-  explicit ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl);
+    explicit ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl);
 
-  friend class detail::ZoneAirHeatBalanceAlgorithm_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit ZoneAirHeatBalanceAlgorithm(Model& model);
+    friend class detail::ZoneAirHeatBalanceAlgorithm_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit ZoneAirHeatBalanceAlgorithm(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneAirHeatBalanceAlgorithm");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneAirHeatBalanceAlgorithm");
+  };
 
-/** \relates ZoneAirHeatBalanceAlgorithm*/
-typedef boost::optional<ZoneAirHeatBalanceAlgorithm> OptionalZoneAirHeatBalanceAlgorithm;
+  /** \relates ZoneAirHeatBalanceAlgorithm*/
+  typedef boost::optional<ZoneAirHeatBalanceAlgorithm> OptionalZoneAirHeatBalanceAlgorithm;
 
-/** \relates ZoneAirHeatBalanceAlgorithm*/
-typedef std::vector<ZoneAirHeatBalanceAlgorithm> ZoneAirHeatBalanceAlgorithmVector;
+  /** \relates ZoneAirHeatBalanceAlgorithm*/
+  typedef std::vector<ZoneAirHeatBalanceAlgorithm> ZoneAirHeatBalanceAlgorithmVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEAIRHEATBALANCEALGORITHM_HPP
-
+#endif  // MODEL_ZONEAIRHEATBALANCEALGORITHM_HPP

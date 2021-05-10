@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,111 +38,98 @@ class ReportingFrequency;
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API OutputVariable_Impl : public ModelObject_Impl {
+    class MODEL_API OutputVariable_Impl : public ModelObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      // constructor
+      OutputVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      // construct from workspace
+      OutputVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      // copy constructor
+      OutputVariable_Impl(const OutputVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
+      // virtual destructor
+      virtual ~OutputVariable_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      std::string keyValue() const;
 
-    // constructor
-    OutputVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      bool isKeyValueDefaulted() const;
 
-    // construct from workspace
-    OutputVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      std::string variableName() const;
 
-    // copy constructor
-    OutputVariable_Impl(const OutputVariable_Impl& other, Model_Impl* model, bool keepHandle);
+      std::string reportingFrequency() const;
 
-    // virtual destructor
-    virtual ~OutputVariable_Impl(){}
+      bool isReportingFrequencyDefaulted() const;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      std::vector<std::string> reportingFrequencyValues() const;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      boost::optional<Schedule> schedule() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool exportToBCVTB() const;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      bool isExportToBCVTBDefaulted() const;
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      bool setKeyValue(const std::string& keyValue);
 
-    std::string keyValue() const;
+      void resetKeyValue();
 
-    bool isKeyValueDefaulted() const;
+      bool setVariableName(const std::string& variableName);
 
-    std::string variableName() const;
+      bool setReportingFrequency(const std::string& reportingFrequency);
 
-    std::string reportingFrequency() const;
+      void resetReportingFrequency();
 
-    bool isReportingFrequencyDefaulted() const;
+      bool setSchedule(Schedule& schedule);
 
-    std::vector<std::string> reportingFrequencyValues() const;
+      void resetSchedule();
 
-    boost::optional<Schedule> schedule() const;
+      bool setExportToBCVTB(bool exportToBCVTB);
 
-    bool exportToBCVTB() const;
+      void resetExportToBCVTB();
 
-    bool isExportToBCVTBDefaulted() const;
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputVariable");
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<ModelObject> scheduleAsModelObject() const;
 
-    bool setKeyValue(const std::string& keyValue);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    void resetKeyValue();
+  }  // namespace detail
 
-    bool setVariableName(const std::string& variableName);
+}  // namespace model
+}  // namespace openstudio
 
-    bool setReportingFrequency(const std::string& reportingFrequency);
-
-    void resetReportingFrequency();
-
-    bool setSchedule(Schedule& schedule);
-
-    void resetSchedule();
-
-    bool setExportToBCVTB(bool exportToBCVTB);
-
-    void resetExportToBCVTB();
-
-    //@}
-   private:
-
-    REGISTER_LOGGER("openstudio.model.OutputVariable");
-
-    boost::optional<ModelObject> scheduleAsModelObject() const;
-
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_OUTPUTVARIABLE_IMPL_HPP
+#endif  // MODEL_OUTPUTVARIABLE_IMPL_HPP

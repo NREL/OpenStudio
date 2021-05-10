@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,63 +61,60 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellWaterSupply(GeneratorFuelCellWaterSupply & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
-  boost::optional<Node> node;
-  boost::optional<CurveQuadratic> curvequad;
-  boost::optional<CurveCubic> curvecubic;
-  boost::optional<Schedule> sch;
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellWaterSupply(GeneratorFuelCellWaterSupply& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
+    boost::optional<Node> node;
+    boost::optional<CurveQuadratic> curvequad;
+    boost::optional<CurveCubic> curvecubic;
+    boost::optional<Schedule> sch;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_WaterSupply, modelObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    pcm.setName(*s);
+    IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_WaterSupply, modelObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      pcm.setName(*s);
+    }
+
+    //ReformerWaterFlowRateFunctionofFuelRateCurveName
+    curvequad = modelObject.reformerWaterFlowRateFunctionofFuelRateCurve();
+    if (curvequad) {
+      pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterFlowRateFunctionofFuelRateCurveName, curvequad.get().nameString());
+    }
+
+    //ReformerWaterPumpPowerFunctionofFuelRateCurveName
+    curvecubic = modelObject.reformerWaterPumpPowerFunctionofFuelRateCurve();
+    if (curvecubic) {
+      pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterPumpPowerFunctionofFuelRateCurveName, curvecubic.get().nameString());
+    }
+
+    //PumpHeatLossFactor
+    d = modelObject.pumpHeatLossFactor();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, d.get());
+    }
+
+    //WaterTemperatureModelingMode
+    s = modelObject.waterTemperatureModelingMode();
+    if (s) {
+      pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureModelingMode, s.get());
+    }
+
+    //WaterTemperatureReferenceNodeName
+    node = modelObject.waterTemperatureReferenceNode();
+    if (node) {
+      pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureReferenceNodeName, node.get().nameString());
+    }
+
+    //WaterTemperatureScheduleName
+    sch = modelObject.waterTemperatureSchedule();
+    if (sch) {
+      pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureScheduleName, sch.get().nameString());
+    }
+
+    return pcm;
   }
 
-  //ReformerWaterFlowRateFunctionofFuelRateCurveName
-  curvequad = modelObject.reformerWaterFlowRateFunctionofFuelRateCurve();
-  if (curvequad) {
-    pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterFlowRateFunctionofFuelRateCurveName, curvequad.get().nameString());
-  }
+}  // namespace energyplus
 
-  //ReformerWaterPumpPowerFunctionofFuelRateCurveName
-  curvecubic = modelObject.reformerWaterPumpPowerFunctionofFuelRateCurve();
-  if (curvecubic) {
-    pcm.setString(Generator_FuelCell_WaterSupplyFields::ReformerWaterPumpPowerFunctionofFuelRateCurveName, curvecubic.get().nameString());
-  }
-
-  //PumpHeatLossFactor
-  d = modelObject.pumpHeatLossFactor();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, d.get());
-  }
-
-  //WaterTemperatureModelingMode
-  s = modelObject.waterTemperatureModelingMode();
-  if (s) {
-    pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureModelingMode, s.get());
-  }
-
-  //WaterTemperatureReferenceNodeName
-  node = modelObject.waterTemperatureReferenceNode();
-  if (node) {
-    pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureReferenceNodeName, node.get().nameString());
-  }
-
-  //WaterTemperatureScheduleName
-  sch = modelObject.waterTemperatureSchedule();
-  if (sch) {
-    pcm.setString(Generator_FuelCell_WaterSupplyFields::WaterTemperatureScheduleName, sch.get().nameString());
-  }
-
-  return pcm;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** LightingSimulationControl_Impl is a ModelObject_Impl that is the implementation class for LightingSimulationControl.*/
-  class MODEL_API LightingSimulationControl_Impl : public ModelObject_Impl {
+    /** LightingSimulationControl_Impl is a ModelObject_Impl that is the implementation class for LightingSimulationControl.*/
+    class MODEL_API LightingSimulationControl_Impl : public ModelObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      LightingSimulationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      LightingSimulationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      LightingSimulationControl_Impl(const LightingSimulationControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-   public:
+      virtual ~LightingSimulationControl_Impl() {}
 
-    /** @name Constructors and Destructors */
-    //@{
+      //@}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    LightingSimulationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    LightingSimulationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      /** @name Getters */
+      //@{
 
-    LightingSimulationControl_Impl(const LightingSimulationControl_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      bool runSimulationforDesignDays() const;
 
-    virtual ~LightingSimulationControl_Impl() {}
+      bool isRunSimulationforDesignDaysDefaulted() const;
 
-    //@}
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      bool runSimulationforWeatherFileRunPeriods() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isRunSimulationforWeatherFileRunPeriodsDefaulted() const;
 
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool runSimulationforDesignDays() const;
+      bool setRunSimulationforDesignDays(bool runSimulationforDesignDays);
 
-    bool isRunSimulationforDesignDaysDefaulted() const;
+      void resetRunSimulationforDesignDays();
 
-    bool runSimulationforWeatherFileRunPeriods() const;
+      bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
 
-    bool isRunSimulationforWeatherFileRunPeriodsDefaulted() const;
+      void resetRunSimulationforWeatherFileRunPeriods();
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.LightingSimulationControl");
+    };
 
-    bool setRunSimulationforDesignDays(bool runSimulationforDesignDays);
+  }  // namespace detail
 
-    void resetRunSimulationforDesignDays();
+}  // namespace model
+}  // namespace openstudio
 
-    bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
-
-    void resetRunSimulationforWeatherFileRunPeriods();
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.LightingSimulationControl");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_LIGHTINGSIMULATIONCONTROL_IMPL_HPP
+#endif  // MODEL_LIGHTINGSIMULATIONCONTROL_IMPL_HPP

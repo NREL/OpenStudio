@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,183 +33,158 @@
 
 #include <pugixml.hpp>
 
-namespace openstudio{
+namespace openstudio {
 
-  BCLFileReference::BCLFileReference(const openstudio::path& path, const bool setMembers)
-    : m_path(openstudio::filesystem::system_complete(path))
-  {
-    // DLM: why would you not want to set the members?
-    if (setMembers) {
-      m_checksum = openstudio::checksum(m_path);
+BCLFileReference::BCLFileReference(const openstudio::path& path, const bool setMembers) : m_path(openstudio::filesystem::system_complete(path)) {
+  // DLM: why would you not want to set the members?
+  if (setMembers) {
+    m_checksum = openstudio::checksum(m_path);
 
-      std::string fileType = this->fileType();
-      if (fileType == "osm"){
-        m_softwareProgram = "OpenStudio";
-        //m_softwareProgramVersion = "";
-      }else if (fileType == "osc"){
-        m_softwareProgram = "OpenStudio";
-        //m_softwareProgramVersion = "";
-      }else if (fileType == "idf"){
-        m_softwareProgram = "EnergyPlus";
-        //m_softwareProgramVersion = "";
-      }else if (fileType == "rb"){
-        m_softwareProgram = "OpenStudio";
-        //m_softwareProgramVersion = "";
-      }
+    std::string fileType = this->fileType();
+    if (fileType == "osm") {
+      m_softwareProgram = "OpenStudio";
+      //m_softwareProgramVersion = "";
+    } else if (fileType == "osc") {
+      m_softwareProgram = "OpenStudio";
+      //m_softwareProgramVersion = "";
+    } else if (fileType == "idf") {
+      m_softwareProgram = "EnergyPlus";
+      //m_softwareProgramVersion = "";
+    } else if (fileType == "rb") {
+      m_softwareProgram = "OpenStudio";
+      //m_softwareProgramVersion = "";
     }
   }
+}
 
-  BCLFileReference::~BCLFileReference()
-  {
-  }
+BCLFileReference::~BCLFileReference() {}
 
-  openstudio::path BCLFileReference::path() const
-  {
-    return m_path;
-  }
+openstudio::path BCLFileReference::path() const {
+  return m_path;
+}
 
-  std::string BCLFileReference::checksum() const
-  {
-    return m_checksum;
-  }
+std::string BCLFileReference::checksum() const {
+  return m_checksum;
+}
 
-  std::string BCLFileReference::softwareProgram() const
-  {
-    return m_softwareProgram;
-  }
+std::string BCLFileReference::softwareProgram() const {
+  return m_softwareProgram;
+}
 
-  std::string BCLFileReference::softwareProgramVersion() const
-  {
-    return m_softwareProgramVersion;
-  }
+std::string BCLFileReference::softwareProgramVersion() const {
+  return m_softwareProgramVersion;
+}
 
-  boost::optional<VersionString> BCLFileReference::minCompatibleVersion() const
-  {
-    return m_minCompatibleVersion;
-  }
+boost::optional<VersionString> BCLFileReference::minCompatibleVersion() const {
+  return m_minCompatibleVersion;
+}
 
-  boost::optional<VersionString> BCLFileReference::maxCompatibleVersion() const
-  {
-    return m_maxCompatibleVersion;
-  }
+boost::optional<VersionString> BCLFileReference::maxCompatibleVersion() const {
+  return m_maxCompatibleVersion;
+}
 
-  std::string BCLFileReference::fileName() const
-  {
-    return toString(m_path.filename());
-  }
+std::string BCLFileReference::fileName() const {
+  return toString(m_path.filename());
+}
 
-  std::string BCLFileReference::fileType() const
-  {
-    return openstudio::replace(openstudio::toString(m_path.extension()), ".", "");
-  }
+std::string BCLFileReference::fileType() const {
+  return openstudio::replace(openstudio::toString(m_path.extension()), ".", "");
+}
 
-  std::string BCLFileReference::usageType() const
-  {
-    return m_usageType;
-  }
+std::string BCLFileReference::usageType() const {
+  return m_usageType;
+}
 
-  void BCLFileReference::setChecksum(const std::string& checksum)
-  {
-    m_checksum = checksum;
-  }
+void BCLFileReference::setChecksum(const std::string& checksum) {
+  m_checksum = checksum;
+}
 
-  void BCLFileReference::setSoftwareProgram(const std::string& softwareProgram)
-  {
-    m_softwareProgram = softwareProgram;
-  }
+void BCLFileReference::setSoftwareProgram(const std::string& softwareProgram) {
+  m_softwareProgram = softwareProgram;
+}
 
-  void BCLFileReference::setSoftwareProgramVersion(const std::string& softwareProgramVersion)
-  {
-    m_softwareProgramVersion = softwareProgramVersion;
-  }
+void BCLFileReference::setSoftwareProgramVersion(const std::string& softwareProgramVersion) {
+  m_softwareProgramVersion = softwareProgramVersion;
+}
 
-  void BCLFileReference::setMinCompatibleVersion(const VersionString& minCompatibleVersion)
-  {
-    m_minCompatibleVersion = minCompatibleVersion;
-  }
+void BCLFileReference::setMinCompatibleVersion(const VersionString& minCompatibleVersion) {
+  m_minCompatibleVersion = minCompatibleVersion;
+}
 
-  void BCLFileReference::resetMinCompatibleVersion()
-  {
-    m_minCompatibleVersion.reset();
-  }
+void BCLFileReference::resetMinCompatibleVersion() {
+  m_minCompatibleVersion.reset();
+}
 
-  void BCLFileReference::setMaxCompatibleVersion(const VersionString& maxCompatibleVersion)
-  {
-    m_maxCompatibleVersion = maxCompatibleVersion;
-  }
+void BCLFileReference::setMaxCompatibleVersion(const VersionString& maxCompatibleVersion) {
+  m_maxCompatibleVersion = maxCompatibleVersion;
+}
 
-  void BCLFileReference::resetMaxCompatibleVersion()
-  {
-    m_maxCompatibleVersion.reset();
-  }
+void BCLFileReference::resetMaxCompatibleVersion() {
+  m_maxCompatibleVersion.reset();
+}
 
-  void BCLFileReference::setUsageType(const std::string& usageType)
-  {
-    m_usageType = usageType;
-  }
+void BCLFileReference::setUsageType(const std::string& usageType) {
+  m_usageType = usageType;
+}
 
-  void BCLFileReference::writeValues(pugi::xml_node &element) const
-  {
-    if (m_usageType == "script" && !m_softwareProgram.empty() && !m_softwareProgramVersion.empty()){
-      auto versionElement = element.append_child("version");
+void BCLFileReference::writeValues(pugi::xml_node& element) const {
+  if (m_usageType == "script" && !m_softwareProgram.empty() && !m_softwareProgramVersion.empty()) {
+    auto versionElement = element.append_child("version");
 
-      auto subelement = versionElement.append_child("software_program");
-      auto text = subelement.text();
-      text.set(m_softwareProgram.c_str());
-
-      subelement = versionElement.append_child("identifier");
-      text = subelement.text();
-      text.set(m_softwareProgramVersion.c_str());
-
-      if (m_minCompatibleVersion){
-        subelement = versionElement.append_child("min_compatible");
-        text = subelement.text();
-        text.set(m_minCompatibleVersion->str().c_str());
-      }
-
-      if (m_maxCompatibleVersion){
-        subelement = versionElement.append_child("max_compatible");
-        text = subelement.text();
-        text.set(m_maxCompatibleVersion->str().c_str());
-      }
-
-    }
-
-    auto subelement = element.append_child("filename");
+    auto subelement = versionElement.append_child("software_program");
     auto text = subelement.text();
-    text.set(fileName().c_str()); // careful to write out function result instead of member
+    text.set(m_softwareProgram.c_str());
 
-    subelement = element.append_child("filetype");
+    subelement = versionElement.append_child("identifier");
     text = subelement.text();
-    text.set(fileType().c_str()); // careful to write out function result instead of member
+    text.set(m_softwareProgramVersion.c_str());
 
-    subelement = element.append_child("usage_type");
-    text = subelement.text();
-    text.set(m_usageType.c_str());
-
-    subelement = element.append_child("checksum");
-    text = subelement.text();
-    text.set(m_checksum.c_str());
-  }
-
-  bool BCLFileReference::checkForUpdate()
-  {
-    std::string newChecksum = openstudio::checksum(this->path());
-    if (m_checksum != newChecksum){
-      m_checksum = newChecksum;
-      return true;
+    if (m_minCompatibleVersion) {
+      subelement = versionElement.append_child("min_compatible");
+      text = subelement.text();
+      text.set(m_minCompatibleVersion->str().c_str());
     }
-    return false;
+
+    if (m_maxCompatibleVersion) {
+      subelement = versionElement.append_child("max_compatible");
+      text = subelement.text();
+      text.set(m_maxCompatibleVersion->str().c_str());
+    }
   }
 
-  std::ostream& operator<<(std::ostream& os, const BCLFileReference& file)
-  {
-    pugi::xml_document doc;
-    auto element = doc.append_child("File");
-    file.writeValues(element);
+  auto subelement = element.append_child("filename");
+  auto text = subelement.text();
+  text.set(fileName().c_str());  // careful to write out function result instead of member
 
-    doc.save(os, "  ");
-    return os;
+  subelement = element.append_child("filetype");
+  text = subelement.text();
+  text.set(fileType().c_str());  // careful to write out function result instead of member
+
+  subelement = element.append_child("usage_type");
+  text = subelement.text();
+  text.set(m_usageType.c_str());
+
+  subelement = element.append_child("checksum");
+  text = subelement.text();
+  text.set(m_checksum.c_str());
+}
+
+bool BCLFileReference::checkForUpdate() {
+  std::string newChecksum = openstudio::checksum(this->path());
+  if (m_checksum != newChecksum) {
+    m_checksum = newChecksum;
+    return true;
   }
+  return false;
+}
 
-} // openstudio
+std::ostream& operator<<(std::ostream& os, const BCLFileReference& file) {
+  pugi::xml_document doc;
+  auto element = doc.append_child("File");
+  file.writeValues(element);
+
+  doc.save(os, "  ");
+  return os;
+}
+
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,19 +34,21 @@
 
 #include "../core/Logger.hpp"
 
-namespace openstudio{
-namespace detail{
+namespace openstudio {
+namespace detail {
   class WorkflowJSON_Impl;
   class RunOptions_Impl;
-}
+}  // namespace detail
 
-class UTILITIES_API CustomOutputAdapter {
-public:
+class UTILITIES_API CustomOutputAdapter
+{
+ public:
   CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options);
   std::string customFileName() const;
   std::string className() const;
   std::string options() const;
-private:
+
+ private:
   std::string m_customFileName;
   std::string m_className;
   std::string m_options;
@@ -55,8 +57,7 @@ private:
 /** Base class for defining a run options for a OpenStudio Workflow. */
 class UTILITIES_API RunOptions
 {
-public:
-
+ public:
   RunOptions();
 
   virtual ~RunOptions();
@@ -95,28 +96,25 @@ public:
   bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
   void resetCustomOutputAdapter();
 
-protected:
-
+ protected:
   // get the impl
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   friend class detail::WorkflowJSON_Impl;
 
-private:
-
+ private:
   // configure logging
   REGISTER_LOGGER("openstudio.RunOptions");
 
   // pointer to implementation
   std::shared_ptr<detail::RunOptions_Impl> m_impl;
-
 };
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const RunOptions& runOptions);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_RUNOPTIONS_HPP
+#endif  //UTILITIES_FILETYPES_RUNOPTIONS_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,17 +56,16 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Site)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingSurface_Site) {
   Model model;
   ShadingSurfaceGroup shadingSurfaceGroup(model);
   EXPECT_TRUE(shadingSurfaceGroup.setShadingSurfaceType("Site"));
 
   Point3dVector points;
-  points.push_back(Point3d(0,1,0));
-  points.push_back(Point3d(1,1,0));
-  points.push_back(Point3d(1,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   ShadingSurface shadingSurface(points, model);
   EXPECT_TRUE(shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroup));
@@ -77,17 +76,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Site)
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Building)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingSurface_Building) {
   Model model;
   ShadingSurfaceGroup shadingSurfaceGroup(model);
   EXPECT_TRUE(shadingSurfaceGroup.setShadingSurfaceType("Building"));
 
   Point3dVector points;
-  points.push_back(Point3d(0,1,0));
-  points.push_back(Point3d(1,1,0));
-  points.push_back(Point3d(1,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   ShadingSurface shadingSurface(points, model);
   EXPECT_TRUE(shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroup));
@@ -98,17 +96,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Building)
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ShadingSurface_Space)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingSurface_Space) {
   Model model;
 
   ThermalZone thermalZone(model);
 
   Point3dVector points;
-  points.push_back(Point3d(0,1,0));
-  points.push_back(Point3d(1,1,0));
-  points.push_back(Point3d(1,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   boost::optional<Space> space = Space::fromFloorPrint(points, 1, model);
   ASSERT_TRUE(space);

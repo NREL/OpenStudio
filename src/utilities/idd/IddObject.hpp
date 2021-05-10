@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,12 +49,12 @@ struct IddObjectType;
 
 namespace detail {
   class IddObject_Impl;
-} // detail
+}  // namespace detail
 
 /** IddObject represents an object in the Idd.  IddObject is a shared object. */
-class UTILITIES_API IddObject {
+class UTILITIES_API IddObject
+{
  public:
-
   /** @name Constructors */
   //@{
 
@@ -138,7 +138,7 @@ class UTILITIES_API IddObject {
 
   /** Returns true if first IddField is of type handle. This should be true for every OpenStudio
    *  IddObject and false for every EnergyPlus IddObject. */
-  bool hasHandleField()  const;
+  bool hasHandleField() const;
 
   /** Returns true if the first IddField after the handle field, if present, is a name IddField. */
   bool hasNameField() const;
@@ -195,15 +195,10 @@ class UTILITIES_API IddObject {
    *  IddFile. If not constructed by the IddFactory, or the IddObject does not otherwise come from
    *  the EnergyPlus or OpenStudio IDD files, type should be equal to UserCustom. The constructor
    *  also needs the full text of the object for parsing. */
-  static boost::optional<IddObject> load(const std::string& name,
-                                         const std::string& group,
-                                         const std::string& text,
-                                         IddObjectType type);
+  static boost::optional<IddObject> load(const std::string& name, const std::string& group, const std::string& text, IddObjectType type);
 
   /** \overload Sets type to IddObjectType::UserCustom. */
-  static boost::optional<IddObject> load(const std::string& name,
-                                         const std::string& group,
-                                         const std::string& text);
+  static boost::optional<IddObject> load(const std::string& name, const std::string& group, const std::string& text);
 
   /** Print this object to os, in standard IDD format. */
   std::ostream& print(std::ostream& os) const;
@@ -239,8 +234,8 @@ UTILITIES_API std::set<IddObjectType> getIddObjectTypeSet(const std::vector<IddO
 
 /** Converts the vector of \link IddKey IddKeys\endlink associated with object.getField(index)
  *  to a vector of std::string. \relates IddObject */
-UTILITIES_API std::vector<std::string> getIddKeyNames(const IddObject& object,unsigned index);
+UTILITIES_API std::vector<std::string> getIddKeyNames(const IddObject& object, unsigned index);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_IDD_IDDOBJECT_HPP
+#endif  //UTILITIES_IDD_IDDOBJECT_HPP

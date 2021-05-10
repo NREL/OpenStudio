@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,87 +36,81 @@
 namespace openstudio {
 namespace model {
 
-class Construction;
-class Node;
+  class Construction;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** PipeOutdoor_Impl is a StraightComponent_Impl that is the implementation class for PipeOutdoor.*/
-  class MODEL_API PipeOutdoor_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** PipeOutdoor_Impl is a StraightComponent_Impl that is the implementation class for PipeOutdoor.*/
+    class MODEL_API PipeOutdoor_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PipeOutdoor_Impl(const IdfObject& idfObject,
-                     Model_Impl* model,
-                     bool keepHandle);
+      PipeOutdoor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PipeOutdoor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      PipeOutdoor_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PipeOutdoor_Impl(const PipeOutdoor_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      PipeOutdoor_Impl(const PipeOutdoor_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~PipeOutdoor_Impl() {}
+      virtual ~PipeOutdoor_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    boost::optional<Construction> construction() const;
+      boost::optional<Construction> construction() const;
 
-    boost::optional<Node> ambientTemperatureOutdoorAirNode() const;
+      boost::optional<Node> ambientTemperatureOutdoorAirNode() const;
 
-    double pipeInsideDiameter() const;
+      double pipeInsideDiameter() const;
 
-    double pipeLength() const;
+      double pipeLength() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setConstruction(const boost::optional<Construction>& construction);
+      bool setConstruction(const boost::optional<Construction>& construction);
 
-    void resetConstruction();
+      void resetConstruction();
 
-    bool setAmbientTemperatureOutdoorAirNode(const boost::optional<Node>& node);
+      bool setAmbientTemperatureOutdoorAirNode(const boost::optional<Node>& node);
 
-    void resetAmbientTemperatureOutdoorAirNode();
+      void resetAmbientTemperatureOutdoorAirNode();
 
-    bool setPipeInsideDiameter(double pipeInsideDiameter);
+      bool setPipeInsideDiameter(double pipeInsideDiameter);
 
-    bool setPipeLength(double pipeLength);
+      bool setPipeLength(double pipeLength);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.PipeOutdoor");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PipeOutdoor");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PIPEOUTDOOR_IMPL_HPP
-
+#endif  // MODEL_PIPEOUTDOOR_IMPL_HPP

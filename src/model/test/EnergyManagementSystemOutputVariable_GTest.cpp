@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,8 +59,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
-{
+TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -106,7 +105,7 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
 
   //variable name
   bool varset = outvar.setEMSVariableName("badVariable");
-  EXPECT_EQ(true,varset);
+  EXPECT_EQ(true, varset);
   varset = outvar.setEMSVariableName("globalVar");
   EXPECT_EQ(true, varset);
 
@@ -143,7 +142,6 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   EXPECT_EQ("program_1", outvar.emsProgramOrSubroutineName());
   EXPECT_EQ(program, outvar.emsProgram());
 
-
   // add output variable actuator
   EnergyManagementSystemOutputVariable outvar_act(model, fanActuator);
   //setname
@@ -159,6 +157,4 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   ASSERT_TRUE(outvar_sen.emsVariableObject());
   ASSERT_TRUE(outvar_sen.emsSensor());
   EXPECT_EQ(outvar_sen.emsVariableObject().get(), outvar_sen.emsSensor().get());
-
 }
-

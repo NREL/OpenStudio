@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,82 +37,82 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class ElectricLoadCenterInverterSimple_Impl;
+    class ElectricLoadCenterInverterSimple_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ElectricLoadCenterInverterSimple is a Inverter that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Inverter:Simple'. */
-class MODEL_API ElectricLoadCenterInverterSimple : public Inverter {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ElectricLoadCenterInverterSimple is a Inverter that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Inverter:Simple'. */
+  class MODEL_API ElectricLoadCenterInverterSimple : public Inverter
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ElectricLoadCenterInverterSimple(const Model& model);
+    explicit ElectricLoadCenterInverterSimple(const Model& model);
 
-  virtual ~ElectricLoadCenterInverterSimple() {}
+    virtual ~ElectricLoadCenterInverterSimple() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<double> radiativeFraction() const;
+    boost::optional<double> radiativeFraction() const;
 
-  boost::optional<double> inverterEfficiency() const;
+    boost::optional<double> inverterEfficiency() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setRadiativeFraction(double radiativeFraction);
+    bool setRadiativeFraction(double radiativeFraction);
 
-  void resetRadiativeFraction();
+    void resetRadiativeFraction();
 
-  bool setInverterEfficiency(double inverterEfficiency);
+    bool setInverterEfficiency(double inverterEfficiency);
 
-  void resetInverterEfficiency();
+    void resetInverterEfficiency();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ElectricLoadCenterInverterSimple_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ElectricLoadCenterInverterSimple_Impl ImplType;
 
-  explicit ElectricLoadCenterInverterSimple(std::shared_ptr<detail::ElectricLoadCenterInverterSimple_Impl> impl);
+    explicit ElectricLoadCenterInverterSimple(std::shared_ptr<detail::ElectricLoadCenterInverterSimple_Impl> impl);
 
-  friend class detail::ElectricLoadCenterInverterSimple_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterSimple");
-};
+    friend class detail::ElectricLoadCenterInverterSimple_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterSimple");
+  };
 
-/** \relates ElectricLoadCenterInverterSimple*/
-typedef boost::optional<ElectricLoadCenterInverterSimple> OptionalElectricLoadCenterInverterSimple;
+  /** \relates ElectricLoadCenterInverterSimple*/
+  typedef boost::optional<ElectricLoadCenterInverterSimple> OptionalElectricLoadCenterInverterSimple;
 
-/** \relates ElectricLoadCenterInverterSimple*/
-typedef std::vector<ElectricLoadCenterInverterSimple> ElectricLoadCenterInverterSimpleVector;
+  /** \relates ElectricLoadCenterInverterSimple*/
+  typedef std::vector<ElectricLoadCenterInverterSimple> ElectricLoadCenterInverterSimpleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERINVERTERSIMPLE_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERINVERTERSIMPLE_HPP

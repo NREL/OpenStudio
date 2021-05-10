@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,89 +36,84 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneAirMassFlowConservation_Impl is a ModelObject_Impl that is the implementation class for ZoneAirMassFlowConservation.*/
-  class MODEL_API ZoneAirMassFlowConservation_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ZoneAirMassFlowConservation_Impl is a ModelObject_Impl that is the implementation class for ZoneAirMassFlowConservation.*/
+    class MODEL_API ZoneAirMassFlowConservation_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ZoneAirMassFlowConservation_Impl(const IdfObject& idfObject,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      ZoneAirMassFlowConservation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneAirMassFlowConservation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      ZoneAirMassFlowConservation_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneAirMassFlowConservation_Impl(const ZoneAirMassFlowConservation_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      ZoneAirMassFlowConservation_Impl(const ZoneAirMassFlowConservation_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneAirMassFlowConservation_Impl() {}
+      virtual ~ZoneAirMassFlowConservation_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    bool adjustZoneMixingForZoneAirMassFlowBalance() const;
+      std::string adjustZoneMixingandReturnForAirMassFlowBalance() const;
 
-    bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
+      bool isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted() const;
 
-    std::string sourceZoneInfiltrationTreatment() const;
+      std::string sourceZoneInfiltrationTreatment() const;
 
-    bool isSourceZoneInfiltrationTreatmentDefaulted() const;
+      bool isSourceZoneInfiltrationTreatmentDefaulted() const;
 
-    std::string infiltrationBalancingMethod() const;
+      std::string infiltrationBalancingMethod() const;
 
-    bool isInfiltrationBalancingMethodDefaulted() const;
+      bool isInfiltrationBalancingMethodDefaulted() const;
 
-    std::string infiltrationBalancingZones() const;
+      std::string infiltrationBalancingZones() const;
 
-    bool isInfiltrationBalancingZonesDefaulted() const;
+      bool isInfiltrationBalancingZonesDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+      bool setAdjustZoneMixingandReturnForAirMassFlowBalance(const std::string& adjustZoneMixingandReturnForAirMassFlowBalance);
 
-    void resetAdjustZoneMixingForZoneAirMassFlowBalance();
+      void resetAdjustZoneMixingandReturnForAirMassFlowBalance();
 
-    bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
+      bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 
-    void resetSourceZoneInfiltrationTreatment();
+      void resetSourceZoneInfiltrationTreatment();
 
-    bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
+      bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
 
-    void resetInfiltrationBalancingMethod();
+      void resetInfiltrationBalancingMethod();
 
-    bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
+      bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
 
-    void resetInfiltrationBalancingZones();
+      void resetInfiltrationBalancingZones();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneAirMassFlowConservation");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneAirMassFlowConservation");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEAIRMASSFLOWCONSERVATION_IMPL_HPP
+#endif  // MODEL_ZONEAIRMASSFLOWCONSERVATION_IMPL_HPP

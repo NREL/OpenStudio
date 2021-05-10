@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,60 +36,55 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API Mixer_Impl : public HVACComponent_Impl
-{
-  public:
+    class MODEL_API Mixer_Impl : public HVACComponent_Impl
+    {
+     public:
+      Mixer_Impl(IddObjectType type, Model_Impl* model);
 
-  Mixer_Impl(IddObjectType type, Model_Impl* model);
+      Mixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  Mixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      Mixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  Mixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-             Model_Impl* model,
-             bool keepHandle );
+      Mixer_Impl(const Mixer_Impl& other, Model_Impl* model, bool keepHandles);
 
-  Mixer_Impl( const Mixer_Impl& other, Model_Impl* model, bool keepHandles );
+      virtual ~Mixer_Impl() {}
 
-  virtual ~Mixer_Impl() {}
+      virtual unsigned outletPort() const = 0;
 
-  virtual unsigned outletPort() const = 0;
+      virtual unsigned inletPort(unsigned branchIndex) const = 0;
 
-  virtual unsigned inletPort(unsigned branchIndex) const = 0;
+      virtual unsigned nextInletPort() const = 0;
 
-  virtual unsigned nextInletPort() const = 0;
+      virtual boost::optional<ModelObject> outletModelObject() const;
 
-  virtual boost::optional<ModelObject> outletModelObject() const;
+      virtual boost::optional<ModelObject> inletModelObject(unsigned branchIndex) const;
 
-  virtual boost::optional<ModelObject> inletModelObject(unsigned branchIndex) const;
+      virtual boost::optional<ModelObject> lastInletModelObject() const;
 
-  virtual boost::optional<ModelObject> lastInletModelObject() const;
+      virtual std::vector<ModelObject> inletModelObjects() const;
 
-  virtual std::vector<ModelObject> inletModelObjects() const;
+      virtual unsigned newInletPortAfterBranch(unsigned branchIndex);
 
-  virtual unsigned newInletPortAfterBranch(unsigned branchIndex);
+      virtual unsigned branchIndexForInletModelObject(ModelObject modelObject) const;
 
-  virtual unsigned branchIndexForInletModelObject( ModelObject modelObject ) const;
+      virtual unsigned nextBranchIndex() const;
 
-  virtual unsigned nextBranchIndex() const;
+      virtual void removePortForBranch(unsigned branchIndex);
 
-  virtual void removePortForBranch(unsigned branchIndex);
+      virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
 
-  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+      bool isRemovable() const override;
 
-  bool isRemovable() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.Mixer");
+    };
 
-  private:
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.Mixer");
-};
+}  // namespace model
 
-} // detail
-
-} // model
-
-} // openstudio
+}  // namespace openstudio
 
 #endif
-

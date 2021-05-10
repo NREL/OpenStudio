@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,90 +37,90 @@ namespace openstudio {
 
 namespace model {
 
-class PlanarSurface;
-class SolarCollectorPerformanceIntegralCollectorStorage;
+  class PlanarSurface;
+  class SolarCollectorPerformanceIntegralCollectorStorage;
 
-namespace detail {
+  namespace detail {
 
-  class SolarCollectorIntegralCollectorStorage_Impl;
+    class SolarCollectorIntegralCollectorStorage_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SolarCollectorIntegralCollectorStorage is a StraightComponent that wraps the OpenStudio IDD object 'OS:SolarCollector:IntegralCollectorStorage'. */
-class MODEL_API SolarCollectorIntegralCollectorStorage : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SolarCollectorIntegralCollectorStorage is a StraightComponent that wraps the OpenStudio IDD object 'OS:SolarCollector:IntegralCollectorStorage'. */
+  class MODEL_API SolarCollectorIntegralCollectorStorage : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SolarCollectorIntegralCollectorStorage(const Model& model);
+    explicit SolarCollectorIntegralCollectorStorage(const Model& model);
 
-  virtual ~SolarCollectorIntegralCollectorStorage() {}
+    virtual ~SolarCollectorIntegralCollectorStorage() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> bottomSurfaceBoundaryConditionsTypeValues();
+    static std::vector<std::string> bottomSurfaceBoundaryConditionsTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  SolarCollectorPerformanceIntegralCollectorStorage solarCollectorPerformance() const;
+    SolarCollectorPerformanceIntegralCollectorStorage solarCollectorPerformance() const;
 
-  boost::optional<PlanarSurface> surface() const;
+    boost::optional<PlanarSurface> surface() const;
 
-  std::string bottomSurfaceBoundaryConditionsType() const;
+    std::string bottomSurfaceBoundaryConditionsType() const;
 
-  bool isBottomSurfaceBoundaryConditionsTypeDefaulted() const;
+    bool isBottomSurfaceBoundaryConditionsTypeDefaulted() const;
 
-  boost::optional<double> maximumFlowRate() const;
+    boost::optional<double> maximumFlowRate() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// Deletes the current parameters and clones the parameters passed in
-  bool setSolarCollectorPerformance(const SolarCollectorPerformanceIntegralCollectorStorage& solarCollectorPerformance);
+    /// Deletes the current parameters and clones the parameters passed in
+    bool setSolarCollectorPerformance(const SolarCollectorPerformanceIntegralCollectorStorage& solarCollectorPerformance);
 
-  /// Deletes the current parameters and constructs a new default set of parameters
-  void resetSolarCollectorPerformance();
+    /// Deletes the current parameters and constructs a new default set of parameters
+    void resetSolarCollectorPerformance();
 
-  bool setSurface(const PlanarSurface& surface);
+    bool setSurface(const PlanarSurface& surface);
 
-  void resetSurface();
+    void resetSurface();
 
-  bool setMaximumFlowRate(double maximumFlowRate);
+    bool setMaximumFlowRate(double maximumFlowRate);
 
-  void resetMaximumFlowRate();
+    void resetMaximumFlowRate();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SolarCollectorIntegralCollectorStorage_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SolarCollectorIntegralCollectorStorage_Impl ImplType;
 
-  explicit SolarCollectorIntegralCollectorStorage(std::shared_ptr<detail::SolarCollectorIntegralCollectorStorage_Impl> impl);
+    explicit SolarCollectorIntegralCollectorStorage(std::shared_ptr<detail::SolarCollectorIntegralCollectorStorage_Impl> impl);
 
-  friend class detail::SolarCollectorIntegralCollectorStorage_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SolarCollectorIntegralCollectorStorage");
-};
+    friend class detail::SolarCollectorIntegralCollectorStorage_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SolarCollectorIntegralCollectorStorage");
+  };
 
-/** \relates SolarCollectorIntegralCollectorStorage*/
-typedef boost::optional<SolarCollectorIntegralCollectorStorage> OptionalSolarCollectorIntegralCollectorStorage;
+  /** \relates SolarCollectorIntegralCollectorStorage*/
+  typedef boost::optional<SolarCollectorIntegralCollectorStorage> OptionalSolarCollectorIntegralCollectorStorage;
 
-/** \relates SolarCollectorIntegralCollectorStorage*/
-typedef std::vector<SolarCollectorIntegralCollectorStorage> SolarCollectorIntegralCollectorStorageVector;
+  /** \relates SolarCollectorIntegralCollectorStorage*/
+  typedef std::vector<SolarCollectorIntegralCollectorStorage> SolarCollectorIntegralCollectorStorageVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SOLARCOLLECTORINTEGRALCOLLECTORSTORAGE_HPP
-
+#endif  // MODEL_SOLARCOLLECTORINTEGRALCOLLECTORSTORAGE_HPP

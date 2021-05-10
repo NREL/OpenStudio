@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,48 +35,39 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  GasLayer_Impl::GasLayer_Impl(const IdfObject& idfObject,Model_Impl* model, bool keepHandle)
-    : FenestrationMaterial_Impl(idfObject, model, keepHandle)
-  {}
+    GasLayer_Impl::GasLayer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : FenestrationMaterial_Impl(idfObject, model, keepHandle) {}
 
-  GasLayer_Impl::GasLayer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle)
-    : FenestrationMaterial_Impl(other, model, keepHandle)
-  {}
+    GasLayer_Impl::GasLayer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : FenestrationMaterial_Impl(other, model, keepHandle) {}
 
-  GasLayer_Impl::GasLayer_Impl(const GasLayer_Impl& other,Model_Impl* model,bool keepHandle)
-    : FenestrationMaterial_Impl(other, model, keepHandle)
-  {}
+    GasLayer_Impl::GasLayer_Impl(const GasLayer_Impl& other, Model_Impl* model, bool keepHandle)
+      : FenestrationMaterial_Impl(other, model, keepHandle) {}
 
-  OptionalDouble GasLayer_Impl::getVisibleTransmittance() const {
-    OptionalDouble od(1.0);
-    return od;
+    OptionalDouble GasLayer_Impl::getVisibleTransmittance() const {
+      OptionalDouble od(1.0);
+      return od;
+    }
+
+    boost::optional<double> GasLayer_Impl::interiorVisibleAbsorptance() const {
+      return 0.0;
+    }
+
+    boost::optional<double> GasLayer_Impl::exteriorVisibleAbsorptance() const {
+      return 0.0;
+    }
+
+  }  // namespace detail
+
+  /// @cond
+  GasLayer::GasLayer(IddObjectType type, const Model& model) : FenestrationMaterial(type, model) {
+    OS_ASSERT(getImpl<detail::GasLayer_Impl>());
   }
 
-  boost::optional<double> GasLayer_Impl::interiorVisibleAbsorptance() const {
-    return 0.0;
-  }
+  GasLayer::GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl) : FenestrationMaterial(std::move(impl)) {}
+  /// @endcond
 
-  boost::optional<double> GasLayer_Impl::exteriorVisibleAbsorptance() const {
-    return 0.0;
-  }
-
-} // detail
-
-/// @cond
-GasLayer::GasLayer(IddObjectType type,const Model& model)
-  : FenestrationMaterial(type,model)
-{
-  OS_ASSERT(getImpl<detail::GasLayer_Impl>());
-}
-
-GasLayer::GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl)
-  : FenestrationMaterial(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

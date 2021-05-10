@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,7 +48,8 @@ class Unit;
 namespace detail {
 
   // implementation of IddField
-  class UTILITIES_API IddField_Impl {
+  class UTILITIES_API IddField_Impl
+  {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -127,9 +128,7 @@ namespace detail {
      *  following the \\field slash code, or, if that is absent, the 'A' or 'N' identifier,
      *  should be sent in as name. objectName is the IddObject.name() to which this field
      *  belongs. */
-    static std::shared_ptr<IddField_Impl> load(const std::string& name,
-                                                 const std::string& text,
-                                                 const std::string& objectName);
+    static std::shared_ptr<IddField_Impl> load(const std::string& name, const std::string& text, const std::string& objectName);
 
     /** Print the IddField to an output stream. Field slash codes are indented to produce pretty
      *  output. If lastField, then the field id will be followed by a semi-colon; otherwise, a
@@ -139,10 +138,10 @@ namespace detail {
     //@}
    private:
     std::string m_name;
-    std::string m_fieldId;           // e.g. A1, N1
-    std::string m_objectName;        // name of IddObject to which this field belongs
-    IddFieldProperties m_properties; // IDD markup information
-    std::vector<IddKey> m_keys;      // vector of all keys
+    std::string m_fieldId;            // e.g. A1, N1
+    std::string m_objectName;         // name of IddObject to which this field belongs
+    IddFieldProperties m_properties;  // IDD markup information
+    std::vector<IddKey> m_keys;       // vector of all keys
 
     // partial constructor used by load
     IddField_Impl(const std::string& name, const std::string& objectName);
@@ -160,7 +159,7 @@ namespace detail {
     REGISTER_LOGGER("utilities.idd.IddField");
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDFIELD_IMPL_HPP
+#endif  // UTILITIES_IDD_IDDFIELD_IMPL_HPP

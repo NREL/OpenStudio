@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,115 +36,113 @@
 namespace openstudio {
 namespace model {
 
-class ExteriorLightsDefinition;
-class Schedule;
-class Facility;
+  class ExteriorLightsDefinition;
+  class Schedule;
+  class Facility;
 
-namespace detail {
+  namespace detail {
 
-  class ExteriorLights_Impl;
+    class ExteriorLights_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExteriorLights is a ExteriorLoadInstance that wraps the OpenStudio IDD object
+  /** ExteriorLights is a ExteriorLoadInstance that wraps the OpenStudio IDD object
  *  'OS:Exterior:Lights'. ExteriorLights is a child of Facility and instances
  *  ExteriorLightsDefinition. */
-class MODEL_API ExteriorLights : public ExteriorLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ExteriorLights : public ExteriorLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** This constructor sets schedule to always on, and provides the option to use the
+    /** This constructor sets schedule to always on, and provides the option to use the
    *  astronomical clock control option. */
-  ExteriorLights(const ExteriorLightsDefinition& definition,
-                 bool useControlOptionAstronomicalClock = false);
+    ExteriorLights(const ExteriorLightsDefinition& definition, bool useControlOptionAstronomicalClock = false);
 
-  /** This constructor requires a user-specified schedule. */
-  ExteriorLights(const ExteriorLightsDefinition& definition,
-                 Schedule& schedule);
+    /** This constructor requires a user-specified schedule. */
+    ExteriorLights(const ExteriorLightsDefinition& definition, Schedule& schedule);
 
-  virtual ~ExteriorLights() {}
+    virtual ~ExteriorLights() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlOptionValues();
+    static std::vector<std::string> controlOptionValues();
 
-  /** \deprecated */
-  static std::vector<std::string> validControlOptionValues();
+    /** \deprecated */
+    static std::vector<std::string> validControlOptionValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ExteriorLightsDefinition exteriorLightsDefinition() const;
+    ExteriorLightsDefinition exteriorLightsDefinition() const;
 
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  std::string controlOption() const;
+    std::string controlOption() const;
 
-  bool isControlOptionDefaulted() const;
+    bool isControlOptionDefaulted() const;
 
-  double multiplier() const;
+    double multiplier() const;
 
-  bool isMultiplierDefaulted() const;
+    bool isMultiplierDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition);
+    bool setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition);
 
-  bool setSchedule(Schedule& schedule);
+    bool setSchedule(Schedule& schedule);
 
-  void resetSchedule();
+    void resetSchedule();
 
-  bool setControlOption(std::string controlOption);
+    bool setControlOption(std::string controlOption);
 
-  void resetControlOption();
+    void resetControlOption();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  Facility facility() const;
+    Facility facility() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExteriorLights_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExteriorLights_Impl ImplType;
 
-  explicit ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl);
+    explicit ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl);
 
-  friend class detail::ExteriorLights_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExteriorLights");
-};
+    friend class detail::ExteriorLights_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorLights");
+  };
 
-/** \relates ExteriorLights*/
-typedef boost::optional<ExteriorLights> OptionalExteriorLights;
+  /** \relates ExteriorLights*/
+  typedef boost::optional<ExteriorLights> OptionalExteriorLights;
 
-/** \relates ExteriorLights*/
-typedef std::vector<ExteriorLights> ExteriorLightsVector;
+  /** \relates ExteriorLights*/
+  typedef std::vector<ExteriorLights> ExteriorLightsVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERIORLIGHTS_HPP
-
+#endif  // MODEL_EXTERIORLIGHTS_HPP

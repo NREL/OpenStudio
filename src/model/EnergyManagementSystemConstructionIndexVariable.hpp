@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,70 +36,70 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Construction;
+  // TODO: Check the following class names against object getters and setters.
+  class Construction;
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemConstructionIndexVariable_Impl;
+    class EnergyManagementSystemConstructionIndexVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemConstructionIndexVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:ConstructionIndexVariable'. */
-class MODEL_API EnergyManagementSystemConstructionIndexVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemConstructionIndexVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:ConstructionIndexVariable'. */
+  class MODEL_API EnergyManagementSystemConstructionIndexVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemConstructionIndexVariable(const Model& model, const Construction& construction);
+    explicit EnergyManagementSystemConstructionIndexVariable(const Model& model, const Construction& construction);
 
-  explicit EnergyManagementSystemConstructionIndexVariable(const Model& model);
+    explicit EnergyManagementSystemConstructionIndexVariable(const Model& model);
 
-  virtual ~EnergyManagementSystemConstructionIndexVariable() {}
+    virtual ~EnergyManagementSystemConstructionIndexVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ModelObject constructionObject() const;
+    ModelObject constructionObject() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setConstructionObject(const ModelObject& construction);
+    bool setConstructionObject(const ModelObject& construction);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemConstructionIndexVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemConstructionIndexVariable_Impl ImplType;
 
-  explicit EnergyManagementSystemConstructionIndexVariable(std::shared_ptr<detail::EnergyManagementSystemConstructionIndexVariable_Impl> impl);
+    explicit EnergyManagementSystemConstructionIndexVariable(std::shared_ptr<detail::EnergyManagementSystemConstructionIndexVariable_Impl> impl);
 
-  friend class detail::EnergyManagementSystemConstructionIndexVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemConstructionIndexVariable");
-};
+    friend class detail::EnergyManagementSystemConstructionIndexVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemConstructionIndexVariable");
+  };
 
-/** \relates EnergyManagementSystemConstructionIndexVariable*/
-typedef boost::optional<EnergyManagementSystemConstructionIndexVariable> OptionalEnergyManagementSystemConstructionIndexVariable;
+  /** \relates EnergyManagementSystemConstructionIndexVariable*/
+  typedef boost::optional<EnergyManagementSystemConstructionIndexVariable> OptionalEnergyManagementSystemConstructionIndexVariable;
 
-/** \relates EnergyManagementSystemConstructionIndexVariable*/
-typedef std::vector<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemConstructionIndexVariableVector;
+  /** \relates EnergyManagementSystemConstructionIndexVariable*/
+  typedef std::vector<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemConstructionIndexVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMCONSTRUCTIONINDEXVARIABLE_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMCONSTRUCTIONINDEXVARIABLE_HPP

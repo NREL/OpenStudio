@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,7 +37,6 @@
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 
-
 using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
@@ -47,8 +46,8 @@ TEST_F(ModelFixture, FuelCellInverter) {
 
   // check default Inverter
   GeneratorFuelCellInverter inverter(model);
-  EXPECT_EQ("Constant",inverter.inverterEfficiencyCalculationMode());
-  EXPECT_EQ(1.0,inverter.inverterEfficiency());
+  EXPECT_EQ("Constant", inverter.inverterEfficiencyCalculationMode());
+  EXPECT_EQ(1.0, inverter.inverterEfficiency());
   boost::optional<CurveQuadratic> electricCurve = inverter.efficiencyFunctionofDCPowerCurve();
   ASSERT_TRUE(electricCurve);
   inverter.setInverterEfficiency(0.5);
@@ -71,5 +70,4 @@ TEST_F(ModelFixture, FuelCellInverter2) {
   inverter.resetInverterEfficiencyCalculationMode();
   EXPECT_EQ("Constant", inverter.inverterEfficiencyCalculationMode());
   EXPECT_EQ(1.0, inverter.inverterEfficiency());
-
 }

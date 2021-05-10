@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,127 +36,122 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Surface;
-class ThermalZone;
+  class Schedule;
+  class Surface;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneHVACBaseboardRadiantConvectiveElectric_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACBaseboardRadiantConvectiveElectric.*/
-  class MODEL_API ZoneHVACBaseboardRadiantConvectiveElectric_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ZoneHVACBaseboardRadiantConvectiveElectric_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACBaseboardRadiantConvectiveElectric.*/
+    class MODEL_API ZoneHVACBaseboardRadiantConvectiveElectric_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const IdfObject& idfObject,
-                                                    Model_Impl* model,
-                                                    bool keepHandle);
+      ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                    Model_Impl* model,
-                                                    bool keepHandle);
+      ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const ZoneHVACBaseboardRadiantConvectiveElectric_Impl& other,
-                                                    Model_Impl* model,
-                                                    bool keepHandle);
+      ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const ZoneHVACBaseboardRadiantConvectiveElectric_Impl& other, Model_Impl* model,
+                                                      bool keepHandle);
 
-    virtual ~ZoneHVACBaseboardRadiantConvectiveElectric_Impl() {}
+      virtual ~ZoneHVACBaseboardRadiantConvectiveElectric_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    boost::optional<ThermalZone> thermalZone() const override;
+      boost::optional<ThermalZone> thermalZone() const override;
 
-    bool addToThermalZone(ThermalZone & thermalZone) override;
+      bool addToThermalZone(ThermalZone& thermalZone) override;
 
-    void removeFromThermalZone() override;
+      void removeFromThermalZone() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    std::string heatingDesignCapacityMethod() const;
+      std::string heatingDesignCapacityMethod() const;
 
-    boost::optional<double> heatingDesignCapacity() const;
+      boost::optional<double> heatingDesignCapacity() const;
 
-    bool isHeatingDesignCapacityAutosized() const;
+      bool isHeatingDesignCapacityAutosized() const;
 
-    double heatingDesignCapacityPerFloorArea() const;
+      double heatingDesignCapacityPerFloorArea() const;
 
-    double fractionofAutosizedHeatingDesignCapacity() const;
+      double fractionofAutosizedHeatingDesignCapacity() const;
 
-    double efficiency() const;
+      double efficiency() const;
 
-    double fractionRadiant() const;
+      double fractionRadiant() const;
 
-    double fractionofRadiantEnergyIncidentonPeople() const;
+      double fractionofRadiantEnergyIncidentonPeople() const;
 
-    boost::optional<double> autosizedHeatingDesignCapacity() const ;
+      boost::optional<double> autosizedHeatingDesignCapacity() const;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
 
-    bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
+      bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
 
-    void autosizeHeatingDesignCapacity();
+      void autosizeHeatingDesignCapacity();
 
-    bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+      bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
 
-    bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
+      bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-    bool setEfficiency(double efficiency);
+      bool setEfficiency(double efficiency);
 
-    bool setFractionRadiant(double fractionRadiant);
+      bool setFractionRadiant(double fractionRadiant);
 
-    bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
+      bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    std::vector<Surface> surfaces() const;
+      std::vector<Surface> surfaces() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardRadiantConvectiveElectric");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardRadiantConvectiveElectric");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEHVACBASEBOARDRADIANTCONVECTIVEELECTRIC_IMPL_HPP
-
+#endif  // MODEL_ZONEHVACBASEBOARDRADIANTCONVECTIVEELECTRIC_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,30 +45,28 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneAirContaminantBalance( ZoneAirContaminantBalance& modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::ZoneAirContaminantBalance);
+  boost::optional<IdfObject> ForwardTranslator::translateZoneAirContaminantBalance(ZoneAirContaminantBalance& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::ZoneAirContaminantBalance);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  {
-    if( modelObject.carbonDioxideConcentration() ) {
-      idfObject.setString(ZoneAirContaminantBalanceFields::CarbonDioxideConcentration,"Yes");
-    } else {
-      idfObject.setString(ZoneAirContaminantBalanceFields::CarbonDioxideConcentration,"No");
+    {
+      if (modelObject.carbonDioxideConcentration()) {
+        idfObject.setString(ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "Yes");
+      } else {
+        idfObject.setString(ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "No");
+      }
     }
+
+    {
+      if (auto schedule = modelObject.outdoorCarbonDioxideSchedule()) {
+        idfObject.setString(ZoneAirContaminantBalanceFields::OutdoorCarbonDioxideScheduleName, schedule->nameString());
+      }
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  {
-    if( auto schedule = modelObject.outdoorCarbonDioxideSchedule() ) {
-      idfObject.setString(ZoneAirContaminantBalanceFields::OutdoorCarbonDioxideScheduleName,schedule->nameString());
-    }
-  }
+}  // namespace energyplus
 
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

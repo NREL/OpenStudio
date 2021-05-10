@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,74 +40,61 @@
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
-namespace model  {
+namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SizingPeriod_Impl::SizingPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ParentObject_Impl(idfObject, model, keepHandle)
-  {}
+    SizingPeriod_Impl::SizingPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {}
 
-  SizingPeriod_Impl::SizingPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {}
+    SizingPeriod_Impl::SizingPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
-  SizingPeriod_Impl::SizingPeriod_Impl(const SizingPeriod_Impl& other,Model_Impl* model,bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {}
+    SizingPeriod_Impl::SizingPeriod_Impl(const SizingPeriod_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
-  // return the parent object in the hierarchy
-  boost::optional<ParentObject> SizingPeriod_Impl::parent() const
-  {
-    boost::optional<ParentObject> result(model().getOptionalUniqueModelObject<Site>());
-    return result;
-  }
-
-  // set the parent, child may have to call methods on the parent
-  bool SizingPeriod_Impl::setParent(ParentObject& newParent)
-  {
-    if (newParent.optionalCast<Site>() && (newParent.model() == model())) {
-      return true;
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> SizingPeriod_Impl::parent() const {
+      boost::optional<ParentObject> result(model().getOptionalUniqueModelObject<Site>());
+      return result;
     }
-    return false;
+
+    // set the parent, child may have to call methods on the parent
+    bool SizingPeriod_Impl::setParent(ParentObject& newParent) {
+      if (newParent.optionalCast<Site>() && (newParent.model() == model())) {
+        return true;
+      }
+      return false;
+    }
+
+    // return any children objects in the hierarchy
+    std::vector<ModelObject> SizingPeriod_Impl::children() const {
+      std::vector<ModelObject> result;
+      SkyTemperatureVector sts = getObject<ModelObject>().getModelObjectSources<SkyTemperature>();
+      result.insert(result.end(), sts.begin(), sts.end());
+      return result;
+    }
+
+    std::vector<IddObjectType> SizingPeriod_Impl::allowableChildTypes() const {
+      IddObjectTypeVector result;
+      result.push_back(SkyTemperature::iddObjectType());
+      return result;
+    }
+
+  }  // namespace detail
+
+  /// constructor
+  SizingPeriod::SizingPeriod(IddObjectType type, const Model& model) : ParentObject(type, model) {
+    OS_ASSERT(getImpl<detail::SizingPeriod_Impl>());
   }
 
-  // return any children objects in the hierarchy
-  std::vector<ModelObject> SizingPeriod_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    SkyTemperatureVector sts = getObject<ModelObject>().getModelObjectSources<SkyTemperature>();
-    result.insert(result.end(),sts.begin(),sts.end());
-    return result;
+  // constructor
+  SizingPeriod::SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl) : ParentObject(std::move(impl)) {}
+
+  // ensure that this object does not contain the date 2/29
+  void SizingPeriod::ensureNoLeapDays() {
+    getImpl<detail::SizingPeriod_Impl>()->ensureNoLeapDays();
   }
 
-  std::vector<IddObjectType> SizingPeriod_Impl::allowableChildTypes() const {
-    IddObjectTypeVector result;
-    result.push_back(SkyTemperature::iddObjectType());
-    return result;
-  }
-
-} // detail
-
-/// constructor
-SizingPeriod::SizingPeriod(IddObjectType type,const Model& model)
-  : ParentObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::SizingPeriod_Impl>());
-}
-
-// constructor
-SizingPeriod::SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-
-// ensure that this object does not contain the date 2/29
-void SizingPeriod::ensureNoLeapDays()
-{
-  getImpl<detail::SizingPeriod_Impl>()->ensureNoLeapDays();
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,13 +34,13 @@
 
 #include <string>
 
-namespace openstudio{
+namespace openstudio {
 
 /** IddKeyProperties is an all public class describing the properties
  *   of an IddKey object. */
-struct UTILITIES_API IddKeyProperties {
+struct UTILITIES_API IddKeyProperties
+{
  public:
-
   /// constructor
   IddKeyProperties();
 
@@ -55,6 +55,6 @@ struct UTILITIES_API IddKeyProperties {
   std::string note;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDKEYPROPERTIES_HPP
+#endif  // UTILITIES_IDD_IDDKEYPROPERTIES_HPP

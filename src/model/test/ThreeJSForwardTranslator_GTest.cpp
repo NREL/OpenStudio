@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,8 @@
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
 #include "../ConstructionAirBoundary.hpp"
 #include "../Construction.hpp"
 
@@ -48,7 +50,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
+TEST_F(ModelFixture, ThreeJSForwardTranslator_ExampleModel) {
 
   ThreeJSForwardTranslator ft;
   ThreeJSReverseTranslator rt;
@@ -63,11 +65,11 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
   EXPECT_EQ(0, ft.errors().size());
   EXPECT_EQ(0, ft.warnings().size());
 
-  for (const auto& error : ft.errors()){
+  for (const auto& error : ft.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : ft.warnings()){
+  for (const auto& warning : ft.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
@@ -87,11 +89,11 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
   EXPECT_EQ(0, ft.errors().size());
   EXPECT_EQ(0, ft.warnings().size());
 
-  for (const auto& error : ft.errors()){
+  for (const auto& error : ft.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : ft.warnings()){
+  for (const auto& warning : ft.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
@@ -111,9 +113,10 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 
   EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
   EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(model.getConcreteModelObjects<SubSurface>().size(), model2->getConcreteModelObjects<SubSurface>().size());
 }
 
-TEST_F(ModelFixture,ThreeJSForwardTranslator_ConstructionAirBoundary) {
+TEST_F(ModelFixture, ThreeJSForwardTranslator_ConstructionAirBoundary) {
 
   ThreeJSForwardTranslator ft;
 
@@ -131,28 +134,23 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ConstructionAirBoundary) {
   EXPECT_EQ(0, ft.errors().size());
   EXPECT_EQ(0, ft.warnings().size());
 
-  for (const auto& error : ft.errors()){
+  for (const auto& error : ft.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : ft.warnings()){
+  for (const auto& warning : ft.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
-
 
   // Materials are named like "prefix_" + <construction.name>
   auto checkIfMaterialExist = [](const auto& materials, const std::string& containedString) {
     auto it = std::find_if(materials.cbegin(), materials.cend(),
-      [&containedString](const auto& mat){
-        return mat.name().find(containedString) != std::string::npos;
-      }
-    );
+                           [&containedString](const auto& mat) { return mat.name().find(containedString) != std::string::npos; });
     return it != materials.cend();
   };
 
   auto materials = scene.materials();
   EXPECT_TRUE(checkIfMaterialExist(materials, "RegularConstruction"));
-  EXPECT_FALSE(checkIfMaterialExist(materials, "Construction_Air_Boundary")); // Instead it should have been skipped to be replace by "AirWall"
+  EXPECT_FALSE(checkIfMaterialExist(materials, "Construction_Air_Boundary"));  // Instead it should have been skipped to be replace by "AirWall"
   EXPECT_TRUE(checkIfMaterialExist(materials, "AirWall"));
-
 }

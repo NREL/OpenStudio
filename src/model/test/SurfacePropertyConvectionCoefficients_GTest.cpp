@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -103,10 +103,11 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_NE(std::find(locationValues1.begin(), locationValues1.end(), "Inside"), locationValues1.end()) << "'Inside' not in list'";
 
   std::vector<std::string> typeValues1(cc.convectionCoefficient1TypeValues());
-  ASSERT_EQ(typeValues1.size(), 43);
+  ASSERT_EQ(typeValues1.size(), 44);
   ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "Value"), typeValues1.end()) << "'Value' not in list";
   ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "ASHRAEVerticalWall"), typeValues1.end()) << "'ASHRAEVerticalWall' not in list";
-  ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "BeausoleilMorrisonMixedStableFloor"), typeValues1.end()) << "'BeausoleilMorrisonMixedStableFloor' not in list";
+  ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "BeausoleilMorrisonMixedStableFloor"), typeValues1.end())
+    << "'BeausoleilMorrisonMixedStableFloor' not in list";
   ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "ClearRoof"), typeValues1.end()) << "'ClearRoof' not in list";
 
   std::vector<std::string> locationValues2(cc.convectionCoefficient2LocationValues());
@@ -217,5 +218,4 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   boost::optional<SurfacePropertyConvectionCoefficients> cc3(surface.surfacePropertyConvectionCoefficients());
   ASSERT_TRUE(cc3);
   ASSERT_EQ(cc3.get().handle(), cc2.handle());
-
 }

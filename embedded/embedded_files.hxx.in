@@ -113,16 +113,20 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
 
 
 namespace embedded_files {
-  std::map<std::string, EmbeddedFile > files();
+  const std::map<std::string, EmbeddedFile> &files();
 
-  std::vector<std::string> fileNames();
+  const std::vector<std::string> &fileNames();
 
-  inline std::string allFileNamesAsString(){
-    std::string result;
-    for (const auto& fileName: fileNames()){
-      result += (fileName + ";");
-    }
-    return result;
+  inline const std::string &allFileNamesAsString(){
+    static const auto return_value = [](){
+      std::string result;
+      for (const auto& fileName : fileNames()){
+        result += (fileName + ";");
+      }
+      return result;
+    }();
+
+    return return_value;
   }
 
   inline std::string findFirstFileByName(const std::string &t_filename) {
@@ -138,12 +142,12 @@ namespace embedded_files {
   }
 
   inline bool hasFile(const std::string &t_filename) {
-    const auto fs = fileNames();
+    const auto &fs = fileNames();
     return (std::find(fs.begin(), fs.end(), t_filename) != fs.end());
   }
 
   inline std::string getFileAsString(const std::string &t_filename) {
-    const auto fs = files();
+    const auto &fs = files();
     const auto f = fs.find(t_filename);
     if (f == fs.end()){
       throw std::runtime_error("Embedded file not found '" + t_filename + "'");
@@ -157,7 +161,7 @@ namespace embedded_files {
 
   inline void extractFile(const std::string &t_filename, const std::string &t_location)
   {
-    const auto fs = files();
+    const auto &fs = files();
 
 
     const auto create_dirs = [](const std::string &t_path) {

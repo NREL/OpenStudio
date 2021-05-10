@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,72 +41,72 @@ namespace energyplus {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemInternalVariable_Impl;
+    class EnergyManagementSystemInternalVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemInternalVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:InternalVariable'. */
-class MODEL_API EnergyManagementSystemInternalVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-  explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string& internalDataType);
+  /** EnergyManagementSystemInternalVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:InternalVariable'. */
+  class MODEL_API EnergyManagementSystemInternalVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string& internalDataType);
 
-  virtual ~EnergyManagementSystemInternalVariable() {}
+    virtual ~EnergyManagementSystemInternalVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string internalDataIndexKeyName() const;
+    std::string internalDataIndexKeyName() const;
 
-  std::string internalDataType() const;
+    std::string internalDataType() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName);
+    bool setInternalDataIndexKeyName(const std::string& internalDataIndexKeyName);
 
-  void resetInternalDataIndexKeyName();
+    void resetInternalDataIndexKeyName();
 
-  bool setInternalDataType(const std::string& internalDataType);
+    bool setInternalDataType(const std::string& internalDataType);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemInternalVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemInternalVariable_Impl ImplType;
 
-  explicit EnergyManagementSystemInternalVariable(std::shared_ptr<detail::EnergyManagementSystemInternalVariable_Impl> impl);
+    explicit EnergyManagementSystemInternalVariable(std::shared_ptr<detail::EnergyManagementSystemInternalVariable_Impl> impl);
 
-  friend class detail::EnergyManagementSystemInternalVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class energyplus::ReverseTranslator;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemInternalVariable");
-  explicit EnergyManagementSystemInternalVariable(const Model& model);
-};
+    friend class detail::EnergyManagementSystemInternalVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class energyplus::ReverseTranslator;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemInternalVariable");
+    explicit EnergyManagementSystemInternalVariable(const Model& model);
+  };
 
-/** \relates EnergyManagementSystemInternalVariable*/
-typedef boost::optional<EnergyManagementSystemInternalVariable> OptionalEnergyManagementSystemInternalVariable;
+  /** \relates EnergyManagementSystemInternalVariable*/
+  typedef boost::optional<EnergyManagementSystemInternalVariable> OptionalEnergyManagementSystemInternalVariable;
 
-/** \relates EnergyManagementSystemInternalVariable*/
-typedef std::vector<EnergyManagementSystemInternalVariable> EnergyManagementSystemInternalVariableVector;
+  /** \relates EnergyManagementSystemInternalVariable*/
+  typedef std::vector<EnergyManagementSystemInternalVariable> EnergyManagementSystemInternalVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMINTERNALVARIABLE_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMINTERNALVARIABLE_HPP

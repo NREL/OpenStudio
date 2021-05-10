@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,73 +43,57 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-ElectricalStorage_Impl::ElectricalStorage_Impl(IddObjectType type, Model_Impl* model)
-  : ParentObject_Impl(type,model)
-{}
+    ElectricalStorage_Impl::ElectricalStorage_Impl(IddObjectType type, Model_Impl* model) : ParentObject_Impl(type, model) {}
 
-ElectricalStorage_Impl::ElectricalStorage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-  : ParentObject_Impl(idfObject, model, keepHandle)
-{}
+    ElectricalStorage_Impl::ElectricalStorage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {}
 
-ElectricalStorage_Impl::ElectricalStorage_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle)
- : ParentObject_Impl(other, model, keepHandle)
-{}
+    ElectricalStorage_Impl::ElectricalStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
-ElectricalStorage_Impl::ElectricalStorage_Impl(const ElectricalStorage_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandles)
- : ParentObject_Impl(other, model, keepHandles)
-{}
+    ElectricalStorage_Impl::ElectricalStorage_Impl(const ElectricalStorage_Impl& other, Model_Impl* model, bool keepHandles)
+      : ParentObject_Impl(other, model, keepHandles) {}
 
-  // Convenience method to find the ELCD linked to this storage device
-  boost::optional<ElectricLoadCenterDistribution> ElectricalStorage_Impl::electricLoadCenterDistribution() const {
-    auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
-    if (elcds.empty()) {
-      // no error
-    } else if (elcds.size() == 1u) {
-      return elcds[0];
-    } else {
-      // error
+    // Convenience method to find the ELCD linked to this storage device
+    boost::optional<ElectricLoadCenterDistribution> ElectricalStorage_Impl::electricLoadCenterDistribution() const {
+      auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+      if (elcds.empty()) {
+        // no error
+      } else if (elcds.size() == 1u) {
+        return elcds[0];
+      } else {
+        // error
+      }
+
+      return boost::none;
     }
 
-    return boost::none;
+  }  // namespace detail
+
+  ElectricalStorage::ElectricalStorage(IddObjectType type, const Model& model) : ParentObject(type, model) {
+    OS_ASSERT(getImpl<detail::ElectricalStorage_Impl>());
   }
 
-} // detail
+  ElectricalStorage::ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> p) : ParentObject(std::move(p)) {}
 
-ElectricalStorage::ElectricalStorage(IddObjectType type,const Model& model)
-  : ParentObject(type, model)
-{
-  OS_ASSERT(getImpl<detail::ElectricalStorage_Impl>());
-}
+  boost::optional<ElectricLoadCenterDistribution> ElectricalStorage::electricLoadCenterDistribution() const {
+    return getImpl<detail::ElectricalStorage_Impl>()->electricLoadCenterDistribution();
+  }
 
-ElectricalStorage::ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> p)
-  : ParentObject(std::move(p))
-{}
+  boost::optional<ThermalZone> ElectricalStorage::thermalZone() const {
+    return getImpl<detail::ElectricalStorage_Impl>()->thermalZone();
+  }
 
-boost::optional<ElectricLoadCenterDistribution> ElectricalStorage::electricLoadCenterDistribution() const
-{
-  return getImpl<detail::ElectricalStorage_Impl>()->electricLoadCenterDistribution();
-}
+  bool ElectricalStorage::setThermalZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::ElectricalStorage_Impl>()->setThermalZone(thermalZone);
+  }
 
-boost::optional<ThermalZone> ElectricalStorage::thermalZone() const {
-  return getImpl<detail::ElectricalStorage_Impl>()->thermalZone();
-}
+  void ElectricalStorage::resetThermalZone() {
+    getImpl<detail::ElectricalStorage_Impl>()->resetThermalZone();
+  }
 
-bool ElectricalStorage::setThermalZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::ElectricalStorage_Impl>()->setThermalZone(thermalZone);
-}
+}  // namespace model
 
-void ElectricalStorage::resetThermalZone() {
-  getImpl<detail::ElectricalStorage_Impl>()->resetThermalZone();
-}
-
-} // model
-
-} // openstudio
-
+}  // namespace openstudio

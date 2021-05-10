@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,19 +62,17 @@ TEST_F(IddFixture, IddField_Properties) {
   ASSERT_TRUE(candidate);
   ASSERT_TRUE(candidate->nonextensibleFields().size() > 0);
   IddField designDayName = candidate->getField(0).get();
-  EXPECT_FALSE(referencesEqual(designDayName,iddZone.getField(0).get()));
+  EXPECT_FALSE(referencesEqual(designDayName, iddZone.getField(0).get()));
   candidate = IddFactory::instance().getObject(IddObjectType::SizingPeriod_WeatherFileDays);
   ASSERT_TRUE(candidate);
   ASSERT_TRUE(candidate->nonextensibleFields().size() > 1);
   IddField weatherFileDaysName = candidate->getField(0).get();
-  EXPECT_TRUE(referencesEqual(weatherFileDaysName,designDayName));
+  EXPECT_TRUE(referencesEqual(weatherFileDaysName, designDayName));
   IddField beginMonth = candidate->getField(1).get();
-  EXPECT_FALSE(referencesEqual(weatherFileDaysName,beginMonth));
+  EXPECT_FALSE(referencesEqual(weatherFileDaysName, beginMonth));
 }
 
-
-TEST_F(IddFixture, IddField_Keys)
-{
+TEST_F(IddFixture, IddField_Keys) {
   OptionalIddObject candidate = IddFactory::instance().getObject(IddObjectType::Lights);
   ASSERT_TRUE(candidate);
   IddObject iddLights = *candidate;
@@ -106,9 +104,9 @@ TEST_F(IddFixture, IddField) {
 
   // has to check everything (not just impl address)
   std::stringstream ss;
-  fields[3].print(ss,false);
-  OptionalIddField fieldClone = IddField::load(fields[3].name(),ss.str(),"Lights");
+  fields[3].print(ss, false);
+  OptionalIddField fieldClone = IddField::load(fields[3].name(), ss.str(), "Lights");
   ASSERT_TRUE(fieldClone);
   // cppcheck-suppress arrayIndexOutOfBounds
-  EXPECT_EQ(fields[3],*fieldClone);
+  EXPECT_EQ(fields[3], *fieldClone);
 }

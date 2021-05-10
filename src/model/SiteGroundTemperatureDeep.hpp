@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,179 +38,178 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class SiteGroundTemperatureDeep_Impl;
+    class SiteGroundTemperatureDeep_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SiteGroundTemperatureDeep is a ModelObject that wraps the OpenStudio IDD object 'OS_Site_GroundTemperature_Deep'. */
-class MODEL_API SiteGroundTemperatureDeep : public ModelObject {
- public:
+  /** SiteGroundTemperatureDeep is a ModelObject that wraps the OpenStudio IDD object 'OS_Site_GroundTemperature_Deep'. */
+  class MODEL_API SiteGroundTemperatureDeep : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    explicit SiteGroundTemperatureDeep(Model& model);
 
-  explicit SiteGroundTemperatureDeep(Model& model);
+    virtual ~SiteGroundTemperatureDeep() {}
 
-  virtual ~SiteGroundTemperatureDeep() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    double januaryDeepGroundTemperature() const;
 
-  double januaryDeepGroundTemperature() const;
+    bool isJanuaryDeepGroundTemperatureDefaulted() const;
 
-  bool isJanuaryDeepGroundTemperatureDefaulted() const;
+    double februaryDeepGroundTemperature() const;
 
-  double februaryDeepGroundTemperature() const;
+    bool isFebruaryDeepGroundTemperatureDefaulted() const;
 
-  bool isFebruaryDeepGroundTemperatureDefaulted() const;
+    double marchDeepGroundTemperature() const;
 
-  double marchDeepGroundTemperature() const;
+    bool isMarchDeepGroundTemperatureDefaulted() const;
 
-  bool isMarchDeepGroundTemperatureDefaulted() const;
+    double aprilDeepGroundTemperature() const;
 
-  double aprilDeepGroundTemperature() const;
+    bool isAprilDeepGroundTemperatureDefaulted() const;
 
-  bool isAprilDeepGroundTemperatureDefaulted() const;
+    double mayDeepGroundTemperature() const;
 
-  double mayDeepGroundTemperature() const;
+    bool isMayDeepGroundTemperatureDefaulted() const;
 
-  bool isMayDeepGroundTemperatureDefaulted() const;
+    double juneDeepGroundTemperature() const;
 
-  double juneDeepGroundTemperature() const;
+    bool isJuneDeepGroundTemperatureDefaulted() const;
 
-  bool isJuneDeepGroundTemperatureDefaulted() const;
+    double julyDeepGroundTemperature() const;
 
-  double julyDeepGroundTemperature() const;
+    bool isJulyDeepGroundTemperatureDefaulted() const;
 
-  bool isJulyDeepGroundTemperatureDefaulted() const;
+    double augustDeepGroundTemperature() const;
 
-  double augustDeepGroundTemperature() const;
+    bool isAugustDeepGroundTemperatureDefaulted() const;
 
-  bool isAugustDeepGroundTemperatureDefaulted() const;
+    double septemberDeepGroundTemperature() const;
 
-  double septemberDeepGroundTemperature() const;
+    bool isSeptemberDeepGroundTemperatureDefaulted() const;
 
-  bool isSeptemberDeepGroundTemperatureDefaulted() const;
+    double octoberDeepGroundTemperature() const;
 
-  double octoberDeepGroundTemperature() const;
+    bool isOctoberDeepGroundTemperatureDefaulted() const;
 
-  bool isOctoberDeepGroundTemperatureDefaulted() const;
+    double novemberDeepGroundTemperature() const;
 
-  double novemberDeepGroundTemperature() const;
+    bool isNovemberDeepGroundTemperatureDefaulted() const;
 
-  bool isNovemberDeepGroundTemperatureDefaulted() const;
+    double decemberDeepGroundTemperature() const;
 
-  double decemberDeepGroundTemperature() const;
+    bool isDecemberDeepGroundTemperatureDefaulted() const;
 
-  bool isDecemberDeepGroundTemperatureDefaulted() const;
+    double getTemperatureByMonth(int month) const;
 
-  double getTemperatureByMonth(int month) const;
+    double getTemperatureByMonth(const openstudio::MonthOfYear& month) const;
 
-  double getTemperatureByMonth(const openstudio::MonthOfYear & month) const;
+    bool isMonthDefaulted(int month) const;
 
-  bool isMonthDefaulted(int month) const;
+    bool isMonthDefaulted(const openstudio::MonthOfYear& month) const;
 
-  bool isMonthDefaulted(const openstudio::MonthOfYear & month) const;
+    std::vector<double> getAllMonthlyTemperatures() const;
 
-  std::vector<double> getAllMonthlyTemperatures() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature);
 
-  bool setJanuaryDeepGroundTemperature(double januaryDeepGroundTemperature);
+    void resetJanuaryDeepGroundTemperature();
 
-  void resetJanuaryDeepGroundTemperature();
+    bool setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature);
 
-  bool setFebruaryDeepGroundTemperature(double februaryDeepGroundTemperature);
+    void resetFebruaryDeepGroundTemperature();
 
-  void resetFebruaryDeepGroundTemperature();
+    bool setMarchDeepGroundTemperature(double marchDeepGroundTemperature);
 
-  bool setMarchDeepGroundTemperature(double marchDeepGroundTemperature);
+    void resetMarchDeepGroundTemperature();
 
-  void resetMarchDeepGroundTemperature();
+    bool setAprilDeepGroundTemperature(double aprilDeepGroundTemperature);
 
-  bool setAprilDeepGroundTemperature(double aprilDeepGroundTemperature);
+    void resetAprilDeepGroundTemperature();
 
-  void resetAprilDeepGroundTemperature();
+    bool setMayDeepGroundTemperature(double mayDeepGroundTemperature);
 
-  bool setMayDeepGroundTemperature(double mayDeepGroundTemperature);
+    void resetMayDeepGroundTemperature();
 
-  void resetMayDeepGroundTemperature();
+    bool setJuneDeepGroundTemperature(double juneDeepGroundTemperature);
 
-  bool setJuneDeepGroundTemperature(double juneDeepGroundTemperature);
+    void resetJuneDeepGroundTemperature();
 
-  void resetJuneDeepGroundTemperature();
+    bool setJulyDeepGroundTemperature(double julyDeepGroundTemperature);
 
-  bool setJulyDeepGroundTemperature(double julyDeepGroundTemperature);
+    void resetJulyDeepGroundTemperature();
 
-  void resetJulyDeepGroundTemperature();
+    bool setAugustDeepGroundTemperature(double augustDeepGroundTemperature);
 
-  bool setAugustDeepGroundTemperature(double augustDeepGroundTemperature);
+    void resetAugustDeepGroundTemperature();
 
-  void resetAugustDeepGroundTemperature();
+    bool setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature);
 
-  bool setSeptemberDeepGroundTemperature(double septemberDeepGroundTemperature);
+    void resetSeptemberDeepGroundTemperature();
 
-  void resetSeptemberDeepGroundTemperature();
+    bool setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature);
 
-  bool setOctoberDeepGroundTemperature(double octoberDeepGroundTemperature);
+    void resetOctoberDeepGroundTemperature();
 
-  void resetOctoberDeepGroundTemperature();
+    bool setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature);
 
-  bool setNovemberDeepGroundTemperature(double novemberDeepGroundTemperature);
+    void resetNovemberDeepGroundTemperature();
 
-  void resetNovemberDeepGroundTemperature();
+    bool setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature);
 
-  bool setDecemberDeepGroundTemperature(double decemberDeepGroundTemperature);
+    void resetDecemberDeepGroundTemperature();
 
-  void resetDecemberDeepGroundTemperature();
+    bool setTemperatureByMonth(int month, double temperature);
 
-  bool setTemperatureByMonth(int month, double temperature);
+    bool setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature);
 
-  bool setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+    void resetTemperatureByMonth(int month);
 
-  void resetTemperatureByMonth(int month);
+    void resetTemperatureByMonth(const openstudio::MonthOfYear& month);
 
-  void resetTemperatureByMonth(const openstudio::MonthOfYear & month);
+    void resetAllMonths();
 
-  void resetAllMonths();
+    bool setAllMonthlyTemperatures(const std::vector<double>& monthly_temperatures);
 
-  bool setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SiteGroundTemperatureDeep_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SiteGroundTemperatureDeep_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::SiteGroundTemperatureDeep_Impl;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::SiteGroundTemperatureDeep_Impl;
+    explicit SiteGroundTemperatureDeep(std::shared_ptr<detail::SiteGroundTemperatureDeep_Impl> impl);
 
-  explicit SiteGroundTemperatureDeep(std::shared_ptr<detail::SiteGroundTemperatureDeep_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureDeep");
+  };
 
-  /// @endcond
- private:
+  /** \relates SiteGroundTemperatureDeep*/
+  typedef boost::optional<SiteGroundTemperatureDeep> OptionalSiteGroundTemperatureDeep;
 
-  REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureDeep");
-};
+  /** \relates SiteGroundTemperatureDeep*/
+  typedef std::vector<SiteGroundTemperatureDeep> SiteGroundTemperatureDeepVector;
 
-/** \relates SiteGroundTemperatureDeep*/
-typedef boost::optional<SiteGroundTemperatureDeep> OptionalSiteGroundTemperatureDeep;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates SiteGroundTemperatureDeep*/
-typedef std::vector<SiteGroundTemperatureDeep> SiteGroundTemperatureDeepVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SITEGROUNDTEMPERATUREDeep_HPP
+#endif  // MODEL_SITEGROUNDTEMPERATUREDeep_HPP

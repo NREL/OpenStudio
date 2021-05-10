@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,93 +37,92 @@
 
 #include <vector>
 
-namespace openstudio{
+namespace openstudio {
 
-  // forward declaration
-  class Point3d;
-  class Vector3d;
+// forward declaration
+class Point3d;
+class Vector3d;
 
-  /** Plane defines an infinite plane in 3D space.  The equation of a plane is
+/** Plane defines an infinite plane in 3D space.  The equation of a plane is
    *  a*x + b*y + c*z = d, any point that satisfies this equation is on the plane.
    */
-  class UTILITIES_API Plane{
-  public:
+class UTILITIES_API Plane
+{
+ public:
+  /// copy constructor
+  Plane(const Plane& other);
 
-    /// copy constructor
-    Plane(const Plane& other);
+  /// construct with point and outward normal, throws openstudio::Exception if outwardNormal has 0 length.
+  Plane(const Point3d& point, const Vector3d& outwardNormal);
 
-    /// construct with point and outward normal, throws openstudio::Exception if outwardNormal has 0 length.
-    Plane(const Point3d& point, const Vector3d& outwardNormal);
+  /// construct with points, will fit least squares plane.
+  /// attempts to align outward normal with that of the points (according to right hand rule).
+  /// throws openstudio::Exception if cannot compute plane for these points.
+  Plane(const std::vector<Point3d>& points);
 
-    /// construct with points, will fit least squares plane.
-    /// attempts to align outward normal with that of the points (according to right hand rule).
-    /// throws openstudio::Exception if cannot compute plane for these points.
-    Plane(const std::vector<Point3d>& points);
+  /// virtual destructor
+  virtual ~Plane();
 
-    /// virtual destructor
-    virtual ~Plane();
+  /// get the outward normal of this plane
+  Vector3d outwardNormal() const;
 
-    /// get the outward normal of this plane
-    Vector3d outwardNormal() const;
+  /// is this plane parallel to the other plane
+  /// true if absolute value of dot product of outward normals is >= (1-tol)
+  bool parallel(const Plane& other, double tol = 0.001) const;
 
-    /// is this plane parallel to the other plane
-    /// true if absolute value of dot product of outward normals is >= (1-tol)
-    bool parallel(const Plane& other, double tol = 0.001) const;
+  /// is this plane equal to the other plane
+  /// true if dot product of outward normals is >= (1-tol) and abs(d1-d2) <= tol
+  bool equal(const Plane& other, double tol = 0.001) const;
 
-    /// is this plane equal to the other plane
-    /// true if dot product of outward normals is >= (1-tol) and abs(d1-d2) <= tol
-    bool equal(const Plane& other, double tol = 0.001) const;
+  /// is this plane reverse equal to the other plane
+  /// true if dot product of outward normals is <= (-1+tol) and abs(d1+d2) <= tol
+  bool reverseEqual(const Plane& other, double tol = 0.001) const;
 
-    /// is this plane reverse equal to the other plane
-    /// true if dot product of outward normals is <= (-1+tol) and abs(d1+d2) <= tol
-    bool reverseEqual(const Plane& other, double tol = 0.001) const;
+  /// flip the plane so outward normal is opposite
+  Plane reversePlane() const;
 
-    /// flip the plane so outward normal is opposite
-    Plane reversePlane() const;
+  /// project a point to this plane
+  Point3d project(const Point3d& point) const;
 
-    /// project a point to this plane
-    Point3d project(const Point3d& point) const;
+  /// project a vector of points to this plane
+  std::vector<Point3d> project(const std::vector<Point3d>& points) const;
 
-    /// project a vector of points to this plane
-    std::vector<Point3d> project(const std::vector<Point3d>& points) const;
+  /// returns true if the point is on this plane
+  bool pointOnPlane(const Point3d& point, double tol = 0.001) const;
 
-    /// returns true if the point is on this plane
-    bool pointOnPlane(const Point3d& point, double tol = 0.001) const;
+  /// coefficient a
+  double a() const;
 
-    /// coefficient a
-    double a() const;
+  /// coefficient b
+  double b() const;
 
-    /// coefficient b
-    double b() const;
+  /// coefficient c
+  double c() const;
 
-    /// coefficient c
-    double c() const;
+  /// coefficient d
+  double d() const;
 
-    /// coefficient d
-    double d() const;
+ private:
+  // construct with coefficients
+  Plane(double a, double b, double c, double d);
 
-  private:
+  REGISTER_LOGGER("utilities.Plane");
 
-    // construct with coefficients
-    Plane(double a, double b, double c, double d);
+  double m_a;
+  double m_b;
+  double m_c;
+  double m_d;
+};
 
-    REGISTER_LOGGER("utilities.Plane");
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Plane& plane);
 
-    double m_a;
-    double m_b;
-    double m_c;
-    double m_d;
-  };
+/// optional Plane
+typedef boost::optional<Plane> OptionalPlane;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Plane& plane);
+/// vector of Plane
+typedef std::vector<Plane> PlaneVector;
 
-  /// optional Plane
-  typedef boost::optional<Plane> OptionalPlane;
+}  // namespace openstudio
 
-  /// vector of Plane
-  typedef std::vector<Plane> PlaneVector;
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_BOUNDINGBOX_HPP
+#endif  //UTILITIES_GEOMETRY_BOUNDINGBOX_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,14 +30,14 @@
 #ifndef ENERGYPLUS_ENERGYPLUSAPI_HPP
 #define ENERGYPLUS_ENERGYPLUSAPI_HPP
 
-  #if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
-    #if defined(openstudio_energyplus_EXPORTS) || defined(openstudio_EXPORTS)
-      #define ENERGYPLUS_API __declspec(dllexport)
-    #else
-      #define ENERGYPLUS_API __declspec(dllimport)
-    #endif
-  #else
-    #define ENERGYPLUS_API
-  #endif
+#if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
+#  if defined(openstudio_energyplus_EXPORTS) || defined(openstudio_EXPORTS)
+#    define ENERGYPLUS_API __declspec(dllexport)
+#  else
+#    define ENERGYPLUS_API __declspec(dllimport)
+#  endif
+#else
+#  define ENERGYPLUS_API
+#endif
 
 #endif

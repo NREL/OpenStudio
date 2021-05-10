@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,69 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemGlobalVariable_Impl;
+    class EnergyManagementSystemGlobalVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemGlobalVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:GlobalVariable'. */
-class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemGlobalVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:GlobalVariable'. */
+  class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName);
+    explicit EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName);
 
-  virtual ~EnergyManagementSystemGlobalVariable() {}
+    virtual ~EnergyManagementSystemGlobalVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  bool exportToBCVTB() const;
+    bool exportToBCVTB() const;
 
-  bool isExportToBCVTBDefaulted() const;
+    bool isExportToBCVTBDefaulted() const;
 
-  bool setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
-  void resetExportToBCVTB();
+    void resetExportToBCVTB();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemGlobalVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemGlobalVariable_Impl ImplType;
 
-  explicit EnergyManagementSystemGlobalVariable(std::shared_ptr<detail::EnergyManagementSystemGlobalVariable_Impl> impl);
+    explicit EnergyManagementSystemGlobalVariable(std::shared_ptr<detail::EnergyManagementSystemGlobalVariable_Impl> impl);
 
-  friend class detail::EnergyManagementSystemGlobalVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemGlobalVariable");
-};
+    friend class detail::EnergyManagementSystemGlobalVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemGlobalVariable");
+  };
 
-/** \relates EnergyManagementSystemGlobalVariable*/
-typedef boost::optional<EnergyManagementSystemGlobalVariable> OptionalEnergyManagementSystemGlobalVariable;
+  /** \relates EnergyManagementSystemGlobalVariable*/
+  typedef boost::optional<EnergyManagementSystemGlobalVariable> OptionalEnergyManagementSystemGlobalVariable;
 
-/** \relates EnergyManagementSystemGlobalVariable*/
-typedef std::vector<EnergyManagementSystemGlobalVariable> EnergyManagementSystemGlobalVariableVector;
+  /** \relates EnergyManagementSystemGlobalVariable*/
+  typedef std::vector<EnergyManagementSystemGlobalVariable> EnergyManagementSystemGlobalVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMGLOBALVARIABLE_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMGLOBALVARIABLE_HPP

@@ -293,7 +293,7 @@ class TranslatorGenerator
     result << "{\n"
 
     # High level variables
-    result << "  boost::optional<WorkspaceObject> result;\n"
+    result << "  boost::optional<IdfObject> result;\n"
     if @hasObjectFields
       result << "  boost::optional<WorkspaceObject> _wo;\n"
       result << "  boost::optional<ModelObject> _mo;\n"
@@ -334,42 +334,18 @@ class TranslatorGenerator
         # Comment
         result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
         if field.optionalGetter?
-          result << "  if (" << field.getterReturnType() << " _" << field.getterName << " = "<< field.getterName() << "()) {\n"
-          result << "    if ( boost::optional<WorkspaceObject> _owo = translateAndMapModelObject(_" << field.getterName << ".get()) )  {\n"
+          result << "  if (" << field.getterReturnType() << " _" << field.getterName << " = modelObject."<< field.getterName() << "()) {\n"
+          result << "    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_" << field.getterName << ".get()) )  {\n"
           result << "      idfObject.setString(" << field.fieldEnum << ", _owo->nameString());\n"
           result << "    }\n"
           result << "  }\n"
         else
-          result << "  " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();"
-          result << "  if ( boost::optional<WorkspaceObject> _owo = translateAndMapModelObject(" << field.getterName << ") )  {\n"
+          result << "  " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();\n"
+          result << "  if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(" << field.getterName << ") )  {\n"
           result << "    idfObject.setString(" << field.fieldEnum << ", _owo->nameString());\n"
           result << "  }\n"
         end
 
-        result << "  if ( (_wo = workspaceObject.getTarget(#{field.fieldEnum})) ) {\n"
-        result << "    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {\n"
-        result << "      // TODO: check return types\n"
-        result << "      if (" << field.getterReturnType(true) << " _"
-        result << field.getterName << " = _mo->optionalCast<" << field.getterReturnType(false) << ">()) {\n"
-        result << "        modelObject." << field.setterName << "(_" << field.getterName << ".get());\n"
-        result << "      } else {\n"
-        result << "        LOG(Warn, workspaceObject.briefDescription() << \" has a wrong type for '" << field.name << "'\");\n"
-        result << "      }\n"
-        if field.isRequired?
-          result << "    } else {\n"
-          result << '      LOG(Error, "For " << workspaceObject.briefDescription()'
-          result << " << \", cannot reverse translate required object '" << field.name << "'\");" << "\n"
-          result << "      return result;\n"
-          result << "    }\n"
-          result << "  } else {\n"
-          result << '    LOG(Error, "For " << workspaceObject.briefDescription()'
-          result << " << \", cannot find required object '" << field.name << "'\");" << "\n"
-          result << "    return result;\n"
-          result << "  }\n"
-        else
-          result << "    }\n"
-          result << "  }\n"
-        end
       else
         prefix = ""
         need_closing = false
@@ -377,13 +353,13 @@ class TranslatorGenerator
         # Comment
         if field.canAutosize?
           result << "  if (modelObject." << field.isAutosizeName << "()) {\n"
-          result << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", \"Autosize\")\n"
+          result << "    idfObject.setString(" << field.fieldEnum << ", \"Autosize\");\n"
           result << "  } else {\n"
           prefix = "  "
           need_closing = true
         elsif field.canAutocalculate?
           result << "  if (modelObject." << field.isAutocalculateName << "()) {\n"
-          result << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", \"Autocalculate\")\n"
+          result << "    idfObject.setString(" << field.fieldEnum << ", \"Autocalculate\");\n"
           result << "  } else {\n"
           prefix = "  "
           need_closing = true
@@ -394,7 +370,7 @@ class TranslatorGenerator
           result << prefix << "  // " << field.name << ": " << field.getterReturnType << "\n"
 
           result << prefix << "  if (" << field.getterReturnType << " _" << field.getterName << " = modelObject." << field.getterName << "()) {\n"
-          result << prefix << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", _" << field.getterName << ".get())\n"
+          result << prefix << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", _" << field.getterName << ".get());\n"
           result << prefix << "  }\n"
 
 
@@ -427,7 +403,7 @@ class TranslatorGenerator
           result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
 
           result << "  " << field.getterReturnType << " " << field.getterName << " = modelObject." << field.getterName << "();\n"
-          result << "  idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", " << field.getterName << ")\n\n"
+          result << "  idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", " << field.getterName << ");\n\n"
 
         end
 
@@ -442,7 +418,7 @@ class TranslatorGenerator
     end # End loop on nonextensibleFields
 
     # Assign result and return
-    result << "  result = modelObject;\n"
+    result << "  result = IdfObject;\n"
     result << "  return result;\n"
 
     # Close method

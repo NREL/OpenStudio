@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,46 +39,43 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCurveLinear(
-    const WorkspaceObject& workspaceObject )
-{
-  CurveLinear curve(m_model);
+  boost::optional<ModelObject> ReverseTranslator::translateCurveLinear(const WorkspaceObject& workspaceObject) {
+    CurveLinear curve(m_model);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = workspaceObject.name())) {
-    curve.setName(*s);
+    if ((s = workspaceObject.name())) {
+      curve.setName(*s);
+    }
+
+    if ((d = workspaceObject.getDouble(Curve_LinearFields::Coefficient1Constant))) {
+      curve.setCoefficient1Constant(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_LinearFields::Coefficient2x))) {
+      curve.setCoefficient2x(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_LinearFields::MinimumValueofx))) {
+      curve.setMinimumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_LinearFields::MaximumValueofx))) {
+      curve.setMaximumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_LinearFields::MinimumCurveOutput))) {
+      curve.setMinimumCurveOutput(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_LinearFields::MaximumCurveOutput))) {
+      curve.setMaximumCurveOutput(*d);
+    }
+    if ((s = workspaceObject.getString(Curve_LinearFields::InputUnitTypeforX, false, true))) {
+      curve.setInputUnitTypeforX(*s);
+    }
+    if ((s = workspaceObject.getString(Curve_LinearFields::OutputUnitType, false, true))) {
+      curve.setOutputUnitType(*s);
+    }
+
+    return curve;
   }
 
-  if ((d = workspaceObject.getDouble(Curve_LinearFields::Coefficient1Constant))) {
-    curve.setCoefficient1Constant(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_LinearFields::Coefficient2x))) {
-    curve.setCoefficient2x(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_LinearFields::MinimumValueofx))) {
-    curve.setMinimumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_LinearFields::MaximumValueofx))) {
-    curve.setMaximumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_LinearFields::MinimumCurveOutput))) {
-    curve.setMinimumCurveOutput(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_LinearFields::MaximumCurveOutput))) {
-    curve.setMaximumCurveOutput(*d);
-  }
-  if ((s = workspaceObject.getString(Curve_LinearFields::InputUnitTypeforX,false,true))) {
-    curve.setInputUnitTypeforX(*s);
-  }
-  if ((s = workspaceObject.getString(Curve_LinearFields::OutputUnitType,false,true))) {
-    curve.setOutputUnitType(*s);
-  }
-
-  return curve;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

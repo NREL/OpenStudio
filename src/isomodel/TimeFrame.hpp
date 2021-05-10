@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,15 +35,14 @@ namespace isomodel {
 
   class TimeFrame
   {
-    public:
-      static const int TIMESLICES=8760;
+   public:
+    static const int TIMESLICES = 8760;
 
-      TimeFrame();
+    TimeFrame();
 
-      int monthLength(int month);
-      int YTD[TIMESLICES], Hour[TIMESLICES], Day[TIMESLICES], Month[TIMESLICES];
-
+    static int monthLength(int month);
+    int YTD[TIMESLICES], Hour[TIMESLICES], Day[TIMESLICES], Month[TIMESLICES];
   };
-}
-}
+}  // namespace isomodel
+}  // namespace openstudio
 #endif

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RoofVegetation_Ctor)
-{
+TEST_F(ModelFixture, RoofVegetation_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     RoofVegetation roofVegetation(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      RoofVegetation roofVegetation(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RoofVegetation_GettersSetters)
-{
+TEST_F(ModelFixture, RoofVegetation_GettersSetters) {
   Model m;
   RoofVegetation roofVegetation(m);
 
@@ -64,7 +62,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetHeightofPlants();
   EXPECT_EQ(.2, roofVegetation.heightofPlants());
 
-
   // Leaf Area Index:  Double
   // Check Idd default: 1.0
   EXPECT_EQ(1.0, roofVegetation.leafAreaIndex());
@@ -72,7 +69,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_EQ(0.5, roofVegetation.leafAreaIndex());
   roofVegetation.resetLeafAreaIndex();
   EXPECT_EQ(1.0, roofVegetation.leafAreaIndex());
-
 
   // Leaf Reflectivity:  Double
   // Check Idd default: 0.22
@@ -82,7 +78,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetLeafReflectivity();
   EXPECT_EQ(0.22, roofVegetation.leafReflectivity());
 
-
   // Leaf Emissivity:  Double
   // Check Idd default: 0.95
   EXPECT_EQ(0.95, roofVegetation.leafEmissivity());
@@ -90,7 +85,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_EQ(0.88, roofVegetation.leafEmissivity());
   roofVegetation.resetLeafEmissivity();
   EXPECT_EQ(0.95, roofVegetation.leafEmissivity());
-
 
   // Minimum Stomatal Resistance:  Double
   // Check Idd default: 180.0
@@ -100,13 +94,11 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetMinimumStomatalResistance();
   EXPECT_EQ(180.0, roofVegetation.minimumStomatalResistance());
 
-
   // Soil Layer Name:  String
   // Check Idd default: "Green Roof Soil"
   EXPECT_EQ("Green Roof Soil", roofVegetation.soilLayerName());
   EXPECT_TRUE(roofVegetation.setSoilLayerName("Another name"));
   EXPECT_EQ("Another name", roofVegetation.soilLayerName());
-
 
   // Roughness:  String
   // Check Idd default: "MediumRough"
@@ -119,7 +111,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_FALSE(roofVegetation.setRoughness("BadChoice"));
   EXPECT_EQ("VeryRough", roofVegetation.roughness());
 
-
   // Thickness:  Double
   // Check Idd default: 0.1
   EXPECT_EQ(0.1, roofVegetation.thickness());
@@ -127,7 +118,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_EQ(0.08, roofVegetation.thickness());
   roofVegetation.resetThickness();
   EXPECT_EQ(0.1, roofVegetation.thickness());
-
 
   // Conductivity of Dry Soil:  Double
   // Check Idd default: 0.35
@@ -137,7 +127,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetConductivityofDrySoil();
   EXPECT_EQ(0.35, roofVegetation.conductivityofDrySoil());
 
-
   // Density of Dry Soil:  Double
   // Check Idd default: 1100.0
   EXPECT_EQ(1100.0, roofVegetation.densityofDrySoil());
@@ -145,7 +134,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_EQ(700.0, roofVegetation.densityofDrySoil());
   roofVegetation.resetDensityofDrySoil();
   EXPECT_EQ(1100.0, roofVegetation.densityofDrySoil());
-
 
   // Specific Heat of Dry Soil:  Double
   // Check Idd default: 1200.0
@@ -155,7 +143,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetSpecificHeatofDrySoil();
   EXPECT_EQ(1200.0, roofVegetation.specificHeatofDrySoil());
 
-
   // Thermal Absorptance:  Double
   // Check Idd default: .9
   EXPECT_EQ(.9, roofVegetation.thermalAbsorptance());
@@ -163,7 +150,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_EQ(0.85, roofVegetation.thermalAbsorptance());
   roofVegetation.resetThermalAbsorptance();
   EXPECT_EQ(.9, roofVegetation.thermalAbsorptance());
-
 
   // Solar Absorptance:  Double
   // Check Idd default: .70
@@ -173,7 +159,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetSolarAbsorptance();
   EXPECT_EQ(.70, roofVegetation.solarAbsorptance());
 
-
   // Visible Absorptance:  Double
   // Check Idd default: .75
   EXPECT_EQ(.75, roofVegetation.visibleAbsorptance());
@@ -181,7 +166,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_EQ(0.63, roofVegetation.visibleAbsorptance());
   roofVegetation.resetVisibleAbsorptance();
   EXPECT_EQ(.75, roofVegetation.visibleAbsorptance());
-
 
   // Saturation Volumetric Moisture Content of the Soil Layer:  Double
   // Check Idd default: 0.3
@@ -191,7 +175,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetSaturationVolumetricMoistureContentoftheSoilLayer();
   EXPECT_EQ(0.3, roofVegetation.saturationVolumetricMoistureContentoftheSoilLayer());
 
-
   // Residual Volumetric Moisture Content of the Soil Layer:  Double
   // Check Idd default: 0.01
   EXPECT_EQ(0.01, roofVegetation.residualVolumetricMoistureContentoftheSoilLayer());
@@ -200,7 +183,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   roofVegetation.resetResidualVolumetricMoistureContentoftheSoilLayer();
   EXPECT_EQ(0.01, roofVegetation.residualVolumetricMoistureContentoftheSoilLayer());
 
-
   // Initial Volumetric Moisture Content of the Soil Layer:  Double
   // Check Idd default: 0.1
   EXPECT_EQ(0.1, roofVegetation.initialVolumetricMoistureContentoftheSoilLayer());
@@ -208,7 +190,6 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   EXPECT_EQ(0.08, roofVegetation.initialVolumetricMoistureContentoftheSoilLayer());
   roofVegetation.resetInitialVolumetricMoistureContentoftheSoilLayer();
   EXPECT_EQ(0.1, roofVegetation.initialVolumetricMoistureContentoftheSoilLayer());
-
 
   // Moisture Diffusion Calculation Method:  String
   // Check Idd default: "Advanced"
@@ -219,14 +200,11 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters)
   // Test an invalid choice
   EXPECT_FALSE(roofVegetation.setMoistureDiffusionCalculationMethod("BadChoice"));
   EXPECT_EQ("Simple", roofVegetation.moistureDiffusionCalculationMethod());
-
 }
-
 
 TEST_F(ModelFixture, RoofVegetation_StandardsInformation) {
   Model model;
 
   RoofVegetation roofVegetation(model);
   StandardsInformationMaterial info = roofVegetation.standardsInformation();
-
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,24 +55,22 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_ChillerHeaterPerformanceElectricEIR)
-{
+TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ChillerHeaterPerformanceElectricEIR) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model model;
+  ASSERT_EXIT(
+    {
+      Model model;
 
-     ChillerHeaterPerformanceElectricEIR ch_heater(model);
+      ChillerHeaterPerformanceElectricEIR ch_heater(model);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 // Test the various setters and getters
-TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_SettersGetters)
-{
+TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_SettersGetters) {
   Model model;
 
   ChillerHeaterPerformanceElectricEIR ch_heater(model);
@@ -236,11 +234,9 @@ TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_SettersGetters)
   // Return type: bool
   ASSERT_TRUE(ch_heater.setSizingFactor(1.05));
   ASSERT_EQ(1.05, ch_heater.sizingFactor());
-
 }
 
-TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithoutModule)
-{
+TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithoutModule) {
   Model model;
 
   ChillerHeaterPerformanceElectricEIR ch_heater(model);
@@ -248,24 +244,21 @@ TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithoutModule)
   ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   // Clone the ChillerHeater into the same model
-  ChillerHeaterPerformanceElectricEIR  ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  ChillerHeaterPerformanceElectricEIR ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
   Curve c1 = ch_heaterClone.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(2u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   // Check that it points to the same curve
   ASSERT_EQ(c.handle(), c1.handle());
 
-
   // Clone into another model
   Model model2;
-  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
+  ChillerHeaterPerformanceElectricEIR ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(c.name(), c2.name());
-
 }
 
-TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithModule)
-{
+TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithModule) {
   Model model;
 
   // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
@@ -276,7 +269,7 @@ TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithModule)
   ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   // Clone the ChillerHeater into the same model
-  ChillerHeaterPerformanceElectricEIR  ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  ChillerHeaterPerformanceElectricEIR ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
   Curve c1 = ch_heaterClone.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(2u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   // Check that it points to the same curve
@@ -287,19 +280,15 @@ TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithModule)
 
   // Clone into another model
   Model model2;
-  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
+  ChillerHeaterPerformanceElectricEIR ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(c.name(), c2.name());
   // Check that it didn't clone the parent Module...Should be zero
   ASSERT_EQ(0u, model2.getModelObjects<CentralHeatPumpSystemModule>().size());
-
-
 }
 
-
-TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
-{
+TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups) {
   // Nothing set
   {
     Model model;
@@ -320,9 +309,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
     ASSERT_EQ(mod.handle(), ch_heater.centralHeatPumpSystemModules()[0].handle());
 
     ASSERT_EQ(0u, ch_heater.centralHeatPumpSystems().size());
-
   }
-
 
   // A module and a centralHP
   {
@@ -341,7 +328,6 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
 
     ASSERT_EQ(1u, ch_heater.centralHeatPumpSystems().size());
     ASSERT_EQ(central_hp.handle(), ch_heater.centralHeatPumpSystems()[0].handle());
-
   }
 
   // Two parent modules in two different centralHP
@@ -362,7 +348,6 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
     ASSERT_EQ(2u, ch_heater.centralHeatPumpSystemModules().size());
 
     ASSERT_EQ(2u, ch_heater.centralHeatPumpSystems().size());
-
   }
 
   // Two parent modules in the same centralHP
@@ -382,8 +367,5 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
     ASSERT_EQ(2u, ch_heater.centralHeatPumpSystemModules().size());
 
     ASSERT_EQ(1u, ch_heater.centralHeatPumpSystems().size());
-
   }
-
-
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,13 +39,12 @@ void SqlFileFixture::SetUp() {}
 
 void SqlFileFixture::TearDown() {}
 
-void SqlFileFixture::SetUpTestSuite()
-{
+void SqlFileFixture::SetUpTestSuite() {
   logFile = FileLogSink(toPath("./SqlFileFixture.log"));
   logFile->setLogLevel(Debug);
 
   openstudio::path path;
-  path = resourcesPath()/toPath("energyplus/5ZoneAirCooled/eplusout.sql");
+  path = resourcesPath() / toPath("energyplus/5ZoneAirCooled/eplusout.sql");
   sqlFile = openstudio::SqlFile(path);
   ASSERT_TRUE(sqlFile.connectionOpen());
 
@@ -53,7 +52,6 @@ void SqlFileFixture::SetUpTestSuite()
   path2 = resourcesPath() / toPath("energyplus/Office_With_Many_HVAC_Types/eplusout.sql");
   sqlFile2 = openstudio::SqlFile(path2);
   ASSERT_TRUE(sqlFile2.connectionOpen());
-
 }
 
 void SqlFileFixture::TearDownTestSuite() {
@@ -66,9 +64,10 @@ void SqlFileFixture::TearDownTestSuite() {
     return ::testing::AssertionSuccess();
   } else {
     // Google Test seems to be ingoring the fixed && precision iomanips
-    return ::testing::AssertionFailure() << "Value isn't within the required tolerance of "
-      << std::fixed << std::setprecision(2) << (tolerance * 100) << "%. "
-      << "Expected Value = " << expectedValue << ", Sql Value = " << actualValue << ", Difference = " << (100*percentageDifference) << "%.";
+    return ::testing::AssertionFailure() << "Value isn't within the required tolerance of " << std::fixed << std::setprecision(2) << (tolerance * 100)
+                                         << "%. "
+                                         << "Expected Value = " << expectedValue << ", Sql Value = " << actualValue
+                                         << ", Difference = " << (100 * percentageDifference) << "%.";
   }
 }
 

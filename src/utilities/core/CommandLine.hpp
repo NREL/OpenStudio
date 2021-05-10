@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,31 +40,31 @@
 *   command line arguments.  Assume UTF-16LE on Windows and UTF-8 elsewhere.
 **/
 
-namespace boost{
-namespace program_options{
+namespace boost {
+namespace program_options {
 
-#if (defined (_WIN32) || defined (_WIN64))
+#if (defined(_WIN32) || defined(_WIN64))
   typedef std::wstring string;
   typedef std::vector<std::wstring> string_vector;
 
-  boost::program_options::typed_value<string, wchar_t>* value(string* str){
+  boost::program_options::typed_value<string, wchar_t>* value(string* str) {
     return boost::program_options::wvalue<string>(str);
   }
-  boost::program_options::typed_value<string_vector, wchar_t>* value(string_vector* vec){
+  boost::program_options::typed_value<string_vector, wchar_t>* value(string_vector* vec) {
     return boost::program_options::wvalue<string_vector>(vec)->multitoken();
   }
 #else
   typedef std::string string;
   typedef std::vector<std::string> string_vector;
 
-  boost::program_options::typed_value<string, char>* value(string* str){
+  boost::program_options::typed_value<string, char>* value(string* str) {
     return boost::program_options::value<string>(str);
   }
-  boost::program_options::typed_value<string_vector, char>* value(string_vector* vec){
+  boost::program_options::typed_value<string_vector, char>* value(string_vector* vec) {
     return boost::program_options::value<string_vector>(vec)->multitoken();
   }
 #endif
-}
-}
+}  // namespace program_options
+}  // namespace boost
 
-#endif // UTILITIES_CORE_COMMANDLINE_HPP
+#endif  // UTILITIES_CORE_COMMANDLINE_HPP

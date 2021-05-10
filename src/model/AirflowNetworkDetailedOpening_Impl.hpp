@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,89 +37,82 @@
 namespace openstudio {
 namespace model {
 
-class DetailedOpeningFactorData;
+  class DetailedOpeningFactorData;
 
-namespace detail {
+  namespace detail {
 
-/** AirflowNetworkDetailedOpening_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDetailedOpening.*/
-class MODEL_API AirflowNetworkDetailedOpening_Impl : public AirflowNetworkComponent_Impl
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
+    /** AirflowNetworkDetailedOpening_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDetailedOpening.*/
+    class MODEL_API AirflowNetworkDetailedOpening_Impl : public AirflowNetworkComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  AirflowNetworkDetailedOpening_Impl(const IdfObject& idfObject,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkDetailedOpening_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  AirflowNetworkDetailedOpening_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkDetailedOpening_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AirflowNetworkDetailedOpening_Impl(const AirflowNetworkDetailedOpening_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkDetailedOpening_Impl(const AirflowNetworkDetailedOpening_Impl& other, Model_Impl* model, bool keepHandle);
 
-  virtual ~AirflowNetworkDetailedOpening_Impl() {}
+      virtual ~AirflowNetworkDetailedOpening_Impl() {}
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-  //@}
-  /** @name Getters */
-  //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-  double airMassFlowCoefficientWhenOpeningisClosed() const;
+      double airMassFlowCoefficientWhenOpeningisClosed() const;
 
-  double airMassFlowExponentWhenOpeningisClosed() const;
+      double airMassFlowExponentWhenOpeningisClosed() const;
 
-  bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
+      bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
 
-  std::string typeofRectangularLargeVerticalOpening() const;
+      std::string typeofRectangularLargeVerticalOpening() const;
 
-  bool isTypeofRectangularLargeVerticalOpeningDefaulted() const;
+      bool isTypeofRectangularLargeVerticalOpeningDefaulted() const;
 
-  double extraCrackLengthorHeightofPivotingAxis() const;
+      double extraCrackLengthorHeightofPivotingAxis() const;
 
-  bool isExtraCrackLengthorHeightofPivotingAxisDefaulted() const;
+      bool isExtraCrackLengthorHeightofPivotingAxisDefaulted() const;
 
-  std::vector<DetailedOpeningFactorData> openingFactors() const;
+      std::vector<DetailedOpeningFactorData> openingFactors() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
+      bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
 
-  bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
+      bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
 
-  void resetAirMassFlowExponentWhenOpeningisClosed();
+      void resetAirMassFlowExponentWhenOpeningisClosed();
 
-  bool setTypeofRectangularLargeVerticalOpening(const std::string& typeofRectangularLargeVerticalOpening);
+      bool setTypeofRectangularLargeVerticalOpening(const std::string& typeofRectangularLargeVerticalOpening);
 
-  void resetTypeofRectangularLargeVerticalOpening();
+      void resetTypeofRectangularLargeVerticalOpening();
 
-  bool setExtraCrackLengthorHeightofPivotingAxis(double extraCrackLengthorHeightofPivotingAxis);
+      bool setExtraCrackLengthorHeightofPivotingAxis(double extraCrackLengthorHeightofPivotingAxis);
 
-  void resetExtraCrackLengthorHeightofPivotingAxis();
+      void resetExtraCrackLengthorHeightofPivotingAxis();
 
-  bool setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors);
+      bool setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors);
 
-  //@}
-protected:
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkDetailedOpening");
-};
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkDetailedOpening");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKDETAILEDOPENING_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKDETAILEDOPENING_IMPL_HPP

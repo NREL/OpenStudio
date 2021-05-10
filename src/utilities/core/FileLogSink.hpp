@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,24 +35,22 @@
 #include "LogSink.hpp"
 #include "Path.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
-  class UTILITIES_API FileLogSink : public LogSink
-  {
-    public:
+class UTILITIES_API FileLogSink : public LogSink
+{
+ public:
+  /// constructor takes path of file, opens in write mode positioned at file beginning
+  /// and registers in the global logger
+  FileLogSink(const openstudio::path& path);
 
-    /// constructor takes path of file, opens in write mode positioned at file beginning
-    /// and registers in the global logger
-    FileLogSink(const openstudio::path& path);
+  /// returns the path that log messages are written to
+  openstudio::path path() const;
 
-    /// returns the path that log messages are written to
-    openstudio::path path() const;
+  /// get messages out of the file content
+  std::vector<LogMessage> logMessages() const;
+};
 
-    /// get messages out of the file content
-    std::vector<LogMessage> logMessages() const;
+}  // namespace openstudio
 
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_FILELOGSINK_HPP
+#endif  // UTILITIES_CORE_FILELOGSINK_HPP

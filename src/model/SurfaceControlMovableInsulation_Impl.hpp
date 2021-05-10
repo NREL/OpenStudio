@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,82 +36,76 @@
 namespace openstudio {
 namespace model {
 
-class Surface;
-class Material;
-class Schedule;
+  class Surface;
+  class Material;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** SurfaceControlMovableInsulation_Impl is a ModelObject_Impl that is the implementation class for SurfaceControlMovableInsulation.*/
-  class MODEL_API SurfaceControlMovableInsulation_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SurfaceControlMovableInsulation_Impl is a ModelObject_Impl that is the implementation class for SurfaceControlMovableInsulation.*/
+    class MODEL_API SurfaceControlMovableInsulation_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SurfaceControlMovableInsulation_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      SurfaceControlMovableInsulation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SurfaceControlMovableInsulation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      SurfaceControlMovableInsulation_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SurfaceControlMovableInsulation_Impl(const SurfaceControlMovableInsulation_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      SurfaceControlMovableInsulation_Impl(const SurfaceControlMovableInsulation_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SurfaceControlMovableInsulation_Impl() {}
+      virtual ~SurfaceControlMovableInsulation_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string insulationType() const;
+      std::string insulationType() const;
 
-    Surface surface() const;
+      Surface surface() const;
 
-    Material material() const;
+      Material material() const;
 
-    Schedule schedule() const;
+      Schedule schedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setInsulationType(const std::string& insulationType);
+      bool setInsulationType(const std::string& insulationType);
 
-    bool setSurface(const Surface& surface);
+      bool setSurface(const Surface& surface);
 
-    bool setMaterial(const Material& material);
+      bool setMaterial(const Material& material);
 
-    bool setSchedule(Schedule& schedule);
+      bool setSchedule(Schedule& schedule);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SurfaceControlMovableInsulation");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SurfaceControlMovableInsulation");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SURFACECONTROLMOVABLEINSULATION_IMPL_HPP
-
+#endif  // MODEL_SURFACECONTROLMOVABLEINSULATION_IMPL_HPP

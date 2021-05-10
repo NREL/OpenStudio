@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,19 +35,17 @@
 
 using namespace openstudio;
 
-
-TEST_F(DataFixture, CalibrationResult)
-{
+TEST_F(DataFixture, CalibrationResult) {
 
   openstudio::path xmlPath = toPath("./calibration_report.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
   // these objects do no calculations they just store data as entered
 
-  CalibrationUtilityBill electricBill("Electric Bill", FuelType::Electricity, InstallLocationType::Facility,
-    boost::none, boost::none, boost::none, std::string("kWh"), 5.0, std::string("kW"), 5.0, 5, 30.0, 2, 1.0, 1.0);
+  CalibrationUtilityBill electricBill("Electric Bill", FuelType::Electricity, InstallLocationType::Facility, boost::none, boost::none, boost::none,
+                                      std::string("kWh"), 5.0, std::string("kW"), 5.0, 5, 30.0, 2, 1.0, 1.0);
   EXPECT_EQ("Electric Bill", electricBill.name());
   EXPECT_EQ(FuelType::Electricity, electricBill.fuelType().value());
   EXPECT_EQ(InstallLocationType::Facility, electricBill.meterInstallLocation().value());
@@ -71,10 +69,10 @@ TEST_F(DataFixture, CalibrationResult)
   ASSERT_TRUE(electricBill.NMBE());
   EXPECT_EQ(1.0, electricBill.NMBE().get());
 
-  CalibrationBillingPeriod electricityJan(Date(1,1,1999), 30, std::string("kWh"), std::string("kW"),
-    10.0, 1.0, boost::none, 11.0, 1.1, boost::none);
-  EXPECT_EQ(Date(1,1,1999), electricityJan.startDate());
-  EXPECT_EQ(Date(1,30,1999), electricityJan.endDate());
+  CalibrationBillingPeriod electricityJan(Date(1, 1, 1999), 30, std::string("kWh"), std::string("kW"), 10.0, 1.0, boost::none, 11.0, 1.1,
+                                          boost::none);
+  EXPECT_EQ(Date(1, 1, 1999), electricityJan.startDate());
+  EXPECT_EQ(Date(1, 30, 1999), electricityJan.endDate());
   EXPECT_EQ(30, electricityJan.numberOfDays());
   EXPECT_EQ("kWh", electricityJan.consumptionUnit());
   ASSERT_TRUE(electricityJan.peakDemandUnit());
@@ -91,30 +89,27 @@ TEST_F(DataFixture, CalibrationResult)
   EXPECT_FALSE(electricityJan.modelTotalCost());
   EXPECT_TRUE(electricBill.addBillingPeriod(electricityJan));
 
-  CalibrationBillingPeriod electricityFeb(Date(2,1,1999), 28, std::string("kWh"), std::string("kW"),
-    10.0, 1.0, boost::none, 11.0, 1.1, boost::none);
+  CalibrationBillingPeriod electricityFeb(Date(2, 1, 1999), 28, std::string("kWh"), std::string("kW"), 10.0, 1.0, boost::none, 11.0, 1.1,
+                                          boost::none);
   EXPECT_TRUE(electricBill.addBillingPeriod(electricityFeb));
   EXPECT_EQ(2u, electricBill.billingPeriods().size());
 
+  CalibrationUtilityBill gasBill("Gas Bill", FuelType::Gas, InstallLocationType::Facility, boost::none, boost::none, boost::none,
+                                 std::string("Therms"), 5.0, boost::none, boost::none, boost::none, boost::none, 3, 1.0, 1.0);
 
-  CalibrationUtilityBill gasBill("Gas Bill", FuelType::Gas, InstallLocationType::Facility,
-    boost::none, boost::none, boost::none, std::string("Therms"), 5.0, boost::none, boost::none, boost::none, boost::none, 3, 1.0, 1.0);
-
-  CalibrationBillingPeriod gasJan(Date(1,1,1999), 30, std::string("Therms"), boost::none,
-    10.0, boost::none, boost::none, 11.0, boost::none, boost::none);
+  CalibrationBillingPeriod gasJan(Date(1, 1, 1999), 30, std::string("Therms"), boost::none, 10.0, boost::none, boost::none, 11.0, boost::none,
+                                  boost::none);
   EXPECT_TRUE(gasBill.addBillingPeriod(gasJan));
 
-  CalibrationBillingPeriod gasFeb(Date(2,1,1999), 28, std::string("Therms"), boost::none,
-    10.0, boost::none, boost::none, 11.0, boost::none, boost::none);
+  CalibrationBillingPeriod gasFeb(Date(2, 1, 1999), 28, std::string("Therms"), boost::none, 10.0, boost::none, boost::none, 11.0, boost::none,
+                                  boost::none);
   EXPECT_TRUE(gasBill.addBillingPeriod(gasFeb));
   EXPECT_EQ(2u, gasBill.billingPeriods().size());
-
 
   EXPECT_FALSE(electricBill.addBillingPeriod(gasJan));
   EXPECT_EQ(2u, electricBill.billingPeriods().size());
   EXPECT_FALSE(gasBill.addBillingPeriod(electricityJan));
   EXPECT_EQ(2u, gasBill.billingPeriods().size());
-
 
   CalibrationResult calibrationResult;
   calibrationResult.addUtilityBill(electricBill);
@@ -134,5 +129,4 @@ TEST_F(DataFixture, CalibrationResult)
   CalibrationUtilityBill electricBill2 = testCalibrationResult->utilityBills()[0];
   EXPECT_EQ(electricBill.name(), electricBill2.name());
   EXPECT_EQ(electricBill.billingPeriods().size(), electricBill2.billingPeriods().size());
-
 }

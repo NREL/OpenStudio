@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,49 +35,46 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API Connection_Impl : public ModelObject_Impl {
-   public:
+    class MODEL_API Connection_Impl : public ModelObject_Impl
+    {
+     public:
+      Connection_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Connection_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      Connection_Impl(const Connection_Impl& other, Model_Impl* model, bool keepHandle);
 
-    Connection_Impl(const Connection_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual ~Connection_Impl();
 
-    virtual ~Connection_Impl();
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      boost::optional<ModelObject> sourceObject() const;
 
-    boost::optional<ModelObject> sourceObject() const;
+      boost::optional<unsigned> sourceObjectPort() const;
 
-    boost::optional<unsigned> sourceObjectPort() const;
+      boost::optional<ModelObject> targetObject() const;
 
-    boost::optional<ModelObject> targetObject() const;
+      boost::optional<unsigned> targetObjectPort() const;
 
-    boost::optional<unsigned> targetObjectPort() const;
+      bool setSourceObject(ModelObject object);
 
-    bool setSourceObject(ModelObject object);
+      bool setSourceObjectPort(unsigned port);
 
-    bool setSourceObjectPort(unsigned port);
+      bool setTargetObject(ModelObject object);
 
-    bool setTargetObject(ModelObject object);
+      bool setTargetObjectPort(unsigned port);
 
-    bool setTargetObjectPort(unsigned port);
+     private:
+      REGISTER_LOGGER("openstudio.model.Connection");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.Connection");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CONNECTION_IMPL_HPP
+#endif  // MODEL_CONNECTION_IMPL_HPP

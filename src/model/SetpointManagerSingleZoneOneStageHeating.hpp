@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,85 +37,86 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
-class Node;
+  class ThermalZone;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerSingleZoneOneStageHeating_Impl;
+    class SetpointManagerSingleZoneOneStageHeating_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerSingleZoneOneStageHeating is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:OneStageHeating'. */
-class MODEL_API SetpointManagerSingleZoneOneStageHeating : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerSingleZoneOneStageHeating is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:OneStageHeating'. */
+  class MODEL_API SetpointManagerSingleZoneOneStageHeating : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerSingleZoneOneStageHeating(const Model& model);
+    explicit SetpointManagerSingleZoneOneStageHeating(const Model& model);
 
-  virtual ~SetpointManagerSingleZoneOneStageHeating() {}
+    virtual ~SetpointManagerSingleZoneOneStageHeating() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  double heatingStageOnSupplyAirSetpointTemperature() const;
+    double heatingStageOnSupplyAirSetpointTemperature() const;
 
-  double heatingStageOffSupplyAirSetpointTemperature() const;
+    double heatingStageOffSupplyAirSetpointTemperature() const;
 
-  boost::optional<ThermalZone> controlZone() const;
+    boost::optional<ThermalZone> controlZone() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature);
+    bool setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature);
 
-  bool setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature);
+    bool setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature);
 
-  bool setControlZone(const ThermalZone& thermalZone);
+    bool setControlZone(const ThermalZone& thermalZone);
 
-  void resetControlZone();
+    void resetControlZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerSingleZoneOneStageHeating_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerSingleZoneOneStageHeating_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneOneStageHeating(std::shared_ptr<detail::SetpointManagerSingleZoneOneStageHeating_Impl> impl);
+    explicit SetpointManagerSingleZoneOneStageHeating(std::shared_ptr<detail::SetpointManagerSingleZoneOneStageHeating_Impl> impl);
 
-  friend class detail::SetpointManagerSingleZoneOneStageHeating_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneOneStageHeating");
-};
+    friend class detail::SetpointManagerSingleZoneOneStageHeating_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneOneStageHeating");
+  };
 
-/** \relates SetpointManagerSingleZoneOneStageHeating*/
-typedef boost::optional<SetpointManagerSingleZoneOneStageHeating> OptionalSetpointManagerSingleZoneOneStageHeating;
+  /** \relates SetpointManagerSingleZoneOneStageHeating*/
+  typedef boost::optional<SetpointManagerSingleZoneOneStageHeating> OptionalSetpointManagerSingleZoneOneStageHeating;
 
-/** \relates SetpointManagerSingleZoneOneStageHeating*/
-typedef std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSingleZoneOneStageHeatingVector;
+  /** \relates SetpointManagerSingleZoneOneStageHeating*/
+  typedef std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSingleZoneOneStageHeatingVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSINGLEZONEONESTAGEHEATING_HPP
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONEONESTAGEHEATING_HPP

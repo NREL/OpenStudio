@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,7 +42,6 @@
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
-
 
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
@@ -127,7 +126,8 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
   fanPowerInputFunctionofFlowCurve.setMinimumValueofx(0.0);
   fanPowerInputFunctionofFlowCurve.setMaximumValueofx(99.0);
 
-  ElectricEquipmentITEAirCooledDefinition definition(model, cPUPowerInputFunctionofLoadingandAirTemperatureCurve, airFlowFunctionofLoadingandAirTemperatureCurve, fanPowerInputFunctionofFlowCurve);
+  ElectricEquipmentITEAirCooledDefinition definition(model, cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
+                                                     airFlowFunctionofLoadingandAirTemperatureCurve, fanPowerInputFunctionofFlowCurve);
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
   EXPECT_EQ(5u, model.numObjects());
 
@@ -145,9 +145,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
   ASSERT_EQ(5.0, definition.supplyTemperatureDifference());
 
   //model.save(toPath("./ITE2.osm"), true);
-
 }
-
 
 //set equipment level and switch between equipment level input methods
 TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_equipmentLevel) {
@@ -178,9 +176,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_equipmentLevel) {
   EXPECT_EQ(0.5, definition.wattsperZoneFloorArea());
 
   //model.save(toPath("./ITE3.osm"), true);
-
 }
-
 
 //Set FlowControlWithApproachTemperatures method
 TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_FlowControlWithApproachTemperatures) {
@@ -196,9 +192,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_FlowControlWithApproachTemper
   ASSERT_EQ(10.0, definition.supplyTemperatureDifference());
 
   //model.save(toPath("./ITE4.osm"), true);
-
 }
-
 
 //remove ITE object
 TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_Remove) {
@@ -218,9 +212,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_Remove) {
   EXPECT_EQ(4u, model.numObjects());
 
   //model.save(toPath("./ITE5.osm"), true);
-
 }
-
 
 //remove definition
 TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_RemoveDefinition) {
@@ -241,7 +233,6 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_RemoveDefinition) {
   EXPECT_EQ(3u, model.numObjects());
 
   //model.save(toPath("./ITE6.osm"), true);
-
 }
 
 // test thermalzone inletportlist
@@ -261,7 +252,6 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_inletportlist) {
   //m.save(toPath("./ITE7.osm"), true);
 
   std::cout << thermalZone.inletPortList().airLoopHVACModelObject()->optionalCast<Node>()->name().get() << "\n";
-
 }
 
 // test ITE approach temperature schedule
@@ -286,5 +276,4 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooledDefinition_approachtemperature
   EXPECT_EQ(returndeltasch, definition.returnTemperatureDifferenceSchedule().get());
 
   // model.save(toPath("./ITE8.osm"), true);
-
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,150 +40,150 @@ class Transformation;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class IlluminanceMap_Impl;
+    class IlluminanceMap_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** IlluminanceMap is a SpaceItem and is an interface to the OpenStudio IDD object named "OS:IlluminanceMap".
+  /** IlluminanceMap is a SpaceItem and is an interface to the OpenStudio IDD object named "OS:IlluminanceMap".
  *
  *  IlluminanceMap is a child of the Space object and is used to report daylighting illuminance values
  *  over a grid.  The grid of points to calculate daylight
  *  illuminance over is defined by the minimum and maximum corners of a rectangle aligned with the parent \link Space Space's \endlink
  *  coordinate system.
  */
-class MODEL_API IlluminanceMap : public SpaceItem {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API IlluminanceMap : public SpaceItem
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit IlluminanceMap(const Model& model);
+    explicit IlluminanceMap(const Model& model);
 
-  virtual ~IlluminanceMap() {}
+    virtual ~IlluminanceMap() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  double originXCoordinate() const;
+    double originXCoordinate() const;
 
-  double originYCoordinate() const;
+    double originYCoordinate() const;
 
-  double originZCoordinate() const;
+    double originZCoordinate() const;
 
-  double psiRotationAroundXAxis() const;
+    double psiRotationAroundXAxis() const;
 
-  bool isPsiRotationAroundXAxisDefaulted() const;
+    bool isPsiRotationAroundXAxisDefaulted() const;
 
-  double thetaRotationAroundYAxis() const;
+    double thetaRotationAroundYAxis() const;
 
-  bool isThetaRotationAroundYAxisDefaulted() const;
+    bool isThetaRotationAroundYAxisDefaulted() const;
 
-  double phiRotationAroundZAxis() const;
+    double phiRotationAroundZAxis() const;
 
-  bool isPhiRotationAroundZAxisDefaulted() const;
+    bool isPhiRotationAroundZAxisDefaulted() const;
 
-  double xLength() const;
+    double xLength() const;
 
-  bool isXLengthDefaulted() const;
+    bool isXLengthDefaulted() const;
 
-  int numberofXGridPoints() const;
+    int numberofXGridPoints() const;
 
-  bool isNumberofXGridPointsDefaulted() const;
+    bool isNumberofXGridPointsDefaulted() const;
 
-  double yLength() const;
+    double yLength() const;
 
-  bool isYLengthDefaulted() const;
+    bool isYLengthDefaulted() const;
 
-  int numberofYGridPoints() const;
+    int numberofYGridPoints() const;
 
-  bool isNumberofYGridPointsDefaulted() const;
+    bool isNumberofYGridPointsDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOriginXCoordinate(double originXCoordinate);
+    bool setOriginXCoordinate(double originXCoordinate);
 
-  bool setOriginYCoordinate(double originYCoordinate);
+    bool setOriginYCoordinate(double originYCoordinate);
 
-  bool setOriginZCoordinate(double originZCoordinate);
+    bool setOriginZCoordinate(double originZCoordinate);
 
-  bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
+    bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
-  void resetPsiRotationAroundXAxis();
+    void resetPsiRotationAroundXAxis();
 
-  bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
+    bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
 
-  void resetThetaRotationAroundYAxis();
+    void resetThetaRotationAroundYAxis();
 
-  bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
+    bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
 
-  void resetPhiRotationAroundZAxis();
+    void resetPhiRotationAroundZAxis();
 
-  bool setXLength(double xLength);
+    bool setXLength(double xLength);
 
-  void resetXLength();
+    void resetXLength();
 
-  bool setNumberofXGridPoints(int numberofXGridPoints);
+    bool setNumberofXGridPoints(int numberofXGridPoints);
 
-  void resetNumberofXGridPoints();
+    void resetNumberofXGridPoints();
 
-  bool setYLength(double yLength);
+    bool setYLength(double yLength);
 
-  void resetYLength();
+    void resetYLength();
 
-  bool setNumberofYGridPoints(int numberofYGridPoints);
+    bool setNumberofYGridPoints(int numberofYGridPoints);
 
-  void resetNumberofYGridPoints();
+    void resetNumberofYGridPoints();
 
-  //@}
+    //@}
 
-  /// Get the transformation from illuminance map coordinates to space coordinates
-  openstudio::Transformation transformation() const;
+    /// Get the transformation from illuminance map coordinates to space coordinates
+    openstudio::Transformation transformation() const;
 
-  /// Set the transformation from illuminance map coordinates to space coordinates
-  bool setTransformation(const openstudio::Transformation& transformation);
+    /// Set the transformation from illuminance map coordinates to space coordinates
+    bool setTransformation(const openstudio::Transformation& transformation);
 
-  /// Returns a vector of all the reference points in the calculation grid in illuminance map coordinates.
-  /// The points are returned in order such as [0, 0, 0], ..., [xLength, 0, 0], [0, yLength/numberofYGridPoints, 0], ..., [xLength, yLength, 0]
-  /// To get the points in space coordinates use transformation * referencePoints
-  std::vector<Point3d> referencePoints() const;
+    /// Returns a vector of all the reference points in the calculation grid in illuminance map coordinates.
+    /// The points are returned in order such as [0, 0, 0], ..., [xLength, 0, 0], [0, yLength/numberofYGridPoints, 0], ..., [xLength, yLength, 0]
+    /// To get the points in space coordinates use transformation * referencePoints
+    std::vector<Point3d> referencePoints() const;
 
-  /// Returns a vector of the 4 corner reference points in the calculation grid in illuminance map coordinates.
-  /// The points returned are [0, yLength, 0], [0, 0, 0], [xLength, 0, 0], [xLength, yLength, 0]
-  /// To get the points in space coordinates use transformation * referencePoints
-  std::vector<Point3d> corners() const;
+    /// Returns a vector of the 4 corner reference points in the calculation grid in illuminance map coordinates.
+    /// The points returned are [0, yLength, 0], [0, 0, 0], [xLength, 0, 0], [xLength, yLength, 0]
+    /// To get the points in space coordinates use transformation * referencePoints
+    std::vector<Point3d> corners() const;
 
- protected:
-  /// @cond
-  typedef detail::IlluminanceMap_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::IlluminanceMap_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit IlluminanceMap(std::shared_ptr<detail::IlluminanceMap_Impl> impl);
+    explicit IlluminanceMap(std::shared_ptr<detail::IlluminanceMap_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.IlluminanceMap");
+  };
 
-  REGISTER_LOGGER("openstudio.model.IlluminanceMap");
-};
+  /** \relates IlluminanceMap*/
+  typedef boost::optional<IlluminanceMap> OptionalIlluminanceMap;
 
-/** \relates IlluminanceMap*/
-typedef boost::optional<IlluminanceMap> OptionalIlluminanceMap;
+  /** \relates IlluminanceMap*/
+  typedef std::vector<IlluminanceMap> IlluminanceMapVector;
 
-/** \relates IlluminanceMap*/
-typedef std::vector<IlluminanceMap> IlluminanceMapVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ILLUMINANCEMAP_HPP
+#endif  // MODEL_ILLUMINANCEMAP_HPP

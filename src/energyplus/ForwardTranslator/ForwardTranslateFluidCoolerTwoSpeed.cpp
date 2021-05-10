@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,131 +42,129 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerTwoSpeed(FluidCoolerTwoSpeed & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::FluidCooler_TwoSpeed);
+  boost::optional<IdfObject> ForwardTranslator::translateFluidCoolerTwoSpeed(FluidCoolerTwoSpeed& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::FluidCooler_TwoSpeed);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  if( auto value = modelObject.name() ) {
-    idfObject.setName(value.get());
-  }
-
-  if( auto node = modelObject.inletModelObject() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::WaterInletNodeName,node->name().get());
-  }
-
-  if( auto node = modelObject.outletModelObject() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::WaterOutletNodeName,node->name().get());
-  }
-
-  {
-    auto value = modelObject.performanceInputMethod();
-    idfObject.setString(FluidCooler_TwoSpeedFields::PerformanceInputMethod,value);
-  }
-
-  if( istringEqual("UFactorTimesAreaAndDesignWaterFlowRate",modelObject.performanceInputMethod()) ) {
-    if( modelObject.isHighFanSpeedUfactorTimesAreaValueAutosized() ) {
-      idfObject.setString(FluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue,"Autosize");
-    } else if( auto value = modelObject.highFanSpeedUfactorTimesAreaValue() ) {
-      idfObject.setDouble(FluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue,value.get());
+    if (auto value = modelObject.name()) {
+      idfObject.setName(value.get());
     }
-  }
 
-  if( istringEqual("UFactorTimesAreaAndDesignWaterFlowRate",modelObject.performanceInputMethod()) ) {
-    if( modelObject.isLowFanSpeedUfactorTimesAreaValueAutosized() ) {
-      idfObject.setString(FluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue,"Autosize");
-    } else if( auto value = modelObject.lowFanSpeedUfactorTimesAreaValue() ) {
-      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue,value.get());
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::WaterInletNodeName, node->name().get());
     }
-  }
 
-  if( istringEqual("UFactorTimesAreaAndDesignWaterFlowRate",modelObject.performanceInputMethod()) ) {
-    auto value = modelObject.lowFanSpeedUFactorTimesAreaSizingFactor();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor,value);
-  }
-
-  if( istringEqual("NominalCapacity",modelObject.performanceInputMethod()) ) {
-    auto value = modelObject.highSpeedNominalCapacity();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::HighSpeedNominalCapacity,value);
-  }
-
-  if( istringEqual("NominalCapacity",modelObject.performanceInputMethod()) ) {
-    if( modelObject.isLowSpeedNominalCapacityAutosized() ) {
-      idfObject.setString(FluidCooler_TwoSpeedFields::LowSpeedNominalCapacity,"Autosize");
-    } else if(auto value = modelObject.lowSpeedNominalCapacity()) {
-      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowSpeedNominalCapacity,value.get());
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::WaterOutletNodeName, node->name().get());
     }
+
+    {
+      auto value = modelObject.performanceInputMethod();
+      idfObject.setString(FluidCooler_TwoSpeedFields::PerformanceInputMethod, value);
+    }
+
+    if (istringEqual("UFactorTimesAreaAndDesignWaterFlowRate", modelObject.performanceInputMethod())) {
+      if (modelObject.isHighFanSpeedUfactorTimesAreaValueAutosized()) {
+        idfObject.setString(FluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue, "Autosize");
+      } else if (auto value = modelObject.highFanSpeedUfactorTimesAreaValue()) {
+        idfObject.setDouble(FluidCooler_TwoSpeedFields::HighFanSpeedUfactorTimesAreaValue, value.get());
+      }
+    }
+
+    if (istringEqual("UFactorTimesAreaAndDesignWaterFlowRate", modelObject.performanceInputMethod())) {
+      if (modelObject.isLowFanSpeedUfactorTimesAreaValueAutosized()) {
+        idfObject.setString(FluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue, "Autosize");
+      } else if (auto value = modelObject.lowFanSpeedUfactorTimesAreaValue()) {
+        idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedUfactorTimesAreaValue, value.get());
+      }
+    }
+
+    if (istringEqual("UFactorTimesAreaAndDesignWaterFlowRate", modelObject.performanceInputMethod())) {
+      auto value = modelObject.lowFanSpeedUFactorTimesAreaSizingFactor();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedUFactorTimesAreaSizingFactor, value);
+    }
+
+    if (istringEqual("NominalCapacity", modelObject.performanceInputMethod())) {
+      auto value = modelObject.highSpeedNominalCapacity();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::HighSpeedNominalCapacity, value);
+    }
+
+    if (istringEqual("NominalCapacity", modelObject.performanceInputMethod())) {
+      if (modelObject.isLowSpeedNominalCapacityAutosized()) {
+        idfObject.setString(FluidCooler_TwoSpeedFields::LowSpeedNominalCapacity, "Autosize");
+      } else if (auto value = modelObject.lowSpeedNominalCapacity()) {
+        idfObject.setDouble(FluidCooler_TwoSpeedFields::LowSpeedNominalCapacity, value.get());
+      }
+    }
+
+    if (istringEqual("NominalCapacity", modelObject.performanceInputMethod())) {
+      auto value = modelObject.lowSpeedNominalCapacitySizingFactor();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowSpeedNominalCapacitySizingFactor, value);
+    }
+
+    {
+      auto value = modelObject.designEnteringWaterTemperature();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignEnteringWaterTemperature, value);
+    }
+
+    {
+      auto value = modelObject.designEnteringAirTemperature();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignEnteringAirTemperature, value);
+    }
+
+    {
+      auto value = modelObject.designEnteringAirWetbulbTemperature();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignEnteringAirWetbulbTemperature, value);
+    }
+
+    if (modelObject.isDesignWaterFlowRateAutosized()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::DesignWaterFlowRate, "Autosize");
+    } else if (auto value = modelObject.designWaterFlowRate()) {
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignWaterFlowRate, value.get());
+    }
+
+    if (modelObject.isHighFanSpeedAirFlowRateAutosized()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate, "Autosize");
+    } else if (auto value = modelObject.highFanSpeedAirFlowRate()) {
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate, value.get());
+    }
+
+    if (modelObject.isHighFanSpeedFanPowerAutosized()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::HighFanSpeedFanPower, "Autosize");
+    } else if (auto value = modelObject.highFanSpeedFanPower()) {
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::HighFanSpeedFanPower, value.get());
+    }
+
+    if (modelObject.isLowFanSpeedAirFlowRateAutosized()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate, "Autosize");
+    } else if (auto value = modelObject.lowFanSpeedAirFlowRate()) {
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate, value.get());
+    }
+
+    {
+      auto value = modelObject.lowFanSpeedAirFlowRateSizingFactor();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor, value);
+    }
+
+    if (modelObject.isLowFanSpeedFanPowerAutosized()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::LowFanSpeedFanPower, "Autosize");
+    } else if (auto value = modelObject.lowFanSpeedFanPower()) {
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedFanPower, value.get());
+    }
+
+    {
+      auto value = modelObject.lowFanSpeedFanPowerSizingFactor();
+      idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor, value);
+    }
+
+    if (auto node = modelObject.outdoorAirInletNode()) {
+      idfObject.setString(FluidCooler_TwoSpeedFields::OutdoorAirInletNodeName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  if( istringEqual("NominalCapacity",modelObject.performanceInputMethod()) ) {
-    auto value = modelObject.lowSpeedNominalCapacitySizingFactor();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::LowSpeedNominalCapacitySizingFactor,value);
-  }
+}  // namespace energyplus
 
-  {
-    auto value = modelObject.designEnteringWaterTemperature();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignEnteringWaterTemperature,value);
-  }
-
-  {
-    auto value = modelObject.designEnteringAirTemperature();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignEnteringAirTemperature,value);
-  }
-
-  {
-    auto value = modelObject.designEnteringAirWetbulbTemperature();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignEnteringAirWetbulbTemperature,value);
-  }
-
-  if( modelObject.isDesignWaterFlowRateAutosized() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::DesignWaterFlowRate,"Autosize");
-  } else if(auto value = modelObject.designWaterFlowRate()) {
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::DesignWaterFlowRate,value.get());
-  }
-
-  if( modelObject.isHighFanSpeedAirFlowRateAutosized() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate,"Autosize");
-  } else if(auto value = modelObject.highFanSpeedAirFlowRate()) {
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::HighFanSpeedAirFlowRate,value.get());
-  }
-
-  if( modelObject.isHighFanSpeedFanPowerAutosized() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::HighFanSpeedFanPower,"Autosize");
-  } else if(auto value = modelObject.highFanSpeedFanPower()) {
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::HighFanSpeedFanPower,value.get());
-  }
-
-  if( modelObject.isLowFanSpeedAirFlowRateAutosized() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate,"Autosize");
-  } else if(auto value = modelObject.lowFanSpeedAirFlowRate()) {
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRate,value.get());
-  }
-
-  {
-    auto value = modelObject.lowFanSpeedAirFlowRateSizingFactor();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedAirFlowRateSizingFactor,value);
-  }
-
-  if( modelObject.isLowFanSpeedFanPowerAutosized() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::LowFanSpeedFanPower,"Autosize");
-  } else if(auto value = modelObject.lowFanSpeedFanPower()) {
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedFanPower,value.get());
-  }
-
-  {
-    auto value = modelObject.lowFanSpeedFanPowerSizingFactor();
-    idfObject.setDouble(FluidCooler_TwoSpeedFields::LowFanSpeedFanPowerSizingFactor,value);
-  }
-
-  if( auto node = modelObject.outdoorAirInletNode() ) {
-    idfObject.setString(FluidCooler_TwoSpeedFields::OutdoorAirInletNodeName,node->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

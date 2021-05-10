@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,8 +57,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ElectricEquipment_SameSpaceType_DesignLevel)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_DesignLevel) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   SpaceType spaceType(model);
@@ -104,15 +103,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ElectricEquipment_SameSpaceType_Desig
   WorkspaceObjectVector equips = workspace.getObjectsByType(IddObjectType::ElectricEquipment);
   ASSERT_EQ(2u, equips.size());
 
-  for (const auto& equip : equips){
+  for (const auto& equip : equips) {
     EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     EXPECT_EQ(100, equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get());
   }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_DesignLevel)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_DesignLevel) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   SpaceType spaceType1(model);
@@ -165,7 +163,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   ASSERT_EQ(2u, equips.size());
 
   double designLevelTotal = 0;
-  for (const auto& equip : equips){
+  for (const auto& equip : equips) {
     EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();
@@ -173,8 +171,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   EXPECT_EQ(300, designLevelTotal);
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_DesignLevel_Multiplier)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_DesignLevel_Multiplier) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   SpaceType spaceType1(model);
@@ -228,7 +225,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   ASSERT_EQ(2u, equips.size());
 
   double designLevelTotal = 0;
-  for (const auto& equip : equips){
+  for (const auto& equip : equips) {
     EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();
@@ -236,8 +233,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   EXPECT_EQ(300, designLevelTotal);
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Density)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Density) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   SpaceType spaceType(model);
@@ -282,15 +278,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Dens
   WorkspaceObjectVector equips = workspace.getObjectsByType(IddObjectType::ElectricEquipment);
   ASSERT_EQ(1u, equips.size());
 
-  for (const auto& equip : equips){
+  for (const auto& equip : equips) {
     EXPECT_EQ(zonelists[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
     EXPECT_EQ("Watts/Area", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     EXPECT_EQ(1, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
   }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Density)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Density) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   SpaceType spaceType1(model);
@@ -343,7 +338,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   ASSERT_EQ(2u, equips.size());
 
   double designLevelTotal = 0;
-  for (const auto& equip : equips){
+  for (const auto& equip : equips) {
     EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();
@@ -351,8 +346,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   EXPECT_EQ(300, designLevelTotal);
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Density_Multiplier)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Density_Multiplier) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   SpaceType spaceType1(model);
@@ -406,7 +400,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   ASSERT_EQ(2u, equips.size());
 
   double designLevelTotal = 0;
-  for (const auto& equip : equips){
+  for (const auto& equip : equips) {
     EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();

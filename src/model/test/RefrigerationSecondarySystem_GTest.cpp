@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,22 +51,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_CirculatingFluidName)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_CirculatingFluidName) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -77,8 +75,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CirculatingFluidName)
   EXPECT_FALSE(testObject.setCirculatingFluidName("Not Valid"));
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_GlycolConcentration)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_GlycolConcentration) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -91,8 +88,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_GlycolConcentration)
   EXPECT_FALSE(testObject.setGlycolConcentration(101));
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -127,8 +123,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove)
   EXPECT_EQ(0, refrigerationCurveCubics.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -136,19 +131,18 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData)
 
   EXPECT_EQ("PropyleneGlycol", testObjectClone.circulatingFluidName());
   EXPECT_EQ(30, testObjectClone.glycolConcentration().get());
-  EXPECT_DOUBLE_EQ(35000.0 ,testObjectClone.evaporatorCapacity().get());
-  EXPECT_DOUBLE_EQ(0.0021 ,testObjectClone.evaporatorFlowRateforSecondaryFluid().get());
-  EXPECT_DOUBLE_EQ(-12.6 ,testObjectClone.evaporatorEvaporatingTemperature());
-  EXPECT_DOUBLE_EQ(2.7 ,testObjectClone.evaporatorApproachTemperatureDifference());
-  EXPECT_DOUBLE_EQ(4.0 ,testObjectClone.evaporatorRangeTemperatureDifference().get());
+  EXPECT_DOUBLE_EQ(35000.0, testObjectClone.evaporatorCapacity().get());
+  EXPECT_DOUBLE_EQ(0.0021, testObjectClone.evaporatorFlowRateforSecondaryFluid().get());
+  EXPECT_DOUBLE_EQ(-12.6, testObjectClone.evaporatorEvaporatingTemperature());
+  EXPECT_DOUBLE_EQ(2.7, testObjectClone.evaporatorApproachTemperatureDifference());
+  EXPECT_DOUBLE_EQ(4.0, testObjectClone.evaporatorRangeTemperatureDifference().get());
   EXPECT_EQ(3, testObjectClone.numberofPumpsinLoop());
-  EXPECT_DOUBLE_EQ(0.0023 ,testObjectClone.totalPumpFlowRate().get());
-  EXPECT_DOUBLE_EQ(209000.0 ,testObjectClone.totalPumpHead().get());
-  EXPECT_DOUBLE_EQ(1.0 ,testObjectClone.pumpMotorHeattoFluid());
+  EXPECT_DOUBLE_EQ(0.0023, testObjectClone.totalPumpFlowRate().get());
+  EXPECT_DOUBLE_EQ(209000.0, testObjectClone.totalPumpHead().get());
+  EXPECT_DOUBLE_EQ(1.0, testObjectClone.pumpMotorHeattoFluid());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData) {
   Model model;
   ThermalZone thermalZone(model);
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
@@ -177,29 +171,28 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData)
   RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
 
   std::vector<CurveCubic> refrigerationSecondarySystemCurves = model.getModelObjects<CurveCubic>();
-  for(auto it = refrigerationSecondarySystemCurves.begin(); it != refrigerationSecondarySystemCurves.end(); ++it) {
+  for (auto it = refrigerationSecondarySystemCurves.begin(); it != refrigerationSecondarySystemCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
   EXPECT_EQ("R410a", testObjectClone.circulatingFluidName());
   EXPECT_EQ(0, testObjectClone.glycolConcentration().get());
-  EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.evaporatorCapacity().get());
-  EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.evaporatorFlowRateforSecondaryFluid().get());
-  EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.evaporatorEvaporatingTemperature());
-  EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.evaporatorApproachTemperatureDifference());
-  EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.evaporatorRangeTemperatureDifference().get());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.evaporatorCapacity().get());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.evaporatorFlowRateforSecondaryFluid().get());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.evaporatorEvaporatingTemperature());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.evaporatorApproachTemperatureDifference());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.evaporatorRangeTemperatureDifference().get());
   EXPECT_EQ(999, testObjectClone.numberofPumpsinLoop());
-  EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.totalPumpFlowRate().get());
-  EXPECT_DOUBLE_EQ(999.0 ,testObjectClone.totalPumpHead().get());
-  EXPECT_DOUBLE_EQ(0.5 ,testObjectClone.pumpMotorHeattoFluid());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.totalPumpFlowRate().get());
+  EXPECT_DOUBLE_EQ(999.0, testObjectClone.totalPumpHead().get());
+  EXPECT_DOUBLE_EQ(0.5, testObjectClone.pumpMotorHeattoFluid());
   EXPECT_TRUE(testObjectClone.variableSpeedPumpCubicCurve());
   EXPECT_EQ(testObject.variableSpeedPumpCubicCurve().get().handle(), testObjectClone.variableSpeedPumpCubicCurve().get().handle());
   EXPECT_FALSE(testObjectClone.distributionPipingZone());
   EXPECT_FALSE(testObjectClone.receiverSeparatorZone());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneTwoModelsWithDefaultData) {
   Model model;
   ThermalZone thermalZone(model);
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
@@ -211,21 +204,20 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneTwoModelsWithDefaultData)
   RefrigerationSecondarySystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationSecondarySystem>();
   EXPECT_EQ("PropyleneGlycol", testObjectClone2.circulatingFluidName());
   EXPECT_EQ(30, testObjectClone2.glycolConcentration().get());
-  EXPECT_DOUBLE_EQ(35000.0 ,testObjectClone2.evaporatorCapacity().get());
-  EXPECT_DOUBLE_EQ(0.0021 ,testObjectClone2.evaporatorFlowRateforSecondaryFluid().get());
-  EXPECT_DOUBLE_EQ(-12.6 ,testObjectClone2.evaporatorEvaporatingTemperature());
-  EXPECT_DOUBLE_EQ(2.7 ,testObjectClone2.evaporatorApproachTemperatureDifference());
-  EXPECT_DOUBLE_EQ(4.0 ,testObjectClone2.evaporatorRangeTemperatureDifference().get());
+  EXPECT_DOUBLE_EQ(35000.0, testObjectClone2.evaporatorCapacity().get());
+  EXPECT_DOUBLE_EQ(0.0021, testObjectClone2.evaporatorFlowRateforSecondaryFluid().get());
+  EXPECT_DOUBLE_EQ(-12.6, testObjectClone2.evaporatorEvaporatingTemperature());
+  EXPECT_DOUBLE_EQ(2.7, testObjectClone2.evaporatorApproachTemperatureDifference());
+  EXPECT_DOUBLE_EQ(4.0, testObjectClone2.evaporatorRangeTemperatureDifference().get());
   EXPECT_EQ(3, testObjectClone2.numberofPumpsinLoop());
-  EXPECT_DOUBLE_EQ(0.0023 ,testObjectClone2.totalPumpFlowRate().get());
-  EXPECT_DOUBLE_EQ(209000.0 ,testObjectClone2.totalPumpHead().get());
-  EXPECT_DOUBLE_EQ(1.0 ,testObjectClone2.pumpMotorHeattoFluid());
+  EXPECT_DOUBLE_EQ(0.0023, testObjectClone2.totalPumpFlowRate().get());
+  EXPECT_DOUBLE_EQ(209000.0, testObjectClone2.totalPumpHead().get());
+  EXPECT_DOUBLE_EQ(1.0, testObjectClone2.pumpMotorHeattoFluid());
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_Cases)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_Cases) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -242,8 +234,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Cases)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_AddCase)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_AddCase) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -253,8 +244,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_AddCase)
   EXPECT_TRUE(testObject.addCase(case1));
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCase)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCase) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -281,8 +271,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCase)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCases)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCases) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -302,8 +291,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCases)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_AirChillers)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_AirChillers) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -320,8 +308,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_AirChillers)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_AddAirChiller)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_AddAirChiller) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -331,8 +318,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_AddAirChiller)
   EXPECT_TRUE(testObject.addAirChiller(airChiller1));
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAirChiller)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAirChiller) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -359,8 +345,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAirChiller)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllAirChillers)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllAirChillers) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -380,8 +365,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllAirChillers)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_Walkins)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_Walkins) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -398,8 +382,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Walkins)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_AddWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_AddWalkIn) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -409,8 +392,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_AddWalkIn)
   EXPECT_TRUE(testObject.addWalkin(walkin1));
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveWalkIn) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -437,8 +419,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveWalkIn)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllWalkIns) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -458,8 +439,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllWalkIns)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_CasesAndWalkins)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_CasesAndWalkins) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -481,12 +461,12 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CasesAndWalkins)
   EXPECT_EQ(1, walkins.size());
   EXPECT_EQ(1, cases.size());
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -520,7 +500,8 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn)
   EXPECT_EQ(case2.handle(), cases[0].handle());
 
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 
   testObject.removeWalkin(walkin2);
@@ -540,8 +521,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveCaseAndWalkIn)
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCasesAndWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCasesAndWalkIns) {
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
@@ -558,7 +538,8 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_RemoveAllCasesAndWalkIns)
   testObject.addCase(case2);
 
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList().get();
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSecondarySystem_Impl>()->refrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(4, modelObjectList.modelObjects().size());
 
   testObject.removeAllCases();

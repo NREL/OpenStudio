@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,224 +32,246 @@
 
 #include "ModelAPI.hpp"
 #include "PlanarSurface.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
 
-class Surface;
-class ShadingSurface;
-class ShadingControl;
-class ShadingSurfaceGroup;
-class DaylightingDeviceShelf;
-class WindowPropertyFrameAndDivider;
-class SurfacePropertyOtherSideCoefficients;
-class SurfacePropertyOtherSideConditionsModel;
-class SurfacePropertyConvectionCoefficients;
-class AirflowNetworkSurface;
-class AirflowNetworkDetailedOpening;
-class AirflowNetworkSimpleOpening;
-class AirflowNetworkCrack;
-class AirflowNetworkEffectiveLeakageArea;
-class AirflowNetworkHorizontalOpening;
+  class Surface;
+  class ShadingSurface;
+  class ShadingControl;
+  class ShadingSurfaceGroup;
+  class DaylightingDeviceShelf;
+  class WindowPropertyFrameAndDivider;
+  class SurfacePropertyOtherSideCoefficients;
+  class SurfacePropertyOtherSideConditionsModel;
+  class SurfacePropertyConvectionCoefficients;
+  class AirflowNetworkSurface;
+  class AirflowNetworkDetailedOpening;
+  class AirflowNetworkSimpleOpening;
+  class AirflowNetworkCrack;
+  class AirflowNetworkEffectiveLeakageArea;
+  class AirflowNetworkHorizontalOpening;
 
-namespace detail {
+  namespace detail {
 
-  class SubSurface_Impl;
+    class SubSurface_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SubSurface is a PlanarSurface that wraps the OpenStudio IDD object 'OS_SubSurface'. */
-class MODEL_API SubSurface : public PlanarSurface {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SubSurface is a PlanarSurface that wraps the OpenStudio IDD object 'OS_SubSurface'. */
+  class MODEL_API SubSurface : public PlanarSurface
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SubSurface(const std::vector<Point3d>& vertices, const Model& model);
+    explicit SubSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-  virtual ~SubSurface() {}
+    virtual ~SubSurface() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validSubSurfaceTypeValues();
+    static std::vector<std::string> validSubSurfaceTypeValues();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  std::string subSurfaceType() const;
+    std::string subSurfaceType() const;
 
-  boost::optional<double> viewFactortoGround() const;
+    bool isSubSurfaceTypeDefaulted() const;
 
-  bool isViewFactortoGroundDefaulted() const;
+    boost::optional<double> viewFactortoGround() const;
 
-  bool isViewFactortoGroundAutocalculated() const;
+    bool isViewFactortoGroundDefaulted() const;
 
-  bool allowShadingControl() const;
+    bool isViewFactortoGroundAutocalculated() const;
 
-  boost::optional<ShadingControl> shadingControl() const;
+    bool allowShadingControl() const;
 
-  bool allowWindowPropertyFrameAndDivider() const;
+    OS_DEPRECATED boost::optional<ShadingControl> shadingControl() const;
 
-  boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider() const;
+    std::vector<ShadingControl> shadingControls() const;
 
-  double multiplier() const;
+    unsigned int numberofShadingControls() const;
 
-  bool isMultiplierDefaulted() const;
+    bool allowWindowPropertyFrameAndDivider() const;
 
-  boost::optional<double> numberofVertices() const;
+    boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider() const;
 
-  bool isNumberofVerticesDefaulted() const;
+    double multiplier() const;
 
-  bool isNumberofVerticesAutocalculated() const;
+    bool isMultiplierDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    boost::optional<double> numberofVertices() const;
 
-  bool setSubSurfaceType(std::string subSurfaceType);
+    bool isNumberofVerticesDefaulted() const;
 
-  bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
+    bool isNumberofVerticesAutocalculated() const;
 
-  bool setViewFactortoGround(double viewFactortoGround);
+    //@}
+    /** @name Setters */
+    //@{
 
-  void resetViewFactortoGround();
+    bool setSubSurfaceType(std::string subSurfaceType);
 
-  void autocalculateViewFactortoGround();
+    void resetSubSurfaceType();
 
-  bool setShadingControl(const ShadingControl& shadingControl);
+    bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
 
-  void resetShadingControl();
+    bool setViewFactortoGround(double viewFactortoGround);
 
-  bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
+    void resetViewFactortoGround();
 
-  void resetWindowPropertyFrameAndDivider();
+    void autocalculateViewFactortoGround();
 
-  bool setMultiplier(double multiplShadingControlier);
+    // This method is deprecated, please use addShadingControl or addShadingControls.
+    // This will remove this SubSurface from any shading control(s) it is on (`removeAllShadingControls()`) then will call `addShadingControl(shadingControl)`
+    // NOTE: for backward compatibility with C++ interfaces, the argument is kept as `const ShadingControl&`,
+    // but internally this will do a const_cast since the ShadingControl will be mutated
+    OS_DEPRECATED bool setShadingControl(const ShadingControl& shadingControl);
 
-  void resetMultiplier();
+    // Replaced with removeAllShadingControls
+    OS_DEPRECATED void resetShadingControl();
 
-  bool setNumberofVertices(boost::optional<double> numberofVertices);
+    bool addShadingControl(ShadingControl& shadingControl);
 
-  bool setNumberofVertices(double numberofVertices);
+    bool addShadingControls(std::vector<ShadingControl>& shadingControls);
 
-  void resetNumberofVertices();
+    void removeShadingControl(ShadingControl& shadingControl);
 
-  void autocalculateNumberofVertices();
+    void removeAllShadingControls();
 
-  //@}
+    bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 
-  // TODO: test that area is correct with multiplier
+    void resetWindowPropertyFrameAndDivider();
 
-  /// get the surface
-  boost::optional<Surface> surface() const;
+    bool setMultiplier(double multiplier);
 
-  /// set the surface
-  bool setSurface(const Surface& surface);
+    void resetMultiplier();
 
-  /// get the adjacent subsurface
-  boost::optional<SubSurface> adjacentSubSurface() const;
+    bool setNumberofVertices(boost::optional<double> numberofVertices);
 
-  /// set the adjacent subsurface, will fail unless both sub surfaces are parented by surfaces
-  /// which are adjacent
-  bool setAdjacentSubSurface(SubSurface& subSurface);
+    bool setNumberofVertices(double numberofVertices);
 
-  /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface
-  void resetAdjacentSubSurface();
+    void resetNumberofVertices();
 
-  /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
-  boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+    void autocalculateNumberofVertices();
 
-  /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
-  boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
+    //@}
 
-  /** Sets the SurfacePropertyOtherSideCoefficients. */
-  bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+    // TODO: test that area is correct with multiplier
 
-  /** Resets the SurfacePropertyOtherSideCoefficients. */
-  void resetSurfacePropertyOtherSideCoefficients();
+    /// get the surface
+    boost::optional<Surface> surface() const;
 
-  /** Returns the adjacent SurfacePropertyOtherSideConditionsModel, if it exists. */
-  boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+    /// set the surface
+    bool setSurface(const Surface& surface);
 
-  /** Sets the SurfacePropertyOtherSideConditionsModel. */
-  bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+    /// get the adjacent subsurface
+    boost::optional<SubSurface> adjacentSubSurface() const;
 
-  /** Resets the SurfacePropertyOtherSideConditionsModel. */
-  void resetSurfacePropertyOtherSideConditionsModel();
+    /// set the adjacent subsurface, will fail unless both sub surfaces are parented by surfaces
+    /// which are adjacent
+    bool setAdjacentSubSurface(SubSurface& subSurface);
 
-  /** Assign default sub surface type based on vertices. */
-  void assignDefaultSubSurfaceType();
+    /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface
+    void resetAdjacentSubSurface();
 
-  /** Return the surface()'s outsideBoundaryCondition, or an empty string. */
-  std::string outsideBoundaryCondition() const;
+    /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
-  /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. */
-  // DLM: todo add argument for horizontal offset
-  boost::optional<ShadingSurface> addOverhang(double depth, double offset);
+    /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
+    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
-  /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors.
+    /** Sets the SurfacePropertyOtherSideCoefficients. */
+    bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+
+    /** Resets the SurfacePropertyOtherSideCoefficients. */
+    void resetSurfacePropertyOtherSideCoefficients();
+
+    /** Returns the adjacent SurfacePropertyOtherSideConditionsModel, if it exists. */
+    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+
+    /** Sets the SurfacePropertyOtherSideConditionsModel. */
+    bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+
+    /** Resets the SurfacePropertyOtherSideConditionsModel. */
+    void resetSurfacePropertyOtherSideConditionsModel();
+
+    /** Assign default sub surface type based on vertices. */
+    void assignDefaultSubSurfaceType();
+
+    /** Return the surface()'s outsideBoundaryCondition, or an empty string. */
+    std::string outsideBoundaryCondition() const;
+
+    /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. */
+    // DLM: todo add argument for horizontal offset
+    boost::optional<ShadingSurface> addOverhang(double depth, double offset);
+
+    /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors.
    *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
-  // DLM: todo add argument for horizontal offset
-  boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
+    // DLM: todo add argument for horizontal offset
+    boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
 
-  // DLM: todo add methods to create fins
+    // DLM: todo add methods to create fins
 
-  /** Returns any shading surface groups associated with this sub surface. */
-  std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
+    /** Returns any shading surface groups associated with this sub surface. */
+    std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
-  /** Returns true if this sub surface allows the addition of a daylighting light shelf. */
-  bool allowDaylightingDeviceShelf() const;
+    /** Returns true if this sub surface allows the addition of a daylighting light shelf. */
+    bool allowDaylightingDeviceShelf() const;
 
-  /** Get the daylighting light shelf associated with this sub surface if there is one. */
-  boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
+    /** Get the daylighting light shelf associated with this sub surface if there is one. */
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
-  /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
+    /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
    * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
-  boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
+    boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
-  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
-  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
-  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
-  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
-  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
 
-  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
-  // DLM: todo add methods to create light shelves by projection factor
+    // DLM: todo add methods to create light shelves by projection factor
 
- protected:
-  /// @cond
-  typedef detail::SubSurface_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::SubSurface_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl);
+    explicit SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SubSurface");
+  };
 
-  REGISTER_LOGGER("openstudio.model.SubSurface");
-};
+  /// Applys a skylight pattern to exterior roofs in selected spaces.
+  /// Pattern should be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
+  /// Returns new sub surfaces created.
+  MODEL_API std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d>>& pattern, const std::vector<Space>& spaces,
+                                                         const boost::optional<ConstructionBase>& construction);
 
-/// Applys a skylight pattern to exterior roofs in selected spaces.
-/// Pattern should be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
-/// Returns new sub surfaces created.
-MODEL_API std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces, const boost::optional<ConstructionBase>& construction);
+  /** \relates SubSurface*/
+  typedef boost::optional<SubSurface> OptionalSubSurface;
 
-/** \relates SubSurface*/
-typedef boost::optional<SubSurface> OptionalSubSurface;
+  /** \relates SubSurface*/
+  typedef std::vector<SubSurface> SubSurfaceVector;
 
-/** \relates SubSurface*/
-typedef std::vector<SubSurface> SubSurfaceVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SUBSURFACE_HPP
-
+#endif  // MODEL_SUBSURFACE_HPP

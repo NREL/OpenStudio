@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,28 +41,23 @@
 
 #include <boost/regex.hpp>
 
-namespace openstudio{
-namespace detail{
+namespace openstudio {
+namespace detail {
 
-  CSVFile_Impl::CSVFile_Impl()
-  : m_numColumns(0)
-  {
-  }
+  CSVFile_Impl::CSVFile_Impl() : m_numColumns(0) {}
 
-  CSVFile_Impl::CSVFile_Impl(const std::string& s)
-  {
+  CSVFile_Impl::CSVFile_Impl(const std::string& s) {
     std::istringstream ss(s);
 
     // will throw on error
     m_rows = parseRows(ss);
-      
+
     assignNumColumns();
     padRows();
   }
 
-  CSVFile_Impl::CSVFile_Impl(const openstudio::path& p)
-  {
-    if (!boost::filesystem::exists(p) || !boost::filesystem::is_regular_file(p)){
+  CSVFile_Impl::CSVFile_Impl(const openstudio::path& p) {
+    if (!boost::filesystem::exists(p) || !boost::filesystem::is_regular_file(p)) {
       LOG_AND_THROW("Path '" << p << "' is not a CSVFile file");
     }
 
@@ -71,14 +66,13 @@ namespace detail{
 
     // will throw on error
     m_rows = parseRows(ifs);
-    
+
     m_path = p;
     assignNumColumns();
     padRows();
   }
 
-  CSVFile CSVFile_Impl::clone() const
-  {
+  CSVFile CSVFile_Impl::clone() const {
     CSVFile result(this->string());
     if (m_path) {
       result.setPath(*m_path);
@@ -87,8 +81,7 @@ namespace detail{
     return result;
   }
 
-  std::string CSVFile_Impl::string() const
-  {
+  std::string CSVFile_Impl::string() const {
     static const boost::regex escapeItRegex(",");
 
     std::string s;
@@ -98,22 +91,22 @@ namespace detail{
       for (size_t i = 0; i < m_numColumns; ++i) {
 
         switch (row[i].variantType().value()) {
-        case VariantType::Integer:
-          result << row[i].valueAsInteger();
-          break;
-        case VariantType::Double:
-          result << row[i].valueAsDouble();
-          break;
-        case VariantType::String:
-          s = row[i].valueAsString();
-          if (boost::regex_match(s, escapeItRegex)) {
-            result << "\"" << s << "\"";
-          } else {
-            result << s;
-          }
-          break;
-        default:
-          break;
+          case VariantType::Integer:
+            result << row[i].valueAsInteger();
+            break;
+          case VariantType::Double:
+            result << row[i].valueAsDouble();
+            break;
+          case VariantType::String:
+            s = row[i].valueAsString();
+            if (boost::regex_match(s, escapeItRegex)) {
+              result << "\"" << s << "\"";
+            } else {
+              result << s;
+            }
+            break;
+          default:
+            break;
         }
 
         if (i < m_numColumns - 1) {
@@ -125,10 +118,9 @@ namespace detail{
     return result.str();
   }
 
-  bool CSVFile_Impl::save() const
-  {
+  bool CSVFile_Impl::save() const {
     boost::optional<openstudio::path> p = path();
-    if (!p){
+    if (!p) {
       return false;
     }
 
@@ -148,76 +140,65 @@ namespace detail{
     }
 
     LOG(Error, "Unable to write file to path '" << toString(*p) << "', because parent directory "
-        << "could not be created.");
+                                                << "could not be created.");
 
     return false;
   }
 
-  bool CSVFile_Impl::saveAs(const openstudio::path& p)
-  {
+  bool CSVFile_Impl::saveAs(const openstudio::path& p) {
     setPath(p);
     return save();
   }
 
-  boost::optional<openstudio::path> CSVFile_Impl::path() const
-  {
+  boost::optional<openstudio::path> CSVFile_Impl::path() const {
     return m_path;
   }
 
-  bool CSVFile_Impl::setPath(const openstudio::path& path) 
-  {
+  bool CSVFile_Impl::setPath(const openstudio::path& path) {
     m_path = path;
     return true;
   }
 
-  void CSVFile_Impl::resetPath() 
-  {
+  void CSVFile_Impl::resetPath() {
     m_path.reset();
   }
 
-  unsigned CSVFile_Impl::numColumns() const 
-  {
+  unsigned CSVFile_Impl::numColumns() const {
     return m_numColumns;
   }
 
-  unsigned CSVFile_Impl::numRows() const 
-  {
+  unsigned CSVFile_Impl::numRows() const {
     return m_rows.size();
   }
 
-  std::vector<std::vector<Variant> > CSVFile_Impl::rows() const 
-  {
+  std::vector<std::vector<Variant>> CSVFile_Impl::rows() const {
     return m_rows;
   }
 
-  void CSVFile_Impl::addRow(const std::vector<Variant>& row) 
-  {
+  void CSVFile_Impl::addRow(const std::vector<Variant>& row) {
     m_rows.push_back(row);
     if (row.size() > m_numColumns) {
       m_numColumns = row.size();
       padRows();
     }
-      
-    while (m_rows[m_rows.size() - 1].size() < m_numColumns){
+
+    while (m_rows[m_rows.size() - 1].size() < m_numColumns) {
       m_rows[m_rows.size() - 1].push_back(Variant(""));
     }
   }
 
-  void CSVFile_Impl::setRows(const std::vector<std::vector<Variant> >& rows) 
-  {
+  void CSVFile_Impl::setRows(const std::vector<std::vector<Variant>>& rows) {
     m_rows = rows;
     assignNumColumns();
   }
 
-  void CSVFile_Impl::clear() 
-  {
+  void CSVFile_Impl::clear() {
     m_rows.clear();
     m_path.reset();
     m_numColumns = 0;
   }
 
-  unsigned CSVFile_Impl::addColumn(const std::vector<DateTime>& dateTimes) 
-  {
+  unsigned CSVFile_Impl::addColumn(const std::vector<DateTime>& dateTimes) {
     unsigned n = dateTimes.size();
     ensureNumRows(n);
 
@@ -234,8 +215,7 @@ namespace detail{
     return m_numColumns;
   }
 
-  unsigned CSVFile_Impl::addColumn(const Vector& values) 
-  {
+  unsigned CSVFile_Impl::addColumn(const Vector& values) {
     unsigned n = values.size();
     ensureNumRows(n);
 
@@ -252,8 +232,7 @@ namespace detail{
     return m_numColumns;
   }
 
-  unsigned CSVFile_Impl::addColumn(const std::vector<double>& values) 
-  {
+  unsigned CSVFile_Impl::addColumn(const std::vector<double>& values) {
     unsigned n = values.size();
     ensureNumRows(n);
 
@@ -270,8 +249,7 @@ namespace detail{
     return m_numColumns;
   }
 
-  unsigned CSVFile_Impl::addColumn(const std::vector<std::string>& values) 
-  {
+  unsigned CSVFile_Impl::addColumn(const std::vector<std::string>& values) {
     unsigned n = values.size();
     ensureNumRows(n);
 
@@ -288,8 +266,7 @@ namespace detail{
     return m_numColumns;
   }
 
-  std::vector<DateTime> CSVFile_Impl::getColumnAsDateTimes(unsigned columnIndex) const 
-  {
+  std::vector<DateTime> CSVFile_Impl::getColumnAsDateTimes(unsigned columnIndex) const {
     if (columnIndex >= m_numColumns) {
       LOG(Warn, "Column index " << columnIndex << " invalid for number of columns " << m_numColumns);
       return std::vector<DateTime>();
@@ -356,7 +333,7 @@ namespace detail{
 
       if (m_rows[i][columnIndex].variantType() == VariantType::String) {
         result.push_back(m_rows[i][columnIndex].valueAsString());
-      }else if (m_rows[i][columnIndex].variantType() == VariantType::Double) {
+      } else if (m_rows[i][columnIndex].variantType() == VariantType::Double) {
         std::stringstream ss;
         ss << m_rows[i][columnIndex].valueAsDouble();
         result.push_back(ss.str());
@@ -371,24 +348,24 @@ namespace detail{
   }
 
   // throws on error
-  std::vector<std::vector<Variant> > CSVFile_Impl::parseRows(std::istream& input) 
-  {
-    std::vector<std::vector<Variant> > result;
+  std::vector<std::vector<Variant>> CSVFile_Impl::parseRows(std::istream& input) {
+    std::vector<std::vector<Variant>> result;
 
     // DLM: what conditions should make this throw?
 
     // Excel formated CSV regex, \A[^,"]*(?=,)|(?:[^",]*"[^"]*"[^",]*)+|[^",]*"[^"]*\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\Z|\A[^,]*\Z
-    static const boost::regex csvRegex("\\A[^,\"]*(?=,)|(?:[^\",]*\"[^\"]*\"[^\",]*)+|[^\",]*\"[^\"]*\\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\\Z|\\A[^,]*\\Z");
+    static const boost::regex csvRegex(
+      "\\A[^,\"]*(?=,)|(?:[^\",]*\"[^\"]*\"[^\",]*)+|[^\",]*\"[^\"]*\\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\\Z|\\A[^,]*\\Z");
     static const boost::regex intRegex("^[-0-9]+$");
     static const boost::regex doubleRegex("^[+-]?\\d+\\.?(\\d+)?$");
     static const boost::regex quoteRegex("^\"(.*)\"$");
-    
+
     std::string line;
     while (std::getline(input, line)) {
       std::vector<Variant> row;
       boost::regex_token_iterator<std::string::iterator> it{line.begin(), line.end(), csvRegex, 0};
       boost::regex_token_iterator<std::string::iterator> end;
-      while (it != end){
+      while (it != end) {
         std::string value = *it;
         if (boost::regex_match(value, intRegex)) {
           row.push_back(Variant(std::stoi(value)));
@@ -410,16 +387,14 @@ namespace detail{
     return result;
   }
 
-  void CSVFile_Impl::assignNumColumns() 
-  {
+  void CSVFile_Impl::assignNumColumns() {
     m_numColumns = 0;
     for (const auto& row : m_rows) {
       m_numColumns = std::max<unsigned>(m_numColumns, row.size());
     }
   }
 
-  void CSVFile_Impl::ensureNumRows(unsigned numRows) 
-  {
+  void CSVFile_Impl::ensureNumRows(unsigned numRows) {
     // add empty cells to existing columns if needed
     if (numRows > m_rows.size()) {
       unsigned numRowsToAdd = numRows - m_rows.size();
@@ -439,149 +414,117 @@ namespace detail{
     }
   }
 
-} // detail
+}  // namespace detail
 
-CSVFile::CSVFile()
-  : m_impl(std::shared_ptr<detail::CSVFile_Impl>(new detail::CSVFile_Impl()))
-{}
+CSVFile::CSVFile() : m_impl(std::shared_ptr<detail::CSVFile_Impl>(new detail::CSVFile_Impl())) {}
 
-CSVFile::CSVFile(const std::string& s)
-  : m_impl(std::shared_ptr<detail::CSVFile_Impl>(new detail::CSVFile_Impl(s)))
-{}
+CSVFile::CSVFile(const std::string& s) : m_impl(std::shared_ptr<detail::CSVFile_Impl>(new detail::CSVFile_Impl(s))) {}
 
-CSVFile::CSVFile(const openstudio::path& p)
-  : m_impl(std::shared_ptr<detail::CSVFile_Impl>(new detail::CSVFile_Impl(p)))
-{}
+CSVFile::CSVFile(const openstudio::path& p) : m_impl(std::shared_ptr<detail::CSVFile_Impl>(new detail::CSVFile_Impl(p))) {}
 
-CSVFile::CSVFile(std::shared_ptr<detail::CSVFile_Impl> impl)
-  : m_impl(impl)
-{}
+CSVFile::CSVFile(std::shared_ptr<detail::CSVFile_Impl> impl) : m_impl(impl) {}
 
-CSVFile CSVFile::clone() const
-{
+CSVFile CSVFile::clone() const {
   return getImpl<detail::CSVFile_Impl>()->clone();
 }
 
-boost::optional<CSVFile> CSVFile::load(const std::string& s)
-{
+boost::optional<CSVFile> CSVFile::load(const std::string& s) {
   boost::optional<CSVFile> result;
   try {
     result = CSVFile(s);
-  } catch (const std::exception&){
+  } catch (const std::exception&) {
   }
   return result;
 }
 
-boost::optional<CSVFile> CSVFile::load(const openstudio::path& p)
-{
+boost::optional<CSVFile> CSVFile::load(const openstudio::path& p) {
   boost::optional<CSVFile> result;
   try {
     result = CSVFile(p);
-  } catch (const std::exception&){
+  } catch (const std::exception&) {
   }
   return result;
 }
 
-std::string CSVFile::string() const
-{
+std::string CSVFile::string() const {
   return getImpl<detail::CSVFile_Impl>()->string();
 }
 
-bool CSVFile::save() const
-{
+bool CSVFile::save() const {
   return getImpl<detail::CSVFile_Impl>()->save();
 }
 
-bool CSVFile::saveAs(const openstudio::path& p)
-{
+bool CSVFile::saveAs(const openstudio::path& p) {
   return getImpl<detail::CSVFile_Impl>()->saveAs(p);
 }
 
-boost::optional<openstudio::path> CSVFile::path() const 
-{
+boost::optional<openstudio::path> CSVFile::path() const {
   return getImpl<detail::CSVFile_Impl>()->path();
 }
 
-bool CSVFile::setPath(const openstudio::path& path) 
-{
+bool CSVFile::setPath(const openstudio::path& path) {
   return getImpl<detail::CSVFile_Impl>()->setPath(path);
 }
 
-void CSVFile::resetPath() 
-{
+void CSVFile::resetPath() {
   getImpl<detail::CSVFile_Impl>()->resetPath();
 }
 
-
-unsigned CSVFile::numColumns() const 
-{
+unsigned CSVFile::numColumns() const {
   return getImpl<detail::CSVFile_Impl>()->numColumns();
 }
 
-unsigned CSVFile::numRows() const 
-{
+unsigned CSVFile::numRows() const {
   return getImpl<detail::CSVFile_Impl>()->numRows();
 }
 
-std::vector<std::vector<Variant> > CSVFile::rows() const 
-{
+std::vector<std::vector<Variant>> CSVFile::rows() const {
   return getImpl<detail::CSVFile_Impl>()->rows();
 }
 
-void CSVFile::addRow(const std::vector<Variant>& row) 
-{
+void CSVFile::addRow(const std::vector<Variant>& row) {
   getImpl<detail::CSVFile_Impl>()->addRow(row);
 }
 
-void CSVFile::setRows(const std::vector<std::vector<Variant> >& rows) 
-{
+void CSVFile::setRows(const std::vector<std::vector<Variant>>& rows) {
   getImpl<detail::CSVFile_Impl>()->setRows(rows);
 }
 
-void CSVFile::clear() 
-{
+void CSVFile::clear() {
   getImpl<detail::CSVFile_Impl>()->clear();
 }
 
-unsigned CSVFile::addColumn(const std::vector<DateTime>& dateTimes)
-{
+unsigned CSVFile::addColumn(const std::vector<DateTime>& dateTimes) {
   return getImpl<detail::CSVFile_Impl>()->addColumn(dateTimes);
 }
 
-unsigned CSVFile::addColumn(const Vector& values)
-{
+unsigned CSVFile::addColumn(const Vector& values) {
   return getImpl<detail::CSVFile_Impl>()->addColumn(values);
 }
 
-unsigned CSVFile::addColumn(const std::vector<double>& values)
-{
+unsigned CSVFile::addColumn(const std::vector<double>& values) {
   return getImpl<detail::CSVFile_Impl>()->addColumn(values);
 }
 
-unsigned CSVFile::addColumn(const std::vector<std::string>& values)
-{
+unsigned CSVFile::addColumn(const std::vector<std::string>& values) {
   return getImpl<detail::CSVFile_Impl>()->addColumn(values);
 }
 
-std::vector<DateTime> CSVFile::getColumnAsDateTimes(unsigned columnIndex) const
-{
+std::vector<DateTime> CSVFile::getColumnAsDateTimes(unsigned columnIndex) const {
   return getImpl<detail::CSVFile_Impl>()->getColumnAsDateTimes(columnIndex);
 }
 
-std::vector<double> CSVFile::getColumnAsDoubleVector(unsigned columnIndex) const
-{
+std::vector<double> CSVFile::getColumnAsDoubleVector(unsigned columnIndex) const {
   return getImpl<detail::CSVFile_Impl>()->getColumnAsDoubleVector(columnIndex);
 }
 
-std::vector<std::string> CSVFile::getColumnAsStringVector(unsigned columnIndex) const
-{
+std::vector<std::string> CSVFile::getColumnAsStringVector(unsigned columnIndex) const {
   return getImpl<detail::CSVFile_Impl>()->getColumnAsStringVector(columnIndex);
 }
 
-std::ostream& operator<<(std::ostream& os, const CSVFile& CSVFile)
-{
-  os << CSVFile.string();
+std::ostream& operator<<(std::ostream& os, const CSVFile& csvFile) {
+  os << csvFile.string();
   return os;
 }
 
-} // openstudio
+}  // namespace openstudio

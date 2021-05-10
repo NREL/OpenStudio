@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,9 +34,9 @@
 #include <iostream>
 
 #ifdef _WIN32
-#include <Windows.h>
+#  include <Windows.h>
 #else
-#include <dlfcn.h>
+#  include <dlfcn.h>
 #endif
 
 namespace openstudio {
@@ -51,12 +51,13 @@ openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
   result = boost::filesystem::system_complete(result);
   std::string dirStr = result.string();
   // create string used in error messages
-  if (dirStr != outdir) { tss << " (" << dirStr << ")"; }
+  if (dirStr != outdir) {
+    tss << " (" << dirStr << ")";
+  }
 
   // result cannot be a file
   if (boost::filesystem::is_regular_file(result)) {
-    ss << "Invalid outdir, " << outdir << tss.str()
-       << ", is a file instead of a directory with a valid parent_path.";
+    ss << "Invalid outdir, " << outdir << tss.str() << ", is a file instead of a directory with a valid parent_path.";
     throw std::runtime_error(ss.str().c_str());
   }
 
@@ -64,13 +65,12 @@ openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
   if (!boost::filesystem::is_directory(result)) {
     // parent path must be an existing directory
     if (!boost::filesystem::is_directory(result.parent_path())) {
-      ss << "Invalid outdir, " << outdir << tss.str()
-         << ", has a parent_path, " << result.parent_path().string()
+      ss << "Invalid outdir, " << outdir << tss.str() << ", has a parent_path, " << result.parent_path().string()
          << ", that is either invalid, or corresponds to a non-existent directory.";
       throw std::runtime_error(ss.str().c_str());
     }
     // make the output directory, if possible
-    std::cout << "Creating output directory " << dirStr << "." << std::endl;
+    std::cout << "Creating output directory " << dirStr << "." << '\n';
     bool ok = boost::filesystem::create_directory(result);
     if (!ok) {
       ss << "Unable to create outdir " << outdir << tss.str() << ".";
@@ -78,9 +78,8 @@ openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
     }
   }
 
-  std::cout << std::endl << "All output will be directed to " << dirStr << "."
-            << std::endl << std::endl;
+  std::cout << '\n' << "All output will be directed to " << dirStr << "." << '\n' << '\n';
   return result;
 }
 
-} // openstudio
+}  // namespace openstudio

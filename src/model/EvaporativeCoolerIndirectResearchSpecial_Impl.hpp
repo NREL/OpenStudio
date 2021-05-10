@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,195 +36,189 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Curve;
+  class Schedule;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** EvaporativeCoolerIndirectResearchSpecial_Impl is a StraightComponent_Impl that is the implementation class for EvaporativeCoolerIndirectResearchSpecial.*/
-  class MODEL_API EvaporativeCoolerIndirectResearchSpecial_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** EvaporativeCoolerIndirectResearchSpecial_Impl is a StraightComponent_Impl that is the implementation class for EvaporativeCoolerIndirectResearchSpecial.*/
+    class MODEL_API EvaporativeCoolerIndirectResearchSpecial_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    EvaporativeCoolerIndirectResearchSpecial_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      EvaporativeCoolerIndirectResearchSpecial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    EvaporativeCoolerIndirectResearchSpecial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      EvaporativeCoolerIndirectResearchSpecial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    EvaporativeCoolerIndirectResearchSpecial_Impl(const EvaporativeCoolerIndirectResearchSpecial_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      EvaporativeCoolerIndirectResearchSpecial_Impl(const EvaporativeCoolerIndirectResearchSpecial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~EvaporativeCoolerIndirectResearchSpecial_Impl() {}
+      virtual ~EvaporativeCoolerIndirectResearchSpecial_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> availabilitySchedule() const;
+      // TODO: Check return type. From object lists, some candidates are: Schedule.
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    double coolerMaximumEffectiveness() const;
+      double coolerMaximumEffectiveness() const;
 
-    boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
+      boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
-    bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
+      bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
 
-    boost::optional<double> secondaryFanFlowRate() const;
+      boost::optional<double> secondaryFanFlowRate() const;
 
-    bool isSecondaryFanFlowRateAutosized() const;
+      bool isSecondaryFanFlowRateAutosized() const;
 
-    double secondaryFanTotalEfficiency() const;
+      double secondaryFanTotalEfficiency() const;
 
-    double secondaryFanDeltaPressure() const;
+      double secondaryFanDeltaPressure() const;
 
-    double dewpointEffectivenessFactor() const;
+      double dewpointEffectivenessFactor() const;
 
-    boost::optional<double> driftLossFraction() const;
+      boost::optional<double> driftLossFraction() const;
 
-    boost::optional<double> blowdownConcentrationRatio() const;
+      boost::optional<double> blowdownConcentrationRatio() const;
 
-    boost::optional<Curve> wetbulbEffectivenessFlowRatioModifierCurve() const;
+      boost::optional<Curve> wetbulbEffectivenessFlowRatioModifierCurve() const;
 
-    boost::optional<double> coolerDrybulbDesignEffectiveness() const;
+      boost::optional<double> coolerDrybulbDesignEffectiveness() const;
 
-    boost::optional<Curve> drybulbEffectivenessFlowRatioModifierCurve() const;
+      boost::optional<Curve> drybulbEffectivenessFlowRatioModifierCurve() const;
 
-    double waterPumpPowerSizingFactor() const;
+      double waterPumpPowerSizingFactor() const;
 
-    boost::optional<Curve> waterPumpPowerModifierCurve() const;
+      boost::optional<Curve> waterPumpPowerModifierCurve() const;
 
-    double secondaryAirFlowScalingFactor() const;
+      double secondaryAirFlowScalingFactor() const;
 
-    boost::optional<double> secondaryAirFanDesignPower() const;
+      boost::optional<double> secondaryAirFanDesignPower() const;
 
-    bool isSecondaryAirFanDesignPowerAutosized() const;
+      bool isSecondaryAirFanDesignPowerAutosized() const;
 
-    boost::optional<Curve> secondaryAirFanPowerModifierCurve() const;
+      boost::optional<Curve> secondaryAirFanPowerModifierCurve() const;
 
-    boost::optional<double> primaryDesignAirFlowRate() const;
+      boost::optional<double> primaryDesignAirFlowRate() const;
 
-    bool isPrimaryDesignAirFlowRateAutosized() const;
+      bool isPrimaryDesignAirFlowRateAutosized() const;
 
-    boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+      boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const;
 
-    boost::optional<double> autosizedSecondaryFanFlowRate() const ;
+      boost::optional<double> autosizedSecondaryFanFlowRate() const;
 
-    boost::optional<double> autosizedSecondaryAirFanDesignPower() const ;
+      boost::optional<double> autosizedSecondaryAirFanDesignPower() const;
 
-    boost::optional<double> autosizedPrimaryDesignAirFlowRate() const ;
+      boost::optional<double> autosizedPrimaryDesignAirFlowRate() const;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    // TODO: Water Supply Storage Tank Name
+      // TODO: Water Supply Storage Tank Name
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setCoolerMaximumEffectiveness(double coolerMaximumEffectiveness);
+      bool setCoolerMaximumEffectiveness(double coolerMaximumEffectiveness);
 
-    bool setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
+      bool setRecirculatingWaterPumpPowerConsumption(double recirculatingWaterPumpPowerConsumption);
 
-    void autosizeRecirculatingWaterPumpPowerConsumption();
+      void autosizeRecirculatingWaterPumpPowerConsumption();
 
-    bool setSecondaryFanFlowRate(boost::optional<double> secondaryFanFlowRate);
+      bool setSecondaryFanFlowRate(boost::optional<double> secondaryFanFlowRate);
 
-    void resetSecondaryFanFlowRate();
+      void resetSecondaryFanFlowRate();
 
-    void autosizeSecondaryFanFlowRate();
+      void autosizeSecondaryFanFlowRate();
 
-    bool setSecondaryFanTotalEfficiency(double secondaryFanTotalEfficiency);
+      bool setSecondaryFanTotalEfficiency(double secondaryFanTotalEfficiency);
 
-    bool setSecondaryFanDeltaPressure(double secondaryFanDeltaPressure);
+      bool setSecondaryFanDeltaPressure(double secondaryFanDeltaPressure);
 
-    bool setDewpointEffectivenessFactor(double dewpointEffectivenessFactor);
+      bool setDewpointEffectivenessFactor(double dewpointEffectivenessFactor);
 
-    bool setDriftLossFraction(boost::optional<double> driftLossFraction);
+      bool setDriftLossFraction(boost::optional<double> driftLossFraction);
 
-    void resetDriftLossFraction();
+      void resetDriftLossFraction();
 
-    bool setBlowdownConcentrationRatio(boost::optional<double> blowdownConcentrationRatio);
+      bool setBlowdownConcentrationRatio(boost::optional<double> blowdownConcentrationRatio);
 
-    void resetBlowdownConcentrationRatio();
+      void resetBlowdownConcentrationRatio();
 
-    bool setWetbulbEffectivenessFlowRatioModifierCurve(const boost::optional<Curve>& curve);
+      bool setWetbulbEffectivenessFlowRatioModifierCurve(const boost::optional<Curve>& curve);
 
-    void resetWetbulbEffectivenessFlowRatioModifierCurve();
+      void resetWetbulbEffectivenessFlowRatioModifierCurve();
 
-    bool setCoolerDrybulbDesignEffectiveness(boost::optional<double> coolerDrybulbDesignEffectiveness);
+      bool setCoolerDrybulbDesignEffectiveness(boost::optional<double> coolerDrybulbDesignEffectiveness);
 
-    void resetCoolerDrybulbDesignEffectiveness();
+      void resetCoolerDrybulbDesignEffectiveness();
 
-    bool setDrybulbEffectivenessFlowRatioModifierCurve(const boost::optional<Curve>& curve);
+      bool setDrybulbEffectivenessFlowRatioModifierCurve(const boost::optional<Curve>& curve);
 
-    void resetDrybulbEffectivenessFlowRatioModifierCurve();
+      void resetDrybulbEffectivenessFlowRatioModifierCurve();
 
-    bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+      bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
-    bool setWaterPumpPowerModifierCurve(const boost::optional<Curve>& curve);
+      bool setWaterPumpPowerModifierCurve(const boost::optional<Curve>& curve);
 
-    void resetWaterPumpPowerModifierCurve();
+      void resetWaterPumpPowerModifierCurve();
 
-    bool setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
+      bool setSecondaryAirFlowScalingFactor(double secondaryAirFlowScalingFactor);
 
-    bool setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower);
+      bool setSecondaryAirFanDesignPower(boost::optional<double> secondaryAirFanDesignPower);
 
-    void autosizeSecondaryAirFanDesignPower();
+      void autosizeSecondaryAirFanDesignPower();
 
-    bool setSecondaryAirFanPowerModifierCurve(const boost::optional<Curve>& curve);
+      bool setSecondaryAirFanPowerModifierCurve(const boost::optional<Curve>& curve);
 
-    void resetSecondaryAirFanPowerModifierCurve();
+      void resetSecondaryAirFanPowerModifierCurve();
 
-    bool setPrimaryDesignAirFlowRate(boost::optional<double> primaryDesignAirFlowRate);
+      bool setPrimaryDesignAirFlowRate(boost::optional<double> primaryDesignAirFlowRate);
 
-    void resetPrimaryDesignAirFlowRate();
+      void resetPrimaryDesignAirFlowRate();
 
-    void autosizePrimaryDesignAirFlowRate();
+      void autosizePrimaryDesignAirFlowRate();
 
-    //@}
-    /** @name Other */
-    //@{
-    virtual unsigned inletPort() const override;
+      //@}
+      /** @name Other */
+      //@{
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    bool setReliefAirInletNode(const Node & node);
+      bool setReliefAirInletNode(const Node& node);
 
-    boost::optional<Node> reliefAirInletNode() const;
+      boost::optional<Node> reliefAirInletNode() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.EvaporativeCoolerIndirectResearchSpecial");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.EvaporativeCoolerIndirectResearchSpecial");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_IMPL_HPP
+#endif  // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_IMPL_HPP

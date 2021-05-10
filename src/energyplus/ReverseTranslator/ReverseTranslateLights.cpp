@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,130 +52,127 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateLights( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Lights ){
-    LOG(Error, "WorkspaceObject " << workspaceObject.briefDescription()
-        << " is not IddObjectType: Lights");
-    return boost::none;
-  }
-
-  // create the definition
-  openstudio::model::LightsDefinition definition(m_model);
-
-  OptionalString s = workspaceObject.name();
-  if(s){
-    definition.setName(*s + " Definition");
-  }
-
-  s = workspaceObject.getString(openstudio::LightsFields::DesignLevelCalculationMethod, true);
-  OS_ASSERT(s);
-
-  OptionalDouble d;
-  if (istringEqual("LightingLevel", *s)){
-    d = workspaceObject.getDouble(openstudio::LightsFields::LightingLevel);
-    if (d){
-      definition.setLightingLevel(*d);
-    }else{
-      LOG(Error, "LightingLevel value not found for workspace object " << workspaceObject);
+  OptionalModelObject ReverseTranslator::translateLights(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Lights) {
+      LOG(Error, "WorkspaceObject " << workspaceObject.briefDescription() << " is not IddObjectType: Lights");
+      return boost::none;
     }
-  }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::LightsFields::WattsperZoneFloorArea);
-    if (d){
-      definition.setWattsperSpaceFloorArea(*d);
-    }else{
-      LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+
+    // create the definition
+    openstudio::model::LightsDefinition definition(m_model);
+
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      definition.setName(*s + " Definition");
     }
-  }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::LightsFields::WattsperPerson);
-    if (d){
-      definition.setWattsperPerson(*d);
-    }else{
-      LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+
+    s = workspaceObject.getString(openstudio::LightsFields::DesignLevelCalculationMethod, true);
+    OS_ASSERT(s);
+
+    OptionalDouble d;
+    if (istringEqual("LightingLevel", *s)) {
+      d = workspaceObject.getDouble(openstudio::LightsFields::LightingLevel);
+      if (d) {
+        definition.setLightingLevel(*d);
+      } else {
+        LOG(Error, "LightingLevel value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Area", *s)) {
+      d = workspaceObject.getDouble(openstudio::LightsFields::WattsperZoneFloorArea);
+      if (d) {
+        definition.setWattsperSpaceFloorArea(*d);
+      } else {
+        LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Person", *s)) {
+      d = workspaceObject.getDouble(openstudio::LightsFields::WattsperPerson);
+      if (d) {
+        definition.setWattsperPerson(*d);
+      } else {
+        LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+      }
+    } else {
+      LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
     }
-  }else{
-    LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
-  }
 
-  d = workspaceObject.getDouble(openstudio::LightsFields::ReturnAirFraction);
-  if (d){
-    definition.setReturnAirFraction(*d);
-  }
-
-  d = workspaceObject.getDouble(openstudio::LightsFields::FractionRadiant);
-  if (d){
-    definition.setFractionRadiant(*d);
-  }
-
-  d = workspaceObject.getDouble(openstudio::LightsFields::FractionVisible);
-  if (d){
-    definition.setFractionVisible(*d);
-  }
-
-  s = workspaceObject.getString(openstudio::LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature);
-  if (s){
-    if (istringEqual("Yes", *s)){
-      definition.setReturnAirFractionCalculatedfromPlenumTemperature(true);
-    }else{
-      definition.setReturnAirFractionCalculatedfromPlenumTemperature(false);
+    d = workspaceObject.getDouble(openstudio::LightsFields::ReturnAirFraction);
+    if (d) {
+      definition.setReturnAirFraction(*d);
     }
-  }
 
-  d = workspaceObject.getDouble(openstudio::LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1);
-  if (d){
-    definition.setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::LightsFields::FractionRadiant);
+    if (d) {
+      definition.setFractionRadiant(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2);
-  if (d){
-    definition.setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::LightsFields::FractionVisible);
+    if (d) {
+      definition.setFractionVisible(*d);
+    }
 
-  // create the instance
-  Lights lights(definition);
-
-  s = workspaceObject.name();
-  if(s){
-    lights.setName(*s);
-  }
-
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::LightsFields::ZoneorZoneListName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        lights.setSpace(modelObject->cast<Space>());
-      }else if (modelObject->optionalCast<SpaceType>()){
-        lights.setSpaceType(modelObject->cast<SpaceType>());
+    s = workspaceObject.getString(openstudio::LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature);
+    if (s) {
+      if (istringEqual("Yes", *s)) {
+        definition.setReturnAirFractionCalculatedfromPlenumTemperature(true);
+      } else {
+        definition.setReturnAirFractionCalculatedfromPlenumTemperature(false);
       }
     }
-  }
 
-  target = workspaceObject.getTarget(openstudio::LightsFields::ScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
-        Schedule schedule(*intermediate);
-        lights.setSchedule(schedule);
+    d = workspaceObject.getDouble(openstudio::LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1);
+    if (d) {
+      definition.setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(*d);
+    }
+
+    d = workspaceObject.getDouble(openstudio::LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2);
+    if (d) {
+      definition.setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(*d);
+    }
+
+    // create the instance
+    Lights lights(definition);
+
+    s = workspaceObject.name();
+    if (s) {
+      lights.setName(*s);
+    }
+
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::LightsFields::ZoneorZoneListName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Space>()) {
+          lights.setSpace(modelObject->cast<Space>());
+        } else if (modelObject->optionalCast<SpaceType>()) {
+          lights.setSpaceType(modelObject->cast<SpaceType>());
+        }
       }
     }
+
+    target = workspaceObject.getTarget(openstudio::LightsFields::ScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule(*intermediate);
+          lights.setSchedule(schedule);
+        }
+      }
+    }
+
+    d = workspaceObject.getDouble(openstudio::LightsFields::FractionReplaceable);
+    if (d) {
+      lights.setFractionReplaceable(*d);
+    }
+
+    s = workspaceObject.getString(openstudio::LightsFields::EndUseSubcategory);
+    if (s) {
+      lights.setEndUseSubcategory(*s);
+    }
+
+    return lights;
   }
 
-  d = workspaceObject.getDouble(openstudio::LightsFields::FractionReplaceable);
-  if (d){
-    lights.setFractionReplaceable(*d);
-  }
+}  // namespace energyplus
 
-  s = workspaceObject.getString(openstudio::LightsFields::EndUseSubcategory);
-  if(s){
-    lights.setEndUseSubcategory(*s);
-  }
-
-  return lights;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

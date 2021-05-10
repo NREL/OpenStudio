@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,39 +46,37 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorPVWatts(model::GeneratorPVWatts & modelObject)
-{
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_PVWatts, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorPVWatts(model::GeneratorPVWatts& modelObject) {
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_PVWatts, modelObject);
 
-  idfObject.setString(Generator_PVWattsFields::PVWattsVersion, modelObject.pvWattsVersion());
+    idfObject.setString(Generator_PVWattsFields::PVWattsVersion, modelObject.pvWattsVersion());
 
-  idfObject.setDouble(Generator_PVWattsFields::DCSystemCapacity, modelObject.dcSystemCapacity());
+    idfObject.setDouble(Generator_PVWattsFields::DCSystemCapacity, modelObject.dcSystemCapacity());
 
-  idfObject.setString(Generator_PVWattsFields::ModuleType, modelObject.moduleType());
+    idfObject.setString(Generator_PVWattsFields::ModuleType, modelObject.moduleType());
 
-  idfObject.setString(Generator_PVWattsFields::ArrayType, modelObject.arrayType());
+    idfObject.setString(Generator_PVWattsFields::ArrayType, modelObject.arrayType());
 
-  idfObject.setDouble(Generator_PVWattsFields::SystemLosses, modelObject.systemLosses());
+    idfObject.setDouble(Generator_PVWattsFields::SystemLosses, modelObject.systemLosses());
 
-  boost::optional<PlanarSurface> surface = modelObject.surface();
-  if (surface){
-    boost::optional<IdfObject> surfaceIdf = translateAndMapModelObject(*surface);
-    if (surfaceIdf){
-      idfObject.setString(Generator_PVWattsFields::ArrayGeometryType, "Surface");
-      idfObject.setString(Generator_PVWattsFields::SurfaceName, surfaceIdf->name().get());
+    boost::optional<PlanarSurface> surface = modelObject.surface();
+    if (surface) {
+      boost::optional<IdfObject> surfaceIdf = translateAndMapModelObject(*surface);
+      if (surfaceIdf) {
+        idfObject.setString(Generator_PVWattsFields::ArrayGeometryType, "Surface");
+        idfObject.setString(Generator_PVWattsFields::SurfaceName, surfaceIdf->name().get());
+      }
+    } else {
+      idfObject.setString(Generator_PVWattsFields::ArrayGeometryType, "TiltAzimuth");
+      idfObject.setDouble(Generator_PVWattsFields::TiltAngle, modelObject.tiltAngle());
+      idfObject.setDouble(Generator_PVWattsFields::AzimuthAngle, modelObject.azimuthAngle());
     }
-  } else {
-    idfObject.setString(Generator_PVWattsFields::ArrayGeometryType, "TiltAzimuth");
-    idfObject.setDouble(Generator_PVWattsFields::TiltAngle, modelObject.tiltAngle());
-    idfObject.setDouble(Generator_PVWattsFields::AzimuthAngle, modelObject.azimuthAngle());
+
+    idfObject.setDouble(Generator_PVWattsFields::GroundCoverageRatio, modelObject.groundCoverageRatio());
+
+    return idfObject;
   }
 
-  idfObject.setDouble(Generator_PVWattsFields::GroundCoverageRatio, modelObject.groundCoverageRatio());
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

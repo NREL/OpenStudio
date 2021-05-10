@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,67 +36,67 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExteriorFuelEquipmentDefinition_Impl;
+    class ExteriorFuelEquipmentDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExteriorFuelEquipmentDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
+  /** ExteriorFuelEquipmentDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
  *  'OS:Exterior:FuelEquipment:Definition'. */
-class MODEL_API ExteriorFuelEquipmentDefinition : public ExteriorLoadDefinition {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ExteriorFuelEquipmentDefinition : public ExteriorLoadDefinition
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Defaults design level to 0.0 W. */
-  explicit ExteriorFuelEquipmentDefinition(const Model& model);
+    /** Defaults design level to 0.0 W. */
+    explicit ExteriorFuelEquipmentDefinition(const Model& model);
 
-  virtual ~ExteriorFuelEquipmentDefinition() {}
+    virtual ~ExteriorFuelEquipmentDefinition() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double designLevel() const;
+    double designLevel() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDesignLevel(double designLevel);
+    bool setDesignLevel(double designLevel);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExteriorFuelEquipmentDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExteriorFuelEquipmentDefinition_Impl ImplType;
 
-  explicit ExteriorFuelEquipmentDefinition(std::shared_ptr<detail::ExteriorFuelEquipmentDefinition_Impl> impl);
+    explicit ExteriorFuelEquipmentDefinition(std::shared_ptr<detail::ExteriorFuelEquipmentDefinition_Impl> impl);
 
-  friend class detail::ExteriorFuelEquipmentDefinition_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExteriorFuelEquipmentDefinition");
-};
+    friend class detail::ExteriorFuelEquipmentDefinition_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorFuelEquipmentDefinition");
+  };
 
-/** \relates ExteriorFuelEquipmentDefinition*/
-typedef boost::optional<ExteriorFuelEquipmentDefinition> OptionalExteriorFuelEquipmentDefinition;
+  /** \relates ExteriorFuelEquipmentDefinition*/
+  typedef boost::optional<ExteriorFuelEquipmentDefinition> OptionalExteriorFuelEquipmentDefinition;
 
-/** \relates ExteriorFuelEquipmentDefinition*/
-typedef std::vector<ExteriorFuelEquipmentDefinition> ExteriorFuelEquipmentDefinitionVector;
+  /** \relates ExteriorFuelEquipmentDefinition*/
+  typedef std::vector<ExteriorFuelEquipmentDefinition> ExteriorFuelEquipmentDefinitionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERIORFUELEQUIPMENTDEFINITION_HPP
-
+#endif  // MODEL_EXTERIORFUELEQUIPMENTDEFINITION_HPP

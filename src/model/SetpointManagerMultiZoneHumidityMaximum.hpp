@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,79 +37,79 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerMultiZoneHumidityMaximum_Impl;
+    class SetpointManagerMultiZoneHumidityMaximum_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerMultiZoneHumidityMaximum is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:MultiZone:Humidity:Maximum'. */
-class MODEL_API SetpointManagerMultiZoneHumidityMaximum : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerMultiZoneHumidityMaximum is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:MultiZone:Humidity:Maximum'. */
+  class MODEL_API SetpointManagerMultiZoneHumidityMaximum : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerMultiZoneHumidityMaximum(const Model& model);
+    explicit SetpointManagerMultiZoneHumidityMaximum(const Model& model);
 
-  virtual ~SetpointManagerMultiZoneHumidityMaximum() {}
+    virtual ~SetpointManagerMultiZoneHumidityMaximum() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  double minimumSetpointHumidityRatio() const;
+    double minimumSetpointHumidityRatio() const;
 
-  double maximumSetpointHumidityRatio() const;
+    double maximumSetpointHumidityRatio() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
+    bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
 
-  bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
+    bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerMultiZoneHumidityMaximum_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerMultiZoneHumidityMaximum_Impl ImplType;
 
-  explicit SetpointManagerMultiZoneHumidityMaximum(std::shared_ptr<detail::SetpointManagerMultiZoneHumidityMaximum_Impl> impl);
+    explicit SetpointManagerMultiZoneHumidityMaximum(std::shared_ptr<detail::SetpointManagerMultiZoneHumidityMaximum_Impl> impl);
 
-  friend class detail::SetpointManagerMultiZoneHumidityMaximum_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHumidityMaximum");
-};
+    friend class detail::SetpointManagerMultiZoneHumidityMaximum_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHumidityMaximum");
+  };
 
-/** \relates SetpointManagerMultiZoneHumidityMaximum*/
-typedef boost::optional<SetpointManagerMultiZoneHumidityMaximum> OptionalSetpointManagerMultiZoneHumidityMaximum;
+  /** \relates SetpointManagerMultiZoneHumidityMaximum*/
+  typedef boost::optional<SetpointManagerMultiZoneHumidityMaximum> OptionalSetpointManagerMultiZoneHumidityMaximum;
 
-/** \relates SetpointManagerMultiZoneHumidityMaximum*/
-typedef std::vector<SetpointManagerMultiZoneHumidityMaximum> SetpointManagerMultiZoneHumidityMaximumVector;
+  /** \relates SetpointManagerMultiZoneHumidityMaximum*/
+  typedef std::vector<SetpointManagerMultiZoneHumidityMaximum> SetpointManagerMultiZoneHumidityMaximumVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMAXIMUM_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMAXIMUM_HPP

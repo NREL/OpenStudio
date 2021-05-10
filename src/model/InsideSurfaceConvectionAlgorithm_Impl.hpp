@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,72 +35,66 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API InsideSurfaceConvectionAlgorithm_Impl : public ModelObject_Impl {
+    class MODEL_API InsideSurfaceConvectionAlgorithm_Impl : public ModelObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      // constructor
+      InsideSurfaceConvectionAlgorithm_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      // construct from workspace
+      InsideSurfaceConvectionAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    InsideSurfaceConvectionAlgorithm_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // clone copy constructor
+      InsideSurfaceConvectionAlgorithm_Impl(const InsideSurfaceConvectionAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    InsideSurfaceConvectionAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      // virtual destructor
+      virtual ~InsideSurfaceConvectionAlgorithm_Impl() {}
 
-    // clone copy constructor
-    InsideSurfaceConvectionAlgorithm_Impl(const InsideSurfaceConvectionAlgorithm_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    // virtual destructor
-    virtual ~InsideSurfaceConvectionAlgorithm_Impl(){}
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      virtual IddObjectType iddObjectType() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual IddObjectType iddObjectType() const override;
+      std::string algorithm() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      bool isAlgorithmDefaulted() const;
 
-    std::string algorithm() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool isAlgorithmDefaulted() const;
+      bool setAlgorithm(std::string algorithm);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetAlgorithm();
 
-    bool setAlgorithm(std::string algorithm);
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.InsideSurfaceConvectionAlgorithm");
+    };
 
-    void resetAlgorithm();
+  }  // namespace detail
 
-    //@}
-   private:
+}  // namespace model
+}  // namespace openstudio
 
-    REGISTER_LOGGER("openstudio.model.InsideSurfaceConvectionAlgorithm");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_INSIDESURFACECONVECTIONALGORITHM_IMPL_HPP
+#endif  // MODEL_INSIDESURFACECONVECTIONALGORITHM_IMPL_HPP

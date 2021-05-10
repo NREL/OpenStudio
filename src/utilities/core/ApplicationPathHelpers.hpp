@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,45 +36,45 @@
 
 namespace openstudio {
 
-  /// \returns The source directory the application was built from
-  UTILITIES_API openstudio::path getApplicationSourceDirectory();
+/// \returns The source directory the application was built from
+UTILITIES_API openstudio::path getApplicationSourceDirectory();
 
-  /// \returns The directory the application was built in
-  UTILITIES_API openstudio::path getApplicationBuildDirectory();
+/// \returns The directory the application was built in
+UTILITIES_API openstudio::path getApplicationBuildDirectory();
 
-  /// \returns The path to the current executable application
-  UTILITIES_API openstudio::path getApplicationPath();
+/// \returns The path to the current executable application
+UTILITIES_API openstudio::path getApplicationPath();
 
-  /// \returns The directory of the current executable application
-  UTILITIES_API openstudio::path getApplicationDirectory();
+/// \returns The directory of the current executable application
+UTILITIES_API openstudio::path getApplicationDirectory();
 
-  /// \returns True if the application is running from the build directory
-  UTILITIES_API bool applicationIsRunningFromBuildDirectory();
+/// \returns True if the application is running from the build directory
+UTILITIES_API bool applicationIsRunningFromBuildDirectory();
 
-  /// \returns Will return path to the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
-  UTILITIES_API openstudio::path getOpenStudioModule();
+/// \returns Will return path to the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
+UTILITIES_API openstudio::path getOpenStudioModule();
 
-  /// \returns Will return dir containing the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
-  UTILITIES_API openstudio::path getOpenStudioModuleDirectory();
+/// \returns Will return dir containing the binary containing OpenStudio Utilities, could be openstudio.exe, openstudio.so, etc.
+UTILITIES_API openstudio::path getOpenStudioModuleDirectory();
 
-  /// \returns True if the OpenStudio Module is running from the build directory
-  UTILITIES_API bool moduleIsRunningFromBuildDirectory();
+/// \returns True if the OpenStudio Module is running from the build directory
+UTILITIES_API bool moduleIsRunningFromBuildDirectory();
 
-  /// \returns The path to the OpenStudio Command Line Interface  if it exists.
-  UTILITIES_API openstudio::path getOpenStudioCLI();
+/// \returns The path to the OpenStudio Command Line Interface  if it exists.
+UTILITIES_API openstudio::path getOpenStudioCLI();
 
-  /// \returns The packaged EnergyPlus installation if it exists.
-  UTILITIES_API openstudio::path getEnergyPlusDirectory();
+/// \returns The packaged EnergyPlus installation if it exists.
+UTILITIES_API openstudio::path getEnergyPlusDirectory();
 
-  /// \returns The path to the EnergyPlus executable if it exists.
-  UTILITIES_API openstudio::path getEnergyPlusExecutable();
+/// \returns The path to the EnergyPlus executable if it exists.
+UTILITIES_API openstudio::path getEnergyPlusExecutable();
 
-  /// \returns The path to the Radiance installation if it exists.
-  UTILITIES_API openstudio::path getRadianceDirectory();
+/// \returns The path to the Radiance installation if it exists.
+UTILITIES_API openstudio::path getRadianceDirectory();
 
-  /// \returns The path to the Perl executable if it exists.
-  UTILITIES_API openstudio::path getPerlExecutable();
+/// \returns The path to the Perl executable if it exists.
+UTILITIES_API openstudio::path getPerlExecutable();
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_CORE_PATHHELPERS_HPP
+#endif  //UTILITIES_CORE_PATHHELPERS_HPP

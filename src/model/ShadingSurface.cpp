@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,395 +57,350 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ShadingSurface_Impl::ShadingSurface_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : PlanarSurface_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ShadingSurface::iddObjectType());
-  }
-
-  ShadingSurface_Impl::ShadingSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : PlanarSurface_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ShadingSurface::iddObjectType());
-  }
-
-  ShadingSurface_Impl::ShadingSurface_Impl(const ShadingSurface_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : PlanarSurface_Impl(other,model,keepHandle)
-  {}
-
-  boost::optional<ParentObject> ShadingSurface_Impl::parent() const
-  {
-    boost::optional<ParentObject> result;
-    result = this->shadingSurfaceGroup();
-    return result;
-  }
-
-  std::vector<ModelObject> ShadingSurface_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    // solar collectors?
-
-    return result;
-  }
-
-  bool ShadingSurface_Impl::setParent(ParentObject& newParent)
-  {
-    bool result = false;
-    OptionalShadingSurfaceGroup shadingSurfaceGroup = newParent.optionalCast<ShadingSurfaceGroup>();
-    if (shadingSurfaceGroup){
-      result = this->setShadingSurfaceGroup(*shadingSurfaceGroup);
-    }
-    return result;
-  }
-
-  const std::vector<std::string>& ShadingSurface_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType ShadingSurface_Impl::iddObjectType() const {
-    return ShadingSurface::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ShadingSurface_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ShadingSurfaceFields::TransmittanceScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ShadingSurface","Transmittance"));
-    }
-    return result;
-  }
-
-  bool ShadingSurface_Impl::subtractFromGrossArea() const
-  {
-    return false;
-  }
-
-  boost::optional<std::pair<ConstructionBase, int> > ShadingSurface_Impl::constructionWithSearchDistance() const
-  {
-    boost::optional<std::pair<ConstructionBase, int> > result;
-
-    boost::optional<ConstructionBase> construction = getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_ShadingSurfaceFields::ConstructionName);
-    if (construction){
-      return std::make_pair(*construction, 0);
+    ShadingSurface_Impl::ShadingSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : PlanarSurface_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ShadingSurface::iddObjectType());
     }
 
-    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = this->shadingSurfaceGroup();
-    if (shadingSurfaceGroup){
+    ShadingSurface_Impl::ShadingSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : PlanarSurface_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ShadingSurface::iddObjectType());
+    }
 
-      // check the space
-      boost::optional<Space> space = shadingSurfaceGroup->space();
-      if (space){
-        result = space->getDefaultConstructionWithSearchDistance(this->getObject<ShadingSurface>());
-        if (result){
-          return result;
-        }
+    ShadingSurface_Impl::ShadingSurface_Impl(const ShadingSurface_Impl& other, Model_Impl* model, bool keepHandle)
+      : PlanarSurface_Impl(other, model, keepHandle) {}
+
+    boost::optional<ParentObject> ShadingSurface_Impl::parent() const {
+      boost::optional<ParentObject> result;
+      result = this->shadingSurfaceGroup();
+      return result;
+    }
+
+    std::vector<ModelObject> ShadingSurface_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      // solar collectors?
+
+      return result;
+    }
+
+    bool ShadingSurface_Impl::setParent(ParentObject& newParent) {
+      bool result = false;
+      OptionalShadingSurfaceGroup shadingSurfaceGroup = newParent.optionalCast<ShadingSurfaceGroup>();
+      if (shadingSurfaceGroup) {
+        result = this->setShadingSurfaceGroup(*shadingSurfaceGroup);
+      }
+      return result;
+    }
+
+    const std::vector<std::string>& ShadingSurface_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType ShadingSurface_Impl::iddObjectType() const {
+      return ShadingSurface::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> ShadingSurface_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ShadingSurfaceFields::TransmittanceScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ShadingSurface", "Transmittance"));
+      }
+      return result;
+    }
+
+    bool ShadingSurface_Impl::subtractFromGrossArea() const {
+      return false;
+    }
+
+    boost::optional<std::pair<ConstructionBase, int>> ShadingSurface_Impl::constructionWithSearchDistance() const {
+      boost::optional<std::pair<ConstructionBase, int>> result;
+
+      boost::optional<ConstructionBase> construction =
+        getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_ShadingSurfaceFields::ConstructionName);
+      if (construction) {
+        return std::make_pair(*construction, 0);
       }
 
-      // check the building
-      boost::optional<Building> building = this->model().building();
-      if (building){
+      boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = this->shadingSurfaceGroup();
+      if (shadingSurfaceGroup) {
 
-        boost::optional<DefaultConstructionSet> defaultConstructionSet = building->defaultConstructionSet();
-        if (defaultConstructionSet){
-          construction = defaultConstructionSet->getDefaultConstruction(this->getObject<ShadingSurface>());
-          if (construction){
-            return std::make_pair(*construction, 4);
+        // check the space
+        boost::optional<Space> space = shadingSurfaceGroup->space();
+        if (space) {
+          result = space->getDefaultConstructionWithSearchDistance(this->getObject<ShadingSurface>());
+          if (result) {
+            return result;
           }
         }
 
-        // check the building's space type
-        boost::optional<SpaceType> spaceType = building->spaceType();
-        if (spaceType){
-          defaultConstructionSet = spaceType->defaultConstructionSet();
-          if (defaultConstructionSet){
+        // check the building
+        boost::optional<Building> building = this->model().building();
+        if (building) {
+
+          boost::optional<DefaultConstructionSet> defaultConstructionSet = building->defaultConstructionSet();
+          if (defaultConstructionSet) {
             construction = defaultConstructionSet->getDefaultConstruction(this->getObject<ShadingSurface>());
-            if (construction){
-              return std::make_pair(*construction, 5);
+            if (construction) {
+              return std::make_pair(*construction, 4);
+            }
+          }
+
+          // check the building's space type
+          boost::optional<SpaceType> spaceType = building->spaceType();
+          if (spaceType) {
+            defaultConstructionSet = spaceType->defaultConstructionSet();
+            if (defaultConstructionSet) {
+              construction = defaultConstructionSet->getDefaultConstruction(this->getObject<ShadingSurface>());
+              if (construction) {
+                return std::make_pair(*construction, 5);
+              }
             }
           }
         }
       }
+
+      return result;
     }
 
-    return result;
-  }
-
-  bool ShadingSurface_Impl::isConstructionDefaulted() const
-  {
-    return isEmpty(OS_ShadingSurfaceFields::ConstructionName);
-  }
-
-  bool ShadingSurface_Impl::setConstruction(const ConstructionBase& construction)
-  {
-    return this->setPointer(OS_ShadingSurfaceFields::ConstructionName, construction.handle());
-  }
-
-  void ShadingSurface_Impl::resetConstruction()
-  {
-    setString(OS_ShadingSurfaceFields::ConstructionName, "");
-  }
-
-  boost::optional<PlanarSurfaceGroup> ShadingSurface_Impl::planarSurfaceGroup() const
-  {
-    return boost::optional<PlanarSurfaceGroup>(this->shadingSurfaceGroup());
-  }
-
-  boost::optional<Space> ShadingSurface_Impl::space() const
-  {
-    boost::optional<Space> result;
-    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = this->shadingSurfaceGroup();
-    if (shadingSurfaceGroup){
-      result = shadingSurfaceGroup->space();
+    bool ShadingSurface_Impl::isConstructionDefaulted() const {
+      return isEmpty(OS_ShadingSurfaceFields::ConstructionName);
     }
-    return result;
-  }
 
-  boost::optional<double> ShadingSurface_Impl::numberofVertices() const {
-    return getDouble(OS_ShadingSurfaceFields::NumberofVertices,true);
-  }
-
-  bool ShadingSurface_Impl::isNumberofVerticesDefaulted() const {
-    return isEmpty(OS_ShadingSurfaceFields::NumberofVertices);
-  }
-
-  bool ShadingSurface_Impl::isNumberofVerticesAutocalculated() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ShadingSurfaceFields::NumberofVertices, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "canAutocalculate");
+    bool ShadingSurface_Impl::setConstruction(const ConstructionBase& construction) {
+      return this->setPointer(OS_ShadingSurfaceFields::ConstructionName, construction.handle());
     }
-    return result;
-  }
 
-  bool ShadingSurface_Impl::setNumberofVertices(boost::optional<double> numberofVertices) {
-    bool result = false;
-    if (numberofVertices) {
-      result = setDouble(OS_ShadingSurfaceFields::NumberofVertices, numberofVertices.get());
-    } else {
-      result = setString(OS_ShadingSurfaceFields::NumberofVertices, "");
+    void ShadingSurface_Impl::resetConstruction() {
+      setString(OS_ShadingSurfaceFields::ConstructionName, "");
     }
-    return result;
-  }
 
-  bool ShadingSurface_Impl::setNumberofVertices(double numberofVertices) {
-    bool result = setDouble(OS_ShadingSurfaceFields::NumberofVertices, numberofVertices);
-    return result;
-  }
-
-  void ShadingSurface_Impl::resetNumberofVertices() {
-    bool result = setString(OS_ShadingSurfaceFields::NumberofVertices, "");
-    OS_ASSERT(result);
-  }
-
-  void ShadingSurface_Impl::autocalculateNumberofVertices() {
-    bool result = setString(OS_ShadingSurfaceFields::NumberofVertices, "Autocalculate");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<ShadingSurfaceGroup> ShadingSurface_Impl::shadingSurfaceGroup() const
-  {
-    boost::optional<ShadingSurfaceGroup> result;
-    OptionalWorkspaceObject object = this->getTarget(OS_ShadingSurfaceFields::ShadingSurfaceGroupName);
-    if (object){
-      result = object->optionalCast<ShadingSurfaceGroup>();
+    boost::optional<PlanarSurfaceGroup> ShadingSurface_Impl::planarSurfaceGroup() const {
+      return boost::optional<PlanarSurfaceGroup>(this->shadingSurfaceGroup());
     }
-    return result;
-  }
 
-  bool ShadingSurface_Impl::setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup)
-  {
-    return  this->setPointer(OS_ShadingSurfaceFields::ShadingSurfaceGroupName, shadingSurfaceGroup.handle());
-  }
-
-  void ShadingSurface_Impl::resetShadingSurfaceGroup() {
-    bool ok = setString(OS_ShadingSurfaceFields::ShadingSurfaceGroupName, "");
-    OS_ASSERT(ok);
-  }
-
-  boost::optional<Schedule> ShadingSurface_Impl::transmittanceSchedule() const
-  {
-    boost::optional<Schedule> result;
-    OptionalWorkspaceObject object = this->getTarget(OS_ShadingSurfaceFields::TransmittanceScheduleName);
-    if (object){
-      result = object->optionalCast<Schedule>();
+    boost::optional<Space> ShadingSurface_Impl::space() const {
+      boost::optional<Space> result;
+      boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = this->shadingSurfaceGroup();
+      if (shadingSurfaceGroup) {
+        result = shadingSurfaceGroup->space();
+      }
+      return result;
     }
-    return result;
-  }
 
-  bool ShadingSurface_Impl::setTransmittanceSchedule(Schedule& transmittanceSchedule)
-  {
-    bool result = setSchedule(OS_ShadingSurfaceFields::TransmittanceScheduleName,
-                              "ShadingSurface",
-                              "Transmittance",
-                              transmittanceSchedule);
-    return result;
-  }
-
-  void ShadingSurface_Impl::resetTransmittanceSchedule()
-  {
-    bool test = this->setString(OS_ShadingSurfaceFields::TransmittanceScheduleName, "");
-    OS_ASSERT(test);
-  }
-
-  boost::optional<DaylightingDeviceShelf> ShadingSurface_Impl::daylightingDeviceShelf() const
-  {
-    std::vector<DaylightingDeviceShelf> sources = getObject<ModelObject>().getModelObjectSources<DaylightingDeviceShelf>();
-    if (sources.empty()){
-      return boost::none;
+    boost::optional<double> ShadingSurface_Impl::numberofVertices() const {
+      return getDouble(OS_ShadingSurfaceFields::NumberofVertices, true);
     }
-    if (sources.size() > 1){
-      LOG(Error, "ShadingSurface is referenced by more than one DaylightingDeviceShelf, returning first");
-    }
-    return sources[0];
-  }
 
-  boost::optional<ModelObject> ShadingSurface_Impl::shadingSurfaceGroupAsModelObject() const {
-    OptionalModelObject result;
-    OptionalShadingSurfaceGroup intermediate = shadingSurfaceGroup();
-    if (intermediate) {
-      result = *intermediate;
+    bool ShadingSurface_Impl::isNumberofVerticesDefaulted() const {
+      return isEmpty(OS_ShadingSurfaceFields::NumberofVertices);
     }
-    return result;
-  }
 
-  boost::optional<ModelObject> ShadingSurface_Impl::transmittanceScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = transmittanceSchedule();
-    if (intermediate) {
-      result = *intermediate;
+    bool ShadingSurface_Impl::isNumberofVerticesAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ShadingSurfaceFields::NumberofVertices, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+      }
+      return result;
     }
-    return result;
-  }
 
-  bool ShadingSurface_Impl::setShadingSurfaceGroupAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalShadingSurfaceGroup intermediate = modelObject->optionalCast<ShadingSurfaceGroup>();
+    bool ShadingSurface_Impl::setNumberofVertices(boost::optional<double> numberofVertices) {
+      bool result = false;
+      if (numberofVertices) {
+        result = setDouble(OS_ShadingSurfaceFields::NumberofVertices, numberofVertices.get());
+      } else {
+        result = setString(OS_ShadingSurfaceFields::NumberofVertices, "");
+      }
+      return result;
+    }
+
+    bool ShadingSurface_Impl::setNumberofVertices(double numberofVertices) {
+      bool result = setDouble(OS_ShadingSurfaceFields::NumberofVertices, numberofVertices);
+      return result;
+    }
+
+    void ShadingSurface_Impl::resetNumberofVertices() {
+      bool result = setString(OS_ShadingSurfaceFields::NumberofVertices, "");
+      OS_ASSERT(result);
+    }
+
+    void ShadingSurface_Impl::autocalculateNumberofVertices() {
+      bool result = setString(OS_ShadingSurfaceFields::NumberofVertices, "Autocalculate");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<ShadingSurfaceGroup> ShadingSurface_Impl::shadingSurfaceGroup() const {
+      boost::optional<ShadingSurfaceGroup> result;
+      OptionalWorkspaceObject object = this->getTarget(OS_ShadingSurfaceFields::ShadingSurfaceGroupName);
+      if (object) {
+        result = object->optionalCast<ShadingSurfaceGroup>();
+      }
+      return result;
+    }
+
+    bool ShadingSurface_Impl::setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup) {
+      return this->setPointer(OS_ShadingSurfaceFields::ShadingSurfaceGroupName, shadingSurfaceGroup.handle());
+    }
+
+    void ShadingSurface_Impl::resetShadingSurfaceGroup() {
+      bool ok = setString(OS_ShadingSurfaceFields::ShadingSurfaceGroupName, "");
+      OS_ASSERT(ok);
+    }
+
+    boost::optional<Schedule> ShadingSurface_Impl::transmittanceSchedule() const {
+      boost::optional<Schedule> result;
+      OptionalWorkspaceObject object = this->getTarget(OS_ShadingSurfaceFields::TransmittanceScheduleName);
+      if (object) {
+        result = object->optionalCast<Schedule>();
+      }
+      return result;
+    }
+
+    bool ShadingSurface_Impl::setTransmittanceSchedule(Schedule& transmittanceSchedule) {
+      bool result = setSchedule(OS_ShadingSurfaceFields::TransmittanceScheduleName, "ShadingSurface", "Transmittance", transmittanceSchedule);
+      return result;
+    }
+
+    void ShadingSurface_Impl::resetTransmittanceSchedule() {
+      bool test = this->setString(OS_ShadingSurfaceFields::TransmittanceScheduleName, "");
+      OS_ASSERT(test);
+    }
+
+    boost::optional<DaylightingDeviceShelf> ShadingSurface_Impl::daylightingDeviceShelf() const {
+      std::vector<DaylightingDeviceShelf> sources = getObject<ModelObject>().getModelObjectSources<DaylightingDeviceShelf>();
+      if (sources.empty()) {
+        return boost::none;
+      }
+      if (sources.size() > 1) {
+        LOG(Error, "ShadingSurface is referenced by more than one DaylightingDeviceShelf, returning first");
+      }
+      return sources[0];
+    }
+
+    boost::optional<ModelObject> ShadingSurface_Impl::shadingSurfaceGroupAsModelObject() const {
+      OptionalModelObject result;
+      OptionalShadingSurfaceGroup intermediate = shadingSurfaceGroup();
       if (intermediate) {
-        return setShadingSurfaceGroup(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
-      }
+      return result;
     }
-    else {
-      resetShadingSurfaceGroup();
-    }
-    return true;
-  }
 
-  bool ShadingSurface_Impl::setTransmittanceScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+    boost::optional<ModelObject> ShadingSurface_Impl::transmittanceScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = transmittanceSchedule();
       if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setTransmittanceSchedule(schedule);
+        result = *intermediate;
       }
-      else {
-        return false;
+      return result;
+    }
+
+    bool ShadingSurface_Impl::setShadingSurfaceGroupAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalShadingSurfaceGroup intermediate = modelObject->optionalCast<ShadingSurfaceGroup>();
+        if (intermediate) {
+          return setShadingSurfaceGroup(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetShadingSurfaceGroup();
       }
+      return true;
     }
-    else {
-      resetTransmittanceSchedule();
+
+    bool ShadingSurface_Impl::setTransmittanceScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setTransmittanceSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetTransmittanceSchedule();
+      }
+      return true;
     }
-    return true;
+
+  }  // namespace detail
+
+  ShadingSurface::ShadingSurface(const std::vector<Point3d>& vertices, const Model& model)
+    : PlanarSurface(ShadingSurface::iddObjectType(), vertices, model) {
+    OS_ASSERT(getImpl<detail::ShadingSurface_Impl>());
   }
 
-} // detail
+  IddObjectType ShadingSurface::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_ShadingSurface);
+    return result;
+  }
 
-ShadingSurface::ShadingSurface(const std::vector<Point3d>& vertices, const Model& model)
-  : PlanarSurface(ShadingSurface::iddObjectType(),vertices,model)
-{
-  OS_ASSERT(getImpl<detail::ShadingSurface_Impl>());
-}
+  boost::optional<double> ShadingSurface::numberofVertices() const {
+    return getImpl<detail::ShadingSurface_Impl>()->numberofVertices();
+  }
 
-IddObjectType ShadingSurface::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_ShadingSurface);
-  return result;
-}
+  bool ShadingSurface::isNumberofVerticesDefaulted() const {
+    return getImpl<detail::ShadingSurface_Impl>()->isNumberofVerticesDefaulted();
+  }
 
-boost::optional<double> ShadingSurface::numberofVertices() const {
-  return getImpl<detail::ShadingSurface_Impl>()->numberofVertices();
-}
+  bool ShadingSurface::isNumberofVerticesAutocalculated() const {
+    return getImpl<detail::ShadingSurface_Impl>()->isNumberofVerticesAutocalculated();
+  }
 
-bool ShadingSurface::isNumberofVerticesDefaulted() const {
-  return getImpl<detail::ShadingSurface_Impl>()->isNumberofVerticesDefaulted();
-}
+  bool ShadingSurface::setNumberofVertices(boost::optional<double> numberofVertices) {
+    return getImpl<detail::ShadingSurface_Impl>()->setNumberofVertices(numberofVertices);
+  }
 
-bool ShadingSurface::isNumberofVerticesAutocalculated() const {
-  return getImpl<detail::ShadingSurface_Impl>()->isNumberofVerticesAutocalculated();
-}
+  bool ShadingSurface::setNumberofVertices(double numberofVertices) {
+    return getImpl<detail::ShadingSurface_Impl>()->setNumberofVertices(numberofVertices);
+  }
 
-bool ShadingSurface::setNumberofVertices(boost::optional<double> numberofVertices) {
-  return getImpl<detail::ShadingSurface_Impl>()->setNumberofVertices(numberofVertices);
-}
+  void ShadingSurface::resetNumberofVertices() {
+    getImpl<detail::ShadingSurface_Impl>()->resetNumberofVertices();
+  }
 
-bool ShadingSurface::setNumberofVertices(double numberofVertices) {
-  return getImpl<detail::ShadingSurface_Impl>()->setNumberofVertices(numberofVertices);
-}
+  void ShadingSurface::autocalculateNumberofVertices() {
+    getImpl<detail::ShadingSurface_Impl>()->autocalculateNumberofVertices();
+  }
 
-void ShadingSurface::resetNumberofVertices() {
-  getImpl<detail::ShadingSurface_Impl>()->resetNumberofVertices();
-}
+  boost::optional<ShadingSurfaceGroup> ShadingSurface::shadingSurfaceGroup() const {
+    return getImpl<detail::ShadingSurface_Impl>()->shadingSurfaceGroup();
+  }
 
-void ShadingSurface::autocalculateNumberofVertices() {
-  getImpl<detail::ShadingSurface_Impl>()->autocalculateNumberofVertices();
-}
+  bool ShadingSurface::setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup) {
+    return getImpl<detail::ShadingSurface_Impl>()->setShadingSurfaceGroup(shadingSurfaceGroup);
+  }
 
-boost::optional<ShadingSurfaceGroup> ShadingSurface::shadingSurfaceGroup() const
-{
-  return getImpl<detail::ShadingSurface_Impl>()->shadingSurfaceGroup();
-}
+  void ShadingSurface::resetShadingSurfaceGroup() {
+    getImpl<detail::ShadingSurface_Impl>()->resetShadingSurfaceGroup();
+  }
 
-bool ShadingSurface::setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup)
-{
-  return getImpl<detail::ShadingSurface_Impl>()->setShadingSurfaceGroup(shadingSurfaceGroup);
-}
+  boost::optional<Schedule> ShadingSurface::transmittanceSchedule() const {
+    return getImpl<detail::ShadingSurface_Impl>()->transmittanceSchedule();
+  }
 
-void ShadingSurface::resetShadingSurfaceGroup() {
-  getImpl<detail::ShadingSurface_Impl>()->resetShadingSurfaceGroup();
-}
+  bool ShadingSurface::setTransmittanceSchedule(Schedule& transmittanceSchedule) {
+    return getImpl<detail::ShadingSurface_Impl>()->setTransmittanceSchedule(transmittanceSchedule);
+  }
 
-boost::optional<Schedule> ShadingSurface::transmittanceSchedule() const
-{
-  return getImpl<detail::ShadingSurface_Impl>()->transmittanceSchedule();
-}
+  void ShadingSurface::resetTransmittanceSchedule() {
+    getImpl<detail::ShadingSurface_Impl>()->resetTransmittanceSchedule();
+  }
 
-bool ShadingSurface::setTransmittanceSchedule(Schedule& transmittanceSchedule)
-{
-  return getImpl<detail::ShadingSurface_Impl>()->setTransmittanceSchedule(transmittanceSchedule);
-}
+  boost::optional<DaylightingDeviceShelf> ShadingSurface::daylightingDeviceShelf() const {
+    return getImpl<detail::ShadingSurface_Impl>()->daylightingDeviceShelf();
+  }
 
-void ShadingSurface::resetTransmittanceSchedule()
-{
-  getImpl<detail::ShadingSurface_Impl>()->resetTransmittanceSchedule();
-}
+  /// @cond
+  ShadingSurface::ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl) : PlanarSurface(std::move(impl)) {}
+  /// @endcond
 
-boost::optional<DaylightingDeviceShelf> ShadingSurface::daylightingDeviceShelf() const
-{
-  return getImpl<detail::ShadingSurface_Impl>()->daylightingDeviceShelf();
-}
-
-/// @cond
-ShadingSurface::ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl)
-  : PlanarSurface(std::move(impl))
-{}
-/// @endcond
-
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

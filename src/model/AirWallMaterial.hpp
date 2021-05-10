@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,61 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class AirWallMaterial_Impl;
+    class AirWallMaterial_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirWallMaterial is a ModelPartitionMaterial that wraps the OpenStudio IDD object 'OS:Material:AirWall'. */
-class MODEL_API AirWallMaterial : public ModelPartitionMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirWallMaterial is a ModelPartitionMaterial that wraps the OpenStudio IDD object 'OS:Material:AirWall'. */
+  class MODEL_API AirWallMaterial : public ModelPartitionMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirWallMaterial(const Model& model);
+    explicit AirWallMaterial(const Model& model);
 
-  virtual ~AirWallMaterial() {}
+    virtual ~AirWallMaterial() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirWallMaterial_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirWallMaterial_Impl ImplType;
 
-  explicit AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl);
+    explicit AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl);
 
-  friend class detail::AirWallMaterial_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirWallMaterial");
-};
+    friend class detail::AirWallMaterial_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirWallMaterial");
+  };
 
-/** \relates AirWallMaterial*/
-typedef boost::optional<AirWallMaterial> OptionalAirWallMaterial;
+  /** \relates AirWallMaterial*/
+  typedef boost::optional<AirWallMaterial> OptionalAirWallMaterial;
 
-/** \relates AirWallMaterial*/
-typedef std::vector<AirWallMaterial> AirWallMaterialVector;
+  /** \relates AirWallMaterial*/
+  typedef std::vector<AirWallMaterial> AirWallMaterialVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRWALLMATERIAL_HPP
-
+#endif  // MODEL_AIRWALLMATERIAL_HPP

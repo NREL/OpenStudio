@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,462 +39,471 @@ class Time;
 
 namespace model {
 
-class RefrigerationSystem;
-class Schedule;
-class ThermalZone;
-class CurveCubic;
-class RefrigerationDefrostCycleParameters;
+  class RefrigerationSystem;
+  class RefrigerationSecondarySystem;
+  class RefrigerationCompressorRack;
+  class Schedule;
+  class ThermalZone;
+  class CurveCubic;
+  class RefrigerationDefrostCycleParameters;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationCase_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCase.*/
-  class MODEL_API RefrigerationCase_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationCase_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCase.*/
+    class MODEL_API RefrigerationCase_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationCase_Impl(const IdfObject& idfObject,
-                           Model_Impl* model,
-                           bool keepHandle);
+      RefrigerationCase_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCase_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      RefrigerationCase_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCase_Impl(const RefrigerationCase_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      RefrigerationCase_Impl(const RefrigerationCase_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationCase_Impl() {}
+      virtual ~RefrigerationCase_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    boost::optional<ThermalZone> thermalZone() const;
+      boost::optional<ThermalZone> thermalZone() const;
 
-    double ratedAmbientTemperature() const;
+      double ratedAmbientTemperature() const;
 
-    bool isRatedAmbientTemperatureDefaulted() const;
+      bool isRatedAmbientTemperatureDefaulted() const;
 
-    double ratedAmbientRelativeHumidity() const;
+      double ratedAmbientRelativeHumidity() const;
 
-    bool isRatedAmbientRelativeHumidityDefaulted() const;
+      bool isRatedAmbientRelativeHumidityDefaulted() const;
 
-    double ratedTotalCoolingCapacityperUnitLength() const;
+      double ratedTotalCoolingCapacityperUnitLength() const;
 
-    bool isRatedTotalCoolingCapacityperUnitLengthDefaulted() const;
+      bool isRatedTotalCoolingCapacityperUnitLengthDefaulted() const;
 
-    double ratedLatentHeatRatio() const;
+      double ratedLatentHeatRatio() const;
 
-    bool isRatedLatentHeatRatioDefaulted() const;
+      bool isRatedLatentHeatRatioDefaulted() const;
 
-    double ratedRuntimeFraction() const;
+      double ratedRuntimeFraction() const;
 
-    bool isRatedRuntimeFractionDefaulted() const;
+      bool isRatedRuntimeFractionDefaulted() const;
 
-    double caseLength() const;
+      double caseLength() const;
 
-    bool isCaseLengthDefaulted() const;
+      bool isCaseLengthDefaulted() const;
 
-    double caseOperatingTemperature() const;
+      double caseOperatingTemperature() const;
 
-    bool isCaseOperatingTemperatureDefaulted() const;
+      bool isCaseOperatingTemperatureDefaulted() const;
 
-    std::string latentCaseCreditCurveType() const;
+      std::string latentCaseCreditCurveType() const;
 
-    bool isLatentCaseCreditCurveTypeDefaulted() const;
+      bool isLatentCaseCreditCurveTypeDefaulted() const;
 
-    CurveCubic latentCaseCreditCurve() const;
+      CurveCubic latentCaseCreditCurve() const;
 
-    double standardCaseFanPowerperUnitLength() const;
+      double standardCaseFanPowerperUnitLength() const;
 
-    bool isStandardCaseFanPowerperUnitLengthDefaulted() const;
+      bool isStandardCaseFanPowerperUnitLengthDefaulted() const;
 
-    double operatingCaseFanPowerperUnitLength() const;
+      double operatingCaseFanPowerperUnitLength() const;
 
-    bool isOperatingCaseFanPowerperUnitLengthDefaulted() const;
+      bool isOperatingCaseFanPowerperUnitLengthDefaulted() const;
 
-    double standardCaseLightingPowerperUnitLength() const;
+      double standardCaseLightingPowerperUnitLength() const;
 
-    bool isStandardCaseLightingPowerperUnitLengthDefaulted() const;
+      bool isStandardCaseLightingPowerperUnitLengthDefaulted() const;
 
-    boost::optional<double> installedCaseLightingPowerperUnitLength() const;
+      boost::optional<double> installedCaseLightingPowerperUnitLength() const;
 
-    boost::optional<Schedule> caseLightingSchedule() const;
+      boost::optional<Schedule> caseLightingSchedule() const;
 
-    double fractionofLightingEnergytoCase() const;
+      double fractionofLightingEnergytoCase() const;
 
-    bool isFractionofLightingEnergytoCaseDefaulted() const;
+      bool isFractionofLightingEnergytoCaseDefaulted() const;
 
-    double caseAntiSweatHeaterPowerperUnitLength() const;
+      double caseAntiSweatHeaterPowerperUnitLength() const;
 
-    bool isCaseAntiSweatHeaterPowerperUnitLengthDefaulted() const;
+      bool isCaseAntiSweatHeaterPowerperUnitLengthDefaulted() const;
 
-    double minimumAntiSweatHeaterPowerperUnitLength() const;
+      double minimumAntiSweatHeaterPowerperUnitLength() const;
 
-    bool isMinimumAntiSweatHeaterPowerperUnitLengthDefaulted() const;
+      bool isMinimumAntiSweatHeaterPowerperUnitLengthDefaulted() const;
 
-    std::string antiSweatHeaterControlType() const;
+      std::string antiSweatHeaterControlType() const;
 
-    bool isAntiSweatHeaterControlTypeDefaulted() const;
+      bool isAntiSweatHeaterControlTypeDefaulted() const;
 
-    double humidityatZeroAntiSweatHeaterEnergy() const;
+      double humidityatZeroAntiSweatHeaterEnergy() const;
 
-    bool isHumidityatZeroAntiSweatHeaterEnergyDefaulted() const;
+      bool isHumidityatZeroAntiSweatHeaterEnergyDefaulted() const;
 
-    double caseHeight() const;
+      double caseHeight() const;
 
-    bool isCaseHeightDefaulted() const;
+      bool isCaseHeightDefaulted() const;
 
-    double fractionofAntiSweatHeaterEnergytoCase() const;
+      double fractionofAntiSweatHeaterEnergytoCase() const;
 
-    bool isFractionofAntiSweatHeaterEnergytoCaseDefaulted() const;
+      bool isFractionofAntiSweatHeaterEnergytoCaseDefaulted() const;
 
-    double caseDefrostPowerperUnitLength() const;
+      double caseDefrostPowerperUnitLength() const;
 
-    bool isCaseDefrostPowerperUnitLengthDefaulted() const;
+      bool isCaseDefrostPowerperUnitLengthDefaulted() const;
 
-    std::string caseDefrostType() const;
+      std::string caseDefrostType() const;
 
-    bool isCaseDefrostTypeDefaulted() const;
+      bool isCaseDefrostTypeDefaulted() const;
 
-    boost::optional<Schedule> caseDefrostSchedule() const;
+      boost::optional<Schedule> caseDefrostSchedule() const;
 
-    boost::optional<Schedule> caseDefrostDripDownSchedule() const;
+      boost::optional<Schedule> caseDefrostDripDownSchedule() const;
 
-    std::string defrostEnergyCorrectionCurveType() const;
+      std::string defrostEnergyCorrectionCurveType() const;
 
-    bool isDefrostEnergyCorrectionCurveTypeDefaulted() const;
+      bool isDefrostEnergyCorrectionCurveTypeDefaulted() const;
 
-    boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
+      boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
 
-    double underCaseHVACReturnAirFraction() const;
+      double underCaseHVACReturnAirFraction() const;
 
-    bool isUnderCaseHVACReturnAirFractionDefaulted() const;
+      bool isUnderCaseHVACReturnAirFractionDefaulted() const;
 
-    boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const;
+      boost::optional<Schedule> refrigeratedCaseRestockingSchedule() const;
 
-    boost::optional<Schedule> caseCreditFractionSchedule() const;
+      boost::optional<Schedule> caseCreditFractionSchedule() const;
 
-    boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature() const;
+      boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature() const;
 
-    double averageRefrigerantChargeInventory() const;
+      double averageRefrigerantChargeInventory() const;
 
-    bool isAverageRefrigerantChargeInventoryDefaulted() const;
+      bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
-    boost::optional<int> numberOfDoors() const;
+      boost::optional<int> numberOfDoors() const;
 
-    boost::optional<double> ratedTotalCoolingCapacityperDoor() const;
+      boost::optional<double> ratedTotalCoolingCapacityperDoor() const;
 
-    boost::optional<double> standardCaseFanPowerperDoor() const;
+      boost::optional<double> standardCaseFanPowerperDoor() const;
 
-    boost::optional<double> operatingCaseFanPowerperDoor() const;
+      boost::optional<double> operatingCaseFanPowerperDoor() const;
 
-    boost::optional<double> standardCaseLightingPowerperDoor() const;
+      boost::optional<double> standardCaseLightingPowerperDoor() const;
 
-    boost::optional<double> installedCaseLightingPowerperDoor() const;
+      boost::optional<double> installedCaseLightingPowerperDoor() const;
 
-    boost::optional<double> caseAntiSweatHeaterPowerperDoor() const;
+      boost::optional<double> caseAntiSweatHeaterPowerperDoor() const;
 
-    boost::optional<double> minimumAntiSweatHeaterPowerperDoor() const;
+      boost::optional<double> minimumAntiSweatHeaterPowerperDoor() const;
 
-    boost::optional<double> caseDefrostPowerperDoor() const;
+      boost::optional<double> caseDefrostPowerperDoor() const;
 
-    std::string unitType() const;
+      std::string unitType() const;
 
-    bool isUnitTypeDefaulted() const;
+      bool isUnitTypeDefaulted() const;
 
-    boost::optional<RefrigerationDefrostCycleParameters> optionalCaseDefrostCycleParameters() const;
+      boost::optional<RefrigerationDefrostCycleParameters> optionalCaseDefrostCycleParameters() const;
 
-    RefrigerationDefrostCycleParameters caseDefrostCycleParameters();
+      RefrigerationDefrostCycleParameters caseDefrostCycleParameters();
 
-    boost::optional<int> durationofDefrostCycle() const;
+      boost::optional<int> durationofDefrostCycle() const;
 
-    boost::optional<int> dripDownTime() const;
+      boost::optional<int> dripDownTime() const;
 
-    boost::optional<openstudio::Time> defrost1StartTime() const;
+      boost::optional<openstudio::Time> defrost1StartTime() const;
 
-    boost::optional<openstudio::Time> defrost2StartTime() const;
+      boost::optional<openstudio::Time> defrost2StartTime() const;
 
-    boost::optional<openstudio::Time> defrost3StartTime() const;
+      boost::optional<openstudio::Time> defrost3StartTime() const;
 
-    boost::optional<openstudio::Time> defrost4StartTime() const;
+      boost::optional<openstudio::Time> defrost4StartTime() const;
 
-    boost::optional<openstudio::Time> defrost5StartTime() const;
+      boost::optional<openstudio::Time> defrost5StartTime() const;
 
-    boost::optional<openstudio::Time> defrost6StartTime() const;
+      boost::optional<openstudio::Time> defrost6StartTime() const;
 
-    boost::optional<openstudio::Time> defrost7StartTime() const;
+      boost::optional<openstudio::Time> defrost7StartTime() const;
 
-    boost::optional<openstudio::Time> defrost8StartTime() const;
+      boost::optional<openstudio::Time> defrost8StartTime() const;
 
-    std::vector<openstudio::Time> defrostStartTimes() const;
+      std::vector<openstudio::Time> defrostStartTimes() const;
 
-    boost::optional<RefrigerationSystem> system() const;
+      boost::optional<RefrigerationSystem> system() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      boost::optional<RefrigerationCompressorRack> compressorRack() const;
 
-    void resetAvailabilitySchedule();
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setThermalZone(const ThermalZone& thermalZone);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetThermalZone();
+      void resetAvailabilitySchedule();
 
-    bool setRatedAmbientTemperature(double ratedAmbientTemperature);
+      bool setThermalZone(const ThermalZone& thermalZone);
 
-    void resetRatedAmbientTemperature();
+      void resetThermalZone();
 
-    bool setRatedAmbientRelativeHumidity(double ratedAmbientRelativeHumidity);
+      bool setRatedAmbientTemperature(double ratedAmbientTemperature);
 
-    void resetRatedAmbientRelativeHumidity();
+      void resetRatedAmbientTemperature();
 
-    bool setRatedTotalCoolingCapacityperUnitLength(double ratedTotalCoolingCapacityperUnitLength);
+      bool setRatedAmbientRelativeHumidity(double ratedAmbientRelativeHumidity);
 
-    void resetRatedTotalCoolingCapacityperUnitLength();
+      void resetRatedAmbientRelativeHumidity();
 
-    bool setRatedLatentHeatRatio(double ratedLatentHeatRatio);
+      bool setRatedTotalCoolingCapacityperUnitLength(double ratedTotalCoolingCapacityperUnitLength);
 
-    void resetRatedLatentHeatRatio();
+      void resetRatedTotalCoolingCapacityperUnitLength();
 
-    bool setRatedRuntimeFraction(double ratedRuntimeFraction);
+      bool setRatedLatentHeatRatio(double ratedLatentHeatRatio);
 
-    void resetRatedRuntimeFraction();
+      void resetRatedLatentHeatRatio();
 
-    bool setCaseLength(double caseLength);
+      bool setRatedRuntimeFraction(double ratedRuntimeFraction);
 
-    void resetCaseLength();
+      void resetRatedRuntimeFraction();
 
-    bool setCaseOperatingTemperature(double caseOperatingTemperature);
+      bool setCaseLength(double caseLength);
 
-    void resetCaseOperatingTemperature();
+      void resetCaseLength();
 
-    bool setLatentCaseCreditCurveType(std::string latentCaseCreditCurveType);
+      bool setCaseOperatingTemperature(double caseOperatingTemperature);
 
-    void resetLatentCaseCreditCurveType();
+      void resetCaseOperatingTemperature();
 
-    bool setLatentCaseCreditCurve(const CurveCubic& curveCubic);
+      bool setLatentCaseCreditCurveType(std::string latentCaseCreditCurveType);
 
-    bool setStandardCaseFanPowerperUnitLength(double standardCaseFanPowerperUnitLength);
+      void resetLatentCaseCreditCurveType();
 
-    void resetStandardCaseFanPowerperUnitLength();
+      bool setLatentCaseCreditCurve(const CurveCubic& curveCubic);
 
-    bool setOperatingCaseFanPowerperUnitLength(double operatingCaseFanPowerperUnitLength);
+      bool setStandardCaseFanPowerperUnitLength(double standardCaseFanPowerperUnitLength);
 
-    void resetOperatingCaseFanPowerperUnitLength();
+      void resetStandardCaseFanPowerperUnitLength();
 
-    bool setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
+      bool setOperatingCaseFanPowerperUnitLength(double operatingCaseFanPowerperUnitLength);
 
-    void resetStandardCaseLightingPowerperUnitLength();
+      void resetOperatingCaseFanPowerperUnitLength();
 
-    bool setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength);
+      bool setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength);
 
-    void resetInstalledCaseLightingPowerperUnitLength();
+      void resetStandardCaseLightingPowerperUnitLength();
 
-    bool setCaseLightingSchedule(Schedule& schedule);
+      bool setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength);
 
-    void resetCaseLightingSchedule();
+      void resetInstalledCaseLightingPowerperUnitLength();
 
-    bool setFractionofLightingEnergytoCase(double fractionofLightingEnergytoCase);
+      bool setCaseLightingSchedule(Schedule& schedule);
 
-    void resetFractionofLightingEnergytoCase();
+      void resetCaseLightingSchedule();
 
-    bool setCaseAntiSweatHeaterPowerperUnitLength(double caseAntiSweatHeaterPowerperUnitLength);
+      bool setFractionofLightingEnergytoCase(double fractionofLightingEnergytoCase);
 
-    void resetCaseAntiSweatHeaterPowerperUnitLength();
+      void resetFractionofLightingEnergytoCase();
 
-    bool setMinimumAntiSweatHeaterPowerperUnitLength(double minimumAntiSweatHeaterPowerperUnitLength);
+      bool setCaseAntiSweatHeaterPowerperUnitLength(double caseAntiSweatHeaterPowerperUnitLength);
 
-    void resetMinimumAntiSweatHeaterPowerperUnitLength();
+      void resetCaseAntiSweatHeaterPowerperUnitLength();
 
-    bool setAntiSweatHeaterControlType(std::string antiSweatHeaterControlType);
+      bool setMinimumAntiSweatHeaterPowerperUnitLength(double minimumAntiSweatHeaterPowerperUnitLength);
 
-    void resetAntiSweatHeaterControlType();
+      void resetMinimumAntiSweatHeaterPowerperUnitLength();
 
-    bool setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
+      bool setAntiSweatHeaterControlType(std::string antiSweatHeaterControlType);
 
-    void resetHumidityatZeroAntiSweatHeaterEnergy();
+      void resetAntiSweatHeaterControlType();
 
-    bool setCaseHeight(double caseHeight);
+      bool setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy);
 
-    void resetCaseHeight();
+      void resetHumidityatZeroAntiSweatHeaterEnergy();
 
-    bool setFractionofAntiSweatHeaterEnergytoCase(double fractionofAntiSweatHeaterEnergytoCase);
+      bool setCaseHeight(double caseHeight);
 
-    void resetFractionofAntiSweatHeaterEnergytoCase();
+      void resetCaseHeight();
 
-    bool setCaseDefrostPowerperUnitLength(double caseDefrostPowerperUnitLength);
+      bool setFractionofAntiSweatHeaterEnergytoCase(double fractionofAntiSweatHeaterEnergytoCase);
 
-    void resetCaseDefrostPowerperUnitLength();
+      void resetFractionofAntiSweatHeaterEnergytoCase();
 
-    bool setCaseDefrostType(std::string caseDefrostType);
+      bool setCaseDefrostPowerperUnitLength(double caseDefrostPowerperUnitLength);
 
-    void resetCaseDefrostType();
+      void resetCaseDefrostPowerperUnitLength();
 
-    bool setCaseDefrostSchedule(Schedule& schedule);
+      bool setCaseDefrostType(std::string caseDefrostType);
 
-    void resetCaseDefrostSchedule();
+      void resetCaseDefrostType();
 
-    bool setCaseDefrostDripDownSchedule(Schedule& schedule);
+      bool setCaseDefrostSchedule(Schedule& schedule);
 
-    void resetCaseDefrostDripDownSchedule();
+      void resetCaseDefrostSchedule();
 
-    bool setDefrostEnergyCorrectionCurveType(std::string defrostEnergyCorrectionCurveType);
+      bool setCaseDefrostDripDownSchedule(Schedule& schedule);
 
-    void resetDefrostEnergyCorrectionCurveType();
+      void resetCaseDefrostDripDownSchedule();
 
-    bool setDefrostEnergyCorrectionCurve(const boost::optional<CurveCubic>& curveCubic);
+      bool setDefrostEnergyCorrectionCurveType(std::string defrostEnergyCorrectionCurveType);
 
-    void resetDefrostEnergyCorrectionCurve();
+      void resetDefrostEnergyCorrectionCurveType();
 
-    bool setUnderCaseHVACReturnAirFraction(double underCaseHVACReturnAirFraction);
+      bool setDefrostEnergyCorrectionCurve(const boost::optional<CurveCubic>& curveCubic);
 
-    void resetUnderCaseHVACReturnAirFraction();
+      void resetDefrostEnergyCorrectionCurve();
 
-    bool setRefrigeratedCaseRestockingSchedule(Schedule& schedule);
+      bool setUnderCaseHVACReturnAirFraction(double underCaseHVACReturnAirFraction);
 
-    void resetRefrigeratedCaseRestockingSchedule();
+      void resetUnderCaseHVACReturnAirFraction();
 
-    bool setCaseCreditFractionSchedule(Schedule& schedule);
+      bool setRefrigeratedCaseRestockingSchedule(Schedule& schedule);
 
-    void resetCaseCreditFractionSchedule();
+      void resetRefrigeratedCaseRestockingSchedule();
 
-    bool setDesignEvaporatorTemperatureorBrineInletTemperature(boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature);
+      bool setCaseCreditFractionSchedule(Schedule& schedule);
 
-    void resetDesignEvaporatorTemperatureorBrineInletTemperature();
+      void resetCaseCreditFractionSchedule();
 
-    bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+      bool setDesignEvaporatorTemperatureorBrineInletTemperature(boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature);
 
-    void resetAverageRefrigerantChargeInventory();
+      void resetDesignEvaporatorTemperatureorBrineInletTemperature();
 
-    bool setNumberOfDoors(boost::optional<int> numberOfDoors);
+      bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
-    void resetNumberOfDoors();
+      void resetAverageRefrigerantChargeInventory();
 
-    bool setRatedTotalCoolingCapacityperDoor(boost::optional<double> ratedTotalCoolingCapacityperDoor);
+      bool setNumberOfDoors(boost::optional<int> numberOfDoors);
 
-    void resetRatedTotalCoolingCapacityperDoor();
+      void resetNumberOfDoors();
 
-    bool setStandardCaseFanPowerperDoor(boost::optional<double> standardCaseFanPowerperDoor);
+      bool setRatedTotalCoolingCapacityperDoor(boost::optional<double> ratedTotalCoolingCapacityperDoor);
 
-    void resetStandardCaseFanPowerperDoor();
+      void resetRatedTotalCoolingCapacityperDoor();
 
-    bool setOperatingCaseFanPowerperDoor(boost::optional<double> operatingCaseFanPowerperDoor);
+      bool setStandardCaseFanPowerperDoor(boost::optional<double> standardCaseFanPowerperDoor);
 
-    void resetOperatingCaseFanPowerperDoor();
+      void resetStandardCaseFanPowerperDoor();
 
-    bool setStandardCaseLightingPowerperDoor(boost::optional<double> standardCaseLightingPowerperDoor);
+      bool setOperatingCaseFanPowerperDoor(boost::optional<double> operatingCaseFanPowerperDoor);
 
-    void resetStandardCaseLightingPowerperDoor();
+      void resetOperatingCaseFanPowerperDoor();
 
-    bool setInstalledCaseLightingPowerperDoor(boost::optional<double> installedCaseLightingPowerperDoor);
+      bool setStandardCaseLightingPowerperDoor(boost::optional<double> standardCaseLightingPowerperDoor);
 
-    void resetInstalledCaseLightingPowerperDoor();
+      void resetStandardCaseLightingPowerperDoor();
 
-    bool setCaseAntiSweatHeaterPowerperDoor(boost::optional<double> caseAntiSweatHeaterPowerperDoor);
+      bool setInstalledCaseLightingPowerperDoor(boost::optional<double> installedCaseLightingPowerperDoor);
 
-    void resetCaseAntiSweatHeaterPowerperDoor();
+      void resetInstalledCaseLightingPowerperDoor();
 
-    bool setMinimumAntiSweatHeaterPowerperDoor(boost::optional<double> minimumAntiSweatHeaterPowerperDoor);
+      bool setCaseAntiSweatHeaterPowerperDoor(boost::optional<double> caseAntiSweatHeaterPowerperDoor);
 
-    void resetMinimumAntiSweatHeaterPowerperDoor();
+      void resetCaseAntiSweatHeaterPowerperDoor();
 
-    bool setCaseDefrostPowerperDoor(boost::optional<double> caseDefrostPowerperDoor);
+      bool setMinimumAntiSweatHeaterPowerperDoor(boost::optional<double> minimumAntiSweatHeaterPowerperDoor);
 
-    void resetCaseDefrostPowerperDoor();
+      void resetMinimumAntiSweatHeaterPowerperDoor();
 
-    bool setUnitType(std::string unitType);
+      bool setCaseDefrostPowerperDoor(boost::optional<double> caseDefrostPowerperDoor);
 
-    void resetUnitType();
+      void resetCaseDefrostPowerperDoor();
 
-    bool setCaseDefrostCycleParameters(const RefrigerationDefrostCycleParameters& caseDefrostCycleParameters);
+      bool setUnitType(std::string unitType);
 
-    bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
+      void resetUnitType();
 
-    void resetDurationofDefrostCycle();
+      bool setCaseDefrostCycleParameters(const RefrigerationDefrostCycleParameters& caseDefrostCycleParameters);
 
-    bool setDripDownTime(boost::optional<int> dripDownTime);
+      bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
 
-    void resetDripDownTime();
+      void resetDurationofDefrostCycle();
 
-    bool setDefrost1StartTime(const openstudio::Time& defrost1StartTime);
+      bool setDripDownTime(boost::optional<int> dripDownTime);
 
-    void resetDefrost1StartTime();
+      void resetDripDownTime();
 
-    bool setDefrost2StartTime(const openstudio::Time& defrost2StartTime);
+      bool setDefrost1StartTime(const openstudio::Time& defrost1StartTime);
 
-    void resetDefrost2StartTime();
+      void resetDefrost1StartTime();
 
-    bool setDefrost3StartTime(const openstudio::Time& defrost3StartTime);
+      bool setDefrost2StartTime(const openstudio::Time& defrost2StartTime);
 
-    void resetDefrost3StartTime();
+      void resetDefrost2StartTime();
 
-    bool setDefrost4StartTime(const openstudio::Time& defrost4StartTime);
+      bool setDefrost3StartTime(const openstudio::Time& defrost3StartTime);
 
-    void resetDefrost4StartTime();
+      void resetDefrost3StartTime();
 
-    bool setDefrost5StartTime(const openstudio::Time& defrost5StartTime);
+      bool setDefrost4StartTime(const openstudio::Time& defrost4StartTime);
 
-    void resetDefrost5StartTime();
+      void resetDefrost4StartTime();
 
-    bool setDefrost6StartTime(const openstudio::Time& defrost6StartTime);
+      bool setDefrost5StartTime(const openstudio::Time& defrost5StartTime);
 
-    void resetDefrost6StartTime();
+      void resetDefrost5StartTime();
 
-    bool setDefrost7StartTime(const openstudio::Time& defrost7StartTime);
+      bool setDefrost6StartTime(const openstudio::Time& defrost6StartTime);
 
-    void resetDefrost7StartTime();
+      void resetDefrost6StartTime();
 
-    bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
+      bool setDefrost7StartTime(const openstudio::Time& defrost7StartTime);
 
-    void resetDefrost8StartTime();
+      void resetDefrost7StartTime();
 
-    bool addToSystem(RefrigerationSystem & system);
+      bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
-    void removeFromSystem();
+      void resetDefrost8StartTime();
 
-    //@}
-    /** @name Other */
-    //@{
+      bool addToSystem(RefrigerationSystem& system);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationCase");
+      void removeFromSystem();
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<CurveCubic> optionalLatentCaseCreditCurve() const;
-  };
+      bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
 
-} // detail
+      void removeFromSecondarySystem();
 
-} // model
-} // openstudio
+      bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
 
-#endif // MODEL_REFRIGERATIONCASE_IMPL_HPP
+      void removeFromCompressorRack();
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationCase");
+
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<CurveCubic> optionalLatentCaseCreditCurve() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONCASE_IMPL_HPP

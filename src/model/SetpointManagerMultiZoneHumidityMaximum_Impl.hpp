@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,78 +36,72 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerMultiZoneHumidityMaximum_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneHumidityMaximum.*/
-  class MODEL_API SetpointManagerMultiZoneHumidityMaximum_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerMultiZoneHumidityMaximum_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneHumidityMaximum.*/
+    class MODEL_API SetpointManagerMultiZoneHumidityMaximum_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerMultiZoneHumidityMaximum_Impl(const IdfObject& idfObject,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SetpointManagerMultiZoneHumidityMaximum_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneHumidityMaximum_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SetpointManagerMultiZoneHumidityMaximum_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneHumidityMaximum_Impl(const SetpointManagerMultiZoneHumidityMaximum_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SetpointManagerMultiZoneHumidityMaximum_Impl(const SetpointManagerMultiZoneHumidityMaximum_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerMultiZoneHumidityMaximum_Impl() {}
+      virtual ~SetpointManagerMultiZoneHumidityMaximum_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    double minimumSetpointHumidityRatio() const;
+      double minimumSetpointHumidityRatio() const;
 
-    double maximumSetpointHumidityRatio() const;
+      double maximumSetpointHumidityRatio() const;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
+      bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
 
-    bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
+      bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode(const Node& node) override;
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual void resetSetpointNode() override;
+      virtual void resetSetpointNode() override;
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHumidityMaximum");
-  };
+      REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHumidityMaximum");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMAXIMUM_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMAXIMUM_IMPL_HPP

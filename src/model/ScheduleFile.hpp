@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,125 +34,127 @@
 #include "ScheduleInterval.hpp"
 #include "../utilities/filetypes/CSVFile.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ScheduleTypeLimits;
-class ExternalFile;
+  class ScheduleTypeLimits;
+  class ExternalFile;
 
-namespace detail {
+  namespace detail {
 
-  class ScheduleFile_Impl;
+    class ScheduleFile_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ScheduleFile is a ScheduleInterval that wraps the OpenStudio IDD object 'OS:Schedule:File'. */
-class MODEL_API ScheduleFile : public ScheduleInterval {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ScheduleFile is a ScheduleInterval that wraps the OpenStudio IDD object 'OS:Schedule:File'. */
+  class MODEL_API ScheduleFile : public ScheduleInterval
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  ScheduleFile(const ExternalFile& externalfile, int column=1, int rowsToSkip=0);
+    ScheduleFile(const ExternalFile& externalfile, int column = 1, int rowsToSkip = 0);
 
-  virtual ~ScheduleFile() {}
+    virtual ~ScheduleFile() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> minutesperItemValues();
+    static std::vector<std::string> minutesperItemValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
+    boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
-  ExternalFile externalFile() const;
+    ExternalFile externalFile() const;
 
-  int columnNumber() const;
+    int columnNumber() const;
 
-  int rowstoSkipatTop() const;
+    int rowstoSkipatTop() const;
 
-  boost::optional<int> numberofHoursofData() const;
+    // This should be returning `int` as it has a default
+    boost::optional<int> numberofHoursofData() const;
 
-  bool isNumberofHoursofDataDefaulted() const;
+    bool isNumberofHoursofDataDefaulted() const;
 
-  std::string columnSeparator() const;
+    std::string columnSeparator() const;
 
-  bool isColumnSeparatorDefaulted() const;
+    bool isColumnSeparatorDefaulted() const;
 
-  bool interpolatetoTimestep() const;
+    bool interpolatetoTimestep() const;
 
-  bool isInterpolatetoTimestepDefaulted() const;
+    bool isInterpolatetoTimestepDefaulted() const;
 
-  boost::optional<std::string> minutesperItem() const;
+    // This should be returning `int` instead of boost::optional<std::string>...
+    boost::optional<std::string> minutesperItem() const;
 
-  bool isMinutesperItemDefaulted() const;
+    bool isMinutesperItemDefaulted() const;
 
-  /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const;*/
+    /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const;*/
 
-  boost::optional<CSVFile> csvFile() const;
+    boost::optional<CSVFile> csvFile() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
-  bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
+    bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
-  bool resetScheduleTypeLimits();
+    bool resetScheduleTypeLimits();
 
-  bool setColumnNumber(int columnNumber);
+    bool setColumnNumber(int columnNumber);
 
-  bool setRowstoSkipatTop(int rowstoSkipatTop);
+    bool setRowstoSkipatTop(int rowstoSkipatTop);
 
-  bool setNumberofHoursofData(int numberofHours);
+    bool setNumberofHoursofData(int numberofHours);
 
-  bool setColumnSeparator(const std::string& columnSeparator);
+    bool setColumnSeparator(const std::string& columnSeparator);
 
-  void resetColumnSeparator();
+    void resetColumnSeparator();
 
-  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
-  void resetInterpolatetoTimestep();
+    void resetInterpolatetoTimestep();
 
-  bool setMinutesperItem(const std::string& minutesperItem);
+    OS_DEPRECATED bool setMinutesperItem(const std::string& minutesperItem);
 
-  void resetMinutesperItem();
+    bool setMinutesperItem(int minutesperItem);
 
-  /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
+    void resetMinutesperItem();
 
-  //@}
-  /** @name Other */
-  //@{
+    /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
 
-  //@}
- protected:
+    //@}
+    /** @name Other */
+    //@{
 
-  /// @cond
-  typedef detail::ScheduleFile_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ScheduleFile_Impl ImplType;
 
-  explicit ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl);
+    explicit ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl);
 
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ScheduleFile");
-};
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleFile");
+  };
 
-/** \relates ScheduleFile*/
-typedef boost::optional<ScheduleFile> OptionalScheduleFile;
+  /** \relates ScheduleFile*/
+  typedef boost::optional<ScheduleFile> OptionalScheduleFile;
 
-/** \relates ScheduleFile*/
-typedef std::vector<ScheduleFile> ScheduleFileVector;
+  /** \relates ScheduleFile*/
+  typedef std::vector<ScheduleFile> ScheduleFileVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SCHEDULEFILE_HPP
-
+#endif  // MODEL_SCHEDULEFILE_HPP

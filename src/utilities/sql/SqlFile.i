@@ -8,6 +8,7 @@
   #include <utilities/sql/SqlFile.hpp>
   #include <utilities/sql/SqlFileEnums.hpp>
   #include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
+  #include <utilities/sql/SummaryData.hpp>
 
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
@@ -26,9 +27,9 @@
 // ignore detail namespace
 %ignore openstudio::detail;
 
-// These functions return via reference parameters - something we cannot support with SWIG
-%ignore openstudio::SqlFile::illuminanceMapMaxValue(const std::string &, double &, double &);
-%ignore openstudio::SqlFile::illuminanceMapMaxValue(int, double &, double &);
+// These functions return via reference parameters - something we cannot support with SWIG out of the box
+%ignore openstudio::SqlFile::illuminanceMapMaxValue(const std::string&, double&, double&) const;
+%ignore openstudio::SqlFile::illuminanceMapMaxValue(const int&, double&, double&) const;
 
 // create an instantiation of the optional classes
 %template(OptionalSqlFile) boost::optional<openstudio::SqlFile>;
@@ -42,8 +43,14 @@
 %template(IntDateTimePair) std::pair<int, openstudio::DateTime>;
 %template(IntDateTimePairVector) std::vector<std::pair<int, openstudio::DateTime> >;
 
+// Not default-constructible, so ignore vector and resize
+%ignore std::vector<openstudio::SummaryData>::vector(size_type);
+%ignore std::vector<openstudio::SummaryData>::resize(size_type);
+%template(SummaryDataVector) std::vector<openstudio::SummaryData>;
+
 %template(SqlTimeSeriesQueryVector) std::vector<openstudio::SqlFileTimeSeriesQuery>;
 
+%include <utilities/sql/SummaryData.hpp>
 %include <utilities/sql/SqlFile.hpp>
 %include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
 %include <utilities/sql/SqlFileEnums.hpp>

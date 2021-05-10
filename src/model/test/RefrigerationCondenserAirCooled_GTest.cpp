@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,22 +41,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationCondenserAirCooled_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationCondenserAirCooled_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserAirCooled_Remove)
-{
+TEST_F(ModelFixture, RefrigerationCondenserAirCooled_Remove) {
   Model model;
   RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
 
@@ -69,15 +67,14 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_Remove)
   EXPECT_EQ(0, refrigerationCondenserAirCooleds.size());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithDefaultData) {
   Model model;
   RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
 
   RefrigerationCondenserAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();
 
   std::vector<CurveLinear> refrigerationCondenserCurves = model.getModelObjects<CurveLinear>();
-  for(auto it = refrigerationCondenserCurves.begin(); it != refrigerationCondenserCurves.end(); ++it) {
+  for (auto it = refrigerationCondenserCurves.begin(); it != refrigerationCondenserCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -85,11 +82,11 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithDefaultDat
   EXPECT_DOUBLE_EQ(7000.0, testObjectClone.ratedFanPower());
   EXPECT_EQ("VariableSpeed", testObjectClone.condenserFanSpeedControlType());
   EXPECT_DOUBLE_EQ(0.25, testObjectClone.minimumFanAirFlowRatio());
-  EXPECT_EQ(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
+  EXPECT_EQ(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(),
+            testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithCustomData) {
   Model model;
   ThermalZone thermalZone(model);
   RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
@@ -114,12 +111,12 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithCustomData
   EXPECT_EQ("TwoSpeed", testObjectClone.condenserFanSpeedControlType());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.minimumFanAirFlowRatio());
   EXPECT_FALSE(testObjectClone.airInletZone());
-  EXPECT_EQ(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
+  EXPECT_EQ(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(),
+            testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
   EXPECT_EQ(heatRejectionCurve.handle(), testObjectClone.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultData) {
   Model model;
   RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
 
@@ -138,11 +135,11 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultDa
   refrigerationCondenserCurves2 = model2.getModelObjects<CurveLinear>();
   EXPECT_EQ(1, refrigerationCondenserCurves2.size());
 
-  for(auto it = refrigerationCondenserCurves.begin(); it != refrigerationCondenserCurves.end(); ++it) {
+  for (auto it = refrigerationCondenserCurves.begin(); it != refrigerationCondenserCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
-  for(auto it = refrigerationCondenserCurves2.begin(); it != refrigerationCondenserCurves2.end(); ++it) {
+  for (auto it = refrigerationCondenserCurves2.begin(); it != refrigerationCondenserCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -150,7 +147,8 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultDa
   EXPECT_DOUBLE_EQ(7000.0, testObjectClone2.ratedFanPower());
   EXPECT_EQ("VariableSpeed", testObjectClone2.condenserFanSpeedControlType());
   EXPECT_DOUBLE_EQ(0.25, testObjectClone2.minimumFanAirFlowRatio());
-  EXPECT_NE(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(), testObjectClone2.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
+  EXPECT_NE(testObject.ratedEffectiveTotalHeatRejectionRateCurve().get().handle(),
+            testObjectClone2.ratedEffectiveTotalHeatRejectionRateCurve().get().handle());
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }

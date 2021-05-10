@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,21 +48,19 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SolarCollectorFlatPlateWater_SolarCollectorFlatPlateWater)
-{
+TEST_F(ModelFixture, SolarCollectorFlatPlateWater_SolarCollectorFlatPlateWater) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SolarCollectorFlatPlateWater testObject(m);
-    SolarCollectorPerformanceFlatPlate performance = testObject.solarCollectorPerformance();
+  ASSERT_EXIT(
+    {
+      Model m;
+      SolarCollectorFlatPlateWater testObject(m);
+      SolarCollectorPerformanceFlatPlate performance = testObject.solarCollectorPerformance();
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
-
 
 TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
   Model model;
@@ -139,9 +137,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_addToNode) {
   EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
   EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlateWater::iddObjectType()).size());
-
 }
-
 
 TEST_F(ModelFixture, SolarCollectorFlatPlateWater_Clone) {
   {

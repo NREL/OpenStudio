@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,80 +36,80 @@
 namespace openstudio {
 namespace model {
 
-class ChillerHeaterPerformanceElectricEIR;
-class CentralHeatPumpSystem;
-class Schedule;
+  class ChillerHeaterPerformanceElectricEIR;
+  class CentralHeatPumpSystem;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class CentralHeatPumpSystemModule_Impl;
+    class CentralHeatPumpSystemModule_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CentralHeatPumpSystemModule is a ParentObject that wraps the OpenStudio IDD object 'OS:CentralHeatPumpSystem:Module'. */
-class MODEL_API CentralHeatPumpSystemModule : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CentralHeatPumpSystemModule is a ParentObject that wraps the OpenStudio IDD object 'OS:CentralHeatPumpSystem:Module'. */
+  class MODEL_API CentralHeatPumpSystemModule : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CentralHeatPumpSystemModule(const Model& model);
+    explicit CentralHeatPumpSystemModule(const Model& model);
 
-  virtual ~CentralHeatPumpSystemModule() {}
+    virtual ~CentralHeatPumpSystemModule() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ChillerHeaterPerformanceElectricEIR chillerHeaterModulesPerformanceComponent() const;
+    ChillerHeaterPerformanceElectricEIR chillerHeaterModulesPerformanceComponent() const;
 
-  Schedule chillerHeaterModulesControlSchedule() const;
+    Schedule chillerHeaterModulesControlSchedule() const;
 
-  int numberofChillerHeaterModules() const;
+    int numberofChillerHeaterModules() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR);
+    bool setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR);
 
-  bool setChillerHeaterModulesControlSchedule(Schedule& schedule);
+    bool setChillerHeaterModulesControlSchedule(Schedule& schedule);
 
-  bool setNumberofChillerHeaterModules(int numberofChillerHeaterModules);
+    bool setNumberofChillerHeaterModules(int numberofChillerHeaterModules);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  // Convenience function to return parent CentralHeatPumpSystem
-  boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
+    // Convenience function to return parent CentralHeatPumpSystem
+    boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CentralHeatPumpSystemModule_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CentralHeatPumpSystemModule_Impl ImplType;
 
-  explicit CentralHeatPumpSystemModule(std::shared_ptr<detail::CentralHeatPumpSystemModule_Impl> impl);
+    explicit CentralHeatPumpSystemModule(std::shared_ptr<detail::CentralHeatPumpSystemModule_Impl> impl);
 
-  friend class detail::CentralHeatPumpSystemModule_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CentralHeatPumpSystemModule");
-};
+    friend class detail::CentralHeatPumpSystemModule_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CentralHeatPumpSystemModule");
+  };
 
-/** \relates CentralHeatPumpSystemModule*/
-typedef boost::optional<CentralHeatPumpSystemModule> OptionalCentralHeatPumpSystemModule;
+  /** \relates CentralHeatPumpSystemModule*/
+  typedef boost::optional<CentralHeatPumpSystemModule> OptionalCentralHeatPumpSystemModule;
 
-/** \relates CentralHeatPumpSystemModule*/
-typedef std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystemModuleVector;
+  /** \relates CentralHeatPumpSystemModule*/
+  typedef std::vector<CentralHeatPumpSystemModule> CentralHeatPumpSystemModuleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_CENTRALHEATPUMPSYSTEMMODULE_HPP
-
+#endif  // MODEL_CENTRALHEATPUMPSYSTEMMODULE_HPP

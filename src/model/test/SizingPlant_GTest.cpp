@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,18 +35,18 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,SizingPlant) {
+TEST_F(ModelFixture, SizingPlant) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::PlantLoop plant(m);
+      model::PlantLoop plant(m);
 
-     model::SizingPlant sizingPlant(m,plant);
+      model::SizingPlant sizingPlant(m, plant);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,38 +35,33 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-// derive GenericModelObject_Impl from ModelObject_Impl to override virtual methods
-class MODEL_API GenericModelObject_Impl : public ModelObject_Impl{
- public:
+  namespace detail {
+    // derive GenericModelObject_Impl from ModelObject_Impl to override virtual methods
+    class MODEL_API GenericModelObject_Impl : public ModelObject_Impl
+    {
+     public:
+      // constructor
+      GenericModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  // constructor
-  GenericModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      GenericModelObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // construct from workspace
-  GenericModelObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      // copy constructor
+      GenericModelObject_Impl(const GenericModelObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // copy constructor
-  GenericModelObject_Impl(const GenericModelObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      virtual ~GenericModelObject_Impl() {}
 
-  virtual ~GenericModelObject_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.GenericModelObject");
+    };
 
- private:
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.GenericModelObject");
-};
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_GENERICMODELOBJECT_IMPL_HPP
+#endif  // MODEL_GENERICMODELOBJECT_IMPL_HPP

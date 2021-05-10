@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,113 +58,111 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePeople( People & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::People);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translatePeople(People& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::People);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  PeopleDefinition definition = modelObject.peopleDefinition();
-
-  idfObject.setString(PeopleFields::Name, modelObject.name().get());
-
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      idfObject.setString(PeopleFields::ZoneorZoneListName, thermalZone->name().get());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
-  }else if(spaceType){
-    idfObject.setString(PeopleFields::ZoneorZoneListName, spaceType->name().get());
-  }
 
-  boost::optional<Schedule> schedule = modelObject.numberofPeopleSchedule();
-  if (schedule){
-    idfObject.setString(PeopleFields::NumberofPeopleScheduleName, schedule->name().get());
-  }
+    PeopleDefinition definition = modelObject.peopleDefinition();
 
-  idfObject.setString(PeopleFields::NumberofPeopleCalculationMethod, definition.numberofPeopleCalculationMethod());
+    idfObject.setString(PeopleFields::Name, modelObject.name().get());
 
-  double multiplier = modelObject.multiplier();
-
-  OptionalDouble d = definition.numberofPeople();
-  if (d){
-    idfObject.setDouble(PeopleFields::NumberofPeople, (*d)*multiplier);
-  }
-
-  d = definition.peopleperSpaceFloorArea();
-  if (d){
-    idfObject.setDouble(PeopleFields::PeopleperZoneFloorArea, (*d)*multiplier);
-  }
-
-  d = definition.spaceFloorAreaperPerson();
-  if (d){
-    idfObject.setDouble(PeopleFields::ZoneFloorAreaperPerson, (*d)*multiplier);
-  }
-
-  d = definition.fractionRadiant();
-  if (d){
-    idfObject.setDouble(PeopleFields::FractionRadiant, *d);
-  }
-
-  d = definition.sensibleHeatFraction();
-  if (d){
-    idfObject.setDouble(PeopleFields::SensibleHeatFraction, *d);
-  }
-
-  schedule = modelObject.activityLevelSchedule();
-  if (schedule){
-    idfObject.setString(PeopleFields::ActivityLevelScheduleName, schedule->name().get());
-  }
-
-  if (!definition.isCarbonDioxideGenerationRateDefaulted()){
-    idfObject.setDouble(PeopleFields::CarbonDioxideGenerationRate, definition.carbonDioxideGenerationRate());
-  }
-
-  if (!definition.isEnableASHRAE55ComfortWarningsDefaulted()){
-    if (definition.enableASHRAE55ComfortWarnings()){
-      idfObject.setString(PeopleFields::EnableASHRAE55ComfortWarnings, "Yes");
-    }else{
-       idfObject.setString(PeopleFields::EnableASHRAE55ComfortWarnings, "No");
+    boost::optional<Space> space = modelObject.space();
+    boost::optional<SpaceType> spaceType = modelObject.spaceType();
+    if (space) {
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
+      if (thermalZone) {
+        idfObject.setString(PeopleFields::ZoneorZoneListName, thermalZone->name().get());
+      }
+    } else if (spaceType) {
+      idfObject.setString(PeopleFields::ZoneorZoneListName, spaceType->name().get());
     }
-  }
 
-  if (!definition.isMeanRadiantTemperatureCalculationTypeDefaulted()){
-    idfObject.setString(PeopleFields::MeanRadiantTemperatureCalculationType, definition.meanRadiantTemperatureCalculationType());
-  }
-
-  // TODO: Surface Name/Angle Factor List Name
-
-  schedule = modelObject.workEfficiencySchedule();
-  if (schedule){
-    idfObject.setString(PeopleFields::WorkEfficiencyScheduleName, schedule->name().get());
-  }
-
-  schedule = modelObject.clothingInsulationSchedule();
-  if (schedule){
-    idfObject.setString(PeopleFields::ClothingInsulationScheduleName, schedule->name().get());
-  }
-
-  schedule = modelObject.airVelocitySchedule();
-  if (schedule){
-    idfObject.setString(PeopleFields::AirVelocityScheduleName, schedule->name().get());
-  }
-
-  for (int i = 0, n = definition.numThermalComfortModelTypes(); i < n; ++i) {
-    OptionalString s = definition.getThermalComfortModelType(i);
-    if (s) {
-      idfObject.pushExtensibleGroup(StringVector(1u,*s));
+    boost::optional<Schedule> schedule = modelObject.numberofPeopleSchedule();
+    if (schedule) {
+      idfObject.setString(PeopleFields::NumberofPeopleScheduleName, schedule->name().get());
     }
+
+    idfObject.setString(PeopleFields::NumberofPeopleCalculationMethod, definition.numberofPeopleCalculationMethod());
+
+    double multiplier = modelObject.multiplier();
+
+    OptionalDouble d = definition.numberofPeople();
+    if (d) {
+      idfObject.setDouble(PeopleFields::NumberofPeople, (*d) * multiplier);
+    }
+
+    d = definition.peopleperSpaceFloorArea();
+    if (d) {
+      idfObject.setDouble(PeopleFields::PeopleperZoneFloorArea, (*d) * multiplier);
+    }
+
+    d = definition.spaceFloorAreaperPerson();
+    if (d) {
+      idfObject.setDouble(PeopleFields::ZoneFloorAreaperPerson, (*d) * multiplier);
+    }
+
+    d = definition.fractionRadiant();
+    if (d) {
+      idfObject.setDouble(PeopleFields::FractionRadiant, *d);
+    }
+
+    d = definition.sensibleHeatFraction();
+    if (d) {
+      idfObject.setDouble(PeopleFields::SensibleHeatFraction, *d);
+    }
+
+    schedule = modelObject.activityLevelSchedule();
+    if (schedule) {
+      idfObject.setString(PeopleFields::ActivityLevelScheduleName, schedule->name().get());
+    }
+
+    if (!definition.isCarbonDioxideGenerationRateDefaulted()) {
+      idfObject.setDouble(PeopleFields::CarbonDioxideGenerationRate, definition.carbonDioxideGenerationRate());
+    }
+
+    if (!definition.isEnableASHRAE55ComfortWarningsDefaulted()) {
+      if (definition.enableASHRAE55ComfortWarnings()) {
+        idfObject.setString(PeopleFields::EnableASHRAE55ComfortWarnings, "Yes");
+      } else {
+        idfObject.setString(PeopleFields::EnableASHRAE55ComfortWarnings, "No");
+      }
+    }
+
+    if (!definition.isMeanRadiantTemperatureCalculationTypeDefaulted()) {
+      idfObject.setString(PeopleFields::MeanRadiantTemperatureCalculationType, definition.meanRadiantTemperatureCalculationType());
+    }
+
+    // TODO: Surface Name/Angle Factor List Name
+
+    schedule = modelObject.workEfficiencySchedule();
+    if (schedule) {
+      idfObject.setString(PeopleFields::WorkEfficiencyScheduleName, schedule->name().get());
+    }
+
+    schedule = modelObject.clothingInsulationSchedule();
+    if (schedule) {
+      idfObject.setString(PeopleFields::ClothingInsulationScheduleName, schedule->name().get());
+    }
+
+    schedule = modelObject.airVelocitySchedule();
+    if (schedule) {
+      idfObject.setString(PeopleFields::AirVelocityScheduleName, schedule->name().get());
+    }
+
+    for (int i = 0, n = definition.numThermalComfortModelTypes(); i < n; ++i) {
+      OptionalString s = definition.getThermalComfortModelType(i);
+      if (s) {
+        idfObject.pushExtensibleGroup(StringVector(1u, *s));
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

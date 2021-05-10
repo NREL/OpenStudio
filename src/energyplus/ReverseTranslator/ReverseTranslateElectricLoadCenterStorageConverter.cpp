@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,106 +51,88 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConverter( const WorkspaceObject & workspaceObject )
-{
+  OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConverter(const WorkspaceObject& workspaceObject) {
 
-  OptionalModelObject result,omo;
-  OptionalDouble optD;
-  boost::optional<WorkspaceObject> owo;
-  OptionalString optS;
-  bool isSimpleFixed = true;
+    OptionalModelObject result, omo;
+    OptionalDouble optD;
+    boost::optional<WorkspaceObject> owo;
+    OptionalString optS;
+    bool isSimpleFixed = true;
 
-  openstudio::model::ElectricLoadCenterStorageConverter elcConv( m_model );
+    openstudio::model::ElectricLoadCenterStorageConverter elcConv(m_model);
 
-  // Name
-  optS = workspaceObject.name();
-  if(optS)
-  {
-    elcConv.setName(*optS);
-  }
-
-  // AvailabilityScheduleName
-  if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName)) )
-  {
-    if ( (omo = translateAndMapWorkspaceObject(*owo)) )
-    {
-      if (boost::optional<Schedule> schedule = omo->optionalCast<Schedule>())
-      {
-        elcConv.setAvailabilitySchedule(schedule.get());
-      }
-    }
-  }
-
-  // PowerConversionEfficiencyMethod, string
-  optS = workspaceObject.getString(ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
-  if(optS)
-  {
-    if (istringEqual(*optS, "FunctionOfPower"))
-    {
-      isSimpleFixed = false;
-    }
-  }
-
-  if (isSimpleFixed) {
-    // SimpleFixedEfficiency, optD
-    optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency);
-    if(optD)
-    {
-      elcConv.setSimpleFixedEfficiency(*optD);
-    }
-  } else {
-    // designMaximumContinuousInputPower, optD
-    optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower);
-    if(optD)
-    {
-      elcConv.setDesignMaximumContinuousInputPower(*optD);
+    // Name
+    optS = workspaceObject.name();
+    if (optS) {
+      elcConv.setName(*optS);
     }
 
-    // efficiencyFunctionofPowerCurveName, optCurve
-    if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName)) )
-    {
-      if ( (omo = translateAndMapWorkspaceObject(*owo)) )
-      {
-        // Should technically make sure the curve is the right type, but in this case it's UnivariateCurves, lots of possibilities.
-        if (boost::optional<Curve> effFPower = omo->optionalCast<Curve>())
-        {
-          elcConv.setEfficiencyFunctionofPowerCurve(effFPower.get());
+    // AvailabilityScheduleName
+    if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName))) {
+      if ((omo = translateAndMapWorkspaceObject(*owo))) {
+        if (boost::optional<Schedule> schedule = omo->optionalCast<Schedule>()) {
+          elcConv.setAvailabilitySchedule(schedule.get());
         }
       }
     }
-  }
 
-  // AncillaryPowerConsumedInStandby, defaults (double)
-  optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby);
-  if (optD) {
-    elcConv.setAncillaryPowerConsumedInStandby(*optD);
-  }
-
-  // ZoneName
-  if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::ZoneName)) )
-  {
-    if ( (omo = translateAndMapWorkspaceObject(owo.get())) )
-    {
-      if (boost::optional<ThermalZone> thermalZone = omo->optionalCast<ThermalZone>())
-      {
-        elcConv.setThermalZone(thermalZone.get());
+    // PowerConversionEfficiencyMethod, string
+    optS = workspaceObject.getString(ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
+    if (optS) {
+      if (istringEqual(*optS, "FunctionOfPower")) {
+        isSimpleFixed = false;
       }
     }
+
+    if (isSimpleFixed) {
+      // SimpleFixedEfficiency, optD
+      optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency);
+      if (optD) {
+        elcConv.setSimpleFixedEfficiency(*optD);
+      }
+    } else {
+      // designMaximumContinuousInputPower, optD
+      optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower);
+      if (optD) {
+        elcConv.setDesignMaximumContinuousInputPower(*optD);
+      }
+
+      // efficiencyFunctionofPowerCurveName, optCurve
+      if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName))) {
+        if ((omo = translateAndMapWorkspaceObject(*owo))) {
+          // Should technically make sure the curve is the right type, but in this case it's UnivariateCurves, lots of possibilities.
+          if (boost::optional<Curve> effFPower = omo->optionalCast<Curve>()) {
+            elcConv.setEfficiencyFunctionofPowerCurve(effFPower.get());
+          }
+        }
+      }
+    }
+
+    // AncillaryPowerConsumedInStandby, defaults (double)
+    optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby);
+    if (optD) {
+      elcConv.setAncillaryPowerConsumedInStandby(*optD);
+    }
+
+    // ZoneName
+    if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::ZoneName))) {
+      if ((omo = translateAndMapWorkspaceObject(owo.get()))) {
+        if (boost::optional<ThermalZone> thermalZone = omo->optionalCast<ThermalZone>()) {
+          elcConv.setThermalZone(thermalZone.get());
+        }
+      }
+    }
+
+    // Radiative Fraction, defaults (double)
+    optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction);
+    if (optD) {
+      elcConv.setRadiativeFraction(*optD);
+    }
+
+    result = elcConv;
+    return result;
   }
 
-  // Radiative Fraction, defaults (double)
-  optD = workspaceObject.getDouble(ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction);
-  if(optD)
-  {
-    elcConv.setRadiativeFraction(*optD);
-  }
+}  // namespace energyplus
 
-
-
-  result=elcConv;
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

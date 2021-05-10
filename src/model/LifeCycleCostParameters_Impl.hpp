@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,264 +36,279 @@
 
 namespace openstudio {
 
-  class MonthOfYear;
+class MonthOfYear;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API LifeCycleCostParameters_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API LifeCycleCostParameters_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // constructor
-    LifeCycleCostParameters_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // constructor
+      LifeCycleCostParameters_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    LifeCycleCostParameters_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      // construct from workspace
+      LifeCycleCostParameters_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    LifeCycleCostParameters_Impl(const LifeCycleCostParameters_Impl& other,Model_Impl* model,bool keepHandle);
+      // clone copy constructor
+      LifeCycleCostParameters_Impl(const LifeCycleCostParameters_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // virtual destructor
-    virtual ~LifeCycleCostParameters_Impl(){}
+      // virtual destructor
+      virtual ~LifeCycleCostParameters_Impl() {}
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override {return LifeCycleCostParameters::iddObjectType();}
+      virtual IddObjectType iddObjectType() const override {
+        return LifeCycleCostParameters::iddObjectType();
+      }
 
-    std::string analysisType() const;
+      std::string analysisType() const;
 
-    bool isAnalysisTypeDefaulted() const;
+      bool isAnalysisTypeDefaulted() const;
 
-    /// returns true if analysis type is FEMP
-    bool isFEMPAnalysis() const;
+      /// returns true if analysis type is FEMP
+      bool isFEMPAnalysis() const;
 
-    std::string discountingConvention() const;
+      std::string discountingConvention() const;
 
-    bool isDiscountingConventionDefaulted() const;
+      bool isDiscountingConventionDefaulted() const;
 
-    std::string inflationApproach() const;
+      std::string inflationApproach() const;
 
-    bool isInflationApproachDefaulted() const;
+      bool isInflationApproachDefaulted() const;
 
-    bool isConstantDollarAnalysis() const;
+      bool isConstantDollarAnalysis() const;
 
-    boost::optional<double> realDiscountRate() const;
+      boost::optional<double> realDiscountRate() const;
 
-    boost::optional<double> nominalDiscountRate() const;
+      boost::optional<double> nominalDiscountRate() const;
 
-    boost::optional<double> inflation() const;
+      boost::optional<double> inflation() const;
 
-    MonthOfYear baseDateMonth() const;
+      MonthOfYear baseDateMonth() const;
 
-    bool isBaseDateMonthDefaulted() const;
+      bool isBaseDateMonthDefaulted() const;
 
-    int baseDateYear() const;
+      int baseDateYear() const;
 
-    bool isBaseDateYearDefaulted() const;
+      bool isBaseDateYearDefaulted() const;
 
-    MonthOfYear serviceDateMonth() const;
+      MonthOfYear serviceDateMonth() const;
 
-    bool isServiceDateMonthDefaulted() const;
+      bool isServiceDateMonthDefaulted() const;
 
-    int serviceDateYear() const;
+      int serviceDateYear() const;
 
-    bool isServiceDateYearDefaulted() const;
+      bool isServiceDateYearDefaulted() const;
 
-    int lengthOfStudyPeriodInYears() const;
+      int lengthOfStudyPeriodInYears() const;
 
-    bool isLengthOfStudyPeriodInYearsDefaulted() const;
+      bool isLengthOfStudyPeriodInYearsDefaulted() const;
 
-    boost::optional<double> taxRate() const;
+      boost::optional<double> taxRate() const;
 
-    std::string depreciationMethod() const;
+      std::string depreciationMethod() const;
 
-    bool isDepreciationMethodDefaulted() const;
+      bool isDepreciationMethodDefaulted() const;
 
-    bool useNISTFuelEscalationRates() const;
+      bool useNISTFuelEscalationRates() const;
 
-    bool isUseNISTFuelEscalationRatesDefaulted() const;
+      bool isUseNISTFuelEscalationRatesDefaulted() const;
 
-    boost::optional<std::string> nistRegion() const;
+      boost::optional<std::string> nistRegion() const;
 
-    std::vector<std::string> validNistRegionValues() const;
+      std::vector<std::string> validNistRegionValues() const;
 
-    bool isNISTRegionDefaulted() const;
+      bool isNISTRegionDefaulted() const;
 
-    boost::optional<std::string> nistSector() const;
+      boost::optional<std::string> nistSector() const;
 
-    std::vector<std::string> validNistSectorValues() const;
+      std::vector<std::string> validNistSectorValues() const;
 
-    bool isNISTSectorDefaulted() const;
+      bool isNISTSectorDefaulted() const;
 
-    boost::optional<double> electricityInflation() const;
+      boost::optional<double> electricityInflation() const;
 
-    boost::optional<double> naturalGasInflation() const;
+      boost::optional<double> naturalGasInflation() const;
 
-    boost::optional<double> steamInflation() const;
+      boost::optional<double> steamInflation() const;
 
-    boost::optional<double> gasolineInflation() const;
+      boost::optional<double> gasolineInflation() const;
 
-    boost::optional<double> dieselInflation() const;
+      boost::optional<double> dieselInflation() const;
 
-    boost::optional<double> coalInflation() const;
+      boost::optional<double> coalInflation() const;
 
-    boost::optional<double> fuelOil1Inflation() const;
+      boost::optional<double> fuelOil1Inflation() const;
 
-    boost::optional<double> fuelOil2Inflation() const;
+      boost::optional<double> fuelOil2Inflation() const;
 
-    boost::optional<double> propaneInflation() const;
+      boost::optional<double> propaneInflation() const;
 
-    boost::optional<double> waterInflation() const;
+      boost::optional<double> waterInflation() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<double> otherFuel1Inflation() const;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      boost::optional<double> otherFuel2Inflation() const;
 
-    bool setAnalysisType(const std::string& analysisType);
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetAnalysisType();
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    bool setDiscountingConvention(const std::string& discountingConvention);
+      bool setAnalysisType(const std::string& analysisType);
 
-    void resetDiscountingConvention();
+      void resetAnalysisType();
 
-    bool setInflationApproach(const std::string& inflationApproach);
+      bool setDiscountingConvention(const std::string& discountingConvention);
 
-    void resetInflationApproach();
+      void resetDiscountingConvention();
 
-    /// This cannot be set when analysis type is FEMP or when inflation approach is "CurrentDollar"
-    bool setRealDiscountRate(double realDiscountRate);
+      bool setInflationApproach(const std::string& inflationApproach);
 
-    /// This cannot be set when analysis type is FEMP or when inflation approach is "ConstantDollar"
-    bool setNominalDiscountRate(double nominalDiscountRate);
+      void resetInflationApproach();
 
-    /// This cannot be set when analysis type is FEMP or when inflation approach is "ConstantDollar"
-    bool setInflation(double inflation);
+      /// This cannot be set when analysis type is FEMP or when inflation approach is "CurrentDollar"
+      bool setRealDiscountRate(double realDiscountRate);
 
-    bool setBaseDateMonth(const MonthOfYear& baseDateMonth);
+      /// This cannot be set when analysis type is FEMP or when inflation approach is "ConstantDollar"
+      bool setNominalDiscountRate(double nominalDiscountRate);
 
-    void resetBaseDateMonth();
+      /// This cannot be set when analysis type is FEMP or when inflation approach is "ConstantDollar"
+      bool setInflation(double inflation);
 
-    bool setBaseDateYear(int baseDateYear);
+      bool setBaseDateMonth(const MonthOfYear& baseDateMonth);
 
-    void resetBaseDateYear();
+      void resetBaseDateMonth();
 
-    bool setServiceDateMonth(const MonthOfYear& serviceDateMonth);
+      bool setBaseDateYear(int baseDateYear);
 
-    void resetServiceDateMonth();
+      void resetBaseDateYear();
 
-    bool setServiceDateYear(int serviceDateYear);
+      bool setServiceDateMonth(const MonthOfYear& serviceDateMonth);
 
-    void resetServiceDateYear();
+      void resetServiceDateMonth();
 
-    /// This cannot be set greater than 25 years when analysis type is FEMP
-    bool setLengthOfStudyPeriodInYears(int lengthOfStudyPeriodInYears);
+      bool setServiceDateYear(int serviceDateYear);
 
-    void resetLengthOfStudyPeriodInYears();
+      void resetServiceDateYear();
 
-    bool setTaxRate(double taxRate);
+      /// This cannot be set greater than 25 years when analysis type is FEMP
+      bool setLengthOfStudyPeriodInYears(int lengthOfStudyPeriodInYears);
 
-    void resetTaxRate();
+      void resetLengthOfStudyPeriodInYears();
 
-    bool setDepreciationMethod(const std::string& depreciationMethod);
+      bool setTaxRate(double taxRate);
 
-    void resetDepreciationMethod();
+      void resetTaxRate();
 
-    /// This cannot be set when analysis type is FEMP
-    bool setUseNISTFuelEscalationRates(bool useNISTFuelEscalationRates);
+      bool setDepreciationMethod(const std::string& depreciationMethod);
 
-    void resetUseNISTFuelEscalationRates();
+      void resetDepreciationMethod();
 
-    /// This cannot be set when use NIST fuel escalation rates is false
-    bool setNISTRegion(const std::string& nistRegion);
+      /// This cannot be set when analysis type is FEMP
+      bool setUseNISTFuelEscalationRates(bool useNISTFuelEscalationRates);
 
-    void resetNISTRegion();
+      void resetUseNISTFuelEscalationRates();
 
-    /// This cannot be set when use NIST fuel escalation rates is false
-    bool setNISTSector(const std::string& nistSector);
+      /// This cannot be set when use NIST fuel escalation rates is false
+      bool setNISTRegion(const std::string& nistRegion);
 
-    void resetNISTSector();
+      void resetNISTRegion();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setElectricityInflation(double electricityInflation);
+      /// This cannot be set when use NIST fuel escalation rates is false
+      bool setNISTSector(const std::string& nistSector);
 
-    void resetElectricityInflation();
+      void resetNISTSector();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setNaturalGasInflation(double naturalGasInflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setElectricityInflation(double electricityInflation);
 
-    void resetNaturalGasInflation();
+      void resetElectricityInflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setSteamInflation(double steamInflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setNaturalGasInflation(double naturalGasInflation);
 
-    void resetSteamInflation();
+      void resetNaturalGasInflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setGasolineInflation(double gasolineInflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setSteamInflation(double steamInflation);
 
-    void resetGasolineInflation();
+      void resetSteamInflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setDieselInflation(double dieselInflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setGasolineInflation(double gasolineInflation);
 
-    void resetDieselInflation();
+      void resetGasolineInflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setCoalInflation(double coalInflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setDieselInflation(double dieselInflation);
 
-    void resetCoalInflation();
+      void resetDieselInflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setFuelOil1Inflation(double fuelOil1Inflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setCoalInflation(double coalInflation);
 
-    void resetFuelOil1Inflation();
+      void resetCoalInflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setFuelOil2Inflation(double fuelOil2Inflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setFuelOil1Inflation(double fuelOil1Inflation);
 
-    void resetFuelOil2Inflation();
+      void resetFuelOil1Inflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setPropaneInflation(double propaneInflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setFuelOil2Inflation(double fuelOil2Inflation);
 
-    void resetPropaneInflation();
+      void resetFuelOil2Inflation();
 
-    /// This cannot be set when use NIST fuel escalation rates is true
-    bool setWaterInflation(double waterInflation);
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setPropaneInflation(double propaneInflation);
 
-    void resetWaterInflation();
+      void resetPropaneInflation();
 
-    //@}
-   private:
-    REGISTER_LOGGER("openstudio.model.LifeCycleCostParameters");
-  };
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setWaterInflation(double waterInflation);
 
-} // detail
+      void resetWaterInflation();
 
-} // model
-} // openstudio
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setOtherFuel1Inflation(double otherFuel1Inflation);
 
-#endif // MODEL_LIFECYCLECOSTPARAMETERS_IMPL_HPP
+      void resetOtherFuel1Inflation();
+
+      /// This cannot be set when use NIST fuel escalation rates is true
+      bool setOtherFuel2Inflation(double otherFuel2Inflation);
+
+      void resetOtherFuel2Inflation();
+
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.LifeCycleCostParameters");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_LIFECYCLECOSTPARAMETERS_IMPL_HPP

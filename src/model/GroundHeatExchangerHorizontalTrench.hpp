@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,146 +37,147 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class GroundHeatExchangerHorizontalTrench_Impl;
+    class GroundHeatExchangerHorizontalTrench_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GroundHeatExchangerHorizontalTrench is a StraightComponent that wraps the OpenStudio IDD object 'OS:GroundHeatExchanger:HorizontalTrench'. */
-class MODEL_API GroundHeatExchangerHorizontalTrench : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GroundHeatExchangerHorizontalTrench is a StraightComponent that wraps the OpenStudio IDD object 'OS:GroundHeatExchanger:HorizontalTrench'. */
+  class MODEL_API GroundHeatExchangerHorizontalTrench : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GroundHeatExchangerHorizontalTrench(const Model& model);
+    explicit GroundHeatExchangerHorizontalTrench(const Model& model);
 
-  virtual ~GroundHeatExchangerHorizontalTrench() {}
+    virtual ~GroundHeatExchangerHorizontalTrench() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> groundTemperatureModelValues();
+    static std::vector<std::string> groundTemperatureModelValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double designFlowRate() const;
+    double designFlowRate() const;
 
-  double trenchLengthinPipeAxialDirection() const;
+    double trenchLengthinPipeAxialDirection() const;
 
-  int numberofTrenches() const;
+    int numberofTrenches() const;
 
-  double horizontalSpacingBetweenPipes() const;
+    double horizontalSpacingBetweenPipes() const;
 
-  double pipeInnerDiameter() const;
+    double pipeInnerDiameter() const;
 
-  double pipeOuterDiameter() const;
+    double pipeOuterDiameter() const;
 
-  double burialDepth() const;
+    double burialDepth() const;
 
-  double soilThermalConductivity() const;
+    double soilThermalConductivity() const;
 
-  double soilDensity() const;
+    double soilDensity() const;
 
-  double soilSpecificHeat() const;
+    double soilSpecificHeat() const;
 
-  double pipeThermalConductivity() const;
+    double pipeThermalConductivity() const;
 
-  double pipeDensity() const;
+    double pipeDensity() const;
 
-  double pipeSpecificHeat() const;
+    double pipeSpecificHeat() const;
 
-  double soilMoistureContentPercent() const;
+    double soilMoistureContentPercent() const;
 
-  double soilMoistureContentPercentatSaturation() const;
+    double soilMoistureContentPercentatSaturation() const;
 
-  std::string groundTemperatureModel() const;
+    std::string groundTemperatureModel() const;
 
-  bool isGroundTemperatureModelDefaulted() const;
+    bool isGroundTemperatureModelDefaulted() const;
 
-  double kusudaAchenbachAverageSurfaceTemperature() const;
+    double kusudaAchenbachAverageSurfaceTemperature() const;
 
-  double kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const;
+    double kusudaAchenbachAverageAmplitudeofSurfaceTemperature() const;
 
-  double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const;
+    double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const;
 
-  double evapotranspirationGroundCoverParameter() const;
+    double evapotranspirationGroundCoverParameter() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDesignFlowRate(double designFlowRate);
+    bool setDesignFlowRate(double designFlowRate);
 
-  bool setTrenchLengthinPipeAxialDirection(double trenchLengthinPipeAxialDirection);
+    bool setTrenchLengthinPipeAxialDirection(double trenchLengthinPipeAxialDirection);
 
-  bool setNumberofTrenches(int numberofTrenches);
+    bool setNumberofTrenches(int numberofTrenches);
 
-  bool setHorizontalSpacingBetweenPipes(double horizontalSpacingBetweenPipes);
+    bool setHorizontalSpacingBetweenPipes(double horizontalSpacingBetweenPipes);
 
-  bool setPipeInnerDiameter(double pipeInnerDiameter);
+    bool setPipeInnerDiameter(double pipeInnerDiameter);
 
-  bool setPipeOuterDiameter(double pipeOuterDiameter);
+    bool setPipeOuterDiameter(double pipeOuterDiameter);
 
-  bool setBurialDepth(double burialDepth);
+    bool setBurialDepth(double burialDepth);
 
-  bool setSoilThermalConductivity(double soilThermalConductivity);
+    bool setSoilThermalConductivity(double soilThermalConductivity);
 
-  bool setSoilDensity(double soilDensity);
+    bool setSoilDensity(double soilDensity);
 
-  bool setSoilSpecificHeat(double soilSpecificHeat);
+    bool setSoilSpecificHeat(double soilSpecificHeat);
 
-  bool setPipeThermalConductivity(double pipeThermalConductivity);
+    bool setPipeThermalConductivity(double pipeThermalConductivity);
 
-  bool setPipeDensity(double pipeDensity);
+    bool setPipeDensity(double pipeDensity);
 
-  bool setPipeSpecificHeat(double pipeSpecificHeat);
+    bool setPipeSpecificHeat(double pipeSpecificHeat);
 
-  bool setSoilMoistureContentPercent(double soilMoistureContentPercent);
+    bool setSoilMoistureContentPercent(double soilMoistureContentPercent);
 
-  bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
+    bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
 
-  bool setGroundTemperatureModel(std::string groundTemperatureModel);
+    bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
 
-  void resetGroundTemperatureModel();
+    void resetGroundTemperatureModel();
 
-  bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
+    bool setKusudaAchenbachAverageSurfaceTemperature(double kusudaAchenbachAverageSurfaceTemperature);
 
-  bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+    bool setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(double kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
 
-  bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+    bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
 
-  bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
+    bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GroundHeatExchangerHorizontalTrench_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GroundHeatExchangerHorizontalTrench_Impl ImplType;
 
-  explicit GroundHeatExchangerHorizontalTrench(std::shared_ptr<detail::GroundHeatExchangerHorizontalTrench_Impl> impl);
+    explicit GroundHeatExchangerHorizontalTrench(std::shared_ptr<detail::GroundHeatExchangerHorizontalTrench_Impl> impl);
 
-  friend class detail::GroundHeatExchangerHorizontalTrench_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GroundHeatExchangerHorizontalTrench");
-};
+    friend class detail::GroundHeatExchangerHorizontalTrench_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GroundHeatExchangerHorizontalTrench");
+  };
 
-/** \relates GroundHeatExchangerHorizontalTrench*/
-typedef boost::optional<GroundHeatExchangerHorizontalTrench> OptionalGroundHeatExchangerHorizontalTrench;
+  /** \relates GroundHeatExchangerHorizontalTrench*/
+  typedef boost::optional<GroundHeatExchangerHorizontalTrench> OptionalGroundHeatExchangerHorizontalTrench;
 
-/** \relates GroundHeatExchangerHorizontalTrench*/
-typedef std::vector<GroundHeatExchangerHorizontalTrench> GroundHeatExchangerHorizontalTrenchVector;
+  /** \relates GroundHeatExchangerHorizontalTrench*/
+  typedef std::vector<GroundHeatExchangerHorizontalTrench> GroundHeatExchangerHorizontalTrenchVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_HPP
+#endif  // MODEL_GROUNDHEATEXCHANGERHORIZONTALTRENCH_HPP

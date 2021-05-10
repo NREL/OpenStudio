@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,91 +35,88 @@
 namespace openstudio {
 namespace model {
 
-namespace detail
-{
-  class ThermostatSetpointDualSetpoint_Impl;
-}
+  namespace detail {
+    class ThermostatSetpointDualSetpoint_Impl;
+  }
 
-class Schedule;
+  class Schedule;
 
-/** ThermostatSetpointDualSetpoint is a ModelObject that wraps the OpenStudio IDD object
+  /** ThermostatSetpointDualSetpoint is a ModelObject that wraps the OpenStudio IDD object
  *  'OS:ThermostatSetpoint:DualSetpoint'. */
-class MODEL_API ThermostatSetpointDualSetpoint : public Thermostat {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ThermostatSetpointDualSetpoint : public Thermostat
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ThermostatSetpointDualSetpoint(const Model& model);
+    explicit ThermostatSetpointDualSetpoint(const Model& model);
 
-  virtual ~ThermostatSetpointDualSetpoint() {}
+    virtual ~ThermostatSetpointDualSetpoint() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
+    boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
 
-  boost::optional<Schedule> coolingSetpointTemperatureSchedule() const;
+    boost::optional<Schedule> coolingSetpointTemperatureSchedule() const;
 
-  /** This ends up in the ZoneControl:Thermostat object during ForwardTranslation */
-  double temperatureDifferenceBetweenCutoutAndSetpoint() const;
-  bool isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const;
+    /** This ends up in the ZoneControl:Thermostat object during ForwardTranslation */
+    double temperatureDifferenceBetweenCutoutAndSetpoint() const;
+    bool isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const;
 
-  /** \deprecated */
-  boost::optional<Schedule> getHeatingSchedule() const;
+    /** \deprecated */
+    boost::optional<Schedule> getHeatingSchedule() const;
 
-  /** \deprecated */
-  boost::optional<Schedule> getCoolingSchedule() const;
+    /** \deprecated */
+    boost::optional<Schedule> getCoolingSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
+    bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-  void resetHeatingSetpointTemperatureSchedule();
+    void resetHeatingSetpointTemperatureSchedule();
 
-  bool setCoolingSetpointTemperatureSchedule(Schedule& schedule);
+    bool setCoolingSetpointTemperatureSchedule(Schedule& schedule);
 
-  void resetCoolingSetpointTemperatureSchedule();
+    void resetCoolingSetpointTemperatureSchedule();
 
-  bool setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT);
+    bool setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT);
 
-  /** \deprecated */
-  bool setHeatingSchedule(Schedule& s );
+    /** \deprecated */
+    bool setHeatingSchedule(Schedule& s);
 
-  /** \deprecated */
-  void resetHeatingSchedule();
+    /** \deprecated */
+    void resetHeatingSchedule();
 
-  /** \deprecated */
-  bool setCoolingSchedule(Schedule& s );
+    /** \deprecated */
+    bool setCoolingSchedule(Schedule& s);
 
-  /** \deprecated */
-  void resetCoolingSchedule();
+    /** \deprecated */
+    void resetCoolingSchedule();
 
-  //@}
- protected:
+    //@}
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    typedef detail::ThermostatSetpointDualSetpoint_Impl ImplType;
 
-  typedef detail::ThermostatSetpointDualSetpoint_Impl ImplType;
+    explicit ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
 
-  explicit ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ThermostatSetpointDualSetpoint");
+  };
 
- private:
+  typedef boost::optional<ThermostatSetpointDualSetpoint> OptionalThermostatSetpointDualSetpoint;
 
-  REGISTER_LOGGER("openstudio.model.ThermostatSetpointDualSetpoint");
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-typedef boost::optional<ThermostatSetpointDualSetpoint> OptionalThermostatSetpointDualSetpoint;
-
-} // model
-} // openstudio
-
-#endif // MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
+#endif  // MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,398 +49,380 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ZoneHVACBaseboardRadiantConvectiveElectric_Impl::ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const IdfObject& idfObject,
-                                                                                                   Model_Impl* model,
-                                                                                                   bool keepHandle)
-    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType());
-  }
-
-  ZoneHVACBaseboardRadiantConvectiveElectric_Impl::ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                   Model_Impl* model,
-                                                                                                   bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType());
-  }
-
-  ZoneHVACBaseboardRadiantConvectiveElectric_Impl::ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const ZoneHVACBaseboardRadiantConvectiveElectric_Impl& other,
-                                                                                                   Model_Impl* model,
-                                                                                                   bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& ZoneHVACBaseboardRadiantConvectiveElectric_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Baseboard Total Heating Rate",
-      "Baseboard Total Heating Energy",
-      "Baseboard Electric Energy",
-      "Baseboard Electric Power"
-    };
-    return result;
-  }
-
-  IddObjectType ZoneHVACBaseboardRadiantConvectiveElectric_Impl::iddObjectType() const {
-    return ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACBaseboardRadiantConvectiveElectric","Availability"));
+    ZoneHVACBaseboardRadiantConvectiveElectric_Impl::ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                     bool keepHandle)
+      : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType());
     }
-    return result;
-  }
 
-  unsigned ZoneHVACBaseboardRadiantConvectiveElectric_Impl::inletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
+    ZoneHVACBaseboardRadiantConvectiveElectric_Impl::ZoneHVACBaseboardRadiantConvectiveElectric_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType());
+    }
 
-  unsigned ZoneHVACBaseboardRadiantConvectiveElectric_Impl::outletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
+    ZoneHVACBaseboardRadiantConvectiveElectric_Impl::ZoneHVACBaseboardRadiantConvectiveElectric_Impl(
+      const ZoneHVACBaseboardRadiantConvectiveElectric_Impl& other, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
-  boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::thermalZone() const
-  {
-    ModelObject thisObject = this->getObject<ModelObject>();
-    auto const thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
-    for( auto const & thermalZone : thermalZones )
-    {
-      std::vector<ModelObject> equipment = thermalZone.equipment();
+    const std::vector<std::string>& ZoneHVACBaseboardRadiantConvectiveElectric_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Baseboard Total Heating Rate", "Baseboard Total Heating Energy", "Baseboard Electricity Energy",
+                                                   "Baseboard Electricity Rate"};
+      return result;
+    }
 
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        return thermalZone;
+    IddObjectType ZoneHVACBaseboardRadiantConvectiveElectric_Impl::iddObjectType() const {
+      return ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACBaseboardRadiantConvectiveElectric", "Availability"));
       }
-    }
-    return boost::none;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::addToThermalZone(ThermalZone & thermalZone)
-  {
-    Model m = this->model();
-
-    if( thermalZone.model() != m || thermalZone.isPlenum() )
-    {
-      return false;
+      return result;
     }
 
-    removeFromThermalZone();
-
-    thermalZone.setUseIdealAirLoads(false);
-
-    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
-
-    return true;
-  }
-
-  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::removeFromThermalZone()
-  {
-    if ( auto thermalZone = this->thermalZone() ) {
-      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+    unsigned ZoneHVACBaseboardRadiantConvectiveElectric_Impl::inletPort() const {
+      return 0;  // this object has no inlet or outlet node
     }
-  }
 
-  std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::surfaces() const {
+    unsigned ZoneHVACBaseboardRadiantConvectiveElectric_Impl::outletPort() const {
+      return 0;  // this object has no inlet or outlet node
+    }
 
-    //vector to hold all of the surfaces that this radiant system is attached to
-    std::vector<Surface> surfaces;
+    boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::thermalZone() const {
+      ModelObject thisObject = this->getObject<ModelObject>();
+      auto const thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
+      for (auto const& thermalZone : thermalZones) {
+        std::vector<ModelObject> equipment = thermalZone.equipment();
 
-    //get the thermal zone this equipment belongs to
-    if (auto const thermalZone = this->thermalZone()) {
-
-      //loop through all the spaces in this zone
-      for (auto const & space : thermalZone->spaces()){
-
-        //loop through all the surfaces in this space
-        for (auto const & surface : space.surfaces()){
-          surfaces.push_back(surface);
+        if (std::find(equipment.begin(), equipment.end(), thisObject) != equipment.end()) {
+          return thermalZone;
         }
       }
+      return boost::none;
     }
 
-    return surfaces;
-  }
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::addToThermalZone(ThermalZone& thermalZone) {
+      Model m = this->model();
 
-  Schedule ZoneHVACBaseboardRadiantConvectiveElectric_Impl::availabilitySchedule() const {
-    boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+      if (thermalZone.model() != m || thermalZone.isPlenum()) {
+        return false;
+      }
+
+      removeFromThermalZone();
+
+      thermalZone.setUseIdealAirLoads(false);
+
+      thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+      return true;
     }
-    return value.get();
-  }
 
-  std::string ZoneHVACBaseboardRadiantConvectiveElectric_Impl::heatingDesignCapacityMethod() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityMethod,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::heatingDesignCapacity() const {
-    return getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity,true);
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::isHeatingDesignCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::removeFromThermalZone() {
+      if (auto thermalZone = this->thermalZone()) {
+        thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+      }
     }
-    return result;
-  }
 
-  double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::heatingDesignCapacityPerFloorArea() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityPerFloorArea,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::surfaces() const {
 
-  double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::fractionofAutosizedHeatingDesignCapacity() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofAutosizedHeatingDesignCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+      //vector to hold all of the surfaces that this radiant system is attached to
+      std::vector<Surface> surfaces;
 
-  double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::efficiency() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::Efficiency,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+      //get the thermal zone this equipment belongs to
+      if (auto const thermalZone = this->thermalZone()) {
 
-  double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::fractionRadiant() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionRadiant,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+        //loop through all the spaces in this zone
+        for (auto const& space : thermalZone->spaces()) {
 
-  double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::fractionofRadiantEnergyIncidentonPeople() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofRadiantEnergyIncidentonPeople,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+          //loop through all the surfaces in this space
+          for (auto const& surface : space.surfaces()) {
+            surfaces.push_back(surface);
+          }
+        }
+      }
 
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName,
-                              "ZoneHVACBaseboardRadiantConvectiveElectric",
-                              "Availability",
-                              schedule);
-    return result;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
-    bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
-    return result;
-  }
-
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity) {
-    bool result(false);
-    if (heatingDesignCapacity) {
-      result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity, heatingDesignCapacity.get());
+      return surfaces;
     }
-    return result;
-  }
 
-  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosizeHeatingDesignCapacity() {
-    bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity, "autosize");
-    OS_ASSERT(result);
-  }
+    Schedule ZoneHVACBaseboardRadiantConvectiveElectric_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+      }
+      return value.get();
+    }
 
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityPerFloorArea, heatingDesignCapacityPerFloorArea);
-    return result;
-  }
+    std::string ZoneHVACBaseboardRadiantConvectiveElectric_Impl::heatingDesignCapacityMethod() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofAutosizedHeatingDesignCapacity, fractionofAutosizedHeatingDesignCapacity);
-    return result;
-  }
+    boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::heatingDesignCapacity() const {
+      return getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity, true);
+    }
 
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setEfficiency(double efficiency) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::Efficiency, efficiency);
-    return result;
-  }
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::isHeatingDesignCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
 
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setFractionRadiant(double fractionRadiant) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionRadiant, fractionRadiant);
-    return result;
-  }
+    double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::heatingDesignCapacityPerFloorArea() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityPerFloorArea, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
-    bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofRadiantEnergyIncidentonPeople, fractionofRadiantEnergyIncidentonPeople);
-    return result;
-  }
+    double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::fractionofAutosizedHeatingDesignCapacity() const {
+      boost::optional<double> value =
+        getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofAutosizedHeatingDesignCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Schedule> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName);
-  }
+    double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::efficiency() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::Efficiency, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosizedHeatingDesignCapacity() const {
-    return getAutosizedValue("Design Size Heating Design Capacity", "W");
-  }
+    double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::fractionRadiant() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionRadiant, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosize() {
+    double ZoneHVACBaseboardRadiantConvectiveElectric_Impl::fractionofRadiantEnergyIncidentonPeople() const {
+      boost::optional<double> value =
+        getDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofRadiantEnergyIncidentonPeople, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName,
+                                "ZoneHVACBaseboardRadiantConvectiveElectric", "Availability", schedule);
+      return result;
+    }
+
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+      bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
+      return result;
+    }
+
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity) {
+      bool result(false);
+      if (heatingDesignCapacity) {
+        result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity, heatingDesignCapacity.get());
+      }
+      return result;
+    }
+
+    void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosizeHeatingDesignCapacity() {
+      bool result = setString(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
+      bool result =
+        setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityPerFloorArea, heatingDesignCapacityPerFloorArea);
+      return result;
+    }
+
+    bool
+      ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
+      bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofAutosizedHeatingDesignCapacity,
+                              fractionofAutosizedHeatingDesignCapacity);
+      return result;
+    }
+
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setEfficiency(double efficiency) {
+      bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::Efficiency, efficiency);
+      return result;
+    }
+
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setFractionRadiant(double fractionRadiant) {
+      bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionRadiant, fractionRadiant);
+      return result;
+    }
+
+    bool ZoneHVACBaseboardRadiantConvectiveElectric_Impl::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
+      bool result = setDouble(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::FractionofRadiantEnergyIncidentonPeople,
+                              fractionofRadiantEnergyIncidentonPeople);
+      return result;
+    }
+
+    boost::optional<Schedule> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::optionalAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName);
+    }
+
+    boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosizedHeatingDesignCapacity() const {
+      return getAutosizedValue("Design Size Heating Design Capacity", "W");
+    }
+
+    void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosize() {
+      autosizeHeatingDesignCapacity();
+    }
+
+    void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedHeatingDesignCapacity();
+      if (val) {
+        setHeatingDesignCapacity(val.get());
+      }
+    }
+
+    std::vector<EMSActuatorNames> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"ZoneBaseboard:OutdoorTemperatureControlled", "Power Level"}};
+      return actuators;
+    }
+
+    std::vector<std::string> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types{"Simple Zone Baseboard Capacity At Low Temperature", "Simple Zone Baseboard Capacity At High Temperature"};
+      return types;
+    }
+  }  // namespace detail
+
+  ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveElectric(const Model& model)
+    : ZoneHVACComponent(ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>());
+
+    bool ok = true;
+    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(alwaysOn);
+    OS_ASSERT(ok);
+    ok = setHeatingDesignCapacityMethod("HeatingDesignCapacity");
+    OS_ASSERT(ok);
     autosizeHeatingDesignCapacity();
+    ok = setHeatingDesignCapacityPerFloorArea(0);
+    OS_ASSERT(ok);
+    ok = setFractionofAutosizedHeatingDesignCapacity(1.0);
+    OS_ASSERT(ok);
+    ok = setEfficiency(1.0);
+    OS_ASSERT(ok);
+    ok = setFractionRadiant(0.2);
+    OS_ASSERT(ok);
+    ok = setFractionofRadiantEnergyIncidentonPeople(0.3);
+    OS_ASSERT(ok);
   }
 
-  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedHeatingDesignCapacity();
-    if (val) {
-      setHeatingDesignCapacity(val.get());
-    }
-
+  IddObjectType ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric);
   }
 
-  std::vector<EMSActuatorNames> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "ZoneBaseboard:OutdoorTemperatureControlled", "Power Level" } };
-    return actuators;
+  std::vector<std::string> ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacityMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityMethod);
   }
 
-  std::vector<std::string> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{ "Simple Zone Baseboard Capacity At Low Temperature",
-      "Simple Zone Baseboard Capacity At High Temperature" };
-    return types;
-
+  Schedule ZoneHVACBaseboardRadiantConvectiveElectric::availabilitySchedule() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->availabilitySchedule();
   }
-} // detail
 
-ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveElectric(const Model& model)
-  : ZoneHVACComponent(ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>());
+  std::string ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacityMethod() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->heatingDesignCapacityMethod();
+  }
 
-  bool ok = true;
-  auto alwaysOn = model.alwaysOnDiscreteSchedule();
-  ok = setAvailabilitySchedule( alwaysOn );
-  OS_ASSERT(ok);
-  ok = setHeatingDesignCapacityMethod( "HeatingDesignCapacity" );
-  OS_ASSERT(ok);
-  autosizeHeatingDesignCapacity();
-  ok = setHeatingDesignCapacityPerFloorArea( 0 );
-  OS_ASSERT(ok);
-  ok = setFractionofAutosizedHeatingDesignCapacity( 1.0 );
-  OS_ASSERT(ok);
-  ok = setEfficiency( 1.0 );
-  OS_ASSERT(ok);
-  ok = setFractionRadiant( 0.2 );
-  OS_ASSERT(ok);
-  ok = setFractionofRadiantEnergyIncidentonPeople( 0.3 );
-  OS_ASSERT(ok);
-}
+  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacity() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->heatingDesignCapacity();
+  }
 
-IddObjectType ZoneHVACBaseboardRadiantConvectiveElectric::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric);
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::isHeatingDesignCapacityAutosized() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->isHeatingDesignCapacityAutosized();
+  }
 
-std::vector<std::string> ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacityMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::HeatingDesignCapacityMethod);
-}
+  double ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacityPerFloorArea() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->heatingDesignCapacityPerFloorArea();
+  }
 
-Schedule ZoneHVACBaseboardRadiantConvectiveElectric::availabilitySchedule() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->availabilitySchedule();
-}
+  double ZoneHVACBaseboardRadiantConvectiveElectric::fractionofAutosizedHeatingDesignCapacity() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->fractionofAutosizedHeatingDesignCapacity();
+  }
 
-std::string ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacityMethod() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->heatingDesignCapacityMethod();
-}
+  double ZoneHVACBaseboardRadiantConvectiveElectric::efficiency() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->efficiency();
+  }
 
-boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacity() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->heatingDesignCapacity();
-}
+  double ZoneHVACBaseboardRadiantConvectiveElectric::fractionRadiant() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->fractionRadiant();
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::isHeatingDesignCapacityAutosized() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->isHeatingDesignCapacityAutosized();
-}
+  double ZoneHVACBaseboardRadiantConvectiveElectric::fractionofRadiantEnergyIncidentonPeople() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->fractionofRadiantEnergyIncidentonPeople();
+  }
 
-double ZoneHVACBaseboardRadiantConvectiveElectric::heatingDesignCapacityPerFloorArea() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->heatingDesignCapacityPerFloorArea();
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-double ZoneHVACBaseboardRadiantConvectiveElectric::fractionofAutosizedHeatingDesignCapacity() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->fractionofAutosizedHeatingDesignCapacity();
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
+  }
 
-double ZoneHVACBaseboardRadiantConvectiveElectric::efficiency() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->efficiency();
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacity(double heatingDesignCapacity) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setHeatingDesignCapacity(heatingDesignCapacity);
+  }
 
-double ZoneHVACBaseboardRadiantConvectiveElectric::fractionRadiant() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->fractionRadiant();
-}
+  void ZoneHVACBaseboardRadiantConvectiveElectric::autosizeHeatingDesignCapacity() {
+    getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->autosizeHeatingDesignCapacity();
+  }
 
-double ZoneHVACBaseboardRadiantConvectiveElectric::fractionofRadiantEnergyIncidentonPeople() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->fractionofRadiantEnergyIncidentonPeople();
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setHeatingDesignCapacityPerFloorArea(
+      heatingDesignCapacityPerFloorArea);
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setAvailabilitySchedule(schedule);
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setFractionofAutosizedHeatingDesignCapacity(
+      fractionofAutosizedHeatingDesignCapacity);
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setEfficiency(double efficiency) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setEfficiency(efficiency);
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacity(double heatingDesignCapacity) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setHeatingDesignCapacity(heatingDesignCapacity);
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setFractionRadiant(double fractionRadiant) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setFractionRadiant(fractionRadiant);
+  }
 
-void ZoneHVACBaseboardRadiantConvectiveElectric::autosizeHeatingDesignCapacity() {
-  getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->autosizeHeatingDesignCapacity();
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setFractionofRadiantEnergyIncidentonPeople(
+      fractionofRadiantEnergyIncidentonPeople);
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setHeatingDesignCapacityPerFloorArea(heatingDesignCapacityPerFloorArea);
-}
+  boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveElectric::thermalZone() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->thermalZone();
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
-}
+  bool ZoneHVACBaseboardRadiantConvectiveElectric::addToThermalZone(ThermalZone& thermalZone) {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->addToThermalZone(thermalZone);
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setEfficiency(double efficiency) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setEfficiency(efficiency);
-}
+  void ZoneHVACBaseboardRadiantConvectiveElectric::removeFromThermalZone() {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->removeFromThermalZone();
+  }
 
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setFractionRadiant(double fractionRadiant) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setFractionRadiant(fractionRadiant);
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveElectric::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setFractionofRadiantEnergyIncidentonPeople(fractionofRadiantEnergyIncidentonPeople);
-}
-
-boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveElectric::thermalZone() const {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->thermalZone();
-}
-
-bool ZoneHVACBaseboardRadiantConvectiveElectric::addToThermalZone(ThermalZone & thermalZone) {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->addToThermalZone(thermalZone);
-}
-
-void ZoneHVACBaseboardRadiantConvectiveElectric::removeFromThermalZone() {
-  return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->removeFromThermalZone();
-}
-
-/// @cond
-ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl> impl)
-  : ZoneHVACComponent(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveElectric(
+    std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl> impl)
+    : ZoneHVACComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric::autosizedHeatingDesignCapacity() const {
     return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->autosizedHeatingDesignCapacity();
   }
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,7 +59,6 @@
 #include "../PlantEquipmentOperationOutdoorDryBulb.hpp"
 #include "../PlantEquipmentOperationOutdoorDryBulb_Impl.hpp"
 
-
 #include "../AvailabilityManager.hpp"
 #include "../AvailabilityManager_Impl.hpp"
 
@@ -79,62 +78,59 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,PlantLoop_PlantLoop)
-{
+TEST_F(ModelFixture, PlantLoop_PlantLoop) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     PlantLoop plantLoop(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      PlantLoop plantLoop(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,PlantLoop_Remove)
-{
+TEST_F(ModelFixture, PlantLoop_Remove) {
   Model m;
   auto size = m.modelObjects().size();
   PlantLoop plantLoop(m);
 
   EXPECT_FALSE(plantLoop.remove().empty());
 
-  EXPECT_EQ(size,m.modelObjects().size());
+  EXPECT_EQ(size, m.modelObjects().size());
 }
 
-TEST_F(ModelFixture,PlantLoop_supplyComponents)
-{
+TEST_F(ModelFixture, PlantLoop_supplyComponents) {
   Model m;
 
   // Empty Plant Loop
 
   PlantLoop plantLoop(m);
-  ASSERT_EQ( 5u,plantLoop.supplyComponents().size() );
+  ASSERT_EQ(5u, plantLoop.supplyComponents().size());
 
-  EXPECT_EQ("Optimal",plantLoop.loadDistributionScheme());
+  EXPECT_EQ("Optimal", plantLoop.loadDistributionScheme());
 
   boost::optional<ModelObject> comp;
   comp = plantLoop.supplyComponents()[1];
   ASSERT_TRUE(comp);
-  ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Splitter,comp->iddObjectType().value());
+  ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Splitter, comp->iddObjectType().value());
 
   ConnectorSplitter splitter = comp->cast<ConnectorSplitter>();
   comp = splitter.lastOutletModelObject();
   ASSERT_TRUE(comp);
-  ASSERT_EQ(openstudio::IddObjectType::OS_Node,comp->iddObjectType().value());
+  ASSERT_EQ(openstudio::IddObjectType::OS_Node, comp->iddObjectType().value());
 
   Node connectorNode = comp->cast<Node>();
   comp = connectorNode.outletModelObject();
   ASSERT_TRUE(comp);
-  ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Mixer,comp->iddObjectType().value());
+  ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Mixer, comp->iddObjectType().value());
 
   ConnectorMixer mixer = comp->cast<ConnectorMixer>();
   comp = mixer.outletModelObject();
   ASSERT_TRUE(comp);
   Node supplyOutletNode = plantLoop.supplyOutletNode();
-  ASSERT_EQ(comp->handle(),supplyOutletNode.handle());
+  ASSERT_EQ(comp->handle(), supplyOutletNode.handle());
 
   // Add a new component
 
@@ -142,128 +138,123 @@ TEST_F(ModelFixture,PlantLoop_supplyComponents)
   CurveBiquadratic eirToCorfOfT(m);
   CurveQuadratic eiToCorfOfPlr(m);
 
-  ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
   ASSERT_TRUE(chiller.addToNode(supplyOutletNode));
-  ASSERT_EQ( 7u,plantLoop.supplyComponents().size() );
+  ASSERT_EQ(7u, plantLoop.supplyComponents().size());
 
   // Add a new supply branch
 
   ChillerElectricEIR chiller2 = chiller.clone(m).cast<ChillerElectricEIR>();
 
-  ASSERT_EQ( 1u,splitter.nextBranchIndex() );
-  ASSERT_EQ( 1u,mixer.nextBranchIndex() );
+  ASSERT_EQ(1u, splitter.nextBranchIndex());
+  ASSERT_EQ(1u, mixer.nextBranchIndex());
   ASSERT_TRUE(plantLoop.addSupplyBranchForComponent(chiller2));
-  ASSERT_EQ( 1u,splitter.nextBranchIndex() );
-  ASSERT_EQ( 1u,mixer.nextBranchIndex() );
-  ASSERT_EQ( 1u,splitter.outletModelObjects().size() );
-  ASSERT_EQ( 9u,plantLoop.supplyComponents().size() );
+  ASSERT_EQ(1u, splitter.nextBranchIndex());
+  ASSERT_EQ(1u, mixer.nextBranchIndex());
+  ASSERT_EQ(1u, splitter.outletModelObjects().size());
+  ASSERT_EQ(9u, plantLoop.supplyComponents().size());
 
   // Remove the new supply branch
 
   ASSERT_TRUE(plantLoop.removeSupplyBranchWithComponent(chiller2));
-  ASSERT_EQ( 7u,plantLoop.supplyComponents().size() );
+  ASSERT_EQ(7u, plantLoop.supplyComponents().size());
 }
 
-TEST_F(ModelFixture,PlantLoop_demandComponent)
-{
+TEST_F(ModelFixture, PlantLoop_demandComponent) {
   Model m;
   PlantLoop plantLoop(m);
 
-  ASSERT_EQ( 1u,plantLoop.demandInletNodes().size() );
+  ASSERT_EQ(1u, plantLoop.demandInletNodes().size());
 
   auto demandInletNode = plantLoop.demandInletNode();
   auto mo = plantLoop.demandComponent(demandInletNode.handle());
   ASSERT_TRUE(mo);
-  EXPECT_EQ( demandInletNode,mo.get() );
+  EXPECT_EQ(demandInletNode, mo.get());
 }
 
-TEST_F(ModelFixture,PlantLoop_demandComponents)
-{
+TEST_F(ModelFixture, PlantLoop_demandComponents) {
   Model m;
   PlantLoop plantLoop(m);
-  ASSERT_EQ( 5u,plantLoop.demandComponents().size() );
+  ASSERT_EQ(5u, plantLoop.demandComponents().size());
 
   Schedule s = m.alwaysOnDiscreteSchedule();
 
-  CoilHeatingWater coil(m,s);
+  CoilHeatingWater coil(m, s);
   plantLoop.addDemandBranchForComponent(coil);
-  ASSERT_EQ( 7u,plantLoop.demandComponents().size() );
+  ASSERT_EQ(7u, plantLoop.demandComponents().size());
 
-  CoilHeatingWater coil2(m,s);
+  CoilHeatingWater coil2(m, s);
   plantLoop.addDemandBranchForComponent(coil2);
-  ASSERT_EQ( 10u,plantLoop.demandComponents().size() );
+  ASSERT_EQ(10u, plantLoop.demandComponents().size());
 
   Splitter splitter = plantLoop.demandSplitter();
-  ASSERT_EQ( 3u,plantLoop.demandComponents(splitter,coil).size() );
-  ASSERT_EQ( 3u,plantLoop.demandComponents(splitter,coil2).size() );
+  ASSERT_EQ(3u, plantLoop.demandComponents(splitter, coil).size());
+  ASSERT_EQ(3u, plantLoop.demandComponents(splitter, coil2).size());
 
   Mixer mixer = plantLoop.demandMixer();
-  ASSERT_EQ( 3u,plantLoop.demandComponents(coil,mixer).size() );
-  ASSERT_EQ( 3u,plantLoop.demandComponents(coil2,mixer).size() );
+  ASSERT_EQ(3u, plantLoop.demandComponents(coil, mixer).size());
+  ASSERT_EQ(3u, plantLoop.demandComponents(coil2, mixer).size());
 }
 
-TEST_F(ModelFixture,PlantLoop_addDemandBranchForComponent)
-{
+TEST_F(ModelFixture, PlantLoop_addDemandBranchForComponent) {
   Model m;
   ScheduleCompact s(m);
   PlantLoop plantLoop(m);
-  CoilHeatingWater heatingCoil(m,s);
-  CoilHeatingWater heatingCoil2(m,s);
-  CoilCoolingWater coolingCoil(m,s);
+  CoilHeatingWater heatingCoil(m, s);
+  CoilHeatingWater heatingCoil2(m, s);
+  CoilCoolingWater coolingCoil(m, s);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil));
 
   boost::optional<ModelObject> inletModelObject = heatingCoil.waterInletModelObject();
   boost::optional<ModelObject> outletModelObject = heatingCoil.waterOutletModelObject();
-  ASSERT_TRUE( inletModelObject );
-  ASSERT_TRUE( outletModelObject );
+  ASSERT_TRUE(inletModelObject);
+  ASSERT_TRUE(outletModelObject);
 
   boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>();
   boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>();
-  ASSERT_TRUE( inletNode );
-  ASSERT_TRUE( outletNode );
+  ASSERT_TRUE(inletNode);
+  ASSERT_TRUE(outletNode);
 
   boost::optional<ModelObject> inletModelObject2 = inletNode->inletModelObject();
   boost::optional<ModelObject> outletModelObject2 = outletNode->outletModelObject();
-  ASSERT_TRUE( inletModelObject2 );
-  ASSERT_TRUE( outletModelObject2 );
+  ASSERT_TRUE(inletModelObject2);
+  ASSERT_TRUE(outletModelObject2);
 
-  ASSERT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
+  ASSERT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil2));
-  ASSERT_EQ( (unsigned)10,plantLoop.demandComponents().size() );
+  ASSERT_EQ((unsigned)10, plantLoop.demandComponents().size());
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(coolingCoil));
-  ASSERT_EQ( (unsigned)13,plantLoop.demandComponents().size() );
+  ASSERT_EQ((unsigned)13, plantLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture,PlantLoop_removeDemandBranchWithComponent)
-{
+TEST_F(ModelFixture, PlantLoop_removeDemandBranchWithComponent) {
   Model m;
   PlantLoop plantLoop(m);
   ScheduleCompact s(m);
-  CoilHeatingWater heatingCoil(m,s);
+  CoilHeatingWater heatingCoil(m, s);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil));
-  ASSERT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
+  ASSERT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  CoilHeatingWater heatingCoil2(m,s);
+  CoilHeatingWater heatingCoil2(m, s);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil2));
-  ASSERT_EQ( (unsigned)10,plantLoop.demandComponents().size() );
+  ASSERT_EQ((unsigned)10, plantLoop.demandComponents().size());
 
   Splitter splitter = plantLoop.demandSplitter();
 
-  ASSERT_EQ( (unsigned)2,splitter.nextBranchIndex() );
-  std::vector<ModelObject> modelObjects = plantLoop.demandComponents(splitter,heatingCoil2);
-  ASSERT_EQ( (unsigned)3,modelObjects.size() );
+  ASSERT_EQ((unsigned)2, splitter.nextBranchIndex());
+  std::vector<ModelObject> modelObjects = plantLoop.demandComponents(splitter, heatingCoil2);
+  ASSERT_EQ((unsigned)3, modelObjects.size());
 
   EXPECT_TRUE(plantLoop.removeDemandBranchWithComponent(heatingCoil2));
-  ASSERT_EQ( (unsigned)1,splitter.nextBranchIndex() );
+  ASSERT_EQ((unsigned)1, splitter.nextBranchIndex());
 }
 
-TEST_F(ModelFixture,PlantLoop_Cost)
-{
+TEST_F(ModelFixture, PlantLoop_Cost) {
   Model m;
   PlantLoop plantLoop(m);
 
@@ -273,8 +264,7 @@ TEST_F(ModelFixture,PlantLoop_Cost)
   EXPECT_DOUBLE_EQ(1000.0, cost->totalCost());
 }
 
-TEST_F(ModelFixture, PlantLoop_edges)
-{
+TEST_F(ModelFixture, PlantLoop_edges) {
   Model m;
 
   PlantLoop plantLoop(m);
@@ -390,8 +380,7 @@ TEST_F(ModelFixture, PlantLoop_edges)
   //EXPECT_TRUE(found_demand_chiller);
 }
 
-TEST_F(ModelFixture, PlantLoop_removeBranchWithComponent)
-{
+TEST_F(ModelFixture, PlantLoop_removeBranchWithComponent) {
   Model m;
   auto airSystem = addSystemType5(m).cast<AirLoopHVAC>();
 
@@ -407,20 +396,19 @@ TEST_F(ModelFixture, PlantLoop_removeBranchWithComponent)
   EXPECT_FALSE(coilFromPlant);
 
   auto plantDemandComps = plant.demandComponents();
-  EXPECT_EQ(7u,plantDemandComps.size());
+  EXPECT_EQ(7u, plantDemandComps.size());
 
   auto splitter = plant.demandSplitter();
   auto mixer = plant.demandMixer();
 
-  EXPECT_EQ(1u,splitter.outletModelObjects().size());
-  EXPECT_EQ(1u,mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, splitter.outletModelObjects().size());
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
 
-  plantDemandComps = plant.demandComponents(splitter,mixer);
-  EXPECT_EQ(5u,plantDemandComps.size());
+  plantDemandComps = plant.demandComponents(splitter, mixer);
+  EXPECT_EQ(5u, plantDemandComps.size());
 }
 
-TEST_F(ModelFixture, PlantLoop_OperationSchemes)
-{
+TEST_F(ModelFixture, PlantLoop_OperationSchemes) {
   Model m;
   PlantLoop plant(m);
 
@@ -428,26 +416,25 @@ TEST_F(ModelFixture, PlantLoop_OperationSchemes)
   EXPECT_TRUE(plant.setPlantEquipmentOperationCoolingLoad(plantEquipmentOperationCoolingLoad));
   auto coolingLoad = plant.plantEquipmentOperationCoolingLoad();
   EXPECT_TRUE(coolingLoad);
-  if( coolingLoad ) {
-    EXPECT_EQ(plantEquipmentOperationCoolingLoad,coolingLoad.get());
+  if (coolingLoad) {
+    EXPECT_EQ(plantEquipmentOperationCoolingLoad, coolingLoad.get());
   }
 
   PlantEquipmentOperationHeatingLoad plantEquipmentOperationHeatingLoad(m);
   EXPECT_TRUE(plant.setPlantEquipmentOperationHeatingLoad(plantEquipmentOperationHeatingLoad));
   auto heatingLoad = plant.plantEquipmentOperationHeatingLoad();
   EXPECT_TRUE(heatingLoad);
-  if( heatingLoad ) {
-    EXPECT_EQ(plantEquipmentOperationHeatingLoad,heatingLoad.get());
+  if (heatingLoad) {
+    EXPECT_EQ(plantEquipmentOperationHeatingLoad, heatingLoad.get());
   }
 
   PlantEquipmentOperationOutdoorDryBulb plantEquipmentOperationOutdoorDryBulb(m);
   EXPECT_TRUE(plant.setPrimaryPlantEquipmentOperationScheme(plantEquipmentOperationOutdoorDryBulb));
   auto dryBulb = plant.primaryPlantEquipmentOperationScheme();
   EXPECT_TRUE(dryBulb);
-  if( dryBulb ) {
-    EXPECT_EQ(plantEquipmentOperationOutdoorDryBulb,dryBulb.get());
+  if (dryBulb) {
+    EXPECT_EQ(plantEquipmentOperationOutdoorDryBulb, dryBulb.get());
   }
-
 }
 
 TEST_F(ModelFixture, PlantLoop_GlycolConcentration) {
@@ -473,7 +460,6 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManagers) {
 
   ASSERT_EQ(0u, p.availabilityManagers().size());
 
-
   AvailabilityManagerLowTemperatureTurnOn aLTOn(m);
   ASSERT_TRUE(p.addAvailabilityManager(aLTOn));
   ASSERT_EQ(1u, p.availabilityManagers().size());
@@ -498,7 +484,6 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManagers) {
   ASSERT_TRUE(p.addAvailabilityManager(aOptStart));
   ASSERT_EQ(6u, p.availabilityManagers().size());
 
-
   // Shouldn't work
   AvailabilityManagerNightVentilation avm_nv(m);
   ASSERT_FALSE(p.addAvailabilityManager(avm_nv));
@@ -512,20 +497,23 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManagers) {
   ASSERT_FALSE(p.addAvailabilityManager(avm_nc));
   ASSERT_EQ(6u, p.availabilityManagers().size());
 
-
   // Test Clone, same model
   PlantLoop p2 = p.clone(m).cast<PlantLoop>();
   ASSERT_EQ(6u, p2.availabilityManagers().size());
+
+  // Test Clone, different model
+  Model m2;
+  PlantLoop p3 = p.clone(m2).cast<PlantLoop>();
+  ASSERT_EQ(6u, p3.availabilityManagers().size());
 
   // reset shouldn't affect the clone
   p.resetAvailabilityManagers();
   ASSERT_EQ(0u, p.availabilityManagers().size());
   ASSERT_EQ(6u, p2.availabilityManagers().size());
 
-
   // TODO: this fails, but not my fault, it hits the PlantLoop_Impl::sizingPlant()  LOG_AND_THROW statement
   // Test Clone, other model
-/*
+  /*
  *  Model m2;
  *  PlantLoop p3 = p2.clone(m2).cast<PlantLoop>();
  *  ASSERT_EQ(6u, p3.availabilityManagers().size());

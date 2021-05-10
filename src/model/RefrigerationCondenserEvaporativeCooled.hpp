@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,236 +37,242 @@ namespace openstudio {
 
 namespace model {
 
-// WaterStorageTank object not used
-//class WaterStorageTank;
-class Schedule;
+  // WaterStorageTank object not used
+  //class WaterStorageTank;
+  class Schedule;
+  class RefrigerationSystem;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationCondenserEvaporativeCooled_Impl;
+    class RefrigerationCondenserEvaporativeCooled_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationCondenserEvaporativeCooled is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Condenser:EvaporativeCooled'. */
-class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationCondenserEvaporativeCooled is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Condenser:EvaporativeCooled'. */
+  class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationCondenserEvaporativeCooled(const Model& model);
+    explicit RefrigerationCondenserEvaporativeCooled(const Model& model);
 
-  virtual ~RefrigerationCondenserEvaporativeCooled() {}
+    virtual ~RefrigerationCondenserEvaporativeCooled() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> fanSpeedControlTypeValues();
+    static std::vector<std::string> fanSpeedControlTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double ratedEffectiveTotalHeatRejectionRate() const;
+    double ratedEffectiveTotalHeatRejectionRate() const;
 
-  double ratedSubcoolingTemperatureDifference() const;
+    double ratedSubcoolingTemperatureDifference() const;
 
-  bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
+    bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
 
-  std::string fanSpeedControlType() const;
+    std::string fanSpeedControlType() const;
 
-  bool isFanSpeedControlTypeDefaulted() const;
+    bool isFanSpeedControlTypeDefaulted() const;
 
-  double ratedFanPower() const;
+    double ratedFanPower() const;
 
-  double minimumFanAirFlowRatio() const;
+    double minimumFanAirFlowRatio() const;
 
-  bool isMinimumFanAirFlowRatioDefaulted() const;
+    bool isMinimumFanAirFlowRatioDefaulted() const;
 
-  double approachTemperatureConstantTerm() const;
+    double approachTemperatureConstantTerm() const;
 
-  bool isApproachTemperatureConstantTermDefaulted() const;
+    bool isApproachTemperatureConstantTermDefaulted() const;
 
-  double approachTemperatureCoefficient2() const;
+    double approachTemperatureCoefficient2() const;
 
-  bool isApproachTemperatureCoefficient2Defaulted() const;
+    bool isApproachTemperatureCoefficient2Defaulted() const;
 
-  double approachTemperatureCoefficient3() const;
+    double approachTemperatureCoefficient3() const;
 
-  bool isApproachTemperatureCoefficient3Defaulted() const;
+    bool isApproachTemperatureCoefficient3Defaulted() const;
 
-  double approachTemperatureCoefficient4() const;
+    double approachTemperatureCoefficient4() const;
 
-  bool isApproachTemperatureCoefficient4Defaulted() const;
+    bool isApproachTemperatureCoefficient4Defaulted() const;
 
-  double minimumCapacityFactor() const;
+    double minimumCapacityFactor() const;
 
-  bool isMinimumCapacityFactorDefaulted() const;
+    bool isMinimumCapacityFactorDefaulted() const;
 
-  double maximumCapacityFactor() const;
+    double maximumCapacityFactor() const;
 
-  bool isMaximumCapacityFactorDefaulted() const;
+    bool isMaximumCapacityFactorDefaulted() const;
 
-  //std::string airInletNode() const;
+    //std::string airInletNode() const;
 
-  boost::optional<double> ratedAirFlowRate() const;
+    boost::optional<double> ratedAirFlowRate() const;
 
-  bool isRatedAirFlowRateDefaulted() const;
+    bool isRatedAirFlowRateDefaulted() const;
 
-  bool isRatedAirFlowRateAutocalculated() const;
+    bool isRatedAirFlowRateAutocalculated() const;
 
-  double basinHeaterCapacity() const;
+    double basinHeaterCapacity() const;
 
-  bool isBasinHeaterCapacityDefaulted() const;
+    bool isBasinHeaterCapacityDefaulted() const;
 
-  double basinHeaterSetpointTemperature() const;
+    double basinHeaterSetpointTemperature() const;
 
-  bool isBasinHeaterSetpointTemperatureDefaulted() const;
+    bool isBasinHeaterSetpointTemperatureDefaulted() const;
 
-  boost::optional<double> ratedWaterPumpPower() const;
+    boost::optional<double> ratedWaterPumpPower() const;
 
-  bool isRatedWaterPumpPowerDefaulted() const;
+    bool isRatedWaterPumpPowerDefaulted() const;
 
-  bool isRatedWaterPumpPowerAutocalculated() const;
+    bool isRatedWaterPumpPowerAutocalculated() const;
 
-  //boost::optional<WaterStorageTank> evaporativeWaterSupplyTank() const;
+    //boost::optional<WaterStorageTank> evaporativeWaterSupplyTank() const;
 
-  boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule() const;
+    boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  double condenserRefrigerantOperatingChargeInventory() const;
+    double condenserRefrigerantOperatingChargeInventory() const;
 
-  bool isCondenserRefrigerantOperatingChargeInventoryDefaulted() const;
+    bool isCondenserRefrigerantOperatingChargeInventoryDefaulted() const;
 
-  double condensateReceiverRefrigerantInventory() const;
+    double condensateReceiverRefrigerantInventory() const;
 
-  bool isCondensateReceiverRefrigerantInventoryDefaulted() const;
+    bool isCondensateReceiverRefrigerantInventoryDefaulted() const;
 
-  double condensatePipingRefrigerantInventory() const;
+    double condensatePipingRefrigerantInventory() const;
 
-  bool isCondensatePipingRefrigerantInventoryDefaulted() const;
+    bool isCondensatePipingRefrigerantInventoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate);
+    bool setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate);
 
-  bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
+    bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
 
-  void resetRatedSubcoolingTemperatureDifference();
+    void resetRatedSubcoolingTemperatureDifference();
 
-  bool setFanSpeedControlType(std::string fanSpeedControlType);
+    bool setFanSpeedControlType(std::string fanSpeedControlType);
 
-  void resetFanSpeedControlType();
+    void resetFanSpeedControlType();
 
-  bool setRatedFanPower(double ratedFanPower);
+    bool setRatedFanPower(double ratedFanPower);
 
-  bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
+    bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
 
-  void resetMinimumFanAirFlowRatio();
+    void resetMinimumFanAirFlowRatio();
 
-  bool setApproachTemperatureConstantTerm(double approachTemperatureConstantTerm);
+    bool setApproachTemperatureConstantTerm(double approachTemperatureConstantTerm);
 
-  void resetApproachTemperatureConstantTerm();
+    void resetApproachTemperatureConstantTerm();
 
-  bool setApproachTemperatureCoefficient2(double approachTemperatureCoefficient2);
+    bool setApproachTemperatureCoefficient2(double approachTemperatureCoefficient2);
 
-  void resetApproachTemperatureCoefficient2();
+    void resetApproachTemperatureCoefficient2();
 
-  bool setApproachTemperatureCoefficient3(double approachTemperatureCoefficient3);
+    bool setApproachTemperatureCoefficient3(double approachTemperatureCoefficient3);
 
-  void resetApproachTemperatureCoefficient3();
+    void resetApproachTemperatureCoefficient3();
 
-  bool setApproachTemperatureCoefficient4(double approachTemperatureCoefficient4);
+    bool setApproachTemperatureCoefficient4(double approachTemperatureCoefficient4);
 
-  void resetApproachTemperatureCoefficient4();
+    void resetApproachTemperatureCoefficient4();
 
-  bool setMinimumCapacityFactor(double minimumCapacityFactor);
+    bool setMinimumCapacityFactor(double minimumCapacityFactor);
 
-  void resetMinimumCapacityFactor();
+    void resetMinimumCapacityFactor();
 
-  bool setMaximumCapacityFactor(double maximumCapacityFactor);
+    bool setMaximumCapacityFactor(double maximumCapacityFactor);
 
-  void resetMaximumCapacityFactor();
+    void resetMaximumCapacityFactor();
 
-  //bool setAirInletNode(std::string airInletNode);
+    //bool setAirInletNode(std::string airInletNode);
 
-  //void resetAirInletNode();
+    //void resetAirInletNode();
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  void resetRatedAirFlowRate();
+    void resetRatedAirFlowRate();
 
-  void autocalculateRatedAirFlowRate();
+    void autocalculateRatedAirFlowRate();
 
-  bool setBasinHeaterCapacity(double basinHeaterCapacity);
+    bool setBasinHeaterCapacity(double basinHeaterCapacity);
 
-  void resetBasinHeaterCapacity();
+    void resetBasinHeaterCapacity();
 
-  bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+    bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-  void resetBasinHeaterSetpointTemperature();
+    void resetBasinHeaterSetpointTemperature();
 
-  bool setRatedWaterPumpPower(double ratedWaterPumpPower);
+    bool setRatedWaterPumpPower(double ratedWaterPumpPower);
 
-  void resetRatedWaterPumpPower();
+    void resetRatedWaterPumpPower();
 
-  void autocalculateRatedWaterPumpPower();
+    void autocalculateRatedWaterPumpPower();
 
-  //bool setEvaporativeWaterSupplyTank(const WaterStorageTank& waterStorageTank);
+    //bool setEvaporativeWaterSupplyTank(const WaterStorageTank& waterStorageTank);
 
-  //void resetEvaporativeWaterSupplyTank();
+    //void resetEvaporativeWaterSupplyTank();
 
-  bool setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule);
+    bool setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule);
 
-  void resetEvaporativeCondenserAvailabilitySchedule();
+    void resetEvaporativeCondenserAvailabilitySchedule();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+    bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
-  void resetCondenserRefrigerantOperatingChargeInventory();
+    void resetCondenserRefrigerantOperatingChargeInventory();
 
-  bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+    bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
-  void resetCondensateReceiverRefrigerantInventory();
+    void resetCondensateReceiverRefrigerantInventory();
 
-  bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+    bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
-  void resetCondensatePipingRefrigerantInventory();
+    void resetCondensatePipingRefrigerantInventory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationCondenserEvaporativeCooled_Impl ImplType;
+    // The parent RefrigerationSystem, which rejects heat to this condenser
+    // This is a convenience method to find any RefrigerationSystem that uses this condenser
+    boost::optional<RefrigerationSystem> system() const;
 
-  explicit RefrigerationCondenserEvaporativeCooled(std::shared_ptr<detail::RefrigerationCondenserEvaporativeCooled_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationCondenserEvaporativeCooled_Impl ImplType;
 
-  friend class detail::RefrigerationCondenserEvaporativeCooled_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationCondenserEvaporativeCooled");
-};
+    explicit RefrigerationCondenserEvaporativeCooled(std::shared_ptr<detail::RefrigerationCondenserEvaporativeCooled_Impl> impl);
 
-/** \relates RefrigerationCondenserEvaporativeCooled*/
-typedef boost::optional<RefrigerationCondenserEvaporativeCooled> OptionalRefrigerationCondenserEvaporativeCooled;
+    friend class detail::RefrigerationCondenserEvaporativeCooled_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationCondenserEvaporativeCooled");
+  };
 
-/** \relates RefrigerationCondenserEvaporativeCooled*/
-typedef std::vector<RefrigerationCondenserEvaporativeCooled> RefrigerationCondenserEvaporativeCooledVector;
+  /** \relates RefrigerationCondenserEvaporativeCooled*/
+  typedef boost::optional<RefrigerationCondenserEvaporativeCooled> OptionalRefrigerationCondenserEvaporativeCooled;
 
-} // model
-} // openstudio
+  /** \relates RefrigerationCondenserEvaporativeCooled*/
+  typedef std::vector<RefrigerationCondenserEvaporativeCooled> RefrigerationCondenserEvaporativeCooledVector;
 
-#endif // MODEL_REFRIGERATIONCONDENSEREVAPORATIVECOOLED_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONCONDENSEREVAPORATIVECOOLED_HPP

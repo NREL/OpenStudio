@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,8 +72,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_ZNETH) {
   //openstudio::Logger::instance().standardOutLogger().enable();
   //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
 
@@ -86,10 +85,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
 
   // check for additional properties
   for (const auto& object : model->getModelObjects<ModelObject>()) {
-    if (object.optionalCast<Space>() ||
-        object.optionalCast<Surface>() ||
-        object.optionalCast<ShadingSurface>() ||
-        object.optionalCast<SubSurface>()) {
+    if (object.optionalCast<Space>() || object.optionalCast<Surface>() || object.optionalCast<ShadingSurface>()
+        || object.optionalCast<SubSurface>()) {
 
       EXPECT_TRUE(object.hasAdditionalProperties()) << object;
       if (object.optionalCast<Surface>() && object.cast<Surface>().isAirWall()) {
@@ -106,9 +103,9 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
   // add test to see that surfaces that reference two spaces get "surface" boundary condition
   // e.g. surface named "su-76" should have "Surface" string for OutsideBoundaryCondition
   //OptionalSurface osurf = model->getModelObjectByName<Surface>("su-76"); // su-76 is the id
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("B-101-201-I-F-76"); // B-101-201-I-F-76 is the name
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("B-101-201-I-F-76");  // B-101-201-I-F-76 is the name
   ASSERT_TRUE(osurf);
-  EXPECT_EQ("Surface",osurf->outsideBoundaryCondition());
+  EXPECT_EQ("Surface", osurf->outsideBoundaryCondition());
 
   openstudio::energyplus::ForwardTranslator energyPlusTranslator;
   openstudio::Workspace workspace = energyPlusTranslator.translateModel(*model);
@@ -122,8 +119,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
   EXPECT_TRUE(test);
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_Constructions)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_Constructions) {
 
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
 
@@ -142,7 +138,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions)
   EXPECT_EQ("Floor: Floor 1", oconstruct->name().get());
 
   int count = 0;
-  for (auto &srf : model->getModelObjects<Surface>()) {
+  for (auto& srf : model->getModelObjects<Surface>()) {
     if (srf.outsideBoundaryCondition() != "Surface") {
       continue;
     }
@@ -170,11 +166,9 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions)
     }
   }
   EXPECT_EQ(20, count);
-
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions) {
 
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
 
@@ -196,7 +190,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions)
   EXPECT_EQ("3\'0\" x 3\'0\" Double pane  Alum Construction", ofield.get());
 
   int count = 0;
-  for (auto &srf : model->getModelObjects<SubSurface>()) {
+  for (auto& srf : model->getModelObjects<SubSurface>()) {
     auto oc = srf.construction();
     ASSERT_TRUE(oc);
     ofield = srf.getString(OS_SubSurfaceFields::ConstructionName);
@@ -205,11 +199,9 @@ TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions)
     ++count;
   }
   EXPECT_EQ(8, count);
-
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls) {
 
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
 
@@ -252,16 +244,15 @@ TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls)
 
   // Count the underground surfaces
   int count = 0;
-  for (auto &surf : model->getModelObjects<Surface>()) {
+  for (auto& surf : model->getModelObjects<Surface>()) {
     if (surf.outsideBoundaryCondition() == "Ground") {
       count += 1;
     }
   }
-  EXPECT_EQ(12, count); // 4 slabs + 8 walls
+  EXPECT_EQ(12, count);  // 4 slabs + 8 walls
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces) {
 
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
 
@@ -269,44 +260,42 @@ TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces)
   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
   ASSERT_TRUE(model);
 
-
   // Check all the surfaces that are supposed to be floors and ceilings
 
-  struct ExpectedSurfaceInfo {
+  struct ExpectedSurfaceInfo
+  {
     ExpectedSurfaceInfo(std::string t_name, std::string t_surfaceType, std::string t_spaceName)
-      : name(t_name), surfaceType(t_surfaceType), spaceName(t_spaceName) {};
+      : name(t_name), surfaceType(t_surfaceType), spaceName(t_spaceName){};
 
     const std::string name;
     const std::string surfaceType;
     const std::string spaceName;
   };
 
-  std::vector<ExpectedSurfaceInfo> expectedSurfaceInfos({
-    ExpectedSurfaceInfo("B-1-U-F-3", "Floor", "1 Space"),
-    ExpectedSurfaceInfo("B-2-U-F-9", "Floor", "2 Space"),
-    ExpectedSurfaceInfo("B-3-U-F-14", "Floor", "3 Space"),
-    ExpectedSurfaceInfo("B-4-U-F-19", "Floor", "4 Space"),
-    ExpectedSurfaceInfo("T-1-5-I-F-6", "Floor", "5 Space"),
-    ExpectedSurfaceInfo("T-1-5-I-F-6 Reversed", "RoofCeiling", "1 Space"),
-    ExpectedSurfaceInfo("T-10-E-R-44", "RoofCeiling", "10 Space"),
-    ExpectedSurfaceInfo("T-11-E-R-48", "RoofCeiling", "11 Space"),
-    ExpectedSurfaceInfo("T-12-E-R-52", "RoofCeiling", "12 Space"),
-    ExpectedSurfaceInfo("T-2-6-I-F-11", "Floor", "6 Space"),
-    ExpectedSurfaceInfo("T-2-6-I-F-11 Reversed", "RoofCeiling", "2 Space"),
-    ExpectedSurfaceInfo("T-3-7-I-F-16", "Floor", "7 Space"),
-    ExpectedSurfaceInfo("T-3-7-I-F-16 Reversed", "RoofCeiling", "3 Space"),
-    ExpectedSurfaceInfo("T-4-8-I-F-20", "Floor", "8 Space"),
-    ExpectedSurfaceInfo("T-4-8-I-F-20 Reversed", "RoofCeiling", "4 Space"),
-    ExpectedSurfaceInfo("T-5-9-I-F-25", "Floor", "9 Space"),
-    ExpectedSurfaceInfo("T-5-9-I-F-25 Reversed", "RoofCeiling", "5 Space"),
-    ExpectedSurfaceInfo("T-6-10-I-F-29", "Floor", "10 Space"),
-    ExpectedSurfaceInfo("T-6-10-I-F-29 Reversed", "RoofCeiling", "6 Space"),
-    ExpectedSurfaceInfo("T-7-11-I-F-33", "Floor", "11 Space"),
-    ExpectedSurfaceInfo("T-7-11-I-F-33 Reversed", "RoofCeiling", "7 Space"),
-    ExpectedSurfaceInfo("T-8-12-I-F-36", "Floor", "12 Space"),
-    ExpectedSurfaceInfo("T-8-12-I-F-36 Reversed", "RoofCeiling", "8 Space"),
-    ExpectedSurfaceInfo("T-9-E-R-39", "RoofCeiling", "9 Space")
-  });
+  std::vector<ExpectedSurfaceInfo> expectedSurfaceInfos({ExpectedSurfaceInfo("B-1-U-F-3", "Floor", "1 Space"),
+                                                         ExpectedSurfaceInfo("B-2-U-F-9", "Floor", "2 Space"),
+                                                         ExpectedSurfaceInfo("B-3-U-F-14", "Floor", "3 Space"),
+                                                         ExpectedSurfaceInfo("B-4-U-F-19", "Floor", "4 Space"),
+                                                         ExpectedSurfaceInfo("T-1-5-I-F-6", "Floor", "5 Space"),
+                                                         ExpectedSurfaceInfo("T-1-5-I-F-6 Reversed", "RoofCeiling", "1 Space"),
+                                                         ExpectedSurfaceInfo("T-10-E-R-44", "RoofCeiling", "10 Space"),
+                                                         ExpectedSurfaceInfo("T-11-E-R-48", "RoofCeiling", "11 Space"),
+                                                         ExpectedSurfaceInfo("T-12-E-R-52", "RoofCeiling", "12 Space"),
+                                                         ExpectedSurfaceInfo("T-2-6-I-F-11", "Floor", "6 Space"),
+                                                         ExpectedSurfaceInfo("T-2-6-I-F-11 Reversed", "RoofCeiling", "2 Space"),
+                                                         ExpectedSurfaceInfo("T-3-7-I-F-16", "Floor", "7 Space"),
+                                                         ExpectedSurfaceInfo("T-3-7-I-F-16 Reversed", "RoofCeiling", "3 Space"),
+                                                         ExpectedSurfaceInfo("T-4-8-I-F-20", "Floor", "8 Space"),
+                                                         ExpectedSurfaceInfo("T-4-8-I-F-20 Reversed", "RoofCeiling", "4 Space"),
+                                                         ExpectedSurfaceInfo("T-5-9-I-F-25", "Floor", "9 Space"),
+                                                         ExpectedSurfaceInfo("T-5-9-I-F-25 Reversed", "RoofCeiling", "5 Space"),
+                                                         ExpectedSurfaceInfo("T-6-10-I-F-29", "Floor", "10 Space"),
+                                                         ExpectedSurfaceInfo("T-6-10-I-F-29 Reversed", "RoofCeiling", "6 Space"),
+                                                         ExpectedSurfaceInfo("T-7-11-I-F-33", "Floor", "11 Space"),
+                                                         ExpectedSurfaceInfo("T-7-11-I-F-33 Reversed", "RoofCeiling", "7 Space"),
+                                                         ExpectedSurfaceInfo("T-8-12-I-F-36", "Floor", "12 Space"),
+                                                         ExpectedSurfaceInfo("T-8-12-I-F-36 Reversed", "RoofCeiling", "8 Space"),
+                                                         ExpectedSurfaceInfo("T-9-E-R-39", "RoofCeiling", "9 Space")});
 
   for (auto& expectedSurfaceInfo : expectedSurfaceInfos) {
     OptionalSurface _surf = model->getConcreteModelObjectByName<Surface>(expectedSurfaceInfo.name);
@@ -314,12 +303,11 @@ TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces)
     EXPECT_EQ(expectedSurfaceInfo.surfaceType, _surf->surfaceType()) << "Wrong surfaceType for " << expectedSurfaceInfo.name;
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ(expectedSurfaceInfo.spaceName, _space->nameString())  << "Wrong space for " << expectedSurfaceInfo.name;
+    EXPECT_EQ(expectedSurfaceInfo.spaceName, _space->nameString()) << "Wrong space for " << expectedSurfaceInfo.name;
   }
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_AlternateUnits)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_AlternateUnits) {
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
 
   openstudio::gbxml::ReverseTranslator reverseTranslator;
@@ -355,11 +343,9 @@ TEST_F(gbXMLFixture, ReverseTranslator_AlternateUnits)
   //EXPECT_NEAR(1.35, omat->conductivity(), 1.0e-8);
   //EXPECT_NEAR(0.15, omat->thickness(), 1.0e-8);
   //EXPECT_NEAR(840.0, omat->specificHeat(), 1.0e-8);
-
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_HandleMapping)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_HandleMapping) {
   //openstudio::Logger::instance().standardOutLogger().enable();
   //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
 
@@ -428,8 +414,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_HandleMapping)
   EXPECT_EQ(numPlanarSurfaces, model1Clone2.getModelObjects<model::PlanarSurface>().size());
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_SimpleBox_Vasari)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_SimpleBox_Vasari) {
   //openstudio::Logger::instance().standardOutLogger().enable();
   //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
 
@@ -454,8 +439,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_SimpleBox_Vasari)
   EXPECT_TRUE(test);
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_TwoStoryOffice_Trane)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_TwoStoryOffice_Trane) {
   //openstudio::Logger::instance().standardOutLogger().enable();
   //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
 
@@ -468,11 +452,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_TwoStoryOffice_Trane)
 
   // check for additional properties
   for (const auto& object : model->getModelObjects<ModelObject>()) {
-    if (object.optionalCast<ThermalZone>() ||
-      object.optionalCast<Space>() ||
-      object.optionalCast<Surface>() ||
-      object.optionalCast<ShadingSurface>() ||
-      object.optionalCast<SubSurface>()) {
+    if (object.optionalCast<ThermalZone>() || object.optionalCast<Space>() || object.optionalCast<Surface>() || object.optionalCast<ShadingSurface>()
+        || object.optionalCast<SubSurface>()) {
 
       EXPECT_TRUE(object.hasAdditionalProperties()) << object;
       if (object.optionalCast<Surface>() && object.cast<Surface>().isAirWall()) {
@@ -498,8 +479,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_TwoStoryOffice_Trane)
   EXPECT_TRUE(test);
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface) {
 
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
 
@@ -527,8 +507,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface)
   }
 }
 
-TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling)
-{
+TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
 
   openstudio::gbxml::ReverseTranslator reverseTranslator;
@@ -566,7 +545,6 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling)
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
-
 
   {
     auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-1-space-1");
@@ -611,5 +589,4 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling)
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
-
 }

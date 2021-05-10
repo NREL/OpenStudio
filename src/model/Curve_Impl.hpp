@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,63 +36,64 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** Curve_Impl is a ModelObject_Impl that is the implementation class for Curve. */
-  class MODEL_API Curve_Impl : public ResourceObject_Impl {
+    /** Curve_Impl is a ModelObject_Impl that is the implementation class for Curve. */
+    class MODEL_API Curve_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      // Construct completely new object.
+      Curve_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    Curve_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+      // Clone copy constructor.
+      Curve_Impl(const Curve_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Clone copy constructor.
-    Curve_Impl(const Curve_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual ~Curve_Impl() {}
 
-    virtual ~Curve_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      virtual int numVariables() const = 0;
 
-    virtual int numVariables() const = 0;
+      virtual double evaluate(const std::vector<double>& x) const = 0;
 
-    virtual double evaluate(const std::vector<double>& x) const = 0;
+      double evaluate(double x) const;
 
-    double evaluate(double x) const;
+      double evaluate(double x, double y) const;
 
-    double evaluate(double x, double y) const;
+      double evaluate(double x, double y, double z) const;
 
-    double evaluate(double x, double y, double z) const;
+      double evaluate(double w, double x, double y, double z) const;
 
-    //@}
-   private:
-    REGISTER_LOGGER("openstudio.model.Curve");
-  };
+      double evaluate(double v, double w, double x, double y, double z) const;
 
-} // detail
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.Curve");
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_CURVE_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
 
+#endif  // MODEL_CURVE_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,261 +37,261 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class WindowPropertyFrameAndDivider_Impl;
+    class WindowPropertyFrameAndDivider_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** WindowPropertyFrameAndDivider is a ResourceObject that wraps the OpenStudio IDD object 'OS:WindowProperty:FrameAndDivider'. */
-class MODEL_API WindowPropertyFrameAndDivider : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** WindowPropertyFrameAndDivider is a ResourceObject that wraps the OpenStudio IDD object 'OS:WindowProperty:FrameAndDivider'. */
+  class MODEL_API WindowPropertyFrameAndDivider : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit WindowPropertyFrameAndDivider(const Model& model);
+    explicit WindowPropertyFrameAndDivider(const Model& model);
 
-  virtual ~WindowPropertyFrameAndDivider() {}
+    virtual ~WindowPropertyFrameAndDivider() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> dividerTypeValues();
+    static std::vector<std::string> dividerTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double frameWidth() const;
+    double frameWidth() const;
 
-  bool isFrameWidthDefaulted() const;
+    bool isFrameWidthDefaulted() const;
 
-  double frameOutsideProjection() const;
+    double frameOutsideProjection() const;
 
-  bool isFrameOutsideProjectionDefaulted() const;
+    bool isFrameOutsideProjectionDefaulted() const;
 
-  double frameInsideProjection() const;
+    double frameInsideProjection() const;
 
-  bool isFrameInsideProjectionDefaulted() const;
+    bool isFrameInsideProjectionDefaulted() const;
 
-  boost::optional<double> frameConductance() const;
+    boost::optional<double> frameConductance() const;
 
-  double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const;
+    double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const;
 
-  bool isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
+    bool isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
 
-  double frameSolarAbsorptance() const;
+    double frameSolarAbsorptance() const;
 
-  bool isFrameSolarAbsorptanceDefaulted() const;
+    bool isFrameSolarAbsorptanceDefaulted() const;
 
-  double frameVisibleAbsorptance() const;
+    double frameVisibleAbsorptance() const;
 
-  bool isFrameVisibleAbsorptanceDefaulted() const;
+    bool isFrameVisibleAbsorptanceDefaulted() const;
 
-  double frameThermalHemisphericalEmissivity() const;
+    double frameThermalHemisphericalEmissivity() const;
 
-  bool isFrameThermalHemisphericalEmissivityDefaulted() const;
+    bool isFrameThermalHemisphericalEmissivityDefaulted() const;
 
-  std::string dividerType() const;
+    std::string dividerType() const;
 
-  bool isDividerTypeDefaulted() const;
+    bool isDividerTypeDefaulted() const;
 
-  double dividerWidth() const;
+    double dividerWidth() const;
 
-  bool isDividerWidthDefaulted() const;
+    bool isDividerWidthDefaulted() const;
 
-  double numberOfHorizontalDividers() const;
+    double numberOfHorizontalDividers() const;
 
-  bool isNumberOfHorizontalDividersDefaulted() const;
+    bool isNumberOfHorizontalDividersDefaulted() const;
 
-  double numberOfVerticalDividers() const;
+    double numberOfVerticalDividers() const;
 
-  bool isNumberOfVerticalDividersDefaulted() const;
+    bool isNumberOfVerticalDividersDefaulted() const;
 
-  double dividerOutsideProjection() const;
+    double dividerOutsideProjection() const;
 
-  bool isDividerOutsideProjectionDefaulted() const;
+    bool isDividerOutsideProjectionDefaulted() const;
 
-  double dividerInsideProjection() const;
+    double dividerInsideProjection() const;
 
-  bool isDividerInsideProjectionDefaulted() const;
+    bool isDividerInsideProjectionDefaulted() const;
 
-  double dividerConductance() const;
+    double dividerConductance() const;
 
-  bool isDividerConductanceDefaulted() const;
+    bool isDividerConductanceDefaulted() const;
 
-  double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() const;
+    double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance() const;
 
-  bool isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
+    bool isRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductanceDefaulted() const;
 
-  double dividerSolarAbsorptance() const;
+    double dividerSolarAbsorptance() const;
 
-  bool isDividerSolarAbsorptanceDefaulted() const;
+    bool isDividerSolarAbsorptanceDefaulted() const;
 
-  double dividerVisibleAbsorptance() const;
+    double dividerVisibleAbsorptance() const;
 
-  bool isDividerVisibleAbsorptanceDefaulted() const;
+    bool isDividerVisibleAbsorptanceDefaulted() const;
 
-  double dividerThermalHemisphericalEmissivity() const;
+    double dividerThermalHemisphericalEmissivity() const;
 
-  bool isDividerThermalHemisphericalEmissivityDefaulted() const;
+    bool isDividerThermalHemisphericalEmissivityDefaulted() const;
 
-  double outsideRevealDepth() const;
+    double outsideRevealDepth() const;
 
-  bool isOutsideRevealDepthDefaulted() const;
+    bool isOutsideRevealDepthDefaulted() const;
 
-  double outsideRevealSolarAbsorptance() const;
+    double outsideRevealSolarAbsorptance() const;
 
-  bool isOutsideRevealSolarAbsorptanceDefaulted() const;
+    bool isOutsideRevealSolarAbsorptanceDefaulted() const;
 
-  double insideSillDepth() const;
+    double insideSillDepth() const;
 
-  bool isInsideSillDepthDefaulted() const;
+    bool isInsideSillDepthDefaulted() const;
 
-  double insideSillSolarAbsorptance() const;
+    double insideSillSolarAbsorptance() const;
 
-  bool isInsideSillSolarAbsorptanceDefaulted() const;
+    bool isInsideSillSolarAbsorptanceDefaulted() const;
 
-  double insideRevealDepth() const;
+    double insideRevealDepth() const;
 
-  bool isInsideRevealDepthDefaulted() const;
+    bool isInsideRevealDepthDefaulted() const;
 
-  double insideRevealSolarAbsorptance() const;
+    double insideRevealSolarAbsorptance() const;
 
-  bool isInsideRevealSolarAbsorptanceDefaulted() const;
+    bool isInsideRevealSolarAbsorptanceDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFrameWidth(double frameWidth);
+    bool setFrameWidth(double frameWidth);
 
-  void resetFrameWidth();
+    void resetFrameWidth();
 
-  bool setFrameOutsideProjection(double frameOutsideProjection);
+    bool setFrameOutsideProjection(double frameOutsideProjection);
 
-  void resetFrameOutsideProjection();
+    void resetFrameOutsideProjection();
 
-  bool setFrameInsideProjection(double frameInsideProjection);
+    bool setFrameInsideProjection(double frameInsideProjection);
 
-  void resetFrameInsideProjection();
+    void resetFrameInsideProjection();
 
-  bool setFrameConductance(double frameConductance);
+    bool setFrameConductance(double frameConductance);
 
-  void resetFrameConductance();
+    void resetFrameConductance();
 
-  bool setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance);
+    bool setRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance);
 
-  void resetRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance();
+    void resetRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductance();
 
-  bool setFrameSolarAbsorptance(double frameSolarAbsorptance);
+    bool setFrameSolarAbsorptance(double frameSolarAbsorptance);
 
-  void resetFrameSolarAbsorptance();
+    void resetFrameSolarAbsorptance();
 
-  bool setFrameVisibleAbsorptance(double frameVisibleAbsorptance);
+    bool setFrameVisibleAbsorptance(double frameVisibleAbsorptance);
 
-  void resetFrameVisibleAbsorptance();
+    void resetFrameVisibleAbsorptance();
 
-  bool setFrameThermalHemisphericalEmissivity(double frameThermalHemisphericalEmissivity);
+    bool setFrameThermalHemisphericalEmissivity(double frameThermalHemisphericalEmissivity);
 
-  void resetFrameThermalHemisphericalEmissivity();
+    void resetFrameThermalHemisphericalEmissivity();
 
-  bool setDividerType(std::string dividerType);
+    bool setDividerType(const std::string& dividerType);
 
-  void resetDividerType();
+    void resetDividerType();
 
-  bool setDividerWidth(double dividerWidth);
+    bool setDividerWidth(double dividerWidth);
 
-  void resetDividerWidth();
+    void resetDividerWidth();
 
-  bool setNumberOfHorizontalDividers(double numberOfHorizontalDividers);
+    bool setNumberOfHorizontalDividers(double numberOfHorizontalDividers);
 
-  void resetNumberOfHorizontalDividers();
+    void resetNumberOfHorizontalDividers();
 
-  bool setNumberOfVerticalDividers(double numberOfVerticalDividers);
+    bool setNumberOfVerticalDividers(double numberOfVerticalDividers);
 
-  void resetNumberOfVerticalDividers();
+    void resetNumberOfVerticalDividers();
 
-  bool setDividerOutsideProjection(double dividerOutsideProjection);
+    bool setDividerOutsideProjection(double dividerOutsideProjection);
 
-  void resetDividerOutsideProjection();
+    void resetDividerOutsideProjection();
 
-  bool setDividerInsideProjection(double dividerInsideProjection);
+    bool setDividerInsideProjection(double dividerInsideProjection);
 
-  void resetDividerInsideProjection();
+    void resetDividerInsideProjection();
 
-  bool setDividerConductance(double dividerConductance);
+    bool setDividerConductance(double dividerConductance);
 
-  void resetDividerConductance();
+    void resetDividerConductance();
 
-  bool setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance);
+    bool setRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance(double ratioOfDividerEdgeGlassConductanceToCenterOfGlassConductance);
 
-  void resetRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance();
+    void resetRatioOfDividerEdgeGlassConductanceToCenterOfGlassConductance();
 
-  bool setDividerSolarAbsorptance(double dividerSolarAbsorptance);
+    bool setDividerSolarAbsorptance(double dividerSolarAbsorptance);
 
-  void resetDividerSolarAbsorptance();
+    void resetDividerSolarAbsorptance();
 
-  bool setDividerVisibleAbsorptance(double dividerVisibleAbsorptance);
+    bool setDividerVisibleAbsorptance(double dividerVisibleAbsorptance);
 
-  void resetDividerVisibleAbsorptance();
+    void resetDividerVisibleAbsorptance();
 
-  bool setDividerThermalHemisphericalEmissivity(double dividerThermalHemisphericalEmissivity);
+    bool setDividerThermalHemisphericalEmissivity(double dividerThermalHemisphericalEmissivity);
 
-  void resetDividerThermalHemisphericalEmissivity();
+    void resetDividerThermalHemisphericalEmissivity();
 
-  bool setOutsideRevealDepth(double outsideRevealDepth);
+    bool setOutsideRevealDepth(double outsideRevealDepth);
 
-  void resetOutsideRevealDepth();
+    void resetOutsideRevealDepth();
 
-  bool setOutsideRevealSolarAbsorptance(double outsideRevealSolarAbsorptance);
+    bool setOutsideRevealSolarAbsorptance(double outsideRevealSolarAbsorptance);
 
-  void resetOutsideRevealSolarAbsorptance();
+    void resetOutsideRevealSolarAbsorptance();
 
-  bool setInsideSillDepth(double insideSillDepth);
+    bool setInsideSillDepth(double insideSillDepth);
 
-  void resetInsideSillDepth();
+    void resetInsideSillDepth();
 
-  bool setInsideSillSolarAbsorptance(double insideSillSolarAbsorptance);
+    bool setInsideSillSolarAbsorptance(double insideSillSolarAbsorptance);
 
-  void resetInsideSillSolarAbsorptance();
+    void resetInsideSillSolarAbsorptance();
 
-  bool setInsideRevealDepth(double insideRevealDepth);
+    bool setInsideRevealDepth(double insideRevealDepth);
 
-  void resetInsideRevealDepth();
+    void resetInsideRevealDepth();
 
-  bool setInsideRevealSolarAbsorptance(double insideRevealSolarAbsorptance);
+    bool setInsideRevealSolarAbsorptance(double insideRevealSolarAbsorptance);
 
-  void resetInsideRevealSolarAbsorptance();
+    void resetInsideRevealSolarAbsorptance();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::WindowPropertyFrameAndDivider_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::WindowPropertyFrameAndDivider_Impl ImplType;
 
-  explicit WindowPropertyFrameAndDivider(std::shared_ptr<detail::WindowPropertyFrameAndDivider_Impl> impl);
+    explicit WindowPropertyFrameAndDivider(std::shared_ptr<detail::WindowPropertyFrameAndDivider_Impl> impl);
 
-  friend class detail::WindowPropertyFrameAndDivider_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.WindowPropertyFrameAndDivider");
-};
+    friend class detail::WindowPropertyFrameAndDivider_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.WindowPropertyFrameAndDivider");
+  };
 
-/** \relates WindowPropertyFrameAndDivider*/
-typedef boost::optional<WindowPropertyFrameAndDivider> OptionalWindowPropertyFrameAndDivider;
+  /** \relates WindowPropertyFrameAndDivider*/
+  typedef boost::optional<WindowPropertyFrameAndDivider> OptionalWindowPropertyFrameAndDivider;
 
-/** \relates WindowPropertyFrameAndDivider*/
-typedef std::vector<WindowPropertyFrameAndDivider> WindowPropertyFrameAndDividerVector;
+  /** \relates WindowPropertyFrameAndDivider*/
+  typedef std::vector<WindowPropertyFrameAndDivider> WindowPropertyFrameAndDividerVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_WINDOWPROPERTYFRAMEANDDIVIDER_HPP
-
+#endif  // MODEL_WINDOWPROPERTYFRAMEANDDIVIDER_HPP

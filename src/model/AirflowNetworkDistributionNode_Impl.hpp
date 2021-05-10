@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,43 +37,37 @@
 namespace openstudio {
 namespace model {
 
-class HVACComponent;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkDistributionNode_Impl is a AirflowNetworkNode_Impl that is the implementation class for AirflowNetworkDistributionNode.*/
-  class MODEL_API AirflowNetworkDistributionNode_Impl : public AirflowNetworkNode_Impl
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkDistributionNode_Impl is a AirflowNetworkNode_Impl that is the implementation class for AirflowNetworkDistributionNode.*/
+    class MODEL_API AirflowNetworkDistributionNode_Impl : public AirflowNetworkNode_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkDistributionNode_Impl(const IdfObject& idfObject,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      AirflowNetworkDistributionNode_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkDistributionNode_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      AirflowNetworkDistributionNode_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkDistributionNode_Impl(const AirflowNetworkDistributionNode_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      AirflowNetworkDistributionNode_Impl(const AirflowNetworkDistributionNode_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkDistributionNode_Impl() {}
+      virtual ~AirflowNetworkDistributionNode_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
-    /*
+      //@}
+      /** @name Getters */
+      //@{
+      /*
     template <typename T> boost::optional<typename std::enable_if<std::is_same<AirLoopHVACZoneMixer, T>::value ||
       std::is_same<AirLoopHVACZoneSplitter, T>::value ||
       std::is_same<AirLoopHVACOutdoorAirSystem, T>::value || //::type> component() const
@@ -86,46 +80,45 @@ namespace detail {
     }
     */
 
-    boost::optional<HVACComponent> component() const;
+      boost::optional<HVACComponent> component() const;
 
-    boost::optional<Node> node() const;
+      boost::optional<Node> node() const;
 
-    boost::optional<AirLoopHVACZoneMixer> airLoopHVACZoneMixer() const;
+      boost::optional<AirLoopHVACZoneMixer> airLoopHVACZoneMixer() const;
 
-    boost::optional<AirLoopHVACZoneSplitter> airLoopHVACZoneSplitter() const;
+      boost::optional<AirLoopHVACZoneSplitter> airLoopHVACZoneSplitter() const;
 
-    boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+      boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
-    double nodeHeight() const;
+      double nodeHeight() const;
 
-    bool isNodeHeightDefaulted() const;
+      bool isNodeHeightDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    void setComponentNameorNodeName(const std::string& componentNameorNodeName);
+      void setComponentNameorNodeName(const std::string& componentNameorNodeName);
 
-    void resetComponent();
+      void resetComponent();
 
-    void setNodeHeight(double nodeHeight);
+      void setNodeHeight(double nodeHeight);
 
-    void resetNodeHeight();
+      void resetNodeHeight();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionNode");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionNode");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,32 +39,24 @@
 namespace openstudio {
 namespace model {
 
-
-bool ModelExtensibleGroup::setSchedule(unsigned index,
-    const std::string& className,
-    const std::string& scheduleDisplayName,
-    Schedule& schedule)
-{
-  bool result = checkOrAssignScheduleTypeLimits(className,scheduleDisplayName,schedule);
-  if (!result) {
-    if (boost::optional<ScheduleTypeLimits> scheduleTypeLimits = schedule.scheduleTypeLimits()) {
+  bool ModelExtensibleGroup::setSchedule(unsigned index, const std::string& className, const std::string& scheduleDisplayName, Schedule& schedule) {
+    bool result = checkOrAssignScheduleTypeLimits(className, scheduleDisplayName, schedule);
+    if (!result) {
+      if (boost::optional<ScheduleTypeLimits> scheduleTypeLimits = schedule.scheduleTypeLimits()) {
         LOG(Warn, "For object of type " << className << " cannot set Schedule " << scheduleDisplayName << "=" << schedule.nameString()
-               << " because it has an incompatible ScheduleTypeLimits");
+                                        << " because it has an incompatible ScheduleTypeLimits (" << scheduleTypeLimits->nameString() << ")");
+      }
+      return result;
     }
-    return result;
+    return setPointer(index, schedule.handle());
   }
-  return setPointer(index,schedule.handle());
-}
 
+  // PROTECTED
 
-// PROTECTED
+  /// @cond
+  ModelExtensibleGroup::ModelExtensibleGroup(std::shared_ptr<detail::ModelObject_Impl> impl, unsigned index)
+    : WorkspaceExtensibleGroup(impl, index) {}
+  /// @endcond
 
-/// @cond
-ModelExtensibleGroup::ModelExtensibleGroup(std::shared_ptr<detail::ModelObject_Impl> impl,
-                                           unsigned index)
-  : WorkspaceExtensibleGroup(impl,index) {}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

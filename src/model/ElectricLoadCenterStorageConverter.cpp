@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,363 +56,337 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ElectricLoadCenterStorageConverter_Impl::ElectricLoadCenterStorageConverter_Impl(const IdfObject& idfObject,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : ParentObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ElectricLoadCenterStorageConverter::iddObjectType());
-  }
-
-  ElectricLoadCenterStorageConverter_Impl::ElectricLoadCenterStorageConverter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ElectricLoadCenterStorageConverter::iddObjectType());
-  }
-
-  ElectricLoadCenterStorageConverter_Impl::ElectricLoadCenterStorageConverter_Impl(const ElectricLoadCenterStorageConverter_Impl& other,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& ElectricLoadCenterStorageConverter_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Converter AC to DC Efficiency",
-      "Converter AC Input Electric Power",
-      "Converter AC Input Electric Energy",
-      "Converter DC Output Electric Power",
-      "Converter DC Output Electric Energy",
-      "Converter Electric Loss Power",
-      "Converter Electric Loss Energy",
-      "Converter Electric Loss Decrement Energy",
-      "Converter Thermal Loss Rate",
-      "Converter Thermal Loss Energy",
-      "Converter Ancillary AC Electric Power",
-      "Converter Ancillary AC Electric Energy"
-    };
-    return result;
-  }
-
-  IddObjectType ElectricLoadCenterStorageConverter_Impl::iddObjectType() const {
-    return ElectricLoadCenterStorageConverter::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ElectricLoadCenterStorageConverter_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    // TODO: Check schedule display names.
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ElectricLoadCenterStorageConverter","Availability"));
-    }
-    return result;
-  }
-
-  // Private protected
-  boost::optional<Schedule> ElectricLoadCenterStorageConverter_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
-  }
-
-  // Convenience method to find the ELCD linked to this storage device
-  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter_Impl::electricLoadCenterDistribution() const {
-    auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
-    if (elcds.empty()) {
-      // no error
-    } else if (elcds.size() == 1u) {
-      return elcds[0];
-    } else {
-      // error
+    ElectricLoadCenterStorageConverter_Impl::ElectricLoadCenterStorageConverter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ElectricLoadCenterStorageConverter::iddObjectType());
     }
 
-    return boost::none;
-  }
-
-  Schedule ElectricLoadCenterStorageConverter_Impl::availabilitySchedule() const {
-    boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value) {
-      //LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
-      // I'm choosing to just return alwaysOnDiscreteSchedule
-      return this->model().alwaysOnDiscreteSchedule();
+    ElectricLoadCenterStorageConverter_Impl::ElectricLoadCenterStorageConverter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                     Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ElectricLoadCenterStorageConverter::iddObjectType());
     }
-    return value.get();
+
+    ElectricLoadCenterStorageConverter_Impl::ElectricLoadCenterStorageConverter_Impl(const ElectricLoadCenterStorageConverter_Impl& other,
+                                                                                     Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& ElectricLoadCenterStorageConverter_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "Converter AC to DC Efficiency",        "Converter AC Input Electricity Rate",         "Converter AC Input Electricity Energy",
+        "Converter DC Output Electricity Rate", "Converter DC Output Electricity Energy",      "Converter Electricity Loss Rate",
+        "Converter Electricity Loss Energy",    "Converter Electricity Loss Decrement Energy", "Converter Thermal Loss Rate",
+        "Converter Thermal Loss Energy",        "Converter Ancillary AC Electricity Rate",     "Converter Ancillary AC Electricity Energy"};
+      return result;
+    }
+
+    IddObjectType ElectricLoadCenterStorageConverter_Impl::iddObjectType() const {
+      return ElectricLoadCenterStorageConverter::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> ElectricLoadCenterStorageConverter_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      // TODO: Check schedule display names.
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ElectricLoadCenterStorageConverter", "Availability"));
+      }
+      return result;
+    }
+
+    // Private protected
+    boost::optional<Schedule> ElectricLoadCenterStorageConverter_Impl::optionalAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
+    }
+
+    // Convenience method to find the ELCD linked to this storage device
+    boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter_Impl::electricLoadCenterDistribution() const {
+      auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+      if (elcds.empty()) {
+        // no error
+      } else if (elcds.size() == 1u) {
+        return elcds[0];
+      } else {
+        // error
+      }
+
+      return boost::none;
+    }
+
+    Schedule ElectricLoadCenterStorageConverter_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        //LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+        // I'm choosing to just return alwaysOnDiscreteSchedule
+        return this->model().alwaysOnDiscreteSchedule();
+      }
+      return value.get();
+    }
+
+    bool ElectricLoadCenterStorageConverter_Impl::isAvailabilityScheduleDefaulted() const {
+      return isEmpty(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
+    }
+
+    std::string ElectricLoadCenterStorageConverter_Impl::powerConversionEfficiencyMethod() const {
+      boost::optional<std::string> value = getString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    // Required if powerConversionEfficiencyMethod == "SimpleFixed"
+    boost::optional<double> ElectricLoadCenterStorageConverter_Impl::simpleFixedEfficiency() const {
+      return getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, false);
+    }
+
+    // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
+    boost::optional<double> ElectricLoadCenterStorageConverter_Impl::designMaximumContinuousInputPower() const {
+      return getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, true);
+    }
+
+    // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
+    boost::optional<Curve> ElectricLoadCenterStorageConverter_Impl::efficiencyFunctionofPowerCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName);
+    }
+
+    double ElectricLoadCenterStorageConverter_Impl::ancillaryPowerConsumedInStandby() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ElectricLoadCenterStorageConverter_Impl::isAncillaryPowerConsumedInStandbyDefaulted() const {
+      return isEmpty(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby);
+    }
+
+    boost::optional<ThermalZone> ElectricLoadCenterStorageConverter_Impl::thermalZone() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ElectricLoadCenter_Storage_ConverterFields::ZoneName);
+    }
+
+    double ElectricLoadCenterStorageConverter_Impl::radiativeFraction() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ElectricLoadCenterStorageConverter_Impl::isRadiativeFractionDefaulted() const {
+      return isEmpty(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction);
+    }
+
+    // Setters
+
+    bool ElectricLoadCenterStorageConverter_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName, "ElectricLoadCenterStorageConverter",
+                                "Availability", schedule);
+      return result;
+    }
+
+    void ElectricLoadCenterStorageConverter_Impl::resetAvailabilitySchedule() {
+      bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    // This method will automatically switch the PowerConversationEfficiencyMethod to "SimpleFixed" and reset the DesignMaximumContinuousInputPower and EfficiencyFunctionofPowerCurveName fields
+    bool ElectricLoadCenterStorageConverter_Impl::setSimpleFixedEfficiency(double simpleFixedEfficiency) {
+      // Assign the Simple Fixed Efficiency
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, simpleFixedEfficiency);
+      if (result) {
+        // Switch the Method
+        result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "SimpleFixed");
+        OS_ASSERT(result);
+        // Reset the two others
+        result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, "");
+        OS_ASSERT(result);
+        result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, "");
+        OS_ASSERT(result);
+      }
+      return result;
+    }
+
+    // This method will automatically switch the PowerConversationEfficiencyMethod to "FunctionOfPower" and reset the Simple Fixed Efficiency field.
+    bool ElectricLoadCenterStorageConverter_Impl::setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower) {
+      // Assign the Design Maximum Continuous Input Power
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, designMaximumContinuousInputPower);
+      if (result) {
+        // Switch the Method
+        result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
+        OS_ASSERT(result);
+        // Reset the Simple Fixed Efficiency
+        result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
+        OS_ASSERT(result);
+      }
+      return result;
+    }
+
+    // This method will automatically switch the PowerConversationEfficiencyMethod to "FunctionOfPower" and reset the Simple Fixed Efficiency field.
+    bool ElectricLoadCenterStorageConverter_Impl::setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve) {
+      // Set the curve
+      bool result =
+        setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, efficiencyFunctionofPowerCurve.handle());
+      if (result) {
+        // Switch the Method
+        result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
+        OS_ASSERT(result);
+        // Reset the Simple Fixed Efficiency
+        result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
+        OS_ASSERT(result);
+      }
+      return result;
+    }
+
+    bool ElectricLoadCenterStorageConverter_Impl::setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, ancillaryPowerConsumedInStandby);
+      return result;
+    }
+
+    void ElectricLoadCenterStorageConverter_Impl::resetAncillaryPowerConsumedInStandby() {
+      bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, "");
+      OS_ASSERT(result);
+    }
+
+    bool ElectricLoadCenterStorageConverter_Impl::setThermalZone(const ThermalZone& thermalZone) {
+      bool result = setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::ZoneName, thermalZone.handle());
+      return result;
+    }
+
+    void ElectricLoadCenterStorageConverter_Impl::resetThermalZone() {
+      bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::ZoneName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ElectricLoadCenterStorageConverter_Impl::setRadiativeFraction(double radiativeFraction) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction, radiativeFraction);
+      return result;
+    }
+
+    void ElectricLoadCenterStorageConverter_Impl::resetRadiativeFraction() {
+      bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(const Model& model)
+    : ParentObject(ElectricLoadCenterStorageConverter::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageConverter_Impl>());
+
+    // This is actually the E+ default
+    setSimpleFixedEfficiency(0.95);
+
+    // Already defaults to alwaysOnDiscreteSchedule
+    //auto availableSchedule = model.alwaysOnDiscreteSchedule();
+    //setAvailabilitySchedule(availableSchedule);
   }
 
-  bool ElectricLoadCenterStorageConverter_Impl::isAvailabilityScheduleDefaulted() const {
-    return isEmpty(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName);
+  IddObjectType ElectricLoadCenterStorageConverter::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
   }
 
-  std::string ElectricLoadCenterStorageConverter_Impl::powerConversionEfficiencyMethod() const {
-    boost::optional<std::string> value = getString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod,true);
-    OS_ASSERT(value);
-    return value.get();
+  std::vector<std::string> ElectricLoadCenterStorageConverter::powerConversionEfficiencyMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
   }
 
-  // Required if powerConversionEfficiencyMethod == "SimpleFixed"
-  boost::optional<double> ElectricLoadCenterStorageConverter_Impl::simpleFixedEfficiency() const {
-    return getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency,false);
+  boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter::electricLoadCenterDistribution() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->electricLoadCenterDistribution();
   }
 
-  // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
-  boost::optional<double> ElectricLoadCenterStorageConverter_Impl::designMaximumContinuousInputPower() const {
-    return getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower,true);
+  Schedule ElectricLoadCenterStorageConverter::availabilitySchedule() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->availabilitySchedule();
   }
 
-  // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
-  boost::optional<Curve> ElectricLoadCenterStorageConverter_Impl::efficiencyFunctionofPowerCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName);
+  bool ElectricLoadCenterStorageConverter::isAvailabilityScheduleDefaulted() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->isAvailabilityScheduleDefaulted();
   }
 
-  double ElectricLoadCenterStorageConverter_Impl::ancillaryPowerConsumedInStandby() const {
-    boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby,true);
-    OS_ASSERT(value);
-    return value.get();
+  std::string ElectricLoadCenterStorageConverter::powerConversionEfficiencyMethod() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->powerConversionEfficiencyMethod();
   }
 
-  bool ElectricLoadCenterStorageConverter_Impl::isAncillaryPowerConsumedInStandbyDefaulted() const {
-    return isEmpty(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby);
+  boost::optional<double> ElectricLoadCenterStorageConverter::simpleFixedEfficiency() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->simpleFixedEfficiency();
   }
 
-  boost::optional<ThermalZone> ElectricLoadCenterStorageConverter_Impl::thermalZone() const {
-    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ElectricLoadCenter_Storage_ConverterFields::ZoneName);
+  boost::optional<double> ElectricLoadCenterStorageConverter::designMaximumContinuousInputPower() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->designMaximumContinuousInputPower();
   }
 
-  double ElectricLoadCenterStorageConverter_Impl::radiativeFraction() const {
-    boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<Curve> ElectricLoadCenterStorageConverter::efficiencyFunctionofPowerCurve() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->efficiencyFunctionofPowerCurve();
   }
 
-  bool ElectricLoadCenterStorageConverter_Impl::isRadiativeFractionDefaulted() const {
-    return isEmpty(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction);
+  double ElectricLoadCenterStorageConverter::ancillaryPowerConsumedInStandby() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->ancillaryPowerConsumedInStandby();
+  }
+
+  bool ElectricLoadCenterStorageConverter::isAncillaryPowerConsumedInStandbyDefaulted() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->isAncillaryPowerConsumedInStandbyDefaulted();
+  }
+
+  boost::optional<ThermalZone> ElectricLoadCenterStorageConverter::thermalZone() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->thermalZone();
+  }
+
+  double ElectricLoadCenterStorageConverter::radiativeFraction() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->radiativeFraction();
+  }
+
+  bool ElectricLoadCenterStorageConverter::isRadiativeFractionDefaulted() const {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->isRadiativeFractionDefaulted();
   }
 
   // Setters
 
-  bool ElectricLoadCenterStorageConverter_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName,
-                              "ElectricLoadCenterStorageConverter",
-                              "Availability",
-                              schedule);
-    return result;
+  bool ElectricLoadCenterStorageConverter::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  void ElectricLoadCenterStorageConverter_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::AvailabilityScheduleName, "");
-    OS_ASSERT(result);
+  void ElectricLoadCenterStorageConverter::resetAvailabilitySchedule() {
+    getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetAvailabilitySchedule();
   }
 
-  // This method will automatically switch the PowerConversationEfficiencyMethod to "SimpleFixed" and reset the DesignMaximumContinuousInputPower and EfficiencyFunctionofPowerCurveName fields
-  bool ElectricLoadCenterStorageConverter_Impl::setSimpleFixedEfficiency(double simpleFixedEfficiency) {
-    // Assign the Simple Fixed Efficiency
-    bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, simpleFixedEfficiency);
-    if (result){
-      // Switch the Method
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "SimpleFixed");
-      OS_ASSERT(result);
-      // Reset the two others
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, "");
-      OS_ASSERT(result);
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, "");
-      OS_ASSERT(result);
-    }
-    return result;
+  bool ElectricLoadCenterStorageConverter::setSimpleFixedEfficiency(double simpleFixedEfficiency) {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setSimpleFixedEfficiency(simpleFixedEfficiency);
   }
 
-  // This method will automatically switch the PowerConversationEfficiencyMethod to "FunctionOfPower" and reset the Simple Fixed Efficiency field.
-  bool ElectricLoadCenterStorageConverter_Impl::setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower) {
-    // Assign the Design Maximum Continuous Input Power
-    bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, designMaximumContinuousInputPower);
-    if (result){
-      // Switch the Method
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
-      OS_ASSERT(result);
-      // Reset the Simple Fixed Efficiency
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
-      OS_ASSERT(result);
-    }
-    return result;
+  bool ElectricLoadCenterStorageConverter::setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower) {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setDesignMaximumContinuousInputPower(designMaximumContinuousInputPower);
   }
 
-  // This method will automatically switch the PowerConversationEfficiencyMethod to "FunctionOfPower" and reset the Simple Fixed Efficiency field.
-  bool ElectricLoadCenterStorageConverter_Impl::setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve) {
-    // Set the curve
-    bool result = setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::EfficiencyFunctionofPowerCurveName, efficiencyFunctionofPowerCurve.handle());
-    if (result){
-      // Switch the Method
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod, "FunctionOfPower");
-      OS_ASSERT(result);
-      // Reset the Simple Fixed Efficiency
-      result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, "");
-      OS_ASSERT(result);
-    }
-    return result;
+  bool ElectricLoadCenterStorageConverter::setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve) {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setEfficiencyFunctionofPowerCurve(efficiencyFunctionofPowerCurve);
   }
 
-  bool ElectricLoadCenterStorageConverter_Impl::setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby) {
-    bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, ancillaryPowerConsumedInStandby);
-    return result;
+  bool ElectricLoadCenterStorageConverter::setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby) {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setAncillaryPowerConsumedInStandby(ancillaryPowerConsumedInStandby);
   }
 
-  void ElectricLoadCenterStorageConverter_Impl::resetAncillaryPowerConsumedInStandby() {
-    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::AncillaryPowerConsumedInStandby, "");
-    OS_ASSERT(result);
+  void ElectricLoadCenterStorageConverter::resetAncillaryPowerConsumedInStandby() {
+    getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetAncillaryPowerConsumedInStandby();
   }
 
-  bool ElectricLoadCenterStorageConverter_Impl::setThermalZone(const ThermalZone& thermalZone) {
-    bool result = setPointer(OS_ElectricLoadCenter_Storage_ConverterFields::ZoneName, thermalZone.handle());
-    return result;
+  bool ElectricLoadCenterStorageConverter::setThermalZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setThermalZone(thermalZone);
   }
 
-  void ElectricLoadCenterStorageConverter_Impl::resetThermalZone() {
-    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::ZoneName, "");
-    OS_ASSERT(result);
+  void ElectricLoadCenterStorageConverter::resetThermalZone() {
+    getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetThermalZone();
   }
 
-  bool ElectricLoadCenterStorageConverter_Impl::setRadiativeFraction(double radiativeFraction) {
-    bool result = setDouble(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction, radiativeFraction);
-    return result;
+  bool ElectricLoadCenterStorageConverter::setRadiativeFraction(double radiativeFraction) {
+    return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setRadiativeFraction(radiativeFraction);
   }
 
-  void ElectricLoadCenterStorageConverter_Impl::resetRadiativeFraction() {
-    bool result = setString(OS_ElectricLoadCenter_Storage_ConverterFields::RadiativeFraction, "");
-    OS_ASSERT(result);
+  void ElectricLoadCenterStorageConverter::resetRadiativeFraction() {
+    getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetRadiativeFraction();
   }
 
-} // detail
+  /// @cond
+  ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(std::shared_ptr<detail::ElectricLoadCenterStorageConverter_Impl> impl)
+    : ParentObject(std::move(impl)) {}
+  /// @endcond
 
-ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(const Model& model)
-  : ParentObject(ElectricLoadCenterStorageConverter::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageConverter_Impl>());
-
-  // This is actually the E+ default
-  setSimpleFixedEfficiency(0.95);
-
-  // Already defaults to alwaysOnDiscreteSchedule
-  //auto availableSchedule = model.alwaysOnDiscreteSchedule();
-  //setAvailabilitySchedule(availableSchedule);
-
-}
-
-IddObjectType ElectricLoadCenterStorageConverter::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
-}
-
-std::vector<std::string> ElectricLoadCenterStorageConverter::powerConversionEfficiencyMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ElectricLoadCenter_Storage_ConverterFields::PowerConversionEfficiencyMethod);
-}
-
-boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageConverter::electricLoadCenterDistribution() const
-{
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->electricLoadCenterDistribution();
-}
-
-Schedule ElectricLoadCenterStorageConverter::availabilitySchedule() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->availabilitySchedule();
-}
-
-bool ElectricLoadCenterStorageConverter::isAvailabilityScheduleDefaulted() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->isAvailabilityScheduleDefaulted();
-}
-
-std::string ElectricLoadCenterStorageConverter::powerConversionEfficiencyMethod() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->powerConversionEfficiencyMethod();
-}
-
-boost::optional<double> ElectricLoadCenterStorageConverter::simpleFixedEfficiency() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->simpleFixedEfficiency();
-}
-
-boost::optional<double> ElectricLoadCenterStorageConverter::designMaximumContinuousInputPower() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->designMaximumContinuousInputPower();
-}
-
-boost::optional<Curve> ElectricLoadCenterStorageConverter::efficiencyFunctionofPowerCurve() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->efficiencyFunctionofPowerCurve();
-}
-
-double ElectricLoadCenterStorageConverter::ancillaryPowerConsumedInStandby() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->ancillaryPowerConsumedInStandby();
-}
-
-bool ElectricLoadCenterStorageConverter::isAncillaryPowerConsumedInStandbyDefaulted() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->isAncillaryPowerConsumedInStandbyDefaulted();
-}
-
-boost::optional<ThermalZone> ElectricLoadCenterStorageConverter::thermalZone() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->thermalZone();
-}
-
-double ElectricLoadCenterStorageConverter::radiativeFraction() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->radiativeFraction();
-}
-
-bool ElectricLoadCenterStorageConverter::isRadiativeFractionDefaulted() const {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->isRadiativeFractionDefaulted();
-}
-
-
-// Setters
-
-bool ElectricLoadCenterStorageConverter::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setAvailabilitySchedule(schedule);
-}
-
-void ElectricLoadCenterStorageConverter::resetAvailabilitySchedule() {
-  getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetAvailabilitySchedule();
-}
-
-bool ElectricLoadCenterStorageConverter::setSimpleFixedEfficiency(double simpleFixedEfficiency) {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setSimpleFixedEfficiency(simpleFixedEfficiency);
-}
-
-bool ElectricLoadCenterStorageConverter::setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower) {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setDesignMaximumContinuousInputPower(designMaximumContinuousInputPower);
-}
-
-bool ElectricLoadCenterStorageConverter::setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve) {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setEfficiencyFunctionofPowerCurve(efficiencyFunctionofPowerCurve);
-}
-
-bool ElectricLoadCenterStorageConverter::setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby) {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setAncillaryPowerConsumedInStandby(ancillaryPowerConsumedInStandby);
-}
-
-void ElectricLoadCenterStorageConverter::resetAncillaryPowerConsumedInStandby() {
-  getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetAncillaryPowerConsumedInStandby();
-}
-
-bool ElectricLoadCenterStorageConverter::setThermalZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setThermalZone(thermalZone);
-}
-
-void ElectricLoadCenterStorageConverter::resetThermalZone() {
-  getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetThermalZone();
-}
-
-bool ElectricLoadCenterStorageConverter::setRadiativeFraction(double radiativeFraction) {
-  return getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->setRadiativeFraction(radiativeFraction);
-}
-
-void ElectricLoadCenterStorageConverter::resetRadiativeFraction() {
-  getImpl<detail::ElectricLoadCenterStorageConverter_Impl>()->resetRadiativeFraction();
-}
-
-/// @cond
-ElectricLoadCenterStorageConverter::ElectricLoadCenterStorageConverter(std::shared_ptr<detail::ElectricLoadCenterStorageConverter_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

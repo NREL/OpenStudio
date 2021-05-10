@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,100 +37,97 @@ namespace openstudio {
 
 namespace model {
 
-class PlanarSurface;
-class GeneratorPhotovoltaic;
-class SolarCollectorPerformancePhotovoltaicThermalSimple;
+  class PlanarSurface;
+  class GeneratorPhotovoltaic;
+  class SolarCollectorPerformancePhotovoltaicThermalSimple;
 
-namespace detail {
+  namespace detail {
 
-  class SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
+    class SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SolarCollectorFlatPlatePhotovoltaicThermal is a StraightComponent that wraps the OpenStudio IDD object 'OS:SolarCollector:FlatPlate:PhotovoltaicThermal'. */
-class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SolarCollectorFlatPlatePhotovoltaicThermal is a StraightComponent that wraps the OpenStudio IDD object 'OS:SolarCollector:FlatPlate:PhotovoltaicThermal'. */
+  class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model);
+    explicit SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model);
 
-  virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() {}
+    virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
+    SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
 
-  boost::optional<PlanarSurface> surface() const;
+    boost::optional<PlanarSurface> surface() const;
 
-  boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
+    boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
 
-  boost::optional<double> designFlowRate() const;
+    boost::optional<double> designFlowRate() const;
 
-  bool isDesignFlowRateAutosized() const;
+    bool isDesignFlowRateAutosized() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// Deletes the current parameters and clones the parameters passed in
-  bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
+    /// Deletes the current parameters and clones the parameters passed in
+    bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
 
-  /// Deletes the current parameters and constructs a new default set of parameters
-  void resetSolarCollectorPerformance();
+    /// Deletes the current parameters and constructs a new default set of parameters
+    void resetSolarCollectorPerformance();
 
-  bool setSurface(const PlanarSurface& surface);
+    bool setSurface(const PlanarSurface& surface);
 
-  void resetSurface();
+    void resetSurface();
 
-  bool setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic);
+    bool setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic);
 
-  void resetGeneratorPhotovoltaic();
+    void resetGeneratorPhotovoltaic();
 
-  bool setDesignFlowRate(double designFlowRate);
+    bool setDesignFlowRate(double designFlowRate);
 
-  void resetDesignFlowRate();
+    void resetDesignFlowRate();
 
-  void autosizeDesignFlowRate();
+    void autosizeDesignFlowRate();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedDesignFlowRate() const ;
+    boost::optional<double> autosizedDesignFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl ImplType;
 
+    explicit SolarCollectorFlatPlatePhotovoltaicThermal(std::shared_ptr<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl> impl);
 
-  //@}
- protected:
+    friend class detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlatePhotovoltaicThermal");
+  };
 
-  /// @cond
-  typedef detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl ImplType;
+  /** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
+  typedef boost::optional<SolarCollectorFlatPlatePhotovoltaicThermal> OptionalSolarCollectorFlatPlatePhotovoltaicThermal;
 
-  explicit SolarCollectorFlatPlatePhotovoltaicThermal(std::shared_ptr<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl> impl);
+  /** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
+  typedef std::vector<SolarCollectorFlatPlatePhotovoltaicThermal> SolarCollectorFlatPlatePhotovoltaicThermalVector;
 
-  friend class detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlatePhotovoltaicThermal");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
-typedef boost::optional<SolarCollectorFlatPlatePhotovoltaicThermal> OptionalSolarCollectorFlatPlatePhotovoltaicThermal;
-
-/** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
-typedef std::vector<SolarCollectorFlatPlatePhotovoltaicThermal> SolarCollectorFlatPlatePhotovoltaicThermalVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SOLARCOLLECTORFLATPLATEPHOTOVOLTAICTHERMAL_HPP
-
+#endif  // MODEL_SOLARCOLLECTORFLATPLATEPHOTOVOLTAICTHERMAL_HPP

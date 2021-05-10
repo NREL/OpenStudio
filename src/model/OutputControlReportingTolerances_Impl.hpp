@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,80 +33,73 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** OutputControlReportingTolerances_Impl is a ModelObject_Impl that is the implementation class for OutputControlReportingTolerances.*/
-  class MODEL_API OutputControlReportingTolerances_Impl : public ModelObject_Impl {
+    /** OutputControlReportingTolerances_Impl is a ModelObject_Impl that is the implementation class for OutputControlReportingTolerances.*/
+    class MODEL_API OutputControlReportingTolerances_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    OutputControlReportingTolerances_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      OutputControlReportingTolerances_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputControlReportingTolerances_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      OutputControlReportingTolerances_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputControlReportingTolerances_Impl(const OutputControlReportingTolerances_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      OutputControlReportingTolerances_Impl(const OutputControlReportingTolerances_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~OutputControlReportingTolerances_Impl() {}
+      virtual ~OutputControlReportingTolerances_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double toleranceforTimeHeatingSetpointNotMet() const;
+      double toleranceforTimeHeatingSetpointNotMet() const;
 
-    bool isToleranceforTimeHeatingSetpointNotMetDefaulted() const;
+      bool isToleranceforTimeHeatingSetpointNotMetDefaulted() const;
 
-    double toleranceforTimeCoolingSetpointNotMet() const;
+      double toleranceforTimeCoolingSetpointNotMet() const;
 
-    bool isToleranceforTimeCoolingSetpointNotMetDefaulted() const;
+      bool isToleranceforTimeCoolingSetpointNotMetDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet);
+      bool setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet);
 
-    void resetToleranceforTimeHeatingSetpointNotMet();
+      void resetToleranceforTimeHeatingSetpointNotMet();
 
-    bool setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet);
+      bool setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet);
 
-    void resetToleranceforTimeCoolingSetpointNotMet();
+      void resetToleranceforTimeCoolingSetpointNotMet();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputControlReportingTolerances");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputControlReportingTolerances");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_IMPL_HPP
+#endif  // MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_IMPL_HPP

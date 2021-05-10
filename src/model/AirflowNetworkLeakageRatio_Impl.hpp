@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,80 +36,74 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkLeakageRatio_Impl is a AirflowNetworkComponent_Impl that is the implementation class for AirflowNetworkLeakageRatio.*/
-  class MODEL_API AirflowNetworkLeakageRatio_Impl : public AirflowNetworkComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkLeakageRatio_Impl is a AirflowNetworkComponent_Impl that is the implementation class for AirflowNetworkLeakageRatio.*/
+    class MODEL_API AirflowNetworkLeakageRatio_Impl : public AirflowNetworkComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkLeakageRatio_Impl(const IdfObject& idfObject,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      AirflowNetworkLeakageRatio_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkLeakageRatio_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      AirflowNetworkLeakageRatio_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkLeakageRatio_Impl(const AirflowNetworkLeakageRatio_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      AirflowNetworkLeakageRatio_Impl(const AirflowNetworkLeakageRatio_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkLeakageRatio_Impl() {}
+      virtual ~AirflowNetworkLeakageRatio_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> effectiveLeakageRatio() const;
+      boost::optional<double> effectiveLeakageRatio() const;
 
-    double maximumFlowRate() const;
+      double maximumFlowRate() const;
 
-    double referencePressureDifference() const;
+      double referencePressureDifference() const;
 
-    double airMassFlowExponent() const;
+      double airMassFlowExponent() const;
 
-    bool isAirMassFlowExponentDefaulted() const;
+      bool isAirMassFlowExponentDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setEffectiveLeakageRatio(double effectiveLeakageRatio);
+      bool setEffectiveLeakageRatio(double effectiveLeakageRatio);
 
-    void resetEffectiveLeakageRatio();
+      void resetEffectiveLeakageRatio();
 
-    bool setMaximumFlowRate(double maximumFlowRate);
+      bool setMaximumFlowRate(double maximumFlowRate);
 
-    bool setReferencePressureDifference(double referencePressureDifference);
+      bool setReferencePressureDifference(double referencePressureDifference);
 
-    bool setAirMassFlowExponent(double airMassFlowExponent);
+      bool setAirMassFlowExponent(double airMassFlowExponent);
 
-    void resetAirMassFlowExponent();
+      void resetAirMassFlowExponent();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkLeakageRatio");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkLeakageRatio");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKLEAKAGERATIO_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKLEAKAGERATIO_IMPL_HPP

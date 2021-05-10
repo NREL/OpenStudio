@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,102 +50,89 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateControllerWaterCoil( ControllerWaterCoil & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateControllerWaterCoil(ControllerWaterCoil& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Controller_WaterCoil);
+    IdfObject idfObject(IddObjectType::Controller_WaterCoil);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
+    // Name
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // ControlVariable
-
-  if( (s = modelObject.controlVariable()) )
-  {
-    idfObject.setString(Controller_WaterCoilFields::ControlVariable,s.get());
-  }
-
-  // Action
-
-  if( (s = modelObject.action()) )
-  {
-    idfObject.setString(Controller_WaterCoilFields::Action,s.get());
-  }
-
-  // ActuatorVariable
-
-  if( (s = modelObject.actuatorVariable()) )
-  {
-    idfObject.setString(Controller_WaterCoilFields::ActuatorVariable,s.get());
-  }
-
-  boost::optional<model::WaterToAirComponent> waterCoil;
-  if( auto hvacComp = modelObject.getImpl<model::detail::ControllerWaterCoil_Impl>()->waterCoil() ) {
-    waterCoil = hvacComp->optionalCast<model::WaterToAirComponent>();
-  }
-
-  // SensorNodeName
-
-  if( boost::optional<Node> node = modelObject.sensorNode() ) {
-    idfObject.setString(Controller_WaterCoilFields::SensorNodeName,node->name().get());
-  } else if( waterCoil ) {
-    if( auto node = waterCoil->airOutletModelObject() ) {
-      idfObject.setString(Controller_WaterCoilFields::SensorNodeName,node->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // ActuatorNodeName
+    // ControlVariable
 
-  if( boost::optional<Node> node = modelObject.actuatorNode() ) {
-    idfObject.setString(Controller_WaterCoilFields::ActuatorNodeName,node->name().get());
-  } else if( waterCoil ) {
-    if( auto node = waterCoil->waterInletModelObject() ) {
-      idfObject.setString(Controller_WaterCoilFields::ActuatorNodeName,node->name().get());
+    if ((s = modelObject.controlVariable())) {
+      idfObject.setString(Controller_WaterCoilFields::ControlVariable, s.get());
     }
+
+    // Action
+
+    if ((s = modelObject.action())) {
+      idfObject.setString(Controller_WaterCoilFields::Action, s.get());
+    }
+
+    // ActuatorVariable
+
+    if ((s = modelObject.actuatorVariable())) {
+      idfObject.setString(Controller_WaterCoilFields::ActuatorVariable, s.get());
+    }
+
+    boost::optional<model::WaterToAirComponent> waterCoil;
+    if (auto hvacComp = modelObject.getImpl<model::detail::ControllerWaterCoil_Impl>()->waterCoil()) {
+      waterCoil = hvacComp->optionalCast<model::WaterToAirComponent>();
+    }
+
+    // SensorNodeName
+
+    if (boost::optional<Node> node = modelObject.sensorNode()) {
+      idfObject.setString(Controller_WaterCoilFields::SensorNodeName, node->name().get());
+    } else if (waterCoil) {
+      if (auto node = waterCoil->airOutletModelObject()) {
+        idfObject.setString(Controller_WaterCoilFields::SensorNodeName, node->name().get());
+      }
+    }
+
+    // ActuatorNodeName
+
+    if (boost::optional<Node> node = modelObject.actuatorNode()) {
+      idfObject.setString(Controller_WaterCoilFields::ActuatorNodeName, node->name().get());
+    } else if (waterCoil) {
+      if (auto node = waterCoil->waterInletModelObject()) {
+        idfObject.setString(Controller_WaterCoilFields::ActuatorNodeName, node->name().get());
+      }
+    }
+
+    // ControllerConvergenceTolerance
+
+    if (modelObject.isControllerConvergenceToleranceAutosized()) {
+      idfObject.setString(Controller_WaterCoilFields::ControllerConvergenceTolerance, "Autosize");
+    } else if ((value = modelObject.controllerConvergenceTolerance())) {
+      idfObject.setDouble(Controller_WaterCoilFields::ControllerConvergenceTolerance, value.get());
+    }
+
+    // MaximumActuatedFlow
+
+    if (modelObject.isMaximumActuatedFlowAutosized()) {
+      idfObject.setString(Controller_WaterCoilFields::MaximumActuatedFlow, "Autosize");
+    } else if ((value = modelObject.maximumActuatedFlow())) {
+      idfObject.setDouble(Controller_WaterCoilFields::MaximumActuatedFlow, value.get());
+    }
+
+    // MinimumActuatedFlow
+
+    if ((value = modelObject.minimumActuatedFlow())) {
+      idfObject.setDouble(Controller_WaterCoilFields::MinimumActuatedFlow, value.get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // ControllerConvergenceTolerance
+}  // namespace energyplus
 
-  if( modelObject.isControllerConvergenceToleranceAutosized() )
-  {
-    idfObject.setString(Controller_WaterCoilFields::ControllerConvergenceTolerance,"Autosize");
-  }
-  else if( (value = modelObject.controllerConvergenceTolerance()) )
-  {
-    idfObject.setDouble(Controller_WaterCoilFields::ControllerConvergenceTolerance,value.get());
-  }
-
-  // MaximumActuatedFlow
-
-  if( modelObject.isMaximumActuatedFlowAutosized() )
-  {
-    idfObject.setString(Controller_WaterCoilFields::MaximumActuatedFlow,"Autosize");
-  }
-  else if( (value = modelObject.maximumActuatedFlow()) )
-  {
-    idfObject.setDouble(Controller_WaterCoilFields::MaximumActuatedFlow,value.get());
-  }
-
-  // MinimumActuatedFlow
-
-  if( (value = modelObject.minimumActuatedFlow()) )
-  {
-    idfObject.setDouble(Controller_WaterCoilFields::MinimumActuatedFlow,value.get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

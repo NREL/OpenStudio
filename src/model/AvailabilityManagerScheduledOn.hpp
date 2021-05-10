@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,70 +36,70 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerScheduledOn_Impl;
+    class AvailabilityManagerScheduledOn_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerScheduledOn is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:ScheduledOn'. */
-class MODEL_API AvailabilityManagerScheduledOn : public AvailabilityManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AvailabilityManagerScheduledOn is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:ScheduledOn'. */
+  class MODEL_API AvailabilityManagerScheduledOn : public AvailabilityManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AvailabilityManagerScheduledOn(const Model& model);
+    explicit AvailabilityManagerScheduledOn(const Model& model);
 
-  virtual ~AvailabilityManagerScheduledOn() {}
+    virtual ~AvailabilityManagerScheduledOn() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule schedule() const;
+    Schedule schedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /*
+    /*
    * Get the Schedule, if not set, defaults to alwaysOnDiscreteSchedule
    */
-  bool setSchedule(Schedule& schedule);
+    bool setSchedule(Schedule& schedule);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AvailabilityManagerScheduledOn_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerScheduledOn_Impl ImplType;
 
-  explicit AvailabilityManagerScheduledOn(std::shared_ptr<detail::AvailabilityManagerScheduledOn_Impl> impl);
+    explicit AvailabilityManagerScheduledOn(std::shared_ptr<detail::AvailabilityManagerScheduledOn_Impl> impl);
 
-  friend class detail::AvailabilityManagerScheduledOn_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerScheduledOn");
-};
+    friend class detail::AvailabilityManagerScheduledOn_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerScheduledOn");
+  };
 
-/** \relates AvailabilityManagerScheduledOn*/
-typedef boost::optional<AvailabilityManagerScheduledOn> OptionalAvailabilityManagerScheduledOn;
+  /** \relates AvailabilityManagerScheduledOn*/
+  typedef boost::optional<AvailabilityManagerScheduledOn> OptionalAvailabilityManagerScheduledOn;
 
-/** \relates AvailabilityManagerScheduledOn*/
-typedef std::vector<AvailabilityManagerScheduledOn> AvailabilityManagerScheduledOnVector;
+  /** \relates AvailabilityManagerScheduledOn*/
+  typedef std::vector<AvailabilityManagerScheduledOn> AvailabilityManagerScheduledOnVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERSCHEDULEDON_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGERSCHEDULEDON_HPP

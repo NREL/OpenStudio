@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,65 +36,57 @@ namespace openstudio {
 
 namespace model {
 
-class AirflowNetworkDistributionNode;
+  class AirflowNetworkDistributionNode;
 
-namespace detail{
+  namespace detail {
 
-class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
-{
-  public:
+    class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
+    {
+     public:
+      // constructor
+      AirLoopHVACZoneMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  // constructor
-  AirLoopHVACZoneMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      AirLoopHVACZoneMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // construct from workspace
-  AirLoopHVACZoneMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      // copy constructor
+      AirLoopHVACZoneMixer_Impl(const AirLoopHVACZoneMixer_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // copy constructor
-  AirLoopHVACZoneMixer_Impl(const AirLoopHVACZoneMixer_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      // virtual destructor
+      virtual ~AirLoopHVACZoneMixer_Impl();
 
-  // virtual destructor
-  virtual ~AirLoopHVACZoneMixer_Impl();
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  // Get all output variable names that could be associated with this object.
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-  virtual std::vector<ModelObject> children() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      std::vector<openstudio::IdfObject> remove() override;
 
-  std::vector<openstudio::IdfObject> remove() override;
+      unsigned outletPort() const override;
 
-  unsigned outletPort() const override;
+      unsigned inletPort(unsigned branchIndex) const override;
 
-  unsigned inletPort(unsigned branchIndex) const override;
+      unsigned nextInletPort() const override;
 
-  unsigned nextInletPort() const override;
+      virtual bool addToNode(Node& node) override;
 
-  virtual bool addToNode(Node & node) override;
+      virtual ModelObject clone(Model model) const override;
 
-  virtual ModelObject clone(Model model) const override;
+      void disconnect() override;
 
-  void disconnect() override;
+      AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+      boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
-  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+     private:
+      REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneMixer");
+    };
 
- private:
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneMixer");
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACZONEMIXER_IMPL_HPP
-
+#endif  // MODEL_AIRLOOPHVACZONEMIXER_IMPL_HPP

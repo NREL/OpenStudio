@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,49 +36,49 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PlantEquipmentOperationCoolingLoad_Impl;
+    class PlantEquipmentOperationCoolingLoad_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantEquipmentOperationCoolingLoad is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:CoolingLoad'. */
-class MODEL_API PlantEquipmentOperationCoolingLoad : public PlantEquipmentOperationRangeBasedScheme {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantEquipmentOperationCoolingLoad is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:CoolingLoad'. */
+  class MODEL_API PlantEquipmentOperationCoolingLoad : public PlantEquipmentOperationRangeBasedScheme
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantEquipmentOperationCoolingLoad(const Model& model);
+    explicit PlantEquipmentOperationCoolingLoad(const Model& model);
 
-  virtual ~PlantEquipmentOperationCoolingLoad() {}
+    virtual ~PlantEquipmentOperationCoolingLoad() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationCoolingLoad_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationCoolingLoad_Impl ImplType;
 
-  explicit PlantEquipmentOperationCoolingLoad(std::shared_ptr<detail::PlantEquipmentOperationCoolingLoad_Impl> impl);
+    explicit PlantEquipmentOperationCoolingLoad(std::shared_ptr<detail::PlantEquipmentOperationCoolingLoad_Impl> impl);
 
-  friend class detail::PlantEquipmentOperationCoolingLoad_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationCoolingLoad");
-};
+    friend class detail::PlantEquipmentOperationCoolingLoad_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationCoolingLoad");
+  };
 
-/** \relates PlantEquipmentOperationCoolingLoad*/
-typedef boost::optional<PlantEquipmentOperationCoolingLoad> OptionalPlantEquipmentOperationCoolingLoad;
+  /** \relates PlantEquipmentOperationCoolingLoad*/
+  typedef boost::optional<PlantEquipmentOperationCoolingLoad> OptionalPlantEquipmentOperationCoolingLoad;
 
-/** \relates PlantEquipmentOperationCoolingLoad*/
-typedef std::vector<PlantEquipmentOperationCoolingLoad> PlantEquipmentOperationCoolingLoadVector;
+  /** \relates PlantEquipmentOperationCoolingLoad*/
+  typedef std::vector<PlantEquipmentOperationCoolingLoad> PlantEquipmentOperationCoolingLoadVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PLANTEQUIPMENTOPERATIONCOOLINGLOAD_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONCOOLINGLOAD_HPP

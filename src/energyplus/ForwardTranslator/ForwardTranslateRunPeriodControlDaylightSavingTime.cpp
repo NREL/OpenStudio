@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,42 +41,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateRunPeriodControlDaylightSavingTime( RunPeriodControlDaylightSavingTime & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::RunPeriodControl_DaylightSavingTime);
+  boost::optional<IdfObject> ForwardTranslator::translateRunPeriodControlDaylightSavingTime(RunPeriodControlDaylightSavingTime& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::RunPeriodControl_DaylightSavingTime);
 
-  boost::optional<std::string> s;
+    boost::optional<std::string> s;
 
-  s = modelObject.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate);
-  if( s )
-  {
-    std::string str = s.get();
-    //auto index = str.find("5th", 0);
-    //if (index != std::string::npos){
-    //  str.replace(index, 3, "Last");
-    //}
+    s = modelObject.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate);
+    if (s) {
+      std::string str = s.get();
+      //auto index = str.find("5th", 0);
+      //if (index != std::string::npos){
+      //  str.replace(index, 3, "Last");
+      //}
 
-    idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::StartDate, str);
+      idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::StartDate, str);
+    }
+
+    s = modelObject.getString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate);
+    if (s) {
+      std::string str = s.get();
+      //auto index = str.find("5th", 0);
+      //if (index != std::string::npos){
+      //  str.replace(index, 3, "Last");
+      //}
+
+      idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::EndDate, str);
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return idfObject;
   }
 
-  s = modelObject.getString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate);
-  if( s )
-  {
-    std::string str = s.get();
-    //auto index = str.find("5th", 0);
-    //if (index != std::string::npos){
-    //  str.replace(index, 3, "Last");
-    //}
+}  // namespace energyplus
 
-    idfObject.setString(RunPeriodControl_DaylightSavingTimeFields::EndDate, str);
-  }
-
-  m_idfObjects.push_back(idfObject);
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

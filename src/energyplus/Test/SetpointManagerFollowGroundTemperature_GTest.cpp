@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,8 +51,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_SetpointManagerFollowGroundTemperature)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_SetpointManagerFollowGroundTemperature) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -71,14 +70,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SetpointManagerFollowGroundTemperatu
 
   WorkspaceObjectVector spmIdfs = workspace.getObjectsByType(IddObjectType::SetpointManager_FollowGroundTemperature);
   ASSERT_EQ(1u, spmIdfs.size());
-  WorkspaceObject &spmIdf(spmIdfs[0]);
+  WorkspaceObject& spmIdf(spmIdfs[0]);
 
   EXPECT_EQ("MinimumTemperature", spmIdf.getString(SetpointManager_FollowGroundTemperatureFields::ControlVariable, true).get());
-  EXPECT_EQ("Site:GroundTemperature:Shallow", spmIdf.getString(SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType, true).get());
+  EXPECT_EQ("Site:GroundTemperature:Shallow",
+            spmIdf.getString(SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType, true).get());
   EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::OffsetTemperatureDifference, true).get());
   EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::MaximumSetpointTemperature, true).get());
   EXPECT_DOUBLE_EQ(999.9, spmIdf.getDouble(SetpointManager_FollowGroundTemperatureFields::MinimumSetpointTemperature, true).get());
-
 }
-
-

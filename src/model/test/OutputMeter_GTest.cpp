@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,8 +50,7 @@ using namespace openstudio::model;
 using namespace openstudio;
 using std::string;
 
-TEST_F(ModelFixture, MeterRegex)
-{
+TEST_F(ModelFixture, MeterRegex) {
   // regex to search meter name
   // matches[1], specific end use type
   // matches[2], end use type
@@ -96,7 +95,7 @@ TEST_F(ModelFixture, MeterRegex)
   EXPECT_EQ("Facility", string(matches[4].first, matches[4].second));
   EXPECT_EQ("", string(matches[5].first, matches[5].second));
 
-  subject = "Gas:Facility";
+  subject = "NaturalGas:Facility";
   ASSERT_TRUE(boost::regex_search(subject, matches, OutputMeter::meterRegex()));
   ASSERT_TRUE(matches[1].matched);
   EXPECT_FALSE(matches[2].matched);
@@ -104,7 +103,7 @@ TEST_F(ModelFixture, MeterRegex)
   ASSERT_TRUE(matches[4].matched);
   ASSERT_TRUE(matches[5].matched);
   EXPECT_EQ("", string(matches[1].first, matches[1].second));
-  EXPECT_EQ("Gas", string(matches[3].first, matches[3].second));
+  EXPECT_EQ("NaturalGas", string(matches[3].first, matches[3].second));
   EXPECT_EQ("Facility", string(matches[4].first, matches[4].second));
   EXPECT_EQ("", string(matches[5].first, matches[5].second));
 
@@ -183,11 +182,9 @@ TEST_F(ModelFixture, MeterRegex)
   EXPECT_EQ("Electricity", string(matches[3].first, matches[3].second));
   EXPECT_EQ("Zone", string(matches[4].first, matches[4].second));
   EXPECT_EQ("North Zone", string(matches[5].first, matches[5].second));
-
 }
 
-TEST_F(ModelFixture, MeterConstructor)
-{
+TEST_F(ModelFixture, MeterConstructor) {
   Model model;
 
   OutputMeter meter(model);
@@ -203,8 +200,13 @@ TEST_F(ModelFixture, MeterConstructor)
   EXPECT_TRUE(meter.isCumulativeDefaulted());
 
   // check order of operations
-  // this is a corner case of EnergyPlus, there is no 'Heating:Gas:Facility', it is just 'Heating:Gas'
+  // this is a corner case of EnergyPlus, there is no 'Heating:NaturalGas:Facility', it is just 'Heating:NaturalGas'
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setFuelType(FuelType::Gas));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   EXPECT_TRUE(meter.setEndUseType(EndUseType::Heating));
@@ -215,6 +217,11 @@ TEST_F(ModelFixture, MeterConstructor)
   EXPECT_EQ(EndUseType::Heating, meter.endUseType().get().value());
 
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   EXPECT_TRUE(meter.setFuelType(FuelType::Gas));
   EXPECT_TRUE(meter.setEndUseType(EndUseType::Heating));
@@ -225,6 +232,11 @@ TEST_F(ModelFixture, MeterConstructor)
   EXPECT_EQ(EndUseType::Heating, meter.endUseType().get().value());
 
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setEndUseType(EndUseType::Heating));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   EXPECT_TRUE(meter.setFuelType(FuelType::Gas));
@@ -236,6 +248,11 @@ TEST_F(ModelFixture, MeterConstructor)
 
   // make sure we don't mix up gasoline with gas
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setFuelType(FuelType::Gasoline));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   ASSERT_TRUE(meter.fuelType());
@@ -245,6 +262,11 @@ TEST_F(ModelFixture, MeterConstructor)
 
   // make sure we can get FuelOil1
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setFuelType(FuelType::FuelOil_1));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   ASSERT_TRUE(meter.fuelType());
@@ -253,34 +275,32 @@ TEST_F(ModelFixture, MeterConstructor)
   EXPECT_EQ(InstallLocationType::Facility, meter.installLocationType().get().value());
 }
 
-
-TEST_F(ModelFixture, MeterFromModel)
-{
+TEST_F(ModelFixture, MeterFromModel) {
   Model model;
 
   IdfObjectVector idfObjects;
 
   idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
-  idfObjects.back().setString(OS_Output_MeterFields::Name,"Electricity:Facility");
-  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency,"monthly");
-  idfObjects.back().setString(OS_Output_MeterFields::MeterFileOnly,"false");
+  idfObjects.back().setString(OS_Output_MeterFields::Name, "Electricity:Facility");
+  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency, "monthly");
+  idfObjects.back().setString(OS_Output_MeterFields::MeterFileOnly, "false");
 
-  LOG(Debug,"OutputMeter text: " << std::endl << idfObjects.back());
-
-  idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
-  idfObjects.back().setString(OS_Output_MeterFields::Name,"Gas:Building");
-  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency,"hourly");
+  LOG(Debug, "OutputMeter text: " << '\n' << idfObjects.back());
 
   idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
-  idfObjects.back().setString(OS_Output_MeterFields::Name,"InteriorLights:Electricity");
-  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency,"runperiod");
-  idfObjects.back().setString(OS_Output_MeterFields::MeterFileOnly,"false");
-  idfObjects.back().setString(OS_Output_MeterFields::Cumulative,"true");
+  idfObjects.back().setString(OS_Output_MeterFields::Name, "NaturalGas:Building");
+  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency, "hourly");
 
   idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
-  idfObjects.back().setString(OS_Output_MeterFields::Name,"General:InteriorLights:Electricity:Zone:North Zone");
-  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency,"daily");
-  idfObjects.back().setString(OS_Output_MeterFields::Cumulative,"true");
+  idfObjects.back().setString(OS_Output_MeterFields::Name, "InteriorLights:Electricity");
+  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency, "runperiod");
+  idfObjects.back().setString(OS_Output_MeterFields::MeterFileOnly, "false");
+  idfObjects.back().setString(OS_Output_MeterFields::Cumulative, "true");
+
+  idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
+  idfObjects.back().setString(OS_Output_MeterFields::Name, "General:InteriorLights:Electricity:Zone:North Zone");
+  idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency, "daily");
+  idfObjects.back().setString(OS_Output_MeterFields::Cumulative, "true");
 
   EXPECT_EQ(static_cast<unsigned>(4), idfObjects.size());
 
@@ -301,10 +321,10 @@ TEST_F(ModelFixture, MeterFromModel)
   EXPECT_EQ(InstallLocationType::Facility, meter->installLocationType().get().value());
   EXPECT_FALSE(meter->specificInstallLocation());
 
-  //"Output:OutputMeter:MeterFileOnly,Gas:Building,hourly;"
+  //"Output:OutputMeter:MeterFileOnly,NaturalGas:Building,hourly;"
   meter = model.getModelObject<OutputMeter>(handles[1]);
   ASSERT_TRUE(meter);
-  EXPECT_EQ("Gas:Building", meter->name());
+  EXPECT_EQ("NaturalGas:Building", meter->name());
   EXPECT_FALSE(meter->cumulative());
   EXPECT_FALSE(meter->specificEndUse());
   EXPECT_FALSE(meter->endUseType());
@@ -344,20 +364,20 @@ TEST_F(ModelFixture, MeterFromModel)
   EXPECT_EQ("North Zone", meter->specificInstallLocation().get());
 }
 
-TEST_F(ModelFixture, MeterEnumValues)
-{
+TEST_F(ModelFixture, MeterEnumValues) {
   Model model;
 
   std::set<int> installLocationTypes = InstallLocationType::getValues();
-  for (int installLocationType : installLocationTypes){
+  for (int installLocationType : installLocationTypes) {
     OutputMeter meter(model);
     EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType(installLocationType))) << InstallLocationType(installLocationType).valueName();
     ASSERT_TRUE(meter.installLocationType()) << InstallLocationType(installLocationType).valueName();
-    EXPECT_EQ(installLocationType, meter.installLocationType().get().value()) << InstallLocationType(installLocationType).valueName() << " != " << meter.installLocationType().get().valueName();
+    EXPECT_EQ(installLocationType, meter.installLocationType().get().value())
+      << InstallLocationType(installLocationType).valueName() << " != " << meter.installLocationType().get().valueName();
   }
 
   std::set<int> fuelTypes = FuelType::getValues();
-  for (int fuelType : fuelTypes){
+  for (int fuelType : fuelTypes) {
     OutputMeter meter(model);
     EXPECT_TRUE(meter.setFuelType(FuelType(fuelType))) << FuelType(fuelType).valueName();
     ASSERT_TRUE(meter.fuelType()) << FuelType(fuelType).valueName();
@@ -365,61 +385,58 @@ TEST_F(ModelFixture, MeterEnumValues)
   }
 
   std::set<int> endUseTypes = EndUseType::getValues();
-  for (int endUseType : endUseTypes){
+  for (int endUseType : endUseTypes) {
     OutputMeter meter(model);
     EXPECT_TRUE(meter.setEndUseType(EndUseType(endUseType))) << EndUseType(endUseType).valueName();
     ASSERT_TRUE(meter.endUseType()) << EndUseType(endUseType).valueName();
     EXPECT_EQ(endUseType, meter.endUseType().get().value()) << EndUseType(endUseType).valueName() << " != " << meter.endUseType().get().valueName();
   }
 
-  for (int installLocationType : installLocationTypes){
-    for (int fuelType : fuelTypes){
-      for (int endUseType : endUseTypes){
+  for (int installLocationType : installLocationTypes) {
+    for (int fuelType : fuelTypes) {
+      for (int endUseType : endUseTypes) {
         OutputMeter meter(model);
         EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType(installLocationType))) << InstallLocationType(installLocationType).valueName();
         EXPECT_TRUE(meter.setFuelType(FuelType(fuelType))) << FuelType(fuelType).valueName();
         EXPECT_TRUE(meter.setEndUseType(EndUseType(endUseType))) << EndUseType(endUseType).valueName();
 
         // this is a specific case handled by OutputMeter
-        if (installLocationType != InstallLocationType::Facility){
+        if (installLocationType != InstallLocationType::Facility) {
           ASSERT_TRUE(meter.installLocationType()) << InstallLocationType(installLocationType).valueName();
-          EXPECT_EQ(installLocationType, meter.installLocationType().get().value()) << InstallLocationType(installLocationType).valueName() << " != " << meter.installLocationType().get().valueName();
+          EXPECT_EQ(installLocationType, meter.installLocationType().get().value())
+            << InstallLocationType(installLocationType).valueName() << " != " << meter.installLocationType().get().valueName();
         }
 
         ASSERT_TRUE(meter.fuelType()) << FuelType(fuelType).valueName();
         EXPECT_EQ(fuelType, meter.fuelType().get().value()) << FuelType(fuelType).valueName() << " != " << meter.fuelType().get().valueName();
 
         ASSERT_TRUE(meter.endUseType()) << EndUseType(endUseType).valueName();
-        EXPECT_EQ(endUseType, meter.endUseType().get().value()) << EndUseType(endUseType).valueName() << " != " << meter.endUseType().get().valueName();
+        EXPECT_EQ(endUseType, meter.endUseType().get().value())
+          << EndUseType(endUseType).valueName() << " != " << meter.endUseType().get().valueName();
       }
     }
   }
 }
 
-void get_meter_regex()
-{
+void get_meter_regex() {
   std::this_thread::yield();
   std::string subject = "Electricity:Facility";
   boost::smatch matches;
   boost::regex_search(subject, matches, OutputMeter::meterRegex());
 }
 
-TEST_F(ModelFixture, GetMeterRegex_ThreadSafe)
-{
+TEST_F(ModelFixture, GetMeterRegex_ThreadSafe) {
   const unsigned N = 50;
   std::vector<std::future<void>> workers;
-  for (unsigned i = 0; i < N; ++i){
+  for (unsigned i = 0; i < N; ++i) {
     workers.push_back(std::async(std::launch::async, get_meter_regex));
   }
 
-  for (auto &f : workers) {
-    EXPECT_TRUE( f.valid() );
+  for (auto& f : workers) {
+    EXPECT_TRUE(f.valid());
   }
 
-  for (auto &f : workers) {
+  for (auto& f : workers) {
     f.get();
   }
-
 }
-
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,51 +41,44 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateRunPeriodControlSpecialDays( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::RunPeriodControl_SpecialDays )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: RunPeriodControl_SpecialDays");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateRunPeriodControlSpecialDays(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::RunPeriodControl_SpecialDays) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: RunPeriodControl_SpecialDays");
+      return boost::none;
+    }
+
+    boost::optional<std::string> s = workspaceObject.getString(RunPeriodControl_SpecialDaysFields::StartDate);
+    if (!s) {
+      LOG(Error, "No start date specified for RunPeriodControl:SpecialDays");
+      return boost::none;
+    }
+
+    boost::optional<RunPeriodControlSpecialDays> mo;
+    try {
+      mo = RunPeriodControlSpecialDays(*s, m_model);
+    } catch (...) {
+      LOG(Error, "'" << *s << "'  is not a correct date specification");
+      return boost::none;
+    }
+
+    s = workspaceObject.getString(RunPeriodControl_SpecialDaysFields::Name);
+    if (s) {
+      mo->setName(s.get());
+    }
+
+    boost::optional<int> i = workspaceObject.getInt(RunPeriodControl_SpecialDaysFields::Duration);
+    if (i) {
+      mo->setDuration(i.get());
+    }
+
+    s = workspaceObject.getString(RunPeriodControl_SpecialDaysFields::SpecialDayType);
+    if (s) {
+      mo->setString(OS_RunPeriodControl_SpecialDaysFields::SpecialDayType, s.get());
+    }
+
+    return *mo;
   }
 
-  boost::optional<std::string> s = workspaceObject.getString(RunPeriodControl_SpecialDaysFields::StartDate);
-  if( !s )
-  {
-    LOG(Error, "No start date specified for RunPeriodControl:SpecialDays");
-    return boost::none;
-  }
+}  // namespace energyplus
 
-  boost::optional<RunPeriodControlSpecialDays> mo;
-  try{
-    mo = RunPeriodControlSpecialDays(*s, m_model);
-  }catch(...){
-    LOG(Error, "'" << *s << "'  is not a correct date specification");
-    return boost::none;
-  }
-
-  s = workspaceObject.getString(RunPeriodControl_SpecialDaysFields::Name);
-  if( s )
-  {
-    mo->setName(s.get());
-  }
-
-  boost::optional<int> i = workspaceObject.getInt(RunPeriodControl_SpecialDaysFields::Duration);
-  if( i )
-  {
-    mo->setDuration(i.get());
-  }
-
-  s = workspaceObject.getString(RunPeriodControl_SpecialDaysFields::SpecialDayType);
-  if( s )
-  {
-    mo->setString(OS_RunPeriodControl_SpecialDaysFields::SpecialDayType,s.get());
-  }
-
-  return *mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,194 +33,185 @@
 #include "ModelAPI.hpp"
 #include "AirToAirComponent_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Connection;
+  class Schedule;
+  class Connection;
 
-namespace detail {
+  namespace detail {
 
-  /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
-  class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl {
+    /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
+    class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl
+    {
 
-   public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      HeatExchangerAirToAirSensibleAndLatent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    HeatExchangerAirToAirSensibleAndLatent_Impl(const IdfObject& idfObject,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      HeatExchangerAirToAirSensibleAndLatent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    HeatExchangerAirToAirSensibleAndLatent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      HeatExchangerAirToAirSensibleAndLatent_Impl(const HeatExchangerAirToAirSensibleAndLatent_Impl& other, Model_Impl* model, bool keepHandle);
 
-    HeatExchangerAirToAirSensibleAndLatent_Impl(const HeatExchangerAirToAirSensibleAndLatent_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      virtual ~HeatExchangerAirToAirSensibleAndLatent_Impl() {}
 
-    virtual ~HeatExchangerAirToAirSensibleAndLatent_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      // Returns an eventual CoilSystemCooling Water/DX HeatExchangerAssisted
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    // Returns an eventual CoilSystemCooling Water/DX HeatExchangerAssisted
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
-
-    /* Override disallows addToNode when part of a CoilSystemCooling Water/DX HeatExchangerAssisted
+      /* Override disallows addToNode when part of a CoilSystemCooling Water/DX HeatExchangerAssisted
      * otherwise calls parent AirToAirComponent_Impl::addToNode
      */
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    virtual unsigned primaryAirInletPort() const override;
+      virtual unsigned primaryAirInletPort() const override;
 
-    virtual unsigned primaryAirOutletPort() const override;
+      virtual unsigned primaryAirOutletPort() const override;
 
-    virtual unsigned secondaryAirInletPort() const override;
+      virtual unsigned secondaryAirInletPort() const override;
 
-    virtual unsigned secondaryAirOutletPort() const override;
+      virtual unsigned secondaryAirOutletPort() const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      Schedule availabilitySchedule() const;
 
-    Schedule availabilitySchedule() const;
+      boost::optional<double> nominalSupplyAirFlowRate() const;
 
-    boost::optional<double> nominalSupplyAirFlowRate() const;
+      bool isNominalSupplyAirFlowRateAutosized() const;
 
-    bool isNominalSupplyAirFlowRateAutosized() const;
+      double sensibleEffectivenessat100HeatingAirFlow() const;
 
-    double sensibleEffectivenessat100HeatingAirFlow() const;
+      double latentEffectivenessat100HeatingAirFlow() const;
 
-    double latentEffectivenessat100HeatingAirFlow() const;
+      double sensibleEffectivenessat75HeatingAirFlow() const;
 
-    double sensibleEffectivenessat75HeatingAirFlow() const;
+      double latentEffectivenessat75HeatingAirFlow() const;
 
-    double latentEffectivenessat75HeatingAirFlow() const;
+      double sensibleEffectivenessat100CoolingAirFlow() const;
 
-    double sensibleEffectivenessat100CoolingAirFlow() const;
+      double latentEffectivenessat100CoolingAirFlow() const;
 
-    double latentEffectivenessat100CoolingAirFlow() const;
+      double sensibleEffectivenessat75CoolingAirFlow() const;
 
-    double sensibleEffectivenessat75CoolingAirFlow() const;
+      double latentEffectivenessat75CoolingAirFlow() const;
 
-    double latentEffectivenessat75CoolingAirFlow() const;
+      double nominalElectricPower() const;
 
-    double nominalElectricPower() const;
+      bool supplyAirOutletTemperatureControl() const;
 
-    bool supplyAirOutletTemperatureControl() const;
+      std::string heatExchangerType() const;
 
-    std::string heatExchangerType() const;
+      std::string frostControlType() const;
 
-    std::string frostControlType() const;
+      double thresholdTemperature() const;
 
-    double thresholdTemperature() const;
+      bool isThresholdTemperatureDefaulted() const;
 
-    bool isThresholdTemperatureDefaulted() const;
+      boost::optional<double> initialDefrostTimeFraction() const;
 
-    boost::optional<double> initialDefrostTimeFraction() const;
+      boost::optional<double> rateofDefrostTimeFractionIncrease() const;
 
-    boost::optional<double> rateofDefrostTimeFractionIncrease() const;
+      bool economizerLockout() const;
 
-    bool economizerLockout() const;
+      boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
 
-    boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
+      //@}
+      /** @name Setters */
+      //@{
 
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setNominalSupplyAirFlowRate(boost::optional<double> nominalSupplyAirFlowRate);
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      void autosizeNominalSupplyAirFlowRate();
 
-    bool setNominalSupplyAirFlowRate(boost::optional<double> nominalSupplyAirFlowRate);
+      bool setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow);
 
-    void autosizeNominalSupplyAirFlowRate();
+      bool setLatentEffectivenessat100HeatingAirFlow(double latentEffectivenessat100HeatingAirFlow);
 
-    bool setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow);
+      bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
 
-    bool setLatentEffectivenessat100HeatingAirFlow(double latentEffectivenessat100HeatingAirFlow);
+      bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
 
-    bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
+      bool setSensibleEffectivenessat100CoolingAirFlow(double sensibleEffectivenessat100CoolingAirFlow);
 
-    bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
+      bool setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow);
 
-    bool setSensibleEffectivenessat100CoolingAirFlow(double sensibleEffectivenessat100CoolingAirFlow);
+      bool setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
 
-    bool setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow);
+      bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
 
-    bool setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
+      bool setNominalElectricPower(double nominalElectricPower);
 
-    bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
+      bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
 
-    bool setNominalElectricPower(double nominalElectricPower);
+      bool setHeatExchangerType(std::string heatExchangerType);
 
-    bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
+      bool setFrostControlType(std::string frostControlType);
 
-    bool setHeatExchangerType(std::string heatExchangerType);
+      bool setThresholdTemperature(double thresholdTemperature);
 
-    bool setFrostControlType(std::string frostControlType);
+      void resetThresholdTemperature();
 
-    bool setThresholdTemperature(double thresholdTemperature);
+      bool setInitialDefrostTimeFraction(boost::optional<double> initialDefrostTimeFraction);
 
-    void resetThresholdTemperature();
+      void resetInitialDefrostTimeFraction();
 
-    bool setInitialDefrostTimeFraction(boost::optional<double> initialDefrostTimeFraction);
+      bool setRateofDefrostTimeFractionIncrease(boost::optional<double> rateofDefrostTimeFractionIncrease);
 
-    void resetInitialDefrostTimeFraction();
+      void resetRateofDefrostTimeFractionIncrease();
 
-    bool setRateofDefrostTimeFractionIncrease(boost::optional<double> rateofDefrostTimeFractionIncrease);
+      bool setEconomizerLockout(bool economizerLockout);
 
-    void resetRateofDefrostTimeFractionIncrease();
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setEconomizerLockout(bool economizerLockout);
+      AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+      boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.HeatExchangerAirToAirSensibleAndLatent");
 
-    //@}
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.HeatExchangerAirToAirSensibleAndLatent");
+      std::vector<std::string> heatExchangerTypeValues() const;
+      std::vector<std::string> frostControlTypeValues() const;
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    std::vector<std::string> heatExchangerTypeValues() const;
-    std::vector<std::string> frostControlTypeValues() const;
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+  }  // namespace detail
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_IMPL_HPP
+#endif  // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,20 +39,14 @@ namespace openstudio {
 
 // CONSTRUCTORS
 
-IddFileAndFactoryWrapper::IddFileAndFactoryWrapper()
-  : m_iddFileType(IddFileType(IddFileType::OpenStudio))
-{}
+IddFileAndFactoryWrapper::IddFileAndFactoryWrapper() : m_iddFileType(IddFileType(IddFileType::OpenStudio)) {}
 
-IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(const IddFile& iddFile)
-  : m_iddFile(iddFile)
-{}
+IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(const IddFile& iddFile) : m_iddFile(iddFile) {}
 
-IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(IddFileType iddFileType)
-  : m_iddFileType(iddFileType)
-{
+IddFileAndFactoryWrapper::IddFileAndFactoryWrapper(IddFileType iddFileType) : m_iddFileType(iddFileType) {
   if (iddFileType == IddFileType::UserCustom) {
-    LOG(Warn,"IddFileType set to UserCustom without an actual IddFile being specified. Please "
-        << "construct IddFileAndFactoryWrapper from an IddFile, or from a different IddFileType.");
+    LOG(Warn, "IddFileType set to UserCustom without an actual IddFile being specified. Please "
+                << "construct IddFileAndFactoryWrapper from an IddFile, or from a different IddFileType.");
   }
 }
 
@@ -63,11 +57,9 @@ std::string IddFileAndFactoryWrapper::version() const {
 
   if (m_iddFile) {
     result = m_iddFile->version();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     result = IddFactory::instance().getVersion(*m_iddFileType);
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -79,11 +71,9 @@ std::string IddFileAndFactoryWrapper::header() const {
 
   if (m_iddFile) {
     result = m_iddFile->header();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     result = IddFactory::instance().getHeader(*m_iddFileType);
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -95,11 +85,9 @@ std::vector<IddObject> IddFileAndFactoryWrapper::objects() const {
 
   if (m_iddFile) {
     result = m_iddFile->objects();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     result = IddFactory::instance().getObjects(*m_iddFileType);
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -111,11 +99,9 @@ std::vector<std::string> IddFileAndFactoryWrapper::groups() const {
 
   if (m_iddFile) {
     result = m_iddFile->groups();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     result = IddFactory::instance().getGroups(*m_iddFileType);
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -127,11 +113,9 @@ std::vector<IddObject> IddFileAndFactoryWrapper::getObjectsInGroup(const std::st
 
   if (m_iddFile) {
     result = m_iddFile->getObjectsInGroup(group);
-  }
-  else if (m_iddFileType) {
-    result = IddFactory::instance().getObjectsInGroup(group,*m_iddFileType);
-  }
-  else {
+  } else if (m_iddFileType) {
+    result = IddFactory::instance().getObjectsInGroup(group, *m_iddFileType);
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -143,11 +127,9 @@ std::vector<IddObject> IddFileAndFactoryWrapper::getObjects(const boost::regex& 
 
   if (m_iddFile) {
     result = m_iddFile->getObjects(objectRegex);
-  }
-  else if (m_iddFileType) {
-    result = IddFactory::instance().getObjects(objectRegex,*m_iddFileType);
-  }
-  else {
+  } else if (m_iddFileType) {
+    result = IddFactory::instance().getObjects(objectRegex, *m_iddFileType);
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -159,11 +141,9 @@ boost::optional<IddObject> IddFileAndFactoryWrapper::versionObject() const {
 
   if (m_iddFile) {
     result = m_iddFile->versionObject();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     result = IddFactory::instance().getVersionObject(*m_iddFileType);
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -175,16 +155,14 @@ boost::optional<IddObject> IddFileAndFactoryWrapper::getObject(const std::string
 
   if (m_iddFile) {
     result = m_iddFile->getObject(objectName);
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     OptionalIddObject candidate = IddFactory::instance().getObject(objectName);
     if (candidate) {
       if (isInFile(candidate->type())) {
         result = candidate;
       }
     }
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -196,22 +174,20 @@ boost::optional<IddObject> IddFileAndFactoryWrapper::getObject(IddObjectType obj
   OptionalIddObject result;
 
   if (objectType == IddObjectType::UserCustom) {
-    LOG(Info,"Asked to return IddObject of type IddObjectType::UserCustom. Since "
-        << "UserCustom object types are generally not unique, returning false rather than "
-        << "an IddObject. Please specify a different IddObjectType, or use "
-        << "getObject(const std::string&).");
+    LOG(Info, "Asked to return IddObject of type IddObjectType::UserCustom. Since "
+                << "UserCustom object types are generally not unique, returning false rather than "
+                << "an IddObject. Please specify a different IddObjectType, or use "
+                << "getObject(const std::string&).");
     return result;
   }
 
   if (m_iddFile) {
     result = m_iddFile->getObject(objectType);
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     if (isInFile(objectType)) {
       result = IddFactory::instance().getObject(objectType);
     }
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -224,11 +200,9 @@ std::vector<IddObject> IddFileAndFactoryWrapper::requiredObjects() const {
 
   if (m_iddFile) {
     result = m_iddFile->requiredObjects();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     result = IddFactory::instance().getRequiredObjects(*m_iddFileType);
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -241,11 +215,9 @@ std::vector<IddObject> IddFileAndFactoryWrapper::uniqueObjects() const {
 
   if (m_iddFile) {
     result = m_iddFile->uniqueObjects();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     result = IddFactory::instance().getUniqueObjects(*m_iddFileType);
-  }
-  else {
+  } else {
     LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
   }
 
@@ -255,8 +227,7 @@ std::vector<IddObject> IddFileAndFactoryWrapper::uniqueObjects() const {
 IddFile IddFileAndFactoryWrapper::iddFile() const {
   if (m_iddFile) {
     return *m_iddFile;
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     return IddFactory::instance().getIddFile(*m_iddFileType);
   }
 
@@ -265,7 +236,9 @@ IddFile IddFileAndFactoryWrapper::iddFile() const {
 }
 
 IddFileType IddFileAndFactoryWrapper::iddFileType() const {
-  if (m_iddFileType) { return *m_iddFileType; }
+  if (m_iddFileType) {
+    return *m_iddFileType;
+  }
   OS_ASSERT(m_iddFile);
   return IddFileType(IddFileType::UserCustom);
 }
@@ -280,14 +253,14 @@ void IddFileAndFactoryWrapper::setIddFile(const IddFile& iddFile) {
 void IddFileAndFactoryWrapper::setIddFile(IddFileType iddFileType) {
   if (iddFileType == IddFileType::UserCustom) {
     if (m_iddFile) {
-      LOG(Warn,"setIddFile(IddFileType::UserCustom) called when a custom IddFile has already been "
-          << "set. Taking no action (keeping the custom file already specified).");
+      LOG(Warn, "setIddFile(IddFileType::UserCustom) called when a custom IddFile has already been "
+                  << "set. Taking no action (keeping the custom file already specified).");
       return;
     }
     // m_iddFileType is set to something other than IddFileType::UserCustom. Obey the user, but log
     // a warning.
-    LOG(Warn,"IddFileType set to UserCustom without an actual IddFile being specified. Please "
-        << "choose a different IddFileType, or setIddFile using an IddFile object.");
+    LOG(Warn, "IddFileType set to UserCustom without an actual IddFile being specified. Please "
+                << "choose a different IddFileType, or setIddFile using an IddFile object.");
   }
   m_iddFile = boost::none;
   m_iddFileType = iddFileType;
@@ -299,9 +272,8 @@ bool IddFileAndFactoryWrapper::isInFile(IddObjectType objectType) const {
   if (m_iddFile) {
     OptionalIddObject candidate = m_iddFile->getObject(objectType);
     return candidate.has_value();
-  }
-  else if (m_iddFileType) {
-    return IddFactory::instance().isInFile(objectType,*m_iddFileType);
+  } else if (m_iddFileType) {
+    return IddFactory::instance().isInFile(objectType, *m_iddFileType);
   }
 
   LOG_AND_THROW("Invalid IddFactoryWrapper has no IddFile set.");
@@ -312,13 +284,11 @@ bool IddFileAndFactoryWrapper::isInFile(const std::string& objectName) const {
   if (m_iddFile) {
     OptionalIddObject candidate = m_iddFile->getObject(objectName);
     return candidate.has_value();
-  }
-  else if (m_iddFileType) {
+  } else if (m_iddFileType) {
     OptionalIddObject candidate = IddFactory::instance().getObject(objectName);
     if (candidate) {
-      return IddFactory::instance().isInFile(candidate->type(),*m_iddFileType);
-    }
-    else {
+      return IddFactory::instance().isInFile(candidate->type(), *m_iddFileType);
+    } else {
       return false;
     }
   }
@@ -327,8 +297,7 @@ bool IddFileAndFactoryWrapper::isInFile(const std::string& objectName) const {
   return false;
 }
 
-IddFile get_1_9_0_CBECC_IddFile()
-{
+IddFile get_1_9_0_CBECC_IddFile() {
   std::stringstream ss;
   ss << ::openstudio::embedded_files::getFileAsString(":/idd/versions/1_9_0_CBECC/OpenStudio.idd");
   auto cbeccIddFile = IddFile::load(ss);
@@ -336,5 +305,4 @@ IddFile get_1_9_0_CBECC_IddFile()
   return cbeccIddFile.get();
 }
 
-
-} // openstudio
+}  // namespace openstudio

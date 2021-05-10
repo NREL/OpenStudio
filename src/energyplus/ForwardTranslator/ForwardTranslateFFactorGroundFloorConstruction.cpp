@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,42 +44,40 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateFFactorGroundFloorConstruction( FFactorGroundFloorConstruction & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Construction_FfactorGroundFloor);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateFFactorGroundFloorConstruction(FFactorGroundFloorConstruction& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Construction_FfactorGroundFloor);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    idfObject.setString(Construction_FfactorGroundFloorFields::Name, modelObject.name().get());
+
+    OptionalDouble d = modelObject.getDouble(OS_Construction_FfactorGroundFloorFields::FFactor, false);
+    if (d) {
+      idfObject.setDouble(Construction_FfactorGroundFloorFields::FFactor, *d);
+    } else {
+      LOG(Error, "Missing required input 'F-Factor' for Construction:FfactorGroundFloor named '" << modelObject.name().get() << "'");
+    }
+
+    d = modelObject.getDouble(OS_Construction_FfactorGroundFloorFields::Area, false);
+    if (d) {
+      idfObject.setDouble(Construction_FfactorGroundFloorFields::Area, *d);
+    } else {
+      LOG(Error, "Missing required input 'Area' for Construction:FfactorGroundFloor named '" << modelObject.name().get() << "'");
+    }
+
+    d = modelObject.getDouble(OS_Construction_FfactorGroundFloorFields::PerimeterExposed, false);
+    if (d) {
+      idfObject.setDouble(Construction_FfactorGroundFloorFields::PerimeterExposed, *d);
+    } else {
+      LOG(Error, "Missing required input 'PerimeterExposed' for Construction:FfactorGroundFloor named '" << modelObject.name().get() << "'");
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  idfObject.setString(Construction_FfactorGroundFloorFields::Name, modelObject.name().get());
+}  // namespace energyplus
 
-  OptionalDouble d = modelObject.getDouble(OS_Construction_FfactorGroundFloorFields::FFactor, false);
-  if (d){
-    idfObject.setDouble(Construction_FfactorGroundFloorFields::FFactor, *d);
-  }else{
-    LOG(Error, "Missing required input 'F-Factor' for Construction:FfactorGroundFloor named '" << modelObject.name().get() << "'");
-  }
-
-  d = modelObject.getDouble(OS_Construction_FfactorGroundFloorFields::Area, false);
-  if (d){
-    idfObject.setDouble(Construction_FfactorGroundFloorFields::Area, *d);
-  }else{
-    LOG(Error, "Missing required input 'Area' for Construction:FfactorGroundFloor named '" << modelObject.name().get() << "'");
-  }
-
-  d = modelObject.getDouble(OS_Construction_FfactorGroundFloorFields::PerimeterExposed, false);
-  if (d){
-    idfObject.setDouble(Construction_FfactorGroundFloorFields::PerimeterExposed, *d);
-  }else{
-    LOG(Error, "Missing required input 'PerimeterExposed' for Construction:FfactorGroundFloor named '" << modelObject.name().get() << "'");
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,172 +36,135 @@
 namespace openstudio {
 namespace model {
 
-class HeatPumpWaterToWaterEquationFitCooling;
+  class HeatPumpWaterToWaterEquationFitCooling;
+  class CurveQuadLinear;
 
-namespace detail {
+  namespace detail {
 
-  /** HeatPumpWaterToWaterEquationFitHeating_Impl is a WaterToWaterComponent_Impl that is the implementation class for HeatPumpWaterToWaterEquationFitHeating.*/
-  class MODEL_API HeatPumpWaterToWaterEquationFitHeating_Impl : public WaterToWaterComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** HeatPumpWaterToWaterEquationFitHeating_Impl is a WaterToWaterComponent_Impl that is the implementation class for HeatPumpWaterToWaterEquationFitHeating.*/
+    class MODEL_API HeatPumpWaterToWaterEquationFitHeating_Impl : public WaterToWaterComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    HeatPumpWaterToWaterEquationFitHeating_Impl(const IdfObject& idfObject,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      HeatPumpWaterToWaterEquationFitHeating_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    HeatPumpWaterToWaterEquationFitHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      HeatPumpWaterToWaterEquationFitHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    HeatPumpWaterToWaterEquationFitHeating_Impl(const HeatPumpWaterToWaterEquationFitHeating_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      HeatPumpWaterToWaterEquationFitHeating_Impl(const HeatPumpWaterToWaterEquationFitHeating_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~HeatPumpWaterToWaterEquationFitHeating_Impl() {}
+      virtual ~HeatPumpWaterToWaterEquationFitHeating_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned supplyInletPort() const override;
+      virtual unsigned supplyInletPort() const override;
 
-    virtual unsigned supplyOutletPort() const override;
+      virtual unsigned supplyOutletPort() const override;
 
-    virtual unsigned demandInletPort() const override;
+      virtual unsigned demandInletPort() const override;
 
-    virtual unsigned demandOutletPort() const override;
+      virtual unsigned demandOutletPort() const override;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      boost::optional<double> referenceLoadSideFlowRate() const;
 
-    boost::optional<double> referenceLoadSideFlowRate() const;
+      double ratedLoadSideFlowRate() const;
 
-    double ratedLoadSideFlowRate() const;
+      bool isReferenceLoadSideFlowRateAutosized() const;
 
-    bool isReferenceLoadSideFlowRateAutosized() const;
+      boost::optional<double> referenceSourceSideFlowRate() const;
 
-    boost::optional<double> referenceSourceSideFlowRate() const;
+      double ratedSourceSideFlowRate() const;
 
-    double ratedSourceSideFlowRate() const;
+      bool isReferenceSourceSideFlowRateAutosized() const;
 
-    bool isReferenceSourceSideFlowRateAutosized() const;
+      boost::optional<double> ratedHeatingCapacity() const;
 
-    boost::optional<double> ratedHeatingCapacity() const;
+      bool isRatedHeatingCapacityAutosized() const;
 
-    bool isRatedHeatingCapacityAutosized() const;
+      boost::optional<double> ratedHeatingPowerConsumption() const;
 
-    boost::optional<double> ratedHeatingPowerConsumption() const;
+      bool isRatedHeatingPowerConsumptionAutosized() const;
 
-    bool isRatedHeatingPowerConsumptionAutosized() const;
+      CurveQuadLinear heatingCapacityCurve() const;
 
-    double heatingCapacityCoefficient1() const;
+      CurveQuadLinear heatingCompressorPowerCurve() const;
 
-    double heatingCapacityCoefficient2() const;
+      double referenceCoefficientofPerformance() const;
 
-    double heatingCapacityCoefficient3() const;
+      double sizingFactor() const;
 
-    double heatingCapacityCoefficient4() const;
+      boost::optional<HeatPumpWaterToWaterEquationFitCooling> companionCoolingHeatPump() const;
 
-    double heatingCapacityCoefficient5() const;
+      boost::optional<double> autosizedReferenceLoadSideFlowRate() const;
 
-    double heatingCompressorPowerCoefficient1() const;
+      boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
 
-    double heatingCompressorPowerCoefficient2() const;
+      boost::optional<double> autosizedRatedHeatingCapacity() const;
 
-    double heatingCompressorPowerCoefficient3() const;
+      boost::optional<double> autosizedRatedHeatingPowerConsumption() const;
 
-    double heatingCompressorPowerCoefficient4() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    double heatingCompressorPowerCoefficient5() const;
+      bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
 
-    double referenceCoefficientofPerformance() const;
+      bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
-    double sizingFactor() const;
+      void autosizeReferenceLoadSideFlowRate();
 
-    boost::optional<HeatPumpWaterToWaterEquationFitCooling> companionCoolingHeatPump() const;
+      bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
 
-    boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
+      bool setRatedSourceSideFlowRate(double ratedLoadSideFlowRate);
 
-    boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
+      void autosizeReferenceSourceSideFlowRate();
 
-    boost::optional<double> autosizedRatedHeatingCapacity() const ;
+      bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
-    boost::optional<double> autosizedRatedHeatingPowerConsumption() const ;
+      void autosizeRatedHeatingCapacity();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption);
 
-    bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+      void autosizeRatedHeatingPowerConsumption();
 
-    bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
+      bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 
-    void autosizeReferenceLoadSideFlowRate();
+      bool setHeatingCompressorPowerCurve(const CurveQuadLinear& heatingCompressorPowerCurve);
 
-    bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
+      bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 
-    bool setRatedSourceSideFlowRate(double ratedLoadSideFlowRate);
+      bool setSizingFactor(double sizingFactor);
 
-    void autosizeReferenceSourceSideFlowRate();
+      bool setCompanionCoolingHeatPump(const HeatPumpWaterToWaterEquationFitCooling& companionHP);
 
-    bool setRatedHeatingCapacity(double ratedHeatingCapacity);
+      //@}
+      /** @name Other */
+      //@{
 
-    void autosizeRatedHeatingCapacity();
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.HeatPumpWaterToWaterEquationFitHeating");
+    };
 
-    bool setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption);
+  }  // namespace detail
 
-    void autosizeRatedHeatingPowerConsumption();
+}  // namespace model
+}  // namespace openstudio
 
-    bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
-
-    bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
-
-    bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
-
-    bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
-
-    bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
-
-    bool setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
-
-    bool setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
-
-    bool setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
-
-    bool setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
-
-    bool setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
-
-    bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
-
-    bool setSizingFactor(double sizingFactor);
-
-    bool setCompanionCoolingHeatPump(const HeatPumpWaterToWaterEquationFitCooling& companionHP);
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.HeatPumpWaterToWaterEquationFitHeating");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_HEATPUMPWATERTOWATEREQUATIONFITHEATING_IMPL_HPP
+#endif  // MODEL_HEATPUMPWATERTOWATEREQUATIONFITHEATING_IMPL_HPP

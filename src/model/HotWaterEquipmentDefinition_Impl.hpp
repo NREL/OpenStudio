@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,123 +36,117 @@
 namespace openstudio {
 namespace model {
 
-class HotWaterEquipmentDefinition;
+  class HotWaterEquipmentDefinition;
 
-namespace detail {
+  namespace detail {
 
-  /** HotWaterEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for HotWaterEquipmentDefinition.*/
-  class MODEL_API HotWaterEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** HotWaterEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for HotWaterEquipmentDefinition.*/
+    class MODEL_API HotWaterEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    HotWaterEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      HotWaterEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    HotWaterEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      HotWaterEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    HotWaterEquipmentDefinition_Impl(const HotWaterEquipmentDefinition_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      HotWaterEquipmentDefinition_Impl(const HotWaterEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~HotWaterEquipmentDefinition_Impl() {}
+      virtual ~HotWaterEquipmentDefinition_Impl() {}
 
-    //@}
+      //@}
 
-    // TODO: remove
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // TODO: remove
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    /** @name Getters */
-    //@{
+      /** @name Getters */
+      //@{
 
-    std::string designLevelCalculationMethod() const;
+      std::string designLevelCalculationMethod() const;
 
-    boost::optional<double> designLevel() const;
+      boost::optional<double> designLevel() const;
 
-    boost::optional<double> wattsperSpaceFloorArea() const;
+      boost::optional<double> wattsperSpaceFloorArea() const;
 
-    boost::optional<double> wattsperPerson() const;
+      boost::optional<double> wattsperPerson() const;
 
-    double fractionLatent() const;
+      double fractionLatent() const;
 
-    bool isFractionLatentDefaulted() const;
+      bool isFractionLatentDefaulted() const;
 
-    double fractionRadiant() const;
+      double fractionRadiant() const;
 
-    bool isFractionRadiantDefaulted() const;
+      bool isFractionRadiantDefaulted() const;
 
-    double fractionLost() const;
+      double fractionLost() const;
 
-    bool isFractionLostDefaulted() const;
+      bool isFractionLostDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    /// Sets designLevelCalculationMethod to 'DesignLevel', clears wattsperSpaceFloorArea
-    /// and wattsperPerson, and sets designLevel.
-    bool setDesignLevel(boost::optional<double> designLevel);
+      /// Sets designLevelCalculationMethod to 'DesignLevel', clears wattsperSpaceFloorArea
+      /// and wattsperPerson, and sets designLevel.
+      bool setDesignLevel(boost::optional<double> designLevel);
 
-    /// Sets designLevelCalculationMethod to 'Watts/Area', clears designLevel
-    /// and wattsperPerson, and sets wattsperSpaceFloorArea.
-    bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
+      /// Sets designLevelCalculationMethod to 'Watts/Area', clears designLevel
+      /// and wattsperPerson, and sets wattsperSpaceFloorArea.
+      bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
 
-    /// Sets designLevelCalculationMethod to 'Watts/Person', clears designLevel
-    /// and wattsperSpaceFloorArea, and sets wattsperPerson.
-    bool setWattsperPerson(boost::optional<double> wattsperPerson);
+      /// Sets designLevelCalculationMethod to 'Watts/Person', clears designLevel
+      /// and wattsperSpaceFloorArea, and sets wattsperPerson.
+      bool setWattsperPerson(boost::optional<double> wattsperPerson);
 
-    bool setFractionLatent(double fractionLatent);
+      bool setFractionLatent(double fractionLatent);
 
-    void resetFractionLatent();
+      void resetFractionLatent();
 
-    bool setFractionRadiant(double fractionRadiant);
+      bool setFractionRadiant(double fractionRadiant);
 
-    void resetFractionRadiant();
+      void resetFractionRadiant();
 
-    bool setFractionLost(double fractionLost);
+      bool setFractionLost(double fractionLost);
 
-    void resetFractionLost();
+      void resetFractionLost();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    /** Returns the design level represented by this definition, assuming floorArea (m^2) and
+      /** Returns the design level represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
-    double getDesignLevel(double floorArea, double numPeople) const;
+      double getDesignLevel(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
+      /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerFloorArea(double floorArea, double numPeople) const;
+      double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
+      /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerPerson(double floorArea, double numPeople) const;
+      double getPowerPerPerson(double floorArea, double numPeople) const;
 
-    /** If method is a \link validDesignLevelCalculationMethodValues valid design level
+      /** If method is a \link validDesignLevelCalculationMethodValues valid design level
      *  calculation method \endlink, changes this definition to an equivalent power level, under
      *  the assumptions of floorArea (m^2) and numPeople. */
-    bool setDesignLevelCalculationMethod(const std::string& method,
-                                         double floorArea,
-                                         double numPeople);
+      bool setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople);
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.HotWaterEquipmentDefinition");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.HotWaterEquipmentDefinition");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_HOTWATEREQUIPMENTDEFINITION_IMPL_HPP
-
+#endif  // MODEL_HOTWATEREQUIPMENTDEFINITION_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,69 +44,67 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOutputIlluminanceMap( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Output_IlluminanceMap ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Output:IlluminanceMap");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateOutputIlluminanceMap(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Output_IlluminanceMap) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Output:IlluminanceMap");
+      return boost::none;
+    }
 
-  IlluminanceMap illuminanceMap( m_model );
+    IlluminanceMap illuminanceMap(m_model);
 
-  OptionalString s = workspaceObject.name();
-  if (s){
-    illuminanceMap.setName(*s);
-  }
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      illuminanceMap.setName(*s);
+    }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Output_IlluminanceMapFields::ZoneName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        illuminanceMap.setSpace(modelObject->cast<Space>());
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Output_IlluminanceMapFields::ZoneName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Space>()) {
+          illuminanceMap.setSpace(modelObject->cast<Space>());
+        }
       }
     }
-  }
 
-  OptionalDouble d = workspaceObject.getDouble(Output_IlluminanceMapFields::Zheight);
-  if (d){
-    illuminanceMap.setOriginZCoordinate(*d);
-  }
-
-  d = workspaceObject.getDouble(Output_IlluminanceMapFields::XMinimumCoordinate);
-  if (d){
-    illuminanceMap.setOriginXCoordinate(*d);
-
-    OptionalDouble maxX = workspaceObject.getDouble(Output_IlluminanceMapFields::XMaximumCoordinate);
-    if (maxX){
-      illuminanceMap.setXLength(*maxX - *d);
+    OptionalDouble d = workspaceObject.getDouble(Output_IlluminanceMapFields::Zheight);
+    if (d) {
+      illuminanceMap.setOriginZCoordinate(*d);
     }
-  }
 
-  OptionalInt i = workspaceObject.getInt(Output_IlluminanceMapFields::NumberofXGridPoints);
-  if (i){
-    illuminanceMap.setNumberofXGridPoints(*i);
-  }
+    d = workspaceObject.getDouble(Output_IlluminanceMapFields::XMinimumCoordinate);
+    if (d) {
+      illuminanceMap.setOriginXCoordinate(*d);
 
-  d = workspaceObject.getDouble(Output_IlluminanceMapFields::YMinimumCoordinate);
-  if (d){
-    illuminanceMap.setOriginYCoordinate(*d);
-
-    OptionalDouble maxY = workspaceObject.getDouble(Output_IlluminanceMapFields::YMaximumCoordinate);
-    if (maxY){
-      illuminanceMap.setYLength(*maxY - *d);
+      OptionalDouble maxX = workspaceObject.getDouble(Output_IlluminanceMapFields::XMaximumCoordinate);
+      if (maxX) {
+        illuminanceMap.setXLength(*maxX - *d);
+      }
     }
+
+    OptionalInt i = workspaceObject.getInt(Output_IlluminanceMapFields::NumberofXGridPoints);
+    if (i) {
+      illuminanceMap.setNumberofXGridPoints(*i);
+    }
+
+    d = workspaceObject.getDouble(Output_IlluminanceMapFields::YMinimumCoordinate);
+    if (d) {
+      illuminanceMap.setOriginYCoordinate(*d);
+
+      OptionalDouble maxY = workspaceObject.getDouble(Output_IlluminanceMapFields::YMaximumCoordinate);
+      if (maxY) {
+        illuminanceMap.setYLength(*maxY - *d);
+      }
+    }
+
+    i = workspaceObject.getInt(Output_IlluminanceMapFields::NumberofYGridPoints);
+    if (i) {
+      illuminanceMap.setNumberofYGridPoints(*i);
+    }
+
+    return illuminanceMap;
   }
 
-  i = workspaceObject.getInt(Output_IlluminanceMapFields::NumberofYGridPoints);
-  if (i){
-    illuminanceMap.setNumberofYGridPoints(*i);
-  }
+}  // namespace energyplus
 
-  return illuminanceMap;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

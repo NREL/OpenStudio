@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,96 +36,89 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ControllerOutdoorAir;
+  class Schedule;
+  class ControllerOutdoorAir;
 
-namespace detail {
+  namespace detail {
 
-  /** ControllerMechanicalVentilation_Impl is a ModelObject_Impl that is the implementation class for ControllerMechanicalVentilation.*/
-  class MODEL_API ControllerMechanicalVentilation_Impl : public ModelObject_Impl {
+    /** ControllerMechanicalVentilation_Impl is a ModelObject_Impl that is the implementation class for ControllerMechanicalVentilation.*/
+    class MODEL_API ControllerMechanicalVentilation_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ControllerMechanicalVentilation_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      ControllerMechanicalVentilation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ControllerMechanicalVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      ControllerMechanicalVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ControllerMechanicalVentilation_Impl(const ControllerMechanicalVentilation_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      ControllerMechanicalVentilation_Impl(const ControllerMechanicalVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ControllerMechanicalVentilation_Impl() {}
+      virtual ~ControllerMechanicalVentilation_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    bool demandControlledVentilation() const;
+      bool demandControlledVentilation() const;
 
-    bool isDemandControlledVentilationDefaulted() const;
+      bool isDemandControlledVentilationDefaulted() const;
 
-    std::string systemOutdoorAirMethod() const;
+      std::string systemOutdoorAirMethod() const;
 
-    bool isSystemOutdoorAirMethodDefaulted() const;
+      bool isSystemOutdoorAirMethodDefaulted() const;
 
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setDemandControlledVentilation(bool demandControlledVentilation);
 
-    bool setDemandControlledVentilation(bool demandControlledVentilation);
+      void resetDemandControlledVentilation();
 
-    void resetDemandControlledVentilation();
+      bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
 
-    bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+      void resetSystemOutdoorAirMethod();
 
-    void resetSystemOutdoorAirMethod();
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      ControllerOutdoorAir controllerOutdoorAir() const;
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ControllerMechanicalVentilation");
 
-    ControllerOutdoorAir controllerOutdoorAir() const;
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ControllerMechanicalVentilation");
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      std::vector<std::string> systemOutdoorAirMethodValues() const;
 
-    std::vector<std::string> systemOutdoorAirMethodValues() const;
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_CONTROLLERMECHANICALVENTILATION_IMPL_HPP
-
+#endif  // MODEL_CONTROLLERMECHANICALVENTILATION_IMPL_HPP

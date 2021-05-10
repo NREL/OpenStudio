@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,93 +44,77 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSetpointManagerScheduled( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::SetpointManager_Scheduled )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: SetpointManager_Scheduled");
-     return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateSetpointManagerScheduled(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::SetpointManager_Scheduled) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: SetpointManager_Scheduled");
+      return boost::none;
+    }
 
-  boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(SetpointManager_ScheduledFields::ScheduleName);
-  boost::optional<Schedule> schedule;
+    boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(SetpointManager_ScheduledFields::ScheduleName);
+    boost::optional<Schedule> schedule;
 
-  if( wo )
-  {
-    boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
-    if( mo )
-    {
-      if( ! (schedule = mo->optionalCast<Schedule>()) )
-      {
-        LOG(Error, workspaceObject.briefDescription() << " does not have an associated schedule");
+    if (wo) {
+      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
+      if (mo) {
+        if (!(schedule = mo->optionalCast<Schedule>())) {
+          LOG(Error, workspaceObject.briefDescription() << " does not have an associated schedule");
 
+          return boost::none;
+        }
+      }
+    }
+
+    bool nodeFound = false;
+
+    if (boost::optional<std::string> setpointNodeName = workspaceObject.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName)) {
+      boost::optional<Node> setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
+
+      if (setpointNode) {
+        nodeFound = true;
+      }
+    }
+
+    if (!nodeFound) {
+      LOG(Error, workspaceObject.briefDescription() << " is not attached to a node in the model");
+
+      return boost::none;
+    }
+
+    if (schedule) {
+      SetpointManagerScheduled mo(m_model, schedule.get());
+
+      // Name
+      boost::optional<std::string> s = workspaceObject.getString(SetpointManager_ScheduledFields::Name);
+      if (s) {
+        mo.setName(s.get());
+      }
+
+      // Setpoint Node
+      s = workspaceObject.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName);
+      if (s) {
+        boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+
+        if (node) {
+          mo.addToNode(node.get());
+        }
+      }
+
+      // Control Variable
+      s = workspaceObject.getString(SetpointManager_ScheduledFields::ControlVariable);
+      if (s) {
+        mo.setControlVariable(s.get());
+      }
+
+      if (mo.setpointNode()) {
+        return mo;
+      } else {
         return boost::none;
       }
-    }
-  }
-
-  bool nodeFound = false;
-
-  if( boost::optional<std::string> setpointNodeName = workspaceObject.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName) )
-  {
-    boost::optional<Node> setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
-
-    if( setpointNode ) { nodeFound = true; }
-  }
-
-  if( ! nodeFound )
-  {
-    LOG(Error, workspaceObject.briefDescription() << " is not attached to a node in the model");
-
-    return boost::none;
-  }
-
-  if( schedule )
-  {
-    SetpointManagerScheduled mo(m_model,schedule.get());
-
-    // Name
-    boost::optional<std::string> s = workspaceObject.getString(SetpointManager_ScheduledFields::Name);
-    if( s )
-    {
-      mo.setName(s.get());
-    }
-
-    // Setpoint Node
-    s = workspaceObject.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName);
-    if( s )
-    {
-      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
-
-      if( node )
-      {
-        mo.addToNode(node.get());
-      }
-    }
-
-    // Control Variable
-    s = workspaceObject.getString(SetpointManager_ScheduledFields::ControlVariable);
-    if( s )
-    {
-      mo.setControlVariable(s.get());
-    }
-
-    if( mo.setpointNode() )
-    {
-      return mo;
-    }
-    else
-    {
+    } else {
       return boost::none;
     }
   }
-  else
-  {
-    return boost::none;
-  }
-}
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

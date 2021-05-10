@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,108 +36,108 @@
 namespace openstudio {
 namespace model {
 
-class InteriorPartitionSurfaceGroup;
-class DaylightingDeviceShelf;
+  class InteriorPartitionSurfaceGroup;
+  class DaylightingDeviceShelf;
 
-namespace detail {
+  namespace detail {
 
-  class InteriorPartitionSurface_Impl;
+    class InteriorPartitionSurface_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** InteriorPartitionSurface is a PlanarSurface that wraps the OpenStudio IDD object 'OS_InteriorPartitionSurface'. */
-class MODEL_API InteriorPartitionSurface : public PlanarSurface {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** InteriorPartitionSurface is a PlanarSurface that wraps the OpenStudio IDD object 'OS_InteriorPartitionSurface'. */
+  class MODEL_API InteriorPartitionSurface : public PlanarSurface
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit InteriorPartitionSurface(const std::vector<Point3d>& vertices, const Model& model);
+    explicit InteriorPartitionSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-  virtual ~InteriorPartitionSurface() {}
+    virtual ~InteriorPartitionSurface() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  bool converttoInternalMass() const;
+    bool converttoInternalMass() const;
 
-  bool isConverttoInternalMassDefaulted() const;
+    bool isConverttoInternalMassDefaulted() const;
 
-  boost::optional<double> surfaceArea() const;
+    boost::optional<double> surfaceArea() const;
 
-  boost::optional<double> numberofVertices() const;
+    boost::optional<double> numberofVertices() const;
 
-  bool isNumberofVerticesDefaulted() const;
+    bool isNumberofVerticesDefaulted() const;
 
-  bool isNumberofVerticesAutocalculated() const;
+    bool isNumberofVerticesAutocalculated() const;
 
-  // TODO: Handle this object's extensible fields.
+    // TODO: Handle this object's extensible fields.
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setConverttoInternalMass(bool converttoInternalMass);
+    bool setConverttoInternalMass(bool converttoInternalMass);
 
-  void resetConverttoInternalMass();
+    void resetConverttoInternalMass();
 
-  bool setSurfaceArea(boost::optional<double> surfaceArea);
+    bool setSurfaceArea(boost::optional<double> surfaceArea);
 
-  bool setSurfaceArea(double surfaceArea);
+    bool setSurfaceArea(double surfaceArea);
 
-  void resetSurfaceArea();
+    void resetSurfaceArea();
 
-  bool setNumberofVertices(boost::optional<double> numberofVertices);
+    bool setNumberofVertices(boost::optional<double> numberofVertices);
 
-  bool setNumberofVertices(double numberofVertices);
+    bool setNumberofVertices(double numberofVertices);
 
-  void resetNumberofVertices();
+    void resetNumberofVertices();
 
-  void autocalculateNumberofVertices();
+    void autocalculateNumberofVertices();
 
-  // TODO: Handle this object's extensible fields.
+    // TODO: Handle this object's extensible fields.
 
-  //@}
+    //@}
 
-  /// get the interior partition surface group
-  boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup() const;
+    /// get the interior partition surface group
+    boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup() const;
 
-  /// set the interior partition surface group
-  bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
+    /// set the interior partition surface group
+    bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
 
-  void resetInteriorPartitionSurfaceGroup();
+    void resetInteriorPartitionSurfaceGroup();
 
-  boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
- protected:
-  /// @cond
-  typedef detail::InteriorPartitionSurface_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::InteriorPartitionSurface_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit InteriorPartitionSurface(std::shared_ptr<detail::InteriorPartitionSurface_Impl> impl);
+    explicit InteriorPartitionSurface(std::shared_ptr<detail::InteriorPartitionSurface_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.InteriorPartitionSurface");
+  };
 
-  REGISTER_LOGGER("openstudio.model.InteriorPartitionSurface");
-};
+  /** \relates InteriorPartitionSurface*/
+  typedef boost::optional<InteriorPartitionSurface> OptionalInteriorPartitionSurface;
 
-/** \relates InteriorPartitionSurface*/
-typedef boost::optional<InteriorPartitionSurface> OptionalInteriorPartitionSurface;
+  /** \relates InteriorPartitionSurface*/
+  typedef std::vector<InteriorPartitionSurface> InteriorPartitionSurfaceVector;
 
-/** \relates InteriorPartitionSurface*/
-typedef std::vector<InteriorPartitionSurface> InteriorPartitionSurfaceVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_INTERIORPARTITIONSURFACE_HPP
+#endif  // MODEL_INTERIORPARTITIONSURFACE_HPP

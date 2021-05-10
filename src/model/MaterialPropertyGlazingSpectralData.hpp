@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,89 +36,88 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MaterialPropertyGlazingSpectralData_Impl;
+    class MaterialPropertyGlazingSpectralData_Impl;
 
-} // detail
+  }  // namespace detail
 
-class MODEL_API SpectralDataField
-{
-public:
+  class MODEL_API SpectralDataField
+  {
+   public:
+    SpectralDataField(double wavelength, double transmittance, double frontReflectance, double backReflectance);
 
-  SpectralDataField(double wavelength, double transmittance, double frontReflectance, double backReflectance);
+    double wavelength() const;
+    double transmittance() const;
+    double frontReflectance() const;
+    double backReflectance() const;
 
-  double wavelength() const;
-  double transmittance() const;
-  double frontReflectance() const;
-  double backReflectance() const;
+   private:
+    double m_wavelength;
+    double m_transmittance;
+    double m_frontReflectance;
+    double m_backReflectance;
+  };
 
-private:
-  double m_wavelength;
-  double m_transmittance;
-  double m_frontReflectance;
-  double m_backReflectance;
-};
+  /** MaterialPropertyGlazingSpectralData is a ResourceObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:GlazingSpectralData'. */
+  class MODEL_API MaterialPropertyGlazingSpectralData : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-/** MaterialPropertyGlazingSpectralData is a ResourceObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:GlazingSpectralData'. */
-class MODEL_API MaterialPropertyGlazingSpectralData : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    explicit MaterialPropertyGlazingSpectralData(const Model& model);
 
-  explicit MaterialPropertyGlazingSpectralData(const Model& model);
+    virtual ~MaterialPropertyGlazingSpectralData() {}
 
-  virtual ~MaterialPropertyGlazingSpectralData() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    std::vector<SpectralDataField> spectralDataFields() const;
 
-  std::vector<SpectralDataField> spectralDataFields() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setSpectralDataFields(const std::vector<SpectralDataField>& spectralDataFields);
 
-  bool setSpectralDataFields(const std::vector<SpectralDataField>& spectralDataFields);
+    bool addSpectralDataField(const SpectralDataField& spectralDataField);
 
-  bool addSpectralDataField(const SpectralDataField& spectralDataField);
+    bool addSpectralDataField(double wavelength, double transmittance, double frontReflectance, double backReflectance);
 
-  bool addSpectralDataField(double wavelength, double transmittance, double frontReflectance, double backReflectance);
+    void resetSpectralDataFields();
 
-  void resetSpectralDataFields();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::MaterialPropertyGlazingSpectralData_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::MaterialPropertyGlazingSpectralData_Impl ImplType;
+    explicit MaterialPropertyGlazingSpectralData(std::shared_ptr<detail::MaterialPropertyGlazingSpectralData_Impl> impl);
 
-  explicit MaterialPropertyGlazingSpectralData(std::shared_ptr<detail::MaterialPropertyGlazingSpectralData_Impl> impl);
+    friend class detail::MaterialPropertyGlazingSpectralData_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.MaterialPropertyGlazingSpectralData");
+  };
 
-  friend class detail::MaterialPropertyGlazingSpectralData_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.MaterialPropertyGlazingSpectralData");
-};
+  /** \relates MaterialPropertyGlazingSpectralData*/
+  typedef boost::optional<MaterialPropertyGlazingSpectralData> OptionalMaterialPropertyGlazingSpectralData;
 
-/** \relates MaterialPropertyGlazingSpectralData*/
-typedef boost::optional<MaterialPropertyGlazingSpectralData> OptionalMaterialPropertyGlazingSpectralData;
+  /** \relates MaterialPropertyGlazingSpectralData*/
+  typedef std::vector<MaterialPropertyGlazingSpectralData> MaterialPropertyGlazingSpectralDataVector;
 
-/** \relates MaterialPropertyGlazingSpectralData*/
-typedef std::vector<MaterialPropertyGlazingSpectralData> MaterialPropertyGlazingSpectralDataVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_MATERIALPROPERTYGLAZINGSPECTRALDATA_HPP
-
+#endif  // MODEL_MATERIALPROPERTYGLAZINGSPECTRALDATA_HPP

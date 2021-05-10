@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,12 +48,9 @@ using openstudio::createCFMPeople;
 
 using openstudio::createCFMVolumetricFlowrate;
 
-TEST_F(UnitsFixture,CFMUnit_Constructors)
-{
-}
+TEST_F(UnitsFixture, CFMUnit_Constructors) {}
 
-TEST_F(UnitsFixture,CFMUnit_ArithmeticOperators)
-{
+TEST_F(UnitsFixture, CFMUnit_ArithmeticOperators) {
   // /=
 
   // *
@@ -61,48 +58,45 @@ TEST_F(UnitsFixture,CFMUnit_ArithmeticOperators)
   // /
 
   // pow
-
 }
 
-TEST_F(UnitsFixture,CFMUnit_CreateFunctions)
-{
+TEST_F(UnitsFixture, CFMUnit_CreateFunctions) {
   CFMUnit u;
 
   u = createCFMLength();
-  EXPECT_EQ(1,u.baseUnitExponent("ft"));
-  EXPECT_EQ(0,u.scale().exponent);
-  EXPECT_EQ("ft",u.standardString());
-  EXPECT_EQ("",u.prettyString());
+  EXPECT_EQ(1, u.baseUnitExponent("ft"));
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("ft", u.standardString());
+  EXPECT_EQ("", u.prettyString());
 
   u = createCFMTime();
-  EXPECT_EQ(1,u.baseUnitExponent("min"));
-  EXPECT_EQ(0,u.scale().exponent);
-  EXPECT_EQ("min",u.standardString());
-  EXPECT_EQ("",u.prettyString());
+  EXPECT_EQ(1, u.baseUnitExponent("min"));
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("min", u.standardString());
+  EXPECT_EQ("", u.prettyString());
 
   u = createCFMPower();
-  EXPECT_EQ(1,u.baseUnitExponent("ton"));
-  EXPECT_EQ(0,u.scale().exponent);
-  EXPECT_EQ("ton",u.standardString());
-  EXPECT_EQ("",u.prettyString());
+  EXPECT_EQ(1, u.baseUnitExponent("ton"));
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("ton", u.standardString());
+  EXPECT_EQ("", u.prettyString());
 
   u = createCFMTemperature();
-  EXPECT_EQ(1,u.baseUnitExponent("R"));
-  EXPECT_EQ(0,u.scale().exponent);
-  EXPECT_EQ("R",u.standardString());
-  EXPECT_EQ("",u.prettyString());
+  EXPECT_EQ(1, u.baseUnitExponent("R"));
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("R", u.standardString());
+  EXPECT_EQ("", u.prettyString());
 
   u = createCFMPeople();
-  EXPECT_EQ(1,u.baseUnitExponent("people"));
-  EXPECT_EQ(0,u.scale().exponent);
-  EXPECT_EQ("people",u.standardString());
-  EXPECT_EQ("",u.prettyString());
+  EXPECT_EQ(1, u.baseUnitExponent("people"));
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("people", u.standardString());
+  EXPECT_EQ("", u.prettyString());
 
   u = createCFMVolumetricFlowrate();
-  EXPECT_EQ(3,u.baseUnitExponent("ft"));
-  EXPECT_EQ(-1,u.baseUnitExponent("min"));
-  EXPECT_EQ(0,u.scale().exponent);
-  EXPECT_EQ("ft^3/min",u.standardString());
-  EXPECT_EQ("cfm",u.prettyString());
-
+  EXPECT_EQ(3, u.baseUnitExponent("ft"));
+  EXPECT_EQ(-1, u.baseUnitExponent("min"));
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("ft^3/min", u.standardString());
+  EXPECT_EQ("cfm", u.prettyString());
 }

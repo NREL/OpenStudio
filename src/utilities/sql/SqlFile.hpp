@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,6 +35,7 @@
 #include "SummaryData.hpp"
 #include "SqlFileDataDictionary.hpp"
 #include "SqlFileEnums.hpp"
+#include "SqlFile_Impl.hpp"
 
 #include "../data/Vector.hpp"
 #include "../data/Matrix.hpp"
@@ -59,14 +60,14 @@ class EpwFile;
 class Calendar;
 class SqlFileTimeSeriesQuery;
 
-namespace detail {
-  class SqlFile_Impl;
-}
+//namespace detail {
+//class SqlFile_Impl;
+//}
 
 /** SqlFile class is a transaction script around the sql output of EnergyPlus. */
-class UTILITIES_API SqlFile {
+class UTILITIES_API SqlFile
+{
  public:
-
   /** @name Constructors */
   //@{
 
@@ -75,12 +76,12 @@ class UTILITIES_API SqlFile {
 
   /// constructor from path
   /// Creates indexes by default, pass in false for no new indexes and quicker opening
-  explicit SqlFile(const openstudio::path& path, const bool createIndexes=true);
+  explicit SqlFile(const openstudio::path& path, const bool createIndexes = true);
 
   /// initializes a new sql file for output
   /// Creates indexes by default, pass in false for no indexes and quicker creation
-  SqlFile(const openstudio::path &t_path, const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-      const openstudio::Calendar &t_calendar, const bool createIndexes=true);
+  SqlFile(const openstudio::path& t_path, const openstudio::EpwFile& t_epwFile, const openstudio::DateTime& t_simulationTime,
+          const openstudio::Calendar& t_calendar, const bool createIndexes = true);
 
   // virtual destructor
   virtual ~SqlFile();
@@ -159,25 +160,21 @@ class UTILITIES_API SqlFile {
   /// Attribute name: economicsEnergyCost
   boost::optional<double> economicsEnergyCost() const;
 
-  OptionalDouble getElecOrGasUse(bool getGas = true) const;
-  OptionalDouble getElecOrGasCost(bool bGetGas = true) const;
+  OptionalDouble getElecOrGasUse(bool t_getGas = true) const;
+  OptionalDouble getElecOrGasCost(bool t_getGas = true) const;
 
   /// Returns an EndUses object containing all end uses for the simulation.
   boost::optional<EndUses> endUses() const;
 
   /// Returns the energy consumption for the given fuel type, category and month.
   /// Requires BUILDING ENERGY PERFORMANCE tabular report. Value is energy use in J.
-  boost::optional<double> energyConsumptionByMonth(
-      const openstudio::EndUseFuelType &t_fuelType,
-      const openstudio::EndUseCategoryType &t_categoryType,
-      const openstudio::MonthOfYear &t_monthOfYear) const;
+  boost::optional<double> energyConsumptionByMonth(const openstudio::EndUseFuelType& t_fuelType, const openstudio::EndUseCategoryType& t_categoryType,
+                                                   const openstudio::MonthOfYear& t_monthOfYear) const;
 
   /// Returns the energy demand for the given fuel type, category and month.
   /// Requires BUILDING ENERGY PERFORMANCE tabular report. Value is energy use in W.
-  boost::optional<double> peakEnergyDemandByMonth(
-      const openstudio::EndUseFuelType &t_fuelType,
-      const openstudio::EndUseCategoryType &t_categoryType,
-      const openstudio::MonthOfYear &t_monthOfYear) const;
+  boost::optional<double> peakEnergyDemandByMonth(const openstudio::EndUseFuelType& t_fuelType, const openstudio::EndUseCategoryType& t_categoryType,
+                                                  const openstudio::MonthOfYear& t_monthOfYear) const;
 
   /// Returns the electric energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
@@ -637,10 +634,8 @@ class UTILITIES_API SqlFile {
   /// Requires EnergyPlus simulation output to calculate.
   boost::optional<double> hoursCoolingSetpointNotMet() const;
 
-
-
   // returns an optional pair of date times for begin and end of daylight savings time
-  boost::optional<std::pair<DateTime, DateTime> > daylightSavingsPeriod() const;
+  boost::optional<std::pair<DateTime, DateTime>> daylightSavingsPeriod() const;
 
   /// Energy plus version number
   std::string energyPlusVersion() const;
@@ -666,34 +661,24 @@ class UTILITIES_API SqlFile {
   std::vector<std::string> availableReportingFrequencies(const std::string& envPeriod);
 
   // version specific translation for reporting frequencies used in database to reporting frequency enum values
-  boost::optional<openstudio::ReportingFrequency>
-  reportingFrequencyFromDB(const std::string& dbReportingFrequency);
+  boost::optional<openstudio::ReportingFrequency> reportingFrequencyFromDB(const std::string& dbReportingFrequency);
 
   // return a vector of all the available variableName for environment period and reporting frequency
-  std::vector<std::string> availableVariableNames(const std::string& envPeriod,
-                                                  const std::string& reportingFrequency) const;
+  std::vector<std::string> availableVariableNames(const std::string& envPeriod, const std::string& reportingFrequency) const;
 
   // return a vector of all timeseries matching name, envPeriod, and reportingFrequency
   // this could be used to get "Mean Air Temperature" for all zones for instance
-  std::vector<TimeSeries> timeSeries(const std::string& envPeriod,
-                                     const std::string& reportingFrequency,
-                                     const std::string& timeSeriesName);
+  std::vector<TimeSeries> timeSeries(const std::string& envPeriod, const std::string& reportingFrequency, const std::string& timeSeriesName);
 
   // return a vector of all keyValues matching name, envPeriod, and reportingFrequency
-  std::vector<std::string> availableKeyValues(const std::string& envPeriod,
-                                              const std::string& reportingFrequency,
-                                              const std::string& timeSeriesName);
+  std::vector<std::string> availableKeyValues(const std::string& envPeriod, const std::string& reportingFrequency, const std::string& timeSeriesName);
 
   // return a runPeriod value e.g. Electricity::Facility
-  boost::optional<double> runPeriodValue(const std::string& envPeriod,
-                                         const std::string& timeSeriesName,
-                                         const std::string& keyValue);
+  boost::optional<double> runPeriodValue(const std::string& envPeriod, const std::string& timeSeriesName, const std::string& keyValue);
 
   // return a single timeseries matching name, keyValue, envPeriod, and reportingFrequency
   // this could be used to get "Mean Air Temperature" for a particular zone
-  boost::optional<TimeSeries> timeSeries(const std::string& envPeriod,
-                                         const std::string& reportingFrequency,
-                                         const std::string& timeSeriesName,
+  boost::optional<TimeSeries> timeSeries(const std::string& envPeriod, const std::string& reportingFrequency, const std::string& timeSeriesName,
                                          const std::string& keyValue);
 
   /** Expands query to create a vector of all matching queries. The returned queries will have
@@ -718,10 +703,8 @@ class UTILITIES_API SqlFile {
   std::vector<std::string> illuminanceMapZoneNames(const int& mapIndex) const;
 
   /// reference point for map - form RefPtn=(x:y:illuminance)
-  boost::optional<std::string> illuminanceMapRefPt(const std::string& name,
-                                                   const int& ptNum) const;
-  boost::optional<std::string> illuminanceMapRefPt(const int& mapIndex,
-                                                   const int& ptNum) const;
+  boost::optional<std::string> illuminanceMapRefPt(const std::string& name, const int& ptNum) const;
+  boost::optional<std::string> illuminanceMapRefPt(const int& mapIndex, const int& ptNum) const;
 
   /// minimum value of map
   boost::optional<double> illuminanceMapMinValue(const std::string& name) const;
@@ -751,8 +734,7 @@ class UTILITIES_API SqlFile {
   Vector illuminanceMapY(const int& hourlyReportIndex) const;
 
   /// hourly report index for mapIndex at date and time
-  boost::optional<int> illuminanceMapHourlyReportIndex(const int& mapIndex,
-                                                       const DateTime& dateTime) const;
+  boost::optional<int> illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const;
 
   /// date time at hourly report index
   boost::optional<DateTime> illuminanceMapDate(const int& hourlyReportIndex) const;
@@ -761,12 +743,10 @@ class UTILITIES_API SqlFile {
   std::vector<int> illuminanceMapHourlyReportIndices(const std::string& name) const;
 
   /// hourly report indices of the illuminance map
-  std::vector< std::pair<int, DateTime> >
-  illuminanceMapHourlyReportIndicesDates(const int& mapIndex) const;
+  std::vector<std::pair<int, DateTime>> illuminanceMapHourlyReportIndicesDates(const int& mapIndex) const;
 
   /// hourly report indices of the illuminance map
-  std::vector< std::pair<int, DateTime> >
-  illuminanceMapHourlyReportIndicesDates(const std::string& name) const;
+  std::vector<std::pair<int, DateTime>> illuminanceMapHourlyReportIndicesDates(const std::string& name) const;
 
   /// hourly report indices of the illuminance map
   std::vector<int> illuminanceMapHourlyReportIndices(const int& mapIndex) const;
@@ -779,7 +759,6 @@ class UTILITIES_API SqlFile {
    *  value(i,j) is the illuminance at x(i), y(j) */
   Matrix illuminanceMap(const int& hourlyReportIndex) const;
 
-
   /** value (lux) of the illuminance map at hourlyReportIndex
    *  value(i,j) is the illuminance at x(i), y(j) fills in x,y, illuminance*/
   void illuminanceMap(const int& hourlyReportIndex, std::vector<double>& x, std::vector<double>& y, std::vector<double>& illuminance) const;
@@ -787,61 +766,136 @@ class UTILITIES_API SqlFile {
   /// Returns the summary data for each installlocation and fuel type found in report variables
   std::vector<SummaryData> getSummaryData() const;
 
+  int insertZone(const std::string& t_name, double t_relNorth, double t_originX, double t_originY, double t_originZ, double t_centroidX,
+                 double t_centroidY, double t_centroidZ, int t_ofType, double t_multiplier, double t_listMultiplier, double t_minimumX,
+                 double t_maximumX, double t_minimumY, double t_maximumY, double t_minimumZ, double t_maximumZ, double t_ceilingHeight,
+                 double t_volume, int t_insideConvectionAlgo, int t_outsideConvectionAlgo, double t_floorArea, double t_extGrossWallArea,
+                 double t_extNetWallArea, double t_extWindowArea, bool t_isPartOfTotalArea);
 
-  int insertZone(const std::string &t_name,
-      double t_relNorth,
-      double t_originX, double t_originY, double t_originZ,
-      double t_centroidX, double t_centroidY, double t_centroidZ,
-      int t_ofType,
-      double t_multiplier,
-      double t_listMultiplier,
-      double t_minimumX, double t_maximumX,
-      double t_minimumY, double t_maximumY,
-      double t_minimumZ, double t_maximumZ,
-      double t_ceilingHeight,
-      double t_volume,
-      int t_insideConvectionAlgo,
-      int t_outsideConvectionAlgo,
-      double t_floorArea,
-      double t_extGrossWallArea,
-      double t_extNetWallArea,
-      double t_extWindowArea,
-      bool t_isPartOfTotalArea);
-
-  void insertIlluminanceMap(const std::string &t_zoneName, const std::string &name, const std::string &t_environmentName,
-      const std::vector<DateTime> &t_times,
-      const std::vector<double> &t_xs, const std::vector<double> &t_ys, double t_z, const std::vector<Matrix> &t_maps);
+  void insertIlluminanceMap(const std::string& t_zoneName, const std::string& t_name, const std::string& t_environmentName,
+                            const std::vector<DateTime>& t_times, const std::vector<double>& t_xs, const std::vector<double>& t_ys, double t_z,
+                            const std::vector<Matrix>& t_maps);
 
   //@}
   /** @name Generic Query Interface */
   //@{
 
   /// execute a statement and return the first (if any) value as a double
-  boost::optional<double> execAndReturnFirstDouble(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template <typename... Args>
+  boost::optional<double> execAndReturnFirstDouble(const std::string& statement, Args&&... args) const {
+    boost::optional<double> result;
+    if (m_impl) {
+      result = m_impl->execAndReturnFirstDouble(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
+
+  boost::optional<double> execAndReturnFirstDouble(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnFirstDouble<>(statement);
+  }
 
   /// execute a statement and return the first (if any) value as a int
-  boost::optional<int> execAndReturnFirstInt(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template <typename... Args>
+  boost::optional<int> execAndReturnFirstInt(const std::string& statement, Args&&... args) const {
+    boost::optional<int> result;
+    if (m_impl) {
+      result = m_impl->execAndReturnFirstInt(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
+
+  boost::optional<int> execAndReturnFirstInt(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnFirstInt<>(statement);
+  }
 
   /// execute a statement and return the first (if any) value as a string
-  boost::optional<std::string> execAndReturnFirstString(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template <typename... Args>
+  boost::optional<std::string> execAndReturnFirstString(const std::string& statement, Args&&... args) const {
+    boost::optional<std::string> result;
+    if (m_impl) {
+      result = m_impl->execAndReturnFirstString(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
+
+  boost::optional<std::string> execAndReturnFirstString(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnFirstString<>(statement);
+  }
 
   /// execute a statement and return the results (if any) in a vector of double
-  boost::optional<std::vector<double> > execAndReturnVectorOfDouble(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template <typename... Args>
+  boost::optional<std::vector<double>> execAndReturnVectorOfDouble(const std::string& statement, Args&&... args) const {
+    boost::optional<std::vector<double>> result;
+    if (m_impl) {
+      result = m_impl->execAndReturnVectorOfDouble(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
+
+  boost::optional<std::vector<double>> execAndReturnVectorOfDouble(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnVectorOfDouble<>(statement);
+  }
 
   /// execute a statement and return the results (if any) in a vector of int
-  boost::optional<std::vector<int> > execAndReturnVectorOfInt(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template <typename... Args>
+  boost::optional<std::vector<int>> execAndReturnVectorOfInt(const std::string& statement, Args&&... args) const {
+    boost::optional<std::vector<int>> result;
+    if (m_impl) {
+      result = m_impl->execAndReturnVectorOfInt(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
+
+  boost::optional<std::vector<int>> execAndReturnVectorOfInt(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnVectorOfInt<>(statement);
+  }
 
   /// execute a statement and return the results (if any) in a vector of string
-  boost::optional<std::vector<std::string> > execAndReturnVectorOfString(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template <typename... Args>
+  boost::optional<std::vector<std::string>> execAndReturnVectorOfString(const std::string& statement, Args&&... args) const {
+    boost::optional<std::vector<std::string>> result;
+    if (m_impl) {
+      result = m_impl->execAndReturnVectorOfString(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
+
+  boost::optional<std::vector<std::string>> execAndReturnVectorOfString(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnVectorOfString<>(statement);
+  }
 
   /// execute a statement and return the error code, used for create/drop tables
-  int execute(const std::string& statement);
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template <typename... Args>
+  int execute(const std::string& statement, Args&&... args) {
+    int result = 1;  // SQLITE_ERROR
+    if (m_impl) {
+      result = m_impl->execute(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
 
-  void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,
-      const std::string &t_timestepType, const std::string &t_keyValue, const std::string &t_variableName,
-      const openstudio::ReportingFrequency &t_reportingFrequency, const boost::optional<std::string> &t_scheduleName,
-      const std::string &t_variableUnits, const openstudio::TimeSeries &t_timeSeries);
+  int execute(const std::string& statement) {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execute<>(statement);
+  }
 
+  void insertTimeSeriesData(const std::string& t_variableType, const std::string& t_indexGroup, const std::string& t_timestepType,
+                            const std::string& t_keyValue, const std::string& t_variableName,
+                            const openstudio::ReportingFrequency& t_reportingFrequency, const boost::optional<std::string>& t_scheduleName,
+                            const std::string& t_variableUnits, const openstudio::TimeSeries& t_timeSeries);
 
   //@}
   /** @name Operators */
@@ -855,20 +909,18 @@ class UTILITIES_API SqlFile {
 
   //@}
 
-private:
-
+ private:
   REGISTER_LOGGER("openstudio.sql.SqlFile");
 
   std::shared_ptr<detail::SqlFile_Impl> m_impl;
 
   /// returns datadictionary of available timeseries
   detail::DataDictionaryTable dataDictionary() const;
-
 };
 
 /// optional SqlFile
 typedef boost::optional<SqlFile> OptionalSqlFile;
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_SQL_SQLFILE_HPP
+#endif  // UTILITIES_SQL_SQLFILE_HPP

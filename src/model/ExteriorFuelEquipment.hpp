@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,109 +36,108 @@
 namespace openstudio {
 namespace model {
 
-class ExteriorFuelEquipmentDefinition;
-class Schedule;
-class Facility;
+  class ExteriorFuelEquipmentDefinition;
+  class Schedule;
+  class Facility;
 
-namespace detail {
+  namespace detail {
 
-  class ExteriorFuelEquipment_Impl;
+    class ExteriorFuelEquipment_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExteriorFuelEquipment is a ExteriorLoadInstance that wraps the OpenStudio IDD object
+  /** ExteriorFuelEquipment is a ExteriorLoadInstance that wraps the OpenStudio IDD object
  *  'OS:Exterior:FuelEquipment'. ExteriorFuelEquipment is a child of Facility and instances
  *  ExteriorFuelEquipmentDefinition. */
-class MODEL_API ExteriorFuelEquipment : public ExteriorLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ExteriorFuelEquipment : public ExteriorLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** This constructor sets schedule to always on, defaults to Fuel Type = Electricity */
-  ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition);
+    /** This constructor sets schedule to always on, defaults to Fuel Type = Electricity */
+    ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition);
 
-  /** This constructor requires a user-specified schedule. */
-  ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition,
-                 Schedule& schedule);
+    /** This constructor requires a user-specified schedule. */
+    ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition, Schedule& schedule);
 
-  virtual ~ExteriorFuelEquipment() {}
+    virtual ~ExteriorFuelEquipment() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> fuelTypeValues();
+    static std::vector<std::string> fuelTypeValues();
 
-  /** \deprecated */
-  static std::vector<std::string> validFuelTypeValues();
+    /** \deprecated */
+    static std::vector<std::string> validFuelTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ExteriorFuelEquipmentDefinition exteriorFuelEquipmentDefinition() const;
+    ExteriorFuelEquipmentDefinition exteriorFuelEquipmentDefinition() const;
 
-  Schedule schedule() const;
+    Schedule schedule() const;
 
-  std::string fuelType() const;
+    std::string fuelType() const;
 
-  double multiplier() const;
+    double multiplier() const;
 
-  bool isMultiplierDefaulted() const;
+    bool isMultiplierDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& exteriorFuelEquipmentDefinition);
+    bool setExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& exteriorFuelEquipmentDefinition);
 
-  bool setSchedule(Schedule& schedule);
+    bool setSchedule(Schedule& schedule);
 
-  void resetSchedule();
+    void resetSchedule();
 
-  bool setFuelType(std::string fuelType);
+    bool setFuelType(std::string fuelType);
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  Facility facility() const;
+    Facility facility() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExteriorFuelEquipment_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExteriorFuelEquipment_Impl ImplType;
 
-  explicit ExteriorFuelEquipment(std::shared_ptr<detail::ExteriorFuelEquipment_Impl> impl);
+    explicit ExteriorFuelEquipment(std::shared_ptr<detail::ExteriorFuelEquipment_Impl> impl);
 
-  friend class detail::ExteriorFuelEquipment_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExteriorFuelEquipment");
-};
+    friend class detail::ExteriorFuelEquipment_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorFuelEquipment");
+  };
 
-/** \relates ExteriorFuelEquipment*/
-typedef boost::optional<ExteriorFuelEquipment> OptionalExteriorFuelEquipment;
+  /** \relates ExteriorFuelEquipment*/
+  typedef boost::optional<ExteriorFuelEquipment> OptionalExteriorFuelEquipment;
 
-/** \relates ExteriorFuelEquipment*/
-typedef std::vector<ExteriorFuelEquipment> ExteriorFuelEquipmentVector;
+  /** \relates ExteriorFuelEquipment*/
+  typedef std::vector<ExteriorFuelEquipment> ExteriorFuelEquipmentVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERIORFUELEQUIPMENT_HPP
-
+#endif  // MODEL_EXTERIORFUELEQUIPMENT_HPP

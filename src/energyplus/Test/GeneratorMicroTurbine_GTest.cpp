@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,7 +34,6 @@
 #include "../ForwardTranslator.hpp"
 #include "../ReverseTranslator.hpp"
 
-
 // Objects of interest
 #include "../../model/GeneratorMicroTurbine.hpp"
 #include "../../model/GeneratorMicroTurbine_Impl.hpp"
@@ -66,11 +65,11 @@
 #include "../../model/ElectricLoadCenterDistribution.hpp"
 #include "../../model/ElectricLoadCenterDistribution_Impl.hpp"
 
-
 // IDF FieldEnums
 #include <utilities/idd/Generator_MicroTurbine_FieldEnums.hxx>
 // #include <utilities/idd/OS_Generator_MicroTurbine_HeatRecovery_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Distribution_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -87,7 +86,6 @@
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
-
 #include <boost/algorithm/string/predicate.hpp>
 
 #include <resources.hxx>
@@ -99,23 +97,19 @@
 // Debug
 #include "../../utilities/core/Logger.hpp"
 
-
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
 /**
  * Tests whether the ForwarTranslator will handle the name of the GeneratorMicroTurbine correctly in the PlantEquipmentOperationHeatingLoad
  **/
-TEST_F(EnergyPlusFixture,ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop) {
 
   // TODO: Temporarily output the Log in the console with the Trace (-3) level
   // for debug
   // openstudio::Logger::instance().standardOutLogger().enable();
   // openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
-
 
   // Create a model, a mchp, a mchpHR, a plantLoop and an electricalLoadCenter
   Model model;
@@ -163,12 +157,12 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop)
   EXPECT_EQ(mchpHR.inletModelObject()->name().get(), idf_mchp.getString(Generator_MicroTurbineFields::HeatRecoveryWaterInletNodeName).get());
   EXPECT_EQ(mchpHR.outletModelObject()->name().get(), idf_mchp.getString(Generator_MicroTurbineFields::HeatRecoveryWaterOutletNodeName).get());
 
-  OptionalWorkspaceObject idf_operation(workspace.getObjectByTypeAndName(IddObjectType::PlantEquipmentOperation_HeatingLoad,*(operation.name())));
+  OptionalWorkspaceObject idf_operation(workspace.getObjectByTypeAndName(IddObjectType::PlantEquipmentOperation_HeatingLoad, *(operation.name())));
   ASSERT_TRUE(idf_operation);
   // Get the extensible
   ASSERT_EQ(1u, idf_operation->numExtensibleGroups());
   // IdfExtensibleGroup eg = idf_operation.getExtensibleGroup(0);
-   // idf_operation.targets[0]
+  // idf_operation.targets[0]
   ASSERT_EQ(1u, idf_operation->targets().size());
   WorkspaceObject plantEquipmentList(idf_operation->targets()[0]);
   ASSERT_EQ(2u, plantEquipmentList.extensibleGroups().size());
@@ -184,11 +178,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop)
 
   // model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.osm"), true);
   // workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.idf"), true);
-
 }
 //test orphaning the generator before FT
-TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan) {
   // Create a model, a mchp, a mchpHR, a plantLoop and an electricalLoadCenter
   Model model;
 
@@ -205,6 +197,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan)
   // Add it on the same branch as the chpHR, right after it
   Node mchpHROutletNode = mchpHR.outletModelObject()->cast<Node>();
   ASSERT_TRUE(waterHeater.addToNode(mchpHROutletNode));
+  EXPECT_TRUE(waterHeater.plantLoop());
 
   // Create a plantEquipmentOperationHeatingLoad
   PlantEquipmentOperationHeatingLoad operation(model);
@@ -234,5 +227,38 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan)
 
   // model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orhpan.osm"), true);
   // workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orphan.idf"), true);
+}
 
+TEST_F(EnergyPlusFixture, ReverseTranslator_GeneratorMicroTurbine) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  // electric load center distribution
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Distribution);
+  idfObject1.setString(ElectricLoadCenter_DistributionFields::Name, "Electric Load Center Distribution 1");
+
+  openstudio::WorkspaceObject epELCD = workspace.addObject(idfObject1).get();
+
+  // generator micro turbine
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Generator_MicroTurbine);
+  idfObject2.setString(Generator_MicroTurbineFields::Name, "Generator Micro Turbine 1");
+
+  openstudio::WorkspaceObject epGenerator = workspace.addObject(idfObject2).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  /*   std::vector<ElectricLoadCenterDistribution> elcds = model.getModelObjects<ElectricLoadCenterDistribution>();
+  ASSERT_EQ(1u, elcds.size());
+  ElectricLoadCenterDistribution elcd = elcds[0];
+  EXPECT_EQ("Electric Load Center Distribution 1", elcd.name().get());
+  ASSERT_EQ(1u, elcd.generators().size()); */
+
+  std::vector<GeneratorMicroTurbine> generators = model.getModelObjects<GeneratorMicroTurbine>();
+  ASSERT_EQ(1u, generators.size());
+  GeneratorMicroTurbine generator = generators[0];
+  EXPECT_EQ("Generator Micro Turbine 1", generator.name().get());
+  EXPECT_FALSE(generator.availabilitySchedule());
+
+  /* EXPECT_EQ(generator.name().get(), elcd.generators()[0].name().get()); */
 }

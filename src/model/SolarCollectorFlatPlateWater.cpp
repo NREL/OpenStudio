@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,228 +55,206 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SolarCollectorFlatPlateWater_Impl::SolarCollectorFlatPlateWater_Impl(const IdfObject& idfObject,
-                                                                       Model_Impl* model,
-                                                                       bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SolarCollectorFlatPlateWater::iddObjectType());
-  }
+    SolarCollectorFlatPlateWater_Impl::SolarCollectorFlatPlateWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SolarCollectorFlatPlateWater::iddObjectType());
+    }
 
-  SolarCollectorFlatPlateWater_Impl::SolarCollectorFlatPlateWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                       Model_Impl* model,
-                                                                       bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SolarCollectorFlatPlateWater::iddObjectType());
-  }
+    SolarCollectorFlatPlateWater_Impl::SolarCollectorFlatPlateWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                         bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SolarCollectorFlatPlateWater::iddObjectType());
+    }
 
-  SolarCollectorFlatPlateWater_Impl::SolarCollectorFlatPlateWater_Impl(const SolarCollectorFlatPlateWater_Impl& other,
-                                                                       Model_Impl* model,
-                                                                       bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
+    SolarCollectorFlatPlateWater_Impl::SolarCollectorFlatPlateWater_Impl(const SolarCollectorFlatPlateWater_Impl& other, Model_Impl* model,
+                                                                         bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
-  ModelObject SolarCollectorFlatPlateWater_Impl::clone(Model model) const
-  {
+    ModelObject SolarCollectorFlatPlateWater_Impl::clone(Model model) const {
 
-    SolarCollectorFlatPlateWater result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlateWater>();
-    result.setSolarCollectorPerformance(this->solarCollectorPerformance());
+      SolarCollectorFlatPlateWater result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlateWater>();
+      result.setSolarCollectorPerformance(this->solarCollectorPerformance());
 
-    // do not want to point to any surface after cloning
-    result.resetSurface();
+      // do not want to point to any surface after cloning
+      result.resetSurface();
 
-    return result;
-  }
+      return result;
+    }
 
-  std::vector<IdfObject> SolarCollectorFlatPlateWater_Impl::remove()
-  {
-    // DLM: will remove performance object due to parent/child relationship
-    return StraightComponent_Impl::remove();
-  }
+    std::vector<IdfObject> SolarCollectorFlatPlateWater_Impl::remove() {
+      // DLM: will remove performance object due to parent/child relationship
+      return StraightComponent_Impl::remove();
+    }
 
-  const std::vector<std::string>& SolarCollectorFlatPlateWater_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Solar Collector Incident Angle Modifier",
-      "Solar Collector Efficiency",
-      "Solar Collector Heat Transfer Rate",
-      "Solar Collector Heat Gain Rate",
-      "Solar Collector Heat Loss Rate",
-      "Solar Collector Heat Transfer Energy"
-    };
-    return result;
-  }
+    const std::vector<std::string>& SolarCollectorFlatPlateWater_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Solar Collector Incident Angle Modifier", "Solar Collector Efficiency",
+                                                   "Solar Collector Heat Transfer Rate",      "Solar Collector Heat Gain Rate",
+                                                   "Solar Collector Heat Loss Rate",          "Solar Collector Heat Transfer Energy"};
+      return result;
+    }
 
-  IddObjectType SolarCollectorFlatPlateWater_Impl::iddObjectType() const {
-    return SolarCollectorFlatPlateWater::iddObjectType();
-  }
+    IddObjectType SolarCollectorFlatPlateWater_Impl::iddObjectType() const {
+      return SolarCollectorFlatPlateWater::iddObjectType();
+    }
 
-  std::vector<ModelObject> SolarCollectorFlatPlateWater_Impl::children() const
-  {
-    std::vector<ModelObject> result;
+    std::vector<ModelObject> SolarCollectorFlatPlateWater_Impl::children() const {
+      std::vector<ModelObject> result;
 
-    SolarCollectorPerformanceFlatPlate solarCollectorPerformance = this->solarCollectorPerformance();
-    result.push_back(solarCollectorPerformance);
+      SolarCollectorPerformanceFlatPlate solarCollectorPerformance = this->solarCollectorPerformance();
+      result.push_back(solarCollectorPerformance);
 
-    return result;
-  }
+      return result;
+    }
 
-  unsigned SolarCollectorFlatPlateWater_Impl::inletPort() const
-  {
-    return OS_SolarCollector_FlatPlate_WaterFields::InletNodeName;
-  }
+    unsigned SolarCollectorFlatPlateWater_Impl::inletPort() const {
+      return OS_SolarCollector_FlatPlate_WaterFields::InletNodeName;
+    }
 
-  unsigned SolarCollectorFlatPlateWater_Impl::outletPort() const
-  {
-    return OS_SolarCollector_FlatPlate_WaterFields::OutletNodeName;
-  }
+    unsigned SolarCollectorFlatPlateWater_Impl::outletPort() const {
+      return OS_SolarCollector_FlatPlate_WaterFields::OutletNodeName;
+    }
 
-  bool SolarCollectorFlatPlateWater_Impl::addToNode(Node & node)
-  {
-    if (boost::optional<PlantLoop> plantLoop = node.plantLoop())
-    {
-      if (plantLoop->supplyComponent(node.handle()))
-      {
-        if (StraightComponent_Impl::addToNode(node))
-        {
-          return true;
+    bool SolarCollectorFlatPlateWater_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plantLoop = node.plantLoop()) {
+        if (plantLoop->supplyComponent(node.handle())) {
+          if (StraightComponent_Impl::addToNode(node)) {
+            return true;
+          }
         }
       }
+
+      return false;
     }
 
-    return false;
-  }
-
-  SolarCollectorPerformanceFlatPlate SolarCollectorFlatPlateWater_Impl::solarCollectorPerformance() const {
-    boost::optional<SolarCollectorPerformanceFlatPlate> value = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceFlatPlate>(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName);
-    if (!value) {
-      // DLM: could default construct one here?
-      LOG_AND_THROW(briefDescription() << " does not have an Solar Collector Performance attached.");
-    }
-    return value.get();
-  }
-
-  boost::optional<PlanarSurface> SolarCollectorFlatPlateWater_Impl::surface() const {
-    return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName);
-  }
-
-  boost::optional<double> SolarCollectorFlatPlateWater_Impl::maximumFlowRate() const {
-    return getDouble(OS_SolarCollector_FlatPlate_WaterFields::MaximumFlowRate,true);
-  }
-
-  bool SolarCollectorFlatPlateWater_Impl::setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
-    ModelObject clone = solarCollectorPerformanceFlatPlate.clone(this->model());
-    return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformanceFlatPlate>());
-  }
-
-  void SolarCollectorFlatPlateWater_Impl::resetSolarCollectorPerformance()
-  {
-    boost::optional<SolarCollectorPerformanceFlatPlate> oldPerformance = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceFlatPlate>(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName);
-    if (oldPerformance){
-      oldPerformance->remove();
+    SolarCollectorPerformanceFlatPlate SolarCollectorFlatPlateWater_Impl::solarCollectorPerformance() const {
+      boost::optional<SolarCollectorPerformanceFlatPlate> value = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceFlatPlate>(
+        OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName);
+      if (!value) {
+        // DLM: could default construct one here?
+        LOG_AND_THROW(briefDescription() << " does not have an Solar Collector Performance attached.");
+      }
+      return value.get();
     }
 
-    SolarCollectorPerformanceFlatPlate performance(this->model());
-    bool ok = setSolarCollectorPerformanceNoClone(performance);
+    boost::optional<PlanarSurface> SolarCollectorFlatPlateWater_Impl::surface() const {
+      return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName);
+    }
+
+    boost::optional<double> SolarCollectorFlatPlateWater_Impl::maximumFlowRate() const {
+      return getDouble(OS_SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, true);
+    }
+
+    bool
+      SolarCollectorFlatPlateWater_Impl::setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
+      ModelObject clone = solarCollectorPerformanceFlatPlate.clone(this->model());
+      return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformanceFlatPlate>());
+    }
+
+    void SolarCollectorFlatPlateWater_Impl::resetSolarCollectorPerformance() {
+      boost::optional<SolarCollectorPerformanceFlatPlate> oldPerformance =
+        getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceFlatPlate>(
+          OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName);
+      if (oldPerformance) {
+        oldPerformance->remove();
+      }
+
+      SolarCollectorPerformanceFlatPlate performance(this->model());
+      bool ok = setSolarCollectorPerformanceNoClone(performance);
+      OS_ASSERT(ok);
+    }
+
+    bool SolarCollectorFlatPlateWater_Impl::setSurface(const PlanarSurface& surface) {
+      bool result(false);
+
+      // DLM: check for existing solar collectors or photovoltaic generators?
+
+      if (surface.optionalCast<Surface>()) {
+        result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, surface.handle());
+      } else if (surface.optionalCast<ShadingSurface>()) {
+        result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, surface.handle());
+      }
+
+      return result;
+    }
+
+    void SolarCollectorFlatPlateWater_Impl::resetSurface() {
+      bool result = setString(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, "");
+      OS_ASSERT(result);
+    }
+
+    bool SolarCollectorFlatPlateWater_Impl::setMaximumFlowRate(double maximumFlowRate) {
+      return setDouble(OS_SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, maximumFlowRate);
+    }
+
+    void SolarCollectorFlatPlateWater_Impl::resetMaximumFlowRate() {
+      bool result = setString(OS_SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    bool SolarCollectorFlatPlateWater_Impl::setSolarCollectorPerformanceNoClone(
+      const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
+      return setPointer(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, solarCollectorPerformanceFlatPlate.handle());
+    }
+
+  }  // namespace detail
+
+  SolarCollectorFlatPlateWater::SolarCollectorFlatPlateWater(const Model& model)
+    : StraightComponent(SolarCollectorFlatPlateWater::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::SolarCollectorFlatPlateWater_Impl>());
+
+    SolarCollectorPerformanceFlatPlate performance(model);
+
+    bool ok = true;
+    ok = getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSolarCollectorPerformanceNoClone(performance);
     OS_ASSERT(ok);
   }
 
-  bool SolarCollectorFlatPlateWater_Impl::setSurface(const PlanarSurface& surface) {
-    bool result(false);
-
-    // DLM: check for existing solar collectors or photovoltaic generators?
-
-    if (surface.optionalCast<Surface>()){
-      result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, surface.handle());
-    } else if (surface.optionalCast<ShadingSurface>()){
-      result = setPointer(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, surface.handle());
-    }
-
-    return result;
+  IddObjectType SolarCollectorFlatPlateWater::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_SolarCollector_FlatPlate_Water);
   }
 
-  void SolarCollectorFlatPlateWater_Impl::resetSurface() {
-    bool result = setString(OS_SolarCollector_FlatPlate_WaterFields::SurfaceName, "");
-    OS_ASSERT(result);
+  SolarCollectorPerformanceFlatPlate SolarCollectorFlatPlateWater::solarCollectorPerformance() const {
+    return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->solarCollectorPerformance();
   }
 
-  bool SolarCollectorFlatPlateWater_Impl::setMaximumFlowRate(double maximumFlowRate) {
-    return setDouble(OS_SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, maximumFlowRate);
+  boost::optional<PlanarSurface> SolarCollectorFlatPlateWater::surface() const {
+    return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->surface();
   }
 
-  void SolarCollectorFlatPlateWater_Impl::resetMaximumFlowRate() {
-    bool result = setString(OS_SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, "");
-    OS_ASSERT(result);
+  boost::optional<double> SolarCollectorFlatPlateWater::maximumFlowRate() const {
+    return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->maximumFlowRate();
   }
 
-  bool SolarCollectorFlatPlateWater_Impl::setSolarCollectorPerformanceNoClone(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
-    return setPointer(OS_SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, solarCollectorPerformanceFlatPlate.handle());
+  bool SolarCollectorFlatPlateWater::setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
+    return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSolarCollectorPerformance(solarCollectorPerformanceFlatPlate);
   }
 
-} // detail
+  void SolarCollectorFlatPlateWater::resetSolarCollectorPerformance() {
+    getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetSolarCollectorPerformance();
+  }
 
-SolarCollectorFlatPlateWater::SolarCollectorFlatPlateWater(const Model& model)
-  : StraightComponent(SolarCollectorFlatPlateWater::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::SolarCollectorFlatPlateWater_Impl>());
+  bool SolarCollectorFlatPlateWater::setSurface(const PlanarSurface& surface) {
+    return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSurface(surface);
+  }
 
-  SolarCollectorPerformanceFlatPlate performance(model);
+  void SolarCollectorFlatPlateWater::resetSurface() {
+    return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetSurface();
+  }
 
-  bool ok = true;
-  ok = getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSolarCollectorPerformanceNoClone(performance);
-  OS_ASSERT(ok);
+  bool SolarCollectorFlatPlateWater::setMaximumFlowRate(double maximumFlowRate) {
+    return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setMaximumFlowRate(maximumFlowRate);
+  }
 
-}
+  void SolarCollectorFlatPlateWater::resetMaximumFlowRate() {
+    getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetMaximumFlowRate();
+  }
 
-IddObjectType SolarCollectorFlatPlateWater::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_SolarCollector_FlatPlate_Water);
-}
+  /// @cond
+  SolarCollectorFlatPlateWater::SolarCollectorFlatPlateWater(std::shared_ptr<detail::SolarCollectorFlatPlateWater_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-SolarCollectorPerformanceFlatPlate SolarCollectorFlatPlateWater::solarCollectorPerformance() const {
-  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->solarCollectorPerformance();
-}
-
-boost::optional<PlanarSurface> SolarCollectorFlatPlateWater::surface() const {
-  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->surface();
-}
-
-boost::optional<double> SolarCollectorFlatPlateWater::maximumFlowRate() const {
-  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->maximumFlowRate();
-}
-
-bool SolarCollectorFlatPlateWater::setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& solarCollectorPerformanceFlatPlate) {
-  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSolarCollectorPerformance(solarCollectorPerformanceFlatPlate);
-}
-
-void SolarCollectorFlatPlateWater::resetSolarCollectorPerformance() {
-  getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetSolarCollectorPerformance();
-}
-
-bool SolarCollectorFlatPlateWater::setSurface(const PlanarSurface& surface) {
-  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setSurface(surface);
-}
-
-void SolarCollectorFlatPlateWater::resetSurface() {
-  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetSurface();
-}
-
-bool SolarCollectorFlatPlateWater::setMaximumFlowRate(double maximumFlowRate) {
-  return getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->setMaximumFlowRate(maximumFlowRate);
-}
-
-void SolarCollectorFlatPlateWater::resetMaximumFlowRate() {
-  getImpl<detail::SolarCollectorFlatPlateWater_Impl>()->resetMaximumFlowRate();
-}
-
-/// @cond
-SolarCollectorFlatPlateWater::SolarCollectorFlatPlateWater(std::shared_ptr<detail::SolarCollectorFlatPlateWater_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

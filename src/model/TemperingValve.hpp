@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,81 +36,81 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class TemperingValve_Impl;
+    class TemperingValve_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** TemperingValve is a StraightComponent that wraps the OpenStudio IDD object 'OS:TemperingValve'. */
-class MODEL_API TemperingValve : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** TemperingValve is a StraightComponent that wraps the OpenStudio IDD object 'OS:TemperingValve'. */
+  class MODEL_API TemperingValve : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit TemperingValve(const Model& model);
+    explicit TemperingValve(const Model& model);
 
-  virtual ~TemperingValve() {}
+    virtual ~TemperingValve() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> stream2SourceNode() const;
+    boost::optional<Node> stream2SourceNode() const;
 
-  boost::optional<Node> temperatureSetpointNode() const;
+    boost::optional<Node> temperatureSetpointNode() const;
 
-  boost::optional<Node> pumpOutletNode() const;
+    boost::optional<Node> pumpOutletNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setStream2SourceNode(const Node & stream2SourceNode);
+    bool setStream2SourceNode(const Node& stream2SourceNode);
 
-  void resetStream2SourceNode();
+    void resetStream2SourceNode();
 
-  bool setTemperatureSetpointNode(const Node & temperatureSetpointNode);
+    bool setTemperatureSetpointNode(const Node& temperatureSetpointNode);
 
-  void resetTemperatureSetpointNode();
+    void resetTemperatureSetpointNode();
 
-  bool setPumpOutletNode(const Node & pumpOutletNode);
+    bool setPumpOutletNode(const Node& pumpOutletNode);
 
-  void resetPumpOutletNode();
+    void resetPumpOutletNode();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::TemperingValve_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::TemperingValve_Impl ImplType;
 
-  explicit TemperingValve(std::shared_ptr<detail::TemperingValve_Impl> impl);
+    explicit TemperingValve(std::shared_ptr<detail::TemperingValve_Impl> impl);
 
-  friend class detail::TemperingValve_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.TemperingValve");
-};
+    friend class detail::TemperingValve_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.TemperingValve");
+  };
 
-/** \relates TemperingValve*/
-typedef boost::optional<TemperingValve> OptionalTemperingValve;
+  /** \relates TemperingValve*/
+  typedef boost::optional<TemperingValve> OptionalTemperingValve;
 
-/** \relates TemperingValve*/
-typedef std::vector<TemperingValve> TemperingValveVector;
+  /** \relates TemperingValve*/
+  typedef std::vector<TemperingValve> TemperingValveVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_TEMPERINGVALVE_HPP
-
+#endif  // MODEL_TEMPERINGVALVE_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,107 +37,105 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
-class Curve;
-class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
+  class Node;
+  class Curve;
+  class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingFourPipeBeam_Impl;
+    class CoilCoolingFourPipeBeam_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingFourPipeBeam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:FourPipeBeam'. */
-class MODEL_API CoilCoolingFourPipeBeam : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingFourPipeBeam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:FourPipeBeam'. */
+  class MODEL_API CoilCoolingFourPipeBeam : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingFourPipeBeam(const Model& model);
+    explicit CoilCoolingFourPipeBeam(const Model& model);
 
-  virtual ~CoilCoolingFourPipeBeam() {}
+    virtual ~CoilCoolingFourPipeBeam() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> chilledWaterInletNode() const;
+    boost::optional<Node> chilledWaterInletNode() const;
 
-  boost::optional<Node> chilledWaterOutletNode() const;
+    boost::optional<Node> chilledWaterOutletNode() const;
 
-  double beamRatedCoolingCapacityperBeamLength() const;
-  bool isBeamRatedCoolingCapacityperBeamLengthDefaulted() const;
+    double beamRatedCoolingCapacityperBeamLength() const;
+    bool isBeamRatedCoolingCapacityperBeamLengthDefaulted() const;
 
-  double beamRatedCoolingRoomAirChilledWaterTemperatureDifference() const;
-  bool isBeamRatedCoolingRoomAirChilledWaterTemperatureDifferenceDefaulted() const;
+    double beamRatedCoolingRoomAirChilledWaterTemperatureDifference() const;
+    bool isBeamRatedCoolingRoomAirChilledWaterTemperatureDifferenceDefaulted() const;
 
-  double beamRatedChilledWaterVolumeFlowRateperBeamLength() const;
-  bool isBeamRatedChilledWaterVolumeFlowRateperBeamLengthDefaulted() const;
+    double beamRatedChilledWaterVolumeFlowRateperBeamLength() const;
+    bool isBeamRatedChilledWaterVolumeFlowRateperBeamLengthDefaulted() const;
 
-  Curve beamCoolingCapacityTemperatureDifferenceModificationFactorCurve() const;
+    Curve beamCoolingCapacityTemperatureDifferenceModificationFactorCurve() const;
 
-  Curve beamCoolingCapacityAirFlowModificationFactorCurve() const;
+    Curve beamCoolingCapacityAirFlowModificationFactorCurve() const;
 
-  Curve beamCoolingCapacityChilledWaterFlowModificationFactorCurve() const;
+    Curve beamCoolingCapacityChilledWaterFlowModificationFactorCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
+    bool setBeamRatedCoolingCapacityperBeamLength(double beamRatedCoolingCapacityperBeamLength);
+    void resetBeamRatedCoolingCapacityperBeamLength();
 
-  bool setBeamRatedCoolingCapacityperBeamLength(double beamRatedCoolingCapacityperBeamLength);
-  void resetBeamRatedCoolingCapacityperBeamLength();
+    bool setBeamRatedCoolingRoomAirChilledWaterTemperatureDifference(double beamRatedCoolingRoomAirChilledWaterTemperatureDifference);
+    void resetBeamRatedCoolingRoomAirChilledWaterTemperatureDifference();
 
-  bool setBeamRatedCoolingRoomAirChilledWaterTemperatureDifference(double beamRatedCoolingRoomAirChilledWaterTemperatureDifference);
-  void resetBeamRatedCoolingRoomAirChilledWaterTemperatureDifference();
+    bool setBeamRatedChilledWaterVolumeFlowRateperBeamLength(double beamRatedChilledWaterVolumeFlowRateperBeamLength);
+    void resetBeamRatedChilledWaterVolumeFlowRateperBeamLength();
 
-  bool setBeamRatedChilledWaterVolumeFlowRateperBeamLength(double beamRatedChilledWaterVolumeFlowRateperBeamLength);
-  void resetBeamRatedChilledWaterVolumeFlowRateperBeamLength();
+    bool setBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
 
-  bool setBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
+    bool setBeamCoolingCapacityAirFlowModificationFactorCurve(const Curve& curve);
 
-  bool setBeamCoolingCapacityAirFlowModificationFactorCurve(const Curve& curve);
+    bool setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(const Curve& curve);
 
-  bool setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(const Curve& curve);
+    // No reset functions provided for the three curves, because all curves are required if you connect the ATU FourPipeBeam to a hot water plant loop
+    // And given that we added a subclass specifically for the heating portion of the ATU FourPipeBeam, they become required at all times
 
-  // No reset functions provided for the three curves, because all curves are required if you connect the ATU FourPipeBeam to a hot water plant loop
-  // And given that we added a subclass specifically for the heating portion of the ATU FourPipeBeam, they become required at all times
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
+    boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingFourPipeBeam_Impl ImplType;
 
-  /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
-  boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
+    explicit CoilCoolingFourPipeBeam(std::shared_ptr<detail::CoilCoolingFourPipeBeam_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingFourPipeBeam_Impl ImplType;
+    friend class detail::CoilCoolingFourPipeBeam_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingFourPipeBeam");
+  };
 
-  explicit CoilCoolingFourPipeBeam(std::shared_ptr<detail::CoilCoolingFourPipeBeam_Impl> impl);
+  /** \relates CoilCoolingFourPipeBeam*/
+  typedef boost::optional<CoilCoolingFourPipeBeam> OptionalCoilCoolingFourPipeBeam;
 
-  friend class detail::CoilCoolingFourPipeBeam_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingFourPipeBeam");
-};
+  /** \relates CoilCoolingFourPipeBeam*/
+  typedef std::vector<CoilCoolingFourPipeBeam> CoilCoolingFourPipeBeamVector;
 
-/** \relates CoilCoolingFourPipeBeam*/
-typedef boost::optional<CoilCoolingFourPipeBeam> OptionalCoilCoolingFourPipeBeam;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CoilCoolingFourPipeBeam*/
-typedef std::vector<CoilCoolingFourPipeBeam> CoilCoolingFourPipeBeamVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGFOURPIPEBEAM_HPP
-
+#endif  // MODEL_COILCOOLINGFOURPIPEBEAM_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,36 +52,35 @@ using openstudio::atto;
 using openstudio::zepto;
 using openstudio::yocto;
 
-TEST_F(UnitsFixture,Scale_DefinedConstants) {
+TEST_F(UnitsFixture, Scale_DefinedConstants) {
 
-  LOG(Debug,"Scale_DefinedConstants");
+  LOG(Debug, "Scale_DefinedConstants");
 
   // tests << via the log macro
-  LOG(Info,notDefined());
-  LOG(Info,yotta());
-  LOG(Info,zetta());
-  LOG(Info,exa());
-  LOG(Info,peta());
-  LOG(Info,tera());
-  LOG(Info,giga());
-  LOG(Info,mega());
-  LOG(Info,kilo());
-  LOG(Info,one());
-  LOG(Info,centi());
-  LOG(Info,milli());
-  LOG(Info,micro());
-  LOG(Info,nano());
-  LOG(Info,pico());
-  LOG(Info,femto());
-  LOG(Info,atto());
-  LOG(Info,zepto());
-  LOG(Info,yocto());
-
+  LOG(Info, notDefined());
+  LOG(Info, yotta());
+  LOG(Info, zetta());
+  LOG(Info, exa());
+  LOG(Info, peta());
+  LOG(Info, tera());
+  LOG(Info, giga());
+  LOG(Info, mega());
+  LOG(Info, kilo());
+  LOG(Info, one());
+  LOG(Info, centi());
+  LOG(Info, milli());
+  LOG(Info, micro());
+  LOG(Info, nano());
+  LOG(Info, pico());
+  LOG(Info, femto());
+  LOG(Info, atto());
+  LOG(Info, zepto());
+  LOG(Info, yocto());
 }
 
-TEST_F(UnitsFixture,Scale_LogicalOperators) {
+TEST_F(UnitsFixture, Scale_LogicalOperators) {
 
-  LOG(Debug,"Scale_LogicalOperators");
+  LOG(Debug, "Scale_LogicalOperators");
 
   // == and !=
   ASSERT_TRUE(one() == one());
@@ -92,5 +91,4 @@ TEST_F(UnitsFixture,Scale_LogicalOperators) {
   ASSERT_TRUE(mega() > kilo());
   ASSERT_TRUE(one() <= giga());
   ASSERT_TRUE(milli() >= micro());
-
 }

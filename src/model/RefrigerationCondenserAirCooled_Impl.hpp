@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,142 +36,140 @@
 namespace openstudio {
 namespace model {
 
-class CurveLinear;
-class ThermalZone;
+  class RefrigerationSystem;
+  class CurveLinear;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationCondenserAirCooled_Impl is a ParentObject that is the implementation class for RefrigerationCondenserAirCooled.*/
-  class MODEL_API RefrigerationCondenserAirCooled_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationCondenserAirCooled_Impl is a ParentObject that is the implementation class for RefrigerationCondenserAirCooled.*/
+    class MODEL_API RefrigerationCondenserAirCooled_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationCondenserAirCooled_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      RefrigerationCondenserAirCooled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCondenserAirCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      RefrigerationCondenserAirCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCondenserAirCooled_Impl(const RefrigerationCondenserAirCooled_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      RefrigerationCondenserAirCooled_Impl(const RefrigerationCondenserAirCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationCondenserAirCooled_Impl() {}
+      virtual ~RefrigerationCondenserAirCooled_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;
+      boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;
 
-    double ratedSubcoolingTemperatureDifference() const;
+      double ratedSubcoolingTemperatureDifference() const;
 
-    bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
+      bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
 
-    std::string condenserFanSpeedControlType() const;
+      std::string condenserFanSpeedControlType() const;
 
-    bool isCondenserFanSpeedControlTypeDefaulted() const;
+      bool isCondenserFanSpeedControlTypeDefaulted() const;
 
-    double ratedFanPower() const;
+      double ratedFanPower() const;
 
-    bool isRatedFanPowerDefaulted() const;
+      bool isRatedFanPowerDefaulted() const;
 
-    double minimumFanAirFlowRatio() const;
+      double minimumFanAirFlowRatio() const;
 
-    bool isMinimumFanAirFlowRatioDefaulted() const;
+      bool isMinimumFanAirFlowRatioDefaulted() const;
 
-    boost::optional<ThermalZone> airInletZone() const;
+      boost::optional<ThermalZone> airInletZone() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    double condenserRefrigerantOperatingChargeInventory() const;
+      double condenserRefrigerantOperatingChargeInventory() const;
 
-    bool isCondenserRefrigerantOperatingChargeInventoryDefaulted() const;
+      bool isCondenserRefrigerantOperatingChargeInventoryDefaulted() const;
 
-    double condensateReceiverRefrigerantInventory() const;
+      double condensateReceiverRefrigerantInventory() const;
 
-    bool isCondensateReceiverRefrigerantInventoryDefaulted() const;
+      bool isCondensateReceiverRefrigerantInventoryDefaulted() const;
 
-    double condensatePipingRefrigerantInventory() const;
+      double condensatePipingRefrigerantInventory() const;
 
-    bool isCondensatePipingRefrigerantInventoryDefaulted() const;
+      bool isCondensatePipingRefrigerantInventoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setRatedEffectiveTotalHeatRejectionRateCurve(const boost::optional<CurveLinear>& curveLinear);
+      bool setRatedEffectiveTotalHeatRejectionRateCurve(const boost::optional<CurveLinear>& curveLinear);
 
-    void resetRatedEffectiveTotalHeatRejectionRateCurve();
+      void resetRatedEffectiveTotalHeatRejectionRateCurve();
 
-    bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
+      bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
 
-    void resetRatedSubcoolingTemperatureDifference();
+      void resetRatedSubcoolingTemperatureDifference();
 
-    bool setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType);
+      bool setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType);
 
-    void resetCondenserFanSpeedControlType();
+      void resetCondenserFanSpeedControlType();
 
-    bool setRatedFanPower(double ratedFanPower);
+      bool setRatedFanPower(double ratedFanPower);
 
-    void resetRatedFanPower();
+      void resetRatedFanPower();
 
-    bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
+      bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
 
-    void resetMinimumFanAirFlowRatio();
+      void resetMinimumFanAirFlowRatio();
 
-    bool setAirInletZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setAirInletZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetAirInletZone();
+      void resetAirInletZone();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+      bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
-    void resetCondenserRefrigerantOperatingChargeInventory();
+      void resetCondenserRefrigerantOperatingChargeInventory();
 
-    bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+      bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
-    void resetCondensateReceiverRefrigerantInventory();
+      void resetCondensateReceiverRefrigerantInventory();
 
-    bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+      bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
-    void resetCondensatePipingRefrigerantInventory();
+      void resetCondensatePipingRefrigerantInventory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationCondenserAirCooled");
-  };
+      boost::optional<RefrigerationSystem> system() const;
 
-} // detail
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationCondenserAirCooled");
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_REFRIGERATIONCONDENSERAIRCOOLED_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONCONDENSERAIRCOOLED_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,77 +36,76 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class LightingSimulationControl_Impl;
+    class LightingSimulationControl_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** LightingSimulationControl is a ModelObject that wraps the OpenStudio IDD object 'OS_LightingSimulationControl'. */
-class MODEL_API LightingSimulationControl : public ModelObject {
- public:
+  /** LightingSimulationControl is a ModelObject that wraps the OpenStudio IDD object 'OS_LightingSimulationControl'. */
+  class MODEL_API LightingSimulationControl : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~LightingSimulationControl() {}
 
-  virtual ~LightingSimulationControl() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    bool runSimulationforDesignDays() const;
 
-  bool runSimulationforDesignDays() const;
+    bool isRunSimulationforDesignDaysDefaulted() const;
 
-  bool isRunSimulationforDesignDaysDefaulted() const;
+    bool runSimulationforWeatherFileRunPeriods() const;
 
-  bool runSimulationforWeatherFileRunPeriods() const;
+    bool isRunSimulationforWeatherFileRunPeriodsDefaulted() const;
 
-  bool isRunSimulationforWeatherFileRunPeriodsDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setRunSimulationforDesignDays(bool runSimulationforDesignDays);
 
-  bool setRunSimulationforDesignDays(bool runSimulationforDesignDays);
+    void resetRunSimulationforDesignDays();
 
-  void resetRunSimulationforDesignDays();
+    bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
 
-  bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+    void resetRunSimulationforWeatherFileRunPeriods();
 
-  void resetRunSimulationforWeatherFileRunPeriods();
+    //@}
+   protected:
+    /// @cond
+    typedef detail::LightingSimulationControl_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::LightingSimulationControl_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::LightingSimulationControl_Impl;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::LightingSimulationControl_Impl;
+    explicit LightingSimulationControl(std::shared_ptr<detail::LightingSimulationControl_Impl> impl);
 
-  explicit LightingSimulationControl(std::shared_ptr<detail::LightingSimulationControl_Impl> impl);
+    explicit LightingSimulationControl(Model& model);
 
-  explicit LightingSimulationControl(Model& model);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.LightingSimulationControl");
+  };
 
-  /// @endcond
- private:
+  /** \relates LightingSimulationControl*/
+  typedef boost::optional<LightingSimulationControl> OptionalLightingSimulationControl;
 
-  REGISTER_LOGGER("openstudio.model.LightingSimulationControl");
-};
+  /** \relates LightingSimulationControl*/
+  typedef std::vector<LightingSimulationControl> LightingSimulationControlVector;
 
-/** \relates LightingSimulationControl*/
-typedef boost::optional<LightingSimulationControl> OptionalLightingSimulationControl;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates LightingSimulationControl*/
-typedef std::vector<LightingSimulationControl> LightingSimulationControlVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_LIGHTINGSIMULATIONCONTROL_HPP
+#endif  // MODEL_LIGHTINGSIMULATIONCONTROL_HPP

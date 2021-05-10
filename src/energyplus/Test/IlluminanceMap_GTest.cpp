@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,8 +52,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_IlluminanceMap_NoZone)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap_NoZone) {
   Model model;
   ThermalZone thermalZone(model);
   Space space(model);
@@ -67,8 +66,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_IlluminanceMap_NoZone)
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_IlluminanceMap)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap) {
   Model model;
   ThermalZone thermalZone(model);
   Space space(model);
@@ -86,4 +84,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_IlluminanceMap)
   // automatically added
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
 }
-

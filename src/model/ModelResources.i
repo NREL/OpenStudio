@@ -26,7 +26,15 @@
   %ignore openstudio::model::SpaceLoadDefinition::instances;
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
   %ignore openstudio::model::ShadingControl::subSurfaces;
+  %ignore openstudio::model::ShadingControl::subSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::addSubSurface;
+  %ignore openstudio::model::ShadingControl::setSubSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::removeSubSurface(const SubSurface& subSurface); // The unsigned index overload is fine
+  %ignore openstudio::model::ShadingControl::addSubSurfaces;
+  %ignore openstudio::model::ShadingControl::setSubSurfaces;
 
+  // CoilCoolingDX is defined in StraightComponent.i
+  %ignore openstudio::model::CoilCoolingDXCurveFitPerformance::coilCoolingDXs;
   // TODO: why?
   // ignore schedule type
   // %ignore openstudio::model::ScheduleType;
@@ -42,11 +50,21 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
 namespace model {
 
 // forward declarations
 class ShadingControl;
+%feature("valuewrapper") SubSurface;
+class SubSurface;
+%feature("valuewrapper") CoilCoolingDX;
+class CoilCoolingDX;
 
 }
 }
@@ -122,6 +140,8 @@ MODELOBJECT_TEMPLATES(CurveExponentialSkewNormal);
 MODELOBJECT_TEMPLATES(CurveFanPressureRise);
 MODELOBJECT_TEMPLATES(CurveFunctionalPressureDrop);
 MODELOBJECT_TEMPLATES(CurveLinear);
+MODELOBJECT_TEMPLATES(CurveQuadLinear);
+MODELOBJECT_TEMPLATES(CurveQuintLinear);
 MODELOBJECT_TEMPLATES(CurveQuadratic);
 MODELOBJECT_TEMPLATES(CurveQuadraticLinear);
 MODELOBJECT_TEMPLATES(CurveQuartic);
@@ -212,6 +232,8 @@ SWIG_MODELOBJECT(CurveExponentialSkewNormal, 1);
 SWIG_MODELOBJECT(CurveFanPressureRise, 1);
 SWIG_MODELOBJECT(CurveFunctionalPressureDrop, 1);
 SWIG_MODELOBJECT(CurveLinear, 1);
+SWIG_MODELOBJECT(CurveQuadLinear, 1);
+SWIG_MODELOBJECT(CurveQuintLinear, 1);
 SWIG_MODELOBJECT(CurveQuadratic, 1);
 SWIG_MODELOBJECT(CurveQuadraticLinear, 1);
 SWIG_MODELOBJECT(CurveQuartic, 1);

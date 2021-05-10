@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,58 +57,56 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSubroutine(EnergyManagementSystemSubroutine & modelObject)
-{
-  boost::optional<std::string> s;
-  const int subs[] = {1};
-  std::string possible_uid;
-  size_t pos;
-  std::string newline;
+  boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSubroutine(EnergyManagementSystemSubroutine& modelObject) {
+    boost::optional<std::string> s;
+    const int subs[] = {1};
+    std::string possible_uid;
+    size_t pos;
+    std::string newline;
 
-  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Subroutine);
-  m_idfObjects.push_back(idfObject);
-  //m_map.insert(std::make_pair(modelObject.handle(), idfObject));
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
-  }
+    IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Subroutine);
+    m_idfObjects.push_back(idfObject);
+    //m_map.insert(std::make_pair(modelObject.handle(), idfObject));
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
 
-  const Model m = modelObject.model();
-  boost::optional<ModelObject> mObject;
+    const Model m = modelObject.model();
+    boost::optional<ModelObject> mObject;
 
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-    OptionalString line = eg.getString(OS_EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine);
-    if (line) {
-      //find uids
-      newline = line.get();
-      boost::sregex_token_iterator j(line.get().begin(), line.get().end(), uuidInString(), subs);
+    for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
+      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+      OptionalString line = eg.getString(OS_EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine);
+      if (line) {
+        //find uids
+        newline = line.get();
+        boost::sregex_token_iterator j(line.get().begin(), line.get().end(), uuidInString(), subs);
 
-      while (j != boost::sregex_token_iterator()) {
-        possible_uid = *j++;
-        //look to see if uid is in the model and return the object
-        UUID uid = toUUID(possible_uid);
-        mObject = m.getModelObject<model::ModelObject>(uid);
-        if (mObject) {
-          //replace uid with namestring
-          pos = newline.find(possible_uid);
-          if (pos + 38 <= newline.length()) {
-            newline.replace(pos, 38, mObject.get().nameString());
+        while (j != boost::sregex_token_iterator()) {
+          possible_uid = *j++;
+          //look to see if uid is in the model and return the object
+          UUID uid = toUUID(possible_uid);
+          mObject = m.getModelObject<model::ModelObject>(uid);
+          if (mObject) {
+            //replace uid with namestring
+            pos = newline.find(possible_uid);
+            if (pos + 38 <= newline.length()) {
+              newline.replace(pos, 38, mObject.get().nameString());
+            }
           }
         }
+        group.setString(OS_EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine, newline);
       }
-      group.setString(OS_EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine, newline);
+      OptionalString comment = eg.fieldComment(OS_EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine);
+      if (comment) {
+        group.setFieldComment(EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine, comment.get());
+      }
     }
-    OptionalString comment = eg.fieldComment(OS_EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine);
-    if (comment) {
-      group.setFieldComment(EnergyManagementSystem_SubroutineExtensibleFields::ProgramLine, comment.get());
-    }
+    return idfObject;
   }
-  return idfObject;
-}
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

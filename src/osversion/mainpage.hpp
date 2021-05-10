@@ -1,7 +1,7 @@
 namespace openstudio {
 namespace osversion {
 
-/** \mainpage OpenStudio OSVersion
+  /** \mainpage OpenStudio OSVersion
  *
  *  The openstudio::osversion namespace currently contains one class, VersionTranslator, provided
  *  to enable backward compatibility. In particular, OpenStudio models (.osm) and components
@@ -13,5 +13,5 @@ namespace osversion {
  *  available through the Ruby and C# bindings.
  */
 
-} // osversion
-} // openstudio
+}  // namespace osversion
+}  // namespace openstudio

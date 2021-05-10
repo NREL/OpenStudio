@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,42 +41,37 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerMultiZoneHeatingAverage( SetpointManagerMultiZoneHeatingAverage & modelObject )
-{
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerMultiZoneHeatingAverage(SetpointManagerMultiZoneHeatingAverage& modelObject) {
+    boost::optional<double> d;
 
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_MultiZone_Heating_Average, modelObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_MultiZone_Heating_Average, modelObject);
 
-  // HVACAirLoopName
-  if( boost::optional<AirLoopHVAC> airloop = modelObject.airLoopHVAC() )
-  {
-    idfObject.setString(SetpointManager_MultiZone_Heating_AverageFields::HVACAirLoopName,airloop->name().get());
+    // HVACAirLoopName
+    if (boost::optional<AirLoopHVAC> airloop = modelObject.airLoopHVAC()) {
+      idfObject.setString(SetpointManager_MultiZone_Heating_AverageFields::HVACAirLoopName, airloop->name().get());
+    }
+
+    // Minimum Setpoint Temperature
+    d = modelObject.minimumSetpointTemperature();
+    if (d) {
+      idfObject.setDouble(SetpointManager_MultiZone_Heating_AverageFields::MinimumSetpointTemperature, d.get());
+    }
+
+    // Maximum Setpoint Temperature
+    d = modelObject.maximumSetpointTemperature();
+    if (d) {
+      idfObject.setDouble(SetpointManager_MultiZone_Heating_AverageFields::MaximumSetpointTemperature, d.get());
+    }
+
+    // Setpoint Node or NodeList Name
+    if (boost::optional<Node> node = modelObject.setpointNode()) {
+      idfObject.setString(SetpointManager_MultiZone_Heating_AverageFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // Minimum Setpoint Temperature
-  d = modelObject.minimumSetpointTemperature();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_MultiZone_Heating_AverageFields::MinimumSetpointTemperature,d.get());
-  }
+}  // namespace energyplus
 
-  // Maximum Setpoint Temperature
-  d = modelObject.maximumSetpointTemperature();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_MultiZone_Heating_AverageFields::MaximumSetpointTemperature,d.get());
-  }
-
-  // Setpoint Node or NodeList Name
-  if( boost::optional<Node> node = modelObject.setpointNode() )
-  {
-    idfObject.setString(SetpointManager_MultiZone_Heating_AverageFields::SetpointNodeorNodeListName,node->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

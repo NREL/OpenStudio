@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,8 +41,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, Schedule_Day)
-{
+TEST_F(ModelFixture, Schedule_Day) {
   Model model;
 
   ScheduleDay daySchedule(model);
@@ -168,12 +167,11 @@ TEST_F(ModelFixture, Schedule_Day)
   EXPECT_EQ(3u, daySchedule.times().size());
   EXPECT_EQ(3u, daySchedule.values().size());
 
-
   // Add small values
   daySchedule.clearValues();
   EXPECT_EQ(1u, daySchedule.times().size());
   EXPECT_EQ(1u, daySchedule.values().size());
-  EXPECT_EQ(Time(0,24,0),daySchedule.times().front());
+  EXPECT_EQ(Time(0, 24, 0), daySchedule.times().front());
 
   EXPECT_FALSE(daySchedule.addValue(Time(0, 0, 0, 10), -9999));
   EXPECT_EQ(1u, daySchedule.times().size());
@@ -190,12 +188,11 @@ TEST_F(ModelFixture, Schedule_Day)
   EXPECT_EQ(2u, daySchedule.times().size());
   EXPECT_EQ(2u, daySchedule.values().size());
   // 31 seconds becomes 1 minute
-  EXPECT_EQ(Time(0,0,1),daySchedule.times().front());
-  EXPECT_EQ(Time(0,24,0),daySchedule.times().back());
+  EXPECT_EQ(Time(0, 0, 1), daySchedule.times().front());
+  EXPECT_EQ(Time(0, 24, 0), daySchedule.times().back());
 }
 
-TEST_F(ModelFixture, Schedule_Day_Interp)
-{
+TEST_F(ModelFixture, Schedule_Day_Interp) {
   Model model;
 
   double tol = 1e-5;
@@ -228,9 +225,7 @@ TEST_F(ModelFixture, Schedule_Day_Interp)
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 25, 0)), tol);
 }
 
-
-TEST_F(ModelFixture, Schedule_Day_Remove)
-{
+TEST_F(ModelFixture, Schedule_Day_Remove) {
   Model model;
 
   ScheduleDay daySchedule(model);
@@ -308,11 +303,9 @@ TEST_F(ModelFixture, Schedule_Day_Remove)
   ASSERT_EQ(1u, values.size());
   EXPECT_EQ(1.0, times[0].totalDays());
   EXPECT_EQ(2.0, values[0]);
-
 }
 
-TEST_F(ModelFixture, Schedule_Day_Clone)
-{
+TEST_F(ModelFixture, Schedule_Day_Clone) {
   Model model;
 
   ScheduleTypeLimits limits(model);
@@ -337,13 +330,12 @@ TEST_F(ModelFixture, Schedule_Day_Clone)
 }
 
 // Test that addValue (which doesn't call IdfObject::setDouble...) will not affect NaNs/Infinity
-TEST_F(ModelFixture, Schedule_Day_addValue_NaN_Infinity)
-{
+TEST_F(ModelFixture, Schedule_Day_addValue_NaN_Infinity) {
   Model model;
 
   ScheduleDay sch_day(model);
 
-  Time t(0,6,0,0);
+  Time t(0, 6, 0, 0);
   EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::quiet_NaN()));
   EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::infinity()));
   EXPECT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
@@ -352,5 +344,3 @@ TEST_F(ModelFixture, Schedule_Day_addValue_NaN_Infinity)
   EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::infinity()));
   EXPECT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
 }
-
-

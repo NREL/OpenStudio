@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,68 +36,55 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  PlantEquipmentOperationHeatingLoad_Impl::PlantEquipmentOperationHeatingLoad_Impl(const IdfObject& idfObject,
-                                                                                   Model_Impl* model,
-                                                                                   bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationHeatingLoad::iddObjectType());
+    PlantEquipmentOperationHeatingLoad_Impl::PlantEquipmentOperationHeatingLoad_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationHeatingLoad::iddObjectType());
+    }
+
+    PlantEquipmentOperationHeatingLoad_Impl::PlantEquipmentOperationHeatingLoad_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                     Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationHeatingLoad::iddObjectType());
+    }
+
+    PlantEquipmentOperationHeatingLoad_Impl::PlantEquipmentOperationHeatingLoad_Impl(const PlantEquipmentOperationHeatingLoad_Impl& other,
+                                                                                     Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& PlantEquipmentOperationHeatingLoad_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType PlantEquipmentOperationHeatingLoad_Impl::iddObjectType() const {
+      return PlantEquipmentOperationHeatingLoad::iddObjectType();
+    }
+
+    double PlantEquipmentOperationHeatingLoad_Impl::maximumUpperLimit() const {
+      return 1E9;
+    }
+
+    double PlantEquipmentOperationHeatingLoad_Impl::minimumLowerLimit() const {
+      return 0.0;
+    }
+
+  }  // namespace detail
+
+  PlantEquipmentOperationHeatingLoad::PlantEquipmentOperationHeatingLoad(const Model& model)
+    : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationHeatingLoad::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::PlantEquipmentOperationHeatingLoad_Impl>());
   }
 
-  PlantEquipmentOperationHeatingLoad_Impl::PlantEquipmentOperationHeatingLoad_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                   Model_Impl* model,
-                                                                                   bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationHeatingLoad::iddObjectType());
+  IddObjectType PlantEquipmentOperationHeatingLoad::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_HeatingLoad);
   }
 
-  PlantEquipmentOperationHeatingLoad_Impl::PlantEquipmentOperationHeatingLoad_Impl(const PlantEquipmentOperationHeatingLoad_Impl& other,
-                                                                                   Model_Impl* model,
-                                                                                   bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {}
+  /// @cond
+  PlantEquipmentOperationHeatingLoad::PlantEquipmentOperationHeatingLoad(std::shared_ptr<detail::PlantEquipmentOperationHeatingLoad_Impl> impl)
+    : PlantEquipmentOperationRangeBasedScheme(std::move(impl)) {}
+  /// @endcond
 
-  const std::vector<std::string>& PlantEquipmentOperationHeatingLoad_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType PlantEquipmentOperationHeatingLoad_Impl::iddObjectType() const {
-    return PlantEquipmentOperationHeatingLoad::iddObjectType();
-  }
-
-  double PlantEquipmentOperationHeatingLoad_Impl::maximumUpperLimit() const
-  {
-    return 1E9;
-  }
-
-  double PlantEquipmentOperationHeatingLoad_Impl::minimumLowerLimit() const
-  {
-    return 0.0;
-  }
-
-} // detail
-
-PlantEquipmentOperationHeatingLoad::PlantEquipmentOperationHeatingLoad(const Model& model)
-  : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationHeatingLoad::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::PlantEquipmentOperationHeatingLoad_Impl>());
-}
-
-IddObjectType PlantEquipmentOperationHeatingLoad::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_HeatingLoad);
-}
-
-/// @cond
-PlantEquipmentOperationHeatingLoad::PlantEquipmentOperationHeatingLoad(std::shared_ptr<detail::PlantEquipmentOperationHeatingLoad_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,14 +40,15 @@ namespace openstudio {
  *  arithmetic operations. The constructors and assignment operator ensure that this class
  *  behaves as "plain old data" (POD) by cloning any units information (to avoid multiple objects
  *  pointing to the exact same unit data). */
-class UTILITIES_API Quantity {
+class UTILITIES_API Quantity
+{
  public:
   /** @name Constructors */
   //@{
 
-  explicit Quantity(const UnitSystem& system=UnitSystem::Mixed);
+  explicit Quantity(const UnitSystem& system = UnitSystem::Mixed);
 
-  explicit Quantity(double value, const UnitSystem& system=UnitSystem::Mixed);
+  explicit Quantity(double value, const UnitSystem& system = UnitSystem::Mixed);
 
   Quantity(double value, const Unit& units);
 
@@ -55,7 +56,7 @@ class UTILITIES_API Quantity {
 
   Quantity& operator=(const Quantity& q);
 
-  virtual ~Quantity() {};
+  virtual ~Quantity(){};
 
   //@}
   /** @name Value */
@@ -91,11 +92,11 @@ class UTILITIES_API Quantity {
 
   /** Units in string form. LaTeX mathematical formatting--_ for subscripting, ^ for
    *  superscripting. Curly braces {} are used for grouping. \sa Unit::standardUnitsString */
-  std::string standardUnitsString(bool withScale=true) const;
+  std::string standardUnitsString(bool withScale = true) const;
 
   /** Pretty string for this quantity's units. For instance N = kg*m/s^2.
    *  \sa Unit::prettyUnitsString */
-  std::string prettyUnitsString(bool withScale=true) const;
+  std::string prettyUnitsString(bool withScale = true) const;
 
   /** Sets the prettystring for this Quantity's m_units. openstudio::Unit attempts to keep up
    *  with prettyStrings, but makes no promises. Precondition: isCompoundUnit(str). Otherwise
@@ -170,11 +171,11 @@ class UTILITIES_API Quantity {
    *  for all baseUnit and scale exponents. Returned scale exponent may differ from expectation
    *  based on initialization of openstudio::ScaleFactory, see Scale operators declared in
    *  ScaleFactory.hpp.  */
-  Quantity& pow(int expNum,int expDenom=1);
+  Quantity& pow(int expNum, int expDenom = 1);
 
   //@}
 
-  friend UTILITIES_API std::ostream& operator<<(std::ostream& os,const Quantity& q);
+  friend UTILITIES_API std::ostream& operator<<(std::ostream& os, const Quantity& q);
 
  protected:
   double m_value;
@@ -185,7 +186,7 @@ class UTILITIES_API Quantity {
 };
 
 /** \relates Quantity */
-UTILITIES_API std::ostream& operator<<(std::ostream& os,const Quantity& q);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Quantity& q);
 
 /** \relates Quantity */
 typedef boost::optional<Quantity> OptionalQuantity;
@@ -196,32 +197,31 @@ typedef std::vector<Quantity> QuantityVector;
 /** Negate a Quantity. */
 UTILITIES_API Quantity operator-(const Quantity& rQuantity);
 /** Add Quantities. Used with base class Quantities and mixed Quantity types. */
-UTILITIES_API Quantity operator+(const Quantity& lQuantity,const Quantity& rQuantity);
+UTILITIES_API Quantity operator+(const Quantity& lQuantity, const Quantity& rQuantity);
 /** Subtract Quantities. Used with base class Quantities and mixed Quantity types. */
-UTILITIES_API Quantity operator-(const Quantity& lQuantity,const Quantity& rQuantity);
+UTILITIES_API Quantity operator-(const Quantity& lQuantity, const Quantity& rQuantity);
 /** Multiply Quantities. Used with base class Quantities and mixed Quantity types. */
-UTILITIES_API Quantity operator*(const Quantity& lQuantity,const Quantity& rQuantity);
+UTILITIES_API Quantity operator*(const Quantity& lQuantity, const Quantity& rQuantity);
 /** Divide Quantities. Used with base class Quantities and mixed Quantity types. */
-UTILITIES_API Quantity operator/(const Quantity& lQuantity,const Quantity& rQuantity);
+UTILITIES_API Quantity operator/(const Quantity& lQuantity, const Quantity& rQuantity);
 
 /** Raise rQuantity to a rational power. Throws openstudio::Exception if the scale exponent or
  *  any base unit exponent is not cleanly divisible by expDenom. */
-UTILITIES_API Quantity pow(const Quantity& rQuantity,int expNum,int expDenom=1);
+UTILITIES_API Quantity pow(const Quantity& rQuantity, int expNum, int expDenom = 1);
 
 /** Multiply a Quantity by a double. */
-UTILITIES_API Quantity operator*(const Quantity& lQuantity,double d);
+UTILITIES_API Quantity operator*(const Quantity& lQuantity, double d);
 /** Multiply a Quantity by a double. */
-UTILITIES_API Quantity operator*(double d,const Quantity& rQuantity);
+UTILITIES_API Quantity operator*(double d, const Quantity& rQuantity);
 /** Divide a Quantity by a double. */
-UTILITIES_API Quantity operator/(const Quantity& lQuantity,double d);
+UTILITIES_API Quantity operator/(const Quantity& lQuantity, double d);
 /** Divide a double by a Quantity. */
-UTILITIES_API Quantity operator/(double d,const Quantity& rQuantity);
+UTILITIES_API Quantity operator/(double d, const Quantity& rQuantity);
 
-UTILITIES_API bool operator==(const Quantity& lQuantity,const Quantity& rQuantity);
+UTILITIES_API bool operator==(const Quantity& lQuantity, const Quantity& rQuantity);
 
-UTILITIES_API bool operator!=(const Quantity& lQuantity,const Quantity& rQuantity);
+UTILITIES_API bool operator!=(const Quantity& lQuantity, const Quantity& rQuantity);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_QUANTITY_HPP
-
+#endif  // UTILITIES_UNITS_QUANTITY_HPP

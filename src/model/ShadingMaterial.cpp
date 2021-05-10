@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,37 +35,26 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ShadingMaterial_Impl::ShadingMaterial_Impl(const IdfObject& idfObject,Model_Impl* model, bool keepHandle)
-    : FenestrationMaterial_Impl(idfObject, model, keepHandle)
-  {}
+    ShadingMaterial_Impl::ShadingMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : FenestrationMaterial_Impl(idfObject, model, keepHandle) {}
 
-  ShadingMaterial_Impl::ShadingMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : FenestrationMaterial_Impl(other, model, keepHandle)
-  {}
+    ShadingMaterial_Impl::ShadingMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : FenestrationMaterial_Impl(other, model, keepHandle) {}
 
-  ShadingMaterial_Impl::ShadingMaterial_Impl(const ShadingMaterial_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : FenestrationMaterial_Impl(other, model, keepHandle)
-  {}
+    ShadingMaterial_Impl::ShadingMaterial_Impl(const ShadingMaterial_Impl& other, Model_Impl* model, bool keepHandle)
+      : FenestrationMaterial_Impl(other, model, keepHandle) {}
 
-} // detail
+  }  // namespace detail
 
-ShadingMaterial::ShadingMaterial(IddObjectType type,const Model& model)
-  : FenestrationMaterial(type,model)
-{
-  OS_ASSERT(getImpl<detail::ShadingMaterial_Impl>());
-}
+  ShadingMaterial::ShadingMaterial(IddObjectType type, const Model& model) : FenestrationMaterial(type, model) {
+    OS_ASSERT(getImpl<detail::ShadingMaterial_Impl>());
+  }
 
-/// @cond
-ShadingMaterial::ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl)
-  : FenestrationMaterial(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  ShadingMaterial::ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl) : FenestrationMaterial(std::move(impl)) {}
+  /// @endcond
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

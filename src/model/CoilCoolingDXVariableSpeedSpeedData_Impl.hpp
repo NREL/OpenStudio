@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,116 +36,110 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilCoolingDXVariableSpeedSpeedData_Impl is a ParentObject_Impl that is the implementation class for CoilCoolingDXVariableSpeedSpeedData.*/
-  class MODEL_API CoilCoolingDXVariableSpeedSpeedData_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilCoolingDXVariableSpeedSpeedData_Impl is a ParentObject_Impl that is the implementation class for CoilCoolingDXVariableSpeedSpeedData.*/
+    class MODEL_API CoilCoolingDXVariableSpeedSpeedData_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingDXVariableSpeedSpeedData_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      CoilCoolingDXVariableSpeedSpeedData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXVariableSpeedSpeedData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      CoilCoolingDXVariableSpeedSpeedData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXVariableSpeedSpeedData_Impl(const CoilCoolingDXVariableSpeedSpeedData_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      CoilCoolingDXVariableSpeedSpeedData_Impl(const CoilCoolingDXVariableSpeedSpeedData_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingDXVariableSpeedSpeedData_Impl() {}
+      virtual ~CoilCoolingDXVariableSpeedSpeedData_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double referenceUnitGrossRatedTotalCoolingCapacity() const;
+      double referenceUnitGrossRatedTotalCoolingCapacity() const;
 
-    double referenceUnitGrossRatedSensibleHeatRatio() const;
+      double referenceUnitGrossRatedSensibleHeatRatio() const;
 
-    double referenceUnitGrossRatedCoolingCOP() const;
+      double referenceUnitGrossRatedCoolingCOP() const;
 
-    double referenceUnitRatedAirFlowRate() const;
+      double referenceUnitRatedAirFlowRate() const;
 
-    boost::optional<double> referenceUnitRatedCondenserAirFlowRate() const;
+      boost::optional<double> referenceUnitRatedCondenserAirFlowRate() const;
 
-    boost::optional<double> referenceUnitRatedPadEffectivenessofEvapPrecooling() const;
+      boost::optional<double> referenceUnitRatedPadEffectivenessofEvapPrecooling() const;
 
-    Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
+      Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
-    Curve totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
+      Curve totalCoolingCapacityFunctionofAirFlowFractionCurve() const;
 
-    Curve energyInputRatioFunctionofTemperatureCurve() const;
+      Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-    Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
+      Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setReferenceUnitGrossRatedTotalCoolingCapacity(double referenceUnitGrossRatedTotalCoolingCapacity);
+      bool setReferenceUnitGrossRatedTotalCoolingCapacity(double referenceUnitGrossRatedTotalCoolingCapacity);
 
-    bool setReferenceUnitGrossRatedSensibleHeatRatio(double referenceUnitGrossRatedSensibleHeatRatio);
+      bool setReferenceUnitGrossRatedSensibleHeatRatio(double referenceUnitGrossRatedSensibleHeatRatio);
 
-    bool setReferenceUnitGrossRatedCoolingCOP(double referenceUnitGrossRatedCoolingCOP);
+      bool setReferenceUnitGrossRatedCoolingCOP(double referenceUnitGrossRatedCoolingCOP);
 
-    bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
+      bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
 
-    bool setReferenceUnitRatedCondenserAirFlowRate(boost::optional<double> referenceUnitRatedCondenserAirFlowRate);
+      bool setReferenceUnitRatedCondenserAirFlowRate(boost::optional<double> referenceUnitRatedCondenserAirFlowRate);
 
-    void resetReferenceUnitRatedCondenserAirFlowRate();
+      void resetReferenceUnitRatedCondenserAirFlowRate();
 
-    bool setReferenceUnitRatedPadEffectivenessofEvapPrecooling(boost::optional<double> referenceUnitRatedPadEffectivenessofEvapPrecooling);
+      bool setReferenceUnitRatedPadEffectivenessofEvapPrecooling(boost::optional<double> referenceUnitRatedPadEffectivenessofEvapPrecooling);
 
-    void resetReferenceUnitRatedPadEffectivenessofEvapPrecooling();
+      void resetReferenceUnitRatedPadEffectivenessofEvapPrecooling();
 
-    bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
+      bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
+      bool setTotalCoolingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
+      bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
+      bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableSpeedSpeedData");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableSpeedSpeedData");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Curve> optionalTotalCoolingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Curve> optionalTotalCoolingCapacityFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalTotalCoolingCapacityFunctionofAirFlowFractionCurve() const;
+      boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDXVARIABLESPEEDSPEEDDATA_IMPL_HPP
-
+#endif  // MODEL_COILCOOLINGDXVARIABLESPEEDSPEEDDATA_IMPL_HPP

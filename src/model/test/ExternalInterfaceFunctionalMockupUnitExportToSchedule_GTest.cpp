@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,7 +75,6 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitExportToSchedule2) {
   EXPECT_EQ(test.get(), schedule2.nameString());
   schedule2.setName("External Interface Schedule 3");
   EXPECT_EQ("External Interface Schedule 3", schedule2.nameString());
-
 
   ScheduleTypeLimits stl(model);
   EXPECT_TRUE(schedule.setScheduleTypeLimits(stl));

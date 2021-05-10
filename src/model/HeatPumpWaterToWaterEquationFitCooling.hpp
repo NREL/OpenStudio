@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,176 +33,171 @@
 #include "ModelAPI.hpp"
 #include "WaterToWaterComponent.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
 
-class HeatPumpWaterToWaterEquationFitHeating;
+  class HeatPumpWaterToWaterEquationFitHeating;
+  class CurveQuadLinear;
 
-namespace detail {
+  namespace detail {
 
-  class HeatPumpWaterToWaterEquationFitCooling_Impl;
+    class HeatPumpWaterToWaterEquationFitCooling_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** HeatPumpWaterToWaterEquationFitCooling is a WaterToWaterComponent that wraps the OpenStudio IDD object 'OS:HeatPump:WaterToWater:EquationFit:Cooling'. */
-class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** HeatPumpWaterToWaterEquationFitCooling is a WaterToWaterComponent that wraps the OpenStudio IDD object 'OS:HeatPump:WaterToWater:EquationFit:Cooling'. */
+  class MODEL_API HeatPumpWaterToWaterEquationFitCooling : public WaterToWaterComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model);
+    explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model, const CurveQuadLinear& coolingCapacityCurve,
+                                                    const CurveQuadLinear& coolingCompressorPowerCurve);
 
-  virtual ~HeatPumpWaterToWaterEquationFitCooling() {}
+    explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model);
 
-  //@}
+    virtual ~HeatPumpWaterToWaterEquationFitCooling() {}
 
-  static IddObjectType iddObjectType();
+    //@}
 
-  /** @name Getters */
-  //@{
+    static IddObjectType iddObjectType();
 
-  boost::optional<double> referenceLoadSideFlowRate() const;
+    /** @name Getters */
+    //@{
 
-  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
-  double ratedLoadSideFlowRate() const;
+    boost::optional<double> referenceLoadSideFlowRate() const;
 
-  bool isReferenceLoadSideFlowRateAutosized() const;
+    /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
+    double ratedLoadSideFlowRate() const;
 
-  boost::optional<double> referenceSourceSideFlowRate() const;
+    bool isReferenceLoadSideFlowRateAutosized() const;
 
-  /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
-  double ratedSourceSideFlowRate() const;
+    boost::optional<double> referenceSourceSideFlowRate() const;
 
-  bool isReferenceSourceSideFlowRateAutosized() const;
+    /** Prior to EnergyPlus 8.7.0 this field was not autosizeable. To preserve backwards compatibility this method will return -999.0 in autosized models.**/
+    double ratedSourceSideFlowRate() const;
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
-  boost::optional<double> ratedCoolingCapacity() const;
+    bool isReferenceSourceSideFlowRateAutosized() const;
 
-  bool isRatedCoolingCapacityAutosized() const;
+    /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
+    boost::optional<double> ratedCoolingCapacity() const;
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
-  boost::optional<double> ratedCoolingPowerConsumption() const;
+    bool isRatedCoolingCapacityAutosized() const;
 
-  bool isRatedCoolingPowerConsumptionAutosized() const;
+    /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
+    boost::optional<double> ratedCoolingPowerConsumption() const;
 
-  double coolingCapacityCoefficient1() const;
+    bool isRatedCoolingPowerConsumptionAutosized() const;
 
-  double coolingCapacityCoefficient2() const;
+    CurveQuadLinear coolingCapacityCurve() const;
+    OS_DEPRECATED double coolingCapacityCoefficient1() const;
+    OS_DEPRECATED double coolingCapacityCoefficient2() const;
+    OS_DEPRECATED double coolingCapacityCoefficient3() const;
+    OS_DEPRECATED double coolingCapacityCoefficient4() const;
+    OS_DEPRECATED double coolingCapacityCoefficient5() const;
 
-  double coolingCapacityCoefficient3() const;
+    CurveQuadLinear coolingCompressorPowerCurve() const;
+    OS_DEPRECATED double coolingCompressorPowerCoefficient1() const;
+    OS_DEPRECATED double coolingCompressorPowerCoefficient2() const;
+    OS_DEPRECATED double coolingCompressorPowerCoefficient3() const;
+    OS_DEPRECATED double coolingCompressorPowerCoefficient4() const;
+    OS_DEPRECATED double coolingCompressorPowerCoefficient5() const;
 
-  double coolingCapacityCoefficient4() const;
+    double referenceCoefficientofPerformance() const;
 
-  double coolingCapacityCoefficient5() const;
+    double sizingFactor() const;
 
-  double coolingCompressorPowerCoefficient1() const;
+    boost::optional<HeatPumpWaterToWaterEquationFitHeating> companionHeatingHeatPump() const;
 
-  double coolingCompressorPowerCoefficient2() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  double coolingCompressorPowerCoefficient3() const;
+    bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
 
-  double coolingCompressorPowerCoefficient4() const;
+    /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
+    bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
 
-  double coolingCompressorPowerCoefficient5() const;
+    void autosizeReferenceLoadSideFlowRate();
 
-  double referenceCoefficientofPerformance() const;
+    bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
 
-  double sizingFactor() const;
+    /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
+    bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
 
-  boost::optional<HeatPumpWaterToWaterEquationFitHeating> companionHeatingHeatPump() const;
+    void autosizeReferenceSourceSideFlowRate();
 
-  //@}
-  /** @name Setters */
-  //@{
+    /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
+    bool setRatedCoolingCapacity(double ratedCoolingCapacity);
 
-  bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+    void autosizeRatedCoolingCapacity();
 
-  /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
-  bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
+    /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
+    bool setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption);
 
-  void autosizeReferenceLoadSideFlowRate();
+    void autosizeRatedCoolingPowerConsumption();
 
-  bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
+    bool setCoolingCapacityCurve(const CurveQuadLinear& coolingCapacityCurve);
 
-  /** Synonym of setReferenceLoadSideFlowRate for backwards compatibility **/
-  bool setRatedSourceSideFlowRate(double ratedSourceSideFlowRate);
+    OS_DEPRECATED bool setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);
+    OS_DEPRECATED bool setCoolingCapacityCoefficient2(double coolingCapacityCoefficient2);
+    OS_DEPRECATED bool setCoolingCapacityCoefficient3(double coolingCapacityCoefficient3);
+    OS_DEPRECATED bool setCoolingCapacityCoefficient4(double coolingCapacityCoefficient4);
+    OS_DEPRECATED bool setCoolingCapacityCoefficient5(double coolingCapacityCoefficient5);
 
-  void autosizeReferenceSourceSideFlowRate();
+    bool setCoolingCompressorPowerCurve(const CurveQuadLinear& coolingCompressorPowerCurve);
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Capacity" **/
-  bool setRatedCoolingCapacity(double ratedCoolingCapacity);
+    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1);
+    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2);
+    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3);
+    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4);
+    OS_DEPRECATED bool setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5);
 
-  void autosizeRatedCoolingCapacity();
+    bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Reference Cooling Power Consumption" **/
-  bool setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption);
+    bool setSizingFactor(double sizingFactor);
 
-  void autosizeRatedCoolingPowerConsumption();
+    bool setCompanionHeatingHeatPump(const HeatPumpWaterToWaterEquationFitHeating& companionHP);
 
-  bool setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);
+    //@}
+    /** @name Other */
+    //@{
 
-  bool setCoolingCapacityCoefficient2(double coolingCapacityCoefficient2);
+    boost::optional<double> autosizedReferenceLoadSideFlowRate() const;
 
-  bool setCoolingCapacityCoefficient3(double coolingCapacityCoefficient3);
+    boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
 
-  bool setCoolingCapacityCoefficient4(double coolingCapacityCoefficient4);
+    boost::optional<double> autosizedRatedCoolingCapacity() const;
 
-  bool setCoolingCapacityCoefficient5(double coolingCapacityCoefficient5);
+    boost::optional<double> autosizedRatedCoolingPowerConsumption() const;
 
-  bool setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::HeatPumpWaterToWaterEquationFitCooling_Impl ImplType;
 
-  bool setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2);
+    explicit HeatPumpWaterToWaterEquationFitCooling(std::shared_ptr<detail::HeatPumpWaterToWaterEquationFitCooling_Impl> impl);
 
-  bool setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3);
+    friend class detail::HeatPumpWaterToWaterEquationFitCooling_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.HeatPumpWaterToWaterEquationFitCooling");
+  };
 
-  bool setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4);
+  /** \relates HeatPumpWaterToWaterEquationFitCooling*/
+  typedef boost::optional<HeatPumpWaterToWaterEquationFitCooling> OptionalHeatPumpWaterToWaterEquationFitCooling;
 
-  bool setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5);
+  /** \relates HeatPumpWaterToWaterEquationFitCooling*/
+  typedef std::vector<HeatPumpWaterToWaterEquationFitCooling> HeatPumpWaterToWaterEquationFitCoolingVector;
 
-  bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
+}  // namespace model
+}  // namespace openstudio
 
-  bool setSizingFactor(double sizingFactor);
-
-  bool setCompanionHeatingHeatPump(const HeatPumpWaterToWaterEquationFitHeating& companionHP);
-
-  //@}
-  /** @name Other */
-  //@{
-
-  boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
-
-  boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
-
-  boost::optional<double> autosizedRatedCoolingCapacity() const ;
-
-  boost::optional<double> autosizedRatedCoolingPowerConsumption() const ;
-
-
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::HeatPumpWaterToWaterEquationFitCooling_Impl ImplType;
-
-  explicit HeatPumpWaterToWaterEquationFitCooling(std::shared_ptr<detail::HeatPumpWaterToWaterEquationFitCooling_Impl> impl);
-
-  friend class detail::HeatPumpWaterToWaterEquationFitCooling_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.HeatPumpWaterToWaterEquationFitCooling");
-};
-
-/** \relates HeatPumpWaterToWaterEquationFitCooling*/
-typedef boost::optional<HeatPumpWaterToWaterEquationFitCooling> OptionalHeatPumpWaterToWaterEquationFitCooling;
-
-/** \relates HeatPumpWaterToWaterEquationFitCooling*/
-typedef std::vector<HeatPumpWaterToWaterEquationFitCooling> HeatPumpWaterToWaterEquationFitCoolingVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_HEATPUMPWATERTOWATEREQUATIONFITCOOLING_HPP
+#endif  // MODEL_HEATPUMPWATERTOWATEREQUATIONFITCOOLING_HPP

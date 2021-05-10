@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,7 +41,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-CoilCoolingDXMultiSpeedStageData makeStage(Model & model) {
+CoilCoolingDXMultiSpeedStageData makeStage(Model& model) {
   CurveBiquadratic cooling_curve_1(model);
   cooling_curve_1.setCoefficient1Constant(0.766956);
   cooling_curve_1.setCoefficient2x(0.0107756);
@@ -99,33 +99,25 @@ CoilCoolingDXMultiSpeedStageData makeStage(Model & model) {
   cooling_curve_6.setMinimumValueofy(0.0);
   cooling_curve_6.setMaximumValueofy(0.0);
 
-  CoilCoolingDXMultiSpeedStageData stage(model,
-    cooling_curve_1,
-    cooling_curve_2,
-    cooling_curve_3,
-    cooling_curve_4,
-    cooling_curve_5,
-    cooling_curve_6);
+  CoilCoolingDXMultiSpeedStageData stage(model, cooling_curve_1, cooling_curve_2, cooling_curve_3, cooling_curve_4, cooling_curve_5, cooling_curve_6);
 
   return stage;
 }
 
-TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_DefaultConstructors)
-{
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CoilCoolingDXMultiSpeed coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingDXMultiSpeed coil(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages)
-{
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API) {
   Model m;
   CoilCoolingDXMultiSpeed coil(m);
 
@@ -135,7 +127,7 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages)
   auto stage2 = makeStage(m);
   coil.addStage(stage2);
 
-  ASSERT_EQ(2u,coil.stages().size());
+  ASSERT_EQ(2u, coil.stages().size());
 
   // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
   // IDD Default
@@ -143,4 +135,125 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages)
   // There are no IDD limits, so everything should work
   EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
   EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+}
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages) {
+  Model model;
+  CoilCoolingDXMultiSpeed dx(model);
+
+  std::vector<CoilCoolingDXMultiSpeedStageData> stages;
+  for (unsigned i = 1; i <= 4; ++i) {
+    CoilCoolingDXMultiSpeedStageData stage(model);
+    stage.setName("Stage " + std::to_string(i));
+    stages.push_back(stage);
+    EXPECT_TRUE(dx.addStage(stage));
+    EXPECT_EQ(i, dx.numberOfStages());
+    EXPECT_EQ(stages, dx.stages());
+  }
+
+  // Can't add more than 4 Stages;
+  CoilCoolingDXMultiSpeedStageData anotherStage(model);
+  EXPECT_FALSE(dx.addStage(anotherStage));
+  EXPECT_EQ(4, dx.numberOfStages());
+  EXPECT_EQ(stages, dx.stages());
+
+  // Can't remove a stage that's not in there...
+  EXPECT_FALSE(dx.removeStage(anotherStage));
+  EXPECT_EQ(4, dx.numberOfStages());
+  EXPECT_EQ(stages, dx.stages());
+
+  {
+    int stageIndex = 3;
+    std::vector<CoilCoolingDXMultiSpeedStageData> thisStages = dx.stages();
+    const auto& stageAtIndex = thisStages[stageIndex - 1];
+    EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
+    auto optIndex = dx.stageIndex(stageAtIndex);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(stageIndex, optIndex.get());
+    EXPECT_TRUE(dx.removeStage(stageIndex));
+    EXPECT_EQ(3, dx.numberOfStages());
+    thisStages = dx.stages();
+    EXPECT_FALSE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
+    // Do the same on our vector, so we're up to date...
+    stages.erase(stages.begin() + stageIndex - 1);
+    EXPECT_EQ(stages, dx.stages());
+  }
+
+  {
+    int stageIndex = 2;
+    std::vector<CoilCoolingDXMultiSpeedStageData> thisStages = dx.stages();
+    const auto& stageAtIndex = thisStages[stageIndex - 1];
+    EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
+    auto optIndex = dx.stageIndex(stageAtIndex);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(stageIndex, optIndex.get());
+    EXPECT_TRUE(dx.removeStage(stageAtIndex));
+    EXPECT_EQ(2, dx.numberOfStages());
+    thisStages = dx.stages();
+    EXPECT_FALSE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
+    // Do the same on our vector, so we're up to date...
+    stages.erase(std::find(stages.begin(), stages.end(), stageAtIndex));
+    EXPECT_EQ(stages, dx.stages());
+  }
+
+  dx.removeAllStages();
+  EXPECT_EQ(0, dx.numberOfStages());
+
+  EXPECT_TRUE(dx.setStages(stages));
+  EXPECT_EQ(2, dx.numberOfStages());
+  EXPECT_EQ(stages, dx.stages());
+
+  for (unsigned i = 5; i <= 7; ++i) {
+    CoilCoolingDXMultiSpeedStageData stage(model);
+    dx.setName("Stage " + std::to_string(i));
+    stages.push_back(stage);
+  }
+  EXPECT_EQ(5u, stages.size());
+  dx.removeAllStages();
+  EXPECT_TRUE(dx.addStage(anotherStage));
+
+  // This should clear, then assign the first 4, but then return false since the 5th failed
+  EXPECT_FALSE(dx.setStages(stages));
+  EXPECT_EQ(4, dx.numberOfStages());
+  {
+    std::vector<CoilCoolingDXMultiSpeedStageData> thisStages = dx.stages();
+    for (unsigned i = 0; i < 4; ++i) {
+      EXPECT_EQ(stages[i], thisStages[i]);
+    }
+  }
+  stages.pop_back();
+  EXPECT_EQ(4u, stages.size());
+
+  {
+    const auto& stageAtEnd = stages.back();
+    auto optIndex = dx.stageIndex(stageAtEnd);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(dx.numberOfStages(), optIndex.get());
+
+    EXPECT_TRUE(dx.setStageIndex(stageAtEnd, 2));
+    std::vector<CoilCoolingDXMultiSpeedStageData> thisStages = dx.stages();
+    optIndex = dx.stageIndex(stageAtEnd);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(2, optIndex.get());
+    EXPECT_EQ(4, dx.numberOfStages());
+    for (unsigned i = 1; i <= dx.numberOfStages(); ++i) {
+      if (i < optIndex.get()) {
+        EXPECT_EQ(stages[i - 1], dx.stages()[i - 1]);
+      } else if (i > optIndex.get()) {
+        EXPECT_EQ(stages[i - 2], dx.stages()[i - 1]);
+      }
+    }
+  }
+
+  dx.removeAllStages();
+  EXPECT_EQ(0u, dx.numExtensibleGroups());
+  EXPECT_EQ(0u, dx.numberOfStages());
+  EXPECT_EQ(0u, dx.stages().size());
+
+  // Test that added a stage from another model will fail but not add a blank extensible group
+  Model model2;
+  CoilCoolingDXMultiSpeedStageData stageFromAnotherModel(model2);
+  EXPECT_FALSE(dx.addStage(stageFromAnotherModel));
+  EXPECT_EQ(0u, dx.numExtensibleGroups());
+  EXPECT_EQ(0u, dx.numberOfStages());
+  EXPECT_EQ(0u, dx.stages().size());
 }

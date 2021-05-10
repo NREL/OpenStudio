@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,43 +38,29 @@
 namespace openstudio {
 
 DataError::DataError(unsigned fieldIndex, const IdfObject& object, DataErrorType errorType)
-  : m_scope(Scope::Field),
-    m_type(errorType),
-    m_fieldIndex(fieldIndex),
-    m_objectHandle(object.handle()),
-    m_objectType(object.iddObject().type())
-{
+  : m_scope(Scope::Field), m_type(errorType), m_fieldIndex(fieldIndex), m_objectHandle(object.handle()), m_objectType(object.iddObject().type()) {
   // construct field-level error
   OptionalString oName = object.name();
-  if (oName) { m_objectName = *oName; }
+  if (oName) {
+    m_objectName = *oName;
+  }
 }
 
 DataError::DataError(const IdfObject& object, DataErrorType errorType)
-  : m_scope(Scope::Object),
-    m_type(errorType),
-    m_fieldIndex(0),
-    m_objectHandle(object.handle()),
-    m_objectType(object.iddObject().type())
-{
+  : m_scope(Scope::Object), m_type(errorType), m_fieldIndex(0), m_objectHandle(object.handle()), m_objectType(object.iddObject().type()) {
   // construct object-level error
   OptionalString oName = object.name();
-  if (oName) { m_objectName = *oName; }
+  if (oName) {
+    m_objectName = *oName;
+  }
 }
 
-DataError::DataError(DataErrorType errorType)
-  : m_scope(Scope::Collection),
-    m_type(errorType),
-    m_fieldIndex(0)
-{
+DataError::DataError(DataErrorType errorType) : m_scope(Scope::Collection), m_type(errorType), m_fieldIndex(0) {
   // construct collection-level error
 }
 
 DataError::DataError(DataErrorType errorType, IddObjectType objectType)
-  : m_scope(Scope::Collection),
-    m_type(errorType),
-    m_fieldIndex(0),
-    m_objectType(objectType)
-{
+  : m_scope(Scope::Collection), m_type(errorType), m_fieldIndex(0), m_objectType(objectType) {
   // construct collection-level error
 }
 
@@ -88,8 +74,7 @@ DataErrorType DataError::type() const {
 
 unsigned DataError::fieldIdentifier() const {
   if (scope() != Scope::Field) {
-    LOG_AND_THROW("There is no field identifier for this DataError, which has scope "
-                  << scope().valueDescription() << ".");
+    LOG_AND_THROW("There is no field identifier for this DataError, which has scope " << scope().valueDescription() << ".");
   }
   return m_fieldIndex;
 }
@@ -107,12 +92,9 @@ boost::optional<IddObjectType> DataError::objectType() const {
 }
 
 bool DataError::operator==(const DataError& otherError) const {
-  return ( (scope() == otherError.scope()) &&
-           (type() == otherError.type()) &&
-           (m_fieldIndex == otherError.m_fieldIndex) &&
-           (objectIdentifier() == otherError.objectIdentifier()) &&
-           (objectName() == otherError.objectName()) &&
-           (objectType() == otherError.objectType()) );
+  return ((scope() == otherError.scope()) && (type() == otherError.type()) && (m_fieldIndex == otherError.m_fieldIndex)
+          && (objectIdentifier() == otherError.objectIdentifier()) && (objectName() == otherError.objectName())
+          && (objectType() == otherError.objectType()));
 }
 
 bool DataError::operator!=(const DataError& otherError) const {
@@ -131,8 +113,8 @@ bool DataErrorLess::operator()(const DataError& left, const DataError& right) co
   }
   // if object-level name conflict, order by name, then type
   if ((left.scope() == Scope::Object) && (left.type() == DataErrorType::NameConflict)) {
-    if (!istringEqual(left.objectName(),right.objectName())) {
-      return istringLess(left.objectName(),right.objectName());
+    if (!istringEqual(left.objectName(), right.objectName())) {
+      return istringLess(left.objectName(), right.objectName());
     }
   }
   // if objectType exists, order by that next, since Idd Files are in a
@@ -141,8 +123,8 @@ bool DataErrorLess::operator()(const DataError& left, const DataError& right) co
     return left.objectType().get() < right.objectType().get();
   }
   // now order by objectName in remaining cases
-  if (!istringEqual(left.objectName(),right.objectName())) {
-    return istringLess(left.objectName(),right.objectName());
+  if (!istringEqual(left.objectName(), right.objectName())) {
+    return istringLess(left.objectName(), right.objectName());
   }
   // now by objectHandle (for non-named objects)
   if (left.objectIdentifier() != right.objectIdentifier()) {
@@ -157,33 +139,33 @@ bool DataErrorLess::operator()(const DataError& left, const DataError& right) co
   return false;
 }
 
-std::ostream& operator<<(std::ostream& os,const DataError& error) {
+std::ostream& operator<<(std::ostream& os, const DataError& error) {
 
   os << std::setw(11) << std::left << error.scope().valueName() << "level data error of type ";
-  os << std::setw(18) << std::left << error.type().valueName() << "." << std::endl;
+  os << std::setw(18) << std::left << error.type().valueName() << "." << '\n';
 
   if (error.scope() == Scope::Field) {
     OS_ASSERT(error.objectType());
     os << "Error is in an object of type '" << error.objectType()->valueDescription();
     os << "', named '" << error.objectName() << "', in field " << error.fieldIdentifier() << ".";
-    os << std::endl;
+    os << '\n';
   }
 
   if (error.scope() == Scope::Object) {
     OS_ASSERT(error.objectType());
     os << "Error pertains to an object of type '" << error.objectType()->valueDescription();
-    os << "', named '" << error.objectName() << "'." << std::endl;
+    os << "', named '" << error.objectName() << "'." << '\n';
   }
 
   if ((error.scope() == Scope::Collection) && (error.objectType())) {
     os << "Error pertains to objects of type '" << error.objectType()->valueDescription() << "'.";
-    os << std::endl;
+    os << '\n';
   }
 
   os << "Additional information about the error type: " << error.type().valueDescription() << ".";
-  os << std::endl;
+  os << '\n';
 
   return os;
 }
 
-} // openstudio
+}  // namespace openstudio

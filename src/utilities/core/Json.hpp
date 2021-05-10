@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,6 +60,6 @@ UTILITIES_API bool checkType(const Json::Value& value, const std::string& key, c
 /// check key is present and type is correct, return false if key not found or type is not correct
 UTILITIES_API bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
 
-}
+}  // namespace openstudio
 
-#endif // UTILITIES_CORE_JSON_HPP
+#endif  // UTILITIES_CORE_JSON_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,39 +51,36 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateScheduleCompact( ScheduleCompact & modelObject )
-{
-  IdfObject scheduleCompact = createAndRegisterIdfObject(openstudio::IddObjectType::Schedule_Compact,
-                                                         modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateScheduleCompact(ScheduleCompact& modelObject) {
+    IdfObject scheduleCompact = createAndRegisterIdfObject(openstudio::IddObjectType::Schedule_Compact, modelObject);
 
-  OptionalString os;
-  if ((os = modelObject.name())) {
-    scheduleCompact.setName(*os);
-  }
-
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
-  if (scheduleTypeLimits){
-    boost::optional<IdfObject> idfScheduleTypeLimits = translateAndMapModelObject(*scheduleTypeLimits);
-    if (idfScheduleTypeLimits){
-      scheduleCompact.setString(Schedule_CompactFields::ScheduleTypeLimitsName, idfScheduleTypeLimits->name().get());
+    OptionalString os;
+    if ((os = modelObject.name())) {
+      scheduleCompact.setName(*os);
     }
-  }
 
-  for ( IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    for ( unsigned i = 0; i < eg.numFields(); ++i ) {
-      if( auto value = eg.getString(i) ) {
-        if( istringEqual(value.get(), "Interpolate:Yes") ) {
-          eg.setString(i, "Interpolate:Average");
-        }
+    boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
+    if (scheduleTypeLimits) {
+      boost::optional<IdfObject> idfScheduleTypeLimits = translateAndMapModelObject(*scheduleTypeLimits);
+      if (idfScheduleTypeLimits) {
+        scheduleCompact.setString(Schedule_CompactFields::ScheduleTypeLimitsName, idfScheduleTypeLimits->name().get());
       }
     }
-    scheduleCompact.pushExtensibleGroup(eg.fields());
+
+    for (IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
+      for (unsigned i = 0; i < eg.numFields(); ++i) {
+        if (auto value = eg.getString(i)) {
+          if (istringEqual(value.get(), "Interpolate:Yes")) {
+            eg.setString(i, "Interpolate:Average");
+          }
+        }
+      }
+      scheduleCompact.pushExtensibleGroup(eg.fields());
+    }
+
+    return boost::optional<IdfObject>(scheduleCompact);
   }
 
-  return boost::optional<IdfObject>(scheduleCompact);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,107 +36,107 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class LuminaireDefinition_Impl;
+    class LuminaireDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** LuminaireDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
+  /** LuminaireDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
  *  'OS_Luminaire_Definition'. \sa Luminaire */
-class MODEL_API LuminaireDefinition : public SpaceLoadDefinition {
+  class MODEL_API LuminaireDefinition : public SpaceLoadDefinition
+  {
 
- public:
-  /** @name Constructors and Destructors */
-  //@{
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit LuminaireDefinition(const Model& model);
+    explicit LuminaireDefinition(const Model& model);
 
-  virtual ~LuminaireDefinition() {}
+    virtual ~LuminaireDefinition() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  // TODO: Handle Non-Extensible IddField IES File Path.
+    // TODO: Handle Non-Extensible IddField IES File Path.
 
-  double lightingPower() const;
-  bool isLightingPowerDefaulted() const;
+    double lightingPower() const;
+    bool isLightingPowerDefaulted() const;
 
-  double fractionRadiant() const;
-  bool isFractionRadiantDefaulted() const;
+    double fractionRadiant() const;
+    bool isFractionRadiantDefaulted() const;
 
-  double fractionVisible() const;
-  bool isFractionVisibleDefaulted() const;
+    double fractionVisible() const;
+    bool isFractionVisibleDefaulted() const;
 
-  double returnAirFraction() const;
-  bool isReturnAirFractionDefaulted() const;
+    double returnAirFraction() const;
+    bool isReturnAirFractionDefaulted() const;
 
-  bool returnAirFractionCalculatedfromPlenumTemperature() const;
-  bool isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted() const;
+    bool returnAirFractionCalculatedfromPlenumTemperature() const;
+    bool isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted() const;
 
-  double returnAirFractionFunctionofPlenumTemperatureCoefficient1() const;
-  bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted() const;
+    double returnAirFractionFunctionofPlenumTemperatureCoefficient1() const;
+    bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted() const;
 
-  double returnAirFractionFunctionofPlenumTemperatureCoefficient2() const;
-  bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted() const;
+    double returnAirFractionFunctionofPlenumTemperatureCoefficient2() const;
+    bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // TODO: Handle Non-Extensible IddField IES File Path.
+    // TODO: Handle Non-Extensible IddField IES File Path.
 
-  bool setLightingPower(double lightingPower);
-  void resetLightingPower();
+    bool setLightingPower(double lightingPower);
+    void resetLightingPower();
 
-  bool setFractionRadiant(double fractionRadiant);
-  void resetFractionRadiant();
+    bool setFractionRadiant(double fractionRadiant);
+    void resetFractionRadiant();
 
-  bool setFractionVisible(double fractionVisible);
-  void resetFractionVisible();
+    bool setFractionVisible(double fractionVisible);
+    void resetFractionVisible();
 
-  bool setReturnAirFraction(double returnAirFraction);
-  void resetReturnAirFraction();
+    bool setReturnAirFraction(double returnAirFraction);
+    void resetReturnAirFraction();
 
-  bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
-  void resetReturnAirFractionCalculatedfromPlenumTemperature();
+    bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
+    void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
-  bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(double returnAirFractionFunctionofPlenumTemperatureCoefficient1);
-  void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1();
+    bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(double returnAirFractionFunctionofPlenumTemperatureCoefficient1);
+    void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1();
 
-  bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(double returnAirFractionFunctionofPlenumTemperatureCoefficient2);
-  void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2();
+    bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(double returnAirFractionFunctionofPlenumTemperatureCoefficient2);
+    void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::LuminaireDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::LuminaireDefinition_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit LuminaireDefinition(std::shared_ptr<detail::LuminaireDefinition_Impl> impl);
+    explicit LuminaireDefinition(std::shared_ptr<detail::LuminaireDefinition_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.LuminaireDefinition");
+  };
 
-  REGISTER_LOGGER("openstudio.model.LuminaireDefinition");
-};
+  /** \relates LuminaireDefinition*/
+  typedef boost::optional<LuminaireDefinition> OptionalLuminaireDefinition;
 
-/** \relates LuminaireDefinition*/
-typedef boost::optional<LuminaireDefinition> OptionalLuminaireDefinition;
+  /** \relates LuminaireDefinition*/
+  typedef std::vector<LuminaireDefinition> LuminaireDefinitionVector;
 
-/** \relates LuminaireDefinition*/
-typedef std::vector<LuminaireDefinition> LuminaireDefinitionVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_LUMINAIREDEFINITION_HPP
+#endif  // MODEL_LUMINAIREDEFINITION_HPP

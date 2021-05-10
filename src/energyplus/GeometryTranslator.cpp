@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,8 +86,6 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 
-
-
 using openstudio::IddObjectType;
 using openstudio::GlobalGeometryRulesFields;
 using openstudio::OptionalString;
@@ -103,15 +101,11 @@ namespace openstudio {
 namespace energyplus {
 
   /// test equality of coordinate systems
-  bool equal(const CoordinateSystem& left, const CoordinateSystem& right)
-  {
+  bool equal(const CoordinateSystem& left, const CoordinateSystem& right) {
     bool result = false;
-    switch(left.value()){
+    switch (left.value()) {
       case CoordinateSystem::Absolute:
-        result = (right == CoordinateSystem::Absolute || right == CoordinateSystem::World);
-        break;
-      case CoordinateSystem::World:
-        result = (right == CoordinateSystem::Absolute || right == CoordinateSystem::World);
+        result = (right == CoordinateSystem::Absolute);
         break;
       case CoordinateSystem::Relative:
         result = (right == CoordinateSystem::Relative);
@@ -121,97 +115,91 @@ namespace energyplus {
   }
 
   /// constructor with an EnergyPlus Workspace
-  GeometryTranslator::GeometryTranslator(const openstudio::Workspace& workspace)
-    : m_workspace(workspace)
-  {}
+  GeometryTranslator::GeometryTranslator(const openstudio::Workspace& workspace) : m_workspace(workspace) {}
 
   /// convert workspace to given coordinate systems
   /// all geometry will be converted to upper-left-corner, counterclockwise
   /// all simple geometry will be converted to detailed geometry
-  bool GeometryTranslator::convert(const CoordinateSystem& detailedSystem, const CoordinateSystem& daylightingSystem)
-  {
+  bool GeometryTranslator::convert(const CoordinateSystem& detailedSystem, const CoordinateSystem& daylightingSystem) {
     bool result = true;
 
-    IddObjectTypeVector translatedTypes = {
-      IddObjectType::Building,
-      IddObjectType::Zone,
-      IddObjectType::BuildingSurface_Detailed,
-      IddObjectType::Wall_Detailed,
-      IddObjectType::Wall_Exterior,
-      IddObjectType::Wall_Adiabatic,
-      IddObjectType::Wall_Underground,
-      IddObjectType::Wall_Interzone,
-      IddObjectType::RoofCeiling_Detailed,
-      IddObjectType::Roof,
-      IddObjectType::Ceiling_Adiabatic,
-      IddObjectType::Ceiling_Interzone,
-      IddObjectType::Floor_Detailed,
-      IddObjectType::Floor_GroundContact,
-      IddObjectType::Floor_Adiabatic,
-      IddObjectType::Floor_Interzone,
-      IddObjectType::Shading_Site,
-      IddObjectType::Shading_Site_Detailed,
-      IddObjectType::Shading_Building,
-      IddObjectType::Shading_Building_Detailed,
-      IddObjectType::Shading_Zone_Detailed,
-      IddObjectType::Shading_Overhang,
-      IddObjectType::Shading_Overhang_Projection,
-      IddObjectType::Shading_Fin,
-      IddObjectType::Shading_Fin_Projection,
-      IddObjectType::FenestrationSurface_Detailed,
-      IddObjectType::Window,
-      IddObjectType::Window_Interzone,
-      IddObjectType::Door,
-      IddObjectType::GlazedDoor,
-      IddObjectType::Door_Interzone,
-      IddObjectType::GlazedDoor_Interzone,
-      IddObjectType::Daylighting_Controls,
-      IddObjectType::Daylighting_ReferencePoint,
-      IddObjectType::Output_IlluminanceMap
-    };
+    IddObjectTypeVector translatedTypes = {IddObjectType::Building,
+                                           IddObjectType::Zone,
+                                           IddObjectType::BuildingSurface_Detailed,
+                                           IddObjectType::Wall_Detailed,
+                                           IddObjectType::Wall_Exterior,
+                                           IddObjectType::Wall_Adiabatic,
+                                           IddObjectType::Wall_Underground,
+                                           IddObjectType::Wall_Interzone,
+                                           IddObjectType::RoofCeiling_Detailed,
+                                           IddObjectType::Roof,
+                                           IddObjectType::Ceiling_Adiabatic,
+                                           IddObjectType::Ceiling_Interzone,
+                                           IddObjectType::Floor_Detailed,
+                                           IddObjectType::Floor_GroundContact,
+                                           IddObjectType::Floor_Adiabatic,
+                                           IddObjectType::Floor_Interzone,
+                                           IddObjectType::Shading_Site,
+                                           IddObjectType::Shading_Site_Detailed,
+                                           IddObjectType::Shading_Building,
+                                           IddObjectType::Shading_Building_Detailed,
+                                           IddObjectType::Shading_Zone_Detailed,
+                                           IddObjectType::Shading_Overhang,
+                                           IddObjectType::Shading_Overhang_Projection,
+                                           IddObjectType::Shading_Fin,
+                                           IddObjectType::Shading_Fin_Projection,
+                                           IddObjectType::FenestrationSurface_Detailed,
+                                           IddObjectType::Window,
+                                           IddObjectType::Window_Interzone,
+                                           IddObjectType::Door,
+                                           IddObjectType::GlazedDoor,
+                                           IddObjectType::Door_Interzone,
+                                           IddObjectType::GlazedDoor_Interzone,
+                                           IddObjectType::Daylighting_Controls,
+                                           IddObjectType::Daylighting_ReferencePoint,
+                                           IddObjectType::Output_IlluminanceMap};
 
     bool skipConvert = true;
-    for (const auto& type : translatedTypes){
-      if (m_workspace.getObjectsByType(type).size() > 0){
+    for (const auto& type : translatedTypes) {
+      if (m_workspace.getObjectsByType(type).size() > 0) {
         skipConvert = false;
         break;
       }
     }
 
-    if (skipConvert){
+    if (skipConvert) {
       return true;
     }
-
 
     // current geometry rules
     GlobalGeometryRules currentRules = globalGeometryRules();
 
     // convert to counter clockwise vertex entry direction
-    if (currentRules.ved == VertexEntryDirection::Clockwise){
+    if (currentRules.ved == VertexEntryDirection::Clockwise) {
       result = result && reverseAllDetailedVertices();
     }
 
     // change from current detailed system to new detailed system
     CoordinateChange detailedCoordChange = CoordinateChange::NoChange;
-    if (equal(currentRules.detailedSystem, CoordinateSystem::Relative) && equal(detailedSystem, CoordinateSystem::Absolute)){
+    if (equal(currentRules.detailedSystem, CoordinateSystem::Relative) && equal(detailedSystem, CoordinateSystem::Absolute)) {
       detailedCoordChange = CoordinateChange::RelativeToAbsolute;
-    }else if(equal(currentRules.detailedSystem, CoordinateSystem::Absolute) && equal(detailedSystem, CoordinateSystem::Relative)){
+    } else if (equal(currentRules.detailedSystem, CoordinateSystem::Absolute) && equal(detailedSystem, CoordinateSystem::Relative)) {
       detailedCoordChange = CoordinateChange::AbsoluteToRelative;
     }
 
     // change from current daylighting system to new daylighting system
     CoordinateChange daylightingCoordChange = CoordinateChange::NoChange;
-    if (equal(currentRules.daylightingSystem, CoordinateSystem::Relative) && equal(daylightingSystem, CoordinateSystem::Absolute)){
+    if (equal(currentRules.daylightingSystem, CoordinateSystem::Relative) && equal(daylightingSystem, CoordinateSystem::Absolute)) {
       daylightingCoordChange = CoordinateChange::RelativeToAbsolute;
-    }else if(equal(currentRules.daylightingSystem, CoordinateSystem::Absolute) && equal(daylightingSystem, CoordinateSystem::Relative)){
+    } else if (equal(currentRules.daylightingSystem, CoordinateSystem::Absolute) && equal(daylightingSystem, CoordinateSystem::Relative)) {
       daylightingCoordChange = CoordinateChange::AbsoluteToRelative;
     }
 
     // change from current simple system to current detailed system
     CoordinateChange rectangularCoordChange = CoordinateChange::NoChange;
-    if (equal(currentRules.rectangularSystem, CoordinateSystem::Relative) && equal(detailedSystem, CoordinateSystem::Absolute)){
+    if (equal(currentRules.rectangularSystem, CoordinateSystem::Relative) && equal(detailedSystem, CoordinateSystem::Absolute)) {
       rectangularCoordChange = CoordinateChange::RelativeToAbsolute;
-    }else if(equal(currentRules.rectangularSystem, CoordinateSystem::Absolute) && equal(detailedSystem, CoordinateSystem::Relative)){
+    } else if (equal(currentRules.rectangularSystem, CoordinateSystem::Absolute) && equal(detailedSystem, CoordinateSystem::Relative)) {
       rectangularCoordChange = CoordinateChange::AbsoluteToRelative;
     }
 
@@ -235,48 +223,85 @@ namespace energyplus {
     result = result && applyUpperLeftCornerRule();
 
     // set GlobalGeometryRules to the new rules
-    result = result && setGlobalGeometryRules(StartingVertexPosition::UpperLeftCorner,
-                                              VertexEntryDirection::Counterclockwise,
-                                              detailedSystem,
-                                              daylightingSystem,
-                                              detailedSystem);
+    result = result
+             && setGlobalGeometryRules(StartingVertexPosition::UpperLeftCorner, VertexEntryDirection::Counterclockwise, detailedSystem,
+                                       daylightingSystem, detailedSystem);
 
     return result;
   }
 
   // get the current GlobalGeometryRules
-  GeometryTranslator::GlobalGeometryRules GeometryTranslator::globalGeometryRules() const
-  {
+  GeometryTranslator::GlobalGeometryRules GeometryTranslator::globalGeometryRules() const {
     GlobalGeometryRules result;
+
+    // Start with defaults, then try to specialize
+    result.svp = StartingVertexPosition::UpperLeftCorner;
+    result.ved = VertexEntryDirection::Counterclockwise;
+    result.detailedSystem = CoordinateSystem::Relative;
+    result.daylightingSystem = CoordinateSystem::Relative;
+    result.rectangularSystem = CoordinateSystem::Relative;
 
     // get the GlobalGeometryRules
     WorkspaceObjectVector objects = m_workspace.getObjectsByType(IddObjectType::GlobalGeometryRules);
-    if (objects.size() != 1){
+    if (objects.size() != 1) {
       LOG(Warn, "Could not find GlobalGeometryRules object, assuming defaults");
-      result.svp = StartingVertexPosition::UpperLeftCorner;
-      result.ved = VertexEntryDirection::Counterclockwise;
-      result.detailedSystem = CoordinateSystem::Relative;
-      result.daylightingSystem = CoordinateSystem::Relative;
-      result.rectangularSystem = CoordinateSystem::Relative;
       return result;
     }
+    // get current geometry rules
     WorkspaceObject globalGeometryRules = objects[0];
 
-    // get current geometry rules
-    try{
-      OptionalString strSvp = globalGeometryRules.getString(GlobalGeometryRulesFields::StartingVertexPosition, true);
-      OptionalString strVed = globalGeometryRules.getString(GlobalGeometryRulesFields::VertexEntryDirection, true);
-      OptionalString strDetailedSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::CoordinateSystem, true);
-      OptionalString strDaylightingSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, true);
-      OptionalString strRectangularSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, true);
+    // I don't really like this try/catch, but the alternative is to explicitly check the IDD Enums (choices), which is a bit less future proof.
+    // I'm going to use a try-catch per field instead of for the all block so it's less subject to failures
+    if (OptionalString strSvp = globalGeometryRules.getString(GlobalGeometryRulesFields::StartingVertexPosition, true)) {
+      try {
+        result.svp = StartingVertexPosition(strSvp.get());
+      } catch (...) {
+        LOG(Error, "Could not read required property 'Starting Vertex Position' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing required property 'Starting Vertex Position' for GlobalGeometryRules");
+    }
 
-      result.svp = StartingVertexPosition(*strSvp);
-      result.ved = VertexEntryDirection(*strVed);
-      result.detailedSystem = CoordinateSystem(*strDetailedSystem);
-      result.daylightingSystem = CoordinateSystem(*strDaylightingSystem);
-      result.rectangularSystem = CoordinateSystem(*strRectangularSystem);
-    }catch(...){
-      LOG(Error, "Could not read GlobalGeometryRules object");
+    if (OptionalString strVed = globalGeometryRules.getString(GlobalGeometryRulesFields::VertexEntryDirection, true)) {
+      try {
+        result.ved = VertexEntryDirection(*strVed);
+      } catch (...) {
+        LOG(Error, "Could not read required property 'Vertex Entry Direction' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing required property 'Vertex Entry Direction' for GlobalGeometryRules");
+    }
+
+    if (OptionalString strDetailedSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::CoordinateSystem, true)) {
+      if (openstudio::istringEqual("Absolute", *strDetailedSystem) || openstudio::istringEqual("World", *strDetailedSystem)) {
+        result.detailedSystem = CoordinateSystem::Absolute;
+      } else {
+        result.detailedSystem = CoordinateSystem::Relative;
+      }
+    } else {
+      LOG(Error, "Missing required property 'Coordinate System' for GlobalGeometryRules");
+    }
+
+    // These two have defaults in IDD, so it shouldn't fail
+    if (OptionalString strDaylightingSystem =
+          globalGeometryRules.getString(GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, true)) {
+      try {
+        result.daylightingSystem = CoordinateSystem(*strDaylightingSystem);
+      } catch (...) {
+        LOG(Error, "Could not read property 'Daylighting Reference Point Coordinate System' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing property 'Daylighting Reference Point Coordinate System' for GlobalGeometryRules");
+    }
+
+    if (OptionalString strRectangularSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, true)) {
+      try {
+        result.rectangularSystem = CoordinateSystem(*strRectangularSystem);
+      } catch (...) {
+        LOG(Error, "Could not read property 'Rectangular Surface Coordinate System' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing property 'Rectangular Surface Coordinate System' for GlobalGeometryRules");
     }
 
     return result;
@@ -284,15 +309,13 @@ namespace energyplus {
 
   // set the GlobalGeometryRules, only changes the object does not transform geometry
   bool GeometryTranslator::setGlobalGeometryRules(const StartingVertexPosition& svp, const VertexEntryDirection& ved,
-                                                  const CoordinateSystem& detailedSystem,
-                                                  const CoordinateSystem& daylightingSystem,
-                                                  const CoordinateSystem& rectangularSystem)
-  {
+                                                  const CoordinateSystem& detailedSystem, const CoordinateSystem& daylightingSystem,
+                                                  const CoordinateSystem& rectangularSystem) {
     bool result = true;
 
     // get the GlobalGeometryRules
     WorkspaceObjectVector objects = m_workspace.getObjectsByType(IddObjectType::GlobalGeometryRules);
-    if (objects.empty()){
+    if (objects.empty()) {
       m_workspace.addObject(IdfObject(IddObjectType::GlobalGeometryRules));
       objects = m_workspace.getObjectsByType(IddObjectType::GlobalGeometryRules);
     }
@@ -302,68 +325,68 @@ namespace energyplus {
     result = result && globalGeometryRules.setString(GlobalGeometryRulesFields::StartingVertexPosition, svp.valueName());
     result = result && globalGeometryRules.setString(GlobalGeometryRulesFields::VertexEntryDirection, ved.valueName());
     result = result && globalGeometryRules.setString(GlobalGeometryRulesFields::CoordinateSystem, detailedSystem.valueName());
-    result = result && globalGeometryRules.setString(GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, daylightingSystem.valueName());
+    result =
+      result && globalGeometryRules.setString(GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, daylightingSystem.valueName());
     result = result && globalGeometryRules.setString(GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, rectangularSystem.valueName());
 
     return result;
   }
 
   // get the transformation from building to world
-  Transformation GeometryTranslator::buildingTransformation() const
-  {
+  Transformation GeometryTranslator::buildingTransformation() const {
     // get the Building
     WorkspaceObjectVector objects = m_workspace.getObjectsByType(IddObjectType::Building);
-    if (objects.size() != 1){
+    if (objects.size() != 1) {
       LOG(Warn, "Could not find Building object, assuming 0 rotation");
       return Transformation();
     }
     WorkspaceObject building = objects[0];
 
     OptionalDouble northAxis = building.getDouble(BuildingFields::NorthAxis, true);
-    if (!northAxis){
-       northAxis = 0;
-       LOG(Warn, "North Axis unknown, using 0");
-     }
-     // rotate negative amount around the z axis, EnergyPlus defines rotation opposite to OpenStudio
-     return Transformation::rotation(Vector3d(0,0,1), -degToRad(*northAxis));
+    if (!northAxis) {
+      northAxis = 0;
+      LOG(Warn, "North Axis unknown, using 0");
+    }
+    // rotate negative amount around the z axis, EnergyPlus defines rotation opposite to OpenStudio
+    return Transformation::rotation(Vector3d(0, 0, 1), -degToRad(*northAxis));
   }
 
   // get the transformation from zone to building
-  Transformation GeometryTranslator::zoneTransformation(const WorkspaceObject& zone) const
-  {
+  Transformation GeometryTranslator::zoneTransformation(const WorkspaceObject& zone) const {
     OS_ASSERT(zone.iddObject().type() == IddObjectType::Zone);
 
     OptionalDouble x = zone.getDouble(ZoneFields::XOrigin, true);
     OptionalDouble y = zone.getDouble(ZoneFields::YOrigin, true);
     OptionalDouble z = zone.getDouble(ZoneFields::ZOrigin, true);
-    if (!x || !y || !z){
-       x = 0; y = 0; z = 0;
-       LOG(Error, "Zone origin unknown, using 0, 0, 0");
-     }
+    if (!x || !y || !z) {
+      x = 0;
+      y = 0;
+      z = 0;
+      LOG(Error, "Zone origin unknown, using 0, 0, 0");
+    }
 
     // translation
     Transformation translation = Transformation::translation(Vector3d(*x, *y, *z));
 
     OptionalDouble directionOfRelativeNorth = zone.getDouble(ZoneFields::DirectionofRelativeNorth, true);
-    if (!directionOfRelativeNorth){
-       directionOfRelativeNorth = 0;
-       LOG(Error, "Zone direction of relative North unknown, using 0");
-     }
+    if (!directionOfRelativeNorth) {
+      directionOfRelativeNorth = 0;
+      LOG(Error, "Zone direction of relative North unknown, using 0");
+    }
 
     // rotate negative amount around the z axis, EnergyPlus defines rotation opposite to OpenStudio
-    Transformation rotation = Transformation::rotation(Vector3d(0,0,1), -degToRad(*directionOfRelativeNorth));
+    Transformation rotation = Transformation::rotation(Vector3d(0, 0, 1), -degToRad(*directionOfRelativeNorth));
 
-    return translation*rotation;
+    return translation * rotation;
   }
 
   // convert simple shading to detailed in the current system
-  bool GeometryTranslator::convertSimpleShading(const CoordinateChange& coordChange)
-  {
+  bool GeometryTranslator::convertSimpleShading(const CoordinateChange& coordChange) {
     // building transformation
     Transformation buildingTransformation = this->buildingTransformation();
 
     // Shading::Site
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Site)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Site)) {
 
       // get simple params
       OptionalDouble azimuth = oldObject.getDouble(Shading_SiteFields::AzimuthAngle, true);
@@ -374,7 +397,7 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Shading_SiteFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Shading_SiteFields::Height, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
@@ -383,7 +406,7 @@ namespace energyplus {
       Point3dVector vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_SiteFields::Name, Shading_Site_DetailedFields::Name));
 
       // new object
@@ -397,11 +420,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Site_Detailed);
         // set vertices
         setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -411,13 +434,13 @@ namespace energyplus {
     }
 
     // Shading::Building
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Building)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Building)) {
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         t = buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         t = buildingTransformation;
       }
 
@@ -430,16 +453,17 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Shading_BuildingFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Shading_BuildingFields::Height, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get vertices
       Point3dVector vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
+      vertices = t * vertices;
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_BuildingFields::Name, Shading_Building_DetailedFields::Name));
 
       // new object
@@ -453,11 +477,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Building_Detailed);
         // set vertices
         setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -467,18 +491,18 @@ namespace energyplus {
     }
 
     // Shading:Overhang
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_OverhangFields::WindoworDoorName);
-      if (!subSurface){
+      if (!subSurface) {
         LOG(Error, "Could not find subSurface");
         continue;
       }
 
       // find surface
       OptionalWorkspaceObject surface = subSurface->getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -492,24 +516,24 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse() * subSurfaceVerts) {
 
         OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
-        if (!xMin || (faceVert.x() < *xMin)){
+        if (!xMin || (faceVert.x() < *xMin)) {
           xMin = faceVert.x();
         }
-        if (!xMax || (faceVert.x() > *xMax)){
+        if (!xMax || (faceVert.x() > *xMax)) {
           xMax = faceVert.x();
         }
-        if (!yMin || (faceVert.y() < *yMin)){
+        if (!yMin || (faceVert.y() < *yMin)) {
           yMin = faceVert.y();
         }
-        if (!yMax || (faceVert.y() > *yMax)){
+        if (!yMax || (faceVert.y() > *yMax)) {
           yMax = faceVert.y();
         }
       }
-      if (!xMin || !xMax || !yMin || !yMax){
+      if (!xMin || !xMax || !yMin || !yMax) {
         LOG(Error, "Cannot determine sub surface bounds");
         continue;
       }
@@ -520,31 +544,31 @@ namespace energyplus {
       OptionalDouble leftOffset = oldObject.getDouble(Shading_OverhangFields::LeftextensionfromWindow_DoorWidth, true);
       OptionalDouble rightOffset = oldObject.getDouble(Shading_OverhangFields::RightextensionfromWindow_DoorWidth, true);
       OptionalDouble depth = oldObject.getDouble(Shading_OverhangFields::Depth, true);
-      if (!height || !tilt || !leftOffset || !rightOffset || !depth){
+      if (!height || !tilt || !leftOffset || !rightOffset || !depth) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
-      if (*depth == 0){
+      if (*depth == 0) {
         LOG(Error, "Zero depth surface not allowed");
         continue;
       }
 
       // vertices
       openstudio::Point3dVector faceVertices(4);
-      faceVertices[0] = Point3d(*xMax + *rightOffset, *yMax + *height + *depth*cos(degToRad(*tilt)), *depth*sin(degToRad(*tilt)));
+      faceVertices[0] = Point3d(*xMax + *rightOffset, *yMax + *height + *depth * cos(degToRad(*tilt)), *depth * sin(degToRad(*tilt)));
       faceVertices[1] = Point3d(*xMax + *rightOffset, *yMax + *height, 0.0);
       faceVertices[2] = Point3d(*xMin - *leftOffset, *yMax + *height, 0.0);
-      faceVertices[3] = Point3d(*xMin - *leftOffset, *yMax + *height + *depth*cos(degToRad(*tilt)), *depth*sin(degToRad(*tilt)));
+      faceVertices[3] = Point3d(*xMin - *leftOffset, *yMax + *height + *depth * cos(degToRad(*tilt)), *depth * sin(degToRad(*tilt)));
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::Shading_Zone_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_OverhangFields::Name, Shading_Zone_DetailedFields::Name));
 
       // copy fields over directly
@@ -556,11 +580,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject, false);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -570,18 +594,18 @@ namespace energyplus {
     }
 
     // Shading:Overhang:Projection
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang_Projection)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang_Projection)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_Overhang_ProjectionFields::WindoworDoorName);
-      if (!subSurface){
+      if (!subSurface) {
         LOG(Error, "Could not find subSurface");
         continue;
       }
 
       // find surface
       OptionalWorkspaceObject surface = subSurface->getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -595,24 +619,24 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse() * subSurfaceVerts) {
 
         OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
-        if (!xMin || (faceVert.x() < *xMin)){
+        if (!xMin || (faceVert.x() < *xMin)) {
           xMin = faceVert.x();
         }
-        if (!xMax || (faceVert.x() > *xMax)){
+        if (!xMax || (faceVert.x() > *xMax)) {
           xMax = faceVert.x();
         }
-        if (!yMin || (faceVert.y() < *yMin)){
+        if (!yMin || (faceVert.y() < *yMin)) {
           yMin = faceVert.y();
         }
-        if (!yMax || (faceVert.y() > *yMax)){
+        if (!yMax || (faceVert.y() > *yMax)) {
           yMax = faceVert.y();
         }
       }
-      if (!xMin || !xMax || !yMin || !yMax){
+      if (!xMin || !xMax || !yMin || !yMax) {
         LOG(Error, "Cannot determine sub surface bounds");
         continue;
       }
@@ -623,33 +647,33 @@ namespace energyplus {
       OptionalDouble leftOffset = oldObject.getDouble(Shading_Overhang_ProjectionFields::LeftextensionfromWindow_DoorWidth, true);
       OptionalDouble rightOffset = oldObject.getDouble(Shading_Overhang_ProjectionFields::RightextensionfromWindow_DoorWidth, true);
       OptionalDouble projectionFactor = oldObject.getDouble(Shading_Overhang_ProjectionFields::DepthasFractionofWindow_DoorHeight, true);
-      if (!height || !tilt || !leftOffset || !rightOffset || !projectionFactor){
+      if (!height || !tilt || !leftOffset || !rightOffset || !projectionFactor) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
-      double depth = *projectionFactor*(*yMax-*yMin);
+      double depth = *projectionFactor * (*yMax - *yMin);
 
-      if (depth == 0){
+      if (depth == 0) {
         LOG(Error, "Zero depth surface not allowed");
         continue;
       }
 
       // vertices
       openstudio::Point3dVector faceVertices(4);
-      faceVertices[0] = Point3d(*xMax + *rightOffset, *yMax + *height + depth*cos(degToRad(*tilt)), depth*sin(degToRad(*tilt)));
+      faceVertices[0] = Point3d(*xMax + *rightOffset, *yMax + *height + depth * cos(degToRad(*tilt)), depth * sin(degToRad(*tilt)));
       faceVertices[1] = Point3d(*xMax + *rightOffset, *yMax + *height, 0.0);
       faceVertices[2] = Point3d(*xMin - *leftOffset, *yMax + *height, 0.0);
-      faceVertices[3] = Point3d(*xMin - *leftOffset, *yMax + *height + depth*cos(degToRad(*tilt)), depth*sin(degToRad(*tilt)));
+      faceVertices[3] = Point3d(*xMin - *leftOffset, *yMax + *height + depth * cos(degToRad(*tilt)), depth * sin(degToRad(*tilt)));
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::Shading_Zone_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_Overhang_ProjectionFields::Name, Shading_Zone_DetailedFields::Name));
 
       // copy fields over directly
@@ -661,29 +685,29 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject, false);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
     }
 
     // Shading:Fin
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_FinFields::WindoworDoorName);
-      if (!subSurface){
+      if (!subSurface) {
         LOG(Error, "Could not find subSurface");
         continue;
       }
 
       // find surface
       OptionalWorkspaceObject surface = subSurface->getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -697,24 +721,24 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse() * subSurfaceVerts) {
 
         OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
-        if (!xMin || (faceVert.x() < *xMin)){
+        if (!xMin || (faceVert.x() < *xMin)) {
           xMin = faceVert.x();
         }
-        if (!xMax || (faceVert.x() > *xMax)){
+        if (!xMax || (faceVert.x() > *xMax)) {
           xMax = faceVert.x();
         }
-        if (!yMin || (faceVert.y() < *yMin)){
+        if (!yMin || (faceVert.y() < *yMin)) {
           yMin = faceVert.y();
         }
-        if (!yMax || (faceVert.y() > *yMax)){
+        if (!yMax || (faceVert.y() > *yMax)) {
           yMax = faceVert.y();
         }
       }
-      if (!xMin || !xMax || !yMin || !yMax){
+      if (!xMin || !xMax || !yMin || !yMax) {
         LOG(Error, "Cannot determine sub surface bounds");
         continue;
       }
@@ -731,40 +755,45 @@ namespace energyplus {
       OptionalDouble rightTilt = oldObject.getDouble(Shading_FinFields::RightTiltAnglefromWindow_Door, true);
       OptionalDouble rightDepth = oldObject.getDouble(Shading_FinFields::RightDepth, true);
 
-      if (!leftOffset || !leftAbove || !leftBelow || !leftTilt || !leftDepth || !rightOffset || !rightAbove || !rightBelow || !rightTilt || !rightDepth){
+      if (!leftOffset || !leftAbove || !leftBelow || !leftTilt || !leftDepth || !rightOffset || !rightAbove || !rightBelow || !rightTilt
+          || !rightDepth) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
-      if (*leftDepth == 0 || *rightDepth == 0){
+      if (*leftDepth == 0 || *rightDepth == 0) {
         LOG(Error, "Zero depth surface not allowed");
         continue;
       }
 
       // left vertices
       openstudio::Point3dVector leftVertices(4);
-      leftVertices[0] = Point3d(*xMin - *leftOffset + *leftDepth*cos(degToRad(*leftTilt)), *yMax + *leftAbove, *leftDepth*sin(degToRad(*leftTilt)));
-      leftVertices[1] = Point3d(*xMin - *leftOffset + *leftDepth*cos(degToRad(*leftTilt)), *yMin - *leftBelow, *leftDepth*sin(degToRad(*leftTilt)));
+      leftVertices[0] =
+        Point3d(*xMin - *leftOffset + *leftDepth * cos(degToRad(*leftTilt)), *yMax + *leftAbove, *leftDepth * sin(degToRad(*leftTilt)));
+      leftVertices[1] =
+        Point3d(*xMin - *leftOffset + *leftDepth * cos(degToRad(*leftTilt)), *yMin - *leftBelow, *leftDepth * sin(degToRad(*leftTilt)));
       leftVertices[2] = Point3d(*xMin - *leftOffset, *yMin - *leftBelow, 0.0);
       leftVertices[3] = Point3d(*xMin - *leftOffset, *yMax + *leftAbove, 0.0);
 
       // right vertices
       openstudio::Point3dVector rightVertices(4);
-      rightVertices[0] = Point3d(*xMax + *rightOffset + *rightDepth*cos(degToRad(*rightTilt)), *yMax + *rightAbove, *rightDepth*sin(degToRad(*rightTilt)));
-      rightVertices[1] = Point3d(*xMax + *rightOffset + *rightDepth*cos(degToRad(*rightTilt)), *yMin - *rightBelow, *rightDepth*sin(degToRad(*rightTilt)));
+      rightVertices[0] =
+        Point3d(*xMax + *rightOffset + *rightDepth * cos(degToRad(*rightTilt)), *yMax + *rightAbove, *rightDepth * sin(degToRad(*rightTilt)));
+      rightVertices[1] =
+        Point3d(*xMax + *rightOffset + *rightDepth * cos(degToRad(*rightTilt)), *yMin - *rightBelow, *rightDepth * sin(degToRad(*rightTilt)));
       rightVertices[2] = Point3d(*xMax + *rightOffset, *yMin - *rightBelow, 0.0);
       rightVertices[3] = Point3d(*xMax + *rightOffset, *yMax + *rightAbove, 0.0);
 
       // transform vertices
-      leftVertices = t*leftVertices;
-      rightVertices = t*rightVertices;
+      leftVertices = t * leftVertices;
+      rightVertices = t * rightVertices;
 
       // add two new objects
       IdfObject leftObject(IddObjectType::Shading_Zone_Detailed);
       IdfObject rightObject(IddObjectType::Shading_Zone_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
 
       // copy fields over directly
       mapFields(oldObject, leftObject, fieldMap);
@@ -780,38 +809,38 @@ namespace energyplus {
 
       // swap old object with left one
       bool ok = m_workspace.swap(oldObject, leftObject, false);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, leftVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
 
       // add right object
       OptionalWorkspaceObject w = m_workspace.addObject(rightObject);
-      if (w){
+      if (w) {
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, *w, rightVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object add failed");
         continue;
       }
     }
 
     // Shading:Fin:Projection
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin_Projection)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin_Projection)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_Fin_ProjectionFields::WindoworDoorName);
-      if (!subSurface){
+      if (!subSurface) {
         LOG(Error, "Could not find subSurface");
         continue;
       }
 
       // find surface
       OptionalWorkspaceObject surface = subSurface->getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -825,24 +854,24 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse() * subSurfaceVerts) {
 
         OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
-        if (!xMin || (faceVert.x() < *xMin)){
+        if (!xMin || (faceVert.x() < *xMin)) {
           xMin = faceVert.x();
         }
-        if (!xMax || (faceVert.x() > *xMax)){
+        if (!xMax || (faceVert.x() > *xMax)) {
           xMax = faceVert.x();
         }
-        if (!yMin || (faceVert.y() < *yMin)){
+        if (!yMin || (faceVert.y() < *yMin)) {
           yMin = faceVert.y();
         }
-        if (!yMax || (faceVert.y() > *yMax)){
+        if (!yMax || (faceVert.y() > *yMax)) {
           yMax = faceVert.y();
         }
       }
-      if (!xMin || !xMax || !yMin || !yMax){
+      if (!xMin || !xMax || !yMin || !yMax) {
         LOG(Error, "Cannot determine sub surface bounds");
         continue;
       }
@@ -859,43 +888,46 @@ namespace energyplus {
       OptionalDouble rightTilt = oldObject.getDouble(Shading_Fin_ProjectionFields::RightTiltAnglefromWindow_Door, true);
       OptionalDouble rightProjection = oldObject.getDouble(Shading_Fin_ProjectionFields::RightDepthasFractionofWindow_DoorWidth, true);
 
-      if (!leftOffset || !leftAbove || !leftBelow || !leftTilt || !leftProjection || !rightOffset || !rightAbove || !rightBelow || !rightTilt || !rightProjection){
+      if (!leftOffset || !leftAbove || !leftBelow || !leftTilt || !leftProjection || !rightOffset || !rightAbove || !rightBelow || !rightTilt
+          || !rightProjection) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
-      double leftDepth = *leftProjection*(*yMax-*yMin);
-      double rightDepth = *rightProjection*(*yMax-*yMin);
+      double leftDepth = *leftProjection * (*yMax - *yMin);
+      double rightDepth = *rightProjection * (*yMax - *yMin);
 
-      if (leftDepth == 0 || rightDepth == 0){
+      if (leftDepth == 0 || rightDepth == 0) {
         LOG(Error, "Zero depth surface not allowed");
         continue;
       }
 
       // left vertices
       openstudio::Point3dVector leftVertices(4);
-      leftVertices[0] = Point3d(*xMin - *leftOffset + leftDepth*cos(degToRad(*leftTilt)), *yMax + *leftAbove, leftDepth*sin(degToRad(*leftTilt)));
-      leftVertices[1] = Point3d(*xMin - *leftOffset + leftDepth*cos(degToRad(*leftTilt)), *yMin - *leftBelow, leftDepth*sin(degToRad(*leftTilt)));
+      leftVertices[0] = Point3d(*xMin - *leftOffset + leftDepth * cos(degToRad(*leftTilt)), *yMax + *leftAbove, leftDepth * sin(degToRad(*leftTilt)));
+      leftVertices[1] = Point3d(*xMin - *leftOffset + leftDepth * cos(degToRad(*leftTilt)), *yMin - *leftBelow, leftDepth * sin(degToRad(*leftTilt)));
       leftVertices[2] = Point3d(*xMin - *leftOffset, *yMin - *leftBelow, 0.0);
       leftVertices[3] = Point3d(*xMin - *leftOffset, *yMax + *leftAbove, 0.0);
 
       // right vertices
       openstudio::Point3dVector rightVertices(4);
-      rightVertices[0] = Point3d(*xMax + *rightOffset + rightDepth*cos(degToRad(*rightTilt)), *yMax + *rightAbove, rightDepth*sin(degToRad(*rightTilt)));
-      rightVertices[1] = Point3d(*xMax + *rightOffset + rightDepth*cos(degToRad(*rightTilt)), *yMin - *rightBelow, rightDepth*sin(degToRad(*rightTilt)));
+      rightVertices[0] =
+        Point3d(*xMax + *rightOffset + rightDepth * cos(degToRad(*rightTilt)), *yMax + *rightAbove, rightDepth * sin(degToRad(*rightTilt)));
+      rightVertices[1] =
+        Point3d(*xMax + *rightOffset + rightDepth * cos(degToRad(*rightTilt)), *yMin - *rightBelow, rightDepth * sin(degToRad(*rightTilt)));
       rightVertices[2] = Point3d(*xMax + *rightOffset, *yMin - *rightBelow, 0.0);
       rightVertices[3] = Point3d(*xMax + *rightOffset, *yMax + *rightAbove, 0.0);
 
       // transform vertices
-      leftVertices = t*leftVertices;
-      rightVertices = t*rightVertices;
+      leftVertices = t * leftVertices;
+      rightVertices = t * rightVertices;
 
       // add two new objects
       IdfObject leftObject(IddObjectType::Shading_Zone_Detailed);
       IdfObject rightObject(IddObjectType::Shading_Zone_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
 
       // copy fields over directly
       mapFields(oldObject, leftObject, fieldMap);
@@ -911,11 +943,11 @@ namespace energyplus {
 
       // swap old object with left one
       bool ok = m_workspace.swap(oldObject, leftObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::Shading_Zone_Detailed);
         // set vertices
         setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, oldObject, leftVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -923,16 +955,16 @@ namespace energyplus {
       // add right object
       OptionalWorkspaceObject w = m_workspace.addObject(rightObject);
       OptionalWorkspaceObject workspaceObject;
-      if (w){
-        workspaceObject = m_workspace.getObject(w->handle ());
-        if (workspaceObject){
+      if (w) {
+        workspaceObject = m_workspace.getObject(w->handle());
+        if (workspaceObject) {
           // set vertices
           setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, *w, rightVertices);
-        }else{
+        } else {
           LOG(Error, "Workspace object add failed");
           continue;
         }
-      }else{
+      } else {
         LOG(Error, "Workspace object add failed");
         continue;
       }
@@ -942,14 +974,13 @@ namespace energyplus {
   }
 
   // convert simple subsurfaces to detailed in the current system
-  bool GeometryTranslator::convertSimpleSubSurfaces()
-  {
+  bool GeometryTranslator::convertSimpleSubSurfaces() {
     // Window
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(WindowFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -962,7 +993,7 @@ namespace energyplus {
       OptionalDouble z0 = oldObject.getDouble(WindowFields::StartingZCoordinate, true);
       OptionalDouble length = oldObject.getDouble(WindowFields::Length, true);
       OptionalDouble height = oldObject.getDouble(WindowFields::Height, true);
-      if (!x0 || !z0 || !length || !height){
+      if (!x0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
@@ -975,13 +1006,13 @@ namespace energyplus {
       faceVertices[3] = Point3d(*x0 + *length, *z0 + *height, 0.0);
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::Name, FenestrationSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
@@ -999,22 +1030,22 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
     }
 
     // Door
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(DoorFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -1027,7 +1058,7 @@ namespace energyplus {
       OptionalDouble z0 = oldObject.getDouble(DoorFields::StartingZCoordinate, true);
       OptionalDouble length = oldObject.getDouble(DoorFields::Length, true);
       OptionalDouble height = oldObject.getDouble(DoorFields::Height, true);
-      if (!x0 || !z0 || !length || !height){
+      if (!x0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
@@ -1040,13 +1071,13 @@ namespace energyplus {
       faceVertices[3] = Point3d(*x0 + *length, *z0 + *height, 0.0);
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(DoorFields::Name, FenestrationSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(DoorFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(DoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
@@ -1063,22 +1094,22 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
     }
 
     // GlazedDoor
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(GlazedDoorFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -1091,7 +1122,7 @@ namespace energyplus {
       OptionalDouble z0 = oldObject.getDouble(GlazedDoorFields::StartingZCoordinate, true);
       OptionalDouble length = oldObject.getDouble(GlazedDoorFields::Length, true);
       OptionalDouble height = oldObject.getDouble(GlazedDoorFields::Height, true);
-      if (!x0 || !z0 || !length || !height){
+      if (!x0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
@@ -1104,17 +1135,19 @@ namespace energyplus {
       faceVertices[3] = Point3d(*x0 + *length, *z0 + *height, 0.0);
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::Name, FenestrationSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(GlazedDoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(GlazedDoorFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
 
       // copy fields over directly
@@ -1128,22 +1161,22 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
     }
 
     // Window:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window_Interzone)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(Window_InterzoneFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -1156,7 +1189,7 @@ namespace energyplus {
       OptionalDouble z0 = oldObject.getDouble(Window_InterzoneFields::StartingZCoordinate, true);
       OptionalDouble length = oldObject.getDouble(Window_InterzoneFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Window_InterzoneFields::Height, true);
-      if (!x0 || !z0 || !length || !height){
+      if (!x0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
@@ -1169,17 +1202,20 @@ namespace energyplus {
       faceVertices[3] = Point3d(*x0 + *length, *z0 + *height, 0.0);
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::OutsideBoundaryConditionObject, FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(Window_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(Window_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::OutsideBoundaryConditionObject,
+                                                       FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
 
       // copy fields over directly
@@ -1192,22 +1228,22 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
     }
 
     // Door:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door_Interzone)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(Door_InterzoneFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -1220,7 +1256,7 @@ namespace energyplus {
       OptionalDouble z0 = oldObject.getDouble(Door_InterzoneFields::StartingZCoordinate, true);
       OptionalDouble length = oldObject.getDouble(Door_InterzoneFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Door_InterzoneFields::Height, true);
-      if (!x0 || !z0 || !length || !height){
+      if (!x0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
@@ -1233,17 +1269,19 @@ namespace energyplus {
       faceVertices[3] = Point3d(*x0 + *length, *z0 + *height, 0.0);
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::OutsideBoundaryConditionObject, FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(Door_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::OutsideBoundaryConditionObject,
+                                                       FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
 
       // copy fields over directly
@@ -1256,22 +1294,22 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
     }
 
     // GlazedDoor:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor_Interzone)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(GlazedDoor_InterzoneFields::BuildingSurfaceName);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Could not find surface");
         continue;
       }
@@ -1284,7 +1322,7 @@ namespace energyplus {
       OptionalDouble z0 = oldObject.getDouble(GlazedDoor_InterzoneFields::StartingZCoordinate, true);
       OptionalDouble length = oldObject.getDouble(GlazedDoor_InterzoneFields::Length, true);
       OptionalDouble height = oldObject.getDouble(GlazedDoor_InterzoneFields::Height, true);
-      if (!x0 || !z0 || !length || !height){
+      if (!x0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
@@ -1297,17 +1335,20 @@ namespace energyplus {
       faceVertices[3] = Point3d(*x0 + *length, *z0 + *height, 0.0);
 
       // transform vertices
-      faceVertices = t*faceVertices;
+      faceVertices = t * faceVertices;
 
       // add new object
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::OutsideBoundaryConditionObject, FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::OutsideBoundaryConditionObject,
+                                                       FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
 
       // copy fields over directly
@@ -1320,11 +1361,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::FenestrationSurface_Detailed);
         // set vertices
         setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, oldObject, faceVertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1333,45 +1374,46 @@ namespace energyplus {
   }
 
   // convert simple surfaces to detailed in the current system
-  bool GeometryTranslator::convertSimpleSurfaces(const CoordinateChange& coordChange)
-  {
+  bool GeometryTranslator::convertSimpleSurfaces(const CoordinateChange& coordChange) {
 
     // building transformation
     Transformation buildingTransformation = this->buildingTransformation();
 
     // Wall::Detailed
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_DetailedFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*getVertices(Wall_DetailedFields::NumberofVertices + 1, oldObject);
+      Point3dVector vertices = t * getVertices(Wall_DetailedFields::NumberofVertices + 1, oldObject);
 
       // new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(Wall_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::OutsideBoundaryConditionObject,
+                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround));
@@ -1385,11 +1427,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1399,42 +1441,47 @@ namespace energyplus {
     }
 
     // RoofCeiling::Detailed
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_DetailedFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, oldObject);
+      Point3dVector vertices = t * getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, oldObject);
 
       // new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::OutsideBoundaryCondition,
+                                                       BuildingSurface_DetailedFields::OutsideBoundaryCondition));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::OutsideBoundaryConditionObject,
+                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
       fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure));
       fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices));
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1444,11 +1491,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1458,38 +1505,40 @@ namespace energyplus {
     }
 
     // Floor::Detailed
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_DetailedFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*getVertices(Floor_DetailedFields::NumberofVertices + 1, oldObject);
+      Point3dVector vertices = t * getVertices(Floor_DetailedFields::NumberofVertices + 1, oldObject);
 
       // new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(Floor_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::OutsideBoundaryConditionObject,
+                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround));
@@ -1503,11 +1552,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1517,11 +1566,11 @@ namespace energyplus {
     }
 
     // Wall:Exterior
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Exterior)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Exterior)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_ExteriorFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -1535,29 +1584,29 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Wall_ExteriorFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Wall_ExteriorFields::Height, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_ExteriorFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_ExteriorFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_ExteriorFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
@@ -1576,11 +1625,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1590,11 +1639,11 @@ namespace energyplus {
     }
 
     // Wall:Adiabatic
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Adiabatic)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Adiabatic)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_AdiabaticFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -1608,29 +1657,29 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Wall_AdiabaticFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Wall_AdiabaticFields::Height, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
@@ -1649,11 +1698,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1663,11 +1712,11 @@ namespace energyplus {
     }
 
     // Wall:Underground
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Underground)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Underground)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_UndergroundFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -1681,29 +1730,29 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Wall_UndergroundFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Wall_UndergroundFields::Height, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_UndergroundFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_UndergroundFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_UndergroundFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
@@ -1722,11 +1771,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1736,11 +1785,11 @@ namespace energyplus {
     }
 
     // Wall:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Interzone)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_InterzoneFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -1754,33 +1803,34 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Wall_InterzoneFields::Length, true);
       OptionalDouble height = oldObject.getDouble(Wall_InterzoneFields::Height, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !height) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
 
       // new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::OutsideBoundaryConditionObject,
+                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1795,11 +1845,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1809,11 +1859,11 @@ namespace energyplus {
     }
 
     // Roof
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Roof)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Roof)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(RoofFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -1827,30 +1877,29 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(RoofFields::Length, true);
       OptionalDouble width = oldObject.getDouble(RoofFields::Width, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
-
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(RoofFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(RoofFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(RoofFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
@@ -1869,11 +1918,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1883,11 +1932,11 @@ namespace energyplus {
     }
 
     // Ceiling:Adiabatic
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Adiabatic)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Adiabatic)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Ceiling_AdiabaticFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -1901,29 +1950,29 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Ceiling_AdiabaticFields::Length, true);
       OptionalDouble width = oldObject.getDouble(Ceiling_AdiabaticFields::Width, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
@@ -1942,11 +1991,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -1956,11 +2005,11 @@ namespace energyplus {
     }
 
     // Ceiling:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Interzone)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Ceiling_InterzoneFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -1974,33 +2023,34 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Ceiling_InterzoneFields::Length, true);
       OptionalDouble width = oldObject.getDouble(Ceiling_InterzoneFields::Width, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::OutsideBoundaryConditionObject,
+                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -2015,11 +2065,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -2029,11 +2079,11 @@ namespace energyplus {
     }
 
     // Floor:GroundContact
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_GroundContact)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_GroundContact)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_GroundContactFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -2047,31 +2097,32 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Floor_GroundContactFields::Length, true);
       OptionalDouble width = oldObject.getDouble(Floor_GroundContactFields::Width, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_GroundContactFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_GroundContactFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
+      fieldMap.push_back(
+        std::pair<unsigned, unsigned>(Floor_GroundContactFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_GroundContactFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
 
       // copy fields over directly
@@ -2088,11 +2139,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -2102,11 +2153,11 @@ namespace energyplus {
     }
 
     // Floor:Adiabatic
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Adiabatic)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Adiabatic)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_AdiabaticFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -2120,29 +2171,29 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Floor_AdiabaticFields::Length, true);
       OptionalDouble width = oldObject.getDouble(Floor_AdiabaticFields::Width, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
@@ -2161,11 +2212,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -2175,11 +2226,11 @@ namespace energyplus {
     }
 
     // Floor:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Interzone)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_InterzoneFields::ZoneName);
-      if (!zone){
+      if (!zone) {
         LOG(Error, "Could not find zone");
         continue;
       }
@@ -2193,33 +2244,34 @@ namespace energyplus {
       OptionalDouble length = oldObject.getDouble(Floor_InterzoneFields::Length, true);
       OptionalDouble width = oldObject.getDouble(Floor_InterzoneFields::Width, true);
 
-      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width){
+      if (!azimuth || !tilt || !x0 || !y0 || !z0 || !length || !width) {
         LOG(Error, "Missing required fields");
         continue;
       }
 
       // get transformation
       Transformation t;
-      if (coordChange == CoordinateChange::AbsoluteToRelative){
+      if (coordChange == CoordinateChange::AbsoluteToRelative) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = zoneTransformation.inverse()*buildingTransformation.inverse();
-      }else if(coordChange == CoordinateChange::RelativeToAbsolute){
+        t = zoneTransformation.inverse() * buildingTransformation.inverse();
+      } else if (coordChange == CoordinateChange::RelativeToAbsolute) {
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        t = buildingTransformation*zoneTransformation;
+        t = buildingTransformation * zoneTransformation;
       }
 
       // get vertices
-      Point3dVector vertices = t*verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
+      Point3dVector vertices = t * verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *width);
 
       // add new object
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned> > fieldMap;
+      std::vector<std::pair<unsigned, unsigned>> fieldMap;
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::Name, BuildingSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::OutsideBoundaryConditionObject,
+                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -2234,11 +2286,11 @@ namespace energyplus {
 
       // swap old object with new one
       bool ok = m_workspace.swap(oldObject, newObject);
-      if (ok){
+      if (ok) {
         OS_ASSERT(oldObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
         // set vertices
         setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, oldObject, vertices);
-      }else{
+      } else {
         LOG(Error, "Workspace object swap failed");
         continue;
       }
@@ -2251,42 +2303,41 @@ namespace energyplus {
   }
 
   // transform daylighting geometry from the current system to the new system
-  bool GeometryTranslator::convertDaylightingGeometry(const CoordinateChange& daylightingCoordChange)
-  {
+  bool GeometryTranslator::convertDaylightingGeometry(const CoordinateChange& daylightingCoordChange) {
     bool result = true;
 
     Transformation buildingTransformation = this->buildingTransformation();
 
     // daylighting controls
-    for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)){
+    for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)) {
       // todo: transform glare angle
     }
 
     // daylighting reference points
-    for (WorkspaceObject daylightingPoint : m_workspace.getObjectsByType(IddObjectType::Daylighting_ReferencePoint)){
-      if (daylightingCoordChange != CoordinateChange::NoChange){
+    for (WorkspaceObject daylightingPoint : m_workspace.getObjectsByType(IddObjectType::Daylighting_ReferencePoint)) {
+      if (daylightingCoordChange != CoordinateChange::NoChange) {
         OptionalWorkspaceObject zone = daylightingPoint.getTarget(Daylighting_ReferencePointFields::ZoneName);
-        if (!zone){
+        if (!zone) {
           LOG(Error, "Could not find zone");
           continue;
         }
 
         Transformation t;
-        if (daylightingCoordChange == CoordinateChange::AbsoluteToRelative){
+        if (daylightingCoordChange == CoordinateChange::AbsoluteToRelative) {
           Transformation zoneTransformation = this->zoneTransformation(*zone);
-          t = zoneTransformation.inverse()*buildingTransformation.inverse();
-        }else if(daylightingCoordChange == CoordinateChange::RelativeToAbsolute){
+          t = zoneTransformation.inverse() * buildingTransformation.inverse();
+        } else if (daylightingCoordChange == CoordinateChange::RelativeToAbsolute) {
           Transformation zoneTransformation = this->zoneTransformation(*zone);
-          t = buildingTransformation*zoneTransformation;
+          t = buildingTransformation * zoneTransformation;
         }
 
         // transform sensor points
         OptionalDouble x = daylightingPoint.getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, true);
         OptionalDouble y = daylightingPoint.getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, true);
         OptionalDouble z = daylightingPoint.getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, true);
-        if (x && y && z){
+        if (x && y && z) {
           Point3d point(*x, *y, *z);
-          point = t*point;
+          point = t * point;
           result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, point.x());
           result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, point.y());
           result = result && daylightingPoint.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, point.z());
@@ -2295,21 +2346,21 @@ namespace energyplus {
     }
 
     // output illuminance map
-    for (WorkspaceObject illuminanceMap : m_workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap)){
-      if (daylightingCoordChange != CoordinateChange::NoChange){
+    for (WorkspaceObject illuminanceMap : m_workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap)) {
+      if (daylightingCoordChange != CoordinateChange::NoChange) {
         OptionalWorkspaceObject zone = illuminanceMap.getTarget(Output_IlluminanceMapFields::ZoneName);
-        if (!zone){
+        if (!zone) {
           LOG(Error, "Could not find zone");
           continue;
         }
 
         Transformation t;
-        if (daylightingCoordChange == CoordinateChange::AbsoluteToRelative){
+        if (daylightingCoordChange == CoordinateChange::AbsoluteToRelative) {
           Transformation zoneTransformation = this->zoneTransformation(*zone);
-          t = zoneTransformation.inverse()*buildingTransformation.inverse();
-        }else if(daylightingCoordChange == CoordinateChange::RelativeToAbsolute){
+          t = zoneTransformation.inverse() * buildingTransformation.inverse();
+        } else if (daylightingCoordChange == CoordinateChange::RelativeToAbsolute) {
           Transformation zoneTransformation = this->zoneTransformation(*zone);
-          t = buildingTransformation*zoneTransformation;
+          t = buildingTransformation * zoneTransformation;
         }
 
         // transform min/max points
@@ -2318,17 +2369,17 @@ namespace energyplus {
         OptionalDouble xmax = illuminanceMap.getDouble(Output_IlluminanceMapFields::XMaximumCoordinate, true);
         OptionalDouble ymax = illuminanceMap.getDouble(Output_IlluminanceMapFields::YMaximumCoordinate, true);
         OptionalDouble z = illuminanceMap.getDouble(Output_IlluminanceMapFields::Zheight, true);
-        if (xmin && ymin && xmax && ymax && z){
+        if (xmin && ymin && xmax && ymax && z) {
 
           // do not know which point will be min and max in new coord system
           Point3d p1(*xmin, *ymin, *z);
-          p1 = t*p1;
+          p1 = t * p1;
           Point3d p2(*xmax, *ymin, *z);
-          p2 = t*p2;
+          p2 = t * p2;
           Point3d p3(*xmin, *ymax, *z);
-          p3 = t*p3;
+          p3 = t * p3;
           Point3d p4(*xmax, *ymax, *z);
-          p4 = t*p4;
+          p4 = t * p4;
 
           xmin = std::min(std::min(std::min(p1.x(), p2.x()), p3.x()), p4.x());
           ymin = std::min(std::min(std::min(p1.y(), p2.y()), p3.y()), p4.y());
@@ -2348,101 +2399,100 @@ namespace energyplus {
   }
 
   // transform detailed geometry from the current system to the new system
-  bool GeometryTranslator::convertDetailedGeometry(const CoordinateChange& detailedCoordChange)
-  {
+  bool GeometryTranslator::convertDetailedGeometry(const CoordinateChange& detailedCoordChange) {
     bool result = true;
 
     Transformation buildingTransformation = this->buildingTransformation();
 
-    for (WorkspaceObject surface : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
+    for (WorkspaceObject surface : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, surface);
       surface.setString(BuildingSurface_DetailedFields::NumberofVertices, "Autocalculate");
-      if (detailedCoordChange != CoordinateChange::NoChange){
+      if (detailedCoordChange != CoordinateChange::NoChange) {
         OptionalWorkspaceObject zone = surface.getTarget(BuildingSurface_DetailedFields::ZoneName);
-        if (!zone){
+        if (!zone) {
           LOG(Error, "Could not find zone");
           continue;
         }
 
         Transformation zoneTransformation = this->zoneTransformation(*zone);
 
-        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative){
-          vertices = zoneTransformation.inverse()*buildingTransformation.inverse()*vertices;
+        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative) {
+          vertices = zoneTransformation.inverse() * buildingTransformation.inverse() * vertices;
           setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, surface, vertices);
-        }else if(detailedCoordChange == CoordinateChange::RelativeToAbsolute){
-          vertices = buildingTransformation*zoneTransformation*vertices;
+        } else if (detailedCoordChange == CoordinateChange::RelativeToAbsolute) {
+          vertices = buildingTransformation * zoneTransformation * vertices;
           setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, surface, vertices);
         }
       }
     }
 
-    for (WorkspaceObject subsurface : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
+    for (WorkspaceObject subsurface : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, subsurface);
       subsurface.setString(FenestrationSurface_DetailedFields::NumberofVertices, "Autocalculate");
-      if (detailedCoordChange != CoordinateChange::NoChange){
+      if (detailedCoordChange != CoordinateChange::NoChange) {
         OptionalWorkspaceObject surface = subsurface.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName);
-        if (!surface){
+        if (!surface) {
           LOG(Error, "Could not find surface");
           continue;
         }
         OptionalWorkspaceObject zone = surface->getTarget(BuildingSurface_DetailedFields::ZoneName);
-        if (!zone){
+        if (!zone) {
           LOG(Error, "Could not find zone");
           continue;
         }
         Transformation zoneTransformation = this->zoneTransformation(*zone);
-        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative){
-          vertices = zoneTransformation.inverse()*buildingTransformation.inverse()*vertices;
+        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative) {
+          vertices = zoneTransformation.inverse() * buildingTransformation.inverse() * vertices;
           setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, subsurface, vertices);
-        }else if(detailedCoordChange == CoordinateChange::RelativeToAbsolute){
-          vertices = buildingTransformation*zoneTransformation*vertices;
+        } else if (detailedCoordChange == CoordinateChange::RelativeToAbsolute) {
+          vertices = buildingTransformation * zoneTransformation * vertices;
           setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, subsurface, vertices);
         }
       }
     }
 
-    for (WorkspaceObject zoneShading : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
+    for (WorkspaceObject zoneShading : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, zoneShading);
       zoneShading.setString(Shading_Zone_DetailedFields::NumberofVertices, "Autocalculate");
-      if (detailedCoordChange != CoordinateChange::NoChange){
+      if (detailedCoordChange != CoordinateChange::NoChange) {
         OptionalWorkspaceObject zoneSurface = zoneShading.getTarget(Shading_Zone_DetailedFields::BaseSurfaceName);
-        if (!zoneSurface){
+        if (!zoneSurface) {
           LOG(Error, "Could not find zone surface");
           continue;
         }
         OptionalWorkspaceObject zone = zoneSurface->getTarget(BuildingSurface_DetailedFields::ZoneName);
-        if (!zone){
+        if (!zone) {
           LOG(Error, "Could not find zone");
           continue;
         }
 
         Transformation zoneTransformation = this->zoneTransformation(*zone);
 
-        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative){
-          vertices = zoneTransformation.inverse()*buildingTransformation.inverse()*vertices;
+        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative) {
+          vertices = zoneTransformation.inverse() * buildingTransformation.inverse() * vertices;
           setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, zoneShading, vertices);
-        }else if(detailedCoordChange == CoordinateChange::RelativeToAbsolute){
-          vertices = buildingTransformation*zoneTransformation*vertices;
+        } else if (detailedCoordChange == CoordinateChange::RelativeToAbsolute) {
+          vertices = buildingTransformation * zoneTransformation * vertices;
           setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, zoneShading, vertices);
         }
       }
     }
 
-    for (WorkspaceObject buildingShading : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
+    for (WorkspaceObject buildingShading : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, buildingShading);
       buildingShading.setString(Shading_Building_DetailedFields::NumberofVertices, "Autocalculate");
-      if (detailedCoordChange != CoordinateChange::NoChange){
-        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative){
-          vertices = buildingTransformation.inverse()*vertices;
+      if (detailedCoordChange != CoordinateChange::NoChange) {
+        if (detailedCoordChange == CoordinateChange::AbsoluteToRelative) {
+          vertices = buildingTransformation.inverse() * vertices;
           setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, buildingShading, vertices);
-        }else if(detailedCoordChange == CoordinateChange::RelativeToAbsolute){
-          vertices = buildingTransformation*vertices;
+        } else if (detailedCoordChange == CoordinateChange::RelativeToAbsolute) {
+          vertices = buildingTransformation * vertices;
           setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, buildingShading, vertices);
         }
       }
     }
 
-    for (WorkspaceObject siteShading : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
+    for (WorkspaceObject siteShading : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
       siteShading.setString(Shading_Site_DetailedFields::NumberofVertices, "Autocalculate");
     }
 
@@ -2450,70 +2500,66 @@ namespace energyplus {
   }
 
   // get vertices for a surface
-  openstudio::Point3dVector getVertices(unsigned firstVertex, const IdfObject& surface)
-  {
+  openstudio::Point3dVector getVertices(unsigned firstVertex, const IdfObject& surface) {
     Point3dVector result;
     unsigned numFields = surface.numFields();
     unsigned numVertexFields;
     unsigned numVertices;
 
     numVertexFields = numFields - firstVertex;
-    numVertices = numVertexFields / 3; // integer division
+    numVertices = numVertexFields / 3;  // integer division
 
     // check that at least three vertices
-    if ( (numVertexFields % 3) == 0 && numVertices >= 3 ){
+    if ((numVertexFields % 3) == 0 && numVertices >= 3) {
 
-      for (unsigned vertexIndex = 0; vertexIndex < numVertices; ++vertexIndex){
-        OptionalDouble x = surface.getDouble(firstVertex + 3*vertexIndex + 0);
-        OptionalDouble y = surface.getDouble(firstVertex + 3*vertexIndex + 1);
-        OptionalDouble z = surface.getDouble(firstVertex + 3*vertexIndex + 2);
+      for (unsigned vertexIndex = 0; vertexIndex < numVertices; ++vertexIndex) {
+        OptionalDouble x = surface.getDouble(firstVertex + 3 * vertexIndex + 0);
+        OptionalDouble y = surface.getDouble(firstVertex + 3 * vertexIndex + 1);
+        OptionalDouble z = surface.getDouble(firstVertex + 3 * vertexIndex + 2);
 
-        if (x && y && z){
+        if (x && y && z) {
           result.push_back(Point3d(*x, *y, *z));
-        }else{
+        } else {
           LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator",
-                   "Could not read vertex " << vertexIndex << " at indices " <<
-                   firstVertex + 3*vertexIndex + 0 << " to " << firstVertex + 3*vertexIndex + 2 );
+                   "Could not read vertex " << vertexIndex << " at indices " << firstVertex + 3 * vertexIndex + 0 << " to "
+                                            << firstVertex + 3 * vertexIndex + 2);
         }
       }
-    }else{
-      LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator",
-              "Fewer than 3 vertices detected for surface '" << surface.nameString() << "'");
+    } else {
+      LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator", "Fewer than 3 vertices detected for surface '" << surface.nameString() << "'");
     }
 
     return result;
   }
 
   // set vertices for a surface, only detailed surfaces are supported
-  bool setVertices(unsigned firstVertex, WorkspaceObject& surface, const openstudio::Point3dVector& vertices)
-  {
+  bool setVertices(unsigned firstVertex, WorkspaceObject& surface, const openstudio::Point3dVector& vertices) {
     bool result = true;
 
     // delete current fields, cannot currently delete all so leave first 3 vertices
-    while( !surface.popExtensibleGroup().empty() )
-    {}
+    while (!surface.popExtensibleGroup().empty()) {
+    }
 
     // preallocate enough space for all vertices
-    while( (surface.numFields()-firstVertex)/3 < vertices.size() )
-    {
+    while ((surface.numFields() - firstVertex) / 3 < vertices.size()) {
       surface.pushExtensibleGroup(StringVector(3));
     }
 
     // set the vertices
-    for (unsigned vertexIndex = 0; vertexIndex < vertices.size(); ++vertexIndex){
-      if (!surface.setDouble(firstVertex + 3*vertexIndex + 0, vertices[vertexIndex].x())){
+    for (unsigned vertexIndex = 0; vertexIndex < vertices.size(); ++vertexIndex) {
+      if (!surface.setDouble(firstVertex + 3 * vertexIndex + 0, vertices[vertexIndex].x())) {
         LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator",
-                 "Could not set field index " << firstVertex + 3*vertexIndex + 0 << " to " << vertices[vertexIndex].x());
+                 "Could not set field index " << firstVertex + 3 * vertexIndex + 0 << " to " << vertices[vertexIndex].x());
         result = false;
       }
-      if (!surface.setDouble(firstVertex + 3*vertexIndex + 1, vertices[vertexIndex].y())){
+      if (!surface.setDouble(firstVertex + 3 * vertexIndex + 1, vertices[vertexIndex].y())) {
         LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator",
-                 "Could not set field index " << firstVertex + 3*vertexIndex + 1 << " to " << vertices[vertexIndex].y());
+                 "Could not set field index " << firstVertex + 3 * vertexIndex + 1 << " to " << vertices[vertexIndex].y());
         result = false;
       }
-      if (!surface.setDouble(firstVertex + 3*vertexIndex + 2, vertices[vertexIndex].z())){
+      if (!surface.setDouble(firstVertex + 3 * vertexIndex + 2, vertices[vertexIndex].z())) {
         LOG_FREE(Error, "openstudio.energyplus.GeometryTranslator",
-                 "Could not set field index " << firstVertex + 3*vertexIndex + 2 << " to " << vertices[vertexIndex].z());
+                 "Could not set field index " << firstVertex + 3 * vertexIndex + 2 << " to " << vertices[vertexIndex].z());
         result = false;
       }
     }
@@ -2522,59 +2568,58 @@ namespace energyplus {
   }
 
   // reverse all detailed vertices
-  bool GeometryTranslator::reverseAllDetailedVertices()
-  {
+  bool GeometryTranslator::reverseAllDetailedVertices() {
     // BuildingSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Wall:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
       Point3dVector vertices = getVertices(Wall_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Wall_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // RoofCeiling:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
       Point3dVector vertices = getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Floor:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
       Point3dVector vertices = getVertices(Floor_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Floor_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // FenestrationSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Site:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Building:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Zone:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object, vertices);
@@ -2584,52 +2629,51 @@ namespace energyplus {
   }
 
   // apply upper left corner rule to all detailed vertices
-  bool GeometryTranslator::applyUpperLeftCornerRule()
-  {
+  bool GeometryTranslator::applyUpperLeftCornerRule() {
     // BuildingSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object);
       setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Wall:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
       Point3dVector vertices = getVertices(Wall_DetailedFields::NumberofVertices + 1, object);
       setVertices(Wall_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // RoofCeiling:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
       Point3dVector vertices = getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object);
       setVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Floor:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
       Point3dVector vertices = getVertices(Floor_DetailedFields::NumberofVertices + 1, object);
       setVertices(Floor_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // FenestrationSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object);
       setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Site:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Building:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Zone:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
@@ -2639,8 +2683,8 @@ namespace energyplus {
 
   // convert azimuth, tilt, starting x, y, z, length, and width to vertices
   // azimuth and tilt are in degrees
-  openstudio::Point3dVector verticesForAzimuthTiltXYZLengthWidthOrHeight(double azimuth, double tilt, double x0, double y0, double z0, double length, double widthOrHeight)
-  {
+  openstudio::Point3dVector verticesForAzimuthTiltXYZLengthWidthOrHeight(double azimuth, double tilt, double x0, double y0, double z0, double length,
+                                                                         double widthOrHeight) {
     openstudio::Point3dVector result(4);
 
     openstudio::Vector xpts(4, 0.0);
@@ -2658,15 +2702,15 @@ namespace energyplus {
     double cosTilt = cos(degToRad(tilt));
     double sinTilt = sin(degToRad(tilt));
 
-    for (unsigned i = 0; i < 4; ++i){
-      double x = x0 - cosAzimuth*xpts[i] - cosTilt*sinAzimuth*ypts[i];
-      double y = y0 + sinAzimuth*xpts[i] - cosTilt*cosAzimuth*ypts[i];
-      double z = z0 + sinTilt*ypts[i];
+    for (unsigned i = 0; i < 4; ++i) {
+      double x = x0 - cosAzimuth * xpts[i] - cosTilt * sinAzimuth * ypts[i];
+      double y = y0 + sinAzimuth * xpts[i] - cosTilt * cosAzimuth * ypts[i];
+      double z = z0 + sinTilt * ypts[i];
       result[i] = Point3d(x, y, z);
     }
 
     return result;
   }
 
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

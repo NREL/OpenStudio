@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,46 +30,34 @@
 #include "GenericModelObject.hpp"
 #include "GenericModelObject_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail{
+  namespace detail {
 
-// constructor
-GenericModelObject_Impl::GenericModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
-{}
+    // constructor
+    GenericModelObject_Impl::GenericModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {}
 
-GenericModelObject_Impl::GenericModelObject_Impl(
-  const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
-  : ModelObject_Impl(other,model,keepHandle)
-{}
+    GenericModelObject_Impl::GenericModelObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-GenericModelObject_Impl::GenericModelObject_Impl(const GenericModelObject_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle)
-  : ModelObject_Impl(other,model,keepHandle)
-{}
+    GenericModelObject_Impl::GenericModelObject_Impl(const GenericModelObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-const std::vector<std::string>& GenericModelObject_Impl::outputVariableNames() const
-{
-  static const std::vector<std::string> result;
-  return result;
-}
+    const std::vector<std::string>& GenericModelObject_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
+    IddObjectType GenericModelObject_Impl::iddObjectType() const {
+      IddObjectType retVal(iddObject().type());
+      return retVal;
+    }
 
-IddObjectType GenericModelObject_Impl::iddObjectType() const
-{
-  IddObjectType retVal(iddObject().type());
-  return retVal;
-}
+  }  // namespace detail
 
-}// detail
+  GenericModelObject::GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> impl) : ModelObject(std::move(impl)) {}
 
-GenericModelObject::GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> p)
-  :  ModelObject(std::move(p))
-{}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

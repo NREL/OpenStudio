@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,8 +49,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SkyTemperature_Hierarchy)
-{
+TEST_F(ModelFixture, SkyTemperature_Hierarchy) {
   Model model;
 
   SkyTemperature skyTemperature(model);
@@ -71,16 +70,16 @@ TEST_F(ModelFixture, SkyTemperature_Hierarchy)
   ASSERT_TRUE(opo);
   skyTempParent = *opo;
   EXPECT_TRUE(skyTempParent == runPeriod);
-  EXPECT_EQ(static_cast<unsigned>(0),site.children().size());
+  EXPECT_EQ(static_cast<unsigned>(0), site.children().size());
 
   SkyTemperature globalSkyTemperature(model);
   opo = globalSkyTemperature.parent();
   ASSERT_TRUE(opo);
   ParentObject globalSkyTempParent = *opo;
   EXPECT_TRUE(globalSkyTempParent == site);
-  EXPECT_EQ(static_cast<unsigned>(1),site.children().size());
-  EXPECT_EQ(static_cast<unsigned>(1),runPeriod.children().size());
-  EXPECT_EQ(static_cast<unsigned>(4),model.numObjects());
+  EXPECT_EQ(static_cast<unsigned>(1), site.children().size());
+  EXPECT_EQ(static_cast<unsigned>(1), runPeriod.children().size());
+  EXPECT_EQ(static_cast<unsigned>(4), model.numObjects());
 
   // skyTemperature can also be parented by SizingPeriod objects
   DesignDay designDay(model);

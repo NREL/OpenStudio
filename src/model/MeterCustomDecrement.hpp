@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,112 +38,109 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MeterCustomDecrement_Impl;
+    class MeterCustomDecrement_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** MeterCustomDecrement is a ModelObject that wraps the OpenStudio IDD object 'OS:Meter:Custom'. */
-class MODEL_API MeterCustomDecrement : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** MeterCustomDecrement is a ModelObject that wraps the OpenStudio IDD object 'OS:Meter:Custom'. */
+  class MODEL_API MeterCustomDecrement : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  // Constructs a new MeterCustomDecrement object in the model.
-  explicit MeterCustomDecrement(const Model& model, const std::string& sourceMeterName);
+    // Constructs a new MeterCustomDecrement object in the model.
+    explicit MeterCustomDecrement(const Model& model, const std::string& sourceMeterName);
 
-  virtual ~MeterCustomDecrement() {}
+    virtual ~MeterCustomDecrement() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> fuelTypeValues();
+    static std::vector<std::string> fuelTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<std::string> fuelType() const;
+    boost::optional<std::string> fuelType() const;
 
-  std::string sourceMeterName() const;
+    std::string sourceMeterName() const;
 
-  // Return a vector of (Key, Var) pairs
-  std::vector< std::pair<std::string, std::string> > keyVarGroups();
+    // Return a vector of (Key, Var) pairs
+    std::vector<std::pair<std::string, std::string>> keyVarGroups();
 
-  // Return the number of (KeyName, OutputVariableorMeterName) groups
-  unsigned numKeyVarGroups() const;
+    // Return the number of (KeyName, OutputVariableorMeterName) groups
+    unsigned numKeyVarGroups() const;
 
+    // Lower Level functions
+    /** Get the Key Name at index. Indexing starts at 0. */
+    boost::optional<std::string> keyName(unsigned index) const;
 
-  // Lower Level functions
-  /** Get the Key Name at index. Indexing starts at 0. */
-  boost::optional<std::string> keyName(unsigned index) const;
+    /** Get the Output Variable of Meter Name at index. Indexing starts at 0. */
+    boost::optional<std::string> outputVariableorMeterName(unsigned index) const;
 
-  /** Get the Output Variable of Meter Name at index. Indexing starts at 0. */
-  boost::optional<std::string> outputVariableorMeterName(unsigned index) const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setFuelType(const std::string& fuelType);
 
-  bool setFuelType(const std::string& fuelType);
+    void resetFuelType();
 
-  void resetFuelType();
+    bool setSourceMeterName(const std::string& sourceMeterName);
 
-  bool setSourceMeterName(const std::string& sourceMeterName);
+    // Add a new (Key, Var) group
+    bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
 
-  // Add a new (Key, Var) group
-  bool addKeyVarGroup(const std::string& keyName, const std::string& outputVariableorMeterName);
+    // Remove the (Key, Var) group at given index
+    bool removeKeyVarGroup(unsigned groupIndex);
 
-  // Remove the (Key, Var) group at given index
-  bool removeKeyVarGroup(unsigned groupIndex);
+    // Remove all the (Key, Var) groups
+    void removeAllKeyVarGroups();
 
-  // Remove all the (Key, Var) groups
-  void removeAllKeyVarGroups();
+    // Lower level functions
+    /** Set the Key Name at index. Indexing starts at 0. */
+    bool setKeyName(unsigned index, const std::string& str);
 
+    /** Set the Output Variable of Meter Name at index. Indexing starts at 0. */
+    bool setOutputVariableorMeterName(unsigned index, const std::string& str);
 
-  // Lower level functions
-  /** Set the Key Name at index. Indexing starts at 0. */
-  bool setKeyName(unsigned index, const std::string& str);
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Set the Output Variable of Meter Name at index. Indexing starts at 0. */
-  bool setOutputVariableorMeterName(unsigned index, const std::string& str);
+    //@}
+    /** @name Type Casting */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::MeterCustomDecrement_Impl ImplType;
 
-  //@}
-  /** @name Type Casting */
-  //@{
+    explicit MeterCustomDecrement(std::shared_ptr<detail::MeterCustomDecrement_Impl> impl);
 
+    friend class detail::MeterCustomDecrement_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    std::shared_ptr<detail::MeterCustomDecrement_Impl> m_impl;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::MeterCustomDecrement_Impl ImplType;
+    REGISTER_LOGGER("openstudio.model.MeterCustomDecrement");
+  };
 
-  explicit MeterCustomDecrement(std::shared_ptr<detail::MeterCustomDecrement_Impl> impl);
+  /** \relates MeterCustomDecrement*/
+  typedef boost::optional<MeterCustomDecrement> OptionalMeterCustomDecrement;
 
-  friend class detail::MeterCustomDecrement_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  std::shared_ptr<detail::MeterCustomDecrement_Impl> m_impl;
+  /** \relates MeterCustomDecrement*/
+  typedef std::vector<MeterCustomDecrement> MeterCustomDecrementVector;
 
-  REGISTER_LOGGER("openstudio.model.MeterCustomDecrement");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates MeterCustomDecrement*/
-typedef boost::optional<MeterCustomDecrement> OptionalMeterCustomDecrement;
-
-/** \relates MeterCustomDecrement*/
-typedef std::vector<MeterCustomDecrement> MeterCustomDecrementVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_METERCUSTOMDECREMENT_HPP
-
+#endif  // MODEL_METERCUSTOMDECREMENT_HPP

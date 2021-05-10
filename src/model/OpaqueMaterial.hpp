@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,163 +36,164 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class OpaqueMaterial_Impl;
-}
+  namespace detail {
+    class OpaqueMaterial_Impl;
+  }
 
-/** OpaqueMaterial is a Material that serves as a base class for all \link LayeredConstruction
+  /** OpaqueMaterial is a Material that serves as a base class for all \link LayeredConstruction
  *  LayeredConstructions \endlink for which isOpaque. OpaqueMaterial also defines a number of
  *  virtually implemented attributes. */
-class MODEL_API OpaqueMaterial : public Material {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API OpaqueMaterial : public Material
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OpaqueMaterial() {}
+    virtual ~OpaqueMaterial() {}
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /** Thermal conductivity of the Material in W/m*K. Throws openstudio::Exception if unavailable.
+    /** Thermal conductivity of the Material in W/m*K. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalConductivity' */
-  double thermalConductivity() const;
+    double thermalConductivity() const;
 
-  /** Thermal conductance of the Material in W/m^2*K. Throws openstudio::Exception if unavailable.
+    /** Thermal conductance of the Material in W/m^2*K. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalConductance' */
-  double thermalConductance() const;
+    double thermalConductance() const;
 
-  /** Thermal resistivity of the Material in m*K/W. Throws openstudio::Exception if unavailable.
+    /** Thermal resistivity of the Material in m*K/W. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalResistivity'. */
-  double thermalResistivity() const;
+    double thermalResistivity() const;
 
-  /** Thermal resistance of the Material in m^2*K/W. Throws openstudio::Exception if unavailable.
+    /** Thermal resistance of the Material in m^2*K/W. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalResistance'. */
-  double thermalResistance() const;
+    double thermalResistance() const;
 
-  /** Thermal absorptance of the Material (dimensionless fraction).
+    /** Thermal absorptance of the Material (dimensionless fraction).
    *
    *  Attribute name: 'thermalAbsorptance' */
-  double thermalAbsorptance() const;
+    double thermalAbsorptance() const;
 
-  /** Thermal reflectance of the Material (dimensionless fraction).
+    /** Thermal reflectance of the Material (dimensionless fraction).
    *
    *  Attribute name: 'thermalReflectance' */
-  boost::optional<double> thermalReflectance() const;
+    boost::optional<double> thermalReflectance() const;
 
-  /** Solar absorptance of the Material (dimensionless fraction).
+    /** Solar absorptance of the Material (dimensionless fraction).
    *
    *  Attribute name: 'solarAbsorptance' */
-  double solarAbsorptance() const;
+    double solarAbsorptance() const;
 
-  /** Solar reflectance of the Material (dimensionless fraction).
+    /** Solar reflectance of the Material (dimensionless fraction).
    *
    *  Attribute name: 'solarReflectance' */
-  boost::optional<double> solarReflectance() const;
+    boost::optional<double> solarReflectance() const;
 
-  /** Visible absorptance of the Material (dimensionless fraction).
+    /** Visible absorptance of the Material (dimensionless fraction).
    *
    *  Attribute name: 'visibleAbsorptance' */
-  double visibleAbsorptance() const;
+    double visibleAbsorptance() const;
 
-  /** Visible reflectance of the Material (dimensionless fraction).
+    /** Visible reflectance of the Material (dimensionless fraction).
    *
    *  Attribute name: 'visibleReflectance' */
-  boost::optional<double> visibleReflectance() const;
+    boost::optional<double> visibleReflectance() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Set the thermal conductivity (W/m*K).
+    /** Set the thermal conductivity (W/m*K).
    *
    *  Attribute name: 'thermalConductivity' */
-  bool setThermalConductivity(double value);
+    bool setThermalConductivity(double value);
 
-  /** Set the thermal conductance (W/m^2*K).
+    /** Set the thermal conductance (W/m^2*K).
    *
    *  Attribute name: 'thermalConductance' */
-  bool setThermalConductance(double value);
+    bool setThermalConductance(double value);
 
-  /** Set the thermal resistivity (m*K/W).
+    /** Set the thermal resistivity (m*K/W).
    *
    *  Attribute name: 'thermalResistivity' */
-  bool setThermalResistivity(double value);
+    bool setThermalResistivity(double value);
 
-  /** Set the thermal resistance (m^2*K/W).
+    /** Set the thermal resistance (m^2*K/W).
    *
    *  Attribute name: 'thermalResistance' */
-  bool setThermalResistance(double value);
+    bool setThermalResistance(double value);
 
-  /** Set the thermal absorptance (dimensionless fraction).
+    /** Set the thermal absorptance (dimensionless fraction).
    *
    *  Attribute name: 'thermalAbsorptance' */
-  bool setThermalAbsorptance(double value);
+    bool setThermalAbsorptance(double value);
 
-  /** Set the thermal reflectance (dimensionless fraction).
+    /** Set the thermal reflectance (dimensionless fraction).
    *
    *  Attribute name: 'thermalReflectance' */
-  bool setThermalReflectance(boost::optional<double> value);
+    bool setThermalReflectance(boost::optional<double> value);
 
-  /** Set the solar absorptance (dimensionless fraction).
+    /** Set the solar absorptance (dimensionless fraction).
    *
    *  Attribute name: 'solarAbsorptance' */
-  bool setSolarAbsorptance(boost::optional<double> value);
+    bool setSolarAbsorptance(boost::optional<double> value);
 
-  /** Set the solar reflectance (dimensionless fraction).
+    /** Set the solar reflectance (dimensionless fraction).
    *
    *  Attribute name: 'solarReflectance' */
-  bool setSolarReflectance(boost::optional<double> value);
+    bool setSolarReflectance(boost::optional<double> value);
 
-  /** Set the visible absorptance (dimensionless fraction).
+    /** Set the visible absorptance (dimensionless fraction).
    *
    *  Attribute name: 'visibleAbsorptance' */
-  bool setVisibleAbsorptance(boost::optional<double> value);
+    bool setVisibleAbsorptance(boost::optional<double> value);
 
-  /** Set the visible reflectance (dimensionless fraction).
+    /** Set the visible reflectance (dimensionless fraction).
    *
    *  Attribute name: 'visibleReflectance' */
-  bool setVisibleReflectance(boost::optional<double> value);
+    bool setVisibleReflectance(boost::optional<double> value);
 
-  //@}
-  /** @name Queries */
-  //@{
+    //@}
+    /** @name Queries */
+    //@{
 
-  /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
+    /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
    *  specificHeat() * density() * thickness().
    *
    *  Attribute name: 'heatCapacity' */
-  boost::optional<double> heatCapacity() const;
+    boost::optional<double> heatCapacity() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OpaqueMaterial_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OpaqueMaterial_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::OpaqueMaterial_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::OpaqueMaterial_Impl;
 
-  OpaqueMaterial(IddObjectType type,const Model& model);
+    OpaqueMaterial(IddObjectType type, const Model& model);
 
-  explicit OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl);
+    explicit OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OpaqueMaterial");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OpaqueMaterial");
+  };
 
-/** \relates OpaqueMaterial */
-typedef boost::optional<OpaqueMaterial> OptionalOpaqueMaterial;
+  /** \relates OpaqueMaterial */
+  typedef boost::optional<OpaqueMaterial> OptionalOpaqueMaterial;
 
-/** \relates OpaqueMaterial */
-typedef std::vector<OpaqueMaterial> OpaqueMaterialVector;
+  /** \relates OpaqueMaterial */
+  typedef std::vector<OpaqueMaterial> OpaqueMaterialVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OPAQUEMATERIAL_HPP
+#endif  // MODEL_OPAQUEMATERIAL_HPP

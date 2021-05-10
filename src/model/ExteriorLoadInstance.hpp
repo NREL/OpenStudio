@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,75 +36,72 @@
 namespace openstudio {
 namespace model {
 
-class ExteriorLoadDefinition;
+  class ExteriorLoadDefinition;
 
-namespace detail{
-  class ExteriorLoadInstance_Impl;
-}
+  namespace detail {
+    class ExteriorLoadInstance_Impl;
+  }
 
-/** ExteriorLoadInstance is an abstract class derived from ModelObject. \link ExteriorLoadInstance
+  /** ExteriorLoadInstance is an abstract class derived from ModelObject. \link ExteriorLoadInstance
  *  ExteriorLoadInstances \endlink instantiate a given ExteriorLoadDefinition in the facility
  *  by defining a multiplier and a schedule.
  */
-class MODEL_API ExteriorLoadInstance : public ModelObject {
- public:
-  virtual ~ExteriorLoadInstance() {}
+  class MODEL_API ExteriorLoadInstance : public ModelObject
+  {
+   public:
+    virtual ~ExteriorLoadInstance() {}
 
-  /** Returns the definition of this instance. **/
-  ExteriorLoadDefinition definition() const;
+    /** Returns the definition of this instance. **/
+    ExteriorLoadDefinition definition() const;
 
-  /** Sets the definition of this instance. **/
-  bool setDefinition(const ExteriorLoadDefinition& definition);
+    /** Sets the definition of this instance. **/
+    bool setDefinition(const ExteriorLoadDefinition& definition);
 
-  /** Ensures that no other instances share this instances definition. **/
-  void makeUnique();
+    /** Ensures that no other instances share this instances definition. **/
+    void makeUnique();
 
-  /** Gets the multiplier for this space instance, defaults to 1. **/
-  double multiplier() const;
+    /** Gets the multiplier for this space instance, defaults to 1. **/
+    double multiplier() const;
 
-  /** Returns true if the multiplier is defaulted. **/
-  bool isMultiplierDefaulted() const;
+    /** Returns true if the multiplier is defaulted. **/
+    bool isMultiplierDefaulted() const;
 
-  /** Returns the number of instances this space load instance represents.
+    /** Returns the number of instances this space load instance represents.
   This just forwards to multiplier() here but is included for consistency with SpaceLoadInstance**/
-  int quantity() const;
+    int quantity() const;
 
- protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new ExteriorLoadInstance object in the model.
+    ExteriorLoadInstance(IddObjectType type, const ExteriorLoadDefinition& definition);
 
-  /// Constructs a new ExteriorLoadInstance object in the model.
-  ExteriorLoadInstance(IddObjectType type, const ExteriorLoadDefinition& definition);
+    //@}
 
+    /// @cond
 
-  //@}
+    typedef detail::ExteriorLoadInstance_Impl ImplType;
 
-  /// @cond
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ExteriorLoadInstance_Impl;
 
-  typedef detail::ExteriorLoadInstance_Impl ImplType;
+    explicit ExteriorLoadInstance(std::shared_ptr<detail::ExteriorLoadInstance_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ExteriorLoadInstance_Impl;
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorLoadInstance");
 
-  explicit ExteriorLoadInstance(std::shared_ptr<detail::ExteriorLoadInstance_Impl> impl);
+    /// @endcond
+  };
 
- private:
+  /** \relates ExteriorLoadInstance */
+  typedef boost::optional<ExteriorLoadInstance> OptionalExteriorLoadInstance;
 
-  REGISTER_LOGGER("openstudio.model.ExteriorLoadInstance");
+  /** \relates ExteriorLoadInstance */
+  typedef std::vector<ExteriorLoadInstance> ExteriorLoadInstanceVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates ExteriorLoadInstance */
-typedef boost::optional<ExteriorLoadInstance> OptionalExteriorLoadInstance;
-
-/** \relates ExteriorLoadInstance */
-typedef std::vector<ExteriorLoadInstance> ExteriorLoadInstanceVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_EXTERIORLOADINSTANCE_HPP
+#endif  // MODEL_EXTERIORLOADINSTANCE_HPP

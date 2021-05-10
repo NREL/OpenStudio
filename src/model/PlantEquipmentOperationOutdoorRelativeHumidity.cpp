@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,68 +36,57 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  PlantEquipmentOperationOutdoorRelativeHumidity_Impl::PlantEquipmentOperationOutdoorRelativeHumidity_Impl(const IdfObject& idfObject,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType());
+    PlantEquipmentOperationOutdoorRelativeHumidity_Impl::PlantEquipmentOperationOutdoorRelativeHumidity_Impl(const IdfObject& idfObject,
+                                                                                                             Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType());
+    }
+
+    PlantEquipmentOperationOutdoorRelativeHumidity_Impl::PlantEquipmentOperationOutdoorRelativeHumidity_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType());
+    }
+
+    PlantEquipmentOperationOutdoorRelativeHumidity_Impl::PlantEquipmentOperationOutdoorRelativeHumidity_Impl(
+      const PlantEquipmentOperationOutdoorRelativeHumidity_Impl& other, Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& PlantEquipmentOperationOutdoorRelativeHumidity_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType PlantEquipmentOperationOutdoorRelativeHumidity_Impl::iddObjectType() const {
+      return PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType();
+    }
+
+    double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::maximumUpperLimit() const {
+      return 100.0;
+    }
+
+    double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::minimumLowerLimit() const {
+      return 0.0;
+    }
+
+  }  // namespace detail
+
+  PlantEquipmentOperationOutdoorRelativeHumidity::PlantEquipmentOperationOutdoorRelativeHumidity(const Model& model)
+    : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl>());
   }
 
-  PlantEquipmentOperationOutdoorRelativeHumidity_Impl::PlantEquipmentOperationOutdoorRelativeHumidity_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType());
+  IddObjectType PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorRelativeHumidity);
   }
 
-  PlantEquipmentOperationOutdoorRelativeHumidity_Impl::PlantEquipmentOperationOutdoorRelativeHumidity_Impl(const PlantEquipmentOperationOutdoorRelativeHumidity_Impl& other,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {}
+  /// @cond
+  PlantEquipmentOperationOutdoorRelativeHumidity::PlantEquipmentOperationOutdoorRelativeHumidity(
+    std::shared_ptr<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl> impl)
+    : PlantEquipmentOperationRangeBasedScheme(std::move(impl)) {}
+  /// @endcond
 
-  const std::vector<std::string>& PlantEquipmentOperationOutdoorRelativeHumidity_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType PlantEquipmentOperationOutdoorRelativeHumidity_Impl::iddObjectType() const {
-    return PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType();
-  }
-
-  double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::maximumUpperLimit() const
-  {
-    return 100.0;
-  }
-
-  double PlantEquipmentOperationOutdoorRelativeHumidity_Impl::minimumLowerLimit() const
-  {
-    return 0.0;
-  }
-
-} // detail
-
-PlantEquipmentOperationOutdoorRelativeHumidity::PlantEquipmentOperationOutdoorRelativeHumidity(const Model& model)
-  : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl>());
-}
-
-IddObjectType PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorRelativeHumidity);
-}
-
-/// @cond
-PlantEquipmentOperationOutdoorRelativeHumidity::PlantEquipmentOperationOutdoorRelativeHumidity(std::shared_ptr<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

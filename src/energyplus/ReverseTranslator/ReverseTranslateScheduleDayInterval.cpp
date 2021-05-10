@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,76 +50,71 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateScheduleDayInterval(const WorkspaceObject & workspaceObject){
-  if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Day_Interval){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Day:Interval");
-    return boost::none;
-  }
-
-  // create the schedule
-  ScheduleDay scheduleDay(m_model);
-
-  OptionalString s = workspaceObject.name();
-  if (s){
-    scheduleDay.setName(*s);
-  }
-
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_Day_IntervalFields::ScheduleTypeLimitsName);
-  if (target){
-    OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
-    if (scheduleTypeLimits){
-      scheduleDay.setPointer(OS_Schedule_DayFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+  OptionalModelObject ReverseTranslator::translateScheduleDayInterval(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Day_Interval) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Day:Interval");
+      return boost::none;
     }
-  }
 
-  s = workspaceObject.getString(OS_Schedule_DayFields::InterpolatetoTimestep,true);
-  if (s){
-    if (openstudio::istringEqual(*s,"Yes")){
-      scheduleDay.setInterpolatetoTimestep(true);
-    }
-    else if (openstudio::istringEqual(*s,"Linear")){
-      scheduleDay.setInterpolatetoTimestep(true);
-    }
-    else if (openstudio::istringEqual(*s,"Average")){
-      scheduleDay.setInterpolatetoTimestep(true);
-    }
-  }
+    // create the schedule
+    ScheduleDay scheduleDay(m_model);
 
-  //get extensible groups
-  std::vector<IdfExtensibleGroup> extensibleGroups = workspaceObject.extensibleGroups();
-  //loop over extensible groups
-  boost::regex timeRegex("(\\d?\\d:\\d\\d)");
-  boost::smatch m;
-  unsigned n = extensibleGroups.size();
-  for (unsigned i = 0; i < n; ++i){
-    //read in extensible groups
-    boost::optional<std::string> timeString = extensibleGroups[i].getString(Schedule_Day_IntervalExtensibleFields::Time);
-    boost::optional<double> valueUntilTime = extensibleGroups[i].getDouble(Schedule_Day_IntervalExtensibleFields::ValueUntilTime);
-    if (timeString && valueUntilTime) {
-      // Time string may be prefixed with "Until: ". Extract time in HH:MM format.
-      if (boost::regex_search(*timeString,m,timeRegex)) {
-        timeString = std::string(m[1].first,m[1].second);
-      }
-      try {
-        openstudio::Time time(*timeString);
-        scheduleDay.addValue(time,*valueUntilTime);
-      }
-      catch (std::exception& e) {
-        LOG(Warn,"Could not add value (" << *timeString << ", " << *valueUntilTime
-            << ") to ScheduleDay being created from " << workspaceObject.briefDescription()
-            << ", because " << e.what() << ".");
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      scheduleDay.setName(*s);
+    }
+
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_Day_IntervalFields::ScheduleTypeLimitsName);
+    if (target) {
+      OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
+      if (scheduleTypeLimits) {
+        scheduleDay.setPointer(OS_Schedule_DayFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
       }
     }
-    else {
-      LOG(Warn,"Encountered extensible group with incomplete or improperly formatted data in "
-          << workspaceObject.briefDescription() << ". Therefore, a corresponding value is not "
-          << "being added to the ScheduleDay object under construction.");
+
+    s = workspaceObject.getString(OS_Schedule_DayFields::InterpolatetoTimestep, true);
+    if (s) {
+      if (openstudio::istringEqual(*s, "Yes")) {
+        scheduleDay.setInterpolatetoTimestep(true);
+      } else if (openstudio::istringEqual(*s, "Linear")) {
+        scheduleDay.setInterpolatetoTimestep(true);
+      } else if (openstudio::istringEqual(*s, "Average")) {
+        scheduleDay.setInterpolatetoTimestep(true);
+      }
     }
+
+    //get extensible groups
+    std::vector<IdfExtensibleGroup> extensibleGroups = workspaceObject.extensibleGroups();
+    //loop over extensible groups
+    boost::regex timeRegex("(\\d?\\d:\\d\\d)");
+    boost::smatch m;
+    unsigned n = extensibleGroups.size();
+    for (unsigned i = 0; i < n; ++i) {
+      //read in extensible groups
+      boost::optional<std::string> timeString = extensibleGroups[i].getString(Schedule_Day_IntervalExtensibleFields::Time);
+      boost::optional<double> valueUntilTime = extensibleGroups[i].getDouble(Schedule_Day_IntervalExtensibleFields::ValueUntilTime);
+      if (timeString && valueUntilTime) {
+        // Time string may be prefixed with "Until: ". Extract time in HH:MM format.
+        if (boost::regex_search(*timeString, m, timeRegex)) {
+          timeString = std::string(m[1].first, m[1].second);
+        }
+        try {
+          openstudio::Time time(*timeString);
+          scheduleDay.addValue(time, *valueUntilTime);
+        } catch (std::exception& e) {
+          LOG(Warn, "Could not add value (" << *timeString << ", " << *valueUntilTime << ") to ScheduleDay being created from "
+                                            << workspaceObject.briefDescription() << ", because " << e.what() << ".");
+        }
+      } else {
+        LOG(Warn, "Encountered extensible group with incomplete or improperly formatted data in "
+                    << workspaceObject.briefDescription() << ". Therefore, a corresponding value is not "
+                    << "being added to the ScheduleDay object under construction.");
+      }
+    }
+
+    return scheduleDay;
   }
 
-  return scheduleDay;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

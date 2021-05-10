@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,26 +46,25 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGas) {
-    Model model;
+  Model model;
 
-    ScheduleConstant scheduleConstant(model);
-    CoilHeatingGas coilHeatingGas(model, scheduleConstant);
-    coilHeatingGas.setGasBurnerEfficiency(0.6);
-    coilHeatingGas.setNominalCapacity(1535.0);
-    coilHeatingGas.setParasiticElectricLoad(48.0);
-    coilHeatingGas.setParasiticGasLoad(51.0);
-    coilHeatingGas.setFuelType("Propane");
+  ScheduleConstant scheduleConstant(model);
+  CoilHeatingGas coilHeatingGas(model, scheduleConstant);
+  coilHeatingGas.setGasBurnerEfficiency(0.6);
+  coilHeatingGas.setNominalCapacity(1535.0);
+  coilHeatingGas.setParasiticElectricLoad(48.0);
+  coilHeatingGas.setParasiticGasLoad(51.0);
+  coilHeatingGas.setFuelType("Propane");
 
-    ForwardTranslator forwardTranslator;
-    Workspace workspace = forwardTranslator.translateModel(model);
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
 
-    WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_Heating_Fuel));
-    EXPECT_EQ(1u, idfObjs.size());
-    WorkspaceObject coil(idfObjs[0]);
-    EXPECT_EQ("Propane", *coil.getString(Coil_Heating_FuelFields::FuelType));
-    EXPECT_DOUBLE_EQ(0.6, *coil.getDouble(Coil_Heating_FuelFields::BurnerEfficiency));
-    EXPECT_DOUBLE_EQ(1535.0, *coil.getDouble(Coil_Heating_FuelFields::NominalCapacity));
-    EXPECT_DOUBLE_EQ(48.0, *coil.getDouble(Coil_Heating_FuelFields::ParasiticElectricLoad));
-    EXPECT_DOUBLE_EQ(51.0, *coil.getDouble(Coil_Heating_FuelFields::ParasiticFuelLoad));
-
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_Heating_Fuel));
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject coil(idfObjs[0]);
+  EXPECT_EQ("Propane", *coil.getString(Coil_Heating_FuelFields::FuelType));
+  EXPECT_DOUBLE_EQ(0.6, *coil.getDouble(Coil_Heating_FuelFields::BurnerEfficiency));
+  EXPECT_DOUBLE_EQ(1535.0, *coil.getDouble(Coil_Heating_FuelFields::NominalCapacity));
+  EXPECT_DOUBLE_EQ(48.0, *coil.getDouble(Coil_Heating_FuelFields::ParasiticElectricLoad));
+  EXPECT_DOUBLE_EQ(51.0, *coil.getDouble(Coil_Heating_FuelFields::ParasiticFuelLoad));
 }

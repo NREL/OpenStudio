@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,186 +37,179 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-class ThermalZone;
+  class ThermalZone;
 
-class HVACComponent;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-class AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
+    class AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirLoopHVACUnitaryHeatPumpAirToAir is a StraightComponent that wraps the
+  /** AirLoopHVACUnitaryHeatPumpAirToAir is a StraightComponent that wraps the
  *  OpenStudio IDD object 'OS:AirLoopHVAC:UnitaryHeatPump:AirToAir'. */
-class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
-{
-  public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  AirLoopHVACUnitaryHeatPumpAirToAir( const Model & model,
-                                      Schedule & availabilitySchedule,
-                                      HVACComponent & supplyFan,
-                                      HVACComponent & heatingCoil,
-                                      HVACComponent & coolingCoil,
-                                      HVACComponent & supplementalHeatingCoil );
+    AirLoopHVACUnitaryHeatPumpAirToAir(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyFan, HVACComponent& heatingCoil,
+                                       HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-  virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() {}
+    virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validFanPlacementValues();
+    static std::vector<std::string> validFanPlacementValues();
 
-  static std::vector<std::string> validDehumidificationControlTypeValues();
+    static std::vector<std::string> validDehumidificationControlTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
-  bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
+    bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
 
-  bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
+    bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
+    bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
-  boost::optional<ThermalZone> controllingZone() const;
+    boost::optional<ThermalZone> controllingZone() const;
 
-  HVACComponent supplyAirFan() const;
+    HVACComponent supplyAirFan() const;
 
-  HVACComponent heatingCoil() const;
+    HVACComponent heatingCoil() const;
 
-  HVACComponent coolingCoil() const;
+    HVACComponent coolingCoil() const;
 
-  HVACComponent supplementalHeatingCoil() const;
+    HVACComponent supplementalHeatingCoil() const;
 
-  boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
+    boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
 
-  bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
+    bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
 
-  double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
+    double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
 
-  bool isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const;
+    bool isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const;
 
-  std::string fanPlacement() const;
+    std::string fanPlacement() const;
 
-  bool isFanPlacementDefaulted() const;
+    bool isFanPlacementDefaulted() const;
 
-  /** Returns the supply air fan operating mode schedule, if present. In this schedule, values
+    /** Returns the supply air fan operating mode schedule, if present. In this schedule, values
    *  of zero correspond to AUTO fan operation (fan cycles on and off with coils to meet load).
    *  Other values indicate that the supply fan is to run continuously. */
-  boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-  std::string dehumidificationControlType() const;
+    std::string dehumidificationControlType() const;
 
-  bool isDehumidificationControlTypeDefaulted() const;
+    bool isDehumidificationControlTypeDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
+    bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
-  void autosizeSupplyAirFlowRateDuringCoolingOperation();
+    void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
-  bool setSupplyAirFlowRateDuringHeatingOperation(double n2);
+    bool setSupplyAirFlowRateDuringHeatingOperation(double n2);
 
-  void autosizeSupplyAirFlowRateDuringHeatingOperation();
+    void autosizeSupplyAirFlowRateDuringHeatingOperation();
 
-  bool setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
+    bool setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
 
-  void resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    void resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  bool setControllingZone( ThermalZone & zone );
+    bool setControllingZone(ThermalZone& zone);
 
-  void resetControllingZone();
+    void resetControllingZone();
 
-  bool setSupplyAirFan( HVACComponent & hvacComponent );
+    bool setSupplyAirFan(HVACComponent& hvacComponent);
 
-  bool setHeatingCoil( HVACComponent & hvacComponent );
+    bool setHeatingCoil(HVACComponent& hvacComponent);
 
-  bool setCoolingCoil( HVACComponent & hvacComponent );
+    bool setCoolingCoil(HVACComponent& hvacComponent);
 
-  bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+    bool setSupplementalHeatingCoil(HVACComponent& hvacComponent);
 
-  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
-  void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+    void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
-  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
-  void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
+    void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-  bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(std::string fanPlacement);
 
-  void resetFanPlacement();
+    void resetFanPlacement();
 
-  bool setSupplyAirFanOperatingModeSchedule(Schedule & schedule);
+    bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-  void resetSupplyAirFanOperatingModeSchedule();
+    void resetSupplyAirFanOperatingModeSchedule();
 
-  bool setDehumidificationControlType(std::string dehumidificationControlType);
+    bool setDehumidificationControlType(std::string dehumidificationControlType);
 
-  void resetDehumidificationControlType();
+    void resetDehumidificationControlType();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+    boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const;
 
+    //@}
+   protected:
+    /// @cond
 
+    typedef detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
+    explicit AirLoopHVACUnitaryHeatPumpAirToAir(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl);
 
-  typedef detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl ImplType;
+    friend class detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit AirLoopHVACUnitaryHeatPumpAirToAir(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACUnitaryHeatPumpAirToAir");
+  };
 
-  friend class detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+  /** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
+  typedef boost::optional<AirLoopHVACUnitaryHeatPumpAirToAir> OptionalAirLoopHVACUnitaryHeatPumpAirToAir;
 
-  /// @endcond
- private:
+  /** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
+  typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> AirLoopHVACUnitaryHeatPumpAirToAirVector;
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACUnitaryHeatPumpAirToAir");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
-typedef boost::optional<AirLoopHVACUnitaryHeatPumpAirToAir> OptionalAirLoopHVACUnitaryHeatPumpAirToAir;
-
-/** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
-typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> AirLoopHVACUnitaryHeatPumpAirToAirVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_HPP
+#endif  // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_HPP

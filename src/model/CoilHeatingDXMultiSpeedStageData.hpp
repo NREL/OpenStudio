@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,136 +38,132 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingDXMultiSpeedStageData_Impl;
+    class CoilHeatingDXMultiSpeedStageData_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingDXMultiSpeedStageData is a ParentObject that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:MultiSpeed:StageData'. */
-class MODEL_API CoilHeatingDXMultiSpeedStageData : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilHeatingDXMultiSpeedStageData is a ParentObject that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:MultiSpeed:StageData'. */
+  class MODEL_API CoilHeatingDXMultiSpeedStageData : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilHeatingDXMultiSpeedStageData(const Model& model);
+    explicit CoilHeatingDXMultiSpeedStageData(const Model& model);
 
-  explicit CoilHeatingDXMultiSpeedStageData(const Model& model,
-    const Curve& heatingCapacityFunctionofTemperature,
-    const Curve& heatingCapacityFunctionofFlowFraction,
-    const Curve& energyInputRatioFunctionofTemperature,
-    const Curve& energyInputRatioFunctionofFlowFraction,
-    const Curve& partLoadFractionCorrelation,
-    const Curve& wasteHeatFunctionofTemperature);
+    explicit CoilHeatingDXMultiSpeedStageData(const Model& model, const Curve& heatingCapacityFunctionofTemperature,
+                                              const Curve& heatingCapacityFunctionofFlowFraction, const Curve& energyInputRatioFunctionofTemperature,
+                                              const Curve& energyInputRatioFunctionofFlowFraction, const Curve& partLoadFractionCorrelation,
+                                              const Curve& wasteHeatFunctionofTemperature);
 
-  virtual ~CoilHeatingDXMultiSpeedStageData() {}
+    virtual ~CoilHeatingDXMultiSpeedStageData() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> grossRatedHeatingCapacity() const;
+    boost::optional<double> grossRatedHeatingCapacity() const;
 
-  bool isGrossRatedHeatingCapacityAutosized() const;
+    bool isGrossRatedHeatingCapacityAutosized() const;
 
-  double grossRatedHeatingCOP() const;
+    double grossRatedHeatingCOP() const;
 
-  boost::optional<double> ratedAirFlowRate() const;
+    boost::optional<double> ratedAirFlowRate() const;
 
-  bool isRatedAirFlowRateAutosized() const;
+    bool isRatedAirFlowRateAutosized() const;
 
-  double ratedSupplyAirFanPowerPerVolumeFlowRate() const;
+    double ratedSupplyAirFanPowerPerVolumeFlowRate() const;
 
-  Curve heatingCapacityFunctionofTemperatureCurve() const;
+    Curve heatingCapacityFunctionofTemperatureCurve() const;
 
-  Curve heatingCapacityFunctionofFlowFractionCurve() const;
+    Curve heatingCapacityFunctionofFlowFractionCurve() const;
 
-  Curve energyInputRatioFunctionofTemperatureCurve() const;
+    Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-  Curve energyInputRatioFunctionofFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofFlowFractionCurve() const;
 
-  Curve partLoadFractionCorrelationCurve() const;
+    Curve partLoadFractionCorrelationCurve() const;
 
-  double ratedWasteHeatFractionofPowerInput() const;
+    double ratedWasteHeatFractionofPowerInput() const;
 
-  Curve wasteHeatFunctionofTemperatureCurve() const;
+    Curve wasteHeatFunctionofTemperatureCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setGrossRatedHeatingCapacity(double grossRatedHeatingCapacity);
+    bool setGrossRatedHeatingCapacity(double grossRatedHeatingCapacity);
 
-  void autosizeGrossRatedHeatingCapacity();
+    void autosizeGrossRatedHeatingCapacity();
 
-  bool setGrossRatedHeatingCOP(double grossRatedHeatingCOP);
+    bool setGrossRatedHeatingCOP(double grossRatedHeatingCOP);
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  void autosizeRatedAirFlowRate();
+    void autosizeRatedAirFlowRate();
 
-  bool setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate);
+    bool setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate);
 
-  bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
+    bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve);
+    bool setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
+    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
+    bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
 
-  bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
+    bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
-  bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
+    bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
+    boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+    boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  void autosize();
+    void autosize();
 
-  void applySizingValues();
+    void applySizingValues();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilHeatingDXMultiSpeedStageData_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingDXMultiSpeedStageData_Impl ImplType;
 
-  explicit CoilHeatingDXMultiSpeedStageData(std::shared_ptr<detail::CoilHeatingDXMultiSpeedStageData_Impl> impl);
+    explicit CoilHeatingDXMultiSpeedStageData(std::shared_ptr<detail::CoilHeatingDXMultiSpeedStageData_Impl> impl);
 
-  friend class detail::CoilHeatingDXMultiSpeedStageData_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeedStageData");
+    friend class detail::CoilHeatingDXMultiSpeedStageData_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeedStageData");
 
-  // Used to determine the index of this performance data in the
-  // list of stages in the parent object.
-  boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> stageIndexAndParentCoil() const;
+    // Used to determine the index of this performance data in the
+    // list of stages in the parent object.
+    boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> stageIndexAndParentCoil() const;
+  };
 
-};
+  /** \relates CoilHeatingDXMultiSpeedStageData*/
+  typedef boost::optional<CoilHeatingDXMultiSpeedStageData> OptionalCoilHeatingDXMultiSpeedStageData;
 
-/** \relates CoilHeatingDXMultiSpeedStageData*/
-typedef boost::optional<CoilHeatingDXMultiSpeedStageData> OptionalCoilHeatingDXMultiSpeedStageData;
+  /** \relates CoilHeatingDXMultiSpeedStageData*/
+  typedef std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeedStageDataVector;
 
-/** \relates CoilHeatingDXMultiSpeedStageData*/
-typedef std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeedStageDataVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGDXMULTISPEEDSTAGEDATA_HPP
-
+#endif  // MODEL_COILHEATINGDXMULTISPEEDSTAGEDATA_HPP

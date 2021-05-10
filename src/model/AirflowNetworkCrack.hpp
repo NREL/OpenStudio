@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,83 +38,82 @@ namespace openstudio {
 
 namespace model {
 
-class AirflowNetworkReferenceCrackConditions;
+  class AirflowNetworkReferenceCrackConditions;
 
-namespace detail {
+  namespace detail {
 
-class AirflowNetworkCrack_Impl;
+    class AirflowNetworkCrack_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkCrack is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkCrack'. */
-class MODEL_API AirflowNetworkCrack : public AirflowNetworkComponent
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
-  /** Construct a surface crack object with default values and a specified mass flow coefficient. */
-  AirflowNetworkCrack(const Model& model, double massFlowCoefficient);
-  /** Construct a surface crack object without a reference conditions object. */
-  AirflowNetworkCrack(const Model& model, double massFlowCoefficient, double massFlowExponent);
-  /** Construct a surface crack object. */
-  AirflowNetworkCrack(const Model& model, double massFlowCoefficient, double massFlowExponent,
-    const AirflowNetworkReferenceCrackConditions &referenceCrackConditions);
+  /** AirflowNetworkCrack is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkCrack'. */
+  class MODEL_API AirflowNetworkCrack : public AirflowNetworkComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    /** Construct a surface crack object with default values and a specified mass flow coefficient. */
+    AirflowNetworkCrack(const Model& model, double massFlowCoefficient);
+    /** Construct a surface crack object without a reference conditions object. */
+    AirflowNetworkCrack(const Model& model, double massFlowCoefficient, double massFlowExponent);
+    /** Construct a surface crack object. */
+    AirflowNetworkCrack(const Model& model, double massFlowCoefficient, double massFlowExponent,
+                        const AirflowNetworkReferenceCrackConditions& referenceCrackConditions);
 
-  virtual ~AirflowNetworkCrack() {}
+    virtual ~AirflowNetworkCrack() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
-  /** Returns the mass flow coefficient in kg/s at 1 Pa. */
-  double airMassFlowCoefficient() const;
-  /** Returns the mass flow exponent. */
-  double airMassFlowExponent() const;
-  /** Returns true if the mass flow exponent is defaulted. */
-  bool isAirMassFlowExponentDefaulted() const;
-  /** Returns a reference crack conditions object if available. */
-  boost::optional<AirflowNetworkReferenceCrackConditions> referenceCrackConditions() const;
+    /** @name Getters */
+    //@{
+    /** Returns the mass flow coefficient in kg/s at 1 Pa. */
+    double airMassFlowCoefficient() const;
+    /** Returns the mass flow exponent. */
+    double airMassFlowExponent() const;
+    /** Returns true if the mass flow exponent is defaulted. */
+    bool isAirMassFlowExponentDefaulted() const;
+    /** Returns a reference crack conditions object if available. */
+    boost::optional<AirflowNetworkReferenceCrackConditions> referenceCrackConditions() const;
 
-  //@}
-  /** @name Setters */
-  //@{
-  /** Sets the mass flow coefficient in kg/s at 1 Pa.  */
-  bool setAirMassFlowCoefficient(double airMassFlowCoefficientatReferenceConditions);
-  /** Sets the mass flow exponent. */
-  bool setAirMassFlowExponent(double airMassFlowExponent);
-  /** Returns the mass flow exponent to the default value. */
-  void resetAirMassFlowExponent();
-  /** Sets the the reference crack conditions. */
-  bool setReferenceCrackConditions(const AirflowNetworkReferenceCrackConditions& referenceCrackConditions);
-  /** Resets the the reference crack conditions. */
-  void resetReferenceCrackConditions();
+    //@}
+    /** @name Setters */
+    //@{
+    /** Sets the mass flow coefficient in kg/s at 1 Pa.  */
+    bool setAirMassFlowCoefficient(double airMassFlowCoefficientatReferenceConditions);
+    /** Sets the mass flow exponent. */
+    bool setAirMassFlowExponent(double airMassFlowExponent);
+    /** Returns the mass flow exponent to the default value. */
+    void resetAirMassFlowExponent();
+    /** Sets the the reference crack conditions. */
+    bool setReferenceCrackConditions(const AirflowNetworkReferenceCrackConditions& referenceCrackConditions);
+    /** Resets the the reference crack conditions. */
+    void resetReferenceCrackConditions();
 
-  //@}
-protected:
-  /// @cond
-  typedef detail::AirflowNetworkCrack_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkCrack_Impl ImplType;
 
-  explicit AirflowNetworkCrack(std::shared_ptr<detail::AirflowNetworkCrack_Impl> impl);
+    explicit AirflowNetworkCrack(std::shared_ptr<detail::AirflowNetworkCrack_Impl> impl);
 
-  friend class detail::AirflowNetworkCrack_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkCrack");
-};
+    friend class detail::AirflowNetworkCrack_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkCrack");
+  };
 
-/** \relates AirflowNetworkCrack*/
-typedef boost::optional<AirflowNetworkCrack> OptionalAirflowNetworkCrack;
+  /** \relates AirflowNetworkCrack*/
+  typedef boost::optional<AirflowNetworkCrack> OptionalAirflowNetworkCrack;
 
-/** \relates AirflowNetworkCrack*/
-typedef std::vector<AirflowNetworkCrack> AirflowNetworkCrackVector;
+  /** \relates AirflowNetworkCrack*/
+  typedef std::vector<AirflowNetworkCrack> AirflowNetworkCrackVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKCRACK_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKCRACK_HPP

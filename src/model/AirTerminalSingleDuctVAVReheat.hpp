@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,216 +40,207 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-class HVACComponent;
+  class HVACComponent;
 
-namespace detail {
-  class AirTerminalSingleDuctVAVReheat_Impl;
-} // detail
+  namespace detail {
+    class AirTerminalSingleDuctVAVReheat_Impl;
+  }  // namespace detail
 
-class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
+  class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent
+  {
 
-  public:
+   public:
+    explicit AirTerminalSingleDuctVAVReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
-  explicit AirTerminalSingleDuctVAVReheat( const Model& model,
-                                           Schedule & availabilitySchedule,
-                                           HVACComponent & coil );
+    virtual ~AirTerminalSingleDuctVAVReheat() {}
 
-  virtual ~AirTerminalSingleDuctVAVReheat() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    /** Returns the reheat coil */
+    HVACComponent reheatCoil() const;
 
-  /** Returns the reheat coil */
-  HVACComponent reheatCoil() const;
+    /** Sets the reheat coil.  Returns true if the supplied coil was accecpted */
+    bool setReheatCoil(HVACComponent& coil);
 
-  /** Sets the reheat coil.  Returns true if the supplied coil was accecpted */
-  bool setReheatCoil(HVACComponent & coil);
+    /** Returns the Schedule referred to by the AvailabilityScheduleName field. */
+    Schedule availabilitySchedule() const;
 
-  /** Returns the Schedule referred to by the AvailabilityScheduleName field. */
-  Schedule availabilitySchedule() const;
+    /** Sets the Schedule referred to by the AvailabilityScheduleName field. */
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  /** Sets the Schedule referred to by the AvailabilityScheduleName field. */
-  bool setAvailabilitySchedule(Schedule& schedule);
+    /** Returns the value of the MaximumAirFlowRate field. */
+    boost::optional<double> maximumAirFlowRate() const;
 
-  /** Returns the value of the MaximumAirFlowRate field. */
-  boost::optional<double> maximumAirFlowRate() const ;
+    /** Sets the value of the MaximumAirFlowRate field. */
+    bool setMaximumAirFlowRate(double value);
 
-  /** Sets the value of the MaximumAirFlowRate field. */
-  bool setMaximumAirFlowRate( double value );
+    /** Sets the value of the MaximumAirFlowRate field to AutoSize */
+    void autosizeMaximumAirFlowRate();
 
-  /** Sets the value of the MaximumAirFlowRate field to AutoSize */
-  void autosizeMaximumAirFlowRate();
+    /** Returns true of the MaximumAirFlowRate field is set to AutoSize */
+    bool isMaximumAirFlowRateAutosized() const;
 
-  /** Returns true of the MaximumAirFlowRate field is set to AutoSize */
-  bool isMaximumAirFlowRateAutosized() const;
+    /** Returns the value of the MaximumAirFlowRate field. */
+    std::string zoneMinimumAirFlowInputMethod();
+    /** deprecated **/
+    OS_DEPRECATED std::string zoneMinimumAirFlowMethod();
 
-  /** Returns the value of the MaximumAirFlowRate field. */
-  std::string zoneMinimumAirFlowInputMethod();
-  /** deprecated **/
-  OS_DEPRECATED std::string zoneMinimumAirFlowMethod();
-
-  /** Sets the value of the MaximumAirFlowRate field.
+    /** Sets the value of the MaximumAirFlowRate field.
    *  Options are FixedFlowRate and Scheduled.
    */
-  bool setZoneMinimumAirFlowInputMethod(const std::string& value );
-  /** deprecated **/
-  OS_DEPRECATED bool setZoneMinimumAirFlowMethod(const std::string& value );
+    bool setZoneMinimumAirFlowInputMethod(const std::string& value);
+    /** deprecated **/
+    OS_DEPRECATED bool setZoneMinimumAirFlowMethod(const std::string& value);
 
+    /** Returns the value of the ConstantMinimumAirFlowFraction field. */
+    boost::optional<double> constantMinimumAirFlowFraction() const;
 
-  /** Returns the value of the ConstantMinimumAirFlowFraction field. */
-  boost::optional<double> constantMinimumAirFlowFraction() const;
+    /** Sets the value of the ConstantMinimumAirFlowFraction field. */
+    bool setConstantMinimumAirFlowFraction(double value);
 
-  /** Sets the value of the ConstantMinimumAirFlowFraction field. */
-  bool setConstantMinimumAirFlowFraction( double value );
+    /** Sets the value of the ConstantMinimumAirFlowFraction field to Autosize */
+    void autosizeConstantMinimumAirFlowFraction();
 
-  /** Sets the value of the ConstantMinimumAirFlowFraction field to Autosize */
-  void autosizeConstantMinimumAirFlowFraction();
+    /** Returns true of the ConstantMinimumAirFlowFraction field is set to Autosize */
+    bool isConstantMinimumAirFlowFractionAutosized() const;
 
-  /** Returns true of the ConstantMinimumAirFlowFraction field is set to Autosize */
-  bool isConstantMinimumAirFlowFractionAutosized() const;
+    /** Returns the value of the FixedMinimumAirFlowRate field. */
+    boost::optional<double> fixedMinimumAirFlowRate() const;
 
-  /** Returns the value of the FixedMinimumAirFlowRate field. */
-  boost::optional<double> fixedMinimumAirFlowRate() const;
+    /** Sets the value of the FixedMinimumAirFlowRate field. */
+    bool setFixedMinimumAirFlowRate(double value);
 
-  /** Sets the value of the FixedMinimumAirFlowRate field. */
-  bool setFixedMinimumAirFlowRate( double value );
+    /** Sets the value of the FixedMinimumAirFlowRate field to Autosize */
+    void autosizeFixedMinimumAirFlowRate();
 
-  /** Sets the value of the FixedMinimumAirFlowRate field to Autosize */
-  void autosizeFixedMinimumAirFlowRate();
+    /** Returns true of the FixedMinimumAirFlowRate field is set to Autosize */
+    bool isFixedMinimumAirFlowRateAutosized() const;
 
-  /** Returns true of the FixedMinimumAirFlowRate field is set to Autosize */
-  bool isFixedMinimumAirFlowRateAutosized() const;
+    /** Returns the Schedule referred to by the MinimumAirFlowFractionScheduleName field. */
+    boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
+    /** Sets the Schedule referred to by the MinimumAirFlowFractionScheduleName field. */
+    bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 
-  /** Returns the Schedule referred to by the MinimumAirFlowFractionScheduleName field. */
-  boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
+    void resetMinimumAirFlowFractionSchedule();
 
-  /** Sets the Schedule referred to by the MinimumAirFlowFractionScheduleName field. */
-  bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
+    /** Returns the value of the MaximumHotWaterOrSteamFlowRate field. */
+    boost::optional<double> maximumHotWaterOrSteamFlowRate();
 
-  void resetMinimumAirFlowFractionSchedule();
+    /** Sets the value of the MaximumHotWaterOrSteamFlowRate field. */
+    bool setMaximumHotWaterOrSteamFlowRate(double value);
 
-  /** Returns the value of the MaximumHotWaterOrSteamFlowRate field. */
-  boost::optional<double> maximumHotWaterOrSteamFlowRate();
+    /** Sets the value of the MaximumHotWaterOrSteamFlowRate field to AutoSize */
+    void autosizeMaximumHotWaterOrSteamFlowRate();
 
-  /** Sets the value of the MaximumHotWaterOrSteamFlowRate field. */
-  bool setMaximumHotWaterOrSteamFlowRate( double value );
+    /** Returns true of the MaximumHotWaterOrSteamFlowRate field is set to AutoSize */
+    bool isMaximumHotWaterOrSteamFlowRateAutosized() const;
 
-  /** Sets the value of the MaximumHotWaterOrSteamFlowRate field to AutoSize */
-  void autosizeMaximumHotWaterOrSteamFlowRate();
+    /** Returns the value of the MinimumHotWaterOrSteamFlowRate field. */
+    double minimumHotWaterOrSteamFlowRate();
 
-  /** Returns true of the MaximumHotWaterOrSteamFlowRate field is set to AutoSize */
-  bool isMaximumHotWaterOrSteamFlowRateAutosized() const;
+    /** Sets the value of the MinimumHotWaterOrSteamFlowRate field. */
+    bool setMinimumHotWaterOrStreamFlowRate(double value);
 
-  /** Returns the value of the MinimumHotWaterOrSteamFlowRate field. */
-  double minimumHotWaterOrSteamFlowRate();
+    /** Returns the value of the ConvergenceTolerance field. */
+    double convergenceTolerance();
 
-  /** Sets the value of the MinimumHotWaterOrSteamFlowRate field. */
-  bool setMinimumHotWaterOrStreamFlowRate( double value );
+    /** Sets the value of the ConvergenceTolerance field. */
+    bool setConvergenceTolerance(double value);
 
-  /** Returns the value of the ConvergenceTolerance field. */
-  double convergenceTolerance();
+    /** Returns the value of the DamperHeatingAction field. */
+    std::string damperHeatingAction();
 
-  /** Sets the value of the ConvergenceTolerance field. */
-  bool setConvergenceTolerance( double value );
-
-  /** Returns the value of the DamperHeatingAction field. */
-  std::string damperHeatingAction();
-
-  /** Sets the value of the DamperHeatingAction field.
+    /** Sets the value of the DamperHeatingAction field.
    *  Options are Normal and Reverse.
    */
-  bool setDamperHeatingAction(const std::string& value);
+    bool setDamperHeatingAction(const std::string& value);
 
-  /** Returns the value of the MaximumFlowPerZoneFloorAreaDuringReheat field. */
-  boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
+    /** Returns the value of the MaximumFlowPerZoneFloorAreaDuringReheat field. */
+    boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
 
-  /** Sets the value of the MaximumFlowPerZoneFloorAreaDuringReheat field. */
-  bool setMaximumFlowPerZoneFloorAreaDuringReheat( double value );
+    /** Sets the value of the MaximumFlowPerZoneFloorAreaDuringReheat field. */
+    bool setMaximumFlowPerZoneFloorAreaDuringReheat(double value);
 
-  /** Sets the value of the MaximumFlowPerZoneFloorAreaDuringReheat field to AutoSize */
-  void autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
+    /** Sets the value of the MaximumFlowPerZoneFloorAreaDuringReheat field to AutoSize */
+    void autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
 
-  /** Returns true of the MaximumFlowPerZoneFloorAreaDuringReheat field is set to AutoSize */
-  bool isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() const;
+    /** Returns true of the MaximumFlowPerZoneFloorAreaDuringReheat field is set to AutoSize */
+    bool isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() const;
 
-  /** Resets the MaximumFlowPerZoneFloorAreaDuringReheat field to no value */
-  void resetMaximumFlowPerZoneFloorAreaDuringReheat();
+    /** Resets the MaximumFlowPerZoneFloorAreaDuringReheat field to no value */
+    void resetMaximumFlowPerZoneFloorAreaDuringReheat();
 
-  /** Returns the value of the MaximumFlowFractionDuringReheat field. */
-  boost::optional<double> maximumFlowFractionDuringReheat();
+    /** Returns the value of the MaximumFlowFractionDuringReheat field. */
+    boost::optional<double> maximumFlowFractionDuringReheat();
 
-  /** Sets the value of the MaximumFlowFractionDuringReheat field. */
-  bool setMaximumFlowFractionDuringReheat( double value );
+    /** Sets the value of the MaximumFlowFractionDuringReheat field. */
+    bool setMaximumFlowFractionDuringReheat(double value);
 
-  /** Sets the value of the MaximumFlowFractionDuringReheat field to AutoSize */
-  void autosizeMaximumFlowFractionDuringReheat();
+    /** Sets the value of the MaximumFlowFractionDuringReheat field to AutoSize */
+    void autosizeMaximumFlowFractionDuringReheat();
 
-  /** Returns true of the MaximumFlowFractionDuringReheat field is set to AutoSize */
-  bool isMaximumFlowFractionDuringReheatAutosized() const;
+    /** Returns true of the MaximumFlowFractionDuringReheat field is set to AutoSize */
+    bool isMaximumFlowFractionDuringReheatAutosized() const;
 
-  /** Reset MaximumFlowFractionDuringReheat to no value */
-  void resetMaximumFlowFractionDuringReheat();
+    /** Reset MaximumFlowFractionDuringReheat to no value */
+    void resetMaximumFlowFractionDuringReheat();
 
-  /** Returns the value of the MaximumReheatAirTemperature field. */
-  double maximumReheatAirTemperature();
+    /** Returns the value of the MaximumReheatAirTemperature field. */
+    double maximumReheatAirTemperature();
 
-  /** Sets the value of the MaximumReheatAirTemperature field. */
-  bool setMaximumReheatAirTemperature( double value );
+    /** Sets the value of the MaximumReheatAirTemperature field. */
+    bool setMaximumReheatAirTemperature(double value);
 
-  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
     * with the terminal's zone on export to EnergyPlus idf format.
     * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
-  bool controlForOutdoorAir() const;
+    bool controlForOutdoorAir() const;
 
-  bool setControlForOutdoorAir(bool controlForOutdoorAir);
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-  boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
+    boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
 
-  boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
+    boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const;
+    boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const;
 
-  boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const;
+    boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const;
 
-  boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const;
+    boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const;
 
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-  /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+   protected:
+    friend class Model;
 
-  /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    friend class openstudio::IdfObject;
 
- protected:
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class Model;
+    /// @cond
 
-  friend class openstudio::IdfObject;
+    typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
 
-  friend class openstudio::detail::IdfObject_Impl;
+    explicit AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
 
-  /// @cond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVReheat");
 
-  typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
+    /// @endcond
+  };
 
-  explicit AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
+  typedef boost::optional<AirTerminalSingleDuctVAVReheat> OptionalAirTerminalSingleDuctVAVReheat;
 
- private:
+}  // namespace model
+}  // namespace openstudio
 
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVReheat");
-
-  /// @endcond
-
-};
-
-typedef boost::optional<AirTerminalSingleDuctVAVReheat> OptionalAirTerminalSingleDuctVAVReheat;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_HPP
+#endif  // MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_HPP

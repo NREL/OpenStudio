@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,644 +50,635 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const IdfObject& idfObject,
-                                                                   Model_Impl* model,
-                                                                   bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXCurveFitSpeed::iddObjectType());
-  }
-
-  CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                   Model_Impl* model,
-                                                                   bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilCoolingDXCurveFitSpeed::iddObjectType());
-  }
-
-  CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const CoilCoolingDXCurveFitSpeed_Impl& other,
-                                                                   Model_Impl* model,
-                                                                   bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& CoilCoolingDXCurveFitSpeed_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    if (result.empty()){
-    }
-    return result;
-  }
-
-  IddObjectType CoilCoolingDXCurveFitSpeed_Impl::iddObjectType() const {
-    return CoilCoolingDXCurveFitSpeed::iddObjectType();
-  }
-
-  ModelObject CoilCoolingDXCurveFitSpeed_Impl::clone(Model model) const {
-    // clone the operating modes is already handle in ModelObject_Impl::clone since they are ResourceObjects
-    // We don't do ParentObject_Impl::clone since it'll also CLONE the children...
-    return ModelObject_Impl::clone(model);
-  }
-
-  std::vector<ModelObject> CoilCoolingDXCurveFitSpeed_Impl::children() const {
-    std::vector<ModelObject> result;
-
-    // These are ResourceObjects, so they shouldn't really be children except for OS App / IG
-    if (auto _c = totalCoolingCapacityModifierFunctionofTemperatureCurve()) {
-      result.push_back(_c.get());
-    }
-    if (auto _c = totalCoolingCapacityModifierFunctionofAirFlowFractionCurve()) {
-      result.push_back(_c.get());
-    }
-    if (auto _c = energyInputRatioModifierFunctionofTemperatureCurve()) {
-      result.push_back(_c.get());
-    }
-    if (auto _c = energyInputRatioModifierFunctionofAirFlowFractionCurve()) {
-      result.push_back(_c.get());
-    }
-    if (auto _c = partLoadFractionCorrelationCurve()) {
-      result.push_back(_c.get());
-    }
-    if (auto _c = wasteHeatModifierFunctionofTemperatureCurve()) {
-      result.push_back(_c.get());
-    }
-    if (auto _c = sensibleHeatRatioModifierFunctionofTemperatureCurve()) {
-      result.push_back(_c.get());
-    }
-    if (auto _c = sensibleHeatRatioModifierFunctionofFlowFractionCurve()) {
-      result.push_back(_c.get());
+    CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ResourceObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXCurveFitSpeed::iddObjectType());
     }
 
-    return result;
-  }
-
-  std::vector<IdfObject> CoilCoolingDXCurveFitSpeed_Impl::remove() {
-    for (auto& opMode: coilCoolingDXCurveFitOperatingModes()) {
-      opMode.removeSpeed(getObject<CoilCoolingDXCurveFitSpeed>());
+    CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                     bool keepHandle)
+      : ResourceObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilCoolingDXCurveFitSpeed::iddObjectType());
     }
-    return ResourceObject_Impl::remove();
-  }
 
-  double CoilCoolingDXCurveFitSpeed_Impl::grossTotalCoolingCapacityFraction() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const CoilCoolingDXCurveFitSpeed_Impl& other, Model_Impl* model, bool keepHandle)
+      : ResourceObject_Impl(other, model, keepHandle) {}
 
-  double CoilCoolingDXCurveFitSpeed_Impl::evaporatorAirFlowRateFraction() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilCoolingDXCurveFitSpeed_Impl::condenserAirFlowRateFraction() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> CoilCoolingDXCurveFitSpeed_Impl::grossSensibleHeatRatio() const {
-    return getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio,true);
-  }
-
-  bool CoilCoolingDXCurveFitSpeed_Impl::isGrossSensibleHeatRatioAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    const std::vector<std::string>& CoilCoolingDXCurveFitSpeed_Impl::outputVariableNames() const {
+      static std::vector<std::string> result;
+      if (result.empty()) {
+      }
+      return result;
     }
-    return result;
-  }
 
-  double CoilCoolingDXCurveFitSpeed_Impl::grossCoolingCOP() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    IddObjectType CoilCoolingDXCurveFitSpeed_Impl::iddObjectType() const {
+      return CoilCoolingDXCurveFitSpeed::iddObjectType();
+    }
 
-  double CoilCoolingDXCurveFitSpeed_Impl::activeFractionofCoilFaceArea() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    ModelObject CoilCoolingDXCurveFitSpeed_Impl::clone(Model model) const {
+      // clone the operating modes is already handle in ModelObject_Impl::clone since they are ResourceObjects
+      // We don't do ParentObject_Impl::clone since it'll also CLONE the children...
+      return ModelObject_Impl::clone(model);
+    }
 
-  double CoilCoolingDXCurveFitSpeed_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    std::vector<ModelObject> CoilCoolingDXCurveFitSpeed_Impl::children() const {
+      std::vector<ModelObject> result;
 
-  double CoilCoolingDXCurveFitSpeed_Impl::evaporativeCondenserPumpPowerFraction() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+      // These are ResourceObjects, so they shouldn't really be children except for OS App / IG
+      if (auto _c = totalCoolingCapacityModifierFunctionofTemperatureCurve()) {
+        result.push_back(_c.get());
+      }
+      if (auto _c = totalCoolingCapacityModifierFunctionofAirFlowFractionCurve()) {
+        result.push_back(_c.get());
+      }
+      if (auto _c = energyInputRatioModifierFunctionofTemperatureCurve()) {
+        result.push_back(_c.get());
+      }
+      if (auto _c = energyInputRatioModifierFunctionofAirFlowFractionCurve()) {
+        result.push_back(_c.get());
+      }
+      if (auto _c = partLoadFractionCorrelationCurve()) {
+        result.push_back(_c.get());
+      }
+      if (auto _c = wasteHeatModifierFunctionofTemperatureCurve()) {
+        result.push_back(_c.get());
+      }
+      if (auto _c = sensibleHeatRatioModifierFunctionofTemperatureCurve()) {
+        result.push_back(_c.get());
+      }
+      if (auto _c = sensibleHeatRatioModifierFunctionofFlowFractionCurve()) {
+        result.push_back(_c.get());
+      }
 
-  double CoilCoolingDXCurveFitSpeed_Impl::evaporativeCondenserEffectiveness() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+      return result;
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::totalCoolingCapacityModifierFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurve);
-  }
+    std::vector<IdfObject> CoilCoolingDXCurveFitSpeed_Impl::remove() {
+      for (auto& opMode : coilCoolingDXCurveFitOperatingModes()) {
+        opMode.removeSpeed(getObject<CoilCoolingDXCurveFitSpeed>());
+      }
+      return ResourceObject_Impl::remove();
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurve);
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::grossTotalCoolingCapacityFraction() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::energyInputRatioModifierFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurve);
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::evaporatorAirFlowRateFraction() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
+    double CoilCoolingDXCurveFitSpeed_Impl::condenserAirFlowRateFraction() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::energyInputRatioModifierFunctionofAirFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurve);
-  }
+    boost::optional<double> CoilCoolingDXCurveFitSpeed_Impl::grossSensibleHeatRatio() const {
+      return getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, true);
+    }
 
+    bool CoilCoolingDXCurveFitSpeed_Impl::isGrossSensibleHeatRatioAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::partLoadFractionCorrelationCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurve);
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::grossCoolingCOP() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::wasteHeatModifierFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurve);
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::activeFractionofCoilFaceArea() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  double CoilCoolingDXCurveFitSpeed_Impl::ratedWasteHeatFractionofPowerInput() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::sensibleHeatRatioModifierFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurve);
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::evaporativeCondenserPumpPowerFraction() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::sensibleHeatRatioModifierFunctionofFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurve);
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::evaporativeCondenserEffectiveness() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  std::vector<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitSpeed_Impl::coilCoolingDXCurveFitOperatingModes() const {
-    return getObject<ModelObject>().getModelObjectSources<CoilCoolingDXCurveFitOperatingMode>(CoilCoolingDXCurveFitOperatingMode::iddObjectType());
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::totalCoolingCapacityModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurve);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setGrossTotalCoolingCapacityFraction(double grossTotalCoolingCapacityFraction) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction, grossTotalCoolingCapacityFraction);
-    return result;
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurve);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setEvaporatorAirFlowRateFraction(double evaporatorAirFlowRateFraction) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction, evaporatorAirFlowRateFraction);
-    return result;
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::energyInputRatioModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurve);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setCondenserAirFlowRateFraction(double condenserAirFlowRateFraction) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction, condenserAirFlowRateFraction);
-    return result;
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::energyInputRatioModifierFunctionofAirFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurve);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setGrossSensibleHeatRatio(double grossSensibleHeatRatio) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, grossSensibleHeatRatio);
-    return result;
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::partLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurve);
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::autosizeGrossSensibleHeatRatio() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, "autosize");
-    OS_ASSERT(result);
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::wasteHeatModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurve);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setGrossCoolingCOP(double grossCoolingCOP) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, grossCoolingCOP);
-    return result;
-  }
+    double CoilCoolingDXCurveFitSpeed_Impl::ratedWasteHeatFractionofPowerInput() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setActiveFractionofCoilFaceArea(double activeFractionofCoilFaceArea) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, activeFractionofCoilFaceArea);
-    return result;
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::sensibleHeatRatioModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurve);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, ratedEvaporatorFanPowerPerVolumeFlowRate);
-    return result;
-  }
+    boost::optional<Curve> CoilCoolingDXCurveFitSpeed_Impl::sensibleHeatRatioModifierFunctionofFlowFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurve);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setEvaporativeCondenserPumpPowerFraction(double evaporativeCondenserPumpPowerFraction) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, evaporativeCondenserPumpPowerFraction);
-    return result;
-  }
+    std::vector<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitSpeed_Impl::coilCoolingDXCurveFitOperatingModes() const {
+      return getObject<ModelObject>().getModelObjectSources<CoilCoolingDXCurveFitOperatingMode>(CoilCoolingDXCurveFitOperatingMode::iddObjectType());
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, evaporativeCondenserEffectiveness);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setGrossTotalCoolingCapacityFraction(double grossTotalCoolingCapacityFraction) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction, grossTotalCoolingCapacityFraction);
+      return result;
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setTotalCoolingCapacityModifierFunctionofTemperatureCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setEvaporatorAirFlowRateFraction(double evaporatorAirFlowRateFraction) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction, evaporatorAirFlowRateFraction);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetTotalCoolingCapacityModifierFunctionofTemperatureCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurve, "");
-    OS_ASSERT(result);
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setCondenserAirFlowRateFraction(double condenserAirFlowRateFraction) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction, condenserAirFlowRateFraction);
+      return result;
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setGrossSensibleHeatRatio(double grossSensibleHeatRatio) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, grossSensibleHeatRatio);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurve, "");
-    OS_ASSERT(result);
-  }
+    void CoilCoolingDXCurveFitSpeed_Impl::autosizeGrossSensibleHeatRatio() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, "autosize");
+      OS_ASSERT(result);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setGrossCoolingCOP(double grossCoolingCOP) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, grossCoolingCOP);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetEnergyInputRatioModifierFunctionofTemperatureCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurve, "");
-    OS_ASSERT(result);
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setActiveFractionofCoilFaceArea(double activeFractionofCoilFaceArea) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, activeFractionofCoilFaceArea);
+      return result;
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
+      bool result =
+        setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, ratedEvaporatorFanPowerPerVolumeFlowRate);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurve, "");
-    OS_ASSERT(result);
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setEvaporativeCondenserPumpPowerFraction(double evaporativeCondenserPumpPowerFraction) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, evaporativeCondenserPumpPowerFraction);
+      return result;
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, evaporativeCondenserEffectiveness);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetPartLoadFractionCorrelationCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurve, "");
-    OS_ASSERT(result);
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setTotalCoolingCapacityModifierFunctionofTemperatureCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    void CoilCoolingDXCurveFitSpeed_Impl::resetTotalCoolingCapacityModifierFunctionofTemperatureCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurve, "");
+      OS_ASSERT(result);
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetWasteHeatModifierFunctionofTemperatureCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurve, "");
-    OS_ASSERT(result);
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput) {
-    bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, ratedWasteHeatFractionofPowerInput);
-    return result;
-  }
+    void CoilCoolingDXCurveFitSpeed_Impl::resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurve, "");
+      OS_ASSERT(result);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setSensibleHeatRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetSensibleHeatRatioModifierFunctionofTemperatureCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurve, "");
-    OS_ASSERT(result);
-  }
+    void CoilCoolingDXCurveFitSpeed_Impl::resetEnergyInputRatioModifierFunctionofTemperatureCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurve, "");
+      OS_ASSERT(result);
+    }
 
-  bool CoilCoolingDXCurveFitSpeed_Impl::setSensibleHeatRatioModifierFunctionofFlowFractionCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurve, curve.handle());
-    OS_ASSERT(result);
-    return result;
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::resetSensibleHeatRatioModifierFunctionofFlowFractionCurve() {
-    bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurve, "");
-    OS_ASSERT(result);
-  }
+    void CoilCoolingDXCurveFitSpeed_Impl::resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurve, "");
+      OS_ASSERT(result);
+    }
 
-  boost::optional<double> CoilCoolingDXCurveFitSpeed_Impl::autosizedGrossSensibleHeatRatio() const {
-    return getAutosizedValue("Design Size Gross Sensible Heat Ratio", "");
-  }
+    bool CoilCoolingDXCurveFitSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::autosize() {
+    void CoilCoolingDXCurveFitSpeed_Impl::resetPartLoadFractionCorrelationCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurve, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilCoolingDXCurveFitSpeed_Impl::setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilCoolingDXCurveFitSpeed_Impl::resetWasteHeatModifierFunctionofTemperatureCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurve, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilCoolingDXCurveFitSpeed_Impl::setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput) {
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, ratedWasteHeatFractionofPowerInput);
+      return result;
+    }
+
+    bool CoilCoolingDXCurveFitSpeed_Impl::setSensibleHeatRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilCoolingDXCurveFitSpeed_Impl::resetSensibleHeatRatioModifierFunctionofTemperatureCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurve, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilCoolingDXCurveFitSpeed_Impl::setSensibleHeatRatioModifierFunctionofFlowFractionCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurve, curve.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilCoolingDXCurveFitSpeed_Impl::resetSensibleHeatRatioModifierFunctionofFlowFractionCurve() {
+      bool result = setString(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurve, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<double> CoilCoolingDXCurveFitSpeed_Impl::autosizedGrossSensibleHeatRatio() const {
+      return getAutosizedValue("Design Size Gross Sensible Heat Ratio", "");
+    }
+
+    void CoilCoolingDXCurveFitSpeed_Impl::autosize() {
+      autosizeGrossSensibleHeatRatio();
+    }
+
+    void CoilCoolingDXCurveFitSpeed_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedGrossSensibleHeatRatio();
+      if (val) {
+        setGrossSensibleHeatRatio(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(const Model& model) : ResourceObject(CoilCoolingDXCurveFitSpeed::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>());
+
+    setGrossTotalCoolingCapacityFraction(1.0);
+    setEvaporatorAirFlowRateFraction(1.0);
+    setCondenserAirFlowRateFraction(1.0);
     autosizeGrossSensibleHeatRatio();
+    setGrossCoolingCOP(3.0);
+    setActiveFractionofCoilFaceArea(1.0);
+    setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+    setEvaporativeCondenserPumpPowerFraction(1.0);
+    setEvaporativeCondenserEffectiveness(0.9);
+    setRatedWasteHeatFractionofPowerInput(0.2);
+
+    //CurveBiquadratic totalCoolingCapacityModifierFunctionofTemperatureCurve(model);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient1Constant(0.766956);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient2x(0.0107756);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(-0.0000414703);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient4y(0.00134961);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(-0.000261144);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.000457488);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMinimumValueofx(17.0);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMaximumValueofx(22.0);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMinimumValueofy(13.0);
+    //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMaximumValueofy(46.0);
+    //setTotalCoolingCapacityModifierFunctionofTemperatureCurve(totalCoolingCapacityModifierFunctionofTemperatureCurve);
+
+    //CurveQuadratic totalCoolingCapacityModifierFunctionofAirFlowFractionCurve(model);
+    //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setCoefficient1Constant(0.8);
+    //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setCoefficient2x(0.2);
+    //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setCoefficient3xPOW2(0.0);
+    //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setMinimumValueofx(0.5);
+    //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setMaximumValueofx(1.5);
+    //setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve);
+
+    //CurveBiquadratic energyInputRatioModifierFunctionofTemperatureCurve(model);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient1Constant(0.297145);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient2x(0.0430933);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(-0.000748766);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient4y(0.00597727);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0.000482112);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(-0.000956448);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setMinimumValueofx(17.0);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setMaximumValueofx(22.0);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setMinimumValueofy(13.0);
+    //energyInputRatioModifierFunctionofTemperatureCurve.setMaximumValueofy(46.0);
+    //setEnergyInputRatioModifierFunctionofTemperatureCurve(energyInputRatioModifierFunctionofTemperatureCurve);
+
+    //CurveQuadratic energyInputRatioModifierFunctionofAirFlowFractionCurve(model);
+    //energyInputRatioModifierFunctionofAirFlowFractionCurve.setCoefficient1Constant(1.156);
+    //energyInputRatioModifierFunctionofAirFlowFractionCurve.setCoefficient2x(-0.1816);
+    //energyInputRatioModifierFunctionofAirFlowFractionCurve.setCoefficient3xPOW2(0.0256);
+    //energyInputRatioModifierFunctionofAirFlowFractionCurve.setMinimumValueofx(0.5);
+    //energyInputRatioModifierFunctionofAirFlowFractionCurve.setMaximumValueofx(1.5);
+    //setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(energyInputRatioModifierFunctionofAirFlowFractionCurve);
+
+    //CurveQuadratic partLoadFractionCorrelationCurve(model);
+    //partLoadFractionCorrelationCurve.setCoefficient1Constant(0.75);
+    //partLoadFractionCorrelationCurve.setCoefficient2x(0.25);
+    //partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
+    //partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
+    //partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
+    //setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
+
+    //CurveBiquadratic wasteHeatModifierFunctionofTemperatureCurve(model);
+    //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient1Constant(1);
+    //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient2x(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient4y(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setMinimumValueofx(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setMaximumValueofx(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setMinimumValueofy(0.0);
+    //wasteHeatModifierFunctionofTemperatureCurve.setMaximumValueofy(0.0);
+    //setWasteHeatModifierFunctionofTemperatureCurve(wasteHeatModifierFunctionofTemperatureCurve);
   }
 
-  void CoilCoolingDXCurveFitSpeed_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedGrossSensibleHeatRatio();
-    if (val) {
-      setGrossSensibleHeatRatio(val.get());
-    }
-
+  IddObjectType CoilCoolingDXCurveFitSpeed::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed);
   }
 
-} // detail
+  double CoilCoolingDXCurveFitSpeed::grossTotalCoolingCapacityFraction() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->grossTotalCoolingCapacityFraction();
+  }
 
-CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(const Model& model)
-  : ResourceObject(CoilCoolingDXCurveFitSpeed::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>());
+  double CoilCoolingDXCurveFitSpeed::evaporatorAirFlowRateFraction() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->evaporatorAirFlowRateFraction();
+  }
 
-  setGrossTotalCoolingCapacityFraction(1.0);
-  setEvaporatorAirFlowRateFraction(1.0);
-  setCondenserAirFlowRateFraction(1.0);
-  autosizeGrossSensibleHeatRatio();
-  setGrossCoolingCOP(3.0);
-  setActiveFractionofCoilFaceArea(1.0);
-  setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
-  setEvaporativeCondenserPumpPowerFraction(1.0);
-  setEvaporativeCondenserEffectiveness(0.9);
-  setRatedWasteHeatFractionofPowerInput(0.2);
+  double CoilCoolingDXCurveFitSpeed::condenserAirFlowRateFraction() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->condenserAirFlowRateFraction();
+  }
 
-  //CurveBiquadratic totalCoolingCapacityModifierFunctionofTemperatureCurve(model);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient1Constant(0.766956);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient2x(0.0107756);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(-0.0000414703);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient4y(0.00134961);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(-0.000261144);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.000457488);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMinimumValueofx(17.0);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMaximumValueofx(22.0);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMinimumValueofy(13.0);
-  //totalCoolingCapacityModifierFunctionofTemperatureCurve.setMaximumValueofy(46.0);
-  //setTotalCoolingCapacityModifierFunctionofTemperatureCurve(totalCoolingCapacityModifierFunctionofTemperatureCurve);
+  boost::optional<double> CoilCoolingDXCurveFitSpeed::grossSensibleHeatRatio() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->grossSensibleHeatRatio();
+  }
 
-  //CurveQuadratic totalCoolingCapacityModifierFunctionofAirFlowFractionCurve(model);
-  //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setCoefficient1Constant(0.8);
-  //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setCoefficient2x(0.2);
-  //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setCoefficient3xPOW2(0.0);
-  //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setMinimumValueofx(0.5);
-  //totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.setMaximumValueofx(1.5);
-  //setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve);
+  bool CoilCoolingDXCurveFitSpeed::isGrossSensibleHeatRatioAutosized() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->isGrossSensibleHeatRatioAutosized();
+  }
 
-  //CurveBiquadratic energyInputRatioModifierFunctionofTemperatureCurve(model);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient1Constant(0.297145);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient2x(0.0430933);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(-0.000748766);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient4y(0.00597727);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0.000482112);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(-0.000956448);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setMinimumValueofx(17.0);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setMaximumValueofx(22.0);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setMinimumValueofy(13.0);
-  //energyInputRatioModifierFunctionofTemperatureCurve.setMaximumValueofy(46.0);
-  //setEnergyInputRatioModifierFunctionofTemperatureCurve(energyInputRatioModifierFunctionofTemperatureCurve);
+  double CoilCoolingDXCurveFitSpeed::grossCoolingCOP() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->grossCoolingCOP();
+  }
 
-  //CurveQuadratic energyInputRatioModifierFunctionofAirFlowFractionCurve(model);
-  //energyInputRatioModifierFunctionofAirFlowFractionCurve.setCoefficient1Constant(1.156);
-  //energyInputRatioModifierFunctionofAirFlowFractionCurve.setCoefficient2x(-0.1816);
-  //energyInputRatioModifierFunctionofAirFlowFractionCurve.setCoefficient3xPOW2(0.0256);
-  //energyInputRatioModifierFunctionofAirFlowFractionCurve.setMinimumValueofx(0.5);
-  //energyInputRatioModifierFunctionofAirFlowFractionCurve.setMaximumValueofx(1.5);
-  //setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(energyInputRatioModifierFunctionofAirFlowFractionCurve);
+  double CoilCoolingDXCurveFitSpeed::activeFractionofCoilFaceArea() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->activeFractionofCoilFaceArea();
+  }
 
-  //CurveQuadratic partLoadFractionCorrelationCurve(model);
-  //partLoadFractionCorrelationCurve.setCoefficient1Constant(0.75);
-  //partLoadFractionCorrelationCurve.setCoefficient2x(0.25);
-  //partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
-  //partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
-  //partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
-  //setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
+  double CoilCoolingDXCurveFitSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate();
+  }
 
-  //CurveBiquadratic wasteHeatModifierFunctionofTemperatureCurve(model);
-  //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient1Constant(1);
-  //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient2x(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient4y(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setMinimumValueofx(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setMaximumValueofx(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setMinimumValueofy(0.0);
-  //wasteHeatModifierFunctionofTemperatureCurve.setMaximumValueofy(0.0);
-  //setWasteHeatModifierFunctionofTemperatureCurve(wasteHeatModifierFunctionofTemperatureCurve);
-}
+  double CoilCoolingDXCurveFitSpeed::evaporativeCondenserPumpPowerFraction() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->evaporativeCondenserPumpPowerFraction();
+  }
 
-IddObjectType CoilCoolingDXCurveFitSpeed::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed);
-}
+  double CoilCoolingDXCurveFitSpeed::evaporativeCondenserEffectiveness() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->evaporativeCondenserEffectiveness();
+  }
 
-double CoilCoolingDXCurveFitSpeed::grossTotalCoolingCapacityFraction() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->grossTotalCoolingCapacityFraction();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::totalCoolingCapacityModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->totalCoolingCapacityModifierFunctionofTemperatureCurve();
+  }
 
-double CoilCoolingDXCurveFitSpeed::evaporatorAirFlowRateFraction() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->evaporatorAirFlowRateFraction();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->totalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
+  }
 
-double CoilCoolingDXCurveFitSpeed::condenserAirFlowRateFraction() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->condenserAirFlowRateFraction();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::energyInputRatioModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->energyInputRatioModifierFunctionofTemperatureCurve();
+  }
 
-boost::optional<double> CoilCoolingDXCurveFitSpeed::grossSensibleHeatRatio() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->grossSensibleHeatRatio();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::energyInputRatioModifierFunctionofAirFlowFractionCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->energyInputRatioModifierFunctionofAirFlowFractionCurve();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::isGrossSensibleHeatRatioAutosized() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->isGrossSensibleHeatRatioAutosized();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::partLoadFractionCorrelationCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->partLoadFractionCorrelationCurve();
+  }
 
-double CoilCoolingDXCurveFitSpeed::grossCoolingCOP() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->grossCoolingCOP();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::wasteHeatModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->wasteHeatModifierFunctionofTemperatureCurve();
+  }
 
-double CoilCoolingDXCurveFitSpeed::activeFractionofCoilFaceArea() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->activeFractionofCoilFaceArea();
-}
+  double CoilCoolingDXCurveFitSpeed::ratedWasteHeatFractionofPowerInput() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedWasteHeatFractionofPowerInput();
+  }
 
-double CoilCoolingDXCurveFitSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::sensibleHeatRatioModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->sensibleHeatRatioModifierFunctionofTemperatureCurve();
+  }
 
-double CoilCoolingDXCurveFitSpeed::evaporativeCondenserPumpPowerFraction() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->evaporativeCondenserPumpPowerFraction();
-}
+  boost::optional<Curve> CoilCoolingDXCurveFitSpeed::sensibleHeatRatioModifierFunctionofFlowFractionCurve() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->sensibleHeatRatioModifierFunctionofFlowFractionCurve();
+  }
 
-double CoilCoolingDXCurveFitSpeed::evaporativeCondenserEffectiveness() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->evaporativeCondenserEffectiveness();
-}
+  std::vector<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitSpeed::coilCoolingDXCurveFitOperatingModes() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->coilCoolingDXCurveFitOperatingModes();
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::totalCoolingCapacityModifierFunctionofTemperatureCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->totalCoolingCapacityModifierFunctionofTemperatureCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setGrossTotalCoolingCapacityFraction(double grossTotalCoolingCapacityFraction) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setGrossTotalCoolingCapacityFraction(grossTotalCoolingCapacityFraction);
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->totalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setEvaporatorAirFlowRateFraction(double evaporatorAirFlowRateFraction) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEvaporatorAirFlowRateFraction(evaporatorAirFlowRateFraction);
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::energyInputRatioModifierFunctionofTemperatureCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->energyInputRatioModifierFunctionofTemperatureCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setCondenserAirFlowRateFraction(double condenserAirFlowRateFraction) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setCondenserAirFlowRateFraction(condenserAirFlowRateFraction);
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::energyInputRatioModifierFunctionofAirFlowFractionCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->energyInputRatioModifierFunctionofAirFlowFractionCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setGrossSensibleHeatRatio(double grossSensibleHeatRatio) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setGrossSensibleHeatRatio(grossSensibleHeatRatio);
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::partLoadFractionCorrelationCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->partLoadFractionCorrelationCurve();
-}
+  void CoilCoolingDXCurveFitSpeed::autosizeGrossSensibleHeatRatio() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosizeGrossSensibleHeatRatio();
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::wasteHeatModifierFunctionofTemperatureCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->wasteHeatModifierFunctionofTemperatureCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setGrossCoolingCOP(double grossCoolingCOP) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setGrossCoolingCOP(grossCoolingCOP);
+  }
 
-double CoilCoolingDXCurveFitSpeed::ratedWasteHeatFractionofPowerInput() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedWasteHeatFractionofPowerInput();
-}
+  bool CoilCoolingDXCurveFitSpeed::setActiveFractionofCoilFaceArea(double activeFractionofCoilFaceArea) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setActiveFractionofCoilFaceArea(activeFractionofCoilFaceArea);
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::sensibleHeatRatioModifierFunctionofTemperatureCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->sensibleHeatRatioModifierFunctionofTemperatureCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate(ratedEvaporatorFanPowerPerVolumeFlowRate);
+  }
 
-boost::optional<Curve> CoilCoolingDXCurveFitSpeed::sensibleHeatRatioModifierFunctionofFlowFractionCurve() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->sensibleHeatRatioModifierFunctionofFlowFractionCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setEvaporativeCondenserPumpPowerFraction(double evaporativeCondenserPumpPowerFraction) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEvaporativeCondenserPumpPowerFraction(evaporativeCondenserPumpPowerFraction);
+  }
 
-std::vector<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitSpeed::coilCoolingDXCurveFitOperatingModes() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->coilCoolingDXCurveFitOperatingModes();
-}
+  bool CoilCoolingDXCurveFitSpeed::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEvaporativeCondenserEffectiveness(evaporativeCondenserEffectiveness);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setGrossTotalCoolingCapacityFraction(double grossTotalCoolingCapacityFraction) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setGrossTotalCoolingCapacityFraction(grossTotalCoolingCapacityFraction);
-}
+  bool CoilCoolingDXCurveFitSpeed::setTotalCoolingCapacityModifierFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setTotalCoolingCapacityModifierFunctionofTemperatureCurve(curve);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setEvaporatorAirFlowRateFraction(double evaporatorAirFlowRateFraction) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEvaporatorAirFlowRateFraction(evaporatorAirFlowRateFraction);
-}
+  void CoilCoolingDXCurveFitSpeed::resetTotalCoolingCapacityModifierFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetTotalCoolingCapacityModifierFunctionofTemperatureCurve();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setCondenserAirFlowRateFraction(double condenserAirFlowRateFraction) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setCondenserAirFlowRateFraction(condenserAirFlowRateFraction);
-}
+  bool CoilCoolingDXCurveFitSpeed::setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(curve);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setGrossSensibleHeatRatio(double grossSensibleHeatRatio) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setGrossSensibleHeatRatio(grossSensibleHeatRatio);
-}
+  void CoilCoolingDXCurveFitSpeed::resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
+  }
 
-void CoilCoolingDXCurveFitSpeed::autosizeGrossSensibleHeatRatio() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosizeGrossSensibleHeatRatio();
-}
+  bool CoilCoolingDXCurveFitSpeed::setEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEnergyInputRatioModifierFunctionofTemperatureCurve(curve);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setGrossCoolingCOP(double grossCoolingCOP) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setGrossCoolingCOP(grossCoolingCOP);
-}
+  void CoilCoolingDXCurveFitSpeed::resetEnergyInputRatioModifierFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetEnergyInputRatioModifierFunctionofTemperatureCurve();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setActiveFractionofCoilFaceArea(double activeFractionofCoilFaceArea) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setActiveFractionofCoilFaceArea(activeFractionofCoilFaceArea);
-}
+  bool CoilCoolingDXCurveFitSpeed::setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(curve);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate(ratedEvaporatorFanPowerPerVolumeFlowRate);
-}
+  void CoilCoolingDXCurveFitSpeed::resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setEvaporativeCondenserPumpPowerFraction(double evaporativeCondenserPumpPowerFraction) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEvaporativeCondenserPumpPowerFraction(evaporativeCondenserPumpPowerFraction);
-}
+  bool CoilCoolingDXCurveFitSpeed::setPartLoadFractionCorrelationCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setPartLoadFractionCorrelationCurve(curve);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEvaporativeCondenserEffectiveness(evaporativeCondenserEffectiveness);
-}
+  void CoilCoolingDXCurveFitSpeed::resetPartLoadFractionCorrelationCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetPartLoadFractionCorrelationCurve();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setTotalCoolingCapacityModifierFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setTotalCoolingCapacityModifierFunctionofTemperatureCurve(curve);
-}
+  bool CoilCoolingDXCurveFitSpeed::setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setWasteHeatModifierFunctionofTemperatureCurve(curve);
+  }
 
-void CoilCoolingDXCurveFitSpeed::resetTotalCoolingCapacityModifierFunctionofTemperatureCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetTotalCoolingCapacityModifierFunctionofTemperatureCurve();
-}
+  void CoilCoolingDXCurveFitSpeed::resetWasteHeatModifierFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetWasteHeatModifierFunctionofTemperatureCurve();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(curve);
-}
+  bool CoilCoolingDXCurveFitSpeed::setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedWasteHeatFractionofPowerInput(ratedWasteHeatFractionofPowerInput);
+  }
 
-void CoilCoolingDXCurveFitSpeed::resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setSensibleHeatRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setSensibleHeatRatioModifierFunctionofTemperatureCurve(curve);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEnergyInputRatioModifierFunctionofTemperatureCurve(curve);
-}
+  void CoilCoolingDXCurveFitSpeed::resetSensibleHeatRatioModifierFunctionofTemperatureCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetSensibleHeatRatioModifierFunctionofTemperatureCurve();
+  }
 
-void CoilCoolingDXCurveFitSpeed::resetEnergyInputRatioModifierFunctionofTemperatureCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetEnergyInputRatioModifierFunctionofTemperatureCurve();
-}
+  bool CoilCoolingDXCurveFitSpeed::setSensibleHeatRatioModifierFunctionofFlowFractionCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setSensibleHeatRatioModifierFunctionofFlowFractionCurve(curve);
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(curve);
-}
+  void CoilCoolingDXCurveFitSpeed::resetSensibleHeatRatioModifierFunctionofFlowFractionCurve() {
+    getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetSensibleHeatRatioModifierFunctionofFlowFractionCurve();
+  }
 
-void CoilCoolingDXCurveFitSpeed::resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve();
-}
+  boost::optional<double> CoilCoolingDXCurveFitSpeed::autosizedGrossSensibleHeatRatio() const {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosizedGrossSensibleHeatRatio();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setPartLoadFractionCorrelationCurve(curve);
-}
+  void CoilCoolingDXCurveFitSpeed::autosize() {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosize();
+  }
 
-void CoilCoolingDXCurveFitSpeed::resetPartLoadFractionCorrelationCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetPartLoadFractionCorrelationCurve();
-}
+  void CoilCoolingDXCurveFitSpeed::applySizingValues() {
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->applySizingValues();
+  }
 
-bool CoilCoolingDXCurveFitSpeed::setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setWasteHeatModifierFunctionofTemperatureCurve(curve);
-}
+  /// @cond
+  CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(std::shared_ptr<detail::CoilCoolingDXCurveFitSpeed_Impl> impl) : ResourceObject(impl) {}
+  /// @endcond
 
-void CoilCoolingDXCurveFitSpeed::resetWasteHeatModifierFunctionofTemperatureCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetWasteHeatModifierFunctionofTemperatureCurve();
-}
-
-bool CoilCoolingDXCurveFitSpeed::setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedWasteHeatFractionofPowerInput(ratedWasteHeatFractionofPowerInput);
-}
-
-bool CoilCoolingDXCurveFitSpeed::setSensibleHeatRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setSensibleHeatRatioModifierFunctionofTemperatureCurve(curve);
-}
-
-void CoilCoolingDXCurveFitSpeed::resetSensibleHeatRatioModifierFunctionofTemperatureCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetSensibleHeatRatioModifierFunctionofTemperatureCurve();
-}
-
-bool CoilCoolingDXCurveFitSpeed::setSensibleHeatRatioModifierFunctionofFlowFractionCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setSensibleHeatRatioModifierFunctionofFlowFractionCurve(curve);
-}
-
-void CoilCoolingDXCurveFitSpeed::resetSensibleHeatRatioModifierFunctionofFlowFractionCurve() {
-  getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->resetSensibleHeatRatioModifierFunctionofFlowFractionCurve();
-}
-
-boost::optional<double> CoilCoolingDXCurveFitSpeed::autosizedGrossSensibleHeatRatio() const {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosizedGrossSensibleHeatRatio();
-}
-
-void CoilCoolingDXCurveFitSpeed::autosize() {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosize();
-}
-
-void CoilCoolingDXCurveFitSpeed::applySizingValues() {
-  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->applySizingValues();
-}
-
-/// @cond
-CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(std::shared_ptr<detail::CoilCoolingDXCurveFitSpeed_Impl> impl)
-  : ResourceObject(impl)
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

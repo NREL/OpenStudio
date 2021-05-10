@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,94 +37,95 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerFollowSystemNodeTemperature_Impl;
+    class SetpointManagerFollowSystemNodeTemperature_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerFollowSystemNodeTemperature is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:FollowSystemNodeTemperature'. */
-class MODEL_API SetpointManagerFollowSystemNodeTemperature : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerFollowSystemNodeTemperature is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:FollowSystemNodeTemperature'. */
+  class MODEL_API SetpointManagerFollowSystemNodeTemperature : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerFollowSystemNodeTemperature(const Model& model);
+    explicit SetpointManagerFollowSystemNodeTemperature(const Model& model);
 
-  virtual ~SetpointManagerFollowSystemNodeTemperature() {}
+    virtual ~SetpointManagerFollowSystemNodeTemperature() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  static std::vector<std::string> referenceTemperatureTypeValues();
+    static std::vector<std::string> referenceTemperatureTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  boost::optional<Node> referenceNode() const;
+    boost::optional<Node> referenceNode() const;
 
-  std::string referenceTemperatureType() const;
+    std::string referenceTemperatureType() const;
 
-  double offsetTemperatureDifference() const;
+    double offsetTemperatureDifference() const;
 
-  double maximumLimitSetpointTemperature() const;
+    double maximumLimitSetpointTemperature() const;
 
-  double minimumLimitSetpointTemperature() const;
+    double minimumLimitSetpointTemperature() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setReferenceNode(const Node& node);
+    bool setReferenceNode(const Node& node);
 
-  void resetReferenceNode();
+    void resetReferenceNode();
 
-  bool setReferenceTemperatureType(const std::string& referenceTemperatureType);
+    bool setReferenceTemperatureType(const std::string& referenceTemperatureType);
 
-  bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
+    bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
 
-  bool setMaximumLimitSetpointTemperature(double maximumLimitSetpointTemperature);
+    bool setMaximumLimitSetpointTemperature(double maximumLimitSetpointTemperature);
 
-  bool setMinimumLimitSetpointTemperature(double minimumLimitSetpointTemperature);
+    bool setMinimumLimitSetpointTemperature(double minimumLimitSetpointTemperature);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerFollowSystemNodeTemperature_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerFollowSystemNodeTemperature_Impl ImplType;
 
-  explicit SetpointManagerFollowSystemNodeTemperature(std::shared_ptr<detail::SetpointManagerFollowSystemNodeTemperature_Impl> impl);
+    explicit SetpointManagerFollowSystemNodeTemperature(std::shared_ptr<detail::SetpointManagerFollowSystemNodeTemperature_Impl> impl);
 
-  friend class detail::SetpointManagerFollowSystemNodeTemperature_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerFollowSystemNodeTemperature");
-};
+    friend class detail::SetpointManagerFollowSystemNodeTemperature_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerFollowSystemNodeTemperature");
+  };
 
-/** \relates SetpointManagerFollowSystemNodeTemperature*/
-typedef boost::optional<SetpointManagerFollowSystemNodeTemperature> OptionalSetpointManagerFollowSystemNodeTemperature;
+  /** \relates SetpointManagerFollowSystemNodeTemperature*/
+  typedef boost::optional<SetpointManagerFollowSystemNodeTemperature> OptionalSetpointManagerFollowSystemNodeTemperature;
 
-/** \relates SetpointManagerFollowSystemNodeTemperature*/
-typedef std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatureVector;
+  /** \relates SetpointManagerFollowSystemNodeTemperature*/
+  typedef std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatureVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERFOLLOWSYSTEMNODETEMPERATURE_HPP
+#endif  // MODEL_SETPOINTMANAGERFOLLOWSYSTEMNODETEMPERATURE_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,166 +52,164 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorption( ChillerAbsorption & modelObject )
-{
-  IdfObject idfObject(IddObjectType::Chiller_Absorption);
+  boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorption(ChillerAbsorption& modelObject) {
+    IdfObject idfObject(IddObjectType::Chiller_Absorption);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  // ChilledWaterInletNodeName
-  if( auto mo = modelObject.supplyInletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(Chiller_AbsorptionFields::ChilledWaterInletNodeName,node->name().get());
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
     }
-  }
 
-  // ChilledWaterOutletNodeName
-  if( auto mo = modelObject.supplyOutletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(Chiller_AbsorptionFields::ChilledWaterOutletNodeName,node->name().get());
+    // ChilledWaterInletNodeName
+    if (auto mo = modelObject.supplyInletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(Chiller_AbsorptionFields::ChilledWaterInletNodeName, node->name().get());
+      }
     }
-  }
 
-  // CondenserInletNodeName
-  if( auto mo = modelObject.demandInletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(Chiller_AbsorptionFields::CondenserInletNodeName,node->name().get());
+    // ChilledWaterOutletNodeName
+    if (auto mo = modelObject.supplyOutletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(Chiller_AbsorptionFields::ChilledWaterOutletNodeName, node->name().get());
+      }
     }
-  }
 
-  // CondenserOutletNodeName
-  if( auto mo = modelObject.demandOutletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(Chiller_AbsorptionFields::CondenserOutletNodeName,node->name().get());
+    // CondenserInletNodeName
+    if (auto mo = modelObject.demandInletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(Chiller_AbsorptionFields::CondenserInletNodeName, node->name().get());
+      }
     }
-  }
 
-  if( auto mo = modelObject.tertiaryInletModelObject() ) {
-    idfObject.setString(Chiller_AbsorptionFields::GeneratorInletNodeName,mo->name().get());
-  }
-
-  if( auto mo = modelObject.tertiaryOutletModelObject() ) {
-    idfObject.setString(Chiller_AbsorptionFields::GeneratorOutletNodeName,mo->name().get());
-  }
-
-  if( modelObject.isNominalCapacityAutosized() ) {
-    idfObject.setString(Chiller_AbsorptionFields::NominalCapacity,"Autosize");
-  } else if( auto value = modelObject.nominalCapacity() ) {
-    idfObject.setDouble(Chiller_AbsorptionFields::NominalCapacity,value.get());
-  }
-
-  if( modelObject.isNominalPumpingPowerAutosized() ) {
-    idfObject.setString(Chiller_AbsorptionFields::NominalPumpingPower,"Autosize");
-  } else if( auto value = modelObject.nominalPumpingPower() ) {
-    idfObject.setDouble(Chiller_AbsorptionFields::NominalPumpingPower,value.get());
-  }
-
-  {
-    auto value = modelObject.minimumPartLoadRatio();
-    idfObject.setDouble(Chiller_AbsorptionFields::MinimumPartLoadRatio,value);
-  }
-
-  {
-    auto value = modelObject.maximumPartLoadRatio();
-    idfObject.setDouble(Chiller_AbsorptionFields::MaximumPartLoadRatio,value);
-  }
-
-  {
-    auto value = modelObject.optimumPartLoadRatio();
-    idfObject.setDouble(Chiller_AbsorptionFields::OptimumPartLoadRatio,value);
-  }
-
-  {
-    auto value = modelObject.designCondenserInletTemperature();
-    idfObject.setDouble(Chiller_AbsorptionFields::DesignCondenserInletTemperature,value);
-  }
-
-  if( modelObject.isDesignChilledWaterFlowRateAutosized() ) {
-    idfObject.setString(Chiller_AbsorptionFields::DesignChilledWaterFlowRate,"Autosize");
-  } else if( auto value = modelObject.designChilledWaterFlowRate() ) {
-    idfObject.setDouble(Chiller_AbsorptionFields::DesignChilledWaterFlowRate,value.get());
-  }
-
-  if( modelObject.isDesignCondenserWaterFlowRateAutosized() ) {
-    idfObject.setString(Chiller_AbsorptionFields::DesignCondenserWaterFlowRate,"Autosize");
-  } else if( auto value = modelObject.designCondenserWaterFlowRate() ) {
-    idfObject.setDouble(Chiller_AbsorptionFields::DesignCondenserWaterFlowRate,value.get());
-  }
-
-  {
-    auto value = modelObject.coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve();
-    idfObject.setDouble(Chiller_AbsorptionFields::Coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve,value);
-  }
-
-  {
-    auto value = modelObject.coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve();
-    idfObject.setDouble(Chiller_AbsorptionFields::Coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve,value);
-  }
-
-  {
-    auto value = modelObject.coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve();
-    idfObject.setDouble(Chiller_AbsorptionFields::Coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve,value);
-  }
-
-  {
-    auto value = modelObject.coefficient1ofthePumpElectricUsePartLoadRatioCurve();
-    idfObject.setDouble(Chiller_AbsorptionFields::Coefficient1ofthePumpElectricUsePartLoadRatioCurve,value);
-  }
-
-  {
-    auto value = modelObject.coefficient2ofthePumpElectricUsePartLoadRatioCurve();
-    idfObject.setDouble(Chiller_AbsorptionFields::Coefficient2ofthePumpElectricUsePartLoadRatioCurve,value);
-  }
-
-  {
-    auto value = modelObject.coefficient3ofthePumpElectricUsePartLoadRatioCurve();
-    idfObject.setDouble(Chiller_AbsorptionFields::Coefficient3ofthePumpElectricUsePartLoadRatioCurve,value);
-  }
-
-  {
-    auto value = modelObject.chilledWaterOutletTemperatureLowerLimit();
-    idfObject.setDouble(Chiller_AbsorptionFields::ChilledWaterOutletTemperatureLowerLimit,value);
-  }
-
-  {
-    auto value = modelObject.chillerFlowMode();
-    idfObject.setString(Chiller_AbsorptionFields::ChillerFlowMode,value);
-  }
-
-  {
-    auto value = modelObject.generatorHeatSourceType();
-    idfObject.setString(Chiller_AbsorptionFields::GeneratorHeatSourceType,value);
-  }
-
-  if( modelObject.generatorLoop() ) {
-    if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
-      idfObject.setString(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,"Autosize");
-    } else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
-      idfObject.setDouble(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,value.get());
+    // CondenserOutletNodeName
+    if (auto mo = modelObject.demandOutletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(Chiller_AbsorptionFields::CondenserOutletNodeName, node->name().get());
+      }
     }
-  } else {
-    idfObject.setString(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate,"");
+
+    if (auto mo = modelObject.tertiaryInletModelObject()) {
+      idfObject.setString(Chiller_AbsorptionFields::GeneratorInletNodeName, mo->name().get());
+    }
+
+    if (auto mo = modelObject.tertiaryOutletModelObject()) {
+      idfObject.setString(Chiller_AbsorptionFields::GeneratorOutletNodeName, mo->name().get());
+    }
+
+    if (modelObject.isNominalCapacityAutosized()) {
+      idfObject.setString(Chiller_AbsorptionFields::NominalCapacity, "Autosize");
+    } else if (auto value = modelObject.nominalCapacity()) {
+      idfObject.setDouble(Chiller_AbsorptionFields::NominalCapacity, value.get());
+    }
+
+    if (modelObject.isNominalPumpingPowerAutosized()) {
+      idfObject.setString(Chiller_AbsorptionFields::NominalPumpingPower, "Autosize");
+    } else if (auto value = modelObject.nominalPumpingPower()) {
+      idfObject.setDouble(Chiller_AbsorptionFields::NominalPumpingPower, value.get());
+    }
+
+    {
+      auto value = modelObject.minimumPartLoadRatio();
+      idfObject.setDouble(Chiller_AbsorptionFields::MinimumPartLoadRatio, value);
+    }
+
+    {
+      auto value = modelObject.maximumPartLoadRatio();
+      idfObject.setDouble(Chiller_AbsorptionFields::MaximumPartLoadRatio, value);
+    }
+
+    {
+      auto value = modelObject.optimumPartLoadRatio();
+      idfObject.setDouble(Chiller_AbsorptionFields::OptimumPartLoadRatio, value);
+    }
+
+    {
+      auto value = modelObject.designCondenserInletTemperature();
+      idfObject.setDouble(Chiller_AbsorptionFields::DesignCondenserInletTemperature, value);
+    }
+
+    if (modelObject.isDesignChilledWaterFlowRateAutosized()) {
+      idfObject.setString(Chiller_AbsorptionFields::DesignChilledWaterFlowRate, "Autosize");
+    } else if (auto value = modelObject.designChilledWaterFlowRate()) {
+      idfObject.setDouble(Chiller_AbsorptionFields::DesignChilledWaterFlowRate, value.get());
+    }
+
+    if (modelObject.isDesignCondenserWaterFlowRateAutosized()) {
+      idfObject.setString(Chiller_AbsorptionFields::DesignCondenserWaterFlowRate, "Autosize");
+    } else if (auto value = modelObject.designCondenserWaterFlowRate()) {
+      idfObject.setDouble(Chiller_AbsorptionFields::DesignCondenserWaterFlowRate, value.get());
+    }
+
+    {
+      auto value = modelObject.coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve();
+      idfObject.setDouble(Chiller_AbsorptionFields::Coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve, value);
+    }
+
+    {
+      auto value = modelObject.coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve();
+      idfObject.setDouble(Chiller_AbsorptionFields::Coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve, value);
+    }
+
+    {
+      auto value = modelObject.coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve();
+      idfObject.setDouble(Chiller_AbsorptionFields::Coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve, value);
+    }
+
+    {
+      auto value = modelObject.coefficient1ofthePumpElectricUsePartLoadRatioCurve();
+      idfObject.setDouble(Chiller_AbsorptionFields::Coefficient1ofthePumpElectricUsePartLoadRatioCurve, value);
+    }
+
+    {
+      auto value = modelObject.coefficient2ofthePumpElectricUsePartLoadRatioCurve();
+      idfObject.setDouble(Chiller_AbsorptionFields::Coefficient2ofthePumpElectricUsePartLoadRatioCurve, value);
+    }
+
+    {
+      auto value = modelObject.coefficient3ofthePumpElectricUsePartLoadRatioCurve();
+      idfObject.setDouble(Chiller_AbsorptionFields::Coefficient3ofthePumpElectricUsePartLoadRatioCurve, value);
+    }
+
+    {
+      auto value = modelObject.chilledWaterOutletTemperatureLowerLimit();
+      idfObject.setDouble(Chiller_AbsorptionFields::ChilledWaterOutletTemperatureLowerLimit, value);
+    }
+
+    {
+      auto value = modelObject.chillerFlowMode();
+      idfObject.setString(Chiller_AbsorptionFields::ChillerFlowMode, value);
+    }
+
+    {
+      auto value = modelObject.generatorHeatSourceType();
+      idfObject.setString(Chiller_AbsorptionFields::GeneratorHeatSourceType, value);
+    }
+
+    if (modelObject.generatorLoop()) {
+      if (modelObject.isDesignGeneratorFluidFlowRateAutosized()) {
+        idfObject.setString(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate, "Autosize");
+      } else if (auto value = modelObject.designGeneratorFluidFlowRate()) {
+        idfObject.setDouble(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate, value.get());
+      }
+    } else {
+      idfObject.setString(Chiller_AbsorptionFields::DesignGeneratorFluidFlowRate, "");
+    }
+
+    {
+      auto value = modelObject.degreeofSubcoolinginSteamGenerator();
+      idfObject.setDouble(Chiller_AbsorptionFields::DegreeofSubcoolinginSteamGenerator, value);
+    }
+
+    {
+      auto value = modelObject.sizingFactor();
+      idfObject.setDouble(Chiller_AbsorptionFields::SizingFactor, value);
+    }
+
+    return idfObject;
   }
 
-  {
-    auto value = modelObject.degreeofSubcoolinginSteamGenerator();
-    idfObject.setDouble(Chiller_AbsorptionFields::DegreeofSubcoolinginSteamGenerator,value);
-  }
+}  // namespace energyplus
 
-  {
-    auto value = modelObject.sizingFactor();
-    idfObject.setDouble(Chiller_AbsorptionFields::SizingFactor,value);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

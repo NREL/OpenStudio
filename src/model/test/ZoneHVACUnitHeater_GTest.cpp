@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,46 +49,44 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,ZoneHVACUnitHeater_Check_Constructor) {
+TEST_F(ModelFixture, ZoneHVACUnitHeater_Check_Constructor) {
 
   Model model;
   ScheduleConstant sched(model);
-  sched.setValue(1.0); // Always on
-  FanConstantVolume fan(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  ZoneHVACUnitHeater zoneHVACUnitHeater(model,sched,fan,heatingCoil);
+  sched.setValue(1.0);  // Always on
+  FanConstantVolume fan(model, sched);
+  CoilHeatingWater heatingCoil(model, sched);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model, sched, fan, heatingCoil);
 
   // Testing .idd object type
 
-  EXPECT_EQ(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater,zoneHVACUnitHeater.iddObjectType().value());
+  EXPECT_EQ(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater, zoneHVACUnitHeater.iddObjectType().value());
 
   // Test set and get availability schedule
 
   ScheduleConstant test_sched(model);
   test_sched.setValue(1.0);
   EXPECT_TRUE(zoneHVACUnitHeater.setAvailabilitySchedule(test_sched));
-  EXPECT_EQ(zoneHVACUnitHeater.availabilitySchedule(),test_sched);
-
+  EXPECT_EQ(zoneHVACUnitHeater.availabilitySchedule(), test_sched);
 }
 
 // Test add to thermal zone
 
-TEST_F(ModelFixture,ZoneHVACUnitHeater_addToThermalZone) {
+TEST_F(ModelFixture, ZoneHVACUnitHeater_addToThermalZone) {
 
   Model model;
   ScheduleConstant sched(model);
-  sched.setValue(1.0); // Always on
-  FanConstantVolume fan(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  ZoneHVACUnitHeater zoneHVACUnitHeater(model,sched,fan,heatingCoil);
+  sched.setValue(1.0);  // Always on
+  FanConstantVolume fan(model, sched);
+  CoilHeatingWater heatingCoil(model, sched);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model, sched, fan, heatingCoil);
 
   //test add to and remove from Thermal zone
 
   ThermalZone thermalZone(model);
   EXPECT_TRUE(zoneHVACUnitHeater.addToThermalZone(thermalZone));
   boost::optional<ThermalZone> testThermalZone = zoneHVACUnitHeater.thermalZone();
-  EXPECT_EQ(*(testThermalZone),zoneHVACUnitHeater.thermalZone());
+  EXPECT_EQ(*(testThermalZone), zoneHVACUnitHeater.thermalZone());
 
   // Check inlet and outlet nodes
   EXPECT_TRUE(zoneHVACUnitHeater.inletNode());
@@ -96,28 +94,26 @@ TEST_F(ModelFixture,ZoneHVACUnitHeater_addToThermalZone) {
 
   zoneHVACUnitHeater.removeFromThermalZone();
   EXPECT_FALSE(zoneHVACUnitHeater.thermalZone());
-
 }
-  //Test set and get supply air fan
+//Test set and get supply air fan
 
-TEST_F(ModelFixture,ZoneHVACUnitHeater_Check_Supply_Air_Fan) {
+TEST_F(ModelFixture, ZoneHVACUnitHeater_Check_Supply_Air_Fan) {
 
   Model model;
   ScheduleConstant sched(model);
-  sched.setValue(1.0); // Always on
-  FanConstantVolume fan(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  ZoneHVACUnitHeater zoneHVACUnitHeater(model,sched,fan,heatingCoil);
-  FanVariableVolume testfan(model,sched);
+  sched.setValue(1.0);  // Always on
+  FanConstantVolume fan(model, sched);
+  CoilHeatingWater heatingCoil(model, sched);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model, sched, fan, heatingCoil);
+  FanVariableVolume testfan(model, sched);
   EXPECT_TRUE(zoneHVACUnitHeater.setSupplyAirFan(testfan));
-  EXPECT_EQ(zoneHVACUnitHeater.supplyAirFan(),testfan);
+  EXPECT_EQ(zoneHVACUnitHeater.supplyAirFan(), testfan);
 
   // Test set and get max supply air flow rate, and test fan autosize functions
 
   EXPECT_TRUE(zoneHVACUnitHeater.setMaximumSupplyAirFlowRate(500));
   boost::optional<double> testmaxSAFR = zoneHVACUnitHeater.maximumSupplyAirFlowRate();
-  EXPECT_EQ((*testmaxSAFR),500);
-
+  EXPECT_EQ((*testmaxSAFR), 500);
 
   EXPECT_FALSE(zoneHVACUnitHeater.isMaximumSupplyAirFlowRateAutosized());
   zoneHVACUnitHeater.autosizeMaximumSupplyAirFlowRate();
@@ -128,30 +124,29 @@ TEST_F(ModelFixture,ZoneHVACUnitHeater_Check_Supply_Air_Fan) {
   EXPECT_FALSE(zoneHVACUnitHeater.setFanControlType("wrong fan"));
   EXPECT_TRUE(zoneHVACUnitHeater.setFanControlType("OnOff"));
   EXPECT_TRUE(zoneHVACUnitHeater.setFanControlType("Continuous"));
-  EXPECT_EQ(zoneHVACUnitHeater.fanControlType(),"Continuous");
-
+  EXPECT_EQ(zoneHVACUnitHeater.fanControlType(), "Continuous");
 }
 
 // Test set and get heating coil
 
-TEST_F(ModelFixture,ZoneHVACUnitHeater_Check_Heating_Coil) {
+TEST_F(ModelFixture, ZoneHVACUnitHeater_Check_Heating_Coil) {
 
   Model model;
   ScheduleConstant sched(model);
-  sched.setValue(1.0); // Always on
-  FanConstantVolume fan(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  ZoneHVACUnitHeater zoneHVACUnitHeater(model,sched,fan,heatingCoil);
+  sched.setValue(1.0);  // Always on
+  FanConstantVolume fan(model, sched);
+  CoilHeatingWater heatingCoil(model, sched);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model, sched, fan, heatingCoil);
 
-  CoilHeatingWater testheatingCoil(model,sched);
+  CoilHeatingWater testheatingCoil(model, sched);
   EXPECT_TRUE(zoneHVACUnitHeater.setHeatingCoil(testheatingCoil));
-  EXPECT_EQ(zoneHVACUnitHeater.heatingCoil(),testheatingCoil);
+  EXPECT_EQ(zoneHVACUnitHeater.heatingCoil(), testheatingCoil);
 
   // Test set and get max hot water flow rate, and test max hot water flow autosize functions
 
   EXPECT_TRUE(zoneHVACUnitHeater.setMaximumHotWaterFlowRate(500));
   boost::optional<double> testmaxHWMFR = zoneHVACUnitHeater.maximumHotWaterFlowRate();
-  EXPECT_EQ((*testmaxHWMFR),500);
+  EXPECT_EQ((*testmaxHWMFR), 500);
 
   EXPECT_FALSE(zoneHVACUnitHeater.isMaximumHotWaterFlowRateAutosized());
   zoneHVACUnitHeater.resetMaximumHotWaterFlowRate();
@@ -163,7 +158,7 @@ TEST_F(ModelFixture,ZoneHVACUnitHeater_Check_Heating_Coil) {
 
   EXPECT_TRUE(zoneHVACUnitHeater.setMinimumHotWaterFlowRate(500));
   boost::optional<double> testminHWMFR = zoneHVACUnitHeater.minimumHotWaterFlowRate();
-  EXPECT_EQ((*testminHWMFR),500);
+  EXPECT_EQ((*testminHWMFR), 500);
 
   EXPECT_FALSE(zoneHVACUnitHeater.isMinimumHotWaterFlowRateDefaulted());
   zoneHVACUnitHeater.resetMinimumHotWaterFlowRate();
@@ -174,26 +169,27 @@ TEST_F(ModelFixture,ZoneHVACUnitHeater_Check_Heating_Coil) {
 
   EXPECT_TRUE(zoneHVACUnitHeater.setHeatingConvergenceTolerance(0.002));
   boost::optional<double> testHCT = zoneHVACUnitHeater.heatingConvergenceTolerance();
-  EXPECT_EQ((*testHCT),0.002);
+  EXPECT_EQ((*testHCT), 0.002);
 
   EXPECT_FALSE(zoneHVACUnitHeater.isHeatingConvergenceToleranceDefaulted());
   zoneHVACUnitHeater.resetHeatingConvergenceTolerance();
-  EXPECT_EQ(zoneHVACUnitHeater.heatingConvergenceTolerance(),0.001);
+  EXPECT_EQ(zoneHVACUnitHeater.heatingConvergenceTolerance(), 0.001);
   EXPECT_TRUE(zoneHVACUnitHeater.isHeatingConvergenceToleranceDefaulted());
 }
 
 // Test add Life Cycle Costs
 
-TEST_F(ModelFixture,ZoneHVACUnitHeater_addLifeCycleCosts) {
+TEST_F(ModelFixture, ZoneHVACUnitHeater_addLifeCycleCosts) {
 
   Model model;
   ScheduleConstant sched(model);
-  sched.setValue(1.0); // Always on
-  FanConstantVolume fan(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  ZoneHVACUnitHeater zoneHVACUnitHeater(model,sched,fan,heatingCoil);
+  sched.setValue(1.0);  // Always on
+  FanConstantVolume fan(model, sched);
+  CoilHeatingWater heatingCoil(model, sched);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model, sched, fan, heatingCoil);
 
-  boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", zoneHVACUnitHeater, 1000.0, "CostPerEach", "Construction");
+  boost::optional<openstudio::model::LifeCycleCost> cost1 =
+    openstudio::model::LifeCycleCost::createLifeCycleCost("Install", zoneHVACUnitHeater, 1000.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost1);
 
   EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());

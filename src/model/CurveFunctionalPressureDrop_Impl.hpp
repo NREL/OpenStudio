@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,94 +36,85 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** CurveFunctionalPressureDrop_Impl is a Curve_Impl that is the implementation class for CurveFunctionalPressureDrop.*/
-  class MODEL_API CurveFunctionalPressureDrop_Impl : public Curve_Impl {
+    /** CurveFunctionalPressureDrop_Impl is a Curve_Impl that is the implementation class for CurveFunctionalPressureDrop.*/
+    class MODEL_API CurveFunctionalPressureDrop_Impl : public Curve_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      CurveFunctionalPressureDrop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      CurveFunctionalPressureDrop_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      CurveFunctionalPressureDrop_Impl(const CurveFunctionalPressureDrop_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~CurveFunctionalPressureDrop_Impl() {}
 
-   public:
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    CurveFunctionalPressureDrop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    CurveFunctionalPressureDrop_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      virtual int numVariables() const override;
 
-    CurveFunctionalPressureDrop_Impl(const CurveFunctionalPressureDrop_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
-    virtual ~CurveFunctionalPressureDrop_Impl() {}
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      double diameter() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      boost::optional<double> minorLossCoefficient() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      boost::optional<double> length() const;
 
-    virtual int numVariables() const override;
+      boost::optional<double> roughness() const;
 
-    virtual double evaluate(const std::vector<double>& x) const override;
+      boost::optional<double> fixedFrictionFactor() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    double diameter() const;
+      bool setDiameter(double diameter);
 
-    boost::optional<double> minorLossCoefficient() const;
+      bool setMinorLossCoefficient(boost::optional<double> minorLossCoefficient);
 
-    boost::optional<double> length() const;
+      void resetMinorLossCoefficient();
 
-    boost::optional<double> roughness() const;
+      bool setLength(boost::optional<double> length);
 
-    boost::optional<double> fixedFrictionFactor() const;
+      void resetLength();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setRoughness(boost::optional<double> roughness);
 
-    bool setDiameter(double diameter);
+      void resetRoughness();
 
-    bool setMinorLossCoefficient(boost::optional<double> minorLossCoefficient);
+      bool setFixedFrictionFactor(boost::optional<double> fixedFrictionFactor);
 
-    void resetMinorLossCoefficient();
+      void resetFixedFrictionFactor();
 
-    bool setLength(boost::optional<double> length);
+      //@}
+      /** @name Other */
+      //@{
 
-    void resetLength();
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CurveFunctionalPressureDrop");
+    };
 
-    bool setRoughness(boost::optional<double> roughness);
+  }  // namespace detail
 
-    void resetRoughness();
+}  // namespace model
+}  // namespace openstudio
 
-    bool setFixedFrictionFactor(boost::optional<double> fixedFrictionFactor);
-
-    void resetFixedFrictionFactor();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CurveFunctionalPressureDrop");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEFUNCTIONALPRESSUREDROP_IMPL_HPP
+#endif  // MODEL_CURVEFUNCTIONALPRESSUREDROP_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,135 +37,135 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class CoilPerformanceDXCooling;
-class AirflowNetworkEquivalentDuct;
+  class Schedule;
+  class CoilPerformanceDXCooling;
+  class AirflowNetworkEquivalentDuct;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
+    class CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingDXTwoStageWithHumidityControlMode is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode'. */
-class MODEL_API CoilCoolingDXTwoStageWithHumidityControlMode : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingDXTwoStageWithHumidityControlMode is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode'. */
+  class MODEL_API CoilCoolingDXTwoStageWithHumidityControlMode : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingDXTwoStageWithHumidityControlMode(const Model& model);
+    explicit CoilCoolingDXTwoStageWithHumidityControlMode(const Model& model);
 
-  virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() {}
+    virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  double crankcaseHeaterCapacity() const;
+    double crankcaseHeaterCapacity() const;
 
-  double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-  int numberofCapacityStages() const;
+    int numberofCapacityStages() const;
 
-  int numberofEnhancedDehumidificationModes() const;
+    int numberofEnhancedDehumidificationModes() const;
 
-  boost::optional<CoilPerformanceDXCooling> normalModeStage1CoilPerformance() const;
+    boost::optional<CoilPerformanceDXCooling> normalModeStage1CoilPerformance() const;
 
-  boost::optional<CoilPerformanceDXCooling> normalModeStage1Plus2CoilPerformance() const;
+    boost::optional<CoilPerformanceDXCooling> normalModeStage1Plus2CoilPerformance() const;
 
-  boost::optional<CoilPerformanceDXCooling> dehumidificationMode1Stage1CoilPerformance() const;
+    boost::optional<CoilPerformanceDXCooling> dehumidificationMode1Stage1CoilPerformance() const;
 
-  boost::optional<CoilPerformanceDXCooling> dehumidificationMode1Stage1Plus2CoilPerformance() const;
+    boost::optional<CoilPerformanceDXCooling> dehumidificationMode1Stage1Plus2CoilPerformance() const;
 
-  double basinHeaterCapacity() const;
+    double basinHeaterCapacity() const;
 
-  double basinHeaterSetpointTemperature() const;
+    double basinHeaterSetpointTemperature() const;
 
-  boost::optional<Schedule> basinHeaterOperatingSchedule() const;
+    boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-  bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-  bool setNumberofCapacityStages(int numberofCapacityStages);
+    bool setNumberofCapacityStages(int numberofCapacityStages);
 
-  bool setNumberofEnhancedDehumidificationModes(int numberofEnhancedDehumidificationModes);
+    bool setNumberofEnhancedDehumidificationModes(int numberofEnhancedDehumidificationModes);
 
-  bool setNormalModeStage1CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
+    bool setNormalModeStage1CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
 
-  void resetNormalModeStage1CoilPerformance();
+    void resetNormalModeStage1CoilPerformance();
 
-  bool setNormalModeStage1Plus2CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
+    bool setNormalModeStage1Plus2CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
 
-  void resetNormalModeStage1Plus2CoilPerformance();
+    void resetNormalModeStage1Plus2CoilPerformance();
 
-  bool setDehumidificationMode1Stage1CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
+    bool setDehumidificationMode1Stage1CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
 
-  void resetDehumidificationMode1Stage1CoilPerformance();
+    void resetDehumidificationMode1Stage1CoilPerformance();
 
-  bool setDehumidificationMode1Stage1Plus2CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
+    bool setDehumidificationMode1Stage1Plus2CoilPerformance(const CoilPerformanceDXCooling& coilPerformanceDXCooling);
 
-  void resetDehumidificationMode1Stage1Plus2CoilPerformance();
+    void resetDehumidificationMode1Stage1Plus2CoilPerformance();
 
-  bool setBasinHeaterCapacity(double basinHeaterCapacity);
+    bool setBasinHeaterCapacity(double basinHeaterCapacity);
 
-  bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+    bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-  bool setBasinHeaterOperatingSchedule(Schedule& schedule);
+    bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
-  void resetBasinHeaterOperatingSchedule();
+    void resetBasinHeaterOperatingSchedule();
 
-  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-  /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl ImplType;
 
-  explicit CoilCoolingDXTwoStageWithHumidityControlMode(std::shared_ptr<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl> impl);
+    explicit CoilCoolingDXTwoStageWithHumidityControlMode(std::shared_ptr<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl> impl);
 
-  friend class detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoStageWithHumidityControlMode");
-};
+    friend class detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoStageWithHumidityControlMode");
+  };
 
-/** \relates CoilCoolingDXTwoStageWithHumidityControlMode*/
-typedef boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> OptionalCoilCoolingDXTwoStageWithHumidityControlMode;
+  /** \relates CoilCoolingDXTwoStageWithHumidityControlMode*/
+  typedef boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> OptionalCoilCoolingDXTwoStageWithHumidityControlMode;
 
-/** \relates CoilCoolingDXTwoStageWithHumidityControlMode*/
-typedef std::vector<CoilCoolingDXTwoStageWithHumidityControlMode> CoilCoolingDXTwoStageWithHumidityControlModeVector;
+  /** \relates CoilCoolingDXTwoStageWithHumidityControlMode*/
+  typedef std::vector<CoilCoolingDXTwoStageWithHumidityControlMode> CoilCoolingDXTwoStageWithHumidityControlModeVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDXTWOSTAGEWITHHUMIDITYCONTROLMODE_HPP
-
+#endif  // MODEL_COILCOOLINGDXTWOSTAGEWITHHUMIDITYCONTROLMODE_HPP

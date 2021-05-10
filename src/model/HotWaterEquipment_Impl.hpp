@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,135 +36,130 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HotWaterEquipment;
-class HotWaterEquipmentDefinition;
+  class Schedule;
+  class HotWaterEquipment;
+  class HotWaterEquipmentDefinition;
 
-namespace detail {
+  namespace detail {
 
-  /** HotWaterEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for HotWaterEquipment.*/
-  class MODEL_API HotWaterEquipment_Impl : public SpaceLoadInstance_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** HotWaterEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for HotWaterEquipment.*/
+    class MODEL_API HotWaterEquipment_Impl : public SpaceLoadInstance_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    HotWaterEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      HotWaterEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    HotWaterEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      HotWaterEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    HotWaterEquipment_Impl(const HotWaterEquipment_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      HotWaterEquipment_Impl(const HotWaterEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~HotWaterEquipment_Impl() {}
+      virtual ~HotWaterEquipment_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool hardSize() override;
+      virtual bool hardSize() override;
 
-    virtual bool hardApplySchedules() override;
+      virtual bool hardApplySchedules() override;
 
-    virtual double multiplier() const override;
+      virtual double multiplier() const override;
 
-    virtual bool isMultiplierDefaulted() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-    virtual bool isAbsolute() const override;
+      virtual bool isAbsolute() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    /** Gets the HotWaterEquipmentDefinition object. */
-    HotWaterEquipmentDefinition hotWaterEquipmentDefinition() const;
+      /** Gets the HotWaterEquipmentDefinition object. */
+      HotWaterEquipmentDefinition hotWaterEquipmentDefinition() const;
 
-    /** Returns the (fractional) equipment schedule.  If this object does not
+      /** Returns the (fractional) equipment schedule.  If this object does not
      *  specify a schedule this function will search the hierarchy. */
-    boost::optional<Schedule> schedule() const;
+      boost::optional<Schedule> schedule() const;
 
-    /** Returns true if this object does not specify a schedule directly. */
-    bool isScheduleDefaulted() const;
+      /** Returns true if this object does not specify a schedule directly. */
+      bool isScheduleDefaulted() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    /** Sets the HotWaterEquipmentDefinition object. */
-    bool setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& definition);
+      /** Sets the HotWaterEquipmentDefinition object. */
+      bool setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& definition);
 
-    /** Sets the definition of this instance. */
-    virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
+      /** Sets the definition of this instance. */
+      virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-    /** Sets the (fractional) Schedule. */
-    bool setSchedule(Schedule& schedule);
+      /** Sets the (fractional) Schedule. */
+      bool setSchedule(Schedule& schedule);
 
-    /** Resets the (fractional) Schedule. */
-    void resetSchedule();
+      /** Resets the (fractional) Schedule. */
+      void resetSchedule();
 
-    bool setMultiplier(double multiplier);
+      bool setMultiplier(double multiplier);
 
-    void resetMultiplier();
+      void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+      /** Returns the design level represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getDesignLevel(double floorArea, double numPeople) const;
+      double getDesignLevel(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+      /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerFloorArea(double floorArea, double numPeople) const;
+      double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+      /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerPerson(double floorArea, double numPeople) const;
+      double getPowerPerPerson(double floorArea, double numPeople) const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-   protected:
+      //@}
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-    // index of the space name
-    virtual int spaceIndex() const override;
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-    // index of the definition name
-    virtual int definitionIndex() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.HotWaterEquipment");
 
-   private:
-    REGISTER_LOGGER("openstudio.model.HotWaterEquipment");
+      boost::optional<ModelObject> hotWaterEquipmentDefinitionAsModelObject() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
 
-    boost::optional<ModelObject> hotWaterEquipmentDefinitionAsModelObject() const;
-    boost::optional<ModelObject> scheduleAsModelObject() const;
+      bool setHotWaterEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setHotWaterEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_HOTWATEREQUIPMENT_IMPL_HPP
-
+#endif  // MODEL_HOTWATEREQUIPMENT_IMPL_HPP

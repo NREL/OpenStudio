@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,84 +36,78 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** EnergyManagementSystemTrendVariable_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemTrendVariable.*/
-  class MODEL_API EnergyManagementSystemTrendVariable_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** EnergyManagementSystemTrendVariable_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemTrendVariable.*/
+    class MODEL_API EnergyManagementSystemTrendVariable_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    EnergyManagementSystemTrendVariable_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      EnergyManagementSystemTrendVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemTrendVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      EnergyManagementSystemTrendVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemTrendVariable_Impl(const EnergyManagementSystemTrendVariable_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      EnergyManagementSystemTrendVariable_Impl(const EnergyManagementSystemTrendVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~EnergyManagementSystemTrendVariable_Impl() {}
+      virtual ~EnergyManagementSystemTrendVariable_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string emsVariableName() const;
+      std::string emsVariableName() const;
 
-    int numberOfTimestepsToBeLogged() const;
+      int numberOfTimestepsToBeLogged() const;
 
-    boost::optional<ModelObject> emsVariableObject() const;
+      boost::optional<ModelObject> emsVariableObject() const;
 
-    boost::optional<EnergyManagementSystemActuator> emsActuator() const;
-    boost::optional<EnergyManagementSystemSensor> emsSensor() const;
-    boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
-    boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
-    boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
-    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
-    boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
+      boost::optional<EnergyManagementSystemActuator> emsActuator() const;
+      boost::optional<EnergyManagementSystemSensor> emsSensor() const;
+      boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
+      boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
+      boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
+      boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
+      boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setEMSVariableName(const std::string& eMSVariableName);
+      bool setEMSVariableName(const std::string& eMSVariableName);
 
-    bool setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged);
+      bool setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged);
 
-    bool setEMSVariableName(const EnergyManagementSystemActuator& object);
-    bool setEMSVariableName(const EnergyManagementSystemSensor& object);
-    bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
-    bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
-    bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
-    bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
-    bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
+      bool setEMSVariableName(const EnergyManagementSystemActuator& object);
+      bool setEMSVariableName(const EnergyManagementSystemSensor& object);
+      bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
+      bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
+      bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
+      bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
+      bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemTrendVariable");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.EnergyManagementSystemTrendVariable");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMTRENDVARIABLE_IMPL_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMTRENDVARIABLE_IMPL_HPP

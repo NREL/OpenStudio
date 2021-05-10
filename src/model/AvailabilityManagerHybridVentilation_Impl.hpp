@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,122 +36,142 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class Schedule;
-class Curve;
+  class ThermalZone;
+  class Schedule;
+  class Curve;
+  class ModelObject;
 
-namespace detail {
+  namespace detail {
 
-  /** AvailabilityManagerHybridVentilation_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerHybridVentilation.*/
-  class MODEL_API AvailabilityManagerHybridVentilation_Impl : public AvailabilityManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AvailabilityManagerHybridVentilation_Impl is a ModelObject_Impl that is the implementation class for AvailabilityManagerHybridVentilation.*/
+    class MODEL_API AvailabilityManagerHybridVentilation_Impl : public AvailabilityManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AvailabilityManagerHybridVentilation_Impl(const IdfObject& idfObject,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      AvailabilityManagerHybridVentilation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerHybridVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      AvailabilityManagerHybridVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerHybridVentilation_Impl(const AvailabilityManagerHybridVentilation_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      AvailabilityManagerHybridVentilation_Impl(const AvailabilityManagerHybridVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AvailabilityManagerHybridVentilation_Impl() {}
+      virtual ~AvailabilityManagerHybridVentilation_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual ModelObject clone(Model model) const override;
 
-    boost::optional<ThermalZone> controlledZone() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule ventilationControlModeSchedule() const;
+      boost::optional<ThermalZone> controlledZone() const;
 
-    bool useWeatherFileRainIndicators() const;
+      Schedule ventilationControlModeSchedule() const;
 
-    double maximumWindSpeed() const;
+      bool useWeatherFileRainIndicators() const;
 
-    double minimumOutdoorTemperature() const;
+      double maximumWindSpeed() const;
 
-    double maximumOutdoorTemperature() const;
+      double minimumOutdoorTemperature() const;
 
-    double minimumOutdoorEnthalpy() const;
+      double maximumOutdoorTemperature() const;
 
-    double maximumOutdoorEnthalpy() const;
+      double minimumOutdoorEnthalpy() const;
 
-    double minimumOutdoorDewpoint() const;
+      double maximumOutdoorEnthalpy() const;
 
-    double maximumOutdoorDewpoint() const;
+      double minimumOutdoorDewpoint() const;
 
-    Schedule minimumOutdoorVentilationAirSchedule() const;
+      double maximumOutdoorDewpoint() const;
 
-    boost::optional<Curve> openingFactorFunctionofWindSpeedCurve() const;
+      Schedule minimumOutdoorVentilationAirSchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<Curve> openingFactorFunctionofWindSpeedCurve() const;
 
-    bool setControlledZone(const boost::optional<ThermalZone>& thermalZone);
+      double minimumHVACOperationTime() const;
 
-    void resetControlledZone();
+      double minimumVentilationTime() const;
 
-    bool setVentilationControlModeSchedule(Schedule& schedule);
+      boost::optional<Schedule> airflowNetworkControlTypeSchedule() const;
 
-    bool setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators);
+      boost::optional<Schedule> simpleAirflowControlTypeSchedule() const;
 
-    bool setMaximumWindSpeed(double maximumWindSpeed);
+      boost::optional<ModelObject> zoneVentilationObject() const;
 
-    bool setMinimumOutdoorTemperature(double minimumOutdoorTemperature);
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMaximumOutdoorTemperature(double maximumOutdoorTemperature);
+      bool setControlledZone(const boost::optional<ThermalZone>& thermalZone);
 
-    bool setMinimumOutdoorEnthalpy(double minimumOutdoorEnthalpy);
+      void resetControlledZone();
 
-    bool setMaximumOutdoorEnthalpy(double maximumOutdoorEnthalpy);
+      bool setVentilationControlModeSchedule(Schedule& schedule);
 
-    bool setMinimumOutdoorDewpoint(double minimumOutdoorDewpoint);
+      bool setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators);
 
-    bool setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint);
+      bool setMaximumWindSpeed(double maximumWindSpeed);
 
-    bool setMinimumOutdoorVentilationAirSchedule(Schedule& schedule);
+      bool setMinimumOutdoorTemperature(double minimumOutdoorTemperature);
 
-    bool setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve);
+      bool setMaximumOutdoorTemperature(double maximumOutdoorTemperature);
 
-    void resetOpeningFactorFunctionofWindSpeedCurve();
+      bool setMinimumOutdoorEnthalpy(double minimumOutdoorEnthalpy);
 
-    //@}
-    /** @name Other */
-    //@{
+      bool setMaximumOutdoorEnthalpy(double maximumOutdoorEnthalpy);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AvailabilityManagerHybridVentilation");
+      bool setMinimumOutdoorDewpoint(double minimumOutdoorDewpoint);
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalVentilationControlModeSchedule() const;
-  };
+      bool setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint);
 
-} // detail
+      bool setMinimumOutdoorVentilationAirSchedule(Schedule& schedule);
 
-} // model
-} // openstudio
+      bool setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve);
 
-#endif // MODEL_AVAILABILITYMANAGERHYBRIDVENTILATION_IMPL_HPP
+      void resetOpeningFactorFunctionofWindSpeedCurve();
 
+      bool setMinimumHVACOperationTime(double minimumHVACOperationTime);
+
+      bool setMinimumVentilationTime(double minimumVentilationTime);
+
+      bool setAirflowNetworkControlTypeSchedule(Schedule& schedule);
+      void resetAirflowNetworkControlTypeSchedule();
+
+      bool setSimpleAirflowControlTypeSchedule(Schedule& schedule);
+      void resetSimpleAirflowControlTypeSchedule();
+
+      bool setZoneVentilationObject(const ModelObject& zv);
+      void resetZoneVentilationObject();
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AvailabilityManagerHybridVentilation");
+
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalVentilationControlModeSchedule() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_AVAILABILITYMANAGERHYBRIDVENTILATION_IMPL_HPP

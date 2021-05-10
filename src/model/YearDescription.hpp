@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,101 +42,99 @@ class DayOfWeek;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class YearDescription_Impl;
+    class YearDescription_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** YearDescription is a ParentObject that wraps the OpenStudio IDD object 'OS_YearDescription'. */
-class MODEL_API YearDescription : public ParentObject {
- public:
+  /** YearDescription is a ParentObject that wraps the OpenStudio IDD object 'OS_YearDescription'. */
+  class MODEL_API YearDescription : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~YearDescription() {}
 
-  virtual ~YearDescription() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validDayofWeekforStartDayValues();
 
-  static std::vector<std::string> validDayofWeekforStartDayValues();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    boost::optional<int> calendarYear() const;
 
-  boost::optional<int> calendarYear() const;
+    std::string dayofWeekforStartDay() const;
 
-  std::string dayofWeekforStartDay() const;
+    bool isDayofWeekforStartDayDefaulted() const;
 
-  bool isDayofWeekforStartDayDefaulted() const;
+    bool isLeapYear() const;
 
-  bool isLeapYear() const;
+    bool isIsLeapYearDefaulted() const;
 
-  bool isIsLeapYearDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCalendarYear(int calendarYear);
 
-  bool setCalendarYear(int calendarYear);
+    void resetCalendarYear();
 
-  void resetCalendarYear();
+    bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
 
-  bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+    void resetDayofWeekforStartDay();
 
-  void resetDayofWeekforStartDay();
+    bool setIsLeapYear(bool isLeapYear);
 
-  bool setIsLeapYear(bool isLeapYear);
+    void resetIsLeapYear();
 
-  void resetIsLeapYear();
+    //@}
 
-  //@}
+    /// Returns assumed year for date calculations.
+    int assumedYear() const;
 
-  /// Returns assumed year for date calculations.
-  int assumedYear() const;
+    /// Returns a date which may be used in this model.
+    /// Will throw if dayOfMonth is not appropriate for monthOfYear.
+    openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
+    openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
 
-  /// Returns a date which may be used in this model.
-  /// Will throw if dayOfMonth is not appropriate for monthOfYear.
-  openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
-  openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
+    /// nth weekday of month generators
+    openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
 
-  /// nth weekday of month generators
-  openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
+    /// day of year
+    openstudio::Date makeDate(unsigned dayOfYear);
 
-  /// day of year
-  openstudio::Date makeDate(unsigned dayOfYear);
+   protected:
+    /// @cond
+    typedef detail::YearDescription_Impl ImplType;
 
- protected:
-  /// @cond
-  typedef detail::YearDescription_Impl ImplType;
+    friend class Model;
+    friend class IdfObject;
+    friend class detail::YearDescription_Impl;
 
-  friend class Model;
-  friend class IdfObject;
-  friend class detail::YearDescription_Impl;
+    explicit YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl);
 
-  explicit YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl);
+    explicit YearDescription(Model& model);
 
-  explicit YearDescription(Model& model);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.YearDescription");
+  };
 
-  /// @endcond
- private:
+  /** \relates YearDescription*/
+  typedef boost::optional<YearDescription> OptionalYearDescription;
 
-  REGISTER_LOGGER("openstudio.model.YearDescription");
-};
+  /** \relates YearDescription*/
+  typedef std::vector<YearDescription> YearDescriptionVector;
 
-/** \relates YearDescription*/
-typedef boost::optional<YearDescription> OptionalYearDescription;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates YearDescription*/
-typedef std::vector<YearDescription> YearDescriptionVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_YEARDESCRIPTION_HPP
-
+#endif  // MODEL_YEARDESCRIPTION_HPP

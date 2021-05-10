@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,38 +47,37 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunctionalMockupUnitExportToSchedule(ExternalInterfaceFunctionalMockupUnitExportToSchedule & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunctionalMockupUnitExportToSchedule(
+    ExternalInterfaceFunctionalMockupUnitExportToSchedule& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_FunctionalMockupUnitExport_To_Schedule);
-  m_idfObjects.push_back(idfObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_FunctionalMockupUnitExport_To_Schedule);
+    m_idfObjects.push_back(idfObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    const boost::optional<ScheduleTypeLimits> m = modelObject.scheduleTypeLimits();
+    if (m.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::ScheduleTypeLimitsNames, m.get().nameString());
+    }
+
+    s = modelObject.fMUVariableName();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::FMUVariableName, s.get());
+    }
+
+    d = modelObject.initialValue();
+    if (d.is_initialized()) {
+      idfObject.setDouble(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::InitialValue, d.get());
+    }
+
+    return idfObject;
   }
 
-  const boost::optional<ScheduleTypeLimits> m = modelObject.scheduleTypeLimits();
-  if (m.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::ScheduleTypeLimitsNames, m.get().nameString());
-  }
+}  // namespace energyplus
 
-  s = modelObject.fMUVariableName();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::FMUVariableName, s.get());
-  }
-
-  d = modelObject.initialValue();
-  if (d.is_initialized()) {
-    idfObject.setDouble(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::InitialValue, d.get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

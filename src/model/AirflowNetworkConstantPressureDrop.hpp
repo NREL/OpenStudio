@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,67 +37,67 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class AirflowNetworkConstantPressureDrop_Impl;
+    class AirflowNetworkConstantPressureDrop_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkConstantPressureDrop is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:ConstantPressureDrop'. */
-class MODEL_API AirflowNetworkConstantPressureDrop : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirflowNetworkConstantPressureDrop is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:ConstantPressureDrop'. */
+  class MODEL_API AirflowNetworkConstantPressureDrop : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  //explicit AirflowNetworkConstantPressureDrop(const Model& model);
-  /** Construct a constant pressure drop object. */
-  AirflowNetworkConstantPressureDrop(const Model& model, double pressureDrop);
+    //explicit AirflowNetworkConstantPressureDrop(const Model& model);
+    /** Construct a constant pressure drop object. */
+    AirflowNetworkConstantPressureDrop(const Model& model, double pressureDrop);
 
-  virtual ~AirflowNetworkConstantPressureDrop() {}
+    virtual ~AirflowNetworkConstantPressureDrop() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
-  /** Returns the pressure drop across the component. */
-  double pressureDrop() const;
+    /** @name Getters */
+    //@{
+    /** Returns the pressure drop across the component. */
+    double pressureDrop() const;
 
-  //@}
-  /** @name Setters */
-  //@{
-  /** Sets the pressure drop across the component. */
-  bool setPressureDrop(double pressureDrop);
+    //@}
+    /** @name Setters */
+    //@{
+    /** Sets the pressure drop across the component. */
+    bool setPressureDrop(double pressureDrop);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirflowNetworkConstantPressureDrop_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkConstantPressureDrop_Impl ImplType;
 
-  explicit AirflowNetworkConstantPressureDrop(std::shared_ptr<detail::AirflowNetworkConstantPressureDrop_Impl> impl);
+    explicit AirflowNetworkConstantPressureDrop(std::shared_ptr<detail::AirflowNetworkConstantPressureDrop_Impl> impl);
 
-  friend class detail::AirflowNetworkConstantPressureDrop_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkConstantPressureDrop");
-};
+    friend class detail::AirflowNetworkConstantPressureDrop_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkConstantPressureDrop");
+  };
 
-/** \relates AirflowNetworkConstantPressureDrop*/
-typedef boost::optional<AirflowNetworkConstantPressureDrop> OptionalAirflowNetworkConstantPressureDrop;
+  /** \relates AirflowNetworkConstantPressureDrop*/
+  typedef boost::optional<AirflowNetworkConstantPressureDrop> OptionalAirflowNetworkConstantPressureDrop;
 
-/** \relates AirflowNetworkConstantPressureDrop*/
-typedef std::vector<AirflowNetworkConstantPressureDrop> AirflowNetworkConstantPressureDropVector;
+  /** \relates AirflowNetworkConstantPressureDrop*/
+  typedef std::vector<AirflowNetworkConstantPressureDrop> AirflowNetworkConstantPressureDropVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKCONSTANTPRESSUREDROP_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKCONSTANTPRESSUREDROP_HPP

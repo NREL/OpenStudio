@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,401 +44,345 @@
 
 #include <boost/algorithm/string.hpp>
 
-
 namespace openstudio {
-namespace model  {
+namespace model {
 
-namespace detail {
+  namespace detail {
 
-  RunPeriod_Impl::RunPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ParentObject_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == RunPeriod::iddObjectType());
-  }
-
-  RunPeriod_Impl::RunPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == RunPeriod::iddObjectType());
-  }
-
-  RunPeriod_Impl::RunPeriod_Impl(const RunPeriod_Impl& other,Model_Impl* model,bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-  }
-
-  IddObjectType RunPeriod_Impl::iddObjectType() const {
-    return RunPeriod::iddObjectType();
-  }
-
-  int RunPeriod_Impl::getBeginMonth() const
-  {
-    //seems safe since this can't be autocalculate
-    return getInt(OS_RunPeriodFields::BeginMonth, true).get();
-  }
-
-  int RunPeriod_Impl::getBeginDayOfMonth() const
-  {
-    return getInt(OS_RunPeriodFields::BeginDayofMonth, true).get();
-  }
-
-  int RunPeriod_Impl::getEndMonth() const
-  {
-    return getInt(OS_RunPeriodFields::EndMonth, true).get();
-  }
-
-  int RunPeriod_Impl::getEndDayOfMonth() const
-  {
-    return getInt(OS_RunPeriodFields::EndDayofMonth, true).get();
-  }
-
-  bool RunPeriod_Impl::getUseWeatherFileHolidays() const
-  {
-    std::string temp=getString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays, true).get();
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      return false;
+    RunPeriod_Impl::RunPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : ParentObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == RunPeriod::iddObjectType());
     }
-    return true;
-  }
 
-  bool RunPeriod_Impl::getUseWeatherFileDaylightSavings() const
-  {
-    std::string temp=getString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod, true).get();
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      return false;
+    RunPeriod_Impl::RunPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == RunPeriod::iddObjectType());
     }
-    return true;
-  }
 
-  bool RunPeriod_Impl::getApplyWeekendHolidayRule() const
-  {
-    std::string temp=getString(OS_RunPeriodFields::ApplyWeekendHolidayRule, true).get();
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      return false;
+    RunPeriod_Impl::RunPeriod_Impl(const RunPeriod_Impl& other, Model_Impl* model, bool keepHandle) : ParentObject_Impl(other, model, keepHandle) {}
+
+    IddObjectType RunPeriod_Impl::iddObjectType() const {
+      return RunPeriod::iddObjectType();
     }
-    return true;
-  }
 
-  bool RunPeriod_Impl::getUseWeatherFileRainInd() const
-  {
-    std::string temp=getString(OS_RunPeriodFields::UseWeatherFileRainIndicators, true).get();
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      return false;
+    int RunPeriod_Impl::getBeginMonth() const {
+      //seems safe since this can't be autocalculate
+      return getInt(OS_RunPeriodFields::BeginMonth, true).get();
     }
-    return true;
-  }
 
-  bool RunPeriod_Impl::getUseWeatherFileSnowInd() const
-  {
-    std::string temp=getString(OS_RunPeriodFields::UseWeatherFileSnowIndicators, true).get();
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      return false;
+    int RunPeriod_Impl::getBeginDayOfMonth() const {
+      return getInt(OS_RunPeriodFields::BeginDayofMonth, true).get();
     }
-    return true;
-  }
 
-  int RunPeriod_Impl::getNumTimePeriodRepeats() const
-  {
-    return getInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated, true).get();
-  }
-
-  bool RunPeriod_Impl::setBeginMonth(int month)
-  {
-    return setInt(OS_RunPeriodFields::BeginMonth,month);;
-  }
-
-  bool RunPeriod_Impl::setBeginDayOfMonth(int day)
-  {
-    return setInt(OS_RunPeriodFields::BeginDayofMonth,day);;
-  }
-
-  bool RunPeriod_Impl::setEndMonth(int month)
-  {
-    return setInt(OS_RunPeriodFields::EndMonth,month);;
-  }
-
-  bool RunPeriod_Impl::setEndDayOfMonth(int day)
-  {
-    return setInt(OS_RunPeriodFields::EndDayofMonth,day);;
-  }
-
-  bool RunPeriod_Impl::setUseWeatherFileHolidays(bool use)
-  {
-    if(use)
-    {
-      return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"Yes");
+    int RunPeriod_Impl::getEndMonth() const {
+      return getInt(OS_RunPeriodFields::EndMonth, true).get();
     }
-    return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays,"No");
-  }
 
-  bool RunPeriod_Impl::setUseWeatherFileDaylightSavings(bool use)
-  {
-    if(use)
-    {
-      return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"Yes");
+    int RunPeriod_Impl::getEndDayOfMonth() const {
+      return getInt(OS_RunPeriodFields::EndDayofMonth, true).get();
     }
-    return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod,"No");
-  }
 
-  bool RunPeriod_Impl::setApplyWeekendHolidayRule(bool apply)
-  {
-    if(apply)
-    {
-      return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"Yes");
-    }
-    return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule,"No");
-  }
-
-  bool RunPeriod_Impl::setUseWeatherFileRainInd(bool rainInd)
-  {
-    if(rainInd)
-    {
-      return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"Yes");
-    }
-    return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators,"No");
-  }
-
-  bool RunPeriod_Impl::setUseWeatherFileSnowInd(bool snowInd)
-  {
-    if(snowInd)
-    {
-      return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"Yes");
-    }
-    return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators,"No");
-  }
-
-  bool RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats)
-  {
-    return setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated,numRepeats);;
-  }
-
-  void RunPeriod_Impl::ensureNoLeapDays()
-  {
-    boost::optional<int> month;
-    boost::optional<int> day;
-
-    month = getInt(OS_RunPeriodFields::BeginMonth);
-    if (month && (month.get() == 2)){
-      day = this->getInt(OS_RunPeriodFields::BeginDayofMonth);
-      if (day && (day.get() == 29)){
-        this->setInt(OS_RunPeriodFields::BeginDayofMonth, 28);
+    bool RunPeriod_Impl::getUseWeatherFileHolidays() const {
+      std::string temp = getString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays, true).get();
+      boost::to_lower(temp);
+      if (temp == "no") {
+        return false;
       }
-    }
-
-    month = getInt(OS_RunPeriodFields::EndMonth);
-    if (month && (month.get() == 2)){
-      day = this->getInt(OS_RunPeriodFields::EndDayofMonth);
-      if (day && (day.get() == 29)){
-        this->setInt(OS_RunPeriodFields::EndDayofMonth, 28);
-      }
-    }
-  }
-
-  // return the parent object in the hierarchy
-  boost::optional<ParentObject> RunPeriod_Impl::parent() const
-  {
-    boost::optional<ParentObject> result(model().getUniqueModelObject<SimulationControl>());
-    return result;
-  }
-
-  // set the parent, child may have to call methods on the parent
-  bool RunPeriod_Impl::setParent(ParentObject& newParent)
-  {
-    if (newParent.optionalCast<SimulationControl>() && (newParent.model() == model())) {
       return true;
     }
-    return false;
+
+    bool RunPeriod_Impl::getUseWeatherFileDaylightSavings() const {
+      std::string temp = getString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod, true).get();
+      boost::to_lower(temp);
+      if (temp == "no") {
+        return false;
+      }
+      return true;
+    }
+
+    bool RunPeriod_Impl::getApplyWeekendHolidayRule() const {
+      std::string temp = getString(OS_RunPeriodFields::ApplyWeekendHolidayRule, true).get();
+      boost::to_lower(temp);
+      if (temp == "no") {
+        return false;
+      }
+      return true;
+    }
+
+    bool RunPeriod_Impl::getUseWeatherFileRainInd() const {
+      std::string temp = getString(OS_RunPeriodFields::UseWeatherFileRainIndicators, true).get();
+      boost::to_lower(temp);
+      if (temp == "no") {
+        return false;
+      }
+      return true;
+    }
+
+    bool RunPeriod_Impl::getUseWeatherFileSnowInd() const {
+      std::string temp = getString(OS_RunPeriodFields::UseWeatherFileSnowIndicators, true).get();
+      boost::to_lower(temp);
+      if (temp == "no") {
+        return false;
+      }
+      return true;
+    }
+
+    int RunPeriod_Impl::getNumTimePeriodRepeats() const {
+      return getInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated, true).get();
+    }
+
+    bool RunPeriod_Impl::setBeginMonth(int month) {
+      return setInt(OS_RunPeriodFields::BeginMonth, month);
+      ;
+    }
+
+    bool RunPeriod_Impl::setBeginDayOfMonth(int day) {
+      return setInt(OS_RunPeriodFields::BeginDayofMonth, day);
+      ;
+    }
+
+    bool RunPeriod_Impl::setEndMonth(int month) {
+      return setInt(OS_RunPeriodFields::EndMonth, month);
+      ;
+    }
+
+    bool RunPeriod_Impl::setEndDayOfMonth(int day) {
+      return setInt(OS_RunPeriodFields::EndDayofMonth, day);
+      ;
+    }
+
+    bool RunPeriod_Impl::setUseWeatherFileHolidays(bool use) {
+      if (use) {
+        return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays, "Yes");
+      }
+      return setString(OS_RunPeriodFields::UseWeatherFileHolidaysandSpecialDays, "No");
+    }
+
+    bool RunPeriod_Impl::setUseWeatherFileDaylightSavings(bool use) {
+      if (use) {
+        return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod, "Yes");
+      }
+      return setString(OS_RunPeriodFields::UseWeatherFileDaylightSavingPeriod, "No");
+    }
+
+    bool RunPeriod_Impl::setApplyWeekendHolidayRule(bool apply) {
+      if (apply) {
+        return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule, "Yes");
+      }
+      return setString(OS_RunPeriodFields::ApplyWeekendHolidayRule, "No");
+    }
+
+    bool RunPeriod_Impl::setUseWeatherFileRainInd(bool rainInd) {
+      if (rainInd) {
+        return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators, "Yes");
+      }
+      return setString(OS_RunPeriodFields::UseWeatherFileRainIndicators, "No");
+    }
+
+    bool RunPeriod_Impl::setUseWeatherFileSnowInd(bool snowInd) {
+      if (snowInd) {
+        return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators, "Yes");
+      }
+      return setString(OS_RunPeriodFields::UseWeatherFileSnowIndicators, "No");
+    }
+
+    bool RunPeriod_Impl::setNumTimePeriodRepeats(int numRepeats) {
+      return setInt(OS_RunPeriodFields::NumberofTimesRunperiodtobeRepeated, numRepeats);
+      ;
+    }
+
+    void RunPeriod_Impl::ensureNoLeapDays() {
+      boost::optional<int> month;
+      boost::optional<int> day;
+
+      month = getInt(OS_RunPeriodFields::BeginMonth);
+      if (month && (month.get() == 2)) {
+        day = this->getInt(OS_RunPeriodFields::BeginDayofMonth);
+        if (day && (day.get() == 29)) {
+          this->setInt(OS_RunPeriodFields::BeginDayofMonth, 28);
+        }
+      }
+
+      month = getInt(OS_RunPeriodFields::EndMonth);
+      if (month && (month.get() == 2)) {
+        day = this->getInt(OS_RunPeriodFields::EndDayofMonth);
+        if (day && (day.get() == 29)) {
+          this->setInt(OS_RunPeriodFields::EndDayofMonth, 28);
+        }
+      }
+    }
+
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> RunPeriod_Impl::parent() const {
+      boost::optional<ParentObject> result(model().getUniqueModelObject<SimulationControl>());
+      return result;
+    }
+
+    // set the parent, child may have to call methods on the parent
+    bool RunPeriod_Impl::setParent(ParentObject& newParent) {
+      if (newParent.optionalCast<SimulationControl>() && (newParent.model() == model())) {
+        return true;
+      }
+      return false;
+    }
+
+    // return any children objects in the hierarchy
+    std::vector<ModelObject> RunPeriod_Impl::children() const {
+      std::vector<ModelObject> result;
+      SkyTemperatureVector sts = getObject<ModelObject>().getModelObjectSources<SkyTemperature>();
+      result.insert(result.end(), sts.begin(), sts.end());
+      return result;
+    }
+
+    std::vector<IddObjectType> RunPeriod_Impl::allowableChildTypes() const {
+      IddObjectTypeVector result;
+      result.push_back(SkyTemperature::iddObjectType());
+      return result;
+    }
+
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& RunPeriod_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    bool RunPeriod_Impl::isAnnual() const {
+      if (getBeginMonth() != 1u) {
+        return false;
+      }
+      if (getBeginDayOfMonth() != 1u) {
+        return false;
+      }
+      if (getEndMonth() != 12u) {
+        return false;
+      }
+      if (getEndDayOfMonth() != 31u) {
+        return false;
+      }
+      return true;
+    }
+
+    bool RunPeriod_Impl::isPartialYear() const {
+      return !isAnnual();
+    }
+
+    bool RunPeriod_Impl::isRepeated() const {
+      return (getNumTimePeriodRepeats() > 1);
+    }
+
+  }  // namespace detail
+
+  /// constructor
+  RunPeriod::RunPeriod(const Model& model) : ParentObject(RunPeriod::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::RunPeriod_Impl>());
+    setBeginMonth(1);
+    setBeginDayOfMonth(1);
+    setEndMonth(12);
+    setEndDayOfMonth(31);
   }
 
-  // return any children objects in the hierarchy
-  std::vector<ModelObject> RunPeriod_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    SkyTemperatureVector sts = getObject<ModelObject>().getModelObjectSources<SkyTemperature>();
-    result.insert(result.end(),sts.begin(),sts.end());
+  // constructor
+  RunPeriod::RunPeriod(std::shared_ptr<detail::RunPeriod_Impl> impl) : ParentObject(std::move(impl)) {}
+
+  int RunPeriod::getBeginMonth() const {
+    return getImpl<detail::RunPeriod_Impl>()->getBeginMonth();
+  }
+
+  int RunPeriod::getBeginDayOfMonth() const {
+    return getImpl<detail::RunPeriod_Impl>()->getBeginDayOfMonth();
+  }
+
+  int RunPeriod::getEndMonth() const {
+    return getImpl<detail::RunPeriod_Impl>()->getEndMonth();
+  }
+
+  int RunPeriod::getEndDayOfMonth() const {
+    return getImpl<detail::RunPeriod_Impl>()->getEndDayOfMonth();
+  }
+
+  bool RunPeriod::getUseWeatherFileHolidays() const {
+    return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileHolidays();
+  }
+
+  bool RunPeriod::getUseWeatherFileDaylightSavings() const {
+    return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileDaylightSavings();
+  }
+
+  bool RunPeriod::getApplyWeekendHolidayRule() const {
+    return getImpl<detail::RunPeriod_Impl>()->getApplyWeekendHolidayRule();
+  }
+
+  bool RunPeriod::getUseWeatherFileRainInd() const {
+    return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileRainInd();
+  }
+
+  bool RunPeriod::getUseWeatherFileSnowInd() const {
+    return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileSnowInd();
+  }
+
+  int RunPeriod::getNumTimePeriodRepeats() const {
+    return getImpl<detail::RunPeriod_Impl>()->getNumTimePeriodRepeats();
+  }
+
+  bool RunPeriod::setBeginMonth(int month) {
+    return getImpl<detail::RunPeriod_Impl>()->setBeginMonth(month);
+  }
+
+  bool RunPeriod::setBeginDayOfMonth(int day) {
+    return getImpl<detail::RunPeriod_Impl>()->setBeginDayOfMonth(day);
+  }
+
+  bool RunPeriod::setEndMonth(int month) {
+    return getImpl<detail::RunPeriod_Impl>()->setEndMonth(month);
+  }
+
+  bool RunPeriod::setEndDayOfMonth(int day) {
+    return getImpl<detail::RunPeriod_Impl>()->setEndDayOfMonth(day);
+  }
+
+  bool RunPeriod::setUseWeatherFileHolidays(bool use) {
+    return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileHolidays(use);
+  }
+
+  bool RunPeriod::setUseWeatherFileDaylightSavings(bool use) {
+    return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileDaylightSavings(use);
+  }
+
+  bool RunPeriod::setApplyWeekendHolidayRule(bool apply) {
+    return getImpl<detail::RunPeriod_Impl>()->setApplyWeekendHolidayRule(apply);
+  }
+
+  bool RunPeriod::setUseWeatherFileRainInd(bool rainInd) {
+    return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileRainInd(rainInd);
+  }
+
+  bool RunPeriod::setUseWeatherFileSnowInd(bool snowInd) {
+    return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileSnowInd(snowInd);
+  }
+
+  bool RunPeriod::setNumTimePeriodRepeats(int numRepeats) {
+    return getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
+  }
+
+  void RunPeriod::ensureNoLeapDays() {
+    getImpl<detail::RunPeriod_Impl>()->ensureNoLeapDays();
+  }
+
+  bool RunPeriod::isAnnual() const {
+    return getImpl<detail::RunPeriod_Impl>()->isAnnual();
+  }
+
+  bool RunPeriod::isPartialYear() const {
+    return getImpl<detail::RunPeriod_Impl>()->isPartialYear();
+  }
+
+  bool RunPeriod::isRepeated() const {
+    return getImpl<detail::RunPeriod_Impl>()->isRepeated();
+  }
+
+  IddObjectType RunPeriod::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_RunPeriod);
     return result;
   }
 
-  std::vector<IddObjectType> RunPeriod_Impl::allowableChildTypes() const {
-    IddObjectTypeVector result;
-    result.push_back(SkyTemperature::iddObjectType());
-    return result;
-  }
-
-  // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& RunPeriod_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  bool RunPeriod_Impl::isAnnual() const {
-    if (getBeginMonth() != 1u) { return false; }
-    if (getBeginDayOfMonth() != 1u) { return false; }
-    if (getEndMonth() != 12u) { return false; }
-    if (getEndDayOfMonth() != 31u) { return false; }
-    return true;
-  }
-
-  bool RunPeriod_Impl::isPartialYear() const {
-    return !isAnnual();
-  }
-
-  bool RunPeriod_Impl::isRepeated() const {
-    return (getNumTimePeriodRepeats() > 1);
-  }
-
-} // detail
-
-/// constructor
-RunPeriod::RunPeriod(const Model& model)
-  : ParentObject(RunPeriod::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::RunPeriod_Impl>());
-  setBeginMonth(1);
-  setBeginDayOfMonth(1);
-  setEndMonth(12);
-  setEndDayOfMonth(31);
-}
-
-// constructor
-RunPeriod::RunPeriod(std::shared_ptr<detail::RunPeriod_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-
-int RunPeriod::getBeginMonth() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getBeginMonth();
-}
-
-int RunPeriod::getBeginDayOfMonth() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getBeginDayOfMonth();
-}
-
-int RunPeriod::getEndMonth() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getEndMonth();
-}
-
-int RunPeriod::getEndDayOfMonth() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getEndDayOfMonth();
-}
-
-bool RunPeriod::getUseWeatherFileHolidays() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileHolidays();
-}
-
-bool RunPeriod::getUseWeatherFileDaylightSavings() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileDaylightSavings();
-}
-
-bool RunPeriod::getApplyWeekendHolidayRule() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getApplyWeekendHolidayRule();
-}
-
-bool RunPeriod::getUseWeatherFileRainInd() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileRainInd();
-}
-
-bool RunPeriod::getUseWeatherFileSnowInd() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getUseWeatherFileSnowInd();
-}
-
-int RunPeriod::getNumTimePeriodRepeats() const
-{
-  return getImpl<detail::RunPeriod_Impl>()->getNumTimePeriodRepeats();
-}
-
-bool RunPeriod::setBeginMonth(int month)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setBeginMonth(month);
-}
-
-bool RunPeriod::setBeginDayOfMonth(int day)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setBeginDayOfMonth(day);
-}
-
-bool RunPeriod::setEndMonth(int month)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setEndMonth(month);
-}
-
-bool RunPeriod::setEndDayOfMonth(int day)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setEndDayOfMonth(day);
-}
-
-bool RunPeriod::setUseWeatherFileHolidays(bool use)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileHolidays(use);
-}
-
-bool RunPeriod::setUseWeatherFileDaylightSavings(bool use)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileDaylightSavings(use);
-}
-
-bool RunPeriod::setApplyWeekendHolidayRule(bool apply)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setApplyWeekendHolidayRule(apply);
-}
-
-bool RunPeriod::setUseWeatherFileRainInd(bool rainInd)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileRainInd(rainInd);
-}
-
-bool RunPeriod::setUseWeatherFileSnowInd(bool snowInd)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setUseWeatherFileSnowInd(snowInd);
-}
-
-bool RunPeriod::setNumTimePeriodRepeats(int numRepeats)
-{
-  return getImpl<detail::RunPeriod_Impl>()->setNumTimePeriodRepeats(numRepeats);
-}
-
-void RunPeriod::ensureNoLeapDays()
-{
-  getImpl<detail::RunPeriod_Impl>()->ensureNoLeapDays();
-}
-
-bool RunPeriod::isAnnual() const {
-  return getImpl<detail::RunPeriod_Impl>()->isAnnual();
-}
-
-bool RunPeriod::isPartialYear() const {
-  return getImpl<detail::RunPeriod_Impl>()->isPartialYear();
-}
-
-bool RunPeriod::isRepeated() const {
-  return getImpl<detail::RunPeriod_Impl>()->isRepeated();
-}
-
-IddObjectType RunPeriod::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_RunPeriod);
-  return result;
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,9 +64,7 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_CoilCoolingDXCurveFitPerfo
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model model;
@@ -182,12 +180,10 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_coilCoolingDXs) {
   ASSERT_EQ(1u, coilCoolingDXs.size());
   EXPECT_EQ(dx1, coilCoolingDXs[0]);
 
-
   EXPECT_EQ(1u, performance.directUseCount());
   coilCoolingDXs = performance.coilCoolingDXs();
   ASSERT_EQ(1u, coilCoolingDXs.size());
   EXPECT_EQ(dx2, coilCoolingDXs[0]);
-
 }
 
 TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_clone) {
@@ -218,7 +214,6 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_clone) {
   EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1());
   ASSERT_TRUE(performance.alternativeOperatingMode2());
   EXPECT_EQ(alternativeOperatingMode2, performance.alternativeOperatingMode2());
-
 
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());

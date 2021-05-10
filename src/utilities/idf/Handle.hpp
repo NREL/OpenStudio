@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,7 +47,7 @@ typedef std::vector<Handle> HandleVector;
 /// Set of Handles. Enforces uniqueness within a list.
 typedef std::set<Handle> HandleSet;
 /// Maps Handles to Handles.
-typedef std::map<Handle,Handle> HandleMap;
+typedef std::map<Handle, Handle> HandleMap;
 /// Optional Handle.
 typedef boost::optional<Handle> OptionalHandle;
 /// Optional HandleVector.
@@ -62,8 +62,8 @@ UTILITIES_API Handle applyHandleMap(const Handle& original, const HandleMap& han
  *  and the return vector consists of the corresponding handleMap values. Handles in original that
  *  are not listed in handleMap are discarded (silently--compare .size() if all values should be
  *  preserved). */
-UTILITIES_API HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handleMap);
+UTILITIES_API HandleVector applyHandleMap(const HandleVector& original, const HandleMap& handleMap);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_HANDLE_HPP
+#endif  // UTILITIES_IDF_HANDLE_HPP

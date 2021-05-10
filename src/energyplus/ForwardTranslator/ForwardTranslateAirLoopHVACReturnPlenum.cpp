@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,84 +52,76 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum( AirLoopHVACReturnPlenum & modelObject )
-{
-  OptionalModelObject temp;
-  OptionalString optS;
-  std::string s;
+  boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum(AirLoopHVACReturnPlenum& modelObject) {
+    OptionalModelObject temp;
+    OptionalString optS;
+    std::string s;
 
-  IdfObject idfObject(openstudio::IddObjectType::AirLoopHVAC_ReturnPlenum);
+    IdfObject idfObject(openstudio::IddObjectType::AirLoopHVAC_ReturnPlenum);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  s = modelObject.name().get();
-  idfObject.setName(s);
+    // Name
+    s = modelObject.name().get();
+    idfObject.setName(s);
 
-  //((ZoneName)(Zone Name))
-  //((ZoneNodeName)(Zone Node Name))
+    //((ZoneName)(Zone Name))
+    //((ZoneNodeName)(Zone Node Name))
 
-  //  InducedAirOutletNodeorNodeListName
-  // This is only the zoneHVAC that meets a very specific criteria,
-  // see the method documentation in AirLoopHVACReturnPlenum_Impl
-  auto zoneHVAC = modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->zoneHVACIdealLoadsAirSystems();
-  // If zoneHVAC is not empty we do a workaround,
-  // and we don't use the inducedAirOutletPortList because of an EnergyPlus bug
-  if ( zoneHVAC.empty() ) {
-    PortList po = modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPortList();
-    std::vector<ModelObject> inducedNodes = po.modelObjects();
-    if( ! inducedNodes.empty() )
-    {
-      IdfObject nodeList(openstudio::IddObjectType::NodeList);
-      m_idfObjects.push_back(nodeList);
-      nodeList.setName(s + " Induced Air Node List");
-      idfObject.setString(AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNodeorNodeListName,nodeList.name().get());
-      for( std::vector<ModelObject>::const_iterator it = inducedNodes.begin();
-           it != inducedNodes.end();
-           ++it )
-      {
-        IdfExtensibleGroup eg = nodeList.pushExtensibleGroup();
-        eg.setString(NodeListExtensibleFields::NodeName,it->name().get());
+    //  InducedAirOutletNodeorNodeListName
+    // This is only the zoneHVAC that meets a very specific criteria,
+    // see the method documentation in AirLoopHVACReturnPlenum_Impl
+    auto zoneHVAC = modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->zoneHVACIdealLoadsAirSystems();
+    // If zoneHVAC is not empty we do a workaround,
+    // and we don't use the inducedAirOutletPortList because of an EnergyPlus bug
+    if (zoneHVAC.empty()) {
+      PortList po = modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPortList();
+      std::vector<ModelObject> inducedNodes = po.modelObjects();
+      if (!inducedNodes.empty()) {
+        IdfObject nodeList(openstudio::IddObjectType::NodeList);
+        m_idfObjects.push_back(nodeList);
+        nodeList.setName(s + " Induced Air Node List");
+        idfObject.setString(AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNodeorNodeListName, nodeList.name().get());
+        for (std::vector<ModelObject>::const_iterator it = inducedNodes.begin(); it != inducedNodes.end(); ++it) {
+          IdfExtensibleGroup eg = nodeList.pushExtensibleGroup();
+          eg.setString(NodeListExtensibleFields::NodeName, it->name().get());
+        }
       }
     }
-  }
 
-  // OutletNodeName
-  if ( ! zoneHVAC.empty() ) {
-    auto node = zoneHVAC.front().airInletModelObject();
-    OS_ASSERT( node );
-    idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName,node->nameString());
-  } else if( boost::optional<model::ModelObject> node = modelObject.outletModelObject() ) {
-    idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName,node->name().get());
-  } else {
-    idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName,modelObject.nameString() + " Outlet Node");
-  }
-
-  //// ZoneName
-  //// and
-  //// ZoneNodeName
-  if ( boost::optional<model::ThermalZone> zone = modelObject.thermalZone() )
-  {
-    if( boost::optional<IdfObject> _zone = translateAndMapModelObject(zone.get()) )
-    {
-      idfObject.setString(AirLoopHVAC_ReturnPlenumFields::ZoneName,_zone->name().get());
-
-      model::Node node = zone->zoneAirNode();
-      idfObject.setString(AirLoopHVAC_ReturnPlenumFields::ZoneNodeName,node.name().get());
+    // OutletNodeName
+    if (!zoneHVAC.empty()) {
+      auto node = zoneHVAC.front().airInletModelObject();
+      OS_ASSERT(node);
+      idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName, node->nameString());
+    } else if (boost::optional<model::ModelObject> node = modelObject.outletModelObject()) {
+      idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName, node->name().get());
+    } else {
+      idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName, modelObject.nameString() + " Outlet Node");
     }
+
+    //// ZoneName
+    //// and
+    //// ZoneNodeName
+    if (boost::optional<model::ThermalZone> zone = modelObject.thermalZone()) {
+      if (boost::optional<IdfObject> _zone = translateAndMapModelObject(zone.get())) {
+        idfObject.setString(AirLoopHVAC_ReturnPlenumFields::ZoneName, _zone->name().get());
+
+        model::Node node = zone->zoneAirNode();
+        idfObject.setString(AirLoopHVAC_ReturnPlenumFields::ZoneNodeName, node.name().get());
+      }
+    }
+
+    // InletNodeName
+    auto inletModelObjects = modelObject.inletModelObjects();
+    for (auto& inletModelObject : inletModelObjects) {
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+      eg.setString(AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName, inletModelObject.name().get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // InletNodeName
-  auto inletModelObjects = modelObject.inletModelObjects();
-  for( auto & inletModelObject : inletModelObjects ) {
-    IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-    eg.setString(AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName,inletModelObject.name().get());
-  }
+}  // namespace energyplus
 
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

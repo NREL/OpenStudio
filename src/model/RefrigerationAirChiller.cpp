@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,10 @@
 // #include "CurveLinear_Impl.hpp"
 #include "RefrigerationSystem.hpp"
 #include "RefrigerationSystem_Impl.hpp"
+#include "RefrigerationSecondarySystem.hpp"
+#include "RefrigerationSecondarySystem_Impl.hpp"
+#include "RefrigerationCompressorRack.hpp"
+#include "RefrigerationCompressorRack_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -54,1132 +58,1163 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  RefrigerationAirChiller_Impl::RefrigerationAirChiller_Impl(const IdfObject& idfObject,
-                                                                             Model_Impl* model,
-                                                                             bool keepHandle)
-    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == RefrigerationAirChiller::iddObjectType());
-  }
-
-  RefrigerationAirChiller_Impl::RefrigerationAirChiller_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                             Model_Impl* model,
-                                                                             bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == RefrigerationAirChiller::iddObjectType());
-  }
-
-  RefrigerationAirChiller_Impl::RefrigerationAirChiller_Impl(const RefrigerationAirChiller_Impl& other,
-                                                                             Model_Impl* model,
-                                                                             bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& RefrigerationAirChiller_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Refrigeration Zone Air Chiller Total Cooling Rate",
-      "Refrigeration Zone Air Chiller Total Cooling Energy",
-      "Refrigeration Zone Air Chiller Sensible Cooling Rate",
-      "Refrigeration Zone Air Chiller Sensible Cooling Energy",
-      "Refrigeration Zone Air Chiller Latent Cooling Rate",
-      "Refrigeration Zone Air Chiller Latent Cooling Energy",
-      "Refrigeration Zone Air Chiller Water Removed Mass Flow Rate",
-      "Refrigeration Zone Air Chiller Total Electric Power",
-      "Refrigeration Zone Air Chiller Total Electric Energy",
-      "Refrigeration Zone Air Chiller Fan Electric Power",
-      "Refrigeration Zone Air Chiller Fan Electric Energy",
-      "Refrigeration Zone Air Chiller Heater Electric Power",
-      "Refrigeration Zone Air Chiller Heater Electric Energy",
-      "Refrigeration Zone Air Chiller Sensible Heat Ratio",
-      "Refrigeration Zone Air Chiller Frost Accumulation Mass",
-      "Refrigeration Zone Air Chiller Zone Total Cooling Rate",
-      "Refrigeration Zone Air Chiller Zone Total Cooling Energy",
-      "Refrigeration Zone Air Chiller Zone Sensible Cooling Rate",
-      "Refrigeration Zone Air Chiller Zone Sensible Cooling Energy",
-      "Refrigeration Zone Air Chiller Zone Heating Rate",
-      "Refrigeration Zone Air Chiller Zone Heating Energy",
-
-      // TODO: implement test
-      // Report only for Air Chillers using electric defrost
-      "Refrigeration Zone Air Chiller Defrost Electric Power",
-      "Refrigeration Zone Air Chiller Defrost Electric Energy"
-
-      // Reported in ThermalZone
-      // Report for each Zone exchanging energy with the Air Chiller
-      //"Refrigeration Zone Air Chiller Sensible Cooling Rate",
-      //"Refrigeration Zone Air Chiller Sensible Cooling Energy",
-      //"Refrigeration Zone Air Chiller Heating Rate",
-      //"Refrigeration Zone Air Chiller Heating Energy",
-      //"Refrigeration Zone Air Chiller Latent Cooling Rate",
-      //"Refrigeration Zone Air Chiller Latent Cooling Energy",
-      //"Refrigeration Zone Air Chiller Total Cooling Rate",
-      //"Refrigeration Zone Air Chiller Total Cooling Energy",
-      //"Refrigeration Zone Air Chiller Water Removed Mass Flow Rate"
-
-    };
-    return result;
-  }
-
-  IddObjectType RefrigerationAirChiller_Impl::iddObjectType() const {
-    return RefrigerationAirChiller::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> RefrigerationAirChiller_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Refrigeration_AirChillerFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("RefrigerationAirChiller","Availability"));
+    RefrigerationAirChiller_Impl::RefrigerationAirChiller_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == RefrigerationAirChiller::iddObjectType());
     }
-    if (std::find(b,e,OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("RefrigerationAirChiller","Heating Power"));
+
+    RefrigerationAirChiller_Impl::RefrigerationAirChiller_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                               bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == RefrigerationAirChiller::iddObjectType());
     }
-    if (std::find(b,e,OS_Refrigeration_AirChillerFields::DefrostScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("RefrigerationAirChiller","Defrost"));
+
+    RefrigerationAirChiller_Impl::RefrigerationAirChiller_Impl(const RefrigerationAirChiller_Impl& other, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& RefrigerationAirChiller_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "Refrigeration Zone Air Chiller Total Cooling Rate", "Refrigeration Zone Air Chiller Total Cooling Energy",
+        "Refrigeration Zone Air Chiller Sensible Cooling Rate", "Refrigeration Zone Air Chiller Sensible Cooling Energy",
+        "Refrigeration Zone Air Chiller Latent Cooling Rate", "Refrigeration Zone Air Chiller Latent Cooling Energy",
+        "Refrigeration Zone Air Chiller Water Removed Mass Flow Rate", "Refrigeration Zone Air Chiller Total Electricity Rate",
+        "Refrigeration Zone Air Chiller Total Electricity Energy", "Refrigeration Zone Air Chiller Fan Electricity Rate",
+        "Refrigeration Zone Air Chiller Fan Electricity Energy", "Refrigeration Zone Air Chiller Heater Electricity Rate",
+        "Refrigeration Zone Air Chiller Heater Electricity Energy", "Refrigeration Zone Air Chiller Sensible Heat Ratio",
+        "Refrigeration Zone Air Chiller Frost Accumulation Mass", "Refrigeration Zone Air Chiller Zone Total Cooling Rate",
+        "Refrigeration Zone Air Chiller Zone Total Cooling Energy", "Refrigeration Zone Air Chiller Zone Sensible Cooling Rate",
+        "Refrigeration Zone Air Chiller Zone Sensible Cooling Energy", "Refrigeration Zone Air Chiller Zone Heating Rate",
+        "Refrigeration Zone Air Chiller Zone Heating Energy",
+
+        // TODO: implement test
+        // Report only for Air Chillers using electric defrost
+        "Refrigeration Zone Air Chiller Defrost Electricity Rate", "Refrigeration Zone Air Chiller Defrost Electricity Energy"
+
+        // Reported in ThermalZone
+        // Report for each Zone exchanging energy with the Air Chiller
+        //"Refrigeration Zone Air Chiller Sensible Cooling Rate",
+        //"Refrigeration Zone Air Chiller Sensible Cooling Energy",
+        //"Refrigeration Zone Air Chiller Heating Rate",
+        //"Refrigeration Zone Air Chiller Heating Energy",
+        //"Refrigeration Zone Air Chiller Latent Cooling Rate",
+        //"Refrigeration Zone Air Chiller Latent Cooling Energy",
+        //"Refrigeration Zone Air Chiller Total Cooling Rate",
+        //"Refrigeration Zone Air Chiller Total Cooling Energy",
+        //"Refrigeration Zone Air Chiller Water Removed Mass Flow Rate"
+
+      };
+      return result;
     }
-    if (std::find(b,e,OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("RefrigerationAirChiller","Defrost Drip-Down"));
+
+    IddObjectType RefrigerationAirChiller_Impl::iddObjectType() const {
+      return RefrigerationAirChiller::iddObjectType();
     }
-    return result;
-  }
 
-  ModelObject RefrigerationAirChiller_Impl::clone(Model model) const
-  {
-    RefrigerationAirChiller airChillerClone = ZoneHVACComponent_Impl::clone(model).cast<RefrigerationAirChiller>();
-    return airChillerClone;
-  }
+    std::vector<ScheduleTypeKey> RefrigerationAirChiller_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Refrigeration_AirChillerFields::AvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("RefrigerationAirChiller", "Availability"));
+      }
+      if (std::find(b, e, OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("RefrigerationAirChiller", "Heating Power"));
+      }
+      if (std::find(b, e, OS_Refrigeration_AirChillerFields::DefrostScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("RefrigerationAirChiller", "Defrost"));
+      }
+      if (std::find(b, e, OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("RefrigerationAirChiller", "Defrost Drip-Down"));
+      }
+      return result;
+    }
 
-  std::vector<IdfObject> RefrigerationAirChiller_Impl::remove()
-  {
-    // Remove from ModelObjectList in system if needed
-    this->removeFromSystem();
+    ModelObject RefrigerationAirChiller_Impl::clone(Model model) const {
+      RefrigerationAirChiller airChillerClone = ZoneHVACComponent_Impl::clone(model).cast<RefrigerationAirChiller>();
+      return airChillerClone;
+    }
 
-    return ZoneHVACComponent_Impl::remove();
-  }
+    std::vector<IdfObject> RefrigerationAirChiller_Impl::remove() {
+      // Remove from ModelObjectList in system if needed
+      this->removeFromSystem();
 
-  // std::vector<ModelObject> RefrigerationAirChiller_Impl::children() const
-  // {
-  //   std::vector<ModelObject> result;
-  //   if (boost::optional<CurveLinear> intermediate = capacityCorrectionCurve()) {
-  //     result.push_back(*intermediate);
-  //   }
-  //   return result;
-  // }
+      return ZoneHVACComponent_Impl::remove();
+    }
 
-  unsigned RefrigerationAirChiller_Impl::inletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
+    // std::vector<ModelObject> RefrigerationAirChiller_Impl::children() const
+    // {
+    //   std::vector<ModelObject> result;
+    //   if (boost::optional<CurveLinear> intermediate = capacityCorrectionCurve()) {
+    //     result.push_back(*intermediate);
+    //   }
+    //   return result;
+    // }
 
-  unsigned RefrigerationAirChiller_Impl::outletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
+    unsigned RefrigerationAirChiller_Impl::inletPort() const {
+      return 0;  // this object has no inlet or outlet node
+    }
 
-  boost::optional<ThermalZone> RefrigerationAirChiller_Impl::thermalZone() const
-  {
-    Model m = this->model();
-    ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
-    for( const auto & thermalZone : thermalZones )
-    {
-      std::vector<ModelObject> equipment = thermalZone.equipment();
+    unsigned RefrigerationAirChiller_Impl::outletPort() const {
+      return 0;  // this object has no inlet or outlet node
+    }
 
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        return thermalZone;
+    boost::optional<ThermalZone> RefrigerationAirChiller_Impl::thermalZone() const {
+      Model m = this->model();
+      ModelObject thisObject = this->getObject<ModelObject>();
+      std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
+      for (const auto& thermalZone : thermalZones) {
+        std::vector<ModelObject> equipment = thermalZone.equipment();
+
+        if (std::find(equipment.begin(), equipment.end(), thisObject) != equipment.end()) {
+          return thermalZone;
+        }
+      }
+      return boost::none;
+    }
+
+    bool RefrigerationAirChiller_Impl::addToThermalZone(ThermalZone& thermalZone) {
+      Model m = this->model();
+
+      if (thermalZone.model() != m) {
+        return false;
+      }
+
+      removeFromThermalZone();
+      thermalZone.setUseIdealAirLoads(false);
+      thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+      return true;
+    }
+
+    void RefrigerationAirChiller_Impl::removeFromThermalZone() {
+      if (boost::optional<ThermalZone> thermalZone = this->thermalZone()) {
+        thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
       }
     }
-    return boost::none;
-  }
 
-  bool RefrigerationAirChiller_Impl::addToThermalZone(ThermalZone & thermalZone)
-  {
-    Model m = this->model();
-
-    if( thermalZone.model() != m )
-    {
-      return false;
+    boost::optional<Schedule> RefrigerationAirChiller_Impl::availabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::AvailabilityScheduleName);
     }
 
-    removeFromThermalZone();
-    thermalZone.setUseIdealAirLoads(false);
-    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
-
-    return true;
-  }
-
-  void RefrigerationAirChiller_Impl::removeFromThermalZone()
-  {
-    if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
-      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+    std::string RefrigerationAirChiller_Impl::capacityRatingType() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::CapacityRatingType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-  }
 
-  boost::optional<Schedule> RefrigerationAirChiller_Impl::availabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::AvailabilityScheduleName);
-  }
-
-  std::string RefrigerationAirChiller_Impl::capacityRatingType() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::CapacityRatingType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> RefrigerationAirChiller_Impl::ratedUnitLoadFactor() const {
-    return getDouble(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor,true);
-  }
-
-  boost::optional<double> RefrigerationAirChiller_Impl::ratedCapacity() const {
-    return getDouble(OS_Refrigeration_AirChillerFields::RatedCapacity,true);
-  }
-
-  double RefrigerationAirChiller_Impl::ratedRelativeHumidity() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isRatedRelativeHumidityDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity);
-  }
-
-  double RefrigerationAirChiller_Impl::ratedCoolingSourceTemperature() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedCoolingSourceTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double RefrigerationAirChiller_Impl::ratedTemperatureDifferenceDT1() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedTemperatureDifferenceDT1,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> RefrigerationAirChiller_Impl::maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() const {
-    return getDouble(OS_Refrigeration_AirChillerFields::MaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature,true);
-  }
-
-  double RefrigerationAirChiller_Impl::coilMaterialCorrectionFactor() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isCoilMaterialCorrectionFactorDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor);
-  }
-
-  double RefrigerationAirChiller_Impl::refrigerantCorrectionFactor() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isRefrigerantCorrectionFactorDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor);
-  }
-
-  // std::string RefrigerationAirChiller_Impl::capacityCorrectionCurveType() const {
-  //   boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType,true);
-  //   OS_ASSERT(value);
-  //   return value.get();
-  // }
-
-  // bool RefrigerationAirChiller_Impl::isCapacityCorrectionCurveTypeDefaulted() const {
-  //   return isEmpty(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType);
-  // }
-
-  // boost::optional<CurveLinear> RefrigerationAirChiller_Impl::capacityCorrectionCurve() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<CurveLinear>(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveName);
-  // }
-
-  double RefrigerationAirChiller_Impl::sHR60CorrectionFactor() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isSHR60CorrectionFactorDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor);
-  }
-
-  double RefrigerationAirChiller_Impl::ratedTotalHeatingPower() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedTotalHeatingPower,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<Schedule> RefrigerationAirChiller_Impl::heatingPowerSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName);
-  }
-
-  std::string RefrigerationAirChiller_Impl::fanSpeedControlType() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::FanSpeedControlType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isFanSpeedControlTypeDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::FanSpeedControlType);
-  }
-
-  double RefrigerationAirChiller_Impl::ratedFanPower() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedFanPower,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isRatedFanPowerDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::RatedFanPower);
-  }
-
-  double RefrigerationAirChiller_Impl::ratedAirFlow() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedAirFlow,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double RefrigerationAirChiller_Impl::minimumFanAirFlowRatio() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isMinimumFanAirFlowRatioDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio);
-  }
-
-  std::string RefrigerationAirChiller_Impl::defrostType() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::DefrostType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isDefrostTypeDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::DefrostType);
-  }
-
-  std::string RefrigerationAirChiller_Impl::defrostControlType() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::DefrostControlType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isDefrostControlTypeDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::DefrostControlType);
-  }
-
-  Schedule RefrigerationAirChiller_Impl::defrostSchedule() const {
-    boost::optional<Schedule> value = optionalDefrostSchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Defrost Schedule attached.");
+    boost::optional<double> RefrigerationAirChiller_Impl::ratedUnitLoadFactor() const {
+      return getDouble(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor, true);
     }
-    return value.get();
-  }
 
-  boost::optional<Schedule> RefrigerationAirChiller_Impl::defrostDripDownSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName);
-  }
-
-  boost::optional<double> RefrigerationAirChiller_Impl::defrostPower() const {
-    return getDouble(OS_Refrigeration_AirChillerFields::DefrostPower,true);
-  }
-
-  boost::optional<double> RefrigerationAirChiller_Impl::temperatureTerminationDefrostFractiontoIce() const {
-    return getDouble(OS_Refrigeration_AirChillerFields::TemperatureTerminationDefrostFractiontoIce,true);
-  }
-
-  std::string RefrigerationAirChiller_Impl::verticalLocation() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::VerticalLocation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isVerticalLocationDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::VerticalLocation);
-  }
-
-  double RefrigerationAirChiller_Impl::averageRefrigerantChargeInventory() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationAirChiller_Impl::isAverageRefrigerantChargeInventoryDefaulted() const {
-    return isEmpty(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory);
-  }
-
-  bool RefrigerationAirChiller_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Refrigeration_AirChillerFields::AvailabilityScheduleName,
-                              "RefrigerationAirChiller",
-                              "Availability",
-                              schedule);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::AvailabilityScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setCapacityRatingType(std::string capacityRatingType) {
-    bool result = setString(OS_Refrigeration_AirChillerFields::CapacityRatingType, capacityRatingType);
-    return result;
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor) {
-    bool result(false);
-    if (ratedUnitLoadFactor) {
-      result = setDouble(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor, ratedUnitLoadFactor.get());
+    boost::optional<double> RefrigerationAirChiller_Impl::ratedCapacity() const {
+      return getDouble(OS_Refrigeration_AirChillerFields::RatedCapacity, true);
     }
-    else {
-      resetRatedUnitLoadFactor();
-      result = true;
+
+    double RefrigerationAirChiller_Impl::ratedRelativeHumidity() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void RefrigerationAirChiller_Impl::resetRatedUnitLoadFactor() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
-    bool result(false);
-    if (ratedCapacity) {
-      result = setDouble(OS_Refrigeration_AirChillerFields::RatedCapacity, ratedCapacity.get());
+    bool RefrigerationAirChiller_Impl::isRatedRelativeHumidityDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity);
     }
-    else {
-      resetRatedCapacity();
-      result = true;
+
+    double RefrigerationAirChiller_Impl::ratedCoolingSourceTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedCoolingSourceTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void RefrigerationAirChiller_Impl::resetRatedCapacity() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::RatedCapacity, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedRelativeHumidity(double ratedRelativeHumidity) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity, ratedRelativeHumidity);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetRatedRelativeHumidity() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedCoolingSourceTemperature, ratedCoolingSourceTemperature);
-    return result;
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedTemperatureDifferenceDT1(double ratedTemperatureDifferenceDT1) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedTemperatureDifferenceDT1, ratedTemperatureDifferenceDT1);
-    return result;
-  }
-
-  bool RefrigerationAirChiller_Impl::setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(boost::optional<double> maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature) {
-    bool result(false);
-    if (maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature) {
-      result = setDouble(OS_Refrigeration_AirChillerFields::MaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature, maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature.get());
+    double RefrigerationAirChiller_Impl::ratedTemperatureDifferenceDT1() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedTemperatureDifferenceDT1, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    else {
-      resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
-      result = true;
+
+    boost::optional<double> RefrigerationAirChiller_Impl::maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() const {
+      return getDouble(OS_Refrigeration_AirChillerFields::MaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature, true);
     }
-    return result;
-  }
 
-  void RefrigerationAirChiller_Impl::resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::MaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor, coilMaterialCorrectionFactor);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetCoilMaterialCorrectionFactor() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor, refrigerantCorrectionFactor);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetRefrigerantCorrectionFactor() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor, "");
-    OS_ASSERT(result);
-  }
-
-  // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
-  //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType, capacityCorrectionCurveType);
-  //   return result;
-  // }
-
-  // void RefrigerationAirChiller_Impl::resetCapacityCorrectionCurveType() {
-  //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType, "");
-  //   OS_ASSERT(result);
-  // }
-
-  // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurve(const boost::optional<CurveLinear>& curveLinear) {
-  //   bool result(false);
-  //   if (curveLinear) {
-  //     result = setPointer(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveName, curveLinear.get().handle());
-  //   }
-  //   else {
-  //     resetCapacityCorrectionCurve();
-  //     result = true;
-  //   }
-  //   return result;
-  // }
-
-  // void RefrigerationAirChiller_Impl::resetCapacityCorrectionCurve() {
-  //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveName, "");
-  //   OS_ASSERT(result);
-  // }
-
-  bool RefrigerationAirChiller_Impl::setSHR60CorrectionFactor(double sHR60CorrectionFactor) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor, sHR60CorrectionFactor);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetSHR60CorrectionFactor() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedTotalHeatingPower, ratedTotalHeatingPower);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool RefrigerationAirChiller_Impl::setHeatingPowerSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName,
-                              "RefrigerationAirChiller",
-                              "Heating Power",
-                              schedule);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetHeatingPowerSchedule() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setFanSpeedControlType(std::string fanSpeedControlType) {
-    bool result = setString(OS_Refrigeration_AirChillerFields::FanSpeedControlType, fanSpeedControlType);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetFanSpeedControlType() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::FanSpeedControlType, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedFanPower(double ratedFanPower) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedFanPower, ratedFanPower);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetRatedFanPower() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::RatedFanPower, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setRatedAirFlow(double ratedAirFlow) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedAirFlow, ratedAirFlow);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool RefrigerationAirChiller_Impl::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio, minimumFanAirFlowRatio);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetMinimumFanAirFlowRatio() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setDefrostType(std::string defrostType) {
-    bool result = setString(OS_Refrigeration_AirChillerFields::DefrostType, defrostType);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetDefrostType() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::DefrostType, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setDefrostControlType(std::string defrostControlType) {
-    bool result = setString(OS_Refrigeration_AirChillerFields::DefrostControlType, defrostControlType);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetDefrostControlType() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::DefrostControlType, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setDefrostSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Refrigeration_AirChillerFields::DefrostScheduleName,
-                              "RefrigerationAirChiller",
-                              "Defrost",
-                              schedule);
-    return result;
-  }
-
-  bool RefrigerationAirChiller_Impl::setDefrostDripDownSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName,
-                              "RefrigerationAirChiller",
-                              "Defrost Drip-Down",
-                              schedule);
-    return result;
-  }
-
-  void RefrigerationAirChiller_Impl::resetDefrostDripDownSchedule() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setDefrostPower(boost::optional<double> defrostPower) {
-    bool result(false);
-    if (defrostPower) {
-      result = setDouble(OS_Refrigeration_AirChillerFields::DefrostPower, defrostPower.get());
+    double RefrigerationAirChiller_Impl::coilMaterialCorrectionFactor() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    else {
-      resetDefrostPower();
-      result = true;
+
+    bool RefrigerationAirChiller_Impl::isCoilMaterialCorrectionFactorDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor);
     }
-    return result;
-  }
 
-  void RefrigerationAirChiller_Impl::resetDefrostPower() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::DefrostPower, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationAirChiller_Impl::setTemperatureTerminationDefrostFractiontoIce(boost::optional<double> temperatureTerminationDefrostFractiontoIce) {
-    bool result(false);
-    if (temperatureTerminationDefrostFractiontoIce) {
-      result = setDouble(OS_Refrigeration_AirChillerFields::TemperatureTerminationDefrostFractiontoIce, temperatureTerminationDefrostFractiontoIce.get());
+    double RefrigerationAirChiller_Impl::refrigerantCorrectionFactor() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    else {
-      resetTemperatureTerminationDefrostFractiontoIce();
-      result = true;
+
+    bool RefrigerationAirChiller_Impl::isRefrigerantCorrectionFactorDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor);
     }
-    return result;
-  }
 
-  void RefrigerationAirChiller_Impl::resetTemperatureTerminationDefrostFractiontoIce() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::TemperatureTerminationDefrostFractiontoIce, "");
-    OS_ASSERT(result);
-  }
+    // std::string RefrigerationAirChiller_Impl::capacityCorrectionCurveType() const {
+    //   boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType,true);
+    //   OS_ASSERT(value);
+    //   return value.get();
+    // }
 
-  bool RefrigerationAirChiller_Impl::setVerticalLocation(std::string verticalLocation) {
-    bool result = setString(OS_Refrigeration_AirChillerFields::VerticalLocation, verticalLocation);
-    return result;
-  }
+    // bool RefrigerationAirChiller_Impl::isCapacityCorrectionCurveTypeDefaulted() const {
+    //   return isEmpty(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType);
+    // }
 
-  void RefrigerationAirChiller_Impl::resetVerticalLocation() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::VerticalLocation, "");
-    OS_ASSERT(result);
-  }
+    // boost::optional<CurveLinear> RefrigerationAirChiller_Impl::capacityCorrectionCurve() const {
+    //   return getObject<ModelObject>().getModelObjectTarget<CurveLinear>(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveName);
+    // }
 
-  bool RefrigerationAirChiller_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
-    bool result = setDouble(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
-    OS_ASSERT(result);
-    return result;
-  }
+    double RefrigerationAirChiller_Impl::sHR60CorrectionFactor() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  void RefrigerationAirChiller_Impl::resetAverageRefrigerantChargeInventory() {
-    bool result = setString(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory, "");
-    OS_ASSERT(result);
-  }
+    bool RefrigerationAirChiller_Impl::isSHR60CorrectionFactorDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor);
+    }
 
-  boost::optional<Schedule> RefrigerationAirChiller_Impl::optionalDefrostSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::DefrostScheduleName);
-  }
+    double RefrigerationAirChiller_Impl::ratedTotalHeatingPower() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedTotalHeatingPower, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
-    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-    RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-    for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
-      RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
-      if ( !refrigerationAirChillers.empty() && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller) != refrigerationAirChillers.end() ) {
-        return refrigerationSystem;
+    boost::optional<Schedule> RefrigerationAirChiller_Impl::heatingPowerSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName);
+    }
+
+    std::string RefrigerationAirChiller_Impl::fanSpeedControlType() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::FanSpeedControlType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationAirChiller_Impl::isFanSpeedControlTypeDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::FanSpeedControlType);
+    }
+
+    double RefrigerationAirChiller_Impl::ratedFanPower() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedFanPower, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationAirChiller_Impl::isRatedFanPowerDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::RatedFanPower);
+    }
+
+    double RefrigerationAirChiller_Impl::ratedAirFlow() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::RatedAirFlow, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double RefrigerationAirChiller_Impl::minimumFanAirFlowRatio() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationAirChiller_Impl::isMinimumFanAirFlowRatioDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio);
+    }
+
+    std::string RefrigerationAirChiller_Impl::defrostType() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::DefrostType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationAirChiller_Impl::isDefrostTypeDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::DefrostType);
+    }
+
+    std::string RefrigerationAirChiller_Impl::defrostControlType() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::DefrostControlType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationAirChiller_Impl::isDefrostControlTypeDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::DefrostControlType);
+    }
+
+    Schedule RefrigerationAirChiller_Impl::defrostSchedule() const {
+      boost::optional<Schedule> value = optionalDefrostSchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Defrost Schedule attached.");
+      }
+      return value.get();
+    }
+
+    boost::optional<Schedule> RefrigerationAirChiller_Impl::defrostDripDownSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName);
+    }
+
+    boost::optional<double> RefrigerationAirChiller_Impl::defrostPower() const {
+      return getDouble(OS_Refrigeration_AirChillerFields::DefrostPower, true);
+    }
+
+    boost::optional<double> RefrigerationAirChiller_Impl::temperatureTerminationDefrostFractiontoIce() const {
+      return getDouble(OS_Refrigeration_AirChillerFields::TemperatureTerminationDefrostFractiontoIce, true);
+    }
+
+    std::string RefrigerationAirChiller_Impl::verticalLocation() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_AirChillerFields::VerticalLocation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationAirChiller_Impl::isVerticalLocationDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::VerticalLocation);
+    }
+
+    double RefrigerationAirChiller_Impl::averageRefrigerantChargeInventory() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationAirChiller_Impl::isAverageRefrigerantChargeInventoryDefaulted() const {
+      return isEmpty(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory);
+    }
+
+    boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
+      std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+        RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
+        if (!refrigerationAirChillers.empty()
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
+          return refrigerationSystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationSecondarySystem> RefrigerationAirChiller_Impl::secondarySystem() const {
+      std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
+      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+        RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSecondarySystem.airChillers();
+        if (!refrigerationAirChillers.empty()
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
+          return refrigerationSecondarySystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationCompressorRack> RefrigerationAirChiller_Impl::compressorRack() const {
+      std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
+      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+        RefrigerationAirChillerVector refrigerationAirChillers = refrigerationCompressorRack.airChillers();
+        if (!refrigerationAirChillers.empty()
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
+          return refrigerationCompressorRack;
+        }
+      }
+      return boost::none;
+    }
+
+    bool RefrigerationAirChiller_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Refrigeration_AirChillerFields::AvailabilityScheduleName, "RefrigerationAirChiller", "Availability", schedule);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetAvailabilitySchedule() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::AvailabilityScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setCapacityRatingType(std::string capacityRatingType) {
+      bool result = setString(OS_Refrigeration_AirChillerFields::CapacityRatingType, capacityRatingType);
+      return result;
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedUnitLoadFactor(boost::optional<double> ratedUnitLoadFactor) {
+      bool result(false);
+      if (ratedUnitLoadFactor) {
+        result = setDouble(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor, ratedUnitLoadFactor.get());
+      } else {
+        resetRatedUnitLoadFactor();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetRatedUnitLoadFactor() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::RatedUnitLoadFactor, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedCapacity(boost::optional<double> ratedCapacity) {
+      bool result(false);
+      if (ratedCapacity) {
+        result = setDouble(OS_Refrigeration_AirChillerFields::RatedCapacity, ratedCapacity.get());
+      } else {
+        resetRatedCapacity();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetRatedCapacity() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::RatedCapacity, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedRelativeHumidity(double ratedRelativeHumidity) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity, ratedRelativeHumidity);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetRatedRelativeHumidity() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::RatedRelativeHumidity, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedCoolingSourceTemperature, ratedCoolingSourceTemperature);
+      return result;
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedTemperatureDifferenceDT1(double ratedTemperatureDifferenceDT1) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedTemperatureDifferenceDT1, ratedTemperatureDifferenceDT1);
+      return result;
+    }
+
+    bool RefrigerationAirChiller_Impl::setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(
+      boost::optional<double> maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature) {
+      bool result(false);
+      if (maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature) {
+        result = setDouble(OS_Refrigeration_AirChillerFields::MaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature,
+                           maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature.get());
+      } else {
+        resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
+        result = true;
+      }
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::MaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor, coilMaterialCorrectionFactor);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetCoilMaterialCorrectionFactor() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::CoilMaterialCorrectionFactor, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor, refrigerantCorrectionFactor);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetRefrigerantCorrectionFactor() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::RefrigerantCorrectionFactor, "");
+      OS_ASSERT(result);
+    }
+
+    // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
+    //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType, capacityCorrectionCurveType);
+    //   return result;
+    // }
+
+    // void RefrigerationAirChiller_Impl::resetCapacityCorrectionCurveType() {
+    //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType, "");
+    //   OS_ASSERT(result);
+    // }
+
+    // bool RefrigerationAirChiller_Impl::setCapacityCorrectionCurve(const boost::optional<CurveLinear>& curveLinear) {
+    //   bool result(false);
+    //   if (curveLinear) {
+    //     result = setPointer(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveName, curveLinear.get().handle());
+    //   }
+    //   else {
+    //     resetCapacityCorrectionCurve();
+    //     result = true;
+    //   }
+    //   return result;
+    // }
+
+    // void RefrigerationAirChiller_Impl::resetCapacityCorrectionCurve() {
+    //   bool result = setString(OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveName, "");
+    //   OS_ASSERT(result);
+    // }
+
+    bool RefrigerationAirChiller_Impl::setSHR60CorrectionFactor(double sHR60CorrectionFactor) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor, sHR60CorrectionFactor);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetSHR60CorrectionFactor() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::SHR60CorrectionFactor, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedTotalHeatingPower, ratedTotalHeatingPower);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationAirChiller_Impl::setHeatingPowerSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName, "RefrigerationAirChiller", "Heating Power", schedule);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetHeatingPowerSchedule() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::HeatingPowerScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setFanSpeedControlType(std::string fanSpeedControlType) {
+      bool result = setString(OS_Refrigeration_AirChillerFields::FanSpeedControlType, fanSpeedControlType);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetFanSpeedControlType() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::FanSpeedControlType, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedFanPower(double ratedFanPower) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedFanPower, ratedFanPower);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetRatedFanPower() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::RatedFanPower, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setRatedAirFlow(double ratedAirFlow) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::RatedAirFlow, ratedAirFlow);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationAirChiller_Impl::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio, minimumFanAirFlowRatio);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetMinimumFanAirFlowRatio() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::MinimumFanAirFlowRatio, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setDefrostType(std::string defrostType) {
+      bool result = setString(OS_Refrigeration_AirChillerFields::DefrostType, defrostType);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetDefrostType() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::DefrostType, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setDefrostControlType(std::string defrostControlType) {
+      bool result = setString(OS_Refrigeration_AirChillerFields::DefrostControlType, defrostControlType);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetDefrostControlType() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::DefrostControlType, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setDefrostSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Refrigeration_AirChillerFields::DefrostScheduleName, "RefrigerationAirChiller", "Defrost", schedule);
+      return result;
+    }
+
+    bool RefrigerationAirChiller_Impl::setDefrostDripDownSchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName, "RefrigerationAirChiller", "Defrost Drip-Down", schedule);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetDefrostDripDownSchedule() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::DefrostDripDownScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setDefrostPower(boost::optional<double> defrostPower) {
+      bool result(false);
+      if (defrostPower) {
+        result = setDouble(OS_Refrigeration_AirChillerFields::DefrostPower, defrostPower.get());
+      } else {
+        resetDefrostPower();
+        result = true;
+      }
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetDefrostPower() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::DefrostPower, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setTemperatureTerminationDefrostFractiontoIce(
+      boost::optional<double> temperatureTerminationDefrostFractiontoIce) {
+      bool result(false);
+      if (temperatureTerminationDefrostFractiontoIce) {
+        result =
+          setDouble(OS_Refrigeration_AirChillerFields::TemperatureTerminationDefrostFractiontoIce, temperatureTerminationDefrostFractiontoIce.get());
+      } else {
+        resetTemperatureTerminationDefrostFractiontoIce();
+        result = true;
+      }
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetTemperatureTerminationDefrostFractiontoIce() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::TemperatureTerminationDefrostFractiontoIce, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setVerticalLocation(std::string verticalLocation) {
+      bool result = setString(OS_Refrigeration_AirChillerFields::VerticalLocation, verticalLocation);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetVerticalLocation() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::VerticalLocation, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationAirChiller_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+      bool result = setDouble(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationAirChiller_Impl::resetAverageRefrigerantChargeInventory() {
+      bool result = setString(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> RefrigerationAirChiller_Impl::optionalDefrostSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::DefrostScheduleName);
+    }
+
+    bool RefrigerationAirChiller_Impl::addToSystem(RefrigerationSystem& system) {
+      return system.addAirChiller(this->getObject<RefrigerationAirChiller>());
+    }
+
+    void RefrigerationAirChiller_Impl::removeFromSystem() {
+      boost::optional<RefrigerationSystem> refrigerationSystem = system();
+      if (refrigerationSystem) {
+        refrigerationSystem.get().removeAirChiller(this->getObject<RefrigerationAirChiller>());
       }
     }
-    return boost::none;
-  }
 
-  void RefrigerationAirChiller_Impl::removeFromSystem() {
-    if (boost::optional<RefrigerationSystem> _refrigerationSystem = system()) {
-      _refrigerationSystem->removeAirChiller(this->getObject<RefrigerationAirChiller>());
+    bool RefrigerationAirChiller_Impl::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+      return secondarySystem.addAirChiller(this->getObject<RefrigerationAirChiller>());
     }
+
+    void RefrigerationAirChiller_Impl::removeFromSecondarySystem() {
+      boost::optional<RefrigerationSecondarySystem> refrigerationSecondarySystem = secondarySystem();
+      if (refrigerationSecondarySystem) {
+        refrigerationSecondarySystem.get().removeAirChiller(this->getObject<RefrigerationAirChiller>());
+      }
+    }
+
+    bool RefrigerationAirChiller_Impl::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+      return compressorRack.addAirChiller(this->getObject<RefrigerationAirChiller>());
+    }
+
+    void RefrigerationAirChiller_Impl::removeFromCompressorRack() {
+      boost::optional<RefrigerationCompressorRack> refrigerationCompressorRack = compressorRack();
+      if (refrigerationCompressorRack) {
+        refrigerationCompressorRack.get().removeAirChiller(this->getObject<RefrigerationAirChiller>());
+      }
+    }
+
+  }  // namespace detail
+
+  RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& defrostSchedule)
+    : ZoneHVACComponent(RefrigerationAirChiller::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::RefrigerationAirChiller_Impl>());
+
+    bool ok = setCapacityRatingType("UnitLoadFactorSensibleOnly");
+    OS_ASSERT(ok);
+    setRatedUnitLoadFactor(15000.0);
+    ok = setRatedCoolingSourceTemperature(-30.0);
+    OS_ASSERT(ok);
+    ok = setRatedTemperatureDifferenceDT1(5.6);
+    OS_ASSERT(ok);
+    ok = setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(7.3);
+    OS_ASSERT(ok);
+    setCoilMaterialCorrectionFactor(1.0);
+    setRefrigerantCorrectionFactor(1.0);
+    ok = setSHR60CorrectionFactor(1.5);
+    OS_ASSERT(ok);
+    setRatedTotalHeatingPower(275.0);
+    ok = setFanSpeedControlType("Fixed");
+    OS_ASSERT(ok);
+    ok = setRatedFanPower(1500.0);
+    OS_ASSERT(ok);
+    setRatedAirFlow(20.0);
+    ok = setMinimumFanAirFlowRatio(0.2);
+    OS_ASSERT(ok);
+    ok = setDefrostType("Electric");
+    OS_ASSERT(ok);
+    ok = setDefrostControlType("TimeSchedule");
+    OS_ASSERT(ok);
+    ok = setDefrostSchedule(defrostSchedule);
+    OS_ASSERT(ok);
+    ok = setDefrostPower(75000.0);
+    OS_ASSERT(ok);
+    ok = setTemperatureTerminationDefrostFractiontoIce(0.7);
+    OS_ASSERT(ok);
+    ok = getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation("Middle");
+    OS_ASSERT(ok);
   }
 
+  IddObjectType RefrigerationAirChiller::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Refrigeration_AirChiller);
+  }
+
+  std::vector<std::string> RefrigerationAirChiller::capacityRatingTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Refrigeration_AirChillerFields::CapacityRatingType);
+  }
+
+  // std::vector<std::string> RefrigerationAirChiller::capacityCorrectionCurveTypeValues() {
+  //   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+  //                         OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType);
+  // }
+
+  std::vector<std::string> RefrigerationAirChiller::fanSpeedControlTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Refrigeration_AirChillerFields::FanSpeedControlType);
+  }
+
+  std::vector<std::string> RefrigerationAirChiller::defrostTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Refrigeration_AirChillerFields::DefrostType);
+  }
+
+  std::vector<std::string> RefrigerationAirChiller::defrostControlTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Refrigeration_AirChillerFields::DefrostControlType);
+  }
+
+  std::vector<std::string> RefrigerationAirChiller::verticalLocationValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Refrigeration_AirChillerFields::VerticalLocation);
+  }
+
+  boost::optional<Schedule> RefrigerationAirChiller::availabilitySchedule() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->availabilitySchedule();
+  }
+
+  std::string RefrigerationAirChiller::capacityRatingType() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->capacityRatingType();
+  }
+
+  boost::optional<double> RefrigerationAirChiller::ratedUnitLoadFactor() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedUnitLoadFactor();
+  }
+
+  boost::optional<double> RefrigerationAirChiller::ratedCapacity() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedCapacity();
+  }
+
+  double RefrigerationAirChiller::ratedRelativeHumidity() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedRelativeHumidity();
+  }
+
+  bool RefrigerationAirChiller::isRatedRelativeHumidityDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isRatedRelativeHumidityDefaulted();
+  }
+
+  double RefrigerationAirChiller::ratedCoolingSourceTemperature() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedCoolingSourceTemperature();
+  }
+
+  double RefrigerationAirChiller::ratedTemperatureDifferenceDT1() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedTemperatureDifferenceDT1();
+  }
+
+  boost::optional<double> RefrigerationAirChiller::maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
+  }
+
+  double RefrigerationAirChiller::coilMaterialCorrectionFactor() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->coilMaterialCorrectionFactor();
+  }
+
+  bool RefrigerationAirChiller::isCoilMaterialCorrectionFactorDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isCoilMaterialCorrectionFactorDefaulted();
+  }
+
+  double RefrigerationAirChiller::refrigerantCorrectionFactor() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->refrigerantCorrectionFactor();
+  }
+
+  bool RefrigerationAirChiller::isRefrigerantCorrectionFactorDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isRefrigerantCorrectionFactorDefaulted();
+  }
+
+  // std::string RefrigerationAirChiller::capacityCorrectionCurveType() const {
+  //   return getImpl<detail::RefrigerationAirChiller_Impl>()->capacityCorrectionCurveType();
+  // }
+
+  // bool RefrigerationAirChiller::isCapacityCorrectionCurveTypeDefaulted() const {
+  //   return getImpl<detail::RefrigerationAirChiller_Impl>()->isCapacityCorrectionCurveTypeDefaulted();
+  // }
+
+  // boost::optional<CurveLinear> RefrigerationAirChiller::capacityCorrectionCurve() const {
+  //   return getImpl<detail::RefrigerationAirChiller_Impl>()->capacityCorrectionCurve();
+  // }
+
+  double RefrigerationAirChiller::sHR60CorrectionFactor() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->sHR60CorrectionFactor();
+  }
+
+  bool RefrigerationAirChiller::isSHR60CorrectionFactorDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isSHR60CorrectionFactorDefaulted();
+  }
+
+  double RefrigerationAirChiller::ratedTotalHeatingPower() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedTotalHeatingPower();
+  }
 
-} // detail
-
-RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& defrostSchedule)
-  : ZoneHVACComponent(RefrigerationAirChiller::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::RefrigerationAirChiller_Impl>());
-
-  bool ok = setCapacityRatingType("UnitLoadFactorSensibleOnly");
-  OS_ASSERT(ok);
-  setRatedUnitLoadFactor(15000.0);
-  ok = setRatedCoolingSourceTemperature(-30.0);
-  OS_ASSERT(ok);
-  ok = setRatedTemperatureDifferenceDT1(5.6);
-  OS_ASSERT(ok);
-  ok = setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(7.3);
-  OS_ASSERT(ok);
-  setCoilMaterialCorrectionFactor(1.0);
-  setRefrigerantCorrectionFactor(1.0);
-  ok = setSHR60CorrectionFactor(1.5);
-  OS_ASSERT(ok);
-  setRatedTotalHeatingPower(275.0);
-  ok = setFanSpeedControlType("Fixed");
-  OS_ASSERT(ok);
-  ok = setRatedFanPower(1500.0);
-  OS_ASSERT(ok);
-  setRatedAirFlow(20.0);
-  ok = setMinimumFanAirFlowRatio(0.2);
-  OS_ASSERT(ok);
-  ok = setDefrostType("Electric");
-  OS_ASSERT(ok);
-  ok = setDefrostControlType("TimeSchedule");
-  OS_ASSERT(ok);
-  ok = setDefrostSchedule(defrostSchedule);
-  OS_ASSERT(ok);
-  ok = setDefrostPower(75000.0);
-  OS_ASSERT(ok);
-  ok = setTemperatureTerminationDefrostFractiontoIce(0.7);
-  OS_ASSERT(ok);
-  ok = getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation("Middle");
-  OS_ASSERT(ok);
-}
-
-IddObjectType RefrigerationAirChiller::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Refrigeration_AirChiller);
-}
-
-std::vector<std::string> RefrigerationAirChiller::capacityRatingTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Refrigeration_AirChillerFields::CapacityRatingType);
-}
-
-// std::vector<std::string> RefrigerationAirChiller::capacityCorrectionCurveTypeValues() {
-//   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-//                         OS_Refrigeration_AirChillerFields::CapacityCorrectionCurveType);
-// }
-
-std::vector<std::string> RefrigerationAirChiller::fanSpeedControlTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Refrigeration_AirChillerFields::FanSpeedControlType);
-}
-
-std::vector<std::string> RefrigerationAirChiller::defrostTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Refrigeration_AirChillerFields::DefrostType);
-}
-
-std::vector<std::string> RefrigerationAirChiller::defrostControlTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Refrigeration_AirChillerFields::DefrostControlType);
-}
-
-std::vector<std::string> RefrigerationAirChiller::verticalLocationValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Refrigeration_AirChillerFields::VerticalLocation);
-}
-
-boost::optional<Schedule> RefrigerationAirChiller::availabilitySchedule() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->availabilitySchedule();
-}
-
-std::string RefrigerationAirChiller::capacityRatingType() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->capacityRatingType();
-}
-
-boost::optional<double> RefrigerationAirChiller::ratedUnitLoadFactor() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedUnitLoadFactor();
-}
-
-boost::optional<double> RefrigerationAirChiller::ratedCapacity() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedCapacity();
-}
-
-double RefrigerationAirChiller::ratedRelativeHumidity() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedRelativeHumidity();
-}
-
-bool RefrigerationAirChiller::isRatedRelativeHumidityDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isRatedRelativeHumidityDefaulted();
-}
-
-double RefrigerationAirChiller::ratedCoolingSourceTemperature() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedCoolingSourceTemperature();
-}
+  boost::optional<Schedule> RefrigerationAirChiller::heatingPowerSchedule() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->heatingPowerSchedule();
+  }
 
-double RefrigerationAirChiller::ratedTemperatureDifferenceDT1() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedTemperatureDifferenceDT1();
-}
+  std::string RefrigerationAirChiller::fanSpeedControlType() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->fanSpeedControlType();
+  }
 
-boost::optional<double> RefrigerationAirChiller::maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
-}
+  bool RefrigerationAirChiller::isFanSpeedControlTypeDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isFanSpeedControlTypeDefaulted();
+  }
 
-double RefrigerationAirChiller::coilMaterialCorrectionFactor() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->coilMaterialCorrectionFactor();
-}
+  double RefrigerationAirChiller::ratedFanPower() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedFanPower();
+  }
 
-bool RefrigerationAirChiller::isCoilMaterialCorrectionFactorDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isCoilMaterialCorrectionFactorDefaulted();
-}
+  bool RefrigerationAirChiller::isRatedFanPowerDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isRatedFanPowerDefaulted();
+  }
 
-double RefrigerationAirChiller::refrigerantCorrectionFactor() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->refrigerantCorrectionFactor();
-}
+  double RefrigerationAirChiller::ratedAirFlow() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedAirFlow();
+  }
 
-bool RefrigerationAirChiller::isRefrigerantCorrectionFactorDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isRefrigerantCorrectionFactorDefaulted();
-}
+  double RefrigerationAirChiller::minimumFanAirFlowRatio() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->minimumFanAirFlowRatio();
+  }
 
-// std::string RefrigerationAirChiller::capacityCorrectionCurveType() const {
-//   return getImpl<detail::RefrigerationAirChiller_Impl>()->capacityCorrectionCurveType();
-// }
+  bool RefrigerationAirChiller::isMinimumFanAirFlowRatioDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isMinimumFanAirFlowRatioDefaulted();
+  }
 
-// bool RefrigerationAirChiller::isCapacityCorrectionCurveTypeDefaulted() const {
-//   return getImpl<detail::RefrigerationAirChiller_Impl>()->isCapacityCorrectionCurveTypeDefaulted();
-// }
+  std::string RefrigerationAirChiller::defrostType() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostType();
+  }
 
-// boost::optional<CurveLinear> RefrigerationAirChiller::capacityCorrectionCurve() const {
-//   return getImpl<detail::RefrigerationAirChiller_Impl>()->capacityCorrectionCurve();
-// }
+  bool RefrigerationAirChiller::isDefrostTypeDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isDefrostTypeDefaulted();
+  }
 
-double RefrigerationAirChiller::sHR60CorrectionFactor() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->sHR60CorrectionFactor();
-}
+  std::string RefrigerationAirChiller::defrostControlType() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostControlType();
+  }
 
-bool RefrigerationAirChiller::isSHR60CorrectionFactorDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isSHR60CorrectionFactorDefaulted();
-}
+  bool RefrigerationAirChiller::isDefrostControlTypeDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isDefrostControlTypeDefaulted();
+  }
 
-double RefrigerationAirChiller::ratedTotalHeatingPower() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedTotalHeatingPower();
-}
+  Schedule RefrigerationAirChiller::defrostSchedule() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostSchedule();
+  }
 
-boost::optional<Schedule> RefrigerationAirChiller::heatingPowerSchedule() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->heatingPowerSchedule();
-}
+  boost::optional<Schedule> RefrigerationAirChiller::defrostDripDownSchedule() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostDripDownSchedule();
+  }
 
-std::string RefrigerationAirChiller::fanSpeedControlType() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->fanSpeedControlType();
-}
+  boost::optional<double> RefrigerationAirChiller::defrostPower() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostPower();
+  }
 
-bool RefrigerationAirChiller::isFanSpeedControlTypeDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isFanSpeedControlTypeDefaulted();
-}
+  boost::optional<double> RefrigerationAirChiller::temperatureTerminationDefrostFractiontoIce() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->temperatureTerminationDefrostFractiontoIce();
+  }
 
-double RefrigerationAirChiller::ratedFanPower() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedFanPower();
-}
+  std::string RefrigerationAirChiller::verticalLocation() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->verticalLocation();
+  }
 
-bool RefrigerationAirChiller::isRatedFanPowerDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isRatedFanPowerDefaulted();
-}
+  bool RefrigerationAirChiller::isVerticalLocationDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isVerticalLocationDefaulted();
+  }
 
-double RefrigerationAirChiller::ratedAirFlow() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->ratedAirFlow();
-}
+  double RefrigerationAirChiller::averageRefrigerantChargeInventory() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->averageRefrigerantChargeInventory();
+  }
 
-double RefrigerationAirChiller::minimumFanAirFlowRatio() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->minimumFanAirFlowRatio();
-}
+  bool RefrigerationAirChiller::isAverageRefrigerantChargeInventoryDefaulted() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->isAverageRefrigerantChargeInventoryDefaulted();
+  }
 
-bool RefrigerationAirChiller::isMinimumFanAirFlowRatioDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isMinimumFanAirFlowRatioDefaulted();
-}
+  boost::optional<RefrigerationSystem> RefrigerationAirChiller::system() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->system();
+  }
 
-std::string RefrigerationAirChiller::defrostType() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostType();
-}
+  boost::optional<RefrigerationSecondarySystem> RefrigerationAirChiller::secondarySystem() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->secondarySystem();
+  }
 
-bool RefrigerationAirChiller::isDefrostTypeDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isDefrostTypeDefaulted();
-}
+  boost::optional<RefrigerationCompressorRack> RefrigerationAirChiller::compressorRack() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->compressorRack();
+  }
 
-std::string RefrigerationAirChiller::defrostControlType() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostControlType();
-}
+  bool RefrigerationAirChiller::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-bool RefrigerationAirChiller::isDefrostControlTypeDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isDefrostControlTypeDefaulted();
-}
+  void RefrigerationAirChiller::resetAvailabilitySchedule() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetAvailabilitySchedule();
+  }
 
-Schedule RefrigerationAirChiller::defrostSchedule() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostSchedule();
-}
+  bool RefrigerationAirChiller::setCapacityRatingType(std::string capacityRatingType) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityRatingType(capacityRatingType);
+  }
 
-boost::optional<Schedule> RefrigerationAirChiller::defrostDripDownSchedule() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostDripDownSchedule();
-}
+  bool RefrigerationAirChiller::setRatedUnitLoadFactor(double ratedUnitLoadFactor) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedUnitLoadFactor(ratedUnitLoadFactor);
+  }
 
-boost::optional<double> RefrigerationAirChiller::defrostPower() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->defrostPower();
-}
+  void RefrigerationAirChiller::resetRatedUnitLoadFactor() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedUnitLoadFactor();
+  }
 
-boost::optional<double> RefrigerationAirChiller::temperatureTerminationDefrostFractiontoIce() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->temperatureTerminationDefrostFractiontoIce();
-}
+  bool RefrigerationAirChiller::setRatedCapacity(double ratedCapacity) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCapacity(ratedCapacity);
+  }
 
-std::string RefrigerationAirChiller::verticalLocation() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->verticalLocation();
-}
+  void RefrigerationAirChiller::resetRatedCapacity() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedCapacity();
+  }
 
-bool RefrigerationAirChiller::isVerticalLocationDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isVerticalLocationDefaulted();
-}
+  bool RefrigerationAirChiller::setRatedRelativeHumidity(double ratedRelativeHumidity) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedRelativeHumidity(ratedRelativeHumidity);
+  }
 
-double RefrigerationAirChiller::averageRefrigerantChargeInventory() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->averageRefrigerantChargeInventory();
-}
+  void RefrigerationAirChiller::resetRatedRelativeHumidity() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedRelativeHumidity();
+  }
 
-bool RefrigerationAirChiller::isAverageRefrigerantChargeInventoryDefaulted() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->isAverageRefrigerantChargeInventoryDefaulted();
-}
+  bool RefrigerationAirChiller::setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCoolingSourceTemperature(ratedCoolingSourceTemperature);
+  }
 
-bool RefrigerationAirChiller::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setAvailabilitySchedule(schedule);
-}
+  bool RefrigerationAirChiller::setRatedTemperatureDifferenceDT1(double ratedTemperatureDifferenceDT1) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedTemperatureDifferenceDT1(ratedTemperatureDifferenceDT1);
+  }
 
-void RefrigerationAirChiller::resetAvailabilitySchedule() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetAvailabilitySchedule();
-}
-
-bool RefrigerationAirChiller::setCapacityRatingType(std::string capacityRatingType) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityRatingType(capacityRatingType);
-}
-
-bool RefrigerationAirChiller::setRatedUnitLoadFactor(double ratedUnitLoadFactor) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedUnitLoadFactor(ratedUnitLoadFactor);
-}
-
-void RefrigerationAirChiller::resetRatedUnitLoadFactor() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedUnitLoadFactor();
-}
-
-bool RefrigerationAirChiller::setRatedCapacity(double ratedCapacity) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCapacity(ratedCapacity);
-}
-
-void RefrigerationAirChiller::resetRatedCapacity() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedCapacity();
-}
-
-bool RefrigerationAirChiller::setRatedRelativeHumidity(double ratedRelativeHumidity) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedRelativeHumidity(ratedRelativeHumidity);
-}
-
-void RefrigerationAirChiller::resetRatedRelativeHumidity() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedRelativeHumidity();
-}
-
-bool RefrigerationAirChiller::setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedCoolingSourceTemperature(ratedCoolingSourceTemperature);
-}
-
-bool RefrigerationAirChiller::setRatedTemperatureDifferenceDT1(double ratedTemperatureDifferenceDT1) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedTemperatureDifferenceDT1(ratedTemperatureDifferenceDT1);
-}
-
-bool RefrigerationAirChiller::setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(double maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature);
-}
-
-void RefrigerationAirChiller::resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
-}
-
-bool RefrigerationAirChiller::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setCoilMaterialCorrectionFactor(coilMaterialCorrectionFactor);
-}
-
-void RefrigerationAirChiller::resetCoilMaterialCorrectionFactor() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetCoilMaterialCorrectionFactor();
-}
-
-bool RefrigerationAirChiller::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRefrigerantCorrectionFactor(refrigerantCorrectionFactor);
-}
-
-void RefrigerationAirChiller::resetRefrigerantCorrectionFactor() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetRefrigerantCorrectionFactor();
-}
-
-// bool RefrigerationAirChiller::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
-//   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityCorrectionCurveType(capacityCorrectionCurveType);
-// }
-
-// void RefrigerationAirChiller::resetCapacityCorrectionCurveType() {
-//   getImpl<detail::RefrigerationAirChiller_Impl>()->resetCapacityCorrectionCurveType();
-// }
-
-// bool RefrigerationAirChiller::setCapacityCorrectionCurve(const CurveLinear& curveLinear) {
-//   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityCorrectionCurve(curveLinear);
-// }
-
-// void RefrigerationAirChiller::resetCapacityCorrectionCurve() {
-//   getImpl<detail::RefrigerationAirChiller_Impl>()->resetCapacityCorrectionCurve();
-// }
-
-bool RefrigerationAirChiller::setSHR60CorrectionFactor(double sHR60CorrectionFactor) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setSHR60CorrectionFactor(sHR60CorrectionFactor);
-}
-
-void RefrigerationAirChiller::resetSHR60CorrectionFactor() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetSHR60CorrectionFactor();
-}
-
-bool RefrigerationAirChiller::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedTotalHeatingPower(ratedTotalHeatingPower);
-}
-
-bool RefrigerationAirChiller::setHeatingPowerSchedule(Schedule& schedule) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setHeatingPowerSchedule(schedule);
-}
-
-void RefrigerationAirChiller::resetHeatingPowerSchedule() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetHeatingPowerSchedule();
-}
-
-bool RefrigerationAirChiller::setFanSpeedControlType(std::string fanSpeedControlType) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setFanSpeedControlType(fanSpeedControlType);
-}
-
-void RefrigerationAirChiller::resetFanSpeedControlType() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetFanSpeedControlType();
-}
-
-bool RefrigerationAirChiller::setRatedFanPower(double ratedFanPower) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedFanPower(ratedFanPower);
-}
-
-void RefrigerationAirChiller::resetRatedFanPower() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedFanPower();
-}
-
-bool RefrigerationAirChiller::setRatedAirFlow(double ratedAirFlow) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedAirFlow(ratedAirFlow);
-}
-
-bool RefrigerationAirChiller::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setMinimumFanAirFlowRatio(minimumFanAirFlowRatio);
-}
-
-void RefrigerationAirChiller::resetMinimumFanAirFlowRatio() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetMinimumFanAirFlowRatio();
-}
-
-bool RefrigerationAirChiller::setDefrostType(std::string defrostType) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostType(defrostType);
-}
-
-void RefrigerationAirChiller::resetDefrostType() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostType();
-}
-
-bool RefrigerationAirChiller::setDefrostControlType(std::string defrostControlType) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostControlType(defrostControlType);
-}
-
-void RefrigerationAirChiller::resetDefrostControlType() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostControlType();
-}
-
-bool RefrigerationAirChiller::setDefrostSchedule(Schedule& schedule) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostSchedule(schedule);
-}
-
-bool RefrigerationAirChiller::setDefrostDripDownSchedule(Schedule& schedule) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostDripDownSchedule(schedule);
-}
-
-void RefrigerationAirChiller::resetDefrostDripDownSchedule() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostDripDownSchedule();
-}
-
-bool RefrigerationAirChiller::setDefrostPower(double defrostPower) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostPower(defrostPower);
-}
-
-void RefrigerationAirChiller::resetDefrostPower() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostPower();
-}
-
-bool RefrigerationAirChiller::setTemperatureTerminationDefrostFractiontoIce(double temperatureTerminationDefrostFractiontoIce) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setTemperatureTerminationDefrostFractiontoIce(temperatureTerminationDefrostFractiontoIce);
-}
-
-void RefrigerationAirChiller::resetTemperatureTerminationDefrostFractiontoIce() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetTemperatureTerminationDefrostFractiontoIce();
-}
-
-// bool RefrigerationAirChiller::setVerticalLocation(std::string verticalLocation) {
-//   return getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation(verticalLocation);
-// }
-
-// void RefrigerationAirChiller::resetVerticalLocation() {
-//   getImpl<detail::RefrigerationAirChiller_Impl>()->resetVerticalLocation();
-// }
-
-bool RefrigerationAirChiller::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
-}
-
-void RefrigerationAirChiller::resetAverageRefrigerantChargeInventory() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->resetAverageRefrigerantChargeInventory();
-}
-
-boost::optional<RefrigerationSystem> RefrigerationAirChiller::system() const {
-  return getImpl<detail::RefrigerationAirChiller_Impl>()->system();
-}
-
-void RefrigerationAirChiller::removeFromSystem() {
-  getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromSystem();
-}
-
-/// @cond
-RefrigerationAirChiller::RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl)
-  : ZoneHVACComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+  bool RefrigerationAirChiller::setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(
+    double maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature(
+      maximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature);
+  }
+
+  void RefrigerationAirChiller::resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
+  }
+
+  bool RefrigerationAirChiller::setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setCoilMaterialCorrectionFactor(coilMaterialCorrectionFactor);
+  }
+
+  void RefrigerationAirChiller::resetCoilMaterialCorrectionFactor() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetCoilMaterialCorrectionFactor();
+  }
+
+  bool RefrigerationAirChiller::setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRefrigerantCorrectionFactor(refrigerantCorrectionFactor);
+  }
+
+  void RefrigerationAirChiller::resetRefrigerantCorrectionFactor() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetRefrigerantCorrectionFactor();
+  }
+
+  // bool RefrigerationAirChiller::setCapacityCorrectionCurveType(std::string capacityCorrectionCurveType) {
+  //   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityCorrectionCurveType(capacityCorrectionCurveType);
+  // }
+
+  // void RefrigerationAirChiller::resetCapacityCorrectionCurveType() {
+  //   getImpl<detail::RefrigerationAirChiller_Impl>()->resetCapacityCorrectionCurveType();
+  // }
+
+  // bool RefrigerationAirChiller::setCapacityCorrectionCurve(const CurveLinear& curveLinear) {
+  //   return getImpl<detail::RefrigerationAirChiller_Impl>()->setCapacityCorrectionCurve(curveLinear);
+  // }
+
+  // void RefrigerationAirChiller::resetCapacityCorrectionCurve() {
+  //   getImpl<detail::RefrigerationAirChiller_Impl>()->resetCapacityCorrectionCurve();
+  // }
+
+  bool RefrigerationAirChiller::setSHR60CorrectionFactor(double sHR60CorrectionFactor) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setSHR60CorrectionFactor(sHR60CorrectionFactor);
+  }
+
+  void RefrigerationAirChiller::resetSHR60CorrectionFactor() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetSHR60CorrectionFactor();
+  }
+
+  bool RefrigerationAirChiller::setRatedTotalHeatingPower(double ratedTotalHeatingPower) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedTotalHeatingPower(ratedTotalHeatingPower);
+  }
+
+  bool RefrigerationAirChiller::setHeatingPowerSchedule(Schedule& schedule) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setHeatingPowerSchedule(schedule);
+  }
+
+  void RefrigerationAirChiller::resetHeatingPowerSchedule() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetHeatingPowerSchedule();
+  }
+
+  bool RefrigerationAirChiller::setFanSpeedControlType(std::string fanSpeedControlType) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setFanSpeedControlType(fanSpeedControlType);
+  }
+
+  void RefrigerationAirChiller::resetFanSpeedControlType() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetFanSpeedControlType();
+  }
+
+  bool RefrigerationAirChiller::setRatedFanPower(double ratedFanPower) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedFanPower(ratedFanPower);
+  }
+
+  void RefrigerationAirChiller::resetRatedFanPower() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetRatedFanPower();
+  }
+
+  bool RefrigerationAirChiller::setRatedAirFlow(double ratedAirFlow) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setRatedAirFlow(ratedAirFlow);
+  }
+
+  bool RefrigerationAirChiller::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setMinimumFanAirFlowRatio(minimumFanAirFlowRatio);
+  }
+
+  void RefrigerationAirChiller::resetMinimumFanAirFlowRatio() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetMinimumFanAirFlowRatio();
+  }
+
+  bool RefrigerationAirChiller::setDefrostType(std::string defrostType) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostType(defrostType);
+  }
+
+  void RefrigerationAirChiller::resetDefrostType() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostType();
+  }
+
+  bool RefrigerationAirChiller::setDefrostControlType(std::string defrostControlType) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostControlType(defrostControlType);
+  }
+
+  void RefrigerationAirChiller::resetDefrostControlType() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostControlType();
+  }
+
+  bool RefrigerationAirChiller::setDefrostSchedule(Schedule& schedule) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostSchedule(schedule);
+  }
+
+  bool RefrigerationAirChiller::setDefrostDripDownSchedule(Schedule& schedule) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostDripDownSchedule(schedule);
+  }
+
+  void RefrigerationAirChiller::resetDefrostDripDownSchedule() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostDripDownSchedule();
+  }
+
+  bool RefrigerationAirChiller::setDefrostPower(double defrostPower) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setDefrostPower(defrostPower);
+  }
+
+  void RefrigerationAirChiller::resetDefrostPower() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetDefrostPower();
+  }
+
+  bool RefrigerationAirChiller::setTemperatureTerminationDefrostFractiontoIce(double temperatureTerminationDefrostFractiontoIce) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setTemperatureTerminationDefrostFractiontoIce(temperatureTerminationDefrostFractiontoIce);
+  }
+
+  void RefrigerationAirChiller::resetTemperatureTerminationDefrostFractiontoIce() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetTemperatureTerminationDefrostFractiontoIce();
+  }
+
+  // bool RefrigerationAirChiller::setVerticalLocation(std::string verticalLocation) {
+  //   return getImpl<detail::RefrigerationAirChiller_Impl>()->setVerticalLocation(verticalLocation);
+  // }
+
+  // void RefrigerationAirChiller::resetVerticalLocation() {
+  //   getImpl<detail::RefrigerationAirChiller_Impl>()->resetVerticalLocation();
+  // }
+
+  bool RefrigerationAirChiller::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->setAverageRefrigerantChargeInventory(averageRefrigerantChargeInventory);
+  }
+
+  void RefrigerationAirChiller::resetAverageRefrigerantChargeInventory() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->resetAverageRefrigerantChargeInventory();
+  }
+
+  bool RefrigerationAirChiller::addToSystem(RefrigerationSystem& system) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->addToSystem(system);
+  }
+
+  void RefrigerationAirChiller::removeFromSystem() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromSystem();
+  }
+
+  bool RefrigerationAirChiller::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->addToSecondarySystem(secondarySystem);
+  }
+
+  void RefrigerationAirChiller::removeFromSecondarySystem() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromSecondarySystem();
+  }
+
+  bool RefrigerationAirChiller::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->addToCompressorRack(compressorRack);
+  }
+
+  void RefrigerationAirChiller::removeFromCompressorRack() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromCompressorRack();
+  }
+
+  /// @cond
+  RefrigerationAirChiller::RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl) : ZoneHVACComponent(std::move(impl)) {}
+  /// @endcond
+
+}  // namespace model
+}  // namespace openstudio

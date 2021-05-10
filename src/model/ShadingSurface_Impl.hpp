@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,138 +36,126 @@
 namespace openstudio {
 namespace model {
 
-class ShadingSurfaceGroup;
-class Schedule;
-class ShadingSurface;
-class DaylightingDeviceShelf;
+  class ShadingSurfaceGroup;
+  class Schedule;
+  class ShadingSurface;
+  class DaylightingDeviceShelf;
 
-namespace detail {
+  namespace detail {
 
-  /** ShadingSurface_Impl is a PlanarSurface_Impl that is the implementation class for ShadingSurface.*/
-  class MODEL_API ShadingSurface_Impl : public PlanarSurface_Impl {
+    /** ShadingSurface_Impl is a PlanarSurface_Impl that is the implementation class for ShadingSurface.*/
+    class MODEL_API ShadingSurface_Impl : public PlanarSurface_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      ShadingSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      ShadingSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      ShadingSurface_Impl(const ShadingSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~ShadingSurface_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    ShadingSurface_Impl(const IdfObject& idfObject,
-                        Model_Impl* model,
-                        bool keepHandle);
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    ShadingSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      /// set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    ShadingSurface_Impl(const ShadingSurface_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual ~ShadingSurface_Impl() {}
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      /// should subtract this surface from parent's gross area for net area
+      virtual bool subtractFromGrossArea() const override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      /// get the construction object and search distance
+      virtual boost::optional<std::pair<ConstructionBase, int>> constructionWithSearchDistance() const override;
 
-    /// set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      /// Returns true if the construction is not directly referenced by this surface .
+      virtual bool isConstructionDefaulted() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      /// set the construction object
+      virtual bool setConstruction(const ConstructionBase& construction) override;
 
-    virtual IddObjectType iddObjectType() const override;
+      /// Resets the construction object.
+      virtual void resetConstruction() override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      /// Returns the containing PlanarSurfaceGroup if available.
+      virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
 
-    /// should subtract this surface from parent's gross area for net area
-    virtual bool subtractFromGrossArea() const override;
+      /// Returns the containing Space if available.
+      virtual boost::optional<Space> space() const override;
 
-    /// get the construction object and search distance
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    /// Returns true if the construction is not directly referenced by this surface .
-    virtual bool isConstructionDefaulted() const override;
+      /// get the shading group
+      boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup() const;
 
-    /// set the construction object
-    virtual bool setConstruction(const ConstructionBase& construction) override;
+      // get the transmittance schedule
+      boost::optional<Schedule> transmittanceSchedule() const;
 
-    /// Resets the construction object.
-    virtual void resetConstruction() override;
+      boost::optional<double> numberofVertices() const;
 
-    /// Returns the containing PlanarSurfaceGroup if available.
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
+      bool isNumberofVerticesDefaulted() const;
 
-    /// Returns the containing Space if available.
-    virtual boost::optional<Space> space() const override;
+      bool isNumberofVerticesAutocalculated() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    /// get the shading group
-    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup() const;
+      /// set the exterior shading group
+      bool setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup);
 
-    // get the transmittance schedule
-    boost::optional<Schedule> transmittanceSchedule() const;
+      void resetShadingSurfaceGroup();
 
-    boost::optional<double> numberofVertices() const;
+      /// set the transmittance schedule
+      bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
 
-    bool isNumberofVerticesDefaulted() const;
+      /// reset the transmittance schedule
+      void resetTransmittanceSchedule();
 
-    bool isNumberofVerticesAutocalculated() const;
+      bool setNumberofVertices(boost::optional<double> numberofVertices);
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setNumberofVertices(double numberofVertices);
 
-    /// set the exterior shading group
-    bool setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup);
+      void resetNumberofVertices();
 
-    void resetShadingSurfaceGroup();
+      void autocalculateNumberofVertices();
 
-    /// set the transmittance schedule
-    bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
+      //@}
 
-    /// reset the transmittance schedule
-    void resetTransmittanceSchedule();
+      boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
-    bool setNumberofVertices(boost::optional<double> numberofVertices);
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ShadingSurface");
 
-    bool setNumberofVertices(double numberofVertices);
+      boost::optional<ModelObject> shadingSurfaceGroupAsModelObject() const;
+      boost::optional<ModelObject> transmittanceScheduleAsModelObject() const;
 
-    void resetNumberofVertices();
+      bool setShadingSurfaceGroupAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setTransmittanceScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    void autocalculateNumberofVertices();
+  }  // namespace detail
 
-    //@}
+}  // namespace model
+}  // namespace openstudio
 
-    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
-
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ShadingSurface");
-
-    boost::optional<ModelObject> shadingSurfaceGroupAsModelObject() const;
-    boost::optional<ModelObject> transmittanceScheduleAsModelObject() const;
-
-    bool setShadingSurfaceGroupAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setTransmittanceScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SHADINGSURFACE_IMPL_HPP
-
+#endif  // MODEL_SHADINGSURFACE_IMPL_HPP

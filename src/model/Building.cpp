@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,6 +69,7 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/geometry/Intersection.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
@@ -76,1380 +77,1319 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  Building_Impl::Building_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ParentObject_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == Building::iddObjectType());
-  }
-
-  Building_Impl::Building_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == Building::iddObjectType());
-  }
-
-  Building_Impl::Building_Impl(const Building_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {}
-
-  boost::optional<ParentObject> Building_Impl::parent() const
-  {
-    return boost::optional<ParentObject>(this->facility());
-  }
-
-  std::vector<ModelObject> Building_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    // meters
-    OutputMeterVector meters = this->meters();
-    result.insert(result.end(),meters.begin(),meters.end());
-
-    // building stories
-    BuildingStoryVector stories = this->buildingStories();
-    result.insert(result.end(),stories.begin(),stories.end());
-
-    // exterior shading groups
-    ShadingSurfaceGroupVector shadingSurfaceGroups = this->shadingSurfaceGroups();
-    result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
-
-    // thermal zones
-    ThermalZoneVector thermalZones = this->thermalZones();
-    result.insert(result.end(), thermalZones.begin(), thermalZones.end());
-
-    // spaces
-    SpaceVector spaces = this->spaces();
-    result.insert(result.end(), spaces.begin(), spaces.end());
-
-    // TODO: JM 2019-05-13: handle HVAC (#2449)
-    // AirLoopHVACs should be considered de facto part of the building
-    // PlantLoops may merit more attention:
-    // if a PlantLoop doesn't serve an AirLoopHVAC or a ThermalZone, should it be considered part of the Building?
-    // eg: a PlantLoop serving only a LoadProfile:Plant?
-
-    return result;
-  }
-
-  // TODO: this is far from perfect, currently this is just trying to address a known issue #3524
-  // Ideally all corner cases would be handled correctly, and HVAC too
-  std::vector<IdfObject> Building_Impl::remove() {
-
-    // A result vector, and a temporary vector to insert into the result one
-    std::vector<IdfObject> result;
-    std::vector<IdfObject> tmp;
-
-    // Spaces
-    for (auto& s: this->spaces()) {
-      tmp = s.remove();
-      result.insert(result.end(), tmp.begin(), tmp.end());
+    Building_Impl::Building_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : ParentObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == Building::iddObjectType());
     }
 
-    // thermal zones
-    for (auto& z: this->thermalZones()) {
-      tmp = z.remove();
-      result.insert(result.end(), tmp.begin(), tmp.end());
+    Building_Impl::Building_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == Building::iddObjectType());
     }
 
-    // exterior shading groups
-    for (auto& sg: this->shadingSurfaceGroups()) {
-      tmp = sg.remove();
-      result.insert(result.end(), tmp.begin(), tmp.end());
+    Building_Impl::Building_Impl(const Building_Impl& other, Model_Impl* model, bool keepHandle) : ParentObject_Impl(other, model, keepHandle) {}
 
+    boost::optional<ParentObject> Building_Impl::parent() const {
+      return boost::optional<ParentObject>(this->facility());
     }
 
-    // building stories
-    for (auto& bs: this->buildingStories()) {
-      tmp = bs.remove();
-      result.insert(result.end(), tmp.begin(), tmp.end());
+    std::vector<ModelObject> Building_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      // meters
+      OutputMeterVector meters = this->meters();
+      result.insert(result.end(), meters.begin(), meters.end());
+
+      // building stories
+      BuildingStoryVector stories = this->buildingStories();
+      result.insert(result.end(), stories.begin(), stories.end());
+
+      // exterior shading groups
+      ShadingSurfaceGroupVector shadingSurfaceGroups = this->shadingSurfaceGroups();
+      result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
+
+      // thermal zones
+      ThermalZoneVector thermalZones = this->thermalZones();
+      result.insert(result.end(), thermalZones.begin(), thermalZones.end());
+
+      // spaces
+      SpaceVector spaces = this->spaces();
+      result.insert(result.end(), spaces.begin(), spaces.end());
+
+      // TODO: JM 2019-05-13: handle HVAC (#2449)
+      // AirLoopHVACs should be considered de facto part of the building
+      // PlantLoops may merit more attention:
+      // if a PlantLoop doesn't serve an AirLoopHVAC or a ThermalZone, should it be considered part of the Building?
+      // eg: a PlantLoop serving only a LoadProfile:Plant?
+
+      return result;
     }
 
-    // meters
-    for (auto& m: this->meters()) {
-      tmp = m.remove();
+    // TODO: this is far from perfect, currently this is just trying to address a known issue #3524
+    // Ideally all corner cases would be handled correctly, and HVAC too
+    std::vector<IdfObject> Building_Impl::remove() {
+
+      // A result vector, and a temporary vector to insert into the result one
+      std::vector<IdfObject> result;
+      std::vector<IdfObject> tmp;
+
+      // Spaces
+      for (auto& s : this->spaces()) {
+        tmp = s.remove();
+        result.insert(result.end(), tmp.begin(), tmp.end());
+      }
+
+      // thermal zones
+      for (auto& z : this->thermalZones()) {
+        tmp = z.remove();
+        result.insert(result.end(), tmp.begin(), tmp.end());
+      }
+
+      // exterior shading groups
+      for (auto& sg : this->shadingSurfaceGroups()) {
+        tmp = sg.remove();
+        result.insert(result.end(), tmp.begin(), tmp.end());
+      }
+
+      // building stories
+      for (auto& bs : this->buildingStories()) {
+        tmp = bs.remove();
+        result.insert(result.end(), tmp.begin(), tmp.end());
+      }
+
+      // meters
+      for (auto& m : this->meters()) {
+        tmp = m.remove();
+        result.insert(result.end(), tmp.begin(), tmp.end());
+      }
+
+      tmp = ParentObject_Impl::remove();
       result.insert(result.end(), tmp.begin(), tmp.end());
+
+      return result;
     }
 
-    tmp = ParentObject_Impl::remove();
-    result.insert(result.end(), tmp.begin(), tmp.end());
+    ModelObject Building_Impl::clone(Model t_model) const {
+      boost::optional<Building> result;
 
-    return result;
-  }
+      if (t_model == model()) {
+        // Clone attempted into same Model - return the existing instance
+        result = getObject<ModelObject>().cast<Building>();
+      } else {
 
-  ModelObject Building_Impl::clone(Model t_model) const
-  {
-    boost::optional<Building> result;
-
-    if( t_model == model() ) {
-      // Clone attempted into same Model - return the existing instance
-      result = getObject<ModelObject>().cast<Building>();
-    } else {
-
-      auto otherBuilding = t_model.building();
-      if (otherBuilding){
-        otherBuilding->remove();
-      }
-
-      //auto buildings = t_model.getModelObjects<Building>();
-      //if( ! buildings.empty() ) {
-      //  // If Destination model already has a building then first remove it
-      //  buildings.front().remove();
-      //}
-
-      // Clone Building and child objects.
-
-      // This call clones only the building and it's resources
-      result = ModelObject_Impl::clone(t_model).cast<Building>();
-
-      // DLM: why did the ParentObject::clone not work?
-      // DLM: ParentObject::clone only preserves links between child and parent objects, it does not preserve links between levels of the hierarchy
-      // we could potentially add ThermalZone as a resource of Space (or vice versa or both) but I am not sure what the implications of that are
-
-      // Clone children since we are not relying on the implementation provided by ParentObject::clone
-
-      // Meter instances
-      auto t_meters = meters();
-      for( const auto & meter : t_meters ) {
-        meter.clone(t_model);
-      }
-
-      // BuildingStory instances
-      auto t_stories = buildingStories();
-      // Map of the source model story handle to the target model story "cloned" ModelObject
-      std::map<Handle,BuildingStory> m_storyMap;
-
-      for( const auto & story : t_stories ) {
-        auto clone = story.clone(t_model).cast<BuildingStory>();
-        m_storyMap.insert(std::pair<Handle,BuildingStory>(story.handle(),clone));
-      }
-
-      // ShadingSurfaceGroup
-      auto t_shadingSurfaceGroups = shadingSurfaceGroups();
-      for( const auto & surfaceGroup : t_shadingSurfaceGroups ) {
-        surfaceGroup.clone(t_model);
-      }
-
-      // ThermalZone instances
-      auto t_zones = thermalZones();
-      // Map of the source model zone handle to the target model zone "cloned" ModelObject
-      std::map<Handle,ThermalZone> m_zoneMap;
-
-      for( const auto & zone : t_zones ) {
-        auto clone = zone.clone(t_model).cast<ThermalZone>();
-        m_zoneMap.insert(std::pair<Handle,ThermalZone>(zone.handle(),clone));
-      }
-
-      // Space Instances
-      auto t_spaces = spaces();
-
-      for( const auto & space : t_spaces ) {
-        auto clone = space.clone(t_model).cast<Space>();
-
-        if( auto zone = space.thermalZone() ) {
-          auto zoneClone = m_zoneMap.at(zone->handle());
-          clone.setThermalZone(zoneClone);
+        auto otherBuilding = t_model.building();
+        if (otherBuilding) {
+          otherBuilding->remove();
         }
 
-        if( auto story = space.buildingStory() ) {
-          auto storyClone = m_storyMap.at(story->handle());
-          clone.setBuildingStory(storyClone);
+        //auto buildings = t_model.getModelObjects<Building>();
+        //if( ! buildings.empty() ) {
+        //  // If Destination model already has a building then first remove it
+        //  buildings.front().remove();
+        //}
+
+        // Clone Building and child objects.
+
+        // This call clones only the building and it's resources
+        result = ModelObject_Impl::clone(t_model).cast<Building>();
+
+        // DLM: why did the ParentObject::clone not work?
+        // DLM: ParentObject::clone only preserves links between child and parent objects, it does not preserve links between levels of the hierarchy
+        // we could potentially add ThermalZone as a resource of Space (or vice versa or both) but I am not sure what the implications of that are
+
+        // Clone children since we are not relying on the implementation provided by ParentObject::clone
+
+        // Meter instances
+        auto t_meters = meters();
+        for (const auto& meter : t_meters) {
+          meter.clone(t_model);
+        }
+
+        // BuildingStory instances
+        auto t_stories = buildingStories();
+        // Map of the source model story handle to the target model story "cloned" ModelObject
+        std::map<Handle, BuildingStory> m_storyMap;
+
+        for (const auto& story : t_stories) {
+          auto clone = story.clone(t_model).cast<BuildingStory>();
+          m_storyMap.insert(std::pair<Handle, BuildingStory>(story.handle(), clone));
+        }
+
+        // ShadingSurfaceGroup
+        auto t_shadingSurfaceGroups = shadingSurfaceGroups();
+        for (const auto& surfaceGroup : t_shadingSurfaceGroups) {
+          surfaceGroup.clone(t_model);
+        }
+
+        // ThermalZone instances
+        auto t_zones = thermalZones();
+        // Map of the source model zone handle to the target model zone "cloned" ModelObject
+        std::map<Handle, ThermalZone> m_zoneMap;
+
+        for (const auto& zone : t_zones) {
+          auto clone = zone.clone(t_model).cast<ThermalZone>();
+          m_zoneMap.insert(std::pair<Handle, ThermalZone>(zone.handle(), clone));
+        }
+
+        // Space Instances
+        auto t_spaces = spaces();
+
+        for (const auto& space : t_spaces) {
+          auto clone = space.clone(t_model).cast<Space>();
+
+          if (auto zone = space.thermalZone()) {
+            auto zoneClone = m_zoneMap.at(zone->handle());
+            clone.setThermalZone(zoneClone);
+          }
+
+          if (auto story = space.buildingStory()) {
+            auto storyClone = m_storyMap.at(story->handle());
+            clone.setBuildingStory(storyClone);
+          }
         }
       }
 
+      OS_ASSERT(result);
+      return result.get();
     }
 
-    OS_ASSERT(result);
-    return result.get();
-  }
-
-  bool Building_Impl::setParent(ParentObject& newParent)
-  {
-    if (newParent.optionalCast<Facility>()){
-      return true;
-    }
-    return false;
-  }
-
-  std::vector<IddObjectType> Building_Impl::allowableChildTypes() const
-  {
-    std::vector<IddObjectType> result;
-    result.push_back(IddObjectType::OS_Space);
-    result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
-    result.push_back(IddObjectType::OS_ThermalZone);
-    return result;
-  }
-
-  const std::vector<std::string>& Building_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType Building_Impl::iddObjectType() const {
-    return Building::iddObjectType();
-  }
-
-  double Building_Impl::northAxis() const {
-    boost::optional<double> value = getDouble(OS_BuildingFields::NorthAxis,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool Building_Impl::isNorthAxisDefaulted() const {
-    return isEmpty(OS_BuildingFields::NorthAxis);
-  }
-
-  boost::optional<double> Building_Impl::nominalFloortoFloorHeight() const {
-    boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoFloorHeight,true);
-    return value;
-  }
-
-
-  boost::optional<int> Building_Impl::standardsNumberOfStories() const
-  {
-    boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofStories, false);
-    return value;
-  }
-
-  boost::optional<int> Building_Impl::standardsNumberOfAboveGroundStories() const
-  {
-    boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofAboveGroundStories, false);
-    return value;
-  }
-
-  boost::optional<int> Building_Impl::standardsNumberOfLivingUnits() const
-  {
-    boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofLivingUnits, false);
-    return value;
-  }
-
-  boost::optional<double> Building_Impl::nominalFloortoCeilingHeight() const {
-    boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoCeilingHeight, true);
-    return value;
-  }
-
-
-  boost::optional<std::string> Building_Impl::standardsTemplate() const
-  {
-    return getString(OS_BuildingFields::StandardsTemplate, false, true);
-  }
-
-  std::vector<std::string> Building_Impl::suggestedStandardsTemplates() const
-  {
-
-    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
-
-    // Make a dummy model and a dummy space Type,
-    // and call suggestedStandardsTemplates from it, so we don't have to repeat code here
-    Model tempModel;
-    SpaceType tempSpaceType(tempModel);
-    std::vector<std::string> result = tempSpaceType.suggestedStandardsTemplates();
-
-    // include values from model
-    for( const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>() ){
-      if( boost::optional<std::string> otherTemplate = other.standardsTemplate() ) {
-        result.push_back(*otherTemplate);
+    bool Building_Impl::setParent(ParentObject& newParent) {
+      if (newParent.optionalCast<Facility>()) {
+        return true;
       }
+      return false;
     }
 
-    // remove standardsTemplate
-    IstringFind finder;
-    if( standardsTemplate ){
-      finder.addTarget(*standardsTemplate);
-    }
-    auto it = std::remove_if(result.begin(), result.end(), finder);
-    result.resize( std::distance(result.begin(),it) );
-
-    // sort
-    std::sort(result.begin(), result.end(), IstringCompare());
-
-    // make unique
-    // DLM: have to sort before calling unique, unique only works on consecutive elements
-    it = std::unique(result.begin(), result.end(), IstringEqual());
-    result.resize( std::distance(result.begin(),it) );
-
-    // add current to front
-    if( standardsTemplate ){
-      result.insert(result.begin(), *standardsTemplate);
+    std::vector<IddObjectType> Building_Impl::allowableChildTypes() const {
+      std::vector<IddObjectType> result;
+      result.push_back(IddObjectType::OS_Space);
+      result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
+      result.push_back(IddObjectType::OS_ThermalZone);
+      return result;
     }
 
-    return result;
-  }
+    const std::vector<std::string>& Building_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-  bool Building_Impl::setStandardsTemplate(const std::string& standardsTemplate)
-  {
-    bool result = setString(OS_BuildingFields::StandardsTemplate, standardsTemplate);
-    OS_ASSERT(result);
-    return result;
-  }
+    IddObjectType Building_Impl::iddObjectType() const {
+      return Building::iddObjectType();
+    }
 
-  void Building_Impl::resetStandardsTemplate()
-  {
-    bool test = setString(OS_BuildingFields::StandardsTemplate, "");
-    OS_ASSERT(test);
-  }
+    double Building_Impl::northAxis() const {
+      boost::optional<double> value = getDouble(OS_BuildingFields::NorthAxis, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<std::string> Building_Impl::standardsBuildingType() const
-  {
-    return getString(OS_BuildingFields::StandardsBuildingType, false, true);
-  }
+    bool Building_Impl::isNorthAxisDefaulted() const {
+      return isEmpty(OS_BuildingFields::NorthAxis);
+    }
 
-  std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const
-  {
-    // If standardsTemplate isn't set, return empty
-    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
-    if( !standardsTemplate ) {
-      return std::vector<std::string>();
-    } else {
+    boost::optional<double> Building_Impl::nominalFloortoFloorHeight() const {
+      boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoFloorHeight, true);
+      return value;
+    }
 
-      boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+    boost::optional<int> Building_Impl::standardsNumberOfStories() const {
+      boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofStories, false);
+      return value;
+    }
 
-      // Make a dummy Model and a dummy space Type,
+    boost::optional<int> Building_Impl::standardsNumberOfAboveGroundStories() const {
+      boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofAboveGroundStories, false);
+      return value;
+    }
+
+    boost::optional<int> Building_Impl::standardsNumberOfLivingUnits() const {
+      boost::optional<int> value = getInt(OS_BuildingFields::StandardsNumberofLivingUnits, false);
+      return value;
+    }
+
+    boost::optional<double> Building_Impl::nominalFloortoCeilingHeight() const {
+      boost::optional<double> value = getDouble(OS_BuildingFields::NominalFloortoCeilingHeight, true);
+      return value;
+    }
+
+    boost::optional<std::string> Building_Impl::standardsTemplate() const {
+      return getString(OS_BuildingFields::StandardsTemplate, false, true);
+    }
+
+    std::vector<std::string> Building_Impl::suggestedStandardsTemplates() const {
+
+      boost::optional<std::string> standardsTemplate = this->standardsTemplate();
+
+      // Make a dummy model and a dummy space Type,
       // and call suggestedStandardsTemplates from it, so we don't have to repeat code here
       Model tempModel;
       SpaceType tempSpaceType(tempModel);
-      // We set the standards template to the value
-      tempSpaceType.setStandardsTemplate( standardsTemplate.get() );
-      std::vector<std::string> result = tempSpaceType.suggestedStandardsBuildingTypes();
+      std::vector<std::string> result = tempSpaceType.suggestedStandardsTemplates();
 
       // include values from model
-      for( const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>() ){
-        if( boost::optional<std::string> otherBuildingType = other.standardsBuildingType() ){
-          result.push_back(*otherBuildingType);
+      for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()) {
+        if (boost::optional<std::string> otherTemplate = other.standardsTemplate()) {
+          result.push_back(*otherTemplate);
         }
       }
 
-      // remove standardsBuildingType
+      // remove standardsTemplate
       IstringFind finder;
-      if( standardsBuildingType ){
-        finder.addTarget(*standardsBuildingType);
+      if (standardsTemplate) {
+        finder.addTarget(*standardsTemplate);
       }
       auto it = std::remove_if(result.begin(), result.end(), finder);
-      result.resize( std::distance(result.begin(),it) );
+      result.resize(std::distance(result.begin(), it));
 
-      // sort, unique only works on consecutive elements
+      // sort
       std::sort(result.begin(), result.end(), IstringCompare());
+
       // make unique
+      // DLM: have to sort before calling unique, unique only works on consecutive elements
       it = std::unique(result.begin(), result.end(), IstringEqual());
-      result.resize( std::distance(result.begin(),it) );
+      result.resize(std::distance(result.begin(), it));
 
       // add current to front
-      if( standardsBuildingType ){
-        result.insert(result.begin(), *standardsBuildingType);
+      if (standardsTemplate) {
+        result.insert(result.begin(), *standardsTemplate);
       }
+
       return result;
     }
-  }
 
-  bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
-  {
-    bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void Building_Impl::resetStandardsBuildingType()
-  {
-    bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
-    OS_ASSERT(test);
-  }
-
-  bool Building_Impl::relocatable() const
-  {
-    boost::optional<std::string> value = getString(OS_BuildingFields::Relocatable, true, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "True");
-  }
-
-  bool Building_Impl::isRelocatableDefaulted() const {
-    return isEmpty(OS_BuildingFields::Relocatable);
-  }
-
-  bool Building_Impl::setNorthAxis(double northAxis) {
-    bool result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void Building_Impl::resetNorthAxis() {
-    bool result = setString(OS_BuildingFields::NorthAxis, "");
-    OS_ASSERT(result);
-  }
-
-  bool Building_Impl::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
-    bool result = setDouble(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
-    return result;
-  }
-
-  void Building_Impl::resetNominalFloortoFloorHeight() {
-    bool result = setString(OS_BuildingFields::NominalFloortoFloorHeight, "");
-    OS_ASSERT(result);
-  }
-
-  bool Building_Impl::setStandardsNumberOfStories(int value)
-  {
-    bool test = setInt(OS_BuildingFields::StandardsNumberofStories, value);
-    return test;
-  }
-
-  void Building_Impl::resetStandardsNumberOfStories()
-  {
-    bool test = setString(OS_BuildingFields::StandardsNumberofStories, "");
-    OS_ASSERT(test);
-  }
-
-  bool Building_Impl::setStandardsNumberOfAboveGroundStories(int value)
-  {
-    bool test = setInt(OS_BuildingFields::StandardsNumberofAboveGroundStories, value);
-    return test;
-  }
-
-  void Building_Impl::resetStandardsNumberOfAboveGroundStories()
-  {
-    bool test = setString(OS_BuildingFields::StandardsNumberofAboveGroundStories, "");
-    OS_ASSERT(test);
-  }
-
-  bool Building_Impl::setStandardsNumberOfLivingUnits(int value)
-  {
-    bool test = setInt(OS_BuildingFields::StandardsNumberofLivingUnits, value);
-    return test;
-  }
-
-  void Building_Impl::resetStandardsNumberOfLivingUnits()
-  {
-    bool test = setString(OS_BuildingFields::StandardsNumberofLivingUnits, "");
-    OS_ASSERT(test);
-  }
-
-  bool Building_Impl::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
-    bool result = setDouble(OS_BuildingFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
-    return result;
-  }
-
-  void Building_Impl::resetNominalFloortoCeilingHeight() {
-    bool result = setString(OS_BuildingFields::NominalFloortoCeilingHeight, "");
-    OS_ASSERT(result);
-  }
-
-  bool Building_Impl::setRelocatable(bool relocatable)
-  {
-    bool result = false;
-    if (relocatable) {
-      result = setString(OS_BuildingFields::Relocatable, "True");
+    bool Building_Impl::setStandardsTemplate(const std::string& standardsTemplate) {
+      bool result = setString(OS_BuildingFields::StandardsTemplate, standardsTemplate);
+      OS_ASSERT(result);
+      return result;
     }
-    else {
-      result = setString(OS_BuildingFields::Relocatable, "False");
+
+    void Building_Impl::resetStandardsTemplate() {
+      bool test = setString(OS_BuildingFields::StandardsTemplate, "");
+      OS_ASSERT(test);
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void Building_Impl::resetRelocatable()
-  {
-    bool result = setString(OS_BuildingFields::Relocatable, "");
-    OS_ASSERT(result);
-  }
+    boost::optional<std::string> Building_Impl::standardsBuildingType() const {
+      return getString(OS_BuildingFields::StandardsBuildingType, false, true);
+    }
 
-  boost::optional<SpaceType> Building_Impl::spaceType() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_BuildingFields::SpaceTypeName);
-  }
+    std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const {
+      // If standardsTemplate isn't set, return empty
+      boost::optional<std::string> standardsTemplate = this->standardsTemplate();
+      if (!standardsTemplate) {
+        return std::vector<std::string>();
+      } else {
 
-  bool Building_Impl::setSpaceType(const SpaceType& spaceType)
-  {
-    return setPointer(OS_BuildingFields::SpaceTypeName, spaceType.handle());
-  }
+        boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
-  void Building_Impl::resetSpaceType()
-  {
-    bool test = setString(OS_BuildingFields::SpaceTypeName, "");
-    OS_ASSERT(test);
-  }
+        // Make a dummy Model and a dummy space Type,
+        // and call suggestedStandardsTemplates from it, so we don't have to repeat code here
+        Model tempModel;
+        SpaceType tempSpaceType(tempModel);
+        // We set the standards template to the value
+        tempSpaceType.setStandardsTemplate(standardsTemplate.get());
+        std::vector<std::string> result = tempSpaceType.suggestedStandardsBuildingTypes();
 
-  boost::optional<DefaultConstructionSet> Building_Impl::defaultConstructionSet() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<DefaultConstructionSet>(OS_BuildingFields::DefaultConstructionSetName);
-  }
+        // include values from model
+        for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()) {
+          if (boost::optional<std::string> otherBuildingType = other.standardsBuildingType()) {
+            result.push_back(*otherBuildingType);
+          }
+        }
 
-  bool Building_Impl::setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet)
-  {
-    return setPointer(OS_BuildingFields::DefaultConstructionSetName, defaultConstructionSet.handle());
-  }
+        // remove standardsBuildingType
+        IstringFind finder;
+        if (standardsBuildingType) {
+          finder.addTarget(*standardsBuildingType);
+        }
+        auto it = std::remove_if(result.begin(), result.end(), finder);
+        result.resize(std::distance(result.begin(), it));
 
-  void Building_Impl::resetDefaultConstructionSet()
-  {
-    setString(OS_BuildingFields::DefaultConstructionSetName, "");
-  }
+        // sort, unique only works on consecutive elements
+        std::sort(result.begin(), result.end(), IstringCompare());
+        // make unique
+        it = std::unique(result.begin(), result.end(), IstringEqual());
+        result.resize(std::distance(result.begin(), it));
 
-  boost::optional<DefaultScheduleSet> Building_Impl::defaultScheduleSet() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_BuildingFields::DefaultScheduleSetName);
-  }
-
-  boost::optional<Schedule> Building_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const
-  {
-    boost::optional<Schedule> result;
-    boost::optional<DefaultScheduleSet> defaultScheduleSet;
-    boost::optional<SpaceType> spaceType;
-
-    // first check this object (building)
-    defaultScheduleSet = this->defaultScheduleSet();
-    if (defaultScheduleSet){
-      result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
-      if (result){
+        // add current to front
+        if (standardsBuildingType) {
+          result.insert(result.begin(), *standardsBuildingType);
+        }
         return result;
       }
     }
 
+    bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType) {
+      bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
+      OS_ASSERT(result);
+      return result;
+    }
 
-    // then check building's space type
-    if (boost::optional<SpaceType> spaceType = this->spaceType()) {
-      defaultScheduleSet = spaceType->defaultScheduleSet();
-      if (defaultScheduleSet){
+    void Building_Impl::resetStandardsBuildingType() {
+      bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
+      OS_ASSERT(test);
+    }
+
+    bool Building_Impl::relocatable() const {
+      boost::optional<std::string> value = getString(OS_BuildingFields::Relocatable, true, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "True");
+    }
+
+    bool Building_Impl::isRelocatableDefaulted() const {
+      return isEmpty(OS_BuildingFields::Relocatable);
+    }
+
+    bool Building_Impl::setNorthAxis(double northAxis) {
+      bool result = setDouble(OS_BuildingFields::NorthAxis, northAxis);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void Building_Impl::resetNorthAxis() {
+      bool result = setString(OS_BuildingFields::NorthAxis, "");
+      OS_ASSERT(result);
+    }
+
+    bool Building_Impl::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
+      bool result = setDouble(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
+      return result;
+    }
+
+    void Building_Impl::resetNominalFloortoFloorHeight() {
+      bool result = setString(OS_BuildingFields::NominalFloortoFloorHeight, "");
+      OS_ASSERT(result);
+    }
+
+    bool Building_Impl::setStandardsNumberOfStories(int value) {
+      bool test = setInt(OS_BuildingFields::StandardsNumberofStories, value);
+      return test;
+    }
+
+    void Building_Impl::resetStandardsNumberOfStories() {
+      bool test = setString(OS_BuildingFields::StandardsNumberofStories, "");
+      OS_ASSERT(test);
+    }
+
+    bool Building_Impl::setStandardsNumberOfAboveGroundStories(int value) {
+      bool test = setInt(OS_BuildingFields::StandardsNumberofAboveGroundStories, value);
+      return test;
+    }
+
+    void Building_Impl::resetStandardsNumberOfAboveGroundStories() {
+      bool test = setString(OS_BuildingFields::StandardsNumberofAboveGroundStories, "");
+      OS_ASSERT(test);
+    }
+
+    bool Building_Impl::setStandardsNumberOfLivingUnits(int value) {
+      bool test = setInt(OS_BuildingFields::StandardsNumberofLivingUnits, value);
+      return test;
+    }
+
+    void Building_Impl::resetStandardsNumberOfLivingUnits() {
+      bool test = setString(OS_BuildingFields::StandardsNumberofLivingUnits, "");
+      OS_ASSERT(test);
+    }
+
+    bool Building_Impl::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
+      bool result = setDouble(OS_BuildingFields::NominalFloortoCeilingHeight, nominalFloortoCeilingHeight);
+      return result;
+    }
+
+    void Building_Impl::resetNominalFloortoCeilingHeight() {
+      bool result = setString(OS_BuildingFields::NominalFloortoCeilingHeight, "");
+      OS_ASSERT(result);
+    }
+
+    bool Building_Impl::setRelocatable(bool relocatable) {
+      bool result = false;
+      if (relocatable) {
+        result = setString(OS_BuildingFields::Relocatable, "True");
+      } else {
+        result = setString(OS_BuildingFields::Relocatable, "False");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void Building_Impl::resetRelocatable() {
+      bool result = setString(OS_BuildingFields::Relocatable, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<SpaceType> Building_Impl::spaceType() const {
+      return getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_BuildingFields::SpaceTypeName);
+    }
+
+    bool Building_Impl::setSpaceType(const SpaceType& spaceType) {
+      return setPointer(OS_BuildingFields::SpaceTypeName, spaceType.handle());
+    }
+
+    void Building_Impl::resetSpaceType() {
+      bool test = setString(OS_BuildingFields::SpaceTypeName, "");
+      OS_ASSERT(test);
+    }
+
+    boost::optional<DefaultConstructionSet> Building_Impl::defaultConstructionSet() const {
+      return getObject<ModelObject>().getModelObjectTarget<DefaultConstructionSet>(OS_BuildingFields::DefaultConstructionSetName);
+    }
+
+    bool Building_Impl::setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet) {
+      return setPointer(OS_BuildingFields::DefaultConstructionSetName, defaultConstructionSet.handle());
+    }
+
+    void Building_Impl::resetDefaultConstructionSet() {
+      setString(OS_BuildingFields::DefaultConstructionSetName, "");
+    }
+
+    boost::optional<DefaultScheduleSet> Building_Impl::defaultScheduleSet() const {
+      return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_BuildingFields::DefaultScheduleSetName);
+    }
+
+    boost::optional<Schedule> Building_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+      boost::optional<Schedule> result;
+      boost::optional<DefaultScheduleSet> defaultScheduleSet;
+      boost::optional<SpaceType> spaceType;
+
+      // first check this object (building)
+      defaultScheduleSet = this->defaultScheduleSet();
+      if (defaultScheduleSet) {
         result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
-        if (result){
+        if (result) {
           return result;
         }
       }
-    }
 
-    return boost::none;
-  }
-
-  bool Building_Impl::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
-  {
-    return setPointer(OS_BuildingFields::DefaultScheduleSetName, defaultScheduleSet.handle());
-  }
-
-  void Building_Impl::resetDefaultScheduleSet()
-  {
-    setString(OS_BuildingFields::DefaultScheduleSetName, "");
-  }
-
-  OutputMeterVector Building_Impl::meters() const
-  {
-    OutputMeterVector result;
-    OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
-    for (const OutputMeter& meter : meters){
-      if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())){
-        result.push_back(meter);
-      }
-    }
-    return result;
-  }
-
-  BuildingStoryVector Building_Impl::buildingStories() const
-  {
-    // all Building Stories in workspace implicitly belong to building
-    return this->model().getConcreteModelObjects<BuildingStory>();
-  }
-
-  OptionalFacility Building_Impl::facility() const
-  {
-    return this->model().getOptionalUniqueModelObject<Facility>();
-  }
-
-  std::vector<Space> Building_Impl::spaces() const
-  {
-    // all spaces in workspace implicitly belong to building
-    return this->model().getConcreteModelObjects<Space>();
-  }
-
-  ShadingSurfaceGroupVector Building_Impl::shadingSurfaceGroups() const
-  {
-    ShadingSurfaceGroupVector result;
-    for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()){
-      if (istringEqual(shadingGroup.shadingSurfaceType(), "Building")){
-        result.push_back(shadingGroup);
-      }
-    }
-    return result;
-  }
-
-  std::vector<ThermalZone> Building_Impl::thermalZones() const
-  {
-    // all thermal zones in workspace implicitly belong to building
-    return this->model().getConcreteModelObjects<ThermalZone>();
-  }
-
-  std::vector<Surface> Building_Impl::exteriorWalls() const {
-    SurfaceVector result;
-    SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
-    for (const Surface& candidate : candidates) {
-      std::string surfaceType = candidate.surfaceType();
-      std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
-      if (openstudio::istringEqual(surfaceType, "Wall") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
-        result.push_back(candidate);
-      }
-    }
-    return result;
-  }
-
-  std::vector<Surface> Building_Impl::roofs() const {
-    SurfaceVector result;
-    SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
-    for (const Surface& candidate : candidates) {
-      std::string surfaceType = candidate.surfaceType();
-      std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
-      if (openstudio::istringEqual(surfaceType, "RoofCeiling") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
-        result.push_back(candidate);
-      }
-    }
-    return result;
-  }
-
-  double Building_Impl::floorArea() const
-  {
-    double result = 0;
-    for (const Space& space : spaces()){
-      bool partofTotalFloorArea = space.partofTotalFloorArea();
-      if (partofTotalFloorArea) {
-        result += space.multiplier() * space.floorArea();
-      }
-    }
-    return result;
-  }
-
-  boost::optional<double> Building_Impl::conditionedFloorArea() const
-  {
-    boost::optional<double> result;
-
-    for (const ThermalZone& thermalZone : thermalZones()){
-      boost::optional<std::string> isConditioned = thermalZone.isConditioned();
-
-      if (isConditioned) {
-
-        if (!result){
-          result = 0;
+      // then check building's space type
+      if (boost::optional<SpaceType> spaceType = this->spaceType()) {
+        defaultScheduleSet = spaceType->defaultScheduleSet();
+        if (defaultScheduleSet) {
+          result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+          if (result) {
+            return result;
+          }
         }
+      }
 
-        if (istringEqual("Yes", *isConditioned)){
-          for (const Space& space : thermalZone.spaces()){
-            bool partofTotalFloorArea = space.partofTotalFloorArea();
-            if (partofTotalFloorArea) {
-              result = *result + space.multiplier() * space.floorArea();
+      return boost::none;
+    }
+
+    bool Building_Impl::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet) {
+      return setPointer(OS_BuildingFields::DefaultScheduleSetName, defaultScheduleSet.handle());
+    }
+
+    void Building_Impl::resetDefaultScheduleSet() {
+      setString(OS_BuildingFields::DefaultScheduleSetName, "");
+    }
+
+    OutputMeterVector Building_Impl::meters() const {
+      OutputMeterVector result;
+      OutputMeterVector meters = this->model().getConcreteModelObjects<OutputMeter>();
+      for (const OutputMeter& meter : meters) {
+        if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())) {
+          result.push_back(meter);
+        }
+      }
+      return result;
+    }
+
+    BuildingStoryVector Building_Impl::buildingStories() const {
+      // all Building Stories in workspace implicitly belong to building
+      return this->model().getConcreteModelObjects<BuildingStory>();
+    }
+
+    OptionalFacility Building_Impl::facility() const {
+      return this->model().getOptionalUniqueModelObject<Facility>();
+    }
+
+    std::vector<Space> Building_Impl::spaces() const {
+      // all spaces in workspace implicitly belong to building
+      return this->model().getConcreteModelObjects<Space>();
+    }
+
+    ShadingSurfaceGroupVector Building_Impl::shadingSurfaceGroups() const {
+      ShadingSurfaceGroupVector result;
+      for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()) {
+        if (istringEqual(shadingGroup.shadingSurfaceType(), "Building")) {
+          result.push_back(shadingGroup);
+        }
+      }
+      return result;
+    }
+
+    std::vector<ThermalZone> Building_Impl::thermalZones() const {
+      // all thermal zones in workspace implicitly belong to building
+      return this->model().getConcreteModelObjects<ThermalZone>();
+    }
+
+    std::vector<Surface> Building_Impl::exteriorWalls() const {
+      SurfaceVector result;
+      SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
+      for (const Surface& candidate : candidates) {
+        std::string surfaceType = candidate.surfaceType();
+        std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
+        if (openstudio::istringEqual(surfaceType, "Wall") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
+          result.push_back(candidate);
+        }
+      }
+      return result;
+    }
+
+    std::vector<Surface> Building_Impl::roofs() const {
+      SurfaceVector result;
+      SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
+      for (const Surface& candidate : candidates) {
+        std::string surfaceType = candidate.surfaceType();
+        std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
+        if (openstudio::istringEqual(surfaceType, "RoofCeiling") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
+          result.push_back(candidate);
+        }
+      }
+      return result;
+    }
+
+    double Building_Impl::floorArea() const {
+      double result = 0;
+      for (const Space& space : spaces()) {
+        bool partofTotalFloorArea = space.partofTotalFloorArea();
+        if (partofTotalFloorArea) {
+          result += space.multiplier() * space.floorArea();
+        }
+      }
+      return result;
+    }
+
+    boost::optional<double> Building_Impl::conditionedFloorArea() const {
+      boost::optional<double> result;
+
+      for (const ThermalZone& thermalZone : thermalZones()) {
+        boost::optional<std::string> isConditioned = thermalZone.isConditioned();
+
+        if (isConditioned) {
+
+          if (!result) {
+            result = 0;
+          }
+
+          if (istringEqual("Yes", *isConditioned)) {
+            for (const Space& space : thermalZone.spaces()) {
+              bool partofTotalFloorArea = space.partofTotalFloorArea();
+              if (partofTotalFloorArea) {
+                result = *result + space.multiplier() * space.floorArea();
+              }
             }
           }
         }
       }
+
+      return result;
     }
 
-    return result;
-  }
-
-  double Building_Impl::exteriorSurfaceArea() const {
-    double result(0.0);
-    for (const Surface& surface : model().getConcreteModelObjects<Surface>()) {
-      OptionalSpace space = surface.space();
-      std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
-      if (space && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
-        result += surface.grossArea() * space->multiplier();
+    double Building_Impl::exteriorSurfaceArea() const {
+      double result(0.0);
+      for (const Surface& surface : model().getConcreteModelObjects<Surface>()) {
+        OptionalSpace space = surface.space();
+        std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
+        if (space && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
+          result += surface.grossArea() * space->multiplier();
+        }
       }
+      return result;
     }
-    return result;
-  }
 
-  double Building_Impl::exteriorWallArea() const {
-    double result(0.0);
-    for (const Surface& exteriorWall : exteriorWalls()) {
-      if (OptionalSpace space = exteriorWall.space()) {
-        result += exteriorWall.grossArea() * space->multiplier();
+    double Building_Impl::exteriorWallArea() const {
+      double result(0.0);
+      for (const Surface& exteriorWall : exteriorWalls()) {
+        if (OptionalSpace space = exteriorWall.space()) {
+          result += exteriorWall.grossArea() * space->multiplier();
+        }
       }
+      return result;
     }
-    return result;
-  }
 
-  double Building_Impl::airVolume() const {
-    double result(0.0);
-    for (const Space& space : spaces()) {
-      result += space.volume() * space.multiplier();
+    double Building_Impl::airVolume() const {
+      double result(0.0);
+      for (const Space& space : spaces()) {
+        result += space.volume() * space.multiplier();
+      }
+      return result;
     }
-    return result;
-  }
 
-  double Building_Impl::numberOfPeople() const {
-    double result(0.0);
-    for (const Space& space : spaces()) {
-      result += space.numberOfPeople() * space.multiplier();
+    double Building_Impl::numberOfPeople() const {
+      double result(0.0);
+      for (const Space& space : spaces()) {
+        result += space.numberOfPeople() * space.multiplier();
+      }
+      return result;
     }
-    return result;
-  }
 
-  double Building_Impl::peoplePerFloorArea() const {
-    double area = floorArea();
-    double np = numberOfPeople();
-    if (equal(area,0.0)) {
-      if (equal(np,0.0)) {
+    double Building_Impl::peoplePerFloorArea() const {
+      double area = floorArea();
+      double np = numberOfPeople();
+      if (equal(area, 0.0)) {
+        if (equal(np, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].peoplePerFloorArea();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return np / area;
+    }
+
+    double Building_Impl::floorAreaPerPerson() const {
+      double area = floorArea();
+      double np = numberOfPeople();
+      if (equal(np, 0.0)) {
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return area / np;
+    }
+
+    double Building_Impl::lightingPower() const {
+      double result(0.0);
+      for (const Space& space : spaces()) {
+        result += space.multiplier() * space.lightingPower();
+      }
+      return result;
+    }
+
+    double Building_Impl::lightingPowerPerFloorArea() const {
+      double area = floorArea();
+      double lp = lightingPower();
+      if (equal(area, 0.0)) {
+        if (equal(lp, 0.0)) {
+          return 0.0;
+        } else if (spaces().size() == 1u) {
+          return spaces()[0].lightingPowerPerFloorArea();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return lp / area;
+    }
+
+    double Building_Impl::lightingPowerPerPerson() const {
+      double np = numberOfPeople();
+      double lp = lightingPower();
+      if (equal(np, 0.0)) {
+        if (equal(lp, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].lightingPowerPerPerson();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return lp / np;
+    }
+
+    double Building_Impl::electricEquipmentPower() const {
+      double result(0.0);
+      for (const Space& space : spaces()) {
+        result += space.multiplier() * space.electricEquipmentPower();
+      }
+      return result;
+    }
+
+    double Building_Impl::electricEquipmentPowerPerFloorArea() const {
+      double area = floorArea();
+      double ep = electricEquipmentPower();
+      if (equal(area, 0.0)) {
+        if (equal(ep, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].electricEquipmentPowerPerFloorArea();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return ep / area;
+    }
+
+    double Building_Impl::electricEquipmentPowerPerPerson() const {
+      double np = numberOfPeople();
+      double ep = electricEquipmentPower();
+      if (equal(np, 0.0)) {
+        if (equal(ep, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].electricEquipmentPowerPerPerson();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return ep / np;
+    }
+
+    double Building_Impl::gasEquipmentPower() const {
+      double result(0.0);
+      for (const Space& space : spaces()) {
+        result += space.multiplier() * space.gasEquipmentPower();
+      }
+      return result;
+    }
+
+    double Building_Impl::gasEquipmentPowerPerFloorArea() const {
+      double area = floorArea();
+      double ep = gasEquipmentPower();
+      if (equal(area, 0.0)) {
+        if (equal(ep, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].gasEquipmentPowerPerFloorArea();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return ep / area;
+    }
+
+    double Building_Impl::gasEquipmentPowerPerPerson() const {
+      double np = numberOfPeople();
+      double ep = gasEquipmentPower();
+      if (equal(np, 0.0)) {
+        if (equal(ep, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].gasEquipmentPowerPerPerson();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return ep / np;
+    }
+
+    double Building_Impl::infiltrationDesignFlowRate() const {
+      double result(0.0);
+      for (const Space& space : spaces()) {
+        result += space.multiplier() * space.infiltrationDesignFlowRate();
+      }
+      return result;
+    }
+
+    double Building_Impl::infiltrationDesignFlowPerSpaceFloorArea() const {
+      double area = floorArea();
+      double idfr = infiltrationDesignFlowRate();
+      if (equal(area, 0.0)) {
+        if (equal(idfr, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].infiltrationDesignFlowPerSpaceFloorArea();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return idfr / area;
+    }
+
+    double Building_Impl::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+      double area = exteriorSurfaceArea();
+      double idfr = infiltrationDesignFlowRate();
+      if (equal(area, 0.0)) {
+        if (equal(idfr, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].infiltrationDesignFlowPerExteriorSurfaceArea();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return idfr / area;
+    }
+
+    double Building_Impl::infiltrationDesignFlowPerExteriorWallArea() const {
+      double area = exteriorWallArea();
+      double idfr = infiltrationDesignFlowRate();
+      if (equal(area, 0.0)) {
+        if (equal(idfr, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].infiltrationDesignFlowPerExteriorWallArea();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return idfr / area;
+    }
+
+    double Building_Impl::infiltrationDesignAirChangesPerHour() const {
+      double volume = airVolume();
+      double idfr = infiltrationDesignFlowRate();
+      if (equal(volume, 0.0)) {
+        if (equal(idfr, 0.0)) {
+          return 0.0;
+        }
+        if (spaces().size() == 1u) {
+          return spaces()[0].infiltrationDesignAirChangesPerHour();
+        }
+        LOG_AND_THROW("Calculation would require division by 0.");
+      }
+      return (idfr / volume) * 3600.0;
+    }
+
+    Transformation Building_Impl::transformation() const {
+      // rotate negative amount around the z axis, EnergyPlus defines rotation clockwise
+      return Transformation::rotation(Vector3d(0, 0, 1), -degToRad(this->northAxis()));
+    }
+
+    double Building_Impl::exteriorPerimeter() {
+
+      Point3dVectorVector polygons;
+
+      for (const auto& space : model().getConcreteModelObjects<Space>()) {
+        Transformation spaceTransformation = space.transformation();
+        for (const auto& surface : space.surfaces()) {
+          if (surface.outsideBoundaryCondition() == "Ground" || surface.surfaceType() == "Floor") {
+            Point3dVector points = spaceTransformation * surface.vertices();
+            if (!points.empty() && points[0].z() == 0.0) {
+              polygons.push_back(points);
+            }
+          }
+        }
+      }
+
+      auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
+      if (result2.size() == 1) {
+        return result2[0].perimeter();
+      } else {
         return 0.0;
       }
-      if (spaces().size() == 1u) {
-        return spaces()[0].peoplePerFloorArea();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
     }
-    return np / area;
-  }
 
-  double Building_Impl::floorAreaPerPerson() const {
-    double area = floorArea();
-    double np = numberOfPeople();
-    if (equal(np,0.0)) {
-      LOG_AND_THROW("Calculation would require division by 0.");
+    std::vector<std::vector<Point3d>> Building_Impl::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth,
+                                                                             double desiredHeight) const {
+      return openstudio::model::generateSkylightPattern(this->spaces(), 0.0, skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
     }
-    return area / np;
-  }
 
-  double Building_Impl::lightingPower() const {
-    double result(0.0);
-    for (const Space& space : spaces()){
-      result += space.multiplier() * space.lightingPower();
-    }
-    return result;
-  }
-
-  double Building_Impl::lightingPowerPerFloorArea() const {
-    double area = floorArea();
-    double lp = lightingPower();
-    if (equal(area,0.0)) {
-      if (equal(lp,0.0)) {
-        return 0.0;
-      }
-      else if (spaces().size() == 1u) {
-        return spaces()[0].lightingPowerPerFloorArea();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return lp / area;
-  }
-
-  double Building_Impl::lightingPowerPerPerson() const {
-    double np = numberOfPeople();
-    double lp = lightingPower();
-    if (equal(np,0.0)) {
-      if (equal(lp,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].lightingPowerPerPerson();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return lp / np;
-  }
-
-  double Building_Impl::electricEquipmentPower() const {
-    double result(0.0);
-    for (const Space& space : spaces()){
-      result += space.multiplier() * space.electricEquipmentPower();
-    }
-    return result;
-  }
-
-  double Building_Impl::electricEquipmentPowerPerFloorArea() const {
-    double area = floorArea();
-    double ep = electricEquipmentPower();
-    if (equal(area,0.0)) {
-      if (equal(ep,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].electricEquipmentPowerPerFloorArea();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return ep / area;
-  }
-
-  double Building_Impl::electricEquipmentPowerPerPerson() const {
-    double np = numberOfPeople();
-    double ep = electricEquipmentPower();
-    if (equal(np,0.0)) {
-      if (equal(ep,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].electricEquipmentPowerPerPerson();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return ep / np;
-  }
-
-  double Building_Impl::gasEquipmentPower() const {
-    double result(0.0);
-    for (const Space& space : spaces()){
-      result += space.multiplier() * space.gasEquipmentPower();
-    }
-    return result;
-  }
-
-  double Building_Impl::gasEquipmentPowerPerFloorArea() const {
-    double area = floorArea();
-    double ep = gasEquipmentPower();
-    if (equal(area,0.0)) {
-      if (equal(ep,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].gasEquipmentPowerPerFloorArea();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return ep / area;
-  }
-
-  double Building_Impl::gasEquipmentPowerPerPerson() const {
-    double np = numberOfPeople();
-    double ep = gasEquipmentPower();
-    if (equal(np,0.0)) {
-      if (equal(ep,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].gasEquipmentPowerPerPerson();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return ep / np;
-  }
-
-  double Building_Impl::infiltrationDesignFlowRate() const {
-    double result(0.0);
-    for (const Space& space : spaces()){
-      result += space.multiplier() * space.infiltrationDesignFlowRate();
-    }
-    return result;
-  }
-
-  double Building_Impl::infiltrationDesignFlowPerSpaceFloorArea() const {
-    double area = floorArea();
-    double idfr = infiltrationDesignFlowRate();
-    if (equal(area,0.0)) {
-      if (equal(idfr,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].infiltrationDesignFlowPerSpaceFloorArea();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return idfr/area;
-  }
-
-  double Building_Impl::infiltrationDesignFlowPerExteriorSurfaceArea() const {
-    double area = exteriorSurfaceArea();
-    double idfr = infiltrationDesignFlowRate();
-    if (equal(area,0.0)) {
-      if (equal(idfr,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].infiltrationDesignFlowPerExteriorSurfaceArea();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return idfr/area;
-  }
-
-  double Building_Impl::infiltrationDesignFlowPerExteriorWallArea() const {
-    double area = exteriorWallArea();
-    double idfr = infiltrationDesignFlowRate();
-    if (equal(area,0.0)) {
-      if (equal(idfr,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].infiltrationDesignFlowPerExteriorWallArea();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return idfr/area;
-  }
-
-  double Building_Impl::infiltrationDesignAirChangesPerHour() const {
-    double volume = airVolume();
-    double idfr = infiltrationDesignFlowRate();
-    if (equal(volume,0.0)) {
-      if (equal(idfr,0.0)) {
-        return 0.0;
-      }
-      if (spaces().size() == 1u) {
-        return spaces()[0].infiltrationDesignAirChangesPerHour();
-      }
-      LOG_AND_THROW("Calculation would require division by 0.");
-    }
-    return (idfr/volume) * 3600.0;
-  }
-
-  Transformation Building_Impl::transformation() const
-  {
-    // rotate negative amount around the z axis, EnergyPlus defines rotation clockwise
-    return Transformation::rotation(Vector3d(0,0,1), -degToRad(this->northAxis()));
-  }
-
-  std::vector<std::vector<Point3d> > Building_Impl::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const
-  {
-    return openstudio::model::generateSkylightPattern(this->spaces(), 0.0, skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
-  }
-
-  boost::optional<ModelObject> Building_Impl::spaceTypeAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSpaceType intermediate = spaceType();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> Building_Impl::defaultConstructionSetAsModelObject() const {
-    OptionalModelObject result;
-    OptionalDefaultConstructionSet intermediate = defaultConstructionSet();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> Building_Impl::defaultScheduleSetAsModelObject() const {
-    OptionalModelObject result;
-    OptionalDefaultScheduleSet intermediate = defaultScheduleSet();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  std::vector<ModelObject> Building_Impl::metersAsModelObjects() const {
-    ModelObjectVector result = castVector<ModelObject>(meters());
-    return result;
-  }
-
-  std::vector<ModelObject> Building_Impl::buildingStoriesAsModelObjects() const {
-    ModelObjectVector result = castVector<ModelObject>(buildingStories());
-    return result;
-  }
-
-  boost::optional<ModelObject> Building_Impl::facilityAsModelObject() const {
-    OptionalModelObject result;
-    OptionalFacility intermediate = facility();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  std::vector<ModelObject> Building_Impl::spacesAsModelObjects() const {
-    ModelObjectVector result = castVector<ModelObject>(spaces());
-    return result;
-  }
-
-  std::vector<ModelObject> Building_Impl::shadingSurfaceGroupsAsModelObjects() const {
-    ModelObjectVector result = castVector<ModelObject>(shadingSurfaceGroups());
-    return result;
-  }
-
-  std::vector<ModelObject> Building_Impl::thermalZonesAsModelObjects() const {
-    ModelObjectVector result = castVector<ModelObject>(thermalZones());
-    return result;
-  }
-
-  std::vector<ModelObject> Building_Impl::exteriorWallsAsModelObjects() const {
-    ModelObjectVector result = castVector<ModelObject>(exteriorWalls());
-    return result;
-  }
-
-  std::vector<ModelObject> Building_Impl::roofsAsModelObjects() const {
-    ModelObjectVector result = castVector<ModelObject>(roofs());
-    return result;
-  }
-
-  bool Building_Impl::setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSpaceType intermediate = modelObject->optionalCast<SpaceType>();
+    boost::optional<ModelObject> Building_Impl::spaceTypeAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSpaceType intermediate = spaceType();
       if (intermediate) {
-        return setSpaceType(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
-      }
+      return result;
     }
-    else {
-      resetSpaceType();
-    }
-    return true;
-  }
 
-  bool Building_Impl::setDefaultConstructionSetAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalDefaultConstructionSet intermediate = modelObject->optionalCast<DefaultConstructionSet>();
+    boost::optional<ModelObject> Building_Impl::defaultConstructionSetAsModelObject() const {
+      OptionalModelObject result;
+      OptionalDefaultConstructionSet intermediate = defaultConstructionSet();
       if (intermediate) {
-        return setDefaultConstructionSet(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
-      }
+      return result;
     }
-    else {
-      resetDefaultConstructionSet();
-    }
-    return true;
-  }
 
-  bool Building_Impl::setDefaultScheduleSetAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalDefaultScheduleSet intermediate = modelObject->optionalCast<DefaultScheduleSet>();
+    boost::optional<ModelObject> Building_Impl::defaultScheduleSetAsModelObject() const {
+      OptionalModelObject result;
+      OptionalDefaultScheduleSet intermediate = defaultScheduleSet();
       if (intermediate) {
-        return setDefaultScheduleSet(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
+      return result;
+    }
+
+    std::vector<ModelObject> Building_Impl::metersAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(meters());
+      return result;
+    }
+
+    std::vector<ModelObject> Building_Impl::buildingStoriesAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(buildingStories());
+      return result;
+    }
+
+    boost::optional<ModelObject> Building_Impl::facilityAsModelObject() const {
+      OptionalModelObject result;
+      OptionalFacility intermediate = facility();
+      if (intermediate) {
+        result = *intermediate;
       }
+      return result;
     }
-    else {
-      resetDefaultScheduleSet();
+
+    std::vector<ModelObject> Building_Impl::spacesAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(spaces());
+      return result;
     }
-    return true;
+
+    std::vector<ModelObject> Building_Impl::shadingSurfaceGroupsAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(shadingSurfaceGroups());
+      return result;
+    }
+
+    std::vector<ModelObject> Building_Impl::thermalZonesAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(thermalZones());
+      return result;
+    }
+
+    std::vector<ModelObject> Building_Impl::exteriorWallsAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(exteriorWalls());
+      return result;
+    }
+
+    std::vector<ModelObject> Building_Impl::roofsAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(roofs());
+      return result;
+    }
+
+    bool Building_Impl::setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSpaceType intermediate = modelObject->optionalCast<SpaceType>();
+        if (intermediate) {
+          return setSpaceType(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetSpaceType();
+      }
+      return true;
+    }
+
+    bool Building_Impl::setDefaultConstructionSetAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalDefaultConstructionSet intermediate = modelObject->optionalCast<DefaultConstructionSet>();
+        if (intermediate) {
+          return setDefaultConstructionSet(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetDefaultConstructionSet();
+      }
+      return true;
+    }
+
+    bool Building_Impl::setDefaultScheduleSetAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalDefaultScheduleSet intermediate = modelObject->optionalCast<DefaultScheduleSet>();
+        if (intermediate) {
+          return setDefaultScheduleSet(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetDefaultScheduleSet();
+      }
+      return true;
+    }
+
+  }  // namespace detail
+
+  IddObjectType Building::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_Building);
+    return result;
   }
 
-} // detail
-
-IddObjectType Building::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_Building);
-  return result;
-}
-
-double Building::northAxis() const {
-  return getImpl<detail::Building_Impl>()->northAxis();
-}
-
-bool Building::isNorthAxisDefaulted() const {
-  return getImpl<detail::Building_Impl>()->isNorthAxisDefaulted();
-}
-
-boost::optional<double> Building::nominalFloortoFloorHeight() const {
-  return getImpl<detail::Building_Impl>()->nominalFloortoFloorHeight();
-}
-
-boost::optional<int> Building::standardsNumberOfStories() const{
-  return getImpl<detail::Building_Impl>()->standardsNumberOfStories();
-}
-
-boost::optional<int> Building::standardsNumberOfAboveGroundStories() const{
-  return getImpl<detail::Building_Impl>()->standardsNumberOfAboveGroundStories();
-}
-
-boost::optional<int> Building::standardsNumberOfLivingUnits() const{
-  return getImpl<detail::Building_Impl>()->standardsNumberOfLivingUnits();
-}
-
-boost::optional<double> Building::nominalFloortoCeilingHeight() const {
-  return getImpl<detail::Building_Impl>()->nominalFloortoCeilingHeight();
-}
-
-boost::optional<std::string> Building::standardsTemplate() const{
-  return getImpl<detail::Building_Impl>()->standardsTemplate();
-}
-
-std::vector<std::string> Building::suggestedStandardsTemplates() const{
-  return getImpl<detail::Building_Impl>()->suggestedStandardsTemplates();
-}
-
-bool Building::setStandardsTemplate(const std::string& standardsTemplate){
-  return getImpl<detail::Building_Impl>()->setStandardsTemplate(standardsTemplate);
-}
-
-void Building::resetStandardsTemplate(){
-  getImpl<detail::Building_Impl>()->resetStandardsTemplate();
-}
-
-boost::optional<std::string> Building::standardsBuildingType() const{
-  return getImpl<detail::Building_Impl>()->standardsBuildingType();
-}
-
-std::vector<std::string> Building::suggestedStandardsBuildingTypes() const{
-  return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
-}
-
-bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){
-  return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
-}
-
-void Building::resetStandardsBuildingType(){
-  getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
-}
-
-bool Building::relocatable() const{
-  return getImpl<detail::Building_Impl>()->relocatable();
-}
-
-bool Building::isRelocatableDefaulted() const {
-  return getImpl<detail::Building_Impl>()->isRelocatableDefaulted();
-}
-
-bool Building::setNorthAxis(double northAxis) {
-  return getImpl<detail::Building_Impl>()->setNorthAxis(northAxis);
-}
-
-void Building::resetNorthAxis() {
-  getImpl<detail::Building_Impl>()->resetNorthAxis();
-}
-
-bool Building::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
-  return getImpl<detail::Building_Impl>()->setNominalFloortoFloorHeight(nominalFloortoFloorHeight);
-}
-
-void Building::resetNominalFloortoFloorHeight() {
-  getImpl<detail::Building_Impl>()->resetNominalFloortoFloorHeight();
-}
-
-bool Building::setStandardsNumberOfStories(int value){
-  return getImpl<detail::Building_Impl>()->setStandardsNumberOfStories(value);
-}
-
-void Building::resetStandardsNumberOfStories(){
-  getImpl<detail::Building_Impl>()->resetStandardsNumberOfStories();
-}
-
-bool Building::setStandardsNumberOfAboveGroundStories(int value){
-  return getImpl<detail::Building_Impl>()->setStandardsNumberOfAboveGroundStories(value);
-}
-
-void Building::resetStandardsNumberOfAboveGroundStories(){
-  getImpl<detail::Building_Impl>()->resetStandardsNumberOfAboveGroundStories();
-}
-
-bool Building::setStandardsNumberOfLivingUnits(int value){
-  return getImpl<detail::Building_Impl>()->setStandardsNumberOfLivingUnits(value);
-}
-
-void Building::resetStandardsNumberOfLivingUnits(){
-  getImpl<detail::Building_Impl>()->resetStandardsNumberOfLivingUnits();
-}
-
-bool Building::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
-  return getImpl<detail::Building_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
-}
-
-void Building::resetNominalFloortoCeilingHeight() {
-  getImpl<detail::Building_Impl>()->resetNominalFloortoCeilingHeight();
-}
-
-bool Building::setRelocatable(bool isRelocatable){
-  return getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
-}
-
-void Building::setRelocatableNoFail(bool isRelocatable){
-  bool result = getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
-  OS_ASSERT(result);
-}
-
-void Building::resetRelocatable(){
-  getImpl<detail::Building_Impl>()->resetRelocatable();
-}
-
-boost::optional<SpaceType> Building::spaceType() const
-{
-  return getImpl<detail::Building_Impl>()->spaceType();
-}
-
-bool Building::setSpaceType(const SpaceType& spaceType)
-{
-  return getImpl<detail::Building_Impl>()->setSpaceType(spaceType);
-}
-
-void Building::resetSpaceType()
-{
-  getImpl<detail::Building_Impl>()->resetSpaceType();
-}
-
-boost::optional<DefaultConstructionSet> Building::defaultConstructionSet() const
-{
-  return getImpl<detail::Building_Impl>()->defaultConstructionSet();
-}
-
-bool Building::setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet)
-{
-  return getImpl<detail::Building_Impl>()->setDefaultConstructionSet(defaultConstructionSet);
-}
-
-void Building::resetDefaultConstructionSet()
-{
-  getImpl<detail::Building_Impl>()->resetDefaultConstructionSet();
-}
-
-boost::optional<DefaultScheduleSet> Building::defaultScheduleSet() const
-{
-  return getImpl<detail::Building_Impl>()->defaultScheduleSet();
-}
-
-boost::optional<Schedule> Building::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
-  return getImpl<detail::Building_Impl>()->getDefaultSchedule(defaultScheduleType);
-}
-
-bool Building::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
-{
-  return getImpl<detail::Building_Impl>()->setDefaultScheduleSet(defaultScheduleSet);
-}
-
-void Building::resetDefaultScheduleSet()
-{
-  getImpl<detail::Building_Impl>()->resetDefaultScheduleSet();
-}
-
-OutputMeterVector Building::meters() const
-{
-  return getImpl<detail::Building_Impl>()->meters();
-}
-
-BuildingStoryVector Building::buildingStories() const
-{
-  return getImpl<detail::Building_Impl>()->buildingStories();
-}
-
-OptionalFacility Building::facility() const
-{
-  return getImpl<detail::Building_Impl>()->facility();
-}
-
-SpaceVector Building::spaces() const
-{
-  return getImpl<detail::Building_Impl>()->spaces();
-}
-
-ShadingSurfaceGroupVector Building::shadingSurfaceGroups() const
-{
-  return getImpl<detail::Building_Impl>()->shadingSurfaceGroups();
-}
-
-std::vector<ThermalZone> Building::thermalZones() const
-{
-  return getImpl<detail::Building_Impl>()->thermalZones();
-}
-
-std::vector<Surface> Building::exteriorWalls() const {
-  return getImpl<detail::Building_Impl>()->exteriorWalls();
-}
-
-std::vector<Surface> Building::roofs() const {
-  return getImpl<detail::Building_Impl>()->roofs();
-}
-
-double Building::floorArea() const
-{
-  return getImpl<detail::Building_Impl>()->floorArea();
-}
-
-boost::optional<double> Building::conditionedFloorArea() const
-{
-  return getImpl<detail::Building_Impl>()->conditionedFloorArea();
-}
-
-double Building::exteriorSurfaceArea() const {
-  return getImpl<detail::Building_Impl>()->exteriorSurfaceArea();
-}
-
-double Building::exteriorWallArea() const {
-  return getImpl<detail::Building_Impl>()->exteriorWallArea();
-}
-
-double Building::airVolume() const {
-  return getImpl<detail::Building_Impl>()->airVolume();
-}
-
-double Building::numberOfPeople() const {
-  return getImpl<detail::Building_Impl>()->numberOfPeople();
-}
-
-double Building::peoplePerFloorArea() const {
-  return getImpl<detail::Building_Impl>()->peoplePerFloorArea();
-}
-
-double Building::floorAreaPerPerson() const {
-  return getImpl<detail::Building_Impl>()->floorAreaPerPerson();
-}
-
-double Building::lightingPower() const {
-  return getImpl<detail::Building_Impl>()->lightingPower();
-}
-
-double Building::lightingPowerPerFloorArea() const {
-  return getImpl<detail::Building_Impl>()->lightingPowerPerFloorArea();
-}
-
-double Building::lightingPowerPerPerson() const {
-  return getImpl<detail::Building_Impl>()->lightingPowerPerPerson();
-}
-
-double Building::electricEquipmentPower() const {
-  return getImpl<detail::Building_Impl>()->electricEquipmentPower();
-}
-
-double Building::electricEquipmentPowerPerFloorArea() const {
-  return getImpl<detail::Building_Impl>()->electricEquipmentPowerPerFloorArea();
-}
-
-double Building::electricEquipmentPowerPerPerson() const {
-  return getImpl<detail::Building_Impl>()->electricEquipmentPowerPerPerson();
-}
-
-double Building::gasEquipmentPower() const {
-  return getImpl<detail::Building_Impl>()->gasEquipmentPower();
-}
-
-double Building::gasEquipmentPowerPerFloorArea() const {
-  return getImpl<detail::Building_Impl>()->gasEquipmentPowerPerFloorArea();
-}
-
-double Building::gasEquipmentPowerPerPerson() const {
-  return getImpl<detail::Building_Impl>()->gasEquipmentPowerPerPerson();
-}
-
-double Building::infiltrationDesignFlowRate() const {
-  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowRate();
-}
-
-double Building::infiltrationDesignFlowPerSpaceFloorArea() const {
-  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
-}
-
-double Building::infiltrationDesignFlowPerExteriorSurfaceArea() const {
-  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorSurfaceArea();
-}
-
-double Building::infiltrationDesignFlowPerExteriorWallArea() const {
-  return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorWallArea();
-}
-
-double Building::infiltrationDesignAirChangesPerHour() const {
-  return getImpl<detail::Building_Impl>()->infiltrationDesignAirChangesPerHour();
-}
-
-Transformation Building::transformation() const
-{
-  return getImpl<detail::Building_Impl>()->transformation();
-}
-
-std::vector<std::vector<Point3d> > Building::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const
-{
-  return getImpl<detail::Building_Impl>()->generateSkylightPattern(skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
-}
-
-/// @cond
-Building::Building(std::shared_ptr<detail::Building_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-
-Building::Building(Model& model)
-  : ParentObject(Building::iddObjectType(),model)
-{}
-
-/// @endcond
-
-} // model
-} // openstudio
+  double Building::northAxis() const {
+    return getImpl<detail::Building_Impl>()->northAxis();
+  }
+
+  bool Building::isNorthAxisDefaulted() const {
+    return getImpl<detail::Building_Impl>()->isNorthAxisDefaulted();
+  }
+
+  boost::optional<double> Building::nominalFloortoFloorHeight() const {
+    return getImpl<detail::Building_Impl>()->nominalFloortoFloorHeight();
+  }
+
+  boost::optional<int> Building::standardsNumberOfStories() const {
+    return getImpl<detail::Building_Impl>()->standardsNumberOfStories();
+  }
+
+  boost::optional<int> Building::standardsNumberOfAboveGroundStories() const {
+    return getImpl<detail::Building_Impl>()->standardsNumberOfAboveGroundStories();
+  }
+
+  boost::optional<int> Building::standardsNumberOfLivingUnits() const {
+    return getImpl<detail::Building_Impl>()->standardsNumberOfLivingUnits();
+  }
+
+  boost::optional<double> Building::nominalFloortoCeilingHeight() const {
+    return getImpl<detail::Building_Impl>()->nominalFloortoCeilingHeight();
+  }
+
+  boost::optional<std::string> Building::standardsTemplate() const {
+    return getImpl<detail::Building_Impl>()->standardsTemplate();
+  }
+
+  std::vector<std::string> Building::suggestedStandardsTemplates() const {
+    return getImpl<detail::Building_Impl>()->suggestedStandardsTemplates();
+  }
+
+  bool Building::setStandardsTemplate(const std::string& standardsTemplate) {
+    return getImpl<detail::Building_Impl>()->setStandardsTemplate(standardsTemplate);
+  }
+
+  void Building::resetStandardsTemplate() {
+    getImpl<detail::Building_Impl>()->resetStandardsTemplate();
+  }
+
+  boost::optional<std::string> Building::standardsBuildingType() const {
+    return getImpl<detail::Building_Impl>()->standardsBuildingType();
+  }
+
+  std::vector<std::string> Building::suggestedStandardsBuildingTypes() const {
+    return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
+  }
+
+  bool Building::setStandardsBuildingType(const std::string& standardsBuildingType) {
+    return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
+  }
+
+  void Building::resetStandardsBuildingType() {
+    getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
+  }
+
+  bool Building::relocatable() const {
+    return getImpl<detail::Building_Impl>()->relocatable();
+  }
+
+  bool Building::isRelocatableDefaulted() const {
+    return getImpl<detail::Building_Impl>()->isRelocatableDefaulted();
+  }
+
+  bool Building::setNorthAxis(double northAxis) {
+    return getImpl<detail::Building_Impl>()->setNorthAxis(northAxis);
+  }
+
+  void Building::resetNorthAxis() {
+    getImpl<detail::Building_Impl>()->resetNorthAxis();
+  }
+
+  bool Building::setNominalFloortoFloorHeight(double nominalFloortoFloorHeight) {
+    return getImpl<detail::Building_Impl>()->setNominalFloortoFloorHeight(nominalFloortoFloorHeight);
+  }
+
+  void Building::resetNominalFloortoFloorHeight() {
+    getImpl<detail::Building_Impl>()->resetNominalFloortoFloorHeight();
+  }
+
+  bool Building::setStandardsNumberOfStories(int value) {
+    return getImpl<detail::Building_Impl>()->setStandardsNumberOfStories(value);
+  }
+
+  void Building::resetStandardsNumberOfStories() {
+    getImpl<detail::Building_Impl>()->resetStandardsNumberOfStories();
+  }
+
+  bool Building::setStandardsNumberOfAboveGroundStories(int value) {
+    return getImpl<detail::Building_Impl>()->setStandardsNumberOfAboveGroundStories(value);
+  }
+
+  void Building::resetStandardsNumberOfAboveGroundStories() {
+    getImpl<detail::Building_Impl>()->resetStandardsNumberOfAboveGroundStories();
+  }
+
+  bool Building::setStandardsNumberOfLivingUnits(int value) {
+    return getImpl<detail::Building_Impl>()->setStandardsNumberOfLivingUnits(value);
+  }
+
+  void Building::resetStandardsNumberOfLivingUnits() {
+    getImpl<detail::Building_Impl>()->resetStandardsNumberOfLivingUnits();
+  }
+
+  bool Building::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight) {
+    return getImpl<detail::Building_Impl>()->setNominalFloortoCeilingHeight(nominalFloortoCeilingHeight);
+  }
+
+  void Building::resetNominalFloortoCeilingHeight() {
+    getImpl<detail::Building_Impl>()->resetNominalFloortoCeilingHeight();
+  }
+
+  bool Building::setRelocatable(bool isRelocatable) {
+    return getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
+  }
+
+  void Building::setRelocatableNoFail(bool isRelocatable) {
+    bool result = getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
+    OS_ASSERT(result);
+  }
+
+  void Building::resetRelocatable() {
+    getImpl<detail::Building_Impl>()->resetRelocatable();
+  }
+
+  boost::optional<SpaceType> Building::spaceType() const {
+    return getImpl<detail::Building_Impl>()->spaceType();
+  }
+
+  bool Building::setSpaceType(const SpaceType& spaceType) {
+    return getImpl<detail::Building_Impl>()->setSpaceType(spaceType);
+  }
+
+  void Building::resetSpaceType() {
+    getImpl<detail::Building_Impl>()->resetSpaceType();
+  }
+
+  boost::optional<DefaultConstructionSet> Building::defaultConstructionSet() const {
+    return getImpl<detail::Building_Impl>()->defaultConstructionSet();
+  }
+
+  bool Building::setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet) {
+    return getImpl<detail::Building_Impl>()->setDefaultConstructionSet(defaultConstructionSet);
+  }
+
+  void Building::resetDefaultConstructionSet() {
+    getImpl<detail::Building_Impl>()->resetDefaultConstructionSet();
+  }
+
+  boost::optional<DefaultScheduleSet> Building::defaultScheduleSet() const {
+    return getImpl<detail::Building_Impl>()->defaultScheduleSet();
+  }
+
+  boost::optional<Schedule> Building::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+    return getImpl<detail::Building_Impl>()->getDefaultSchedule(defaultScheduleType);
+  }
+
+  bool Building::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet) {
+    return getImpl<detail::Building_Impl>()->setDefaultScheduleSet(defaultScheduleSet);
+  }
+
+  void Building::resetDefaultScheduleSet() {
+    getImpl<detail::Building_Impl>()->resetDefaultScheduleSet();
+  }
+
+  OutputMeterVector Building::meters() const {
+    return getImpl<detail::Building_Impl>()->meters();
+  }
+
+  BuildingStoryVector Building::buildingStories() const {
+    return getImpl<detail::Building_Impl>()->buildingStories();
+  }
+
+  OptionalFacility Building::facility() const {
+    return getImpl<detail::Building_Impl>()->facility();
+  }
+
+  SpaceVector Building::spaces() const {
+    return getImpl<detail::Building_Impl>()->spaces();
+  }
+
+  ShadingSurfaceGroupVector Building::shadingSurfaceGroups() const {
+    return getImpl<detail::Building_Impl>()->shadingSurfaceGroups();
+  }
+
+  std::vector<ThermalZone> Building::thermalZones() const {
+    return getImpl<detail::Building_Impl>()->thermalZones();
+  }
+
+  std::vector<Surface> Building::exteriorWalls() const {
+    return getImpl<detail::Building_Impl>()->exteriorWalls();
+  }
+
+  std::vector<Surface> Building::roofs() const {
+    return getImpl<detail::Building_Impl>()->roofs();
+  }
+
+  double Building::floorArea() const {
+    return getImpl<detail::Building_Impl>()->floorArea();
+  }
+
+  boost::optional<double> Building::conditionedFloorArea() const {
+    return getImpl<detail::Building_Impl>()->conditionedFloorArea();
+  }
+
+  double Building::exteriorSurfaceArea() const {
+    return getImpl<detail::Building_Impl>()->exteriorSurfaceArea();
+  }
+
+  double Building::exteriorWallArea() const {
+    return getImpl<detail::Building_Impl>()->exteriorWallArea();
+  }
+
+  double Building::airVolume() const {
+    return getImpl<detail::Building_Impl>()->airVolume();
+  }
+
+  double Building::numberOfPeople() const {
+    return getImpl<detail::Building_Impl>()->numberOfPeople();
+  }
+
+  double Building::peoplePerFloorArea() const {
+    return getImpl<detail::Building_Impl>()->peoplePerFloorArea();
+  }
+
+  double Building::floorAreaPerPerson() const {
+    return getImpl<detail::Building_Impl>()->floorAreaPerPerson();
+  }
+
+  double Building::lightingPower() const {
+    return getImpl<detail::Building_Impl>()->lightingPower();
+  }
+
+  double Building::lightingPowerPerFloorArea() const {
+    return getImpl<detail::Building_Impl>()->lightingPowerPerFloorArea();
+  }
+
+  double Building::lightingPowerPerPerson() const {
+    return getImpl<detail::Building_Impl>()->lightingPowerPerPerson();
+  }
+
+  double Building::electricEquipmentPower() const {
+    return getImpl<detail::Building_Impl>()->electricEquipmentPower();
+  }
+
+  double Building::electricEquipmentPowerPerFloorArea() const {
+    return getImpl<detail::Building_Impl>()->electricEquipmentPowerPerFloorArea();
+  }
+
+  double Building::electricEquipmentPowerPerPerson() const {
+    return getImpl<detail::Building_Impl>()->electricEquipmentPowerPerPerson();
+  }
+
+  double Building::gasEquipmentPower() const {
+    return getImpl<detail::Building_Impl>()->gasEquipmentPower();
+  }
+
+  double Building::gasEquipmentPowerPerFloorArea() const {
+    return getImpl<detail::Building_Impl>()->gasEquipmentPowerPerFloorArea();
+  }
+
+  double Building::gasEquipmentPowerPerPerson() const {
+    return getImpl<detail::Building_Impl>()->gasEquipmentPowerPerPerson();
+  }
+
+  double Building::infiltrationDesignFlowRate() const {
+    return getImpl<detail::Building_Impl>()->infiltrationDesignFlowRate();
+  }
+
+  double Building::infiltrationDesignFlowPerSpaceFloorArea() const {
+    return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerSpaceFloorArea();
+  }
+
+  double Building::infiltrationDesignFlowPerExteriorSurfaceArea() const {
+    return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorSurfaceArea();
+  }
+
+  double Building::infiltrationDesignFlowPerExteriorWallArea() const {
+    return getImpl<detail::Building_Impl>()->infiltrationDesignFlowPerExteriorWallArea();
+  }
+
+  double Building::infiltrationDesignAirChangesPerHour() const {
+    return getImpl<detail::Building_Impl>()->infiltrationDesignAirChangesPerHour();
+  }
+
+  Transformation Building::transformation() const {
+    return getImpl<detail::Building_Impl>()->transformation();
+  }
+
+  double Building::exteriorPerimeter() {
+    return getImpl<detail::Building_Impl>()->exteriorPerimeter();
+  }
+
+  std::vector<std::vector<Point3d>> Building::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth,
+                                                                      double desiredHeight) const {
+    return getImpl<detail::Building_Impl>()->generateSkylightPattern(skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
+  }
+
+  /// @cond
+  Building::Building(std::shared_ptr<detail::Building_Impl> impl) : ParentObject(std::move(impl)) {}
+
+  Building::Building(Model& model) : ParentObject(Building::iddObjectType(), model) {}
+
+  /// @endcond
+
+}  // namespace model
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,8 +40,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, GlareSensor_Clone)
-{
+TEST_F(ModelFixture, GlareSensor_Clone) {
   Model model;
 
   GlareSensor control(model);
@@ -64,5 +63,4 @@ TEST_F(ModelFixture, GlareSensor_Clone)
   EXPECT_EQ(space.handle(), control.space()->handle());
   EXPECT_EQ(space.handle(), object.cast<GlareSensor>().space()->handle());
   EXPECT_EQ(2u, space.glareSensors().size());
-
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,84 +36,83 @@
 namespace openstudio {
 namespace model {
 
-class StraightComponent;
-class FanConstantVolume;
-class FanVariableVolume;
-class FanOnOff;
-class FanSystemModel;
+  class StraightComponent;
+  class FanConstantVolume;
+  class FanVariableVolume;
+  class FanOnOff;
+  class FanSystemModel;
 
-namespace detail {
+  namespace detail {
 
-  class AirflowNetworkFan_Impl;
-  class FanConstantVolume_Impl;
-  class FanVariableVolume_Impl;
-  class FanOnOff_Impl;
-  class FanSystemModel_Impl;
+    class AirflowNetworkFan_Impl;
+    class FanConstantVolume_Impl;
+    class FanVariableVolume_Impl;
+    class FanOnOff_Impl;
+    class FanSystemModel_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:Fan'. */
-class MODEL_API AirflowNetworkFan : public AirflowNetworkComponent
-{
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirflowNetworkFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:Fan'. */
+  class MODEL_API AirflowNetworkFan : public AirflowNetworkComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~AirflowNetworkFan() {}
+    virtual ~AirflowNetworkFan() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<FanConstantVolume> fanConstantVolume() const;
-  boost::optional<FanVariableVolume> fanVariableVolume() const;
-  boost::optional<FanOnOff> fanOnOff() const;
-  boost::optional<FanSystemModel> fanSystemModel() const;
+    boost::optional<FanConstantVolume> fanConstantVolume() const;
+    boost::optional<FanVariableVolume> fanVariableVolume() const;
+    boost::optional<FanOnOff> fanOnOff() const;
+    boost::optional<FanSystemModel> fanSystemModel() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirflowNetworkFan_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkFan_Impl ImplType;
 
-  explicit AirflowNetworkFan(std::shared_ptr<detail::AirflowNetworkFan_Impl> impl);
+    explicit AirflowNetworkFan(std::shared_ptr<detail::AirflowNetworkFan_Impl> impl);
 
-  AirflowNetworkFan(const Model& model, const Handle &handle);
+    AirflowNetworkFan(const Model& model, const Handle& handle);
 
-  friend class detail::FanConstantVolume_Impl;
-  friend class detail::FanVariableVolume_Impl;
-  friend class detail::FanOnOff_Impl;
-  friend class detail::FanSystemModel_Impl;
+    friend class detail::FanConstantVolume_Impl;
+    friend class detail::FanVariableVolume_Impl;
+    friend class detail::FanOnOff_Impl;
+    friend class detail::FanSystemModel_Impl;
 
-  void resetFan();
+    void resetFan();
 
-  friend class detail::AirflowNetworkFan_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkFan");
-};
+    friend class detail::AirflowNetworkFan_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkFan");
+  };
 
-/** \relates AirflowNetworkFan*/
-typedef boost::optional<AirflowNetworkFan> OptionalAirflowNetworkFan;
+  /** \relates AirflowNetworkFan*/
+  typedef boost::optional<AirflowNetworkFan> OptionalAirflowNetworkFan;
 
-/** \relates AirflowNetworkFan*/
-typedef std::vector<AirflowNetworkFan> AirflowNetworkFanVector;
+  /** \relates AirflowNetworkFan*/
+  typedef std::vector<AirflowNetworkFan> AirflowNetworkFanVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKFAN_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKFAN_HPP

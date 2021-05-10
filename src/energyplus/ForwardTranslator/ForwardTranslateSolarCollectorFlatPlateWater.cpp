@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,62 +51,56 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorFlatPlateWater(SolarCollectorFlatPlateWater & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorFlatPlateWater(SolarCollectorFlatPlateWater& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::SolarCollector_FlatPlate_Water);
+    IdfObject idfObject(IddObjectType::SolarCollector_FlatPlate_Water);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  std::string name = modelObject.name().get();
-  idfObject.setName(name);
+    // Name
+    std::string name = modelObject.name().get();
+    idfObject.setName(name);
 
-  // SolarCollectorPerformanceFlatPlate
-  {
-    auto mo = modelObject.solarCollectorPerformance();
-    IdfObject performance = translateAndMapModelObject(mo).get();
-    idfObject.setString(SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, performance.name().get());
-  }
-
-  OptionalPlanarSurface surface = modelObject.surface();
-  if (surface){
-    IdfObject surf = translateAndMapModelObject(*surface).get();
-    idfObject.setString(SolarCollector_FlatPlate_WaterFields::SurfaceName, surf.name().get());
-  } else{
-    LOG(Error, "SolarCollector:FlatPlate:Water '" << name << "' does not reference a surface.");
-  }
-
-  // InletNodeName
-  if (boost::optional<ModelObject> mo = modelObject.inletModelObject())
-  {
-    if (boost::optional<Node> node = mo->optionalCast<Node>())
+    // SolarCollectorPerformanceFlatPlate
     {
-      idfObject.setString(SolarCollector_FlatPlate_WaterFields::InletNodeName, node->name().get());
+      auto mo = modelObject.solarCollectorPerformance();
+      IdfObject performance = translateAndMapModelObject(mo).get();
+      idfObject.setString(SolarCollector_FlatPlate_WaterFields::SolarCollectorPerformanceName, performance.name().get());
     }
-  }
 
-  // OutletNodeName
-  if (boost::optional<ModelObject> mo = modelObject.outletModelObject())
-  {
-    if (boost::optional<Node> node = mo->optionalCast<Node>())
-    {
-      idfObject.setString(SolarCollector_FlatPlate_WaterFields::OutletNodeName, node->name().get());
+    OptionalPlanarSurface surface = modelObject.surface();
+    if (surface) {
+      IdfObject surf = translateAndMapModelObject(*surface).get();
+      idfObject.setString(SolarCollector_FlatPlate_WaterFields::SurfaceName, surf.name().get());
+    } else {
+      LOG(Error, "SolarCollector:FlatPlate:Water '" << name << "' does not reference a surface.");
     }
+
+    // InletNodeName
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(SolarCollector_FlatPlate_WaterFields::InletNodeName, node->name().get());
+      }
+    }
+
+    // OutletNodeName
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(SolarCollector_FlatPlate_WaterFields::OutletNodeName, node->name().get());
+      }
+    }
+
+    // MaximumFlowRate
+    boost::optional<double> maximumFlowRate = modelObject.maximumFlowRate();
+    if (maximumFlowRate) {
+      idfObject.setDouble(SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, *maximumFlowRate);
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // MaximumFlowRate
-  boost::optional<double> maximumFlowRate = modelObject.maximumFlowRate();
-  if (maximumFlowRate){
-    idfObject.setDouble(SolarCollector_FlatPlate_WaterFields::MaximumFlowRate, *maximumFlowRate);
-  }
+}  // namespace energyplus
 
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

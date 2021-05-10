@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,118 +33,95 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** DesignSpecificationZoneAirDistribution_Impl is a ModelObject_Impl that is the implementation class for DesignSpecificationZoneAirDistribution.*/
-  class MODEL_API DesignSpecificationZoneAirDistribution_Impl : public ModelObject_Impl {
+    /** DesignSpecificationZoneAirDistribution_Impl is a ModelObject_Impl that is the implementation class for DesignSpecificationZoneAirDistribution.*/
+    class MODEL_API DesignSpecificationZoneAirDistribution_Impl : public ModelObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      DesignSpecificationZoneAirDistribution_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      DesignSpecificationZoneAirDistribution_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      DesignSpecificationZoneAirDistribution_Impl(const DesignSpecificationZoneAirDistribution_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~DesignSpecificationZoneAirDistribution_Impl() {}
 
+      //@}
 
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
+      double zoneAirDistributionEffectivenessinCoolingMode() const;
 
+      bool isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
 
+      double zoneAirDistributionEffectivenessinHeatingMode() const;
 
+      bool isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
+      boost::optional<Schedule> zoneAirDistributionEffectivenessSchedule() const;
 
+      double zoneSecondaryRecirculationFraction() const;
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      bool isZoneSecondaryRecirculationFractionDefaulted() const;
 
-    DesignSpecificationZoneAirDistribution_Impl(const IdfObject& idfObject,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      //@}
+      /** @name Setters */
+      //@{
 
-    DesignSpecificationZoneAirDistribution_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      bool setZoneAirDistributionEffectivenessinCoolingMode(double zoneAirDistributionEffectivenessinCoolingMode);
 
-    DesignSpecificationZoneAirDistribution_Impl(const DesignSpecificationZoneAirDistribution_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      void resetZoneAirDistributionEffectivenessinCoolingMode();
 
-    virtual ~DesignSpecificationZoneAirDistribution_Impl() {}
+      bool setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode);
 
-    //@}
+      void resetZoneAirDistributionEffectivenessinHeatingMode();
 
-    /** @name Virtual Methods */
-    //@{
+      bool setZoneAirDistributionEffectivenessSchedule(Schedule& schedule);
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      void resetZoneAirDistributionEffectivenessSchedule();
 
-    virtual IddObjectType iddObjectType() const override;
+      bool setZoneSecondaryRecirculationFraction(double zoneSecondaryRecirculationFraction);
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      void resetZoneSecondaryRecirculationFraction();
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    double zoneAirDistributionEffectivenessinCoolingMode() const;
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.DesignSpecificationZoneAirDistribution");
 
-    bool isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
+      boost::optional<ModelObject> zoneAirDistributionEffectivenessScheduleAsModelObject() const;
 
-    double zoneAirDistributionEffectivenessinHeatingMode() const;
+      bool setZoneAirDistributionEffectivenessScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
+  }  // namespace detail
 
-    boost::optional<Schedule> zoneAirDistributionEffectivenessSchedule() const;
+}  // namespace model
+}  // namespace openstudio
 
-    double zoneSecondaryRecirculationFraction() const;
-
-    bool isZoneSecondaryRecirculationFractionDefaulted() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    bool setZoneAirDistributionEffectivenessinCoolingMode(double zoneAirDistributionEffectivenessinCoolingMode);
-
-    void resetZoneAirDistributionEffectivenessinCoolingMode();
-
-    bool setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode);
-
-    void resetZoneAirDistributionEffectivenessinHeatingMode();
-
-    bool setZoneAirDistributionEffectivenessSchedule(Schedule& schedule);
-
-    void resetZoneAirDistributionEffectivenessSchedule();
-
-    bool setZoneSecondaryRecirculationFraction(double zoneSecondaryRecirculationFraction);
-
-    void resetZoneSecondaryRecirculationFraction();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.DesignSpecificationZoneAirDistribution");
-
-    boost::optional<ModelObject> zoneAirDistributionEffectivenessScheduleAsModelObject() const;
-
-    bool setZoneAirDistributionEffectivenessScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_IMPL_HPP
+#endif  // MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_IMPL_HPP

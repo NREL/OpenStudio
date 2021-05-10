@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,112 +36,106 @@
 namespace openstudio {
 namespace model {
 
-class Node;
-class Curve;
-class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
+  class Node;
+  class Curve;
+  class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingFourPipeBeam_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingFourPipeBeam.*/
-  class MODEL_API CoilHeatingFourPipeBeam_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingFourPipeBeam_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingFourPipeBeam.*/
+    class MODEL_API CoilHeatingFourPipeBeam_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingFourPipeBeam_Impl(const IdfObject& idfObject,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      CoilHeatingFourPipeBeam_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingFourPipeBeam_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      CoilHeatingFourPipeBeam_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingFourPipeBeam_Impl(const CoilHeatingFourPipeBeam_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      CoilHeatingFourPipeBeam_Impl(const CoilHeatingFourPipeBeam_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingFourPipeBeam_Impl() {}
+      virtual ~CoilHeatingFourPipeBeam_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<StraightComponent> containingStraightComponent() const override;
+      virtual boost::optional<StraightComponent> containingStraightComponent() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Node> hotWaterInletNode() const;
+      boost::optional<Node> hotWaterInletNode() const;
 
-    boost::optional<Node> hotWaterOutletNode() const;
+      boost::optional<Node> hotWaterOutletNode() const;
 
-    double beamRatedHeatingCapacityperBeamLength() const;
-    bool isBeamRatedHeatingCapacityperBeamLengthDefaulted() const;
+      double beamRatedHeatingCapacityperBeamLength() const;
+      bool isBeamRatedHeatingCapacityperBeamLengthDefaulted() const;
 
-    double beamRatedHeatingRoomAirHotWaterTemperatureDifference() const;
-    bool isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const;
+      double beamRatedHeatingRoomAirHotWaterTemperatureDifference() const;
+      bool isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const;
 
-    double beamRatedHotWaterVolumeFlowRateperBeamLength() const;
-    bool isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const;
+      double beamRatedHotWaterVolumeFlowRateperBeamLength() const;
+      bool isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const;
 
-    Curve beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
+      Curve beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
 
-    Curve beamHeatingCapacityAirFlowModificationFactorCurve() const;
+      Curve beamHeatingCapacityAirFlowModificationFactorCurve() const;
 
-    Curve beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
+      Curve beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setBeamRatedHeatingCapacityperBeamLength(double beamRatedHeatingCapacityperBeamLength);
-    void resetBeamRatedHeatingCapacityperBeamLength();
+      bool setBeamRatedHeatingCapacityperBeamLength(double beamRatedHeatingCapacityperBeamLength);
+      void resetBeamRatedHeatingCapacityperBeamLength();
 
-    bool setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(double beamRatedHeatingRoomAirHotWaterTemperatureDifference);
-    void resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference();
+      bool setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(double beamRatedHeatingRoomAirHotWaterTemperatureDifference);
+      void resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference();
 
-    bool setBeamRatedHotWaterVolumeFlowRateperBeamLength(double beamRatedHotWaterVolumeFlowRateperBeamLength);
-    void resetBeamRatedHotWaterVolumeFlowRateperBeamLength();
+      bool setBeamRatedHotWaterVolumeFlowRateperBeamLength(double beamRatedHotWaterVolumeFlowRateperBeamLength);
+      void resetBeamRatedHotWaterVolumeFlowRateperBeamLength();
 
-    bool setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
-    // void resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
+      bool setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
+      // void resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
 
-    bool setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve);
-    // void resetBeamHeatingCapacityAirFlowModificationFactorCurve();
+      bool setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve);
+      // void resetBeamHeatingCapacityAirFlowModificationFactorCurve();
 
-    bool setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve);
-    // void resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve();
+      bool setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve);
+      // void resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
-    boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
+      /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
+      boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingFourPipeBeam");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingFourPipeBeam");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGFOURPIPEBEAM_IMPL_HPP
-
+#endif  // MODEL_COILHEATINGFOURPIPEBEAM_IMPL_HPP

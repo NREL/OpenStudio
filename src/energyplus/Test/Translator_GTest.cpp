@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,12 +60,10 @@ using openstudio::SqlFile;
 using openstudio::OptionalInt;
 using openstudio::IddFileType;
 
-TEST_F(EnergyPlusFixture,IddFile)
-{
+TEST_F(EnergyPlusFixture, IddFile) {
   boost::optional<openstudio::IddFile> iddFile = openstudio::IddFile::load(resourcesPath() / openstudio::toPath("energyplus/ProposedEnergy+.idd"));
   ASSERT_TRUE(iddFile);
 }
-
 
 /*
 TEST_F(EnergyPlusFixture,Translator_RoundTrip)

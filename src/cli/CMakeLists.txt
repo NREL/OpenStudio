@@ -171,6 +171,10 @@ list(APPEND EMBEDDED_PATHS "embedded_help.rb")
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb")
 list(APPEND EMBEDDED_PATHS "openstudio_cli.rb")
 
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_init_extended.rb")
+list(APPEND EMBEDDED_PATHS "openstudio_init_extended.rb")
+
+
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager.rb")
 list(APPEND EMBEDDED_PATHS "measure_manager.rb")
 
@@ -287,6 +291,7 @@ target_link_libraries(openstudio
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
+ openstudio_epjson
  openstudio_measure
  openstudio_osversion
  openstudio_sdd
@@ -297,7 +302,7 @@ target_link_libraries(openstudio
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(additional_ruby_libs dl crypt)
+  target_link_libraries(additional_ruby_libs dl crypt anl)
   target_link_libraries(openstudio PRIVATE "icui18n" "icuuc" "gmp")
 elseif(WIN32)
   target_link_libraries(openstudio PRIVATE wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi)

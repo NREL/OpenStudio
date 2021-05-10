@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -83,38 +83,40 @@
 
 #include <OpenStudio.hxx>
 
-
 namespace openstudio {
 namespace model {
-  bool replaceDir(const openstudio::path &sourceDir, const openstudio::path &destinationDir)
-  {
+  bool replaceDir(const openstudio::path& sourceDir, const openstudio::path& destinationDir) {
+    bool result = true;
+
     // Path **must** exist for `canonical()` to work, `weakly_canonical()` doesn't require this
     const auto src = openstudio::filesystem::weakly_canonical(sourceDir);
     const auto dest = openstudio::filesystem::weakly_canonical(destinationDir);
 
     // If both are the same canonical paths, we do nothing
     if (src == dest) {
-      LOG_FREE(Warn, "replaceDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir)
-          << "' canonical path: '" << toString(src) << "'");
-      return true; // there is no error, just nothing to do
+      LOG_FREE(Warn, "replaceDir",
+               "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir) << "' canonical path: '"
+                                              << toString(src) << "'");
+      return true;  // there is no error, just nothing to do
     }
 
     // If the source dir doesn't exist, there's a problem
-    if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src))
-    {
+    if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src)) {
       LOG_FREE(Error, "replaceDir", "Source directory does not exist: " << toString(src));
       return false;
     }
 
-    // If the dest dir exists, remove it
-    if (openstudio::filesystem::exists(dest))
-    {
+    // If the dest dir exists, remove all entries in it
+    if (openstudio::filesystem::exists(dest)) {
       if (openstudio::filesystem::is_directory(dest)) {
-        try {
-          openstudio::filesystem::remove_all(dest);
-        } catch (const std::exception &e) {
-          LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest) << "error: " << e.what());
-          return false;
+        for (openstudio::filesystem::directory_iterator end_dir_it, it(dest); it != end_dir_it; ++it) {
+          openstudio::filesystem::path path = it->path();
+          try {
+            openstudio::filesystem::remove_all(path);
+          } catch (const std::exception& e) {
+            LOG_FREE(Error, "replaceDir", "Error deleting: " << toString(path) << e.what());
+            result = false;
+          }
         }
       } else {
         LOG_FREE(Error, "replaceDir", "Destination exists and is not a directory, aborting: " << toString(dest));
@@ -123,23 +125,28 @@ namespace model {
     }
 
     // Now we recreate it, and it must work!
-    if (!openstudio::filesystem::create_directory(dest))
-    {
-      LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
-      return false;
+    if (!openstudio::filesystem::exists(dest)) {
+      try {
+        if (!openstudio::filesystem::create_directory(dest)) {
+          LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
+          return false;
+        }
+      } catch (const std::exception& e) {
+        LOG_FREE(Error, "replaceDir", "Error creating directory: " << toString(dest) << e.what());
+        return false;
+      }
     }
 
-    bool result = true;
-    for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src})
-    {
+    for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src}) {
       const auto& path = dirEnt.path();
       auto relativePathStr = path.string();
       boost::replace_first(relativePathStr, src.string(), "");
 
       try {
         openstudio::filesystem::copy(path, dest / relativePathStr);
-      } catch (const std::exception &e) {
-        LOG_FREE(Error, "replaceDir", "Error copying from: " << toString(path) << " to: " << toString(dest / relativePathStr) << " Description: " << e.what());
+      } catch (const std::exception& e) {
+        LOG_FREE(Error, "replaceDir",
+                 "Error copying from: " << toString(path) << " to: " << toString(dest / relativePathStr) << " Description: " << e.what());
         result = false;
       }
     }
@@ -147,12 +154,11 @@ namespace model {
     return result;
   }
 
-  bool removeDir(const openstudio::path &path)
-  {
+  bool removeDir(const openstudio::path& path) {
     try {
       const auto count = openstudio::filesystem::remove_all(path);
       LOG_FREE(Debug, "removeDir", "Removed " << count << " files");
-    } catch (const std::exception &e) {
+    } catch (const std::exception& e) {
       LOG_FREE(Error, "removeDir", "Error removing from: " << toString(path) << " Description: " << e.what());
       return false;
     }
@@ -160,24 +166,22 @@ namespace model {
     return true;
   }
 
-  openstudio::path createModelTempDir()
-  {
+  openstudio::path createModelTempDir() {
     const auto result = openstudio::filesystem::create_temporary_directory("osmodel");
     LOG_FREE(Info, "createModelTempDir", "Created directory '" << toString(result) << "'");
     OS_ASSERT(!result.empty());
     return result;
   }
 
-  bool initializeModelTempDir(const openstudio::path& osmPath, const openstudio::path& modelTempDir)
-  {
+  bool initializeModelTempDir(const openstudio::path& osmPath, const openstudio::path& modelTempDir) {
     bool result = true;
 
-    if (osmPath.empty() || !openstudio::filesystem::exists(osmPath)){
+    if (osmPath.empty() || !openstudio::filesystem::exists(osmPath)) {
 
       LOG_FREE(Debug, "initializeModelTempDir", "OSM path '" << toString(osmPath) << "' is empty or does not exist");
       result = false;
 
-    } else{
+    } else {
       openstudio::path fileName = osmPath.filename();
       openstudio::path destination = modelTempDir / fileName;
       LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(osmPath) << "' to '" << toString(destination) << "'");
@@ -187,20 +191,20 @@ namespace model {
       try {
         openstudio::filesystem::copy_file(osmPath, destination);
         test = true;
-      } catch (const std::exception &e) {
-        LOG_FREE(Error, "initializeModelTempDir", "Could not copy osm from '" << toString(osmPath) << "' to '" << toString(destination) << "' error"
-            << e.what());
+      } catch (const std::exception& e) {
+        LOG_FREE(Error, "initializeModelTempDir",
+                 "Could not copy osm from '" << toString(osmPath) << "' to '" << toString(destination) << "' error" << e.what());
         test = false;
       }
 
       // Copy all files from existing resources dir into temp dir when opening
       openstudio::path sourceDir = getCompanionFolder(osmPath);
       openstudio::path destDir = modelTempDir / toPath("resources");
-      if (openstudio::filesystem::exists(sourceDir)){
+      if (openstudio::filesystem::exists(sourceDir)) {
         LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
 
         test = replaceDir(sourceDir, destDir);
-        if (!test){
+        if (!test) {
           LOG_FREE(Error, "initializeModelTempDir", "Could not copy '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
           result = false;
         }
@@ -210,8 +214,7 @@ namespace model {
     return result;
   }
 
-  bool updateModelTempDir(openstudio::model::Model& model, const openstudio::path& modelTempDir)
-  {
+  bool updateModelTempDir(openstudio::model::Model& model, const openstudio::path& modelTempDir) {
     bool modified = false;
 
     // Create folder layout
@@ -219,20 +222,17 @@ namespace model {
     openstudio::path scriptspath = modelTempDir / openstudio::toPath("resources/measures");
     openstudio::path filespath = modelTempDir / openstudio::toPath("resources/files");
 
-    if (!openstudio::filesystem::exists(runpath))
-    {
+    if (!openstudio::filesystem::exists(runpath)) {
       openstudio::filesystem::create_directories(runpath);
       modified = true;
     }
 
-    if (!openstudio::filesystem::exists(scriptspath))
-    {
+    if (!openstudio::filesystem::exists(scriptspath)) {
       openstudio::filesystem::create_directories(scriptspath);
       modified = true;
     }
 
-    if (!openstudio::filesystem::exists(filespath))
-    {
+    if (!openstudio::filesystem::exists(filespath)) {
       openstudio::filesystem::create_directories(filespath);
       modified = true;
     }
@@ -242,23 +242,22 @@ namespace model {
     return modified;
   }
 
-  bool attachWorkflow(openstudio::model::Model& model, const openstudio::path& modelTempDir)
-  {
+  bool attachWorkflow(openstudio::model::Model& model, const openstudio::path& modelTempDir) {
     boost::optional<WorkflowJSON> workflowJSON;
     bool result = false;
 
     openstudio::path oswPath = modelTempDir / openstudio::toPath("resources/workflow.osw");
-    if (boost::filesystem::exists(oswPath)){
+    if (boost::filesystem::exists(oswPath)) {
       workflowJSON = WorkflowJSON::load(oswPath);
-      if (workflowJSON){
+      if (workflowJSON) {
         result = true;
         LOG_FREE(Debug, "attachWorkflow", "Opened existing workflow.osw file");
-      } else{
+      } else {
         LOG_FREE(Error, "attachWorkflow", "Could not open existing workflow.osw file");
       }
     }
 
-    if (!workflowJSON){
+    if (!workflowJSON) {
       workflowJSON = WorkflowJSON();
       workflowJSON->setOswPath(oswPath);
       workflowJSON->save();
@@ -269,16 +268,14 @@ namespace model {
     return result;
   }
 
-  openstudio::path initializeModel(openstudio::model::Model model)
-  {
+  openstudio::path initializeModel(openstudio::model::Model model) {
     return initializeModel(model, openstudio::path());
   }
 
-  openstudio::path initializeModel(openstudio::model::Model model, const openstudio::path& savedPath)
-  {
+  openstudio::path initializeModel(openstudio::model::Model model, const openstudio::path& savedPath) {
     openstudio::path modelTempDir = createModelTempDir();
 
-    if (!savedPath.empty() && exists(savedPath)){
+    if (!savedPath.empty() && exists(savedPath)) {
       initializeModelTempDir(savedPath, modelTempDir);
     }
 
@@ -288,8 +285,7 @@ namespace model {
     return modelTempDir;
   }
 
-  void initializeModelObjects(openstudio::model::Model model)
-  {
+  void initializeModelObjects(openstudio::model::Model model) {
     // These objects used to be added to the model as you clicked through the App's tabs,
     // resulting in a uncertain set of model changes.  With these changes, every model will
     // always have the following objects after opening in the app.
@@ -316,28 +312,27 @@ namespace model {
 
     openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
 
-    for (auto& object : model.objects()){
-      if (object.optionalCast<model::ConstructionBase>()){
+    for (auto& object : model.objects()) {
+      if (object.optionalCast<model::ConstructionBase>()) {
         object.cast<model::ConstructionBase>().standardsInformation();
         object.cast<model::ConstructionBase>().renderingColor();
-      }else if (object.optionalCast<model::Material>()){
+      } else if (object.optionalCast<model::Material>()) {
         object.cast<model::Material>().standardsInformation();
-      }else if (object.optionalCast<model::BuildingStory>()){
+      } else if (object.optionalCast<model::BuildingStory>()) {
         object.cast<model::BuildingStory>().renderingColor();
-      }else if (object.optionalCast<model::LightingSimulationZone>()){
+      } else if (object.optionalCast<model::LightingSimulationZone>()) {
         object.cast<model::LightingSimulationZone>().renderingColor();
-      }else if (object.optionalCast<model::SpaceType>()){
+      } else if (object.optionalCast<model::SpaceType>()) {
         object.cast<model::SpaceType>().renderingColor();
-      }else if (object.optionalCast<model::ThermalZone>()){
+      } else if (object.optionalCast<model::ThermalZone>()) {
         object.cast<model::ThermalZone>().renderingColor();
-      }else if (object.optionalCast<model::BuildingUnit>()){
+      } else if (object.optionalCast<model::BuildingUnit>()) {
         object.cast<model::BuildingUnit>().renderingColor();
       }
     }
   }
 
-  bool saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath)
-  {
+  bool saveModelTempDir(const openstudio::path& modelTempDir, const openstudio::path& osmPath) {
     bool test = true;
 
     // copy osm file
@@ -346,9 +341,8 @@ namespace model {
     try {
       openstudio::filesystem::copy_file(srcPath, osmPath, openstudio::filesystem::copy_option::overwrite_if_exists);
       test = true;
-    } catch (const std::exception &e) {
-      LOG_FREE(Error, "saveModelTempDir", "Could not copy osm from '" << toString(srcPath) << "' to '" << toString(osmPath) << "' error"
-               << e.what());
+    } catch (const std::exception& e) {
+      LOG_FREE(Error, "saveModelTempDir", "Could not copy osm from '" << toString(srcPath) << "' to '" << toString(osmPath) << "' error" << e.what());
       test = false;
     }
 
@@ -361,28 +355,26 @@ namespace model {
       LOG_FREE(Debug, "saveModelTempDir", "Copying " << toString(srcDir) << " to " << toString(dstDir));
 
       test = replaceDir(srcDir, dstDir);
-      if (!test){
+      if (!test) {
         LOG_FREE(Error, "saveModelTempDir", "Could not copy '" << toString(srcDir) << "' to '" << toString(dstDir) << "'");
       }
-
     }
 
     return test;
   }
 
-  bool saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir)
-  {
+  bool saveModel(openstudio::model::Model model, const openstudio::path& osmPath, const openstudio::path& modelTempDir) {
     // set the workflow's path
     openstudio::path oswPath = modelTempDir / openstudio::toPath("resources/workflow.osw");
     boost::optional<openstudio::path> currentOswPath = model.workflowJSON().oswPath();
-    if (!currentOswPath || (oswPath != currentOswPath.get())){
+    if (!currentOswPath || (oswPath != currentOswPath.get())) {
       model.workflowJSON().setOswPath(oswPath);
     }
 
     // set the seed name
     openstudio::path seedFile = toPath("..") / osmPath.filename();
     boost::optional<openstudio::path> currentSeedFile = model.workflowJSON().seedFile();
-    if (!currentSeedFile || (seedFile != currentSeedFile.get())){
+    if (!currentSeedFile || (seedFile != currentSeedFile.get())) {
       model.workflowJSON().setSeedFile(seedFile);
     }
 
@@ -393,9 +385,9 @@ namespace model {
     openstudio::path tempModelPath = modelTempDir / osmPath.filename();
     bool modelSaved = model.save(tempModelPath, true);
 
-    if (modelSaved){
+    if (modelSaved) {
       LOG_FREE(Debug, "saveModel", "Saved model to '" << toString(tempModelPath) << "'");
-    } else{
+    } else {
       LOG_FREE(Error, "saveModel", "Failed to save model to '" << toString(tempModelPath) << "'");
     }
 
@@ -404,11 +396,9 @@ namespace model {
     return (modelSaved && tempDirSaved);
   }
 
-  void removeModelTempDir(const openstudio::path& modelTempDir)
-  {
+  void removeModelTempDir(const openstudio::path& modelTempDir) {
     removeDir(modelTempDir);
   }
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,43 +39,41 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, WaterHeaterStratified_WaterHeaterStratified)
-{
+TEST_F(ModelFixture, WaterHeaterStratified_WaterHeaterStratified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     WaterHeaterStratified waterHeaterStratified(m);
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+  ASSERT_EXIT(
+    {
+      Model m;
+      WaterHeaterStratified waterHeaterStratified(m);
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, WaterHeaterStratified_addToPlantLoop)
-{
-    Model m;
-    WaterHeaterStratified waterHeaterStratified(m);
+TEST_F(ModelFixture, WaterHeaterStratified_addToPlantLoop) {
+  Model m;
+  WaterHeaterStratified waterHeaterStratified(m);
 
-    PlantLoop plantLoop(m);
-    ASSERT_EQ( 5u, plantLoop.supplyComponents().size() );
-    ASSERT_EQ( 5u, plantLoop.demandComponents().size() );
+  PlantLoop plantLoop(m);
+  ASSERT_EQ(5u, plantLoop.supplyComponents().size());
+  ASSERT_EQ(5u, plantLoop.demandComponents().size());
 
-    WaterUseConnections waterUseConnections(m);
+  WaterUseConnections waterUseConnections(m);
 
-    WaterUseEquipmentDefinition definition(m);
+  WaterUseEquipmentDefinition definition(m);
 
-    WaterUseEquipment e1(definition);
-    WaterUseEquipment e2(definition);
-    WaterUseEquipment e3(definition);
+  WaterUseEquipment e1(definition);
+  WaterUseEquipment e2(definition);
+  WaterUseEquipment e3(definition);
 
-    waterUseConnections.addWaterUseEquipment(e1);
-    waterUseConnections.addWaterUseEquipment(e2);
-    waterUseConnections.addWaterUseEquipment(e3);
+  waterUseConnections.addWaterUseEquipment(e1);
+  waterUseConnections.addWaterUseEquipment(e2);
+  waterUseConnections.addWaterUseEquipment(e3);
 
-    EXPECT_EQ(3u, waterUseConnections.waterUseEquipment().size());
+  EXPECT_EQ(3u, waterUseConnections.waterUseEquipment().size());
 
-    plantLoop.addDemandBranchForComponent(waterUseConnections);
-    ASSERT_EQ( 5u, plantLoop.supplyComponents().size() );
-    ASSERT_EQ( 7u, plantLoop.demandComponents().size() );
+  plantLoop.addDemandBranchForComponent(waterUseConnections);
+  ASSERT_EQ(5u, plantLoop.supplyComponents().size());
+  ASSERT_EQ(7u, plantLoop.demandComponents().size());
 }

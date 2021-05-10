@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,88 +49,87 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterTransformer(model::ElectricLoadCenterTransformer & modelObject)
-{
-  boost::optional<double> optD;
-  std::string s;
-  boost::optional<std::string> optS;
-  boost::optional<Schedule> schedule;
-  boost::optional<ThermalZone> zone;
+  boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterTransformer(model::ElectricLoadCenterTransformer& modelObject) {
+    boost::optional<double> optD;
+    std::string s;
+    boost::optional<std::string> optS;
+    boost::optional<Schedule> schedule;
+    boost::optional<ThermalZone> zone;
 
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Transformer, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Transformer, modelObject);
 
-  schedule = modelObject.availabilitySchedule();
-  if (schedule) {
-    boost::optional<IdfObject> scheduleIdf = translateAndMapModelObject(*schedule);
-    if (scheduleIdf) {
-      idfObject.setString(ElectricLoadCenter_TransformerFields::AvailabilityScheduleName, scheduleIdf->name().get());
+    schedule = modelObject.availabilitySchedule();
+    if (schedule) {
+      boost::optional<IdfObject> scheduleIdf = translateAndMapModelObject(*schedule);
+      if (scheduleIdf) {
+        idfObject.setString(ElectricLoadCenter_TransformerFields::AvailabilityScheduleName, scheduleIdf->name().get());
+      }
     }
-  }
 
-  idfObject.setString(ElectricLoadCenter_TransformerFields::TransformerUsage, modelObject.transformerUsage());
+    idfObject.setString(ElectricLoadCenter_TransformerFields::TransformerUsage, modelObject.transformerUsage());
 
-  zone = modelObject.zone();
-  if (zone) {
-    idfObject.setString(ElectricLoadCenter_TransformerFields::ZoneName, zone->name().get());
-  }
-
-  idfObject.setDouble(ElectricLoadCenter_TransformerFields::RadiativeFraction, modelObject.radiativeFraction());
-
-  optD = modelObject.ratedCapacity();
-  if (optD){
-    idfObject.setDouble(ElectricLoadCenter_TransformerFields::RatedCapacity, optD.get());
-  }
-
-  idfObject.setString(ElectricLoadCenter_TransformerFields::Phase, modelObject.phase());
-
-  idfObject.setString(ElectricLoadCenter_TransformerFields::ConductorMaterial, modelObject.conductorMaterial());
-
-  idfObject.setDouble(ElectricLoadCenter_TransformerFields::FullLoadTemperatureRise, modelObject.fullLoadTemperatureRise());
-
-  idfObject.setDouble(ElectricLoadCenter_TransformerFields::FractionofEddyCurrentLosses, modelObject.fractionofEddyCurrentLosses());
-
-  idfObject.setString(ElectricLoadCenter_TransformerFields::PerformanceInputMethod, modelObject.performanceInputMethod());
-
-  optD = modelObject.ratedNoLoadLoss();
-  if (optD){
-    idfObject.setDouble(ElectricLoadCenter_TransformerFields::RatedNoLoadLoss, optD.get());
-  }
-
-  optD = modelObject.ratedLoadLoss();
-  if (optD){
-    idfObject.setDouble(ElectricLoadCenter_TransformerFields::RatedLoadLoss, optD.get());
-  }
-
-  idfObject.setDouble(ElectricLoadCenter_TransformerFields::NameplateEfficiency, modelObject.nameplateEfficiency());
-
-  idfObject.setDouble(ElectricLoadCenter_TransformerFields::PerUnitLoadforNameplateEfficiency, modelObject.perUnitLoadforNameplateEfficiency());
-
-  idfObject.setDouble(ElectricLoadCenter_TransformerFields::ReferenceTemperatureforNameplateEfficiency, modelObject.referenceTemperatureforNameplateEfficiency());
-
-  optD = modelObject.perUnitLoadforMaximumEfficiency();
-  if (optD){
-    idfObject.setDouble(ElectricLoadCenter_TransformerFields::PerUnitLoadforMaximumEfficiency, optD.get());
-  }
-  if (modelObject.considerTransformerLossforUtilityCost()) {
-    s = "Yes";
-  } else {
-    s = "No";
-  }
-  idfObject.setString(ElectricLoadCenter_TransformerFields::ConsiderTransformerLossforUtilityCost, s);
-
-  //meters
-  std::vector<std::string> meters = modelObject.meters();
-  if (!meters.empty()) {
-    for (auto meter : meters) {
-      auto eg = idfObject.pushExtensibleGroup();
-      eg.setString(ElectricLoadCenter_TransformerExtensibleFields::MeterName, meter);
+    zone = modelObject.zone();
+    if (zone) {
+      idfObject.setString(ElectricLoadCenter_TransformerFields::ZoneName, zone->name().get());
     }
+
+    idfObject.setDouble(ElectricLoadCenter_TransformerFields::RadiativeFraction, modelObject.radiativeFraction());
+
+    optD = modelObject.ratedCapacity();
+    if (optD) {
+      idfObject.setDouble(ElectricLoadCenter_TransformerFields::RatedCapacity, optD.get());
+    }
+
+    idfObject.setString(ElectricLoadCenter_TransformerFields::Phase, modelObject.phase());
+
+    idfObject.setString(ElectricLoadCenter_TransformerFields::ConductorMaterial, modelObject.conductorMaterial());
+
+    idfObject.setDouble(ElectricLoadCenter_TransformerFields::FullLoadTemperatureRise, modelObject.fullLoadTemperatureRise());
+
+    idfObject.setDouble(ElectricLoadCenter_TransformerFields::FractionofEddyCurrentLosses, modelObject.fractionofEddyCurrentLosses());
+
+    idfObject.setString(ElectricLoadCenter_TransformerFields::PerformanceInputMethod, modelObject.performanceInputMethod());
+
+    optD = modelObject.ratedNoLoadLoss();
+    if (optD) {
+      idfObject.setDouble(ElectricLoadCenter_TransformerFields::RatedNoLoadLoss, optD.get());
+    }
+
+    optD = modelObject.ratedLoadLoss();
+    if (optD) {
+      idfObject.setDouble(ElectricLoadCenter_TransformerFields::RatedLoadLoss, optD.get());
+    }
+
+    idfObject.setDouble(ElectricLoadCenter_TransformerFields::NameplateEfficiency, modelObject.nameplateEfficiency());
+
+    idfObject.setDouble(ElectricLoadCenter_TransformerFields::PerUnitLoadforNameplateEfficiency, modelObject.perUnitLoadforNameplateEfficiency());
+
+    idfObject.setDouble(ElectricLoadCenter_TransformerFields::ReferenceTemperatureforNameplateEfficiency,
+                        modelObject.referenceTemperatureforNameplateEfficiency());
+
+    optD = modelObject.perUnitLoadforMaximumEfficiency();
+    if (optD) {
+      idfObject.setDouble(ElectricLoadCenter_TransformerFields::PerUnitLoadforMaximumEfficiency, optD.get());
+    }
+    if (modelObject.considerTransformerLossforUtilityCost()) {
+      s = "Yes";
+    } else {
+      s = "No";
+    }
+    idfObject.setString(ElectricLoadCenter_TransformerFields::ConsiderTransformerLossforUtilityCost, s);
+
+    //meters
+    std::vector<std::string> meters = modelObject.meters();
+    if (!meters.empty()) {
+      for (auto meter : meters) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setString(ElectricLoadCenter_TransformerExtensibleFields::MeterName, meter);
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,117 +37,114 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
-// class WaterStorageTank;
+  class Schedule;
+  class Curve;
+  // class WaterStorageTank;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACDehumidifierDX_Impl;
+    class ZoneHVACDehumidifierDX_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACDehumidifierDX is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Dehumidifier:DX'. */
-class MODEL_API ZoneHVACDehumidifierDX : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACDehumidifierDX is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Dehumidifier:DX'. */
+  class MODEL_API ZoneHVACDehumidifierDX : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneHVACDehumidifierDX(const Model& model);
+    explicit ZoneHVACDehumidifierDX(const Model& model);
 
-  explicit ZoneHVACDehumidifierDX(
-    const Model& model,
-    const Curve& waterRemovalCurve,
-    const Curve& energyFactorCurve,
-    const Curve& partLoadFractionCurve
-  );
+    explicit ZoneHVACDehumidifierDX(const Model& model, const Curve& waterRemovalCurve, const Curve& energyFactorCurve,
+                                    const Curve& partLoadFractionCurve);
 
-  virtual ~ZoneHVACDehumidifierDX() {}
+    virtual ~ZoneHVACDehumidifierDX() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  double ratedWaterRemoval() const;
+    double ratedWaterRemoval() const;
 
-  double ratedEnergyFactor() const;
+    double ratedEnergyFactor() const;
 
-  double ratedAirFlowRate() const;
+    double ratedAirFlowRate() const;
 
-  Curve waterRemovalCurve() const;
+    Curve waterRemovalCurve() const;
 
-  Curve energyFactorCurve() const;
+    Curve energyFactorCurve() const;
 
-  Curve partLoadFractionCorrelationCurve() const;
+    Curve partLoadFractionCorrelationCurve() const;
 
-  double minimumDryBulbTemperatureforDehumidifierOperation() const;
+    double minimumDryBulbTemperatureforDehumidifierOperation() const;
 
-  double maximumDryBulbTemperatureforDehumidifierOperation() const;
+    double maximumDryBulbTemperatureforDehumidifierOperation() const;
 
-  double offCycleParasiticElectricLoad() const;
+    double offCycleParasiticElectricLoad() const;
 
-  // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
+    // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRatedWaterRemoval(double ratedWaterRemoval);
+    bool setRatedWaterRemoval(double ratedWaterRemoval);
 
-  bool setRatedEnergyFactor(double ratedEnergyFactor);
+    bool setRatedEnergyFactor(double ratedEnergyFactor);
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  bool setWaterRemovalCurve(const Curve& curve);
+    bool setWaterRemovalCurve(const Curve& curve);
 
-  bool setEnergyFactorCurve(const Curve& curve);
+    bool setEnergyFactorCurve(const Curve& curve);
 
-  bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  bool setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
+    bool setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
 
-  bool setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
+    bool setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
 
-  bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
+    bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
-  // bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
+    // bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-  // void resetCondensateCollectionWaterStorageTank();
+    // void resetCondensateCollectionWaterStorageTank();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACDehumidifierDX_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACDehumidifierDX_Impl ImplType;
 
-  explicit ZoneHVACDehumidifierDX(std::shared_ptr<detail::ZoneHVACDehumidifierDX_Impl> impl);
+    explicit ZoneHVACDehumidifierDX(std::shared_ptr<detail::ZoneHVACDehumidifierDX_Impl> impl);
 
-  friend class detail::ZoneHVACDehumidifierDX_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACDehumidifierDX");
-};
+    friend class detail::ZoneHVACDehumidifierDX_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACDehumidifierDX");
+  };
 
-/** \relates ZoneHVACDehumidifierDX*/
-typedef boost::optional<ZoneHVACDehumidifierDX> OptionalZoneHVACDehumidifierDX;
+  /** \relates ZoneHVACDehumidifierDX*/
+  typedef boost::optional<ZoneHVACDehumidifierDX> OptionalZoneHVACDehumidifierDX;
 
-/** \relates ZoneHVACDehumidifierDX*/
-typedef std::vector<ZoneHVACDehumidifierDX> ZoneHVACDehumidifierDXVector;
+  /** \relates ZoneHVACDehumidifierDX*/
+  typedef std::vector<ZoneHVACDehumidifierDX> ZoneHVACDehumidifierDXVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEHVACDEHUMIDIFIERDX_HPP
+#endif  // MODEL_ZONEHVACDEHUMIDIFIERDX_HPP

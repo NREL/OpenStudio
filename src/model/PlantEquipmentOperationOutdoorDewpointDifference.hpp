@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,69 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class PlantEquipmentOperationOutdoorDewpointDifference_Impl;
+    class PlantEquipmentOperationOutdoorDewpointDifference_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantEquipmentOperationOutdoorDewpointDifference is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDewpointDifference'. */
-class MODEL_API PlantEquipmentOperationOutdoorDewpointDifference : public PlantEquipmentOperationRangeBasedScheme {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantEquipmentOperationOutdoorDewpointDifference is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDewpointDifference'. */
+  class MODEL_API PlantEquipmentOperationOutdoorDewpointDifference : public PlantEquipmentOperationRangeBasedScheme
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantEquipmentOperationOutdoorDewpointDifference(const Model& model);
+    explicit PlantEquipmentOperationOutdoorDewpointDifference(const Model& model);
 
-  virtual ~PlantEquipmentOperationOutdoorDewpointDifference() {}
+    virtual ~PlantEquipmentOperationOutdoorDewpointDifference() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> referenceTemperatureNode() const;
+    boost::optional<Node> referenceTemperatureNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setReferenceTemperatureNode(const Node& node);
+    bool setReferenceTemperatureNode(const Node& node);
 
-  void resetReferenceTemperatureNode();
+    void resetReferenceTemperatureNode();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl ImplType;
 
-  explicit PlantEquipmentOperationOutdoorDewpointDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl> impl);
+    explicit PlantEquipmentOperationOutdoorDewpointDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl> impl);
 
-  friend class detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDewpointDifference");
-};
+    friend class detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDewpointDifference");
+  };
 
-/** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
-typedef boost::optional<PlantEquipmentOperationOutdoorDewpointDifference> OptionalPlantEquipmentOperationOutdoorDewpointDifference;
+  /** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
+  typedef boost::optional<PlantEquipmentOperationOutdoorDewpointDifference> OptionalPlantEquipmentOperationOutdoorDewpointDifference;
 
-/** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
-typedef std::vector<PlantEquipmentOperationOutdoorDewpointDifference> PlantEquipmentOperationOutdoorDewpointDifferenceVector;
+  /** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
+  typedef std::vector<PlantEquipmentOperationOutdoorDewpointDifference> PlantEquipmentOperationOutdoorDewpointDifferenceVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDEWPOINTDIFFERENCE_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDEWPOINTDIFFERENCE_HPP

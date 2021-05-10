@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,321 +49,275 @@
 namespace openstudio {
 namespace model {
 
-ViewFactorData::ViewFactorData(const PlanarSurface& s, double viewFactor)
-  : m_planarSurface(s), m_viewFactor(viewFactor) {}
+  ViewFactorData::ViewFactorData(const PlanarSurface& s, double viewFactor) : m_planarSurface(s), m_viewFactor(viewFactor) {}
 
-PlanarSurface ViewFactorData::planarSurface() const {
-  return m_planarSurface;
-}
-
-double ViewFactorData::viewFactor() const {
-  return m_viewFactor;
-}
-
-std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactorData& vf) {
-  out << "(" << vf.planarSurface().nameString() << ",  " << vf.viewFactor() << ")";
-  return out;
-}
-
-namespace detail {
-
-  AirflowNetworkDuctViewFactors_Impl::AirflowNetworkDuctViewFactors_Impl(const IdfObject& idfObject,
-                                                                         Model_Impl* model,
-                                                                         bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkDuctViewFactors::iddObjectType());
+  PlanarSurface ViewFactorData::planarSurface() const {
+    return m_planarSurface;
   }
 
-  AirflowNetworkDuctViewFactors_Impl::AirflowNetworkDuctViewFactors_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                         Model_Impl* model,
-                                                                         bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == AirflowNetworkDuctViewFactors::iddObjectType());
+  double ViewFactorData::viewFactor() const {
+    return m_viewFactor;
   }
 
-  AirflowNetworkDuctViewFactors_Impl::AirflowNetworkDuctViewFactors_Impl(const AirflowNetworkDuctViewFactors_Impl& other,
-                                                                         Model_Impl* model,
-                                                                         bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& AirflowNetworkDuctViewFactors_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
+  std::ostream& operator<<(std::ostream& out, const openstudio::model::ViewFactorData& vf) {
+    out << "(" << vf.planarSurface().nameString() << ",  " << vf.viewFactor() << ")";
+    return out;
   }
 
-  IddObjectType AirflowNetworkDuctViewFactors_Impl::iddObjectType() const
-  {
-    return AirflowNetworkDuctViewFactors::iddObjectType();
-  }
+  namespace detail {
 
-  AirflowNetworkLinkage AirflowNetworkDuctViewFactors_Impl::linkage() const
-  {
-    boost::optional<AirflowNetworkLinkage> value = optionalLinkage();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Linkage attached.");
+    AirflowNetworkDuctViewFactors_Impl::AirflowNetworkDuctViewFactors_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkDuctViewFactors::iddObjectType());
     }
-    return value.get();
-  }
 
-  double AirflowNetworkDuctViewFactors_Impl::ductSurfaceExposureFraction() const
-  {
-    boost::optional<double> value = getDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    AirflowNetworkDuctViewFactors_Impl::AirflowNetworkDuctViewFactors_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                           bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == AirflowNetworkDuctViewFactors::iddObjectType());
+    }
 
-  bool AirflowNetworkDuctViewFactors_Impl::isDuctSurfaceExposureFractionDefaulted() const
-  {
-    return isEmpty(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction);
-  }
+    AirflowNetworkDuctViewFactors_Impl::AirflowNetworkDuctViewFactors_Impl(const AirflowNetworkDuctViewFactors_Impl& other, Model_Impl* model,
+                                                                           bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  double AirflowNetworkDuctViewFactors_Impl::ductSurfaceEmittance() const
-  {
-    boost::optional<double> value = getDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    const std::vector<std::string>& AirflowNetworkDuctViewFactors_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-  bool AirflowNetworkDuctViewFactors_Impl::isDuctSurfaceEmittanceDefaulted() const
-  {
-    return isEmpty(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance);
-  }
+    IddObjectType AirflowNetworkDuctViewFactors_Impl::iddObjectType() const {
+      return AirflowNetworkDuctViewFactors::iddObjectType();
+    }
 
-  bool AirflowNetworkDuctViewFactors_Impl::setLinkage(const AirflowNetworkLinkage& linkage)
-  {
-    bool result = setPointer(OS_AirflowNetworkDuctViewFactorsFields::LinkageName, linkage.handle());
-    return result;
-  }
-
-  bool AirflowNetworkDuctViewFactors_Impl::setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction)
-  {
-    bool result = setDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction, ductSurfaceExposureFraction);
-    return result;
-  }
-
-  void AirflowNetworkDuctViewFactors_Impl::resetDuctSurfaceExposureFraction()
-  {
-    bool result = setString(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirflowNetworkDuctViewFactors_Impl::setDuctSurfaceEmittance(double ductSurfaceEmittance)
-  {
-    bool result = setDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance, ductSurfaceEmittance);
-    return result;
-  }
-
-  void AirflowNetworkDuctViewFactors_Impl::resetDuctSurfaceEmittance()
-  {
-    bool result = setString(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<AirflowNetworkLinkage> AirflowNetworkDuctViewFactors_Impl::optionalLinkage() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkLinkage>(OS_AirflowNetworkDuctViewFactorsFields::LinkageName);
-  }
-
-  boost::optional<double> AirflowNetworkDuctViewFactors_Impl::getViewFactor(const PlanarSurface &surf) const
-  {
-    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
-      OptionalString name = group.getString(0);
-      if (name) {
-        if (name.get() == surf.name()) {
-          OptionalDouble value = group.getDouble(1);
-          if (value) {
-            return value;
-          } else {
-            LOG(Warn, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
-            return boost::none;
-          }
-        }
-      } else {
-        LOG(Warn, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
+    AirflowNetworkLinkage AirflowNetworkDuctViewFactors_Impl::linkage() const {
+      boost::optional<AirflowNetworkLinkage> value = optionalLinkage();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Linkage attached.");
       }
+      return value.get();
     }
-    return boost::none;
-  }
 
-  std::vector<ViewFactorData> AirflowNetworkDuctViewFactors_Impl::viewFactors() const
-  {
-    std::vector<ViewFactorData> result;
-    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
-      OptionalString name = group.getString(0);
-      if (name) {
-        OptionalDouble value = group.getDouble(1);
-        if (value) {
-          boost::optional<PlanarSurface> optsurface = group.getModelObjectTarget<PlanarSurface>(0);
-          if (optsurface) {
-            result.push_back(ViewFactorData{optsurface.get(), value.get()});
-          } else {
-            LOG(Warn, "Failed to find surface named " << name.get() << " in " << briefDescription() << ".");
+    double AirflowNetworkDuctViewFactors_Impl::ductSurfaceExposureFraction() const {
+      boost::optional<double> value = getDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkDuctViewFactors_Impl::isDuctSurfaceExposureFractionDefaulted() const {
+      return isEmpty(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction);
+    }
+
+    double AirflowNetworkDuctViewFactors_Impl::ductSurfaceEmittance() const {
+      boost::optional<double> value = getDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkDuctViewFactors_Impl::isDuctSurfaceEmittanceDefaulted() const {
+      return isEmpty(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance);
+    }
+
+    bool AirflowNetworkDuctViewFactors_Impl::setLinkage(const AirflowNetworkLinkage& linkage) {
+      bool result = setPointer(OS_AirflowNetworkDuctViewFactorsFields::LinkageName, linkage.handle());
+      return result;
+    }
+
+    bool AirflowNetworkDuctViewFactors_Impl::setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction) {
+      bool result = setDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction, ductSurfaceExposureFraction);
+      return result;
+    }
+
+    void AirflowNetworkDuctViewFactors_Impl::resetDuctSurfaceExposureFraction() {
+      bool result = setString(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceExposureFraction, "");
+      OS_ASSERT(result);
+    }
+
+    bool AirflowNetworkDuctViewFactors_Impl::setDuctSurfaceEmittance(double ductSurfaceEmittance) {
+      bool result = setDouble(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance, ductSurfaceEmittance);
+      return result;
+    }
+
+    void AirflowNetworkDuctViewFactors_Impl::resetDuctSurfaceEmittance() {
+      bool result = setString(OS_AirflowNetworkDuctViewFactorsFields::DuctSurfaceEmittance, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<AirflowNetworkLinkage> AirflowNetworkDuctViewFactors_Impl::optionalLinkage() const {
+      return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkLinkage>(OS_AirflowNetworkDuctViewFactorsFields::LinkageName);
+    }
+
+    boost::optional<double> AirflowNetworkDuctViewFactors_Impl::getViewFactor(const PlanarSurface& surf) const {
+      for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+        OptionalString name = group.getString(0);
+        if (name) {
+          if (name.get() == surf.name()) {
+            OptionalDouble value = group.getDouble(1);
+            if (value) {
+              return value;
+            } else {
+              LOG(Warn, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
+              return boost::none;
+            }
           }
         } else {
-          LOG(Warn, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
+          LOG(Warn, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
         }
-      } else {
-        LOG(Warn, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
       }
+      return boost::none;
     }
-    return result;
-  }
 
-  //std::unordered_map<PlanarSurface, double> AirflowNetworkDuctViewFactors_Impl::viewFactorMap() const
-  //{
-  //  std::unordered_map<PlanarSurface, double> result;
-  //  for (auto &f : viewFactors()) {
-  //    result[f.first] = f.second;
-  //  }
-  //  return result;
-  //}
-
-  bool AirflowNetworkDuctViewFactors_Impl::setViewFactor(const PlanarSurface &surf, double F)
-  {
-    //std::vector<unsigned> ids = castVector<WorkspaceExtensibleGroup>(extensibleGroups())  getSourceFieldIndices(surf.handle());
-    std::vector<unsigned> ids = getSourceIndices(surf.handle());
-    if (ids.empty()) {
-      LOG(Info, "Did not find the surface!");
-      // Didn't find the surface
-      std::vector<std::string> values = { toString(surf.handle()), toString(F) };
-      ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
-      OS_ASSERT(!group.empty());
-    } else {
-      LOG(Info, "Found the surface!");
-      // Found the surface
-
+    std::vector<ViewFactorData> AirflowNetworkDuctViewFactors_Impl::viewFactors() const {
+      std::vector<ViewFactorData> result;
+      for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+        OptionalString name = group.getString(0);
+        if (name) {
+          OptionalDouble value = group.getDouble(1);
+          if (value) {
+            boost::optional<PlanarSurface> optsurface = group.getModelObjectTarget<PlanarSurface>(0);
+            if (optsurface) {
+              result.push_back(ViewFactorData{optsurface.get(), value.get()});
+            } else {
+              LOG(Warn, "Failed to find surface named " << name.get() << " in " << briefDescription() << ".");
+            }
+          } else {
+            LOG(Warn, "Could not read surface view factor " << group.groupIndex() << " in " << briefDescription() << ".");
+          }
+        } else {
+          LOG(Warn, "Could not read surface name " << group.groupIndex() << " in " << briefDescription() << ".");
+        }
+      }
+      return result;
     }
-    return false;
-  }
 
-  bool AirflowNetworkDuctViewFactors_Impl::removeViewFactor(const PlanarSurface &surf)
-  {
-    std::vector<unsigned> ids = getSourceIndices(surf.handle());
-    if (ids.empty()) {
-      LOG(Info, "Did not find the surface!");
-      // Didn't find the surface
+    //std::unordered_map<PlanarSurface, double> AirflowNetworkDuctViewFactors_Impl::viewFactorMap() const
+    //{
+    //  std::unordered_map<PlanarSurface, double> result;
+    //  for (auto &f : viewFactors()) {
+    //    result[f.first] = f.second;
+    //  }
+    //  return result;
+    //}
+
+    bool AirflowNetworkDuctViewFactors_Impl::setViewFactor(const PlanarSurface& surf, double F) {
+      //std::vector<unsigned> ids = castVector<WorkspaceExtensibleGroup>(extensibleGroups())  getSourceFieldIndices(surf.handle());
+      std::vector<unsigned> ids = getSourceIndices(surf.handle());
+      if (ids.empty()) {
+        LOG(Info, "Did not find the surface!");
+        // Didn't find the surface
+        std::vector<std::string> values = {toString(surf.handle()), toString(F)};
+        ModelExtensibleGroup group = pushExtensibleGroup(values, false).cast<ModelExtensibleGroup>();
+        OS_ASSERT(!group.empty());
+      } else {
+        LOG(Info, "Found the surface!");
+        // Found the surface
+      }
       return false;
     }
-    LOG(Info, "Found the surface!");
-    // Found the surface, maybe need to check if there is more than one?
-    return !eraseExtensibleGroup(ids[0]).empty();
+
+    bool AirflowNetworkDuctViewFactors_Impl::removeViewFactor(const PlanarSurface& surf) {
+      std::vector<unsigned> ids = getSourceIndices(surf.handle());
+      if (ids.empty()) {
+        LOG(Info, "Did not find the surface!");
+        // Didn't find the surface
+        return false;
+      }
+      LOG(Info, "Found the surface!");
+      // Found the surface, maybe need to check if there is more than one?
+      return !eraseExtensibleGroup(ids[0]).empty();
+    }
+
+    void AirflowNetworkDuctViewFactors_Impl::resetViewFactors() {
+      auto results = clearExtensibleGroups(false);
+      OS_ASSERT(!results.empty());
+    }
+
+  }  // namespace detail
+
+  AirflowNetworkDuctViewFactors::AirflowNetworkDuctViewFactors(const Model& model)
+    : ModelObject(AirflowNetworkDuctViewFactors::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AirflowNetworkDuctViewFactors_Impl>());
+
+    // TODO: Appropriately handle the following required object-list fields.
+    //     OS_AirflowNetworkDuctViewFactorsFields::LinkageName
+    bool ok = true;
+    // ok = setLinkage();
+    OS_ASSERT(ok);
   }
 
-  void AirflowNetworkDuctViewFactors_Impl::resetViewFactors()
-  {
-    auto results = clearExtensibleGroups(false);
-    OS_ASSERT(!results.empty());
+  IddObjectType AirflowNetworkDuctViewFactors::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_AirflowNetworkDuctViewFactors);
   }
 
-} // detail
+  AirflowNetworkLinkage AirflowNetworkDuctViewFactors::linkage() const {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->linkage();
+  }
 
-AirflowNetworkDuctViewFactors::AirflowNetworkDuctViewFactors(const Model& model)
-  : ModelObject(AirflowNetworkDuctViewFactors::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AirflowNetworkDuctViewFactors_Impl>());
+  double AirflowNetworkDuctViewFactors::ductSurfaceExposureFraction() const {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->ductSurfaceExposureFraction();
+  }
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirflowNetworkDuctViewFactorsFields::LinkageName
-  bool ok = true;
-  // ok = setLinkage();
-  OS_ASSERT(ok);
-}
+  bool AirflowNetworkDuctViewFactors::isDuctSurfaceExposureFractionDefaulted() const {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->isDuctSurfaceExposureFractionDefaulted();
+  }
 
-IddObjectType AirflowNetworkDuctViewFactors::iddObjectType()
-{
-  return IddObjectType(IddObjectType::OS_AirflowNetworkDuctViewFactors);
-}
+  double AirflowNetworkDuctViewFactors::ductSurfaceEmittance() const {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->ductSurfaceEmittance();
+  }
 
-AirflowNetworkLinkage AirflowNetworkDuctViewFactors::linkage() const
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->linkage();
-}
+  bool AirflowNetworkDuctViewFactors::isDuctSurfaceEmittanceDefaulted() const {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->isDuctSurfaceEmittanceDefaulted();
+  }
 
-double AirflowNetworkDuctViewFactors::ductSurfaceExposureFraction() const
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->ductSurfaceExposureFraction();
-}
+  bool AirflowNetworkDuctViewFactors::setLinkage(const AirflowNetworkLinkage& linkage) {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setLinkage(linkage);
+  }
 
-bool AirflowNetworkDuctViewFactors::isDuctSurfaceExposureFractionDefaulted() const
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->isDuctSurfaceExposureFractionDefaulted();
-}
+  bool AirflowNetworkDuctViewFactors::setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction) {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setDuctSurfaceExposureFraction(ductSurfaceExposureFraction);
+  }
 
-double AirflowNetworkDuctViewFactors::ductSurfaceEmittance() const
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->ductSurfaceEmittance();
-}
+  void AirflowNetworkDuctViewFactors::resetDuctSurfaceExposureFraction() {
+    getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetDuctSurfaceExposureFraction();
+  }
 
-bool AirflowNetworkDuctViewFactors::isDuctSurfaceEmittanceDefaulted() const
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->isDuctSurfaceEmittanceDefaulted();
-}
+  bool AirflowNetworkDuctViewFactors::setDuctSurfaceEmittance(double ductSurfaceEmittance) {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setDuctSurfaceEmittance(ductSurfaceEmittance);
+  }
 
-bool AirflowNetworkDuctViewFactors::setLinkage(const AirflowNetworkLinkage& linkage)
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setLinkage(linkage);
-}
+  void AirflowNetworkDuctViewFactors::resetDuctSurfaceEmittance() {
+    getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetDuctSurfaceEmittance();
+  }
 
-bool AirflowNetworkDuctViewFactors::setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction)
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setDuctSurfaceExposureFraction(ductSurfaceExposureFraction);
-}
+  boost::optional<double> AirflowNetworkDuctViewFactors::getViewFactor(const PlanarSurface& surf) const {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->getViewFactor(surf);
+  }
 
-void AirflowNetworkDuctViewFactors::resetDuctSurfaceExposureFraction()
-{
-  getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetDuctSurfaceExposureFraction();
-}
+  std::vector<ViewFactorData> AirflowNetworkDuctViewFactors::viewFactors() const {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->viewFactors();
+  }
 
-bool AirflowNetworkDuctViewFactors::setDuctSurfaceEmittance(double ductSurfaceEmittance)
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setDuctSurfaceEmittance(ductSurfaceEmittance);
-}
+  //std::unordered_map<PlanarSurface, double> AirflowNetworkDuctViewFactors::viewFactorMap() const
+  //{
+  //  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->viewFactorMap();
+  //}
 
-void AirflowNetworkDuctViewFactors::resetDuctSurfaceEmittance()
-{
-  getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetDuctSurfaceEmittance();
-}
+  bool AirflowNetworkDuctViewFactors::setViewFactor(const PlanarSurface& surf, double F) {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setViewFactor(surf, F);
+  }
 
-boost::optional<double> AirflowNetworkDuctViewFactors::getViewFactor(const PlanarSurface &surf) const
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->getViewFactor(surf);
-}
+  bool AirflowNetworkDuctViewFactors::removeViewFactor(const PlanarSurface& surf) {
+    return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->removeViewFactor(surf);
+  }
 
-std::vector<ViewFactorData> AirflowNetworkDuctViewFactors::viewFactors() const
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->viewFactors();
-}
+  void AirflowNetworkDuctViewFactors::resetViewFactors() {
+    getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetViewFactors();
+  }
 
-//std::unordered_map<PlanarSurface, double> AirflowNetworkDuctViewFactors::viewFactorMap() const
-//{
-//  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->viewFactorMap();
-//}
+  /// @cond
+  AirflowNetworkDuctViewFactors::AirflowNetworkDuctViewFactors(std::shared_ptr<detail::AirflowNetworkDuctViewFactors_Impl> impl)
+    : ModelObject(impl) {}
+  /// @endcond
 
-bool AirflowNetworkDuctViewFactors::setViewFactor(const PlanarSurface &surf, double F)
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->setViewFactor(surf, F);
-}
-
-bool AirflowNetworkDuctViewFactors::removeViewFactor(const PlanarSurface &surf)
-{
-  return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->removeViewFactor(surf);
-}
-
-void AirflowNetworkDuctViewFactors::resetViewFactors()
-{
-  getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->resetViewFactors();
-}
-
-/// @cond
-AirflowNetworkDuctViewFactors::AirflowNetworkDuctViewFactors(std::shared_ptr<detail::AirflowNetworkDuctViewFactors_Impl> impl)
-  : ModelObject(impl)
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

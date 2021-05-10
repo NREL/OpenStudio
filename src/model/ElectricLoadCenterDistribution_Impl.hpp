@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,236 +36,226 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Generator;
-class Inverter;
-class ElectricalStorage;
-class ElectricLoadCenterTransformer;
-class ElectricLoadCenterStorageConverter;
-class ModelObjectList;
+  class Schedule;
+  class Generator;
+  class Inverter;
+  class ElectricalStorage;
+  class ElectricLoadCenterTransformer;
+  class ElectricLoadCenterStorageConverter;
+  class ModelObjectList;
 
-namespace detail {
+  namespace detail {
 
-  /** ElectricLoadCenterDistribution_Impl is a ParentObject_Impl that is the implementation class for ElectricLoadCenterDistribution.*/
-  class MODEL_API ElectricLoadCenterDistribution_Impl : public ParentObject_Impl {
+    /** ElectricLoadCenterDistribution_Impl is a ParentObject_Impl that is the implementation class for ElectricLoadCenterDistribution.*/
+    class MODEL_API ElectricLoadCenterDistribution_Impl : public ParentObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ElectricLoadCenterDistribution_Impl(const IdfObject& idfObject,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      ElectricLoadCenterDistribution_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterDistribution_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      ElectricLoadCenterDistribution_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterDistribution_Impl(const ElectricLoadCenterDistribution_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      ElectricLoadCenterDistribution_Impl(const ElectricLoadCenterDistribution_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ElectricLoadCenterDistribution_Impl() {}
+      virtual ~ElectricLoadCenterDistribution_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    /// returns all generators, inverters, transformers, and electrical storage
-    virtual std::vector<ModelObject> children() const override;
+      /// returns all generators, inverters, transformers, and electrical storage
+      virtual std::vector<ModelObject> children() const override;
 
-    /// remove the object from the model's workspace
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      /// remove the object from the model's workspace
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    /// returns all generators, inverters, transformers, and electrical storage
-    virtual ModelObject clone(Model model) const override;
+      /// returns all generators, inverters, transformers, and electrical storage
+      virtual ModelObject clone(Model model) const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      std::vector<Generator> generators() const;
 
-    std::vector<Generator> generators() const;
+      std::string generatorOperationSchemeType() const;
 
-    std::string generatorOperationSchemeType() const;
+      bool isGeneratorOperationSchemeTypeDefaulted() const;
 
-    bool isGeneratorOperationSchemeTypeDefaulted() const;
+      boost::optional<double> demandLimitSchemePurchasedElectricDemandLimit() const;
 
-    boost::optional<double> demandLimitSchemePurchasedElectricDemandLimit() const;
+      boost::optional<Schedule> trackScheduleSchemeSchedule() const;
 
-    boost::optional<Schedule> trackScheduleSchemeSchedule() const;
+      boost::optional<std::string> trackMeterSchemeMeterName() const;
 
-    boost::optional<std::string> trackMeterSchemeMeterName() const;
+      std::string electricalBussType() const;
 
-    std::string electricalBussType() const;
+      bool isElectricalBussTypeDefaulted() const;
 
-    bool isElectricalBussTypeDefaulted() const;
+      boost::optional<Inverter> inverter() const;
 
-    boost::optional<Inverter> inverter() const;
+      boost::optional<ElectricalStorage> electricalStorage() const;
 
-    boost::optional<ElectricalStorage> electricalStorage() const;
+      boost::optional<ElectricLoadCenterTransformer> transformer() const;
 
-    boost::optional<ElectricLoadCenterTransformer> transformer() const;
+      // New
 
-    // New
+      // Storage Operation Scheme, defaults to TrackFacilityElectricDemandStoreExcessOnSite
+      std::string storageOperationScheme() const;
+      bool isStorageOperationSchemeDefaulted() const;
 
-    // Storage Operation Scheme, defaults to TrackFacilityElectricDemandStoreExcessOnSite
-    std::string storageOperationScheme() const;
-    bool isStorageOperationSchemeDefaulted() const;
+      // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
+      boost::optional<std::string> storageControlTrackMeterName() const;
 
-    // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
-    boost::optional<std::string> storageControlTrackMeterName() const;
+      // Storage Converter Object Name
+      boost::optional<ElectricLoadCenterStorageConverter> storageConverter() const;
 
-    // Storage Converter Object Name
-    boost::optional<ElectricLoadCenterStorageConverter> storageConverter() const;
+      // Maximum Storage State of Charge Fraction, required if storage, defaults
+      double maximumStorageStateofChargeFraction() const;
+      bool isMaximumStorageStateofChargeFractionDefaulted() const;
 
-    // Maximum Storage State of Charge Fraction, required if storage, defaults
-    double maximumStorageStateofChargeFraction() const;
-    bool isMaximumStorageStateofChargeFractionDefaulted() const;
+      // Minimum Storage State of Charge Fraction, required if storage, defaults
+      double minimumStorageStateofChargeFraction() const;
+      bool isMinimumStorageStateofChargeFractionDefaulted() const;
 
-    // Minimum Storage State of Charge Fraction, required if storage, defaults
-    double minimumStorageStateofChargeFraction() const;
-    bool isMinimumStorageStateofChargeFractionDefaulted() const;
+      // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+      boost::optional<double> designStorageControlChargePower() const;
 
-    // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-    boost::optional<double> designStorageControlChargePower() const;
+      // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+      // TODO: do I want to default that to daytime?
+      boost::optional<Schedule> storageChargePowerFractionSchedule() const;
 
-    // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
-    // TODO: do I want to default that to daytime?
-    boost::optional<Schedule> storageChargePowerFractionSchedule() const;
+      // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+      boost::optional<double> designStorageControlDischargePower() const;
 
-    // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-    boost::optional<double> designStorageControlDischargePower() const;
+      // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+      // TODO: do I want to default that to daytime?
+      boost::optional<Schedule> storageDischargePowerFractionSchedule() const;
 
-    // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
-    // TODO: do I want to default that to daytime?
-    boost::optional<Schedule> storageDischargePowerFractionSchedule() const;
+      // Storage Control Utility Demand Target, required if FacilityDemandLeveling
+      boost::optional<double> storageControlUtilityDemandTarget() const;
 
+      // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
+      Schedule storageControlUtilityDemandTargetFractionSchedule() const;
+      bool isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const;
 
-    // Storage Control Utility Demand Target, required if FacilityDemandLeveling
-    boost::optional<double> storageControlUtilityDemandTarget() const;
+      //@}
+      /** @name Setters */
+      //@{
 
+      bool addGenerator(const Generator& generator);
 
-    // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-    Schedule storageControlUtilityDemandTargetFractionSchedule() const;
-    bool isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const;
+      bool removeGenerator(const Generator& generator);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetGenerators();
 
-    bool addGenerator(const Generator& generator);
+      bool setGeneratorOperationSchemeType(const std::string& generatorOperationSchemeType);
 
-    bool removeGenerator(const Generator& generator);
+      void resetGeneratorOperationSchemeType();
 
-    void resetGenerators();
+      bool setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
 
-    bool setGeneratorOperationSchemeType(const std::string& generatorOperationSchemeType);
+      void resetDemandLimitSchemePurchasedElectricDemandLimit();
 
-    void resetGeneratorOperationSchemeType();
+      bool setTrackScheduleSchemeSchedule(Schedule& schedule);
 
-    bool setDemandLimitSchemePurchasedElectricDemandLimit(double demandLimitSchemePurchasedElectricDemandLimit);
+      void resetTrackScheduleSchemeSchedule();
 
-    void resetDemandLimitSchemePurchasedElectricDemandLimit();
+      bool setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName);
 
-    bool setTrackScheduleSchemeSchedule(Schedule& schedule);
+      void resetTrackMeterSchemeMeterName();
 
-    void resetTrackScheduleSchemeSchedule();
+      bool setElectricalBussType(const std::string& electricalBussType);
 
-    bool setTrackMeterSchemeMeterName(const std::string& trackMeterSchemeMeterName);
+      void resetElectricalBussType();
 
-    void resetTrackMeterSchemeMeterName();
+      bool setInverter(const Inverter& inverter);
 
-    bool setElectricalBussType(const std::string& electricalBussType);
+      void resetInverter();
 
-    void resetElectricalBussType();
+      bool setElectricalStorage(const ElectricalStorage& electricalStorage);
 
-    bool setInverter(const Inverter& inverter);
+      void resetElectricalStorage();
 
-    void resetInverter();
+      bool setTransformer(const ElectricLoadCenterTransformer& transformer);
 
-    bool setElectricalStorage(const ElectricalStorage& electricalStorage);
+      void resetTransformer();
 
-    void resetElectricalStorage();
+      // Storage Operation Scheme
+      bool setStorageOperationScheme(const std::string& operationScheme);
+      void resetStorageOperationScheme();
 
-    bool setTransformer(const ElectricLoadCenterTransformer& transformer);
+      // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
+      bool setStorageControlTrackMeterName(const std::string& meterName);
+      void resetStorageControlTrackMeterName();
 
-    void resetTransformer();
+      // Storage Converter Object Name
+      bool setStorageConverter(const ElectricLoadCenterStorageConverter& converter);
+      void resetStorageConverter();
 
-    // Storage Operation Scheme
-    bool setStorageOperationScheme(const std::string& operationScheme);
-    void resetStorageOperationScheme();
+      // Maximum Storage State of Charge Fraction, required if storage, defaults
+      bool setMaximumStorageStateofChargeFraction(const double maxStateofCharge);
+      void resetMaximumStorageStateofChargeFraction();
 
-    // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite
-    bool setStorageControlTrackMeterName(const std::string& meterName);
-    void resetStorageControlTrackMeterName();
+      // Minimum Storage State of Charge Fraction, required if storage, defaults
+      bool setMinimumStorageStateofChargeFraction(const double minStateofCharge);
+      void resetMinimumStorageStateofChargeFraction();
 
-    // Storage Converter Object Name
-    bool setStorageConverter(const ElectricLoadCenterStorageConverter& converter);
-    void resetStorageConverter();
+      // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+      bool setDesignStorageControlChargePower(const double designStorageControlChargePower);
+      void resetDesignStorageControlChargePower();
 
-    // Maximum Storage State of Charge Fraction, required if storage, defaults
-    bool setMaximumStorageStateofChargeFraction(const double maxStateofCharge);
-    void resetMaximumStorageStateofChargeFraction();
+      // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+      // TODO: do I want to default that to daytime?
+      bool setStorageChargePowerFractionSchedule(Schedule& schedule);
+      void resetStorageChargePowerFractionSchedule();
 
-    // Minimum Storage State of Charge Fraction, required if storage, defaults
-    bool setMinimumStorageStateofChargeFraction(const double minStateofCharge);
-    void resetMinimumStorageStateofChargeFraction();
+      // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
+      bool setDesignStorageControlDischargePower(const double designStorageControlDischargePower);
+      void resetDesignStorageControlDischargePower();
 
-    // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-    bool setDesignStorageControlChargePower(const double designStorageControlChargePower);
-    void resetDesignStorageControlChargePower();
+      // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
+      // TODO: do I want to default that to daytime?
+      bool setStorageDischargePowerFractionSchedule(Schedule& schedule);
+      void resetStorageDischargePowerFractionSchedule();
 
-    // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
-    // TODO: do I want to default that to daytime?
-    bool setStorageChargePowerFractionSchedule(Schedule& schedule);
-    void resetStorageChargePowerFractionSchedule();
+      // Storage Control Utility Demand Target, required if FacilityDemandLeveling
+      bool setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget);
+      void resetStorageControlUtilityDemandTarget();
 
-    // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
-    bool setDesignStorageControlDischargePower(const double designStorageControlDischargePower);
-    void resetDesignStorageControlDischargePower();
+      // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
+      bool setStorageControlUtilityDemandTargetFractionSchedule(Schedule& schedule);
+      void resetStorageControlUtilityDemandTargetFractionSchedule();
 
-    // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
-    // TODO: do I want to default that to daytime?
-    bool setStorageDischargePowerFractionSchedule(Schedule& schedule);
-    void resetStorageDischargePowerFractionSchedule();
+      //@}
+      /** @name Other */
+      //@{
 
-    // Storage Control Utility Demand Target, required if FacilityDemandLeveling
-    bool setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget);
-    void resetStorageControlUtilityDemandTarget();
+      bool validityCheck() const;
 
-    // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
-    bool setStorageControlUtilityDemandTargetFractionSchedule(Schedule& schedule);
-    void resetStorageControlUtilityDemandTargetFractionSchedule();
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ElectricLoadCenterDistribution");
 
+      ModelObjectList generatorModelObjectList() const;
+    };
 
-    //@}
-    /** @name Other */
-    //@{
+  }  // namespace detail
 
-    bool validityCheck() const;
+}  // namespace model
+}  // namespace openstudio
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterDistribution");
-
-    ModelObjectList generatorModelObjectList() const;
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_ELECTRICLOADCENTERDISTRIBUTION_IMPL_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERDISTRIBUTION_IMPL_HPP

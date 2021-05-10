@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,80 +56,78 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateLuminaire( Luminaire & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::Lights);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateLuminaire(Luminaire& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Lights);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  LuminaireDefinition definition = modelObject.luminaireDefinition();
-
-  idfObject.setString(LightsFields::Name, modelObject.name().get());
-
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      idfObject.setString(LightsFields::ZoneorZoneListName, thermalZone->name().get());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
-  }else if(spaceType){
-    idfObject.setString(LightsFields::ZoneorZoneListName, spaceType->name().get());
+
+    LuminaireDefinition definition = modelObject.luminaireDefinition();
+
+    idfObject.setString(LightsFields::Name, modelObject.name().get());
+
+    boost::optional<Space> space = modelObject.space();
+    boost::optional<SpaceType> spaceType = modelObject.spaceType();
+    if (space) {
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
+      if (thermalZone) {
+        idfObject.setString(LightsFields::ZoneorZoneListName, thermalZone->name().get());
+      }
+    } else if (spaceType) {
+      idfObject.setString(LightsFields::ZoneorZoneListName, spaceType->name().get());
+    }
+
+    boost::optional<Schedule> schedule = modelObject.schedule();
+    if (schedule) {
+      idfObject.setString(LightsFields::ScheduleName, schedule->name().get());
+    }
+
+    idfObject.setString(LightsFields::DesignLevelCalculationMethod, "LightingLevel");
+
+    double multiplier = modelObject.multiplier();
+
+    idfObject.setDouble(LightsFields::LightingLevel, multiplier * definition.lightingPower());
+
+    if (!definition.isReturnAirFractionDefaulted()) {
+      idfObject.setDouble(LightsFields::ReturnAirFraction, definition.returnAirFraction());
+    }
+
+    if (!definition.isFractionRadiantDefaulted()) {
+      idfObject.setDouble(LightsFields::FractionRadiant, definition.fractionRadiant());
+    }
+
+    if (!definition.isFractionVisibleDefaulted()) {
+      idfObject.setDouble(LightsFields::FractionVisible, definition.fractionVisible());
+    }
+
+    if (!modelObject.isFractionReplaceableDefaulted()) {
+      idfObject.setDouble(LightsFields::FractionReplaceable, modelObject.fractionReplaceable());
+    }
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(LightsFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    if (!definition.isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted()) {
+      idfObject.setDouble(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature,
+                          definition.returnAirFractionCalculatedfromPlenumTemperature());
+    }
+
+    if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted()) {
+      idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1,
+                          definition.returnAirFractionFunctionofPlenumTemperatureCoefficient1());
+    }
+
+    if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted()) {
+      idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2,
+                          definition.returnAirFractionFunctionofPlenumTemperatureCoefficient2());
+    }
+
+    return idfObject;
   }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
-    idfObject.setString(LightsFields::ScheduleName, schedule->name().get());
-  }
+}  // namespace energyplus
 
-  idfObject.setString(LightsFields::DesignLevelCalculationMethod, "LightingLevel");
-
-  double multiplier = modelObject.multiplier();
-
-  idfObject.setDouble(LightsFields::LightingLevel, multiplier*definition.lightingPower());
-
-  if (!definition.isReturnAirFractionDefaulted()){
-    idfObject.setDouble(LightsFields::ReturnAirFraction, definition.returnAirFraction());
-  }
-
-  if (!definition.isFractionRadiantDefaulted()){
-    idfObject.setDouble(LightsFields::FractionRadiant, definition.fractionRadiant());
-  }
-
-  if (!definition.isFractionVisibleDefaulted()){
-    idfObject.setDouble(LightsFields::FractionVisible, definition.fractionVisible());
-  }
-
-  if (!modelObject.isFractionReplaceableDefaulted()){
-    idfObject.setDouble(LightsFields::FractionReplaceable, modelObject.fractionReplaceable());
-  }
-
-  if (!modelObject.isEndUseSubcategoryDefaulted()){
-    idfObject.setString(LightsFields::EndUseSubcategory, modelObject.endUseSubcategory());
-  }
-
-  if (!definition.isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted()){
-    idfObject.setDouble(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature,
-                        definition.returnAirFractionCalculatedfromPlenumTemperature());
-  }
-
-  if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted()){
-    idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1,
-                        definition.returnAirFractionFunctionofPlenumTemperatureCoefficient1());
-  }
-
-  if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted()){
-    idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2,
-                        definition.returnAirFractionFunctionofPlenumTemperatureCoefficient2());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

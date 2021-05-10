@@ -1,7 +1,7 @@
 namespace openstudio {
 namespace model {
 
-/** \mainpage OpenStudio Model
+  /** \mainpage OpenStudio Model
  *
  *  \section overview_model Overview
  *
@@ -730,6 +730,7 @@ namespace model {
  *                <li> People (SpaceLoadInstance)
  *                <li> SpaceInfiltrationDesignFlowRate (SpaceLoad)
  *                <li> SpaceInfiltrationEffectiveLeakageArea (SpaceLoad)
+ *                <li> SpaceInfiltrationFlowCoefficient (SpaceLoad)
  *                <li> DaylightingControl (SpaceItem)
  *                <li> IlluminanceMap (SpaceItem)
  *                <li> GlareSensor (SpaceItem)
@@ -895,6 +896,7 @@ namespace model {
  *        <li> People (SpaceLoadInstance)
  *        <li> SpaceInfiltrationDesignFlowRate (SpaceLoad)
  *        <li> SpaceInfiltrationEffectiveLeakageArea (SpaceLoad)
+ *        <li> SpaceInfiltrationFlowCoefficient (SpaceLoad)
  *      </ul>
  *    <li> RenderingColor (ResourceObject)
  *    <li> ElectricEquipmentDefinition (SpaceLoadDefinition)
@@ -1267,5 +1269,5 @@ namespace model {
  *  }
  *  \endcode
  */
- } // model
- } // openstudio
+}  // namespace model
+}  // namespace openstudio

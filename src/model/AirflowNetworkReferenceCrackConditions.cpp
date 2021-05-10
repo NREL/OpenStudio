@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,179 +40,169 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  AirflowNetworkReferenceCrackConditions_Impl::AirflowNetworkReferenceCrackConditions_Impl(const IdfObject& idfObject,
-                                                                                           Model_Impl* model,
-                                                                                           bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkReferenceCrackConditions::iddObjectType());
+    AirflowNetworkReferenceCrackConditions_Impl::AirflowNetworkReferenceCrackConditions_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                             bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkReferenceCrackConditions::iddObjectType());
+    }
+
+    AirflowNetworkReferenceCrackConditions_Impl::AirflowNetworkReferenceCrackConditions_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                             Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == AirflowNetworkReferenceCrackConditions::iddObjectType());
+    }
+
+    AirflowNetworkReferenceCrackConditions_Impl::AirflowNetworkReferenceCrackConditions_Impl(const AirflowNetworkReferenceCrackConditions_Impl& other,
+                                                                                             Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& AirflowNetworkReferenceCrackConditions_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType AirflowNetworkReferenceCrackConditions_Impl::iddObjectType() const {
+      return AirflowNetworkReferenceCrackConditions::iddObjectType();
+    }
+
+    double AirflowNetworkReferenceCrackConditions_Impl::referenceTemperature() const {
+      boost::optional<double> value = getDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkReferenceCrackConditions_Impl::isReferenceTemperatureDefaulted() const {
+      return isEmpty(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature);
+    }
+
+    double AirflowNetworkReferenceCrackConditions_Impl::referenceBarometricPressure() const {
+      boost::optional<double> value = getDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkReferenceCrackConditions_Impl::isReferenceBarometricPressureDefaulted() const {
+      return isEmpty(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure);
+    }
+
+    double AirflowNetworkReferenceCrackConditions_Impl::referenceHumidityRatio() const {
+      boost::optional<double> value = getDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkReferenceCrackConditions_Impl::isReferenceHumidityRatioDefaulted() const {
+      return isEmpty(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio);
+    }
+
+    void AirflowNetworkReferenceCrackConditions_Impl::setReferenceTemperature(double referenceTemperature) {
+      bool result = setDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature, referenceTemperature);
+      OS_ASSERT(result);
+    }
+
+    void AirflowNetworkReferenceCrackConditions_Impl::resetReferenceTemperature() {
+      bool result = setString(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool AirflowNetworkReferenceCrackConditions_Impl::setReferenceBarometricPressure(double referenceBarometricPressure) {
+      bool result = setDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure, referenceBarometricPressure);
+      return result;
+    }
+
+    void AirflowNetworkReferenceCrackConditions_Impl::resetReferenceBarometricPressure() {
+      bool result = setString(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure, "");
+      OS_ASSERT(result);
+    }
+
+    void AirflowNetworkReferenceCrackConditions_Impl::setReferenceHumidityRatio(double referenceHumidityRatio) {
+      bool result = setDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio, referenceHumidityRatio);
+      OS_ASSERT(result);
+    }
+
+    void AirflowNetworkReferenceCrackConditions_Impl::resetReferenceHumidityRatio() {
+      bool result = setString(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(const Model& model)
+    : ModelObject(AirflowNetworkReferenceCrackConditions::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>());
+
+    // TODO: Appropriately handle the following required object-list fields.
   }
 
-  AirflowNetworkReferenceCrackConditions_Impl::AirflowNetworkReferenceCrackConditions_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                           Model_Impl* model,
-                                                                                           bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == AirflowNetworkReferenceCrackConditions::iddObjectType());
+  AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(const Model& model, double temperature, double barometricPressure,
+                                                                                 double humidityRatio)
+    : ModelObject(AirflowNetworkReferenceCrackConditions::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>());
+
+    setTemperature(temperature);
+    setBarometricPressure(barometricPressure);
+    setHumidityRatio(humidityRatio);
   }
 
-  AirflowNetworkReferenceCrackConditions_Impl::AirflowNetworkReferenceCrackConditions_Impl(const AirflowNetworkReferenceCrackConditions_Impl& other,
-                                                                                           Model_Impl* model,
-                                                                                           bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& AirflowNetworkReferenceCrackConditions_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
+  IddObjectType AirflowNetworkReferenceCrackConditions::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_AirflowNetworkReferenceCrackConditions);
   }
 
-  IddObjectType AirflowNetworkReferenceCrackConditions_Impl::iddObjectType() const {
-    return AirflowNetworkReferenceCrackConditions::iddObjectType();
+  double AirflowNetworkReferenceCrackConditions::temperature() const {
+    return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->referenceTemperature();
   }
 
-  double AirflowNetworkReferenceCrackConditions_Impl::referenceTemperature() const {
-    boost::optional<double> value = getDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool AirflowNetworkReferenceCrackConditions::isTemperatureDefaulted() const {
+    return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->isReferenceTemperatureDefaulted();
   }
 
-  bool AirflowNetworkReferenceCrackConditions_Impl::isReferenceTemperatureDefaulted() const {
-    return isEmpty(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature);
+  double AirflowNetworkReferenceCrackConditions::barometricPressure() const {
+    return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->referenceBarometricPressure();
   }
 
-  double AirflowNetworkReferenceCrackConditions_Impl::referenceBarometricPressure() const {
-    boost::optional<double> value = getDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool AirflowNetworkReferenceCrackConditions::isBarometricPressureDefaulted() const {
+    return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->isReferenceBarometricPressureDefaulted();
   }
 
-  bool AirflowNetworkReferenceCrackConditions_Impl::isReferenceBarometricPressureDefaulted() const {
-    return isEmpty(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure);
+  double AirflowNetworkReferenceCrackConditions::humidityRatio() const {
+    return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->referenceHumidityRatio();
   }
 
-  double AirflowNetworkReferenceCrackConditions_Impl::referenceHumidityRatio() const {
-    boost::optional<double> value = getDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool AirflowNetworkReferenceCrackConditions::isHumidityRatioDefaulted() const {
+    return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->isReferenceHumidityRatioDefaulted();
   }
 
-  bool AirflowNetworkReferenceCrackConditions_Impl::isReferenceHumidityRatioDefaulted() const {
-    return isEmpty(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio);
+  void AirflowNetworkReferenceCrackConditions::setTemperature(double referenceTemperature) {
+    getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->setReferenceTemperature(referenceTemperature);
   }
 
-  void AirflowNetworkReferenceCrackConditions_Impl::setReferenceTemperature(double referenceTemperature) {
-    bool result = setDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature, referenceTemperature);
-    OS_ASSERT(result);
+  void AirflowNetworkReferenceCrackConditions::resetTemperature() {
+    getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->resetReferenceTemperature();
   }
 
-  void AirflowNetworkReferenceCrackConditions_Impl::resetReferenceTemperature() {
-    bool result = setString(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceTemperature, "");
-    OS_ASSERT(result);
+  bool AirflowNetworkReferenceCrackConditions::setBarometricPressure(double referenceBarometricPressure) {
+    return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->setReferenceBarometricPressure(referenceBarometricPressure);
   }
 
-  bool AirflowNetworkReferenceCrackConditions_Impl::setReferenceBarometricPressure(double referenceBarometricPressure) {
-    bool result = setDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure, referenceBarometricPressure);
-    return result;
+  void AirflowNetworkReferenceCrackConditions::resetBarometricPressure() {
+    getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->resetReferenceBarometricPressure();
   }
 
-  void AirflowNetworkReferenceCrackConditions_Impl::resetReferenceBarometricPressure() {
-    bool result = setString(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceBarometricPressure, "");
-    OS_ASSERT(result);
+  void AirflowNetworkReferenceCrackConditions::setHumidityRatio(double referenceHumidityRatio) {
+    getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->setReferenceHumidityRatio(referenceHumidityRatio);
   }
 
-  void AirflowNetworkReferenceCrackConditions_Impl::setReferenceHumidityRatio(double referenceHumidityRatio) {
-    bool result = setDouble(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio, referenceHumidityRatio);
-    OS_ASSERT(result);
+  void AirflowNetworkReferenceCrackConditions::resetHumidityRatio() {
+    getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->resetReferenceHumidityRatio();
   }
 
-  void AirflowNetworkReferenceCrackConditions_Impl::resetReferenceHumidityRatio() {
-    bool result = setString(OS_AirflowNetworkReferenceCrackConditionsFields::ReferenceHumidityRatio, "");
-    OS_ASSERT(result);
-  }
+  /// @cond
+  AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(
+    std::shared_ptr<detail::AirflowNetworkReferenceCrackConditions_Impl> impl)
+    : ModelObject(impl) {}
+  /// @endcond
 
-} // detail
-
-AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(const Model& model)
-  : ModelObject(AirflowNetworkReferenceCrackConditions::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-}
-
-AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(const Model& model,
-  double temperature, double barometricPressure, double humidityRatio)
-  : ModelObject(AirflowNetworkReferenceCrackConditions::iddObjectType(), model)
-{
-  OS_ASSERT(getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>());
-
-  setTemperature(temperature);
-  setBarometricPressure(barometricPressure);
-  setHumidityRatio(humidityRatio);
-}
-
-IddObjectType AirflowNetworkReferenceCrackConditions::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_AirflowNetworkReferenceCrackConditions);
-}
-
-double AirflowNetworkReferenceCrackConditions::temperature() const {
-  return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->referenceTemperature();
-}
-
-bool AirflowNetworkReferenceCrackConditions::isTemperatureDefaulted() const {
-  return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->isReferenceTemperatureDefaulted();
-}
-
-double AirflowNetworkReferenceCrackConditions::barometricPressure() const {
-  return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->referenceBarometricPressure();
-}
-
-bool AirflowNetworkReferenceCrackConditions::isBarometricPressureDefaulted() const {
-  return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->isReferenceBarometricPressureDefaulted();
-}
-
-double AirflowNetworkReferenceCrackConditions::humidityRatio() const {
-  return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->referenceHumidityRatio();
-}
-
-bool AirflowNetworkReferenceCrackConditions::isHumidityRatioDefaulted() const {
-  return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->isReferenceHumidityRatioDefaulted();
-}
-
-void AirflowNetworkReferenceCrackConditions::setTemperature(double referenceTemperature) {
-  getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->setReferenceTemperature(referenceTemperature);
-}
-
-void AirflowNetworkReferenceCrackConditions::resetTemperature() {
-  getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->resetReferenceTemperature();
-}
-
-bool AirflowNetworkReferenceCrackConditions::setBarometricPressure(double referenceBarometricPressure) {
-  return getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->setReferenceBarometricPressure(referenceBarometricPressure);
-}
-
-void AirflowNetworkReferenceCrackConditions::resetBarometricPressure() {
-  getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->resetReferenceBarometricPressure();
-}
-
-void AirflowNetworkReferenceCrackConditions::setHumidityRatio(double referenceHumidityRatio) {
-  getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->setReferenceHumidityRatio(referenceHumidityRatio);
-}
-
-void AirflowNetworkReferenceCrackConditions::resetHumidityRatio() {
-  getImpl<detail::AirflowNetworkReferenceCrackConditions_Impl>()->resetReferenceHumidityRatio();
-}
-
-/// @cond
-AirflowNetworkReferenceCrackConditions::AirflowNetworkReferenceCrackConditions(std::shared_ptr<detail::AirflowNetworkReferenceCrackConditions_Impl> impl)
-  : ModelObject(impl)
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

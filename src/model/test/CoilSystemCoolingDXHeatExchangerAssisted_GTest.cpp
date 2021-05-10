@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,19 +57,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,CoilSystemCoolingDXHeatExchangerAssisted)
-{
+TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilSystemCoolingDXHeatExchangerAssisted valve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilSystemCoolingDXHeatExchangerAssisted valve(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 // This test ensures that only the parent CoilSystem can call addToNode, the individual CoilCoolingDXSingleSpeed and HX cannot
@@ -112,7 +110,6 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_addToNode) {
     ASSERT_TRUE(containingHVACComponent);
     EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
   }
-
 }
 
 TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_GettersSetters) {
@@ -137,9 +134,7 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_GettersSetters) {
   HeatExchangerAirToAirSensibleAndLatent hx2(m);
   EXPECT_TRUE(coilSystem.setHeatExchanger(hx2));
   EXPECT_EQ(hx2, coilSystem.heatExchanger());
-
 }
-
 
 TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
 
@@ -153,7 +148,7 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
 
-    /**
+  /**
    * Note JM 2019-03-13: At this point in time
    * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
    * cf https://github.com/NREL/EnergyPlus/issues/7222
@@ -166,8 +161,6 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   EXPECT_EQ(1u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
   EXPECT_EQ(1u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
   EXPECT_EQ(1u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
-
-
 
   // TODO: should these work?
   // EXPECT_TRUE(hx.airLoopHVAC());
@@ -194,7 +187,6 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   EXPECT_NE(hx2.handle(), hx.handle());
 
   EXPECT_FALSE(hx2.airLoopHVAC());
-
 }
 
 TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_containingComponent) {
@@ -210,8 +202,6 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_containingComponen
     ASSERT_TRUE(_c);
     EXPECT_EQ(_c->handle(), unitary.handle());
   }
-
-
 
   {
     Schedule s = m.alwaysOnDiscreteSchedule();
@@ -257,7 +247,6 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_containingComponen
     EXPECT_FALSE(unitary.setCoolingCoil(coilSystem));
   }
 
-
   {
     Schedule s = m.alwaysOnDiscreteSchedule();
     FanConstantVolume supplyFan(m);
@@ -273,5 +262,4 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_containingComponen
     ASSERT_TRUE(_c);
     EXPECT_EQ(_c->handle(), pthp.handle());
   }
-
 }

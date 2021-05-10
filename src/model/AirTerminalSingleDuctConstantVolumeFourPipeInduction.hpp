@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,159 +37,159 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl;
+    class AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctConstantVolumeFourPipeInduction is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction'. */
-class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirTerminalSingleDuctConstantVolumeFourPipeInduction is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction'. */
+  class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil);
+    explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil);
 
-  virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<double> maximumTotalAirFlowRate() const;
+    boost::optional<double> maximumTotalAirFlowRate() const;
 
-  bool isMaximumTotalAirFlowRateAutosized() const;
+    bool isMaximumTotalAirFlowRateAutosized() const;
 
-  double inductionRatio() const;
+    double inductionRatio() const;
 
-  bool isInductionRatioDefaulted() const;
+    bool isInductionRatioDefaulted() const;
 
-  HVACComponent heatingCoil() const;
+    HVACComponent heatingCoil() const;
 
-  boost::optional<double> maximumHotWaterFlowRate() const;
+    boost::optional<double> maximumHotWaterFlowRate() const;
 
-  bool isMaximumHotWaterFlowRateAutosized() const;
+    bool isMaximumHotWaterFlowRateAutosized() const;
 
-  double minimumHotWaterFlowRate() const;
+    double minimumHotWaterFlowRate() const;
 
-  bool isMinimumHotWaterFlowRateDefaulted() const;
+    bool isMinimumHotWaterFlowRateDefaulted() const;
 
-  double heatingConvergenceTolerance() const;
+    double heatingConvergenceTolerance() const;
 
-  bool isHeatingConvergenceToleranceDefaulted() const;
+    bool isHeatingConvergenceToleranceDefaulted() const;
 
-  boost::optional<HVACComponent> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
-  boost::optional<double> maximumColdWaterFlowRate() const;
+    boost::optional<double> maximumColdWaterFlowRate() const;
 
-  bool isMaximumColdWaterFlowRateAutosized() const;
+    bool isMaximumColdWaterFlowRateAutosized() const;
 
-  double minimumColdWaterFlowRate() const;
+    double minimumColdWaterFlowRate() const;
 
-  bool isMinimumColdWaterFlowRateDefaulted() const;
+    bool isMinimumColdWaterFlowRateDefaulted() const;
 
-  double coolingConvergenceTolerance() const;
+    double coolingConvergenceTolerance() const;
 
-  bool isCoolingConvergenceToleranceDefaulted() const;
+    bool isCoolingConvergenceToleranceDefaulted() const;
 
-  boost::optional<Node> inducedAirInletNode() const;
+    boost::optional<Node> inducedAirInletNode() const;
 
-  unsigned inducedAirInletPort() const;
+    unsigned inducedAirInletPort() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setMaximumTotalAirFlowRate(double maximumTotalAirFlowRate);
+    bool setMaximumTotalAirFlowRate(double maximumTotalAirFlowRate);
 
-  void autosizeMaximumTotalAirFlowRate();
+    void autosizeMaximumTotalAirFlowRate();
 
-  bool setInductionRatio(double inductionRatio);
+    bool setInductionRatio(double inductionRatio);
 
-  void resetInductionRatio();
+    void resetInductionRatio();
 
-  bool setHeatingCoil(const HVACComponent& heatingCoil);
+    bool setHeatingCoil(const HVACComponent& heatingCoil);
 
-  bool setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
+    bool setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
 
-  void resetMaximumHotWaterFlowRate();
+    void resetMaximumHotWaterFlowRate();
 
-  void autosizeMaximumHotWaterFlowRate();
+    void autosizeMaximumHotWaterFlowRate();
 
-  bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
+    bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
-  void resetMinimumHotWaterFlowRate();
+    void resetMinimumHotWaterFlowRate();
 
-  bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
+    bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
 
-  void resetHeatingConvergenceTolerance();
+    void resetHeatingConvergenceTolerance();
 
-  bool setCoolingCoil(const HVACComponent& coolingCoil);
+    bool setCoolingCoil(const HVACComponent& coolingCoil);
 
-  void resetCoolingCoil();
+    void resetCoolingCoil();
 
-  bool setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
+    bool setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
 
-  void resetMaximumColdWaterFlowRate();
+    void resetMaximumColdWaterFlowRate();
 
-  void autosizeMaximumColdWaterFlowRate();
+    void autosizeMaximumColdWaterFlowRate();
 
-  bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
+    bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
-  void resetMinimumColdWaterFlowRate();
+    void resetMinimumColdWaterFlowRate();
 
-  bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
+    bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 
-  void resetCoolingConvergenceTolerance();
+    void resetCoolingConvergenceTolerance();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedMaximumTotalAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumTotalAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumHotWaterFlowRate() const ;
+    boost::optional<double> autosizedMaximumHotWaterFlowRate() const;
 
-  boost::optional<double> autosizedMaximumColdWaterFlowRate() const ;
+    boost::optional<double> autosizedMaximumColdWaterFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl ImplType;
 
+    explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(
+      std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl ImplType;
+    friend class detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeFourPipeInduction");
+  };
 
-  explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl);
+  /** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
+  typedef boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> OptionalAirTerminalSingleDuctConstantVolumeFourPipeInduction;
 
-  friend class detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeFourPipeInduction");
-};
+  /** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
+  typedef std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> AirTerminalSingleDuctConstantVolumeFourPipeInductionVector;
 
-/** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
-typedef boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> OptionalAirTerminalSingleDuctConstantVolumeFourPipeInduction;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
-typedef std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> AirTerminalSingleDuctConstantVolumeFourPipeInductionVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_HPP
+#endif  // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_HPP

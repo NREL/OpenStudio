@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,9 +43,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, GasEquipment)
-{
+TEST_F(ModelFixture, GasEquipment) {
   Model model;
 
   GasEquipmentDefinition definition(model);
@@ -53,8 +51,7 @@ TEST_F(ModelFixture, GasEquipment)
   EXPECT_EQ(2u, model.numObjects());
 }
 
-TEST_F(ModelFixture, GasEquipment_Cost)
-{
+TEST_F(ModelFixture, GasEquipment_Cost) {
   Model model;
 
   GasEquipmentDefinition definition(model);
@@ -90,4 +87,16 @@ TEST_F(ModelFixture, GasEquipment_Cost)
   gasEquipment2.setSpace(space);
 
   EXPECT_DOUBLE_EQ(80.0, cost->totalCost());
+}
+
+/* Tests that you cannot set Fractions that sum to greater than 1 */
+TEST_F(ModelFixture, GasEquipment_FractionsLatentRadiantLost) {
+  Model m;
+  GasEquipmentDefinition definition(m);
+
+  ASSERT_TRUE(definition.setFractionLatent(0.5));
+  ASSERT_TRUE(definition.setFractionRadiant(0.5));
+  ASSERT_FALSE(definition.setFractionLost(0.75));
+  ASSERT_FALSE(definition.setFractionLatent(0.75));
+  ASSERT_FALSE(definition.setFractionRadiant(0.75));
 }

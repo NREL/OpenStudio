@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,82 +36,72 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
-class WaterUseConnections;
-class WaterUseEquipmentDefinition;
+  class Schedule;
+  class ThermalZone;
+  class WaterUseConnections;
+  class WaterUseEquipmentDefinition;
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
+    class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl
+    {
 
+     public:
+      WaterUseEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      WaterUseEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      WaterUseEquipment_Impl(const WaterUseEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-  public:
+      virtual ~WaterUseEquipment_Impl() {}
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  WaterUseEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-  WaterUseEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-              Model_Impl* model,
-              bool keepHandle);
+      virtual bool hardSize() override;
 
-  WaterUseEquipment_Impl(const WaterUseEquipment_Impl& other,
-              Model_Impl* model,
-              bool keepHandle);
+      virtual bool hardApplySchedules() override;
 
-  virtual ~WaterUseEquipment_Impl() {}
+      virtual double multiplier() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual bool isAbsolute() const override;
 
-  virtual bool hardSize() override;
+      virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-  virtual bool hardApplySchedules() override;
+      virtual std::vector<IdfObject> remove() override;
 
-  virtual double multiplier() const override;
+      std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual bool isMultiplierDefaulted() const override;
+      boost::optional<Schedule> flowRateFractionSchedule() const;
+      bool setFlowRateFractionSchedule(Schedule& flowRateFractionSchedule);
+      void resetFlowRateFractionSchedule();
 
-  virtual bool isAbsolute() const override;
+      boost::optional<WaterUseConnections> waterUseConnections() const;
 
-  virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
+      WaterUseEquipmentDefinition waterUseEquipmentDefinition() const;
+      bool setWaterUseEquipmentDefinition(const WaterUseEquipmentDefinition& definition);
 
-  virtual std::vector<IdfObject> remove() override;
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-  boost::optional<Schedule> flowRateFractionSchedule() const;
-  bool setFlowRateFractionSchedule(Schedule & flowRateFractionSchedule);
-  void resetFlowRateFractionSchedule();
+     private:
+      REGISTER_LOGGER("openstudio.model.WaterUseEquipment");
 
-  boost::optional<WaterUseConnections> waterUseConnections() const;
+      boost::optional<ModelObject> flowRateFractionScheduleAsModelObject() const;
 
-  WaterUseEquipmentDefinition waterUseEquipmentDefinition() const;
-  bool setWaterUseEquipmentDefinition(const WaterUseEquipmentDefinition & definition);
+      bool setFlowRateFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-  protected:
+  }  // namespace detail
 
-  // index of the space name
-  virtual int spaceIndex() const override;
+}  // namespace model
+}  // namespace openstudio
 
-  // index of the definition name
-  virtual int definitionIndex() const override;
-
-  private:
-
-  REGISTER_LOGGER("openstudio.model.WaterUseEquipment");
-
-  boost::optional<ModelObject> flowRateFractionScheduleAsModelObject() const;
-
-  bool setFlowRateFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-};
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_WATERUSEEQUIPMENT_IMPL_HPP
+#endif  // MODEL_WATERUSEEQUIPMENT_IMPL_HPP

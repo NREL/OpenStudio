@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,255 +52,239 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SolarCollectorIntegralCollectorStorage_Impl::SolarCollectorIntegralCollectorStorage_Impl(const IdfObject& idfObject,
-                                                                                           Model_Impl* model,
-                                                                                           bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SolarCollectorIntegralCollectorStorage::iddObjectType());
-  }
+    SolarCollectorIntegralCollectorStorage_Impl::SolarCollectorIntegralCollectorStorage_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                             bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SolarCollectorIntegralCollectorStorage::iddObjectType());
+    }
 
-  SolarCollectorIntegralCollectorStorage_Impl::SolarCollectorIntegralCollectorStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                           Model_Impl* model,
-                                                                                           bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SolarCollectorIntegralCollectorStorage::iddObjectType());
-  }
+    SolarCollectorIntegralCollectorStorage_Impl::SolarCollectorIntegralCollectorStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                             Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SolarCollectorIntegralCollectorStorage::iddObjectType());
+    }
 
-  SolarCollectorIntegralCollectorStorage_Impl::SolarCollectorIntegralCollectorStorage_Impl(const SolarCollectorIntegralCollectorStorage_Impl& other,
-                                                                                           Model_Impl* model,
-                                                                                           bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
+    SolarCollectorIntegralCollectorStorage_Impl::SolarCollectorIntegralCollectorStorage_Impl(const SolarCollectorIntegralCollectorStorage_Impl& other,
+                                                                                             Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
-  ModelObject SolarCollectorIntegralCollectorStorage_Impl::clone(Model model) const
-  {
+    ModelObject SolarCollectorIntegralCollectorStorage_Impl::clone(Model model) const {
 
-    SolarCollectorIntegralCollectorStorage result = StraightComponent_Impl::clone(model).cast<SolarCollectorIntegralCollectorStorage>();
-    result.setSolarCollectorPerformance(this->solarCollectorPerformance());
+      SolarCollectorIntegralCollectorStorage result = StraightComponent_Impl::clone(model).cast<SolarCollectorIntegralCollectorStorage>();
+      result.setSolarCollectorPerformance(this->solarCollectorPerformance());
 
-    // do not want to point to any surface after cloning
-    result.resetSurface();
+      // do not want to point to any surface after cloning
+      result.resetSurface();
 
-    return result;
-  }
+      return result;
+    }
 
-  std::vector<IdfObject> SolarCollectorIntegralCollectorStorage_Impl::remove()
-  {
-    // DLM: will remove performance object due to parent/child relationship
-    return StraightComponent_Impl::remove();
-  }
+    std::vector<IdfObject> SolarCollectorIntegralCollectorStorage_Impl::remove() {
+      // DLM: will remove performance object due to parent/child relationship
+      return StraightComponent_Impl::remove();
+    }
 
-  const std::vector<std::string>& SolarCollectorIntegralCollectorStorage_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Solar Collector Storage Water Temperature",
-      "Solar Collector Absorber Plate Temperature",
-      "Solar Collector Overall Top Heat Loss Coefficient",
-      "Solar Collector Thermal Efficiency",
-      "Solar Collector Storage Heat Transfer Rate",
-      "Solar Collector Storage Heat Transfer Energy",
-      "Solar Collector Heat Transfer Rate",
-      "Solar Collector Heat Transfer Energy",
-      "Solar Collector Skin Heat Transfer Rate",
-      "Solar Collector Skin Heat Transfer Energy",
-      "Solar Collector Transmittance Absorptance Product"
-    };
-    return result;
-  }
+    const std::vector<std::string>& SolarCollectorIntegralCollectorStorage_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Solar Collector Storage Water Temperature",
+                                                   "Solar Collector Absorber Plate Temperature",
+                                                   "Solar Collector Overall Top Heat Loss Coefficient",
+                                                   "Solar Collector Thermal Efficiency",
+                                                   "Solar Collector Storage Heat Transfer Rate",
+                                                   "Solar Collector Storage Heat Transfer Energy",
+                                                   "Solar Collector Heat Transfer Rate",
+                                                   "Solar Collector Heat Transfer Energy",
+                                                   "Solar Collector Skin Heat Transfer Rate",
+                                                   "Solar Collector Skin Heat Transfer Energy",
+                                                   "Solar Collector Transmittance Absorptance Product"};
+      return result;
+    }
 
-  IddObjectType SolarCollectorIntegralCollectorStorage_Impl::iddObjectType() const {
-    return SolarCollectorIntegralCollectorStorage::iddObjectType();
-  }
+    IddObjectType SolarCollectorIntegralCollectorStorage_Impl::iddObjectType() const {
+      return SolarCollectorIntegralCollectorStorage::iddObjectType();
+    }
 
-  std::vector<ModelObject> SolarCollectorIntegralCollectorStorage_Impl::children() const
-  {
-    std::vector<ModelObject> result;
+    std::vector<ModelObject> SolarCollectorIntegralCollectorStorage_Impl::children() const {
+      std::vector<ModelObject> result;
 
-    SolarCollectorPerformanceIntegralCollectorStorage solarCollectorPerformance = this->solarCollectorPerformance();
-    result.push_back(solarCollectorPerformance);
+      SolarCollectorPerformanceIntegralCollectorStorage solarCollectorPerformance = this->solarCollectorPerformance();
+      result.push_back(solarCollectorPerformance);
 
-    return result;
-  }
+      return result;
+    }
 
-  unsigned SolarCollectorIntegralCollectorStorage_Impl::inletPort() const
-  {
-    return OS_SolarCollector_IntegralCollectorStorageFields::InletNodeName;
-  }
+    unsigned SolarCollectorIntegralCollectorStorage_Impl::inletPort() const {
+      return OS_SolarCollector_IntegralCollectorStorageFields::InletNodeName;
+    }
 
-  unsigned SolarCollectorIntegralCollectorStorage_Impl::outletPort() const
-  {
-    return OS_SolarCollector_IntegralCollectorStorageFields::OutletNodeName;
-  }
+    unsigned SolarCollectorIntegralCollectorStorage_Impl::outletPort() const {
+      return OS_SolarCollector_IntegralCollectorStorageFields::OutletNodeName;
+    }
 
-  bool SolarCollectorIntegralCollectorStorage_Impl::addToNode(Node & node)
-  {
-    if (boost::optional<PlantLoop> plantLoop = node.plantLoop())
-    {
-      if (plantLoop->supplyComponent(node.handle()))
-      {
-        if (StraightComponent_Impl::addToNode(node))
-        {
-          return true;
+    bool SolarCollectorIntegralCollectorStorage_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plantLoop = node.plantLoop()) {
+        if (plantLoop->supplyComponent(node.handle())) {
+          if (StraightComponent_Impl::addToNode(node)) {
+            return true;
+          }
         }
       }
+
+      return false;
     }
 
-    return false;
-  }
-
-  SolarCollectorPerformanceIntegralCollectorStorage SolarCollectorIntegralCollectorStorage_Impl::solarCollectorPerformance() const {
-    boost::optional<SolarCollectorPerformanceIntegralCollectorStorage> value = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceIntegralCollectorStorage>(OS_SolarCollector_IntegralCollectorStorageFields::IntegralCollectorStorageParametersName);
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have a Solar Collector Performance attached.");
-    }
-    return value.get();
-  }
-
-  boost::optional<PlanarSurface> SolarCollectorIntegralCollectorStorage_Impl::surface() const {
-    return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName);
-  }
-
-  std::string SolarCollectorIntegralCollectorStorage_Impl::bottomSurfaceBoundaryConditionsType() const {
-    boost::optional<std::string> value = getString(OS_SolarCollector_IntegralCollectorStorageFields::BottomSurfaceBoundaryConditionsType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SolarCollectorIntegralCollectorStorage_Impl::isBottomSurfaceBoundaryConditionsTypeDefaulted() const {
-    return isEmpty(OS_SolarCollector_IntegralCollectorStorageFields::BottomSurfaceBoundaryConditionsType);
-  }
-
-  boost::optional<double> SolarCollectorIntegralCollectorStorage_Impl::maximumFlowRate() const {
-    return getDouble(OS_SolarCollector_IntegralCollectorStorageFields::MaximumFlowRate,true);
-  }
-
-  bool SolarCollectorIntegralCollectorStorage_Impl::setSolarCollectorPerformance(const SolarCollectorPerformanceIntegralCollectorStorage& performance) {
-    ModelObject clone = performance.clone(this->model());
-    return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformanceIntegralCollectorStorage>());
-  }
-
-  void SolarCollectorIntegralCollectorStorage_Impl::resetSolarCollectorPerformance()
-  {
-    boost::optional<SolarCollectorPerformanceIntegralCollectorStorage> oldPerformance = getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceIntegralCollectorStorage>(OS_SolarCollector_IntegralCollectorStorageFields::IntegralCollectorStorageParametersName);
-    if (oldPerformance){
-      oldPerformance->remove();
+    SolarCollectorPerformanceIntegralCollectorStorage SolarCollectorIntegralCollectorStorage_Impl::solarCollectorPerformance() const {
+      boost::optional<SolarCollectorPerformanceIntegralCollectorStorage> value =
+        getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceIntegralCollectorStorage>(
+          OS_SolarCollector_IntegralCollectorStorageFields::IntegralCollectorStorageParametersName);
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Solar Collector Performance attached.");
+      }
+      return value.get();
     }
 
-    SolarCollectorPerformanceIntegralCollectorStorage performance(this->model());
-    bool ok = setSolarCollectorPerformanceNoClone(performance);
+    boost::optional<PlanarSurface> SolarCollectorIntegralCollectorStorage_Impl::surface() const {
+      return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName);
+    }
+
+    std::string SolarCollectorIntegralCollectorStorage_Impl::bottomSurfaceBoundaryConditionsType() const {
+      boost::optional<std::string> value = getString(OS_SolarCollector_IntegralCollectorStorageFields::BottomSurfaceBoundaryConditionsType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SolarCollectorIntegralCollectorStorage_Impl::isBottomSurfaceBoundaryConditionsTypeDefaulted() const {
+      return isEmpty(OS_SolarCollector_IntegralCollectorStorageFields::BottomSurfaceBoundaryConditionsType);
+    }
+
+    boost::optional<double> SolarCollectorIntegralCollectorStorage_Impl::maximumFlowRate() const {
+      return getDouble(OS_SolarCollector_IntegralCollectorStorageFields::MaximumFlowRate, true);
+    }
+
+    bool SolarCollectorIntegralCollectorStorage_Impl::setSolarCollectorPerformance(
+      const SolarCollectorPerformanceIntegralCollectorStorage& performance) {
+      ModelObject clone = performance.clone(this->model());
+      return setSolarCollectorPerformanceNoClone(clone.cast<SolarCollectorPerformanceIntegralCollectorStorage>());
+    }
+
+    void SolarCollectorIntegralCollectorStorage_Impl::resetSolarCollectorPerformance() {
+      boost::optional<SolarCollectorPerformanceIntegralCollectorStorage> oldPerformance =
+        getObject<ModelObject>().getModelObjectTarget<SolarCollectorPerformanceIntegralCollectorStorage>(
+          OS_SolarCollector_IntegralCollectorStorageFields::IntegralCollectorStorageParametersName);
+      if (oldPerformance) {
+        oldPerformance->remove();
+      }
+
+      SolarCollectorPerformanceIntegralCollectorStorage performance(this->model());
+      bool ok = setSolarCollectorPerformanceNoClone(performance);
+      OS_ASSERT(ok);
+    }
+
+    bool SolarCollectorIntegralCollectorStorage_Impl::setSurface(const PlanarSurface& surface) {
+      bool result(false);
+
+      // DLM: check for existing solar collectors or photovoltaic generators?
+
+      if (surface.optionalCast<Surface>()) {
+        result = setPointer(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName, surface.handle());
+      } else if (surface.optionalCast<ShadingSurface>()) {
+        result = setPointer(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName, surface.handle());
+      }
+
+      return result;
+    }
+
+    void SolarCollectorIntegralCollectorStorage_Impl::resetSurface() {
+      bool result = setString(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName, "");
+      OS_ASSERT(result);
+    }
+
+    bool SolarCollectorIntegralCollectorStorage_Impl::setMaximumFlowRate(double maximumFlowRate) {
+      return setDouble(OS_SolarCollector_IntegralCollectorStorageFields::MaximumFlowRate, maximumFlowRate);
+    }
+
+    void SolarCollectorIntegralCollectorStorage_Impl::resetMaximumFlowRate() {
+      bool result = setString(OS_SolarCollector_IntegralCollectorStorageFields::MaximumFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    bool SolarCollectorIntegralCollectorStorage_Impl::setSolarCollectorPerformanceNoClone(
+      const SolarCollectorPerformanceIntegralCollectorStorage& performance) {
+      return setPointer(OS_SolarCollector_IntegralCollectorStorageFields::IntegralCollectorStorageParametersName, performance.handle());
+    }
+
+  }  // namespace detail
+
+  SolarCollectorIntegralCollectorStorage::SolarCollectorIntegralCollectorStorage(const Model& model)
+    : StraightComponent(SolarCollectorIntegralCollectorStorage::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>());
+
+    SolarCollectorPerformanceIntegralCollectorStorage performance(model);
+
+    bool ok = true;
+    ok = getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setSolarCollectorPerformanceNoClone(performance);
     OS_ASSERT(ok);
   }
 
-  bool SolarCollectorIntegralCollectorStorage_Impl::setSurface(const PlanarSurface& surface) {
-    bool result(false);
-
-    // DLM: check for existing solar collectors or photovoltaic generators?
-
-    if (surface.optionalCast<Surface>()){
-      result = setPointer(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName, surface.handle());
-    } else if (surface.optionalCast<ShadingSurface>()){
-      result = setPointer(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName, surface.handle());
-    }
-
-    return result;
+  IddObjectType SolarCollectorIntegralCollectorStorage::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_SolarCollector_IntegralCollectorStorage);
   }
 
-  void SolarCollectorIntegralCollectorStorage_Impl::resetSurface() {
-    bool result = setString(OS_SolarCollector_IntegralCollectorStorageFields::SurfaceName, "");
-    OS_ASSERT(result);
+  std::vector<std::string> SolarCollectorIntegralCollectorStorage::bottomSurfaceBoundaryConditionsTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_SolarCollector_IntegralCollectorStorageFields::BottomSurfaceBoundaryConditionsType);
   }
 
-  bool SolarCollectorIntegralCollectorStorage_Impl::setMaximumFlowRate(double maximumFlowRate) {
-    return setDouble(OS_SolarCollector_IntegralCollectorStorageFields::MaximumFlowRate, maximumFlowRate);
+  SolarCollectorPerformanceIntegralCollectorStorage SolarCollectorIntegralCollectorStorage::solarCollectorPerformance() const {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->solarCollectorPerformance();
   }
 
-  void SolarCollectorIntegralCollectorStorage_Impl::resetMaximumFlowRate() {
-    bool result = setString(OS_SolarCollector_IntegralCollectorStorageFields::MaximumFlowRate, "");
-    OS_ASSERT(result);
+  boost::optional<PlanarSurface> SolarCollectorIntegralCollectorStorage::surface() const {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->surface();
   }
 
-  bool SolarCollectorIntegralCollectorStorage_Impl::setSolarCollectorPerformanceNoClone(const SolarCollectorPerformanceIntegralCollectorStorage& performance) {
-    return setPointer(OS_SolarCollector_IntegralCollectorStorageFields::IntegralCollectorStorageParametersName, performance.handle());
+  std::string SolarCollectorIntegralCollectorStorage::bottomSurfaceBoundaryConditionsType() const {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->bottomSurfaceBoundaryConditionsType();
   }
 
+  bool SolarCollectorIntegralCollectorStorage::isBottomSurfaceBoundaryConditionsTypeDefaulted() const {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->isBottomSurfaceBoundaryConditionsTypeDefaulted();
+  }
 
-} // detail
+  boost::optional<double> SolarCollectorIntegralCollectorStorage::maximumFlowRate() const {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->maximumFlowRate();
+  }
 
-SolarCollectorIntegralCollectorStorage::SolarCollectorIntegralCollectorStorage(const Model& model)
-  : StraightComponent(SolarCollectorIntegralCollectorStorage::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>());
+  bool SolarCollectorIntegralCollectorStorage::setSolarCollectorPerformance(const SolarCollectorPerformanceIntegralCollectorStorage& performance) {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setSolarCollectorPerformance(performance);
+  }
 
-  SolarCollectorPerformanceIntegralCollectorStorage performance(model);
+  void SolarCollectorIntegralCollectorStorage::resetSolarCollectorPerformance() {
+    getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->resetSolarCollectorPerformance();
+  }
 
-  bool ok = true;
-  ok = getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setSolarCollectorPerformanceNoClone(performance);
-  OS_ASSERT(ok);
-}
+  bool SolarCollectorIntegralCollectorStorage::setSurface(const PlanarSurface& surface) {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setSurface(surface);
+  }
 
-IddObjectType SolarCollectorIntegralCollectorStorage::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_SolarCollector_IntegralCollectorStorage);
-}
+  void SolarCollectorIntegralCollectorStorage::resetSurface() {
+    getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->resetSurface();
+  }
 
-std::vector<std::string> SolarCollectorIntegralCollectorStorage::bottomSurfaceBoundaryConditionsTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_SolarCollector_IntegralCollectorStorageFields::BottomSurfaceBoundaryConditionsType);
-}
+  bool SolarCollectorIntegralCollectorStorage::setMaximumFlowRate(double maximumFlowRate) {
+    return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setMaximumFlowRate(maximumFlowRate);
+  }
 
-SolarCollectorPerformanceIntegralCollectorStorage SolarCollectorIntegralCollectorStorage::solarCollectorPerformance() const {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->solarCollectorPerformance();
-}
+  void SolarCollectorIntegralCollectorStorage::resetMaximumFlowRate() {
+    getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->resetMaximumFlowRate();
+  }
 
-boost::optional<PlanarSurface> SolarCollectorIntegralCollectorStorage::surface() const {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->surface();
-}
+  /// @cond
+  SolarCollectorIntegralCollectorStorage::SolarCollectorIntegralCollectorStorage(
+    std::shared_ptr<detail::SolarCollectorIntegralCollectorStorage_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-std::string SolarCollectorIntegralCollectorStorage::bottomSurfaceBoundaryConditionsType() const {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->bottomSurfaceBoundaryConditionsType();
-}
-
-bool SolarCollectorIntegralCollectorStorage::isBottomSurfaceBoundaryConditionsTypeDefaulted() const {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->isBottomSurfaceBoundaryConditionsTypeDefaulted();
-}
-
-boost::optional<double> SolarCollectorIntegralCollectorStorage::maximumFlowRate() const {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->maximumFlowRate();
-}
-
-bool SolarCollectorIntegralCollectorStorage::setSolarCollectorPerformance(const SolarCollectorPerformanceIntegralCollectorStorage& performance) {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setSolarCollectorPerformance(performance);
-}
-
-void SolarCollectorIntegralCollectorStorage::resetSolarCollectorPerformance() {
-  getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->resetSolarCollectorPerformance();
-}
-
-bool SolarCollectorIntegralCollectorStorage::setSurface(const PlanarSurface& surface) {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setSurface(surface);
-}
-
-void SolarCollectorIntegralCollectorStorage::resetSurface() {
-  getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->resetSurface();
-}
-
-bool SolarCollectorIntegralCollectorStorage::setMaximumFlowRate(double maximumFlowRate) {
-  return getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->setMaximumFlowRate(maximumFlowRate);
-}
-
-void SolarCollectorIntegralCollectorStorage::resetMaximumFlowRate() {
-  getImpl<detail::SolarCollectorIntegralCollectorStorage_Impl>()->resetMaximumFlowRate();
-}
-
-/// @cond
-SolarCollectorIntegralCollectorStorage::SolarCollectorIntegralCollectorStorage(std::shared_ptr<detail::SolarCollectorIntegralCollectorStorage_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

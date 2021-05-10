@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -119,28 +119,28 @@
 namespace openstudio {
 namespace sdd {
 
-  constexpr double footToMeter =  0.3048;
-  constexpr double meterToFoot = 1.0/0.3048;
+  constexpr double footToMeter = 0.3048;
+  constexpr double meterToFoot = 1.0 / 0.3048;
 
-  double fixAngle(double angle){
-    while (angle >= 360){
+  double fixAngle(double angle) {
+    while (angle >= 360) {
       angle -= 360;
     }
-    while (angle < 0){
+    while (angle < 0) {
       angle += 360;
     }
     return angle;
   }
 
-  pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node & root, const std::string& tagName, boost::optional<int> _index){
+  pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node& root, const std::string& tagName, boost::optional<int> _index) {
 
     pugi::xml_node result;
-    if( _index ){
+    if (_index) {
 
-      for (const pugi::xml_node& e: root.children(tagName.c_str())) {
+      for (const pugi::xml_node& e : root.children(tagName.c_str())) {
         // Check if the node has an attribute 'id' that is an int *and* matches the one we seek
         boost::optional<int> _thisIndex = lexicalCastToInt(e.attribute("index"));
-        if (_thisIndex && (_thisIndex.get() == _index.get()) ) {
+        if (_thisIndex && (_thisIndex.get() == _index.get())) {
           result = e;
           break;
         }
@@ -152,8 +152,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
     pugi::xml_node nameElement = element.child("Name");
@@ -162,7 +161,7 @@ namespace sdd {
     // The angle between the model Y-Axis and True North, measured clockwise from the model Y-Axis in Degrees.
     pugi::xml_node northAngleElement = element.child("NAng");
     // The angle between True North and the the model Y-Axis, measured clockwise from True North in Degrees.
-    pugi::xml_node buildingAzimuthElement = element.child("BldgAz"); // this corresponds to Building::North Axis
+    pugi::xml_node buildingAzimuthElement = element.child("BldgAz");  // this corresponds to Building::North Axis
 
     // TODO: do we want to check if key Name is present or whether Name is not an empty string?
     if (!nameElement) {
@@ -193,9 +192,9 @@ namespace sdd {
       shadingSurfaceGroup.setName("Building ShadingGroup");
       shadingSurfaceGroup.setShadingSurfaceType("Building");
       for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
-        if (exteriorShadingElements[i].parent() == element){
+        if (exteriorShadingElements[i].parent() == element) {
           boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
-          if (!exteriorShading){
+          if (!exteriorShading) {
             LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
           }
         }
@@ -220,17 +219,16 @@ namespace sdd {
     */
 
     // create all spaces
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++) {
       pugi::xml_node spaceElement = spaceElements[i];
       boost::optional<model::ModelObject> space = createSpace(spaceElement, model);
-      if (!space){
-        LOG(Error, "Failed to translate 'Spc' element " << i << ", named:"
-                 << spaceElement.child("Name").text().as_string());
+      if (!space) {
+        LOG(Error, "Failed to translate 'Spc' element " << i << ", named:" << spaceElement.child("Name").text().as_string());
       }
     }
 
     // create all thermal zones
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < thermalZoneElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < thermalZoneElements.size(); i++) {
 
       // TODO: check already exists inside createThermalZone, this is redundant
       if (!thermalZoneElements[i].child("Name")) {
@@ -245,34 +243,34 @@ namespace sdd {
     }
 
     // translate building stories
-    if (m_progressBar){
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Storys"));
       m_progressBar->setMinimum(0);
       m_progressBar->setMaximum(buildingStoryElements.size());
       m_progressBar->setValue(0);
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < buildingStoryElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < buildingStoryElements.size(); i++) {
       boost::optional<model::ModelObject> buildingStory = translateBuildingStory(buildingStoryElements[i], model);
-      if (!buildingStory){
+      if (!buildingStory) {
         LOG(Error, "Failed to translate 'Story' element " << i);
       }
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
     // remove unused CFactor constructions
-    for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
-      if (cFactorConstruction.directUseCount(true) == 0){
+    for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()) {
+      if (cFactorConstruction.directUseCount(true) == 0) {
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
-    for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
-      if (fFactorConstruction.directUseCount(true) == 0){
+    for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()) {
+      if (fFactorConstruction.directUseCount(true) == 0) {
         fFactorConstruction.remove();
       }
     }
@@ -280,8 +278,8 @@ namespace sdd {
     return building;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::createThermalZone(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::createThermalZone(const pugi::xml_node& element,
+                                                                                       openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
 
     model::ThermalZone thermalZone(model);
@@ -300,8 +298,8 @@ namespace sdd {
     return thermalZone;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element,
+                                                                                            openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
     std::vector<pugi::xml_node> spaceElements = makeVectorOfChildren(element, "Spc");
 
@@ -320,10 +318,10 @@ namespace sdd {
 
     std::string name = buildingStory.nameString();
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++) {
       pugi::xml_node spaceElement = spaceElements[i];
       boost::optional<model::ModelObject> space = translateSpace(spaceElement, buildingStory);
-      if (!space){
+      if (!space) {
         LOG(Error, "Failed to translate 'Spc' element " << i << " under Story '" << name << "'");
       }
     }
@@ -331,8 +329,7 @@ namespace sdd {
     return buildingStory;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::createSpace(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::createSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
 
     // TODO: move into block where we do set the name no?
@@ -352,8 +349,8 @@ namespace sdd {
     return space;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::BuildingStory& buildingStory)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element,
+                                                                        openstudio::model::BuildingStory& buildingStory) {
     pugi::xml_node nameElement = element.child("Name");
     pugi::xml_node hotWtrHtgRtElement = element.child("HotWtrHtgRtSim");
     pugi::xml_node hotWtrHtgSchRefElement = element.child("HotWtrHtgSchRef");
@@ -391,74 +388,74 @@ namespace sdd {
 
     pugi::xml_node thermalZoneElement = element.child("ThrmlZnRef");
     std::string thermalZoneName;
-    if (!thermalZoneElement){
+    if (!thermalZoneElement) {
       LOG(Error, "Spc element 'ThrmlZnRef' is empty for Space named '" << spaceName << "'.");
-    } else{
+    } else {
       thermalZoneName = escapeName(thermalZoneElement.text().as_string());
     }
 
     boost::optional<model::ThermalZone> thermalZone = space->model().getModelObjectByName<model::ThermalZone>(thermalZoneName);
-    if (thermalZone){
+    if (thermalZone) {
       space->setThermalZone(*thermalZone);
-    } else{
+    } else {
       LOG(Error, "Could not retrieve ThermalZone named '" << thermalZoneName << "'.");
       LOG(Error, "ThermalZone not set for Space named '" << spaceName << "'.");
     }
 
     translateLoads(element, *space);
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorWallElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorWallElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(exteriorWallElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'ExtWall' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorFloorElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorFloorElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(exteriorFloorElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'ExtFlr' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < roofElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < roofElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(roofElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'Roof' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < undergroundFloorElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < undergroundFloorElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(undergroundFloorElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'UndgrFlr' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < undergroundWallElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < undergroundWallElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(undergroundWallElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'UndgrWall' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < ceilingElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < ceilingElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(ceilingElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'Ceiling' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < interiorWallElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < interiorWallElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(interiorWallElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'IntWall' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < interiorFloorElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < interiorFloorElements.size(); i++) {
       boost::optional<model::ModelObject> surface = translateSurface(interiorFloorElements[i], *space);
-      if (!surface){
+      if (!surface) {
         LOG(Error, "Failed to translate 'IntFlr' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
@@ -468,10 +465,10 @@ namespace sdd {
     model::ShadingSurfaceGroup shadingSurfaceGroup(space->model());
     shadingSurfaceGroup.setName(spaceName + " ShadingGroup");
     shadingSurfaceGroup.setSpace(*space);
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i){
-      if (exteriorShadingElements[i].parent() == element){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
+      if (exteriorShadingElements[i].parent() == element) {
         boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
-        if (!exteriorShading){
+        if (!exteriorShading) {
           LOG(Error, "Failed to translate 'ExtShdgObj' element " << i << " for Space named '" << spaceName << "'.");
         }
       }
@@ -507,8 +504,7 @@ namespace sdd {
       shwSys = serviceHotWaterLoopForSupplySegment(shwFluidSegRefElement, model);
     }
 
-    if( _d  && shwSys )
-    {
+    if (_d && shwSys) {
       model::WaterUseConnections connections(model);
 
       connections.setName(spaceName + " Water Use Connection");
@@ -517,15 +513,15 @@ namespace sdd {
 
       definition.setName(spaceName + " Water Use Definition");
 
-      definition.setPeakFlowRate(unitToUnit(_d.get(),"gal/h","m^3/s").get());
+      definition.setPeakFlowRate(unitToUnit(_d.get(), "gal/h", "m^3/s").get());
 
       _d = lexicalCastToDouble(hotWtrSupTempElement);
-      if( _d ) {
-        double value = unitToUnit(_d.get(),"F","C").get();
+      if (_d) {
+        double value = unitToUnit(_d.get(), "F", "C").get();
         model::ScheduleRuleset schedule(model);
         schedule.setName(spaceName + " Target SHW Temp");
         auto scheduleDay = schedule.defaultDaySchedule();
-        scheduleDay.addValue(Time(1.0),value);
+        scheduleDay.addValue(Time(1.0), value);
         definition.setTargetTemperatureSchedule(schedule);
       }
 
@@ -533,8 +529,7 @@ namespace sdd {
 
       equipment.setName(spaceName + " Water Use Equipment");
 
-      if( boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(hotWtrHtgSchRefElement.text().as_string()) )
-      {
+      if (boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(hotWtrHtgSchRefElement.text().as_string())) {
         equipment.setFlowRateFractionSchedule(schedule.get());
       }
 
@@ -546,8 +541,7 @@ namespace sdd {
     return boost::optional<model::ModelObject>(space);
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateLoads(const pugi::xml_node& element, openstudio::model::Space& space)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateLoads(const pugi::xml_node& element, openstudio::model::Space& space) {
     // element is 'Spc' here
 
     UnitSystem siSys(UnitSystem::SI);
@@ -572,30 +566,32 @@ namespace sdd {
       pugi::xml_node occLatHtRtElement = element.child("OccLatHtRt");
       pugi::xml_node occSchRefElement = element.child("OccSchRef");
 
-      if (occDensElement && (occDensElement.text().as_double() > 0)){
-        if (occSensHtRtElement && occLatHtRtElement){
+      if (occDensElement && (occDensElement.text().as_double() > 0)) {
+        if (occSensHtRtElement && occLatHtRtElement) {
 
-          openstudio::Quantity peopleDensityIP(occDensElement.text().as_double() / 1000.0, openstudio::createUnit("people/ft^2",UnitSystem::BTU).get());
+          openstudio::Quantity peopleDensityIP(occDensElement.text().as_double() / 1000.0,
+                                               openstudio::createUnit("people/ft^2", UnitSystem::BTU).get());
           OptionalQuantity peopleDensitySI = QuantityConverter::instance().convert(peopleDensityIP, whSys);
           OS_ASSERT(peopleDensitySI);
-          OS_ASSERT(peopleDensitySI->units() == WhUnit(WhExpnt(0,0,-2,0,0,0,0,0,0,1)));
+          OS_ASSERT(peopleDensitySI->units() == WhUnit(WhExpnt(0, 0, -2, 0, 0, 0, 0, 0, 0, 1)));
 
           openstudio::model::PeopleDefinition peopleDefinition(model);
           peopleDefinition.setName(name + " People Definition");
-          peopleDefinition.setPeopleperSpaceFloorArea(peopleDensitySI->value()); // people/m2
+          peopleDefinition.setPeopleperSpaceFloorArea(peopleDensitySI->value());  // people/m2
 
-          openstudio::Quantity sensibleHeatRateIP(occSensHtRtElement.text().as_double(), openstudio::createUnit("Btu/h*person", UnitSystem::BTU).get());
+          openstudio::Quantity sensibleHeatRateIP(occSensHtRtElement.text().as_double(),
+                                                  openstudio::createUnit("Btu/h*person", UnitSystem::BTU).get());
           OptionalQuantity sensibleHeatRateSI = QuantityConverter::instance().convert(sensibleHeatRateIP, whSys);
           OS_ASSERT(sensibleHeatRateSI);
-          OS_ASSERT(sensibleHeatRateSI->units() == WhUnit(WhExpnt(1,0,0,0,0,0,0,0,0,-1)));
+          OS_ASSERT(sensibleHeatRateSI->units() == WhUnit(WhExpnt(1, 0, 0, 0, 0, 0, 0, 0, 0, -1)));
 
           openstudio::Quantity latentHeatRateIP(occLatHtRtElement.text().as_double(), openstudio::createUnit("Btu/h*person", UnitSystem::BTU).get());
           OptionalQuantity latentHeatRateSI = QuantityConverter::instance().convert(latentHeatRateIP, whSys);
           OS_ASSERT(latentHeatRateSI);
-          OS_ASSERT(latentHeatRateSI->units() == WhUnit(WhExpnt(1,0,0,0,0,0,0,0,0,-1)));
+          OS_ASSERT(latentHeatRateSI->units() == WhUnit(WhExpnt(1, 0, 0, 0, 0, 0, 0, 0, 0, -1)));
 
           double totalHeatRateSI = sensibleHeatRateSI->value() + latentHeatRateSI->value();
-          if (totalHeatRateSI > 0){
+          if (totalHeatRateSI > 0) {
             double sensibleHeatFraction = sensibleHeatRateSI->value() / totalHeatRateSI;
             peopleDefinition.setSensibleHeatFraction(sensibleHeatFraction);
           }
@@ -626,13 +622,13 @@ namespace sdd {
           if (occSchRefElement) {
             std::string scheduleName = escapeName(occSchRefElement.text().as_string());
             boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-            if (schedule){
+            if (schedule) {
               people.setNumberofPeopleSchedule(*schedule);
-            }else{
+            } else {
               LOG(Error, "Could not find schedule '" << scheduleName << "'");
             }
           }
-        }else{
+        } else {
           LOG(Error, "People density is non-zero but sensible and latent heat rates are not given");
         }
       }
@@ -649,39 +645,33 @@ namespace sdd {
 
       //InfMthd = {AirChangesPerHour, FlowArea, FlowExteriorArea, FlowExteriorWallArea, FlowSpace}
       std::vector<pugi::xml_node> infMthdNodes = makeVectorOfChildren(element, "InfMthd");
-      for (std::vector<pugi::xml_node>::size_type i = 0; i < infMthdNodes.size(); i++){
+      for (std::vector<pugi::xml_node>::size_type i = 0; i < infMthdNodes.size(); i++) {
 
         pugi::xml_node infMthdElement = infMthdNodes[i];
 
-
         boost::optional<int> _infIndex = lexicalCastToInt(infMthdElement.attribute("index"));
 
-        pugi::xml_node dsgnInfRtElement = elementByTagNameAndIndex(element,"DsgnInfRt", _infIndex);
-
+        pugi::xml_node dsgnInfRtElement = elementByTagNameAndIndex(element, "DsgnInfRt", _infIndex);
 
         if (infMthdElement && dsgnInfRtElement) {
 
           std::string infMthd = infMthdElement.text().as_string();
 
-          if (openstudio::istringEqual(infMthd, "AirChangesPerHour") ||
-              openstudio::istringEqual(infMthd, "FlowArea") ||
-              openstudio::istringEqual(infMthd, "FlowExteriorArea") ||
-              openstudio::istringEqual(infMthd, "FlowExteriorWallArea") ||
-              openstudio::istringEqual(infMthd, "FlowSpace")){
+          if (openstudio::istringEqual(infMthd, "AirChangesPerHour") || openstudio::istringEqual(infMthd, "FlowArea")
+              || openstudio::istringEqual(infMthd, "FlowExteriorArea") || openstudio::istringEqual(infMthd, "FlowExteriorWallArea")
+              || openstudio::istringEqual(infMthd, "FlowSpace")) {
 
             pugi::xml_node infSchRefElement = elementByTagNameAndIndex(element, "InfSchRef", _infIndex);
-            pugi::xml_node infModelCoefAElement = elementByTagNameAndIndex(element, "InfModelCoefA", _infIndex); // unitless
-            pugi::xml_node infModelCoefBElement = elementByTagNameAndIndex(element, "InfModelCoefB", _infIndex); // 1/deltaF
-            pugi::xml_node infModelCoefCElement = elementByTagNameAndIndex(element, "InfModelCoefC", _infIndex); // hr/mile
-            pugi::xml_node infModelCoefDElement = elementByTagNameAndIndex(element, "InfModelCoefD", _infIndex); // hr^2/mile^2
+            pugi::xml_node infModelCoefAElement = elementByTagNameAndIndex(element, "InfModelCoefA", _infIndex);  // unitless
+            pugi::xml_node infModelCoefBElement = elementByTagNameAndIndex(element, "InfModelCoefB", _infIndex);  // 1/deltaF
+            pugi::xml_node infModelCoefCElement = elementByTagNameAndIndex(element, "InfModelCoefC", _infIndex);  // hr/mile
+            pugi::xml_node infModelCoefDElement = elementByTagNameAndIndex(element, "InfModelCoefD", _infIndex);  // hr^2/mile^2
 
             openstudio::model::SpaceInfiltrationDesignFlowRate spaceInfiltrationDesignFlowRate(model);
             std::string infName;
-            if( _infIndex ) {
+            if (_infIndex) {
               infName = name + " Space Infiltration Design Flow Rate " + openstudio::string_conversions::number(_infIndex.get() + 1);
-            }
-            else
-            {
+            } else {
               infName = name + " Space Infiltration Design Flow Rate";
             }
             spaceInfiltrationDesignFlowRate.setName(infName);
@@ -701,22 +691,22 @@ namespace sdd {
 
             if (openstudio::istringEqual(infMthd, "AirChangesPerHour")) {
               spaceInfiltrationDesignFlowRate.setAirChangesperHour(dsnInfRt);
-            }else if (openstudio::istringEqual(infMthd, "FlowArea")) {
-                spaceInfiltrationDesignFlowRate.setFlowperSpaceFloorArea(dsgnInfRtAreaSI->value());
-            }else if (openstudio::istringEqual(infMthd, "FlowExteriorArea")) {
+            } else if (openstudio::istringEqual(infMthd, "FlowArea")) {
+              spaceInfiltrationDesignFlowRate.setFlowperSpaceFloorArea(dsgnInfRtAreaSI->value());
+            } else if (openstudio::istringEqual(infMthd, "FlowExteriorArea")) {
               spaceInfiltrationDesignFlowRate.setFlowperExteriorSurfaceArea(dsgnInfRtAreaSI->value());
-            }else if(openstudio::istringEqual(infMthd, "FlowExteriorWallArea")) {
+            } else if (openstudio::istringEqual(infMthd, "FlowExteriorWallArea")) {
               spaceInfiltrationDesignFlowRate.setFlowperExteriorWallArea(dsgnInfRtAreaSI->value());
-            }else if (openstudio::istringEqual(infMthd, "FlowSpace")) {
+            } else if (openstudio::istringEqual(infMthd, "FlowSpace")) {
               spaceInfiltrationDesignFlowRate.setDesignFlowRate(dsgnInfRtSI->value());
             }
 
             if (infSchRefElement) {
               std::string scheduleName = escapeName(infSchRefElement.text().as_string());
               boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-              if (schedule){
+              if (schedule) {
                 spaceInfiltrationDesignFlowRate.setSchedule(*schedule);
-              }else{
+              } else {
                 LOG(Error, "Could not find schedule '" << scheduleName << "'");
               }
             }
@@ -728,31 +718,31 @@ namespace sdd {
               spaceInfiltrationDesignFlowRate.setConstantTermCoefficient(infModelCoefA);
             }
 
-            if (infModelCoefBElement){
+            if (infModelCoefBElement) {
               // convert 1/deltaF to 1/detlaC
               spaceInfiltrationDesignFlowRate.setTemperatureTermCoefficient(infModelCoefBElement.text().as_double() * 5.0 / 9.0);
             }
 
-            if (infModelCoefCElement){
+            if (infModelCoefCElement) {
               // SDD: hr/mile, OpenStudio: s/m
-              openstudio::Quantity infModelCoefCIP(infModelCoefCElement.text().as_double(), MPHUnit(MPHExpnt(0,-1,1)));
+              openstudio::Quantity infModelCoefCIP(infModelCoefCElement.text().as_double(), MPHUnit(MPHExpnt(0, -1, 1)));
               OptionalQuantity infModelCoefCSI = QuantityConverter::instance().convert(infModelCoefCIP, siSys);
               OS_ASSERT(infModelCoefCSI);
-              OS_ASSERT(infModelCoefCSI->units() == SIUnit(SIExpnt(0,-1,1)));
+              OS_ASSERT(infModelCoefCSI->units() == SIUnit(SIExpnt(0, -1, 1)));
               spaceInfiltrationDesignFlowRate.setVelocityTermCoefficient(infModelCoefCSI->value());
             }
 
-            if (infModelCoefDElement){
+            if (infModelCoefDElement) {
               // SDD: hr^2/mile^2, OpenStudio: s^2/m^2
-              openstudio::Quantity infModelCoefDIP(infModelCoefDElement.text().as_double(), MPHUnit(MPHExpnt(0,-2,2)));
+              openstudio::Quantity infModelCoefDIP(infModelCoefDElement.text().as_double(), MPHUnit(MPHExpnt(0, -2, 2)));
               OptionalQuantity infModelCoefDSI = QuantityConverter::instance().convert(infModelCoefDIP, siSys);
               OS_ASSERT(infModelCoefDSI);
-              OS_ASSERT(infModelCoefDSI->units() == SIUnit(SIExpnt(0,-2,2)));
+              OS_ASSERT(infModelCoefDSI->units() == SIUnit(SIExpnt(0, -2, 2)));
               spaceInfiltrationDesignFlowRate.setVelocitySquaredTermCoefficient(infModelCoefDSI->value());
             }
           }
         }
-      } // end for infMthdNodes
+      }  // end for infMthdNodes
     }
 
     //***** Interior Lights *****
@@ -766,22 +756,21 @@ namespace sdd {
       //<IntLtgNonRegHtGnSpcFrac>0.5</IntLtgNonRegHtGnSpcFrac> - fraction to space, 1-Return Air Fraction
       //<IntLtgNonRegHtGnRadFrac>0.55</IntLtgNonRegHtGnRadFrac> - radiant fraction
 
-
       pugi::xml_node intLPDRegSimElement = element.child("IntLPDRegSim");
       pugi::xml_node intLtgRegSchRefElement = element.child("IntLtgRegSchRef");
       pugi::xml_node intLtgRegHtGnSpcFracSimElement = element.child("IntLtgRegHtGnSpcFracSim");
       pugi::xml_node intLtgRegHtGnRadFracSimElement = element.child("IntLtgRegHtGnRadFracSim");
       pugi::xml_node intLtgRegEndUseElement = element.child("IntLtgRegEndUseCat");
-      if (intLPDRegSimElement && (intLPDRegSimElement.text().as_double() > 0)){
+      if (intLPDRegSimElement && (intLPDRegSimElement.text().as_double() > 0)) {
 
         openstudio::Quantity lightingDensityIP(intLPDRegSimElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity lightingDensitySI = QuantityConverter::instance().convert(lightingDensityIP, whSys);
         OS_ASSERT(lightingDensitySI);
-        OS_ASSERT(lightingDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+        OS_ASSERT(lightingDensitySI->units() == WhUnit(WhExpnt(1, 0, -2)));
 
         openstudio::model::LightsDefinition lightsDefinition(model);
         lightsDefinition.setName(name + " Regulated Lights Definition");
-        lightsDefinition.setWattsperSpaceFloorArea(lightingDensitySI->value()); // W/m2
+        lightsDefinition.setWattsperSpaceFloorArea(lightingDensitySI->value());  // W/m2
 
         openstudio::model::Lights lights(lightsDefinition);
         lights.setName(name + " Regulated Lights");
@@ -793,27 +782,28 @@ namespace sdd {
         }
         lights.setEndUseSubcategory(subCategory);
 
-        if (intLtgRegSchRefElement){
+        if (intLtgRegSchRefElement) {
           std::string scheduleName = escapeName(intLtgRegSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             lights.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
 
-        if (intLtgRegHtGnSpcFracSimElement){
+        if (intLtgRegHtGnSpcFracSimElement) {
           double spaceFraction = intLtgRegHtGnSpcFracSimElement.text().as_double();
           double returnAirFraction = 1.0 - spaceFraction;
           lightsDefinition.setReturnAirFraction(returnAirFraction);
 
-          if (intLtgRegHtGnRadFracSimElement){
+          if (intLtgRegHtGnRadFracSimElement) {
             double fractionRadiant = intLtgRegHtGnRadFracSimElement.text().as_double() * spaceFraction;
             lightsDefinition.setFractionRadiant(fractionRadiant);
           }
-        }else if (intLtgRegHtGnRadFracSimElement){
-          LOG(Warn, "IntLtgRegHtGnRadFracSimElement is specified for space '" << name << "' but IntLtgRegHtGnSpcFracSimElement is not, IntLtgNonRegHtGnRadFracSimElement will be ignored.");
+        } else if (intLtgRegHtGnRadFracSimElement) {
+          LOG(Warn, "IntLtgRegHtGnRadFracSimElement is specified for space '"
+                      << name << "' but IntLtgRegHtGnSpcFracSimElement is not, IntLtgNonRegHtGnRadFracSimElement will be ignored.");
         }
       }
 
@@ -822,48 +812,49 @@ namespace sdd {
       pugi::xml_node intLtgNonRegHtGnSpcFracSimElement = element.child("IntLtgNonRegHtGnSpcFracSim");
       pugi::xml_node intLtgNonRegHtGnRadFracSimElement = element.child("IntLtgNonRegHtGnRadFracSim");
       pugi::xml_node intLtgNonRegEndUseElement = element.child("IntLtgNonRegEndUseCat");
-      if (intLPDNonRegSimElement && (intLPDNonRegSimElement.text().as_double() > 0)){
+      if (intLPDNonRegSimElement && (intLPDNonRegSimElement.text().as_double() > 0)) {
 
         openstudio::Quantity lightingDensityIP(intLPDNonRegSimElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity lightingDensitySI = QuantityConverter::instance().convert(lightingDensityIP, whSys);
         OS_ASSERT(lightingDensitySI);
-        OS_ASSERT(lightingDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+        OS_ASSERT(lightingDensitySI->units() == WhUnit(WhExpnt(1, 0, -2)));
 
         openstudio::model::LightsDefinition lightsDefinition(model);
         lightsDefinition.setName(name + " Non-Regulated Lights Definition");
-        lightsDefinition.setWattsperSpaceFloorArea(lightingDensitySI->value()); // W/m2
+        lightsDefinition.setWattsperSpaceFloorArea(lightingDensitySI->value());  // W/m2
 
         openstudio::model::Lights lights(lightsDefinition);
         lights.setName(name + " Non-Regulated Lights");
         lights.setSpace(space);
 
         std::string subCategory = "NonComplianceLtg";
-        if (intLtgRegEndUseElement){
+        if (intLtgRegEndUseElement) {
           subCategory = intLtgNonRegEndUseElement.text().as_string();
         }
         lights.setEndUseSubcategory(subCategory);
 
-        if (intLtgNonRegSchRefElement){
+        if (intLtgNonRegSchRefElement) {
           std::string scheduleName = escapeName(intLtgNonRegSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             lights.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
 
-        if (intLtgNonRegHtGnSpcFracSimElement){
+        if (intLtgNonRegHtGnSpcFracSimElement) {
           double spaceFraction = intLtgNonRegHtGnSpcFracSimElement.text().as_double();
           double returnAirFraction = 1.0 - spaceFraction;
           lightsDefinition.setReturnAirFraction(returnAirFraction);
 
-          if (intLtgNonRegHtGnRadFracSimElement){
+          if (intLtgNonRegHtGnRadFracSimElement) {
             double fractionRadiant = intLtgNonRegHtGnRadFracSimElement.text().as_double() * spaceFraction;
             lightsDefinition.setFractionRadiant(fractionRadiant);
           }
-        }else if (intLtgNonRegHtGnRadFracSimElement){
-          LOG(Warn, "IntLtgNonRegHtGnRadFracSimElement is specified for space '" << name << "' but IntLtgNonRegHtGnSpcFracSimElement is not, IntLtgNonRegHtGnRadFracSimElement will be ignored.");
+        } else if (intLtgNonRegHtGnRadFracSimElement) {
+          LOG(Warn, "IntLtgNonRegHtGnRadFracSimElement is specified for space '"
+                      << name << "' but IntLtgNonRegHtGnSpcFracSimElement is not, IntLtgNonRegHtGnRadFracSimElement will be ignored.");
         }
       }
     }
@@ -882,24 +873,24 @@ namespace sdd {
       pugi::xml_node recptRadFracElement = element.child("RecptRadFrac");
       pugi::xml_node recptLatFracElement = element.child("RecptLatFrac");
       pugi::xml_node recptLostFracElement = element.child("RecptLostFrac");
-      if (recptPwrDensElement && (recptPwrDensElement.text().as_double() > 0)){
+      if (recptPwrDensElement && (recptPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity electricalDensityIP(recptPwrDensElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
         OS_ASSERT(electricalDensitySI);
-        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1, 0, -2)));
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Recepticle Loads Definition");
-        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value()); // W/m2
+        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value());  // W/m2
 
-        if (recptRadFracElement){
+        if (recptRadFracElement) {
           electricEquipmentDefinition.setFractionRadiant(recptRadFracElement.text().as_double());
         }
-        if (recptLatFracElement){
+        if (recptLatFracElement) {
           electricEquipmentDefinition.setFractionLatent(recptLatFracElement.text().as_double());
         }
-        if (recptLostFracElement){
+        if (recptLostFracElement) {
           electricEquipmentDefinition.setFractionLost(recptLostFracElement.text().as_double());
         }
 
@@ -908,12 +899,12 @@ namespace sdd {
         electricEquipment.setSpace(space);
         electricEquipment.setEndUseSubcategory("Receptacle");
 
-        if (recptPwrDensSchRefElement){
+        if (recptPwrDensSchRefElement) {
           std::string scheduleName = escapeName(recptPwrDensSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             electricEquipment.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
@@ -934,24 +925,24 @@ namespace sdd {
       pugi::xml_node gasEqpRadFracElement = element.child("GasEqpRadFrac");
       pugi::xml_node gasEqpLatFracElement = element.child("GasEqpLatFrac");
       pugi::xml_node gasEqpLostFracElement = element.child("GasEqpLostFrac");
-      if (gasEqpPwrDensElement && (gasEqpPwrDensElement.text().as_double() > 0)){
+      if (gasEqpPwrDensElement && (gasEqpPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity gasDensityIP(gasEqpPwrDensElement.text().as_double(), openstudio::createUnit("Btu/h*ft^2").get());
         OptionalQuantity gasDensitySI = QuantityConverter::instance().convert(gasDensityIP, whSys);
         OS_ASSERT(gasDensitySI);
-        OS_ASSERT(gasDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+        OS_ASSERT(gasDensitySI->units() == WhUnit(WhExpnt(1, 0, -2)));
 
         openstudio::model::GasEquipmentDefinition gasEquipmentDefinition(model);
         gasEquipmentDefinition.setName(name + " Gas Equipment Loads Definition");
-        gasEquipmentDefinition.setWattsperSpaceFloorArea(gasDensitySI->value()); // W/m2
+        gasEquipmentDefinition.setWattsperSpaceFloorArea(gasDensitySI->value());  // W/m2
 
-        if (gasEqpRadFracElement){
+        if (gasEqpRadFracElement) {
           gasEquipmentDefinition.setFractionRadiant(gasEqpRadFracElement.text().as_double());
         }
-        if (gasEqpLatFracElement){
+        if (gasEqpLatFracElement) {
           gasEquipmentDefinition.setFractionLatent(gasEqpLatFracElement.text().as_double());
         }
-        if (gasEqpLostFracElement){
+        if (gasEqpLostFracElement) {
           gasEquipmentDefinition.setFractionLost(gasEqpLostFracElement.text().as_double());
         }
 
@@ -960,12 +951,12 @@ namespace sdd {
         gasEquipment.setSpace(space);
         gasEquipment.setEndUseSubcategory("Receptacle");
 
-        if (gasEqpPwrDensSchRefElement){
+        if (gasEqpPwrDensSchRefElement) {
           std::string scheduleName = escapeName(gasEqpPwrDensSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             gasEquipment.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
@@ -985,24 +976,24 @@ namespace sdd {
       pugi::xml_node procElecRadFracElement = element.child("ProcElecRadFrac");
       pugi::xml_node procElecLatFracElement = element.child("ProcElecLatFrac");
       pugi::xml_node procElecLostFracElement = element.child("ProcElecLostFrac");
-      if (procElecPwrDensElement && (procElecPwrDensElement.text().as_double() > 0)){
+      if (procElecPwrDensElement && (procElecPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity electricalDensityIP(procElecPwrDensElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
         OS_ASSERT(electricalDensitySI);
-        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1, 0, -2)));
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Process Electric Loads Definition");
-        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value()); // W/m2
+        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value());  // W/m2
 
-        if (procElecRadFracElement){
+        if (procElecRadFracElement) {
           electricEquipmentDefinition.setFractionRadiant(procElecRadFracElement.text().as_double());
         }
-        if (procElecLatFracElement){
+        if (procElecLatFracElement) {
           electricEquipmentDefinition.setFractionLatent(procElecLatFracElement.text().as_double());
         }
-        if (procElecLostFracElement){
+        if (procElecLostFracElement) {
           electricEquipmentDefinition.setFractionLost(procElecLostFracElement.text().as_double());
         }
 
@@ -1011,12 +1002,12 @@ namespace sdd {
         electricEquipment.setSpace(space);
         electricEquipment.setEndUseSubcategory("Process");
 
-        if (procElecSchRefElement){
+        if (procElecSchRefElement) {
           std::string scheduleName = escapeName(procElecSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             electricEquipment.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
@@ -1036,24 +1027,24 @@ namespace sdd {
       pugi::xml_node commRfrgRadFracElement = element.child("CommRfrgRadFrac");
       pugi::xml_node commRfrgLatFracElement = element.child("CommRfrgLatFrac");
       pugi::xml_node commRfrgLostFracElement = element.child("CommRfrgLostFrac");
-      if (commRfrgEPDElement && (commRfrgEPDElement.text().as_double() > 0)){
+      if (commRfrgEPDElement && (commRfrgEPDElement.text().as_double() > 0)) {
 
         openstudio::Quantity electricalDensityIP(commRfrgEPDElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
         OS_ASSERT(electricalDensitySI);
-        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1, 0, -2)));
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Refrigeration Loads Definition");
-        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value()); // W/m2
+        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value());  // W/m2
 
-        if (commRfrgRadFracElement){
+        if (commRfrgRadFracElement) {
           electricEquipmentDefinition.setFractionRadiant(commRfrgRadFracElement.text().as_double());
         }
-        if (commRfrgLatFracElement){
+        if (commRfrgLatFracElement) {
           electricEquipmentDefinition.setFractionLatent(commRfrgLatFracElement.text().as_double());
         }
-        if (commRfrgLostFracElement){
+        if (commRfrgLostFracElement) {
           electricEquipmentDefinition.setFractionLost(commRfrgLostFracElement.text().as_double());
         }
 
@@ -1062,12 +1053,12 @@ namespace sdd {
         electricEquipment.setSpace(space);
         electricEquipment.setEndUseSubcategory("Refrig");
 
-        if (commRfrgEqpSchRefElement){
+        if (commRfrgEqpSchRefElement) {
           std::string scheduleName = escapeName(commRfrgEqpSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             electricEquipment.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
@@ -1087,19 +1078,19 @@ namespace sdd {
       pugi::xml_node elevRadFracElement = element.child("ElevRadFrac");
       pugi::xml_node elevLatFracElement = element.child("ElevLatFrac");
       pugi::xml_node elevLostFracElement = element.child("ElevLostFrac");
-      if (elevPwrElement && (elevPwrElement.text().as_double() > 0)){
+      if (elevPwrElement && (elevPwrElement.text().as_double() > 0)) {
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Elevator Definition");
         electricEquipmentDefinition.setDesignLevel(elevPwrElement.text().as_double());
 
-        if (elevRadFracElement){
+        if (elevRadFracElement) {
           electricEquipmentDefinition.setFractionRadiant(elevRadFracElement.text().as_double());
         }
-        if (elevLatFracElement){
+        if (elevLatFracElement) {
           electricEquipmentDefinition.setFractionLatent(elevLatFracElement.text().as_double());
         }
-        if (elevLostFracElement){
+        if (elevLostFracElement) {
           electricEquipmentDefinition.setFractionLost(elevLostFracElement.text().as_double());
         }
 
@@ -1108,12 +1099,12 @@ namespace sdd {
         electricEquipment.setSpace(space);
         electricEquipment.setEndUseSubcategory("Internal Transport");
 
-        if (elevSchRefElement){
+        if (elevSchRefElement) {
           std::string scheduleName = escapeName(elevSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             electricEquipment.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
@@ -1133,19 +1124,19 @@ namespace sdd {
       pugi::xml_node escalRadFracElement = element.child("EscalRadFrac");
       pugi::xml_node escalLatFracElement = element.child("EscalLatFrac");
       pugi::xml_node escalLostFracElement = element.child("EscalLostFrac");
-      if (escalPwrElement && (escalPwrElement.text().as_double() > 0)){
+      if (escalPwrElement && (escalPwrElement.text().as_double() > 0)) {
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Escalator Definition");
         electricEquipmentDefinition.setDesignLevel(escalPwrElement.text().as_double());
 
-        if (escalRadFracElement){
+        if (escalRadFracElement) {
           electricEquipmentDefinition.setFractionRadiant(escalRadFracElement.text().as_double());
         }
-        if (escalLatFracElement){
+        if (escalLatFracElement) {
           electricEquipmentDefinition.setFractionLatent(escalLatFracElement.text().as_double());
         }
-        if (escalLostFracElement){
+        if (escalLostFracElement) {
           electricEquipmentDefinition.setFractionLost(escalLostFracElement.text().as_double());
         }
 
@@ -1154,12 +1145,12 @@ namespace sdd {
         electricEquipment.setSpace(space);
         electricEquipment.setEndUseSubcategory("Internal Transport");
 
-        if (escalSchRefElement){
+        if (escalSchRefElement) {
           std::string scheduleName = escapeName(escalSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             electricEquipment.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
@@ -1179,24 +1170,24 @@ namespace sdd {
       pugi::xml_node procGasRadFracElement = element.child("ProcGasRadFrac");
       pugi::xml_node procGasLatFracElement = element.child("ProcGasLatFrac");
       pugi::xml_node procGasLostFracElement = element.child("ProcGasLostFrac");
-      if (procGasPwrDensElement && (procGasPwrDensElement.text().as_double() > 0)){
+      if (procGasPwrDensElement && (procGasPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity gasDensityIP(procGasPwrDensElement.text().as_double(), openstudio::createUnit("Btu/h*ft^2").get());
         OptionalQuantity gasDensitySI = QuantityConverter::instance().convert(gasDensityIP, whSys);
         OS_ASSERT(gasDensitySI);
-        OS_ASSERT(gasDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+        OS_ASSERT(gasDensitySI->units() == WhUnit(WhExpnt(1, 0, -2)));
 
         openstudio::model::GasEquipmentDefinition gasEquipmentDefinition(model);
         gasEquipmentDefinition.setName(name + " Gas Loads Definition");
-        gasEquipmentDefinition.setWattsperSpaceFloorArea(gasDensitySI->value()); // W/m2
+        gasEquipmentDefinition.setWattsperSpaceFloorArea(gasDensitySI->value());  // W/m2
 
-        if (procGasRadFracElement){
+        if (procGasRadFracElement) {
           gasEquipmentDefinition.setFractionRadiant(procGasRadFracElement.text().as_double());
         }
-        if (procGasLatFracElement){
+        if (procGasLatFracElement) {
           gasEquipmentDefinition.setFractionLatent(procGasLatFracElement.text().as_double());
         }
-        if (procGasLostFracElement){
+        if (procGasLostFracElement) {
           gasEquipmentDefinition.setFractionLost(procGasLostFracElement.text().as_double());
         }
 
@@ -1205,12 +1196,12 @@ namespace sdd {
         gasEquipment.setSpace(space);
         gasEquipment.setEndUseSubcategory("Process");
 
-        if (procGasSchRefElement){
+        if (procGasSchRefElement) {
           std::string scheduleName = escapeName(procGasSchRefElement.text().as_string());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-          if (schedule){
+          if (schedule) {
             gasEquipment.setSchedule(*schedule);
-          }else{
+          } else {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
@@ -1220,8 +1211,8 @@ namespace sdd {
     return space;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConvectionCoefficients(const pugi::xml_node& element, openstudio::model::PlanarSurface& surface)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConvectionCoefficients(const pugi::xml_node& element,
+                                                                                                     openstudio::model::PlanarSurface& surface) {
     boost::optional<std::string> convectionCoefficient1Location;
     boost::optional<std::string> convectionCoefficient1Type;
     boost::optional<double> convectionCoefficient1;
@@ -1230,7 +1221,7 @@ namespace sdd {
     boost::optional<double> convectionCoefficient2;
 
     pugi::xml_node insideConvCoefElement = element.child("InsideConvCoef");
-    if (insideConvCoefElement){
+    if (insideConvCoefElement) {
 
       // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K)
       Quantity coefIP(insideConvCoefElement.text().as_double(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
@@ -1243,7 +1234,7 @@ namespace sdd {
     }
 
     pugi::xml_node outsideConvCoefElement = element.child("OutsideConvCoef");
-    if (outsideConvCoefElement){
+    if (outsideConvCoefElement) {
 
       // sdd IP units (Btu/h-ft2-F), os SI units (W/m2-K)
       Quantity coefIP(outsideConvCoefElement.text().as_double(), BTUUnit(BTUExpnt(1, -2, -1, -1)));
@@ -1251,7 +1242,7 @@ namespace sdd {
       OS_ASSERT(coefSI);
       OS_ASSERT(coefSI->units() == WhUnit(WhExpnt(1, 0, -2, -1)));
 
-      if (convectionCoefficient1Location){
+      if (convectionCoefficient1Location) {
         convectionCoefficient2Location = "Outside";
         convectionCoefficient2 = coefSI->value();
       } else {
@@ -1260,16 +1251,16 @@ namespace sdd {
       }
     }
 
-    if (convectionCoefficient1Location){
+    if (convectionCoefficient1Location) {
 
-      if( auto derivedSurface = surface.optionalCast<model::Surface>() ) {
+      if (auto derivedSurface = surface.optionalCast<model::Surface>()) {
         model::SurfacePropertyConvectionCoefficients surfacePropertyConvectionCoefficients(derivedSurface.get());
 
         surfacePropertyConvectionCoefficients.setConvectionCoefficient1Location(*convectionCoefficient1Location);
         surfacePropertyConvectionCoefficients.setConvectionCoefficient1Type("Value");
         surfacePropertyConvectionCoefficients.setConvectionCoefficient1(*convectionCoefficient1);
 
-        if (convectionCoefficient2Location){
+        if (convectionCoefficient2Location) {
           surfacePropertyConvectionCoefficients.setConvectionCoefficient2Location(*convectionCoefficient2Location);
           surfacePropertyConvectionCoefficients.setConvectionCoefficient2Type("Value");
           surfacePropertyConvectionCoefficients.setConvectionCoefficient2(*convectionCoefficient2);
@@ -1282,8 +1273,7 @@ namespace sdd {
     return boost::none;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Space& space)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Space& space) {
     boost::optional<model::ModelObject> result;
 
     UnitSystem siSys(UnitSystem::SI);
@@ -1291,15 +1281,15 @@ namespace sdd {
     std::vector<openstudio::Point3d> vertices;
 
     pugi::xml_node polyLoopElement = element.child("PolyLp");
-    if (!polyLoopElement){
+    if (!polyLoopElement) {
       LOG(Error, "Surface element 'PolyLp' is empty, cannot create Surface.");
       return boost::none;
     }
 
     std::vector<pugi::xml_node> cartesianPointElements = makeVectorOfChildren(polyLoopElement, "CartesianPt");
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++) {
       std::vector<pugi::xml_node> coordinateElements = makeVectorOfChildren(cartesianPointElements[i], "Coord");
-      if (coordinateElements.size() != 3){
+      if (coordinateElements.size() != 3) {
         LOG(Error, "PolyLp element 'CartesianPt' does not have exactly 3 'Coord' elements, cannot create Surface.");
         return boost::none;
       }
@@ -1326,11 +1316,10 @@ namespace sdd {
       vertices.push_back(openstudio::Point3d(xSI->value(), ySI->value(), zSI->value()));
       */
 
-      double x = footToMeter*coordinateElements[0].text().as_double();
-      double y = footToMeter*coordinateElements[1].text().as_double();
-      double z = footToMeter*coordinateElements[2].text().as_double();
-      vertices.push_back(openstudio::Point3d(x,y,z));
-
+      double x = footToMeter * coordinateElements[0].text().as_double();
+      double y = footToMeter * coordinateElements[1].text().as_double();
+      double z = footToMeter * coordinateElements[2].text().as_double();
+      vertices.push_back(openstudio::Point3d(x, y, z));
     }
 
     openstudio::model::Surface surface(vertices, space.model());
@@ -1338,9 +1327,9 @@ namespace sdd {
 
     pugi::xml_node nameElement = element.child("Name");
     std::string name;
-    if (!nameElement){
+    if (!nameElement) {
       LOG(Error, "Surface element 'Name' is empty.")
-    } else{
+    } else {
       name = escapeName(nameElement.text().as_string());
     }
     surface.setName(name);
@@ -1348,70 +1337,70 @@ namespace sdd {
     result = surface;
 
     pugi::xml_node constructionReferenceElement = element.child("ConsAssmRef");
-    if (constructionReferenceElement){
+    if (constructionReferenceElement) {
       std::string constructionName = escapeName(constructionReferenceElement.text().as_string());
       boost::optional<model::ConstructionBase> construction = space.model().getModelObjectByName<model::ConstructionBase>(constructionName);
-      if(construction){
+      if (construction) {
         surface.setConstruction(*construction);
-      }else{
+      } else {
         LOG(Error, "Cannot find construction '" << constructionName << "'");
       }
     }
 
     // Get element's (root) tagname
     std::string tagName = element.name();
-    if (tagName == "ExtWall"){
+    if (tagName == "ExtWall") {
       surface.setSurfaceType("Wall");
       surface.setOutsideBoundaryCondition("Outdoors");
       surface.setSunExposure("SunExposed");
       surface.setWindExposure("WindExposed");
-    }else if (tagName == "ExtFlr"){
+    } else if (tagName == "ExtFlr") {
       surface.setSurfaceType("Floor");
       surface.setOutsideBoundaryCondition("Outdoors");
       surface.setSunExposure("SunExposed");
       surface.setWindExposure("WindExposed");
-    }else if (tagName == "Roof"){
+    } else if (tagName == "Roof") {
       surface.setSurfaceType("RoofCeiling");
       surface.setOutsideBoundaryCondition("Outdoors");
       surface.setSunExposure("SunExposed");
       surface.setWindExposure("WindExposed");
-    }else if (tagName.find("UndgrFlr") != std::string::npos) {
+    } else if (tagName.find("UndgrFlr") != std::string::npos) {
       surface.setSurfaceType("Floor");
       surface.setOutsideBoundaryCondition("Ground");
       surface.setSunExposure("NoSun");
       surface.setWindExposure("NoWind");
-    }else if (tagName.find("UndgrWall") != std::string::npos) {
+    } else if (tagName.find("UndgrWall") != std::string::npos) {
       surface.setSurfaceType("Wall");
       surface.setOutsideBoundaryCondition("Ground");
       surface.setSunExposure("NoSun");
       surface.setWindExposure("NoWind");
-    }else if (tagName.find("Ceiling") != std::string::npos) {
+    } else if (tagName.find("Ceiling") != std::string::npos) {
       surface.setSurfaceType("RoofCeiling");
       surface.setOutsideBoundaryCondition("Adiabatic");
       surface.setSunExposure("NoSun");
       surface.setWindExposure("NoWind");
-    }else if (tagName.find("IntWall") != std::string::npos) {
+    } else if (tagName.find("IntWall") != std::string::npos) {
       surface.setSurfaceType("Wall");
       surface.setOutsideBoundaryCondition("Adiabatic");
       surface.setSunExposure("NoSun");
       surface.setWindExposure("NoWind");
-    }else if (tagName.find("IntFlr") != std::string::npos) {
+    } else if (tagName.find("IntFlr") != std::string::npos) {
       surface.setSurfaceType("Floor");
       surface.setOutsideBoundaryCondition("Adiabatic");
       surface.setSunExposure("NoSun");
       surface.setWindExposure("NoWind");
-    }else{
+    } else {
       LOG(Error, "Unknown surface type '" << tagName << "'");
     }
 
     pugi::xml_node perimExposedElement = element.child("PerimExposed");
-    if (perimExposedElement){
+    if (perimExposedElement) {
 
       double perimeterExposedIP = perimExposedElement.text().as_double();
-      double perimeterExposedSI = footToMeter*perimeterExposedIP;
+      double perimeterExposedSI = footToMeter * perimeterExposedIP;
 
       boost::optional<model::ConstructionBase> construction = surface.construction();
-      if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()){
+      if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()) {
         // clone the existing FFactor construction, set perimeter, and assign to this surface
         model::FFactorGroundFloorConstruction fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
         model::Model model = fFactorConstruction.model();
@@ -1423,19 +1412,19 @@ namespace sdd {
         clone.setArea(surface.grossArea());
         surface.setConstruction(clone);
         surface.setOutsideBoundaryCondition("GroundFCfactorMethod");
-      }else{
+      } else {
         LOG(Error, "Cannot set exposed perimeter for surface '" << name << "''s construction.");
       }
     }
 
     pugi::xml_node heightElement = element.child("Hgt");
-    if (heightElement){
+    if (heightElement) {
 
       double heightIP = heightElement.text().as_double();
-      double heightSI = footToMeter*heightIP;
+      double heightSI = footToMeter * heightIP;
 
       boost::optional<model::ConstructionBase> construction = surface.construction();
-      if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()){
+      if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()) {
         // clone the existing CFactorUndergroundWallConstruction, set height, and assign to this surface
         model::CFactorUndergroundWallConstruction cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
         model::Model model = cFactorConstruction.model();
@@ -1446,7 +1435,7 @@ namespace sdd {
         clone.setHeight(heightSI);
         surface.setConstruction(clone);
         surface.setOutsideBoundaryCondition("GroundFCfactorMethod");
-      }else{
+      } else {
         LOG(Error, "Cannot set height for surface '" << name << "''s construction.");
       }
     }
@@ -1456,32 +1445,32 @@ namespace sdd {
     std::vector<pugi::xml_node> doorElements = makeVectorOfChildren(element, "Dr");
     std::vector<pugi::xml_node> skylightElements = makeVectorOfChildren(element, "Skylt");
 
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < windowElements.size(); ++i){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < windowElements.size(); ++i) {
       boost::optional<model::ModelObject> subSurface = translateSubSurface(windowElements[i], surface);
-      if (!subSurface){
+      if (!subSurface) {
         LOG(Error, "Failed to translate 'Win' element " << i << " for Surface named '" << name << "'");
       }
     }
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < doorElements.size(); ++i){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < doorElements.size(); ++i) {
       boost::optional<model::ModelObject> subSurface = translateSubSurface(doorElements[i], surface);
-      if (!subSurface){
+      if (!subSurface) {
         LOG(Error, "Failed to translate 'Dr' element " << i << " for Surface named '" << name << "'");
       }
     }
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < skylightElements.size(); ++i){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < skylightElements.size(); ++i) {
       boost::optional<model::ModelObject> subSurface = translateSubSurface(skylightElements[i], surface);
-      if (!subSurface){
+      if (!subSurface) {
         LOG(Error, "Failed to translate 'Skylt' element " << i << " for Surface named '" << name << "'");
       }
     }
 
     // check for adjacent surface
     pugi::xml_node adjacentSpaceElement = element.child("AdjacentSpcRef");
-    if (adjacentSpaceElement){
+    if (adjacentSpaceElement) {
       std::string adjacentSpaceName = escapeName(adjacentSpaceElement.text().as_string());
       boost::optional<model::Space> otherSpace = space.model().getModelObjectByName<model::Space>(adjacentSpaceName);
 
-      if (!otherSpace){
+      if (!otherSpace) {
         LOG(Error, "Cannot retrieve adjacent Space '" << adjacentSpaceName << "' for Surface named '" << name << "'");
 
         // DLM: make adiabatic per David Reddy, 6/5/2015
@@ -1489,19 +1478,21 @@ namespace sdd {
         //return boost::none;
         surface.setOutsideBoundaryCondition("Adiabatic");
 
-      } else if (otherSpace->handle() == space.handle()){
-        LOG(Error, "Adjacent Space '" << adjacentSpaceName << "' is same as parent Space for Surface named '" << name << "'.  Removing interior surface.");
+      } else if (otherSpace->handle() == space.handle()) {
+        LOG(Error,
+            "Adjacent Space '" << adjacentSpaceName << "' is same as parent Space for Surface named '" << name << "'.  Removing interior surface.");
 
         // DLM: make adiabatic per David Reddy, 6/5/2015
         //surface.remove();
         //return boost::none;
         surface.setOutsideBoundaryCondition("Adiabatic");
 
-      } else{
+      } else {
         // clone the surface and sub surfaces with reverse vertices
         boost::optional<model::Surface> otherSurface = surface.createAdjacentSurface(*otherSpace);
-        if (!otherSurface){
-          LOG(Error, "Failed to create surface in adjacent Space '" << adjacentSpaceName << "' for Surface named '" << name << "'.  Removing surface.");
+        if (!otherSurface) {
+          LOG(Error,
+              "Failed to create surface in adjacent Space '" << adjacentSpaceName << "' for Surface named '" << name << "'.  Removing surface.");
 
           // DLM: make adiabatic per David Reddy, 6/5/2015
           //surface.remove();
@@ -1514,22 +1505,22 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const pugi::xml_node& element, openstudio::model::Surface& surface)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const pugi::xml_node& element,
+                                                                                         openstudio::model::Surface& surface) {
     std::vector<openstudio::Point3d> vertices;
 
     UnitSystem siSys(UnitSystem::SI);
 
     pugi::xml_node polyLoopElement = element.child("PolyLp");
-    if (!polyLoopElement){
+    if (!polyLoopElement) {
       LOG(Error, "SubSurface element 'PolyLp' is empty, cannot create SubSurface.");
       return boost::none;
     }
 
     std::vector<pugi::xml_node> cartesianPointElements = makeVectorOfChildren(polyLoopElement, "CartesianPt");
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++) {
       std::vector<pugi::xml_node> coordinateElements = makeVectorOfChildren(cartesianPointElements[i], "Coord");
-      if (coordinateElements.size() != 3){
+      if (coordinateElements.size() != 3) {
         LOG(Error, "PolyLp element 'CartesianPt' does not have exactly 3 'Coord' elements, cannot create SubSurface.");
         return boost::none;
       }
@@ -1556,10 +1547,10 @@ namespace sdd {
       vertices.push_back(openstudio::Point3d(xSI->value(), ySI->value(), zSI->value()));
       */
 
-      double x = footToMeter*coordinateElements[0].text().as_double();
-      double y = footToMeter*coordinateElements[1].text().as_double();
-      double z = footToMeter*coordinateElements[2].text().as_double();
-      vertices.push_back(openstudio::Point3d(x,y,z));
+      double x = footToMeter * coordinateElements[0].text().as_double();
+      double y = footToMeter * coordinateElements[1].text().as_double();
+      double z = footToMeter * coordinateElements[2].text().as_double();
+      vertices.push_back(openstudio::Point3d(x, y, z));
     }
 
     model::SubSurface subSurface(vertices, surface.model());
@@ -1567,25 +1558,25 @@ namespace sdd {
 
     pugi::xml_node nameElement = element.child("Name");
     std::string name;
-    if (!nameElement){
+    if (!nameElement) {
       LOG(Error, "Surface element 'Name' is empty.")
-    } else{
+    } else {
       name = escapeName(nameElement.text().as_string());
     }
     subSurface.setName(name);
 
     std::string tagName = element.name();
-    if (tagName == "Win"){
+    if (tagName == "Win") {
 
       subSurface.setSubSurfaceType("FixedWindow");
 
       pugi::xml_node constructionReferenceElement = element.child("FenConsRef");
-      if (constructionReferenceElement){
+      if (constructionReferenceElement) {
         std::string constructionName = escapeName(constructionReferenceElement.text().as_string());
         boost::optional<model::ConstructionBase> construction = surface.model().getModelObjectByName<model::ConstructionBase>(constructionName);
-        if(construction){
+        if (construction) {
           subSurface.setConstruction(*construction);
-        }else{
+        } else {
           LOG(Error, "Cannot find construction '" << constructionName << "'");
         }
       }
@@ -1593,17 +1584,17 @@ namespace sdd {
       // Convert surface convection coefficients
       translateConvectionCoefficients(element, subSurface);
 
-    }else if (tagName == "Dr"){
+    } else if (tagName == "Dr") {
 
       subSurface.setSubSurfaceType("Door");
 
       pugi::xml_node constructionReferenceElement = element.child("DrConsRef");
-      if (constructionReferenceElement){
+      if (constructionReferenceElement) {
         std::string constructionName = escapeName(constructionReferenceElement.text().as_string());
         boost::optional<model::ConstructionBase> construction = surface.model().getModelObjectByName<model::ConstructionBase>(constructionName);
-        if(construction){
+        if (construction) {
           subSurface.setConstruction(*construction);
-        }else{
+        } else {
           LOG(Error, "Cannot find construction '" << constructionName << "'");
         }
       }
@@ -1611,17 +1602,17 @@ namespace sdd {
       // Convert surface convection coefficients
       translateConvectionCoefficients(element, subSurface);
 
-    }else if (tagName == "Skylt"){
+    } else if (tagName == "Skylt") {
 
       subSurface.setSubSurfaceType("Skylight");
 
       pugi::xml_node constructionReferenceElement = element.child("FenConsRef");
-      if (constructionReferenceElement){
+      if (constructionReferenceElement) {
         std::string constructionName = escapeName(constructionReferenceElement.text().as_string());
         boost::optional<model::ConstructionBase> construction = surface.model().getModelObjectByName<model::ConstructionBase>(constructionName);
-        if(construction){
+        if (construction) {
           subSurface.setConstruction(*construction);
-        }else{
+        } else {
           LOG(Error, "Cannot find construction '" << constructionName << "'");
         }
       }
@@ -1629,7 +1620,7 @@ namespace sdd {
       // Convert surface convection coefficients
       translateConvectionCoefficients(element, subSurface);
 
-    }else{
+    } else {
       LOG(Error, "Unknown subsurface type '" << tagName << "'");
     }
 
@@ -1639,22 +1630,22 @@ namespace sdd {
     return subSurface;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateShadingSurface(const pugi::xml_node& element, openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup)
-  {
+  boost::optional<openstudio::model::ModelObject>
+    ReverseTranslator::translateShadingSurface(const pugi::xml_node& element, openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup) {
     std::vector<openstudio::Point3d> vertices;
 
     UnitSystem siSys(UnitSystem::SI);
 
     pugi::xml_node polyLoopElement = element.child("PolyLp");
-    if (!polyLoopElement){
+    if (!polyLoopElement) {
       LOG(Error, "ShadingSurface element 'PolyLp' is empty, cannot create ShadingSurface.");
       return boost::none;
     }
 
     std::vector<pugi::xml_node> cartesianPointElements = makeVectorOfChildren(polyLoopElement, "CartesianPt");
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++) {
       std::vector<pugi::xml_node> coordinateElements = makeVectorOfChildren(cartesianPointElements[i], "Coord");
-      if (coordinateElements.size() != 3){
+      if (coordinateElements.size() != 3) {
         LOG(Error, "PolyLp element 'CartesianPt' does not have exactly 3 'Coord' elements, cannot create ShadingSurface.");
         return boost::none;
       }
@@ -1681,10 +1672,10 @@ namespace sdd {
       vertices.push_back(openstudio::Point3d(xSI->value(), ySI->value(), zSI->value()));
       */
 
-      double x = footToMeter*coordinateElements[0].text().as_double();
-      double y = footToMeter*coordinateElements[1].text().as_double();
-      double z = footToMeter*coordinateElements[2].text().as_double();
-      vertices.push_back(openstudio::Point3d(x,y,z));
+      double x = footToMeter * coordinateElements[0].text().as_double();
+      double y = footToMeter * coordinateElements[1].text().as_double();
+      double z = footToMeter * coordinateElements[2].text().as_double();
+      vertices.push_back(openstudio::Point3d(x, y, z));
     }
 
     model::Model model = shadingSurfaceGroup.model();
@@ -1693,27 +1684,27 @@ namespace sdd {
 
     pugi::xml_node nameElement = element.child("Name");
     std::string name;
-    if (!nameElement){
+    if (!nameElement) {
       LOG(Error, "ShadingSurface element 'Name' is empty.")
-    } else{
+    } else {
       name = escapeName(nameElement.text().as_string());
     }
     shadingSurface.setName(name);
 
     std::string tagName = element.name();
-    if (tagName == "ExtShdgObj"){
+    if (tagName == "ExtShdgObj") {
 
       // default to 0 reflectance
       // http://code.google.com/p/cbecc/issues/detail?id=344#c16
       double solRefl = 0.0;
       pugi::xml_node solReflElement = element.child("SolRefl");
-      if (solReflElement){
+      if (solReflElement) {
         solRefl = solReflElement.text().as_double();
       }
 
       double visRefl = 0.0;
       pugi::xml_node visReflElement = element.child("VisRefl");
-      if (visReflElement){
+      if (visReflElement) {
         visRefl = visReflElement.text().as_double();
       }
 
@@ -1721,7 +1712,7 @@ namespace sdd {
       shadingSurface.setConstruction(construction);
 
       pugi::xml_node transOptionElement = element.child("TransOption");
-      if (transOptionElement){
+      if (transOptionElement) {
 
         boost::optional<model::Schedule> schedule;
         std::string scheduleName;
@@ -1730,9 +1721,9 @@ namespace sdd {
         if (openstudio::istringEqual(transOptionElement.text().as_string(), "Constant")) {
 
           pugi::xml_node transElement = element.child("Trans");
-          if (transElement){
+          if (transElement) {
             schedule = shadingSchedule(model, transElement.text().as_double());
-            if (schedule){
+            if (schedule) {
               scheduleName = schedule->name().get();
             }
           } else {
@@ -1743,43 +1734,41 @@ namespace sdd {
         } else if (openstudio::istringEqual(transOptionElement.text().as_string(), "Scheduled")) {
 
           pugi::xml_node scheduleReferenceElement = element.child("TransSchRef");
-          if (scheduleReferenceElement){
+          if (scheduleReferenceElement) {
             scheduleName = escapeName(scheduleReferenceElement.text().as_string());
             schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-            if (!schedule){
+            if (!schedule) {
               LOG(Error, "Cannot find shading schedule '" << scheduleName << "' for shading surface '" << name << "'");
             }
-          } else{
+          } else {
             LOG(Error, "Cannot find shading schedule for shading surface '" << name << "'");
           }
 
-        } else{
+        } else {
           LOG(Error, "Unknown TransOption value for shading surface '" << name << "'");
         }
 
-        if (schedule){
+        if (schedule) {
           bool test = shadingSurface.setTransmittanceSchedule(*schedule);
-          if (!test){
+          if (!test) {
             LOG(Error, "Failed to assign shading schedule '" << scheduleName << "' to shading surface '" << name << "'");
           }
         } else {
           // DLM: could warn here
         }
-
       }
 
-    }else{
+    } else {
       LOG(Error, "Unknown shading surface type '" << tagName << "'");
     }
 
     return shadingSurface;
   }
 
-  model::ConstructionBase ReverseTranslator::shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl)
-  {
+  model::ConstructionBase ReverseTranslator::shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl) {
     std::pair<double, double> key = std::make_pair(solRefl, visRefl);
     auto it = m_shadingConstructionMap.find(key);
-    if (it != m_shadingConstructionMap.end()){
+    if (it != m_shadingConstructionMap.end()) {
       return it->second;
     }
 
@@ -1794,20 +1783,20 @@ namespace sdd {
     model::MasslessOpaqueMaterial material(model);
     material.setName(materialName);
 
-    bool test = material.setSolarAbsorptance(1.0-solRefl);
-    if (!test){
-      LOG(Error, "Failed to assign solar absorptance '" << 1.0-solRefl << "' to material '" << materialName << "'");
+    bool test = material.setSolarAbsorptance(1.0 - solRefl);
+    if (!test) {
+      LOG(Error, "Failed to assign solar absorptance '" << 1.0 - solRefl << "' to material '" << materialName << "'");
     }
 
-    test = material.setVisibleAbsorptance(1.0-visRefl);
-    if (!test){
-      LOG(Error, "Failed to assign visible absorptance '" << 1.0-visRefl << "' to material '" << materialName << "'");
+    test = material.setVisibleAbsorptance(1.0 - visRefl);
+    if (!test) {
+      LOG(Error, "Failed to assign visible absorptance '" << 1.0 - visRefl << "' to material '" << materialName << "'");
     }
 
     std::vector<model::Material> materials;
     materials.push_back(material);
     test = construction.setLayers(materials);
-    if (!test){
+    if (!test) {
       LOG(Error, "Failed to assign material layers to Construction named '" << constructionName << "'");
     }
 
@@ -1815,10 +1804,9 @@ namespace sdd {
     return construction;
   }
 
-  model::Schedule ReverseTranslator::shadingSchedule(openstudio::model::Model& model, double trans)
-  {
+  model::Schedule ReverseTranslator::shadingSchedule(openstudio::model::Model& model, double trans) {
     auto it = m_shadingScheduleMap.find(trans);
-    if (it != m_shadingScheduleMap.end()){
+    if (it != m_shadingScheduleMap.end()) {
       return it->second;
     }
 
@@ -1833,8 +1821,7 @@ namespace sdd {
     return schedule;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateBuilding(const openstudio::model::Building& building, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateBuilding(const openstudio::model::Building& building, pugi::xml_node& root) {
     pugi::xml_node result = root.append_child("Bldg");
     m_translatedObjects[building.handle()] = result;
 
@@ -1882,7 +1869,7 @@ namespace sdd {
     std::vector<model::BuildingStory> buildingStories = building.model().getConcreteModelObjects<model::BuildingStory>();
     std::sort(buildingStories.begin(), buildingStories.end(), WorkspaceObjectNameLess());
 
-    if (m_progressBar){
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Building Stories"));
       m_progressBar->setMinimum(0);
       m_progressBar->setMaximum((int)buildingStories.size());
@@ -1908,33 +1895,33 @@ namespace sdd {
     std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = building.model().getConcreteModelObjects<model::ShadingSurfaceGroup>();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
-    if (m_progressBar){
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Building Shading"));
       m_progressBar->setMinimum(0);
       m_progressBar->setMaximum((int)shadingSurfaceGroups.size());
       m_progressBar->setValue(0);
     }
 
-    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
-      if (istringEqual(shadingSurfaceGroup.shadingSurfaceType(), "Building")){
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
+      if (istringEqual(shadingSurfaceGroup.shadingSurfaceType(), "Building")) {
 
         Transformation transformation = shadingSurfaceGroup.siteTransformation();
 
-        for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
+        for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()) {
           translateShadingSurface(shadingSurface, transformation, result);
         }
       }
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
     // translate building story
-    for (const model::BuildingStory& buildingStory : buildingStories){
+    for (const model::BuildingStory& buildingStory : buildingStories) {
       translateBuildingStory(buildingStory, result);
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
@@ -1944,21 +1931,21 @@ namespace sdd {
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
     std::string spacesWithoutStory;
     std::string spacesWithoutZone;
-    for (const model::Space& space : spaces){
-      if (!space.buildingStory()){
+    for (const model::Space& space : spaces) {
+      if (!space.buildingStory()) {
         spacesWithoutStory += " '" + space.name().get() + "',";
       }
-      if (!space.thermalZone()){
+      if (!space.thermalZone()) {
         spacesWithoutZone += " '" + space.name().get() + "',";
       }
     }
 
-    if (spacesWithoutStory.size() > 0){
+    if (spacesWithoutStory.size() > 0) {
       spacesWithoutStory.pop_back();
       LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated:" << spacesWithoutStory);
     }
 
-    if (spacesWithoutZone.size() > 0){
+    if (spacesWithoutZone.size() > 0) {
       // DLM: desired workflow is to assign thermal zones in cbecc
       // DLM: Kyle, we will have to think about if we want to warn about this or not
       //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
@@ -1970,13 +1957,13 @@ namespace sdd {
     std::vector<model::Surface> surfaces = building.model().getConcreteModelObjects<model::Surface>();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
     std::string surfacesWithoutSpace;
-    for (const model::Surface& surface : surfaces){
-      if (!surface.space()){
+    for (const model::Surface& surface : surfaces) {
+      if (!surface.space()) {
         surfacesWithoutSpace += " '" + surface.name().get() + "',";
       }
     }
 
-    if (surfacesWithoutSpace.size() > 0){
+    if (surfacesWithoutSpace.size() > 0) {
       surfacesWithoutSpace.pop_back();
       LOG(Warn, "Model contains surfaces which are not assigned to a space, these have not been translated:" << surfacesWithoutSpace);
     }
@@ -1985,13 +1972,13 @@ namespace sdd {
     std::vector<model::SubSurface> subSurfaces = building.model().getConcreteModelObjects<model::SubSurface>();
     std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
     std::string subSurfacesWithoutSurface;
-    for (const model::SubSurface& subSurface : subSurfaces){
-      if (!subSurface.surface()){
+    for (const model::SubSurface& subSurface : subSurfaces) {
+      if (!subSurface.surface()) {
         subSurfacesWithoutSurface += " '" + subSurface.name().get() + "',";
       }
     }
 
-    if (subSurfacesWithoutSurface.size() > 0){
+    if (subSurfacesWithoutSurface.size() > 0) {
       subSurfacesWithoutSurface.pop_back();
       LOG(Warn, "Model contains sub surfaces which are not assigned to a surface, these have not been translated:" << subSurfacesWithoutSurface);
     }
@@ -2000,25 +1987,25 @@ namespace sdd {
     std::vector<model::ThermalZone> thermalZones = building.model().getConcreteModelObjects<model::ThermalZone>();
     std::sort(thermalZones.begin(), thermalZones.end(), WorkspaceObjectNameLess());
 
-    if (m_progressBar){
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
       m_progressBar->setMaximum((int)thermalZones.size());
       m_progressBar->setValue(0);
     }
 
-    for (const model::ThermalZone& thermalZone : thermalZones){
+    for (const model::ThermalZone& thermalZone : thermalZones) {
 
       translateThermalZone(thermalZone, result);
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
     // translate AirLoopHVAC systems
     auto airLoops = building.model().getConcreteModelObjects<model::AirLoopHVAC>();
-    std::sort(airLoops.begin(),airLoops.end(),WorkspaceObjectNameLess());
+    std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating AirLoopHVAC Systems"));
@@ -2027,10 +2014,10 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (const auto & airLoop : airLoops) {
+    for (const auto& airLoop : airLoops) {
       translateAirLoopHVAC(airLoop, result);
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
@@ -2038,8 +2025,8 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& buildingStory, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& buildingStory,
+                                                                            pugi::xml_node& root) {
     pugi::xml_node result = root.append_child("Story");
     m_translatedObjects[buildingStory.handle()] = result;
 
@@ -2058,15 +2045,14 @@ namespace sdd {
     std::vector<model::Space> spaces = buildingStory.spaces();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
-    for (const model::Space& space : spaces){
+    for (const model::Space& space : spaces) {
       translateSpace(space, result);
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSpace(const openstudio::model::Space& space, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSpace(const openstudio::model::Space& space, pugi::xml_node& root) {
     UnitSystem ipSys(UnitSystem::IP);
     UnitSystem btuSys(UnitSystem::BTU);
 
@@ -2200,71 +2186,70 @@ namespace sdd {
     // HighRiseResInt - optional, do we need this?
     // HighRiseResCondFlrArea - optional, do we need this?
 
-
     // volume
     double volume = space.volume();
-    Quantity volumeSI(volume, SIUnit(SIExpnt(0,3,0)));
+    Quantity volumeSI(volume, SIUnit(SIExpnt(0, 3, 0)));
     OptionalQuantity volumeIP = QuantityConverter::instance().convert(volumeSI, ipSys);
     OS_ASSERT(volumeIP);
-    OS_ASSERT(volumeIP->units() == IPUnit(IPExpnt(0,3,0)));
+    OS_ASSERT(volumeIP->units() == IPUnit(IPExpnt(0, 3, 0)));
     pugi::xml_node volumeElement = result.append_child("Vol");
     volumeElement.text() = openstudio::string_conversions::number(volumeIP->value()).c_str();
 
     // log warning if volume is 0
-    if (volumeIP->value() < std::numeric_limits<double>::epsilon()){
+    if (volumeIP->value() < std::numeric_limits<double>::epsilon()) {
       LOG(Warn, "Space '" << name << "' has zero volume.");
     }
 
     // area
     double floorArea = space.floorArea();
-    Quantity floorAreaSI(floorArea, SIUnit(SIExpnt(0,2,0)));
+    Quantity floorAreaSI(floorArea, SIUnit(SIExpnt(0, 2, 0)));
     OptionalQuantity floorAreaIP = QuantityConverter::instance().convert(floorAreaSI, ipSys);
     OS_ASSERT(floorAreaIP);
-    OS_ASSERT(floorAreaIP->units() == IPUnit(IPExpnt(0,2,0)));
-    pugi::xml_node floorAreaElement = result.append_child("Area");   // SAC 3/14/14
+    OS_ASSERT(floorAreaIP->units() == IPUnit(IPExpnt(0, 2, 0)));
+    pugi::xml_node floorAreaElement = result.append_child("Area");  // SAC 3/14/14
     floorAreaElement.text() = openstudio::string_conversions::number(floorAreaIP->value()).c_str();
 
     // log warning if area is 0
-    if (floorAreaIP->value() < std::numeric_limits<double>::epsilon()){
+    if (floorAreaIP->value() < std::numeric_limits<double>::epsilon()) {
       LOG(Warn, "Space '" << name << "' has zero floor area.");
     }
 
     // translate floorPrint
     Transformation transformation = space.siteTransformation();
 
-    Point3dVector vertices = transformation*space.floorPrint();
+    Point3dVector vertices = transformation * space.floorPrint();
     boost::optional<double> floorPrintArea = openstudio::getArea(vertices);
-    if (vertices.empty() || !floorPrintArea){
+    if (vertices.empty() || !floorPrintArea) {
       LOG(Warn, "Cannot compute floor print for space '" << name << "'.");
-    }else{
+    } else {
       Quantity floorPrintAreaSI(*floorPrintArea, SIUnit(SIExpnt(0, 2, 0)));
       OptionalQuantity floorPrintAreaIP = QuantityConverter::instance().convert(floorPrintAreaSI, ipSys);
       OS_ASSERT(floorPrintAreaIP);
       OS_ASSERT(floorPrintAreaIP->units() == IPUnit(IPExpnt(0, 2, 0)));
 
       // log warning if floor print area is 0
-      if (floorPrintAreaIP->value() < std::numeric_limits<double>::epsilon()){
+      if (floorPrintAreaIP->value() < std::numeric_limits<double>::epsilon()) {
         LOG(Warn, "Space '" << name << "' has zero floor print area.");
       }
     }
 
     pugi::xml_node polyLoopElement = result.append_child("PolyLp");
-    for (const Point3d& vertex : vertices){
+    for (const Point3d& vertex : vertices) {
       pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.z()).c_str();
     }
 
     // thermal zone
     boost::optional<model::ThermalZone> thermalZone = space.thermalZone();
-    if (thermalZone){
+    if (thermalZone) {
       std::string thermalZoneName = thermalZone->name().get();
       pugi::xml_node thermalZoneElement = result.append_child("ThrmlZnRef");
       thermalZoneElement.text() = escapeName(thermalZoneName).c_str();
@@ -2279,10 +2264,10 @@ namespace sdd {
     std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = space.shadingSurfaceGroups();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
-    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
       Transformation shadingTransformation = shadingSurfaceGroup.siteTransformation();
 
-      for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
+      for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()) {
         translateShadingSurface(shadingSurface, shadingTransformation, result);
       }
     }
@@ -2294,77 +2279,74 @@ namespace sdd {
     unsigned numFloors = 0;
     unsigned numWalls = 0;
     unsigned numRoofCeilings = 0;
-    for (const model::Surface& surface : surfaces){
+    for (const model::Surface& surface : surfaces) {
       std::string surfaceType = surface.surfaceType();
-      if (istringEqual("Wall", surfaceType)){
+      if (istringEqual("Wall", surfaceType)) {
         ++numWalls;
-      } else if (istringEqual("RoofCeiling", surfaceType)){
+      } else if (istringEqual("RoofCeiling", surfaceType)) {
         ++numRoofCeilings;
-      } else if (istringEqual("Floor", surfaceType)){
+      } else if (istringEqual("Floor", surfaceType)) {
         ++numFloors;
       }
 
       translateSurface(surface, transformation, result);
     }
 
-    if (numFloors < 1){
+    if (numFloors < 1) {
       LOG(Warn, "Space '" << name << "' has less than 1 floor surfaces.")
     }
-    if (numWalls < 3){
+    if (numWalls < 3) {
       LOG(Warn, "Space '" << name << "' has less than 3 wall surfaces.")
     }
-    if (numRoofCeilings < 1){
+    if (numRoofCeilings < 1) {
       LOG(Warn, "Space '" << name << "' has less than 1 roof or ceiling surfaces.")
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSurface(const openstudio::model::Surface& surface, const openstudio::Transformation& transformation, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSurface(const openstudio::model::Surface& surface,
+                                                                      const openstudio::Transformation& transformation, pugi::xml_node& root) {
     UnitSystem ipSys(UnitSystem::IP);
 
     boost::optional<pugi::xml_node> result;
 
     // return if already translated
-    if (m_translatedObjects.find(surface.handle()) != m_translatedObjects.end()){
+    if (m_translatedObjects.find(surface.handle()) != m_translatedObjects.end()) {
       return boost::none;
     }
 
     std::string surfaceType = surface.surfaceType();
     std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
-    if (istringEqual("Wall", surfaceType)){
-      if (istringEqual("Outdoors", outsideBoundaryCondition)){
+    if (istringEqual("Wall", surfaceType)) {
+      if (istringEqual("Outdoors", outsideBoundaryCondition)) {
         result = root.append_child("ExtWall");
-      }else if (surface.isGroundSurface()){
+      } else if (surface.isGroundSurface()) {
         result = root.append_child("UndgrWall");
-      }else if (istringEqual("Surface", outsideBoundaryCondition) ||
-                istringEqual("Adiabatic", outsideBoundaryCondition)){
+      } else if (istringEqual("Surface", outsideBoundaryCondition) || istringEqual("Adiabatic", outsideBoundaryCondition)) {
         result = root.append_child("IntWall");
       }
-    }else if (istringEqual("RoofCeiling", surfaceType)){
-      if (istringEqual("Outdoors", outsideBoundaryCondition)){
+    } else if (istringEqual("RoofCeiling", surfaceType)) {
+      if (istringEqual("Outdoors", outsideBoundaryCondition)) {
         result = root.append_child("Roof");
-      }else if (surface.isGroundSurface()){
+      } else if (surface.isGroundSurface()) {
         // DLM: what to do here?
-      }else if (istringEqual("Surface", outsideBoundaryCondition) ||
-                istringEqual("Adiabatic", outsideBoundaryCondition)){
+      } else if (istringEqual("Surface", outsideBoundaryCondition) || istringEqual("Adiabatic", outsideBoundaryCondition)) {
         // DLM: we are not translating interior ceiling surfaces, the paired interior floor will be written instead
         //result = root.append_child("Ceiling");
         return boost::none;
       }
-    }else if (istringEqual("Floor", surfaceType)){
-      if (surface.isGroundSurface()){
+    } else if (istringEqual("Floor", surfaceType)) {
+      if (surface.isGroundSurface()) {
         result = root.append_child("UndgrFlr");
-      }else if (istringEqual("Surface", outsideBoundaryCondition) ||
-                istringEqual("Adiabatic", outsideBoundaryCondition)){
+      } else if (istringEqual("Surface", outsideBoundaryCondition) || istringEqual("Adiabatic", outsideBoundaryCondition)) {
         result = root.append_child("IntFlr");
-      }else if (istringEqual("Outdoors", outsideBoundaryCondition)){
+      } else if (istringEqual("Outdoors", outsideBoundaryCondition)) {
         result = root.append_child("ExtFlr");
       }
     }
 
-    if (!result){
+    if (!result) {
       LOG(Error, "Cannot map surface '" << surface.name().get() << "' to a known surfaceType");
       return boost::none;
     }
@@ -2403,9 +2385,9 @@ namespace sdd {
 
     // adjacent surface
     boost::optional<model::Surface> adjacentSurface = surface.adjacentSurface();
-    if (adjacentSurface){
+    if (adjacentSurface) {
       boost::optional<model::Space> adjacentSpace = adjacentSurface->space();
-      if (adjacentSpace){
+      if (adjacentSpace) {
         std::string adjacentSpaceName = adjacentSpace->name().get();
         pugi::xml_node adjacentSpaceElement = result->append_child("AdjacentSpcRef");
         adjacentSpaceElement.text() = escapeName(adjacentSpaceName).c_str();
@@ -2417,59 +2399,59 @@ namespace sdd {
 
     // construction reference
     boost::optional<model::ConstructionBase> construction = surface.construction();
-    if (construction){
+    if (construction) {
 
       std::string constructionName = construction->name().get();
 
       // check that construction has been translated
-      if (m_translatedObjects.find(construction->handle()) != m_translatedObjects.end()){
+      if (m_translatedObjects.find(construction->handle()) != m_translatedObjects.end()) {
         pugi::xml_node constructionReferenceElement = result->append_child("ConsAssmRef");
         constructionReferenceElement.text() = escapeName(constructionName).c_str();
-      }else{
+      } else {
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Surface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
       }
     }
 
     // if underground floor try to write out perimeter exposed
-    if (istringEqual("Floor", surfaceType) && surface.isGroundSurface()){
+    if (istringEqual("Floor", surfaceType) && surface.isGroundSurface()) {
       // DLM: for now we will get the exposed perimeter from the FFactor construction
       // this assumes one construction per surface, I don't really like this, maybe we can do better later
-      if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()){
+      if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()) {
         model::FFactorGroundFloorConstruction fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
         // check assumption of one surface per FFactor construction
-        if (fFactorConstruction.getModelObjectSources<model::Surface>().size() == 1){
+        if (fFactorConstruction.getModelObjectSources<model::Surface>().size() == 1) {
           double perimeterExposedSI = fFactorConstruction.perimeterExposed();
-          double perimeterExposedIP = meterToFoot*perimeterExposedSI;
+          double perimeterExposedIP = meterToFoot * perimeterExposedSI;
           pugi::xml_node perimExposedElement = result->append_child("PerimExposed");
           perimExposedElement.text() = openstudio::string_conversions::number(perimeterExposedIP).c_str();
-        }else{
+        } else {
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
         }
-      }else{
+      } else {
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
       }
     }
 
     // if underground wall try to write out height
-    if (istringEqual("Wall", surfaceType) && surface.isGroundSurface()){
+    if (istringEqual("Wall", surfaceType) && surface.isGroundSurface()) {
       // DLM: for now we will get the height from the CFactor construction
       // this assumes one construction per surface, I don't really like this, maybe we can do better later
-      if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()){
+      if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()) {
         model::CFactorUndergroundWallConstruction cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
         // check assumption of one surface per CFactor construction
-        if (cFactorConstruction.getModelObjectSources<model::Surface>().size() == 1){
+        if (cFactorConstruction.getModelObjectSources<model::Surface>().size() == 1) {
           double heightSI = cFactorConstruction.height();
-          double heightIP = meterToFoot*heightSI;
+          double heightIP = meterToFoot * heightSI;
           pugi::xml_node heightElement = result->append_child("Hgt");
           heightElement.text() = openstudio::string_conversions::number(heightIP).c_str();
-        }else{
+        } else {
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute height for surface '" << name << "'.");
         }
-      }else{
+      } else {
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Cannot compute height for surface '" << name << "'.");
       }
@@ -2483,14 +2465,14 @@ namespace sdd {
     OS_ASSERT(grossAreaIP->units() == IPUnit(IPExpnt(0, 2, 0)));
 
     // log warning if area is 0
-    if (grossAreaIP->value() < std::numeric_limits<double>::epsilon()){
+    if (grossAreaIP->value() < std::numeric_limits<double>::epsilon()) {
       LOG(Warn, "Surface '" << name << "' has zero area.")
     }
 
     // translate vertices
-    Point3dVector vertices = transformation*surface.vertices();
+    Point3dVector vertices = transformation * surface.vertices();
     pugi::xml_node polyLoopElement = result->append_child("PolyLp");
-    for (const Point3d& vertex : vertices){
+    for (const Point3d& vertex : vertices) {
       pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       /* DLM: these conversions were taking about 75% of the time to convert a large model
@@ -2523,55 +2505,51 @@ namespace sdd {
       */
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
-
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.z()).c_str();
     }
 
     // translate sub surfaces
     std::vector<model::SubSurface> subSurfaces = surface.subSurfaces();
     std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
 
-    for (const model::SubSurface& subSurface : subSurfaces){
+    for (const model::SubSurface& subSurface : subSurfaces) {
       translateSubSurface(subSurface, transformation, *result);
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSubSurface(const openstudio::model::SubSurface& subSurface,
+                                                                         const openstudio::Transformation& transformation, pugi::xml_node& root) {
     UnitSystem ipSys(UnitSystem::IP);
 
     boost::optional<pugi::xml_node> result;
 
     // return if already translated
-    if (m_translatedObjects.find(subSurface.handle()) != m_translatedObjects.end()){
+    if (m_translatedObjects.find(subSurface.handle()) != m_translatedObjects.end()) {
       return boost::none;
     }
 
     std::string subSurfaceType = subSurface.subSurfaceType();
     std::string consRefElementName;
-    if (istringEqual("FixedWindow", subSurfaceType) ||
-        istringEqual("OperableWindow", subSurfaceType) ||
-        istringEqual("GlassDoor", subSurfaceType)){
+    if (istringEqual("FixedWindow", subSurfaceType) || istringEqual("OperableWindow", subSurfaceType) || istringEqual("GlassDoor", subSurfaceType)) {
       consRefElementName = "FenConsRef";
       result = root.append_child("Win");
-    }else if (istringEqual("Door", subSurfaceType) ||
-              istringEqual("OverheadDoor", subSurfaceType)){
+    } else if (istringEqual("Door", subSurfaceType) || istringEqual("OverheadDoor", subSurfaceType)) {
       consRefElementName = "DrConsRef";
       result = root.append_child("Dr");
-    }else if (istringEqual("Skylight", subSurfaceType)){
+    } else if (istringEqual("Skylight", subSurfaceType)) {
       consRefElementName = "FenConsRef";
       result = root.append_child("Skylt");
     }
 
-    if (!result){
+    if (!result) {
       LOG(Error, "Cannot map subsurface '" << subSurface.name().get() << "' to a known subsurfaceType");
       return boost::none;
     }
@@ -2592,15 +2570,15 @@ namespace sdd {
 
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
-    if (construction){
+    if (construction) {
 
       std::string constructionName = construction->name().get();
 
       // check that construction has been translated
-      if (m_translatedObjects.find(construction->handle()) != m_translatedObjects.end()){
+      if (m_translatedObjects.find(construction->handle()) != m_translatedObjects.end()) {
         pugi::xml_node constructionReferenceElement = result->append_child(consRefElementName.c_str());
         constructionReferenceElement.text() = escapeName(constructionName).c_str();
-      }else{
+      } else {
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "SubSurface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
       }
@@ -2614,14 +2592,14 @@ namespace sdd {
     OS_ASSERT(grossAreaIP->units() == IPUnit(IPExpnt(0, 2, 0)));
 
     // log warning if area is 0
-    if (grossAreaIP->value() < std::numeric_limits<double>::epsilon()){
+    if (grossAreaIP->value() < std::numeric_limits<double>::epsilon()) {
       LOG(Warn, "Sub Surface '" << name << "' has zero area.")
     }
 
     // translate vertices
-    Point3dVector vertices = transformation*subSurface.vertices();
+    Point3dVector vertices = transformation * subSurface.vertices();
     pugi::xml_node polyLoopElement = result->append_child("PolyLp");
-    for (const Point3d& vertex : vertices){
+    for (const Point3d& vertex : vertices) {
       pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       /* DLM: these conversions were taking about 75% of the time it takes to convert a large model
@@ -2654,27 +2632,26 @@ namespace sdd {
       */
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
-
-   }
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.z()).c_str();
+    }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface,
+                                                                             const openstudio::Transformation& transformation, pugi::xml_node& root) {
     UnitSystem ipSys(UnitSystem::IP);
 
     boost::optional<pugi::xml_node> result;
 
     // return if already translated
-    if (m_translatedObjects.find(shadingSurface.handle()) != m_translatedObjects.end()){
+    if (m_translatedObjects.find(shadingSurface.handle()) != m_translatedObjects.end()) {
       return boost::none;
     }
 
@@ -2694,17 +2671,16 @@ namespace sdd {
 
     // schedule
     boost::optional<model::Schedule> transmittanceSchedule = shadingSurface.transmittanceSchedule();
-    if (transmittanceSchedule){
+    if (transmittanceSchedule) {
 
       std::string transmittanceScheduleName = transmittanceSchedule->name().get();
 
       // check that construction has been translated
-      if (m_translatedObjects.find(transmittanceSchedule->handle()) != m_translatedObjects.end()){
+      if (m_translatedObjects.find(transmittanceSchedule->handle()) != m_translatedObjects.end()) {
         pugi::xml_node transmittanceScheduleReferenceElement = result->append_child("TransSchRef");
         transmittanceScheduleReferenceElement.text() = escapeName(transmittanceScheduleName).c_str();
-      }else{
-        LOG(Error, "ShadingSurface '" << name << "' uses transmittance schedule '" << transmittanceScheduleName
-                << "' which has not been translated");
+      } else {
+        LOG(Error, "ShadingSurface '" << name << "' uses transmittance schedule '" << transmittanceScheduleName << "' which has not been translated");
       }
     }
 
@@ -2714,40 +2690,40 @@ namespace sdd {
     double visRefl = 0.0;
 
     boost::optional<model::ConstructionBase> constructionBase = shadingSurface.construction();
-    if (constructionBase){
+    if (constructionBase) {
       boost::optional<model::Construction> construction = constructionBase->optionalCast<model::Construction>();
-      if (construction){
+      if (construction) {
 
         std::vector<model::Material> layers = construction->layers();
-        if (!layers.empty()){
+        if (!layers.empty()) {
 
-          if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
+          if (layers[0].optionalCast<model::StandardOpaqueMaterial>()) {
             model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
-            if (!outerMaterial.isSolarAbsorptanceDefaulted()){
+            if (!outerMaterial.isSolarAbsorptanceDefaulted()) {
               boost::optional<double> test = outerMaterial.solarReflectance();
-              if (test){
+              if (test) {
                 solRefl = *test;
               }
             }
-            if (!outerMaterial.isVisibleAbsorptanceDefaulted()){
+            if (!outerMaterial.isVisibleAbsorptanceDefaulted()) {
               boost::optional<double> test = outerMaterial.visibleReflectance();
-              if (test){
+              if (test) {
                 visRefl = *test;
               }
             }
           }
 
-          if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
+          if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()) {
             model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
-            if (!outerMaterial.isSolarAbsorptanceDefaulted()){
+            if (!outerMaterial.isSolarAbsorptanceDefaulted()) {
               boost::optional<double> test = outerMaterial.solarReflectance();
-              if (test){
+              if (test) {
                 solRefl = *test;
               }
             }
-            if (!outerMaterial.isVisibleAbsorptanceDefaulted()){
+            if (!outerMaterial.isVisibleAbsorptanceDefaulted()) {
               boost::optional<double> test = outerMaterial.visibleReflectance();
-              if (test){
+              if (test) {
                 visRefl = *test;
               }
             }
@@ -2763,9 +2739,9 @@ namespace sdd {
     visReflElement.text() = openstudio::string_conversions::number(visRefl).c_str();
 
     // translate vertices
-    Point3dVector vertices = transformation*shadingSurface.vertices();
+    Point3dVector vertices = transformation * shadingSurface.vertices();
     pugi::xml_node polyLoopElement = result->append_child("PolyLp");
-    for (const Point3d& vertex : vertices){
+    for (const Point3d& vertex : vertices) {
       pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       /* DLM: these conversions were taking about 75% of the time it takes to convert a large model
@@ -2798,20 +2774,19 @@ namespace sdd {
       */
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot * vertex.z()).c_str();
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& root) {
     pugi::xml_node result = root.append_child("ThrmlZn");
     m_translatedObjects[thermalZone.handle()] = result;
 
@@ -2821,10 +2796,10 @@ namespace sdd {
     nameElement.text() = escapeName(name).c_str();
 
     // Type
-    std::string type; // Conditioned, Unconditioned, Plenum
-    if(thermalZone.thermostatSetpointDualSetpoint()){
+    std::string type;  // Conditioned, Unconditioned, Plenum
+    if (thermalZone.thermostatSetpointDualSetpoint()) {
       type = "Conditioned";
-    }else {
+    } else {
       type = "Unconditioned";
     }
     pugi::xml_node typeElement = result.append_child("Type");
@@ -2838,6 +2813,5 @@ namespace sdd {
     return result;
   }
 
-
-} // sdd
-} // openstudio
+}  // namespace sdd
+}  // namespace openstudio

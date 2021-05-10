@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,89 +36,84 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class AirToAirComponent_Impl;
-}
+  namespace detail {
+    class AirToAirComponent_Impl;
+  }
 
-class AirLoopHVAC;
+  class AirLoopHVAC;
 
-/** AirToAirComponent is the base class for model objects which interact with
+  /** AirToAirComponent is the base class for model objects which interact with
  *  two air streams.
  *
  *  These objects are typically heat recovery devices such as the EnergyPlus IDD object
  *  named HeatExchanger:AirToAir:SensibleAndLatent.
  */
-class MODEL_API AirToAirComponent : public HVACComponent
-{
-  public:
+  class MODEL_API AirToAirComponent : public HVACComponent
+  {
+   public:
+    AirToAirComponent(IddObjectType type, const Model& model);
 
-  AirToAirComponent(IddObjectType type,const Model& model);
+    virtual ~AirToAirComponent() {}
 
-  virtual ~AirToAirComponent() {}
-
-  /** Returns the primary air stream inlet port.
+    /** Returns the primary air stream inlet port.
    *
    *  In the conext of air to air heat recovery devices in EnergyPlus,
    *  the primary air stream is often thought of as the supply side air stream
    *  which is the supply of outdoor air into the system.
    */
-  unsigned primaryAirInletPort() const;
+    unsigned primaryAirInletPort() const;
 
-  /** Returns the primary air stream outlet port. **/
-  unsigned primaryAirOutletPort() const;
+    /** Returns the primary air stream outlet port. **/
+    unsigned primaryAirOutletPort() const;
 
-  /** Returns the optional ModelObject connected to the primary air stream inlet port. **/
-  boost::optional<ModelObject> primaryAirInletModelObject() const;
+    /** Returns the optional ModelObject connected to the primary air stream inlet port. **/
+    boost::optional<ModelObject> primaryAirInletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the primary air stream outlet port. **/
-  boost::optional<ModelObject> primaryAirOutletModelObject() const;
+    /** Returns the optional ModelObject connected to the primary air stream outlet port. **/
+    boost::optional<ModelObject> primaryAirOutletModelObject() const;
 
-  /** Returns the secondary air stream inlet port.
+    /** Returns the secondary air stream inlet port.
    *
    *  In the context of air to air heat recovery devices in EnergyPlus,
    *  the secondary air stream is often the exhaust air stream leaving the system.
    */
-  unsigned secondaryAirInletPort() const;
+    unsigned secondaryAirInletPort() const;
 
-  /** Returns the secondary air stream outlet port. **/
-  unsigned secondaryAirOutletPort() const;
+    /** Returns the secondary air stream outlet port. **/
+    unsigned secondaryAirOutletPort() const;
 
-  /** Returns the optional ModelObject connected to the secondary air stream inlet port. **/
-  boost::optional<ModelObject> secondaryAirInletModelObject() const;
+    /** Returns the optional ModelObject connected to the secondary air stream inlet port. **/
+    boost::optional<ModelObject> secondaryAirInletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the secondary air stream outlet port. **/
-  boost::optional<ModelObject> secondaryAirOutletModelObject() const;
+    /** Returns the optional ModelObject connected to the secondary air stream outlet port. **/
+    boost::optional<ModelObject> secondaryAirOutletModelObject() const;
 
-  bool addToNode(Node & node);
+    bool addToNode(Node& node);
 
-  std::vector<openstudio::IdfObject> remove();
+    std::vector<openstudio::IdfObject> remove();
 
-  ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const;
 
-  protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /// @cond
 
-  /// @cond
+    typedef detail::AirToAirComponent_Impl ImplType;
 
-  typedef detail::AirToAirComponent_Impl ImplType;
+    explicit AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> impl);
 
-  explicit AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.AirToAirComponent");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.AirToAirComponent");
+  typedef boost::optional<AirToAirComponent> OptionalAirToAirComponent;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-typedef boost::optional<AirToAirComponent> OptionalAirToAirComponent;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTOAIRCOMPONENT_HPP
-
+#endif  // MODEL_AIRTOAIRCOMPONENT_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,69 +37,69 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
-class Node;
-class AirLoopHVAC;
-class AirLoopHVACReturnPlenum;
+  class ThermalZone;
+  class Node;
+  class AirLoopHVAC;
+  class AirLoopHVACReturnPlenum;
 
-namespace detail {
+  namespace detail {
 
-class ZoneHVACComponent_Impl;
+    class ZoneHVACComponent_Impl;
 
-};
+  };
 
-/** ZoneHVACComponent is the base class for HVAC related objects that exclusively condition a single zone.
+  /** ZoneHVACComponent is the base class for HVAC related objects that exclusively condition a single zone.
  */
-class MODEL_API ZoneHVACComponent : public HVACComponent
-{
-  public:
-  virtual ~ZoneHVACComponent() {}
+  class MODEL_API ZoneHVACComponent : public HVACComponent
+  {
+   public:
+    virtual ~ZoneHVACComponent() {}
 
-  /** Returns the inlet port.  For a ZoneHVACComponent this port is typically connected
+    /** Returns the inlet port.  For a ZoneHVACComponent this port is typically connected
    *  to a zone exhaust node. **/
-  unsigned inletPort() const;
+    unsigned inletPort() const;
 
-  /** Returns the optional node connected to the inletPort(). **/
-  boost::optional<Node> inletNode() const;
+    /** Returns the optional node connected to the inletPort(). **/
+    boost::optional<Node> inletNode() const;
 
-  /** Returns the outlet port. For a ZoneHVACComponent this port is typically connected
+    /** Returns the outlet port. For a ZoneHVACComponent this port is typically connected
    *  to a zone air inlet node **/
-  unsigned outletPort() const;
+    unsigned outletPort() const;
 
-  /** Returns the optional node connected to the outletPort(). **/
-  boost::optional<Node> outletNode() const;
+    /** Returns the optional node connected to the outletPort(). **/
+    boost::optional<Node> outletNode() const;
 
-  /** Returns the optional ThermalZone that this ZoneHVACComponent is attached to
+    /** Returns the optional ThermalZone that this ZoneHVACComponent is attached to
    **/
-  virtual boost::optional<ThermalZone> thermalZone() const;
+    virtual boost::optional<ThermalZone> thermalZone() const;
 
-  /** Adds this ZoneHVACComponent to the thermal zone while managing all
+    /** Adds this ZoneHVACComponent to the thermal zone while managing all
    *  node connections automatically.  Returns true if the operation was
    *  successful.
    **/
-  bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone& thermalZone);
 
-  /** Detaches this ZoneHVACComponent from the associated ThermalZone.
+    /** Detaches this ZoneHVACComponent from the associated ThermalZone.
    *  If there is no attached ThermalZone there is no effect.
    *  If the ThermalZone is attached via an AirLoopHVAC object (as a result of addToNode()),
    *  then this method will reverse the effects of addToNode, and also detach the ZoneHVACComponent
    *  from the AirLoopHVAC object.
    **/
-  void removeFromThermalZone();
+    void removeFromThermalZone();
 
-  /** Establish plenumZone as the return plenum for this ZoneHVACComponent.
+    /** Establish plenumZone as the return plenum for this ZoneHVACComponent.
    *  ZoneHVACComponent must already be attached to a ThermalZone
   *   The method canBePlenum called on plenumZone must return true.
   */
-  bool setReturnPlenum(const ThermalZone & plenumZone);
+    bool setReturnPlenum(const ThermalZone& plenumZone);
 
-  /** Remove any return plenum attached to this ZoneHVACComponent
+    /** Remove any return plenum attached to this ZoneHVACComponent
   */
-  void removeReturnPlenum();
+    void removeReturnPlenum();
 
-  boost::optional<AirLoopHVACReturnPlenum> returnPlenum() const;
+    boost::optional<AirLoopHVACReturnPlenum> returnPlenum() const;
 
-  /** Adds this ZoneHVACComponent to a node on an AirLoopHVAC object.
+    /** Adds this ZoneHVACComponent to a node on an AirLoopHVAC object.
    *  The node must be located between a ThermalZone and a AirTerminalSingleDuctInletSideMixer object.
    *  This is used to feed an AirLoopHVAC structure (such as a DOAS, or any built up system) into a ZoneHVACComponent.
    *  If the ZoneHVACComponent object is already attached to a thermalZone() then it will first be detached using removeFromThermalZone().
@@ -111,13 +111,13 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
    *  addToNode can be used to add those components to the supply side of an
    *  AirLoopHVAC system.
    **/
-  bool addToNode(Node & node);
+    bool addToNode(Node& node);
 
-  /** Returns the AirLoopHVAC attached to this ZoneHVACComponent.
+    /** Returns the AirLoopHVAC attached to this ZoneHVACComponent.
    *  The AirLoopHVAC object would have been attached via addToNode */
-  boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  /** If this ZoneHVACComponent is used as a supply component
+    /** If this ZoneHVACComponent is used as a supply component
    *  on an AirLoopHVAC system, then this method will detach
    *  this ZoneHVACComponent from the AirLoopHVAC system, otherwise
    *  this method does nothing.
@@ -132,41 +132,37 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
    *  then use the method removeFromThermalZone, instead of removeFromAirLoopHVAC
    *  to detach this ZoneHVACComponent from the zone and air system.
    **/
-  bool removeFromAirLoopHVAC();
+    bool removeFromAirLoopHVAC();
 
-  /** Provided for backwards compatibility, use inletNode instead **/
-  boost::optional<ModelObject> airInletModelObject() const;
+    /** Provided for backwards compatibility, use inletNode instead **/
+    boost::optional<ModelObject> airInletModelObject() const;
 
-  /** Provided for backwards compatibility, use outletNode instead **/
-  boost::optional<ModelObject> airOutletModelObject() const;
+    /** Provided for backwards compatibility, use outletNode instead **/
+    boost::optional<ModelObject> airOutletModelObject() const;
 
-  protected:
+   protected:
+    ZoneHVACComponent(IddObjectType type, const Model& model);
 
-  ZoneHVACComponent(IddObjectType type,const Model& model);
+    typedef detail::ZoneHVACComponent_Impl ImplType;
 
-  typedef detail::ZoneHVACComponent_Impl ImplType;
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class openstudio::detail::IdfObject_Impl;
+    explicit ZoneHVACComponent(std::shared_ptr<ImplType> impl);
 
-  explicit ZoneHVACComponent(std::shared_ptr<ImplType> impl);
+    virtual std::vector<ModelObject> children() const override;
 
-  virtual std::vector<ModelObject> children() const override;
+   private:
+    REGISTER_LOGGER("openstudio.model.HVACComponent");
+  };
 
-  private:
+  typedef boost::optional<ZoneHVACComponent> OptionalZoneHVACComponent;
 
-  REGISTER_LOGGER("openstudio.model.HVACComponent");
+}  // namespace model
 
-};
+}  // namespace openstudio
 
-typedef boost::optional<ZoneHVACComponent> OptionalZoneHVACComponent;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_ZONEHVACCOMPONENT_HPP
-
+#endif  // MODEL_ZONEHVACCOMPONENT_HPP

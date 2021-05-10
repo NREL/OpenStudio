@@ -25,13 +25,15 @@
   // Ignore AccessPolicyStore which is used by GUIs only
   %ignore openstudio::model::AccessPolicyStore;
 
-  // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i
+  // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i (TODO)
   %ignore openstudio::model::Model::foundationKivaSettings;
   %ignore openstudio::model::Model::outputTableSummaryReports;
   %ignore openstudio::model::Model::runPeriod;
   %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;
   %ignore openstudio::model::Model::performancePrecisionTradeoffs;
+
+  %ignore openstudio::model::Model::outputControlFiles;
 
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
@@ -102,6 +104,13 @@
   %rename(loadComponent) openstudio::model::Component::load;
   %ignore openstudio::model::Meter::name;
   %ignore openstudio::model::Meter::setName;
+
+#elif defined SWIGPYTHON
+  // This is the only module where this isn't needed, since we ARE in openstudiomodelcore so Model already exists
+  // %pythoncode %{
+  //  Model = openstudiomodelcore.Model
+  // %}
+
 #else
 
 #endif

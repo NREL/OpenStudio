@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,8 +46,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, DaylightingDeviceShelf)
-{
+TEST_F(ModelFixture, DaylightingDeviceShelf) {
   Model model;
 
   Point3dVector points;
@@ -87,8 +86,7 @@ TEST_F(ModelFixture, DaylightingDeviceShelf)
   EXPECT_FALSE(window.addDaylightingDeviceShelf());
 }
 
-TEST_F(ModelFixture, DaylightingDeviceShelf_Throw)
-{
+TEST_F(ModelFixture, DaylightingDeviceShelf_Throw) {
   Model model;
 
   Point3dVector points;
@@ -102,9 +100,9 @@ TEST_F(ModelFixture, DaylightingDeviceShelf_Throw)
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceShelf>().size());
 
   bool didThrow = false;
-  try{
+  try {
     DaylightingDeviceShelf shelf(door);
-  }catch(const openstudio::Exception&){
+  } catch (const openstudio::Exception&) {
     didThrow = true;
   }
   EXPECT_TRUE(didThrow);
@@ -116,9 +114,9 @@ TEST_F(ModelFixture, DaylightingDeviceShelf_Throw)
 
   // first one succeeds
   didThrow = false;
-  try{
+  try {
     DaylightingDeviceShelf shelf(door);
-  }catch(const openstudio::Exception&){
+  } catch (const openstudio::Exception&) {
     didThrow = true;
   }
   EXPECT_FALSE(didThrow);
@@ -126,9 +124,9 @@ TEST_F(ModelFixture, DaylightingDeviceShelf_Throw)
 
   // second call throws
   didThrow = false;
-  try{
+  try {
     DaylightingDeviceShelf shelf(door);
-  }catch(const openstudio::Exception&){
+  } catch (const openstudio::Exception&) {
     didThrow = true;
   }
   EXPECT_TRUE(didThrow);

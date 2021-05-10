@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,40 +43,38 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveExponent(
-    CurveExponent& modelObject)
-{
-  IdfObject idfObject(IddObjectType::Curve_Exponent);
+  boost::optional<IdfObject> ForwardTranslator::translateCurveExponent(CurveExponent& modelObject) {
+    IdfObject idfObject(IddObjectType::Curve_Exponent);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = modelObject.name())) {
-    idfObject.setName(*s);
+    if ((s = modelObject.name())) {
+      idfObject.setName(*s);
+    }
+
+    idfObject.setDouble(Curve_ExponentFields::Coefficient1Constant, modelObject.coefficient1Constant());
+    idfObject.setDouble(Curve_ExponentFields::Coefficient2Constant, modelObject.coefficient2Constant());
+    idfObject.setDouble(Curve_ExponentFields::Coefficient3Constant, modelObject.coefficient3Constant());
+    idfObject.setDouble(Curve_ExponentFields::MinimumValueofx, modelObject.minimumValueofx());
+    idfObject.setDouble(Curve_ExponentFields::MaximumValueofx, modelObject.maximumValueofx());
+    if ((d = modelObject.minimumCurveOutput())) {
+      idfObject.setDouble(Curve_ExponentFields::MinimumCurveOutput, *d);
+    }
+    if ((d = modelObject.maximumCurveOutput())) {
+      idfObject.setDouble(Curve_ExponentFields::MaximumCurveOutput, *d);
+    }
+    if (!modelObject.isInputUnitTypeforXDefaulted()) {
+      idfObject.setString(Curve_ExponentFields::InputUnitTypeforX, modelObject.inputUnitTypeforX());
+    }
+    if (!modelObject.isOutputUnitTypeDefaulted()) {
+      idfObject.setString(Curve_ExponentFields::OutputUnitType, modelObject.outputUnitType());
+    }
+
+    return idfObject;
   }
 
-  idfObject.setDouble(Curve_ExponentFields::Coefficient1Constant,modelObject.coefficient1Constant());
-  idfObject.setDouble(Curve_ExponentFields::Coefficient2Constant,modelObject.coefficient2Constant());
-  idfObject.setDouble(Curve_ExponentFields::Coefficient3Constant,modelObject.coefficient3Constant());
-  idfObject.setDouble(Curve_ExponentFields::MinimumValueofx,modelObject.minimumValueofx());
-  idfObject.setDouble(Curve_ExponentFields::MaximumValueofx,modelObject.maximumValueofx());
-  if ((d = modelObject.minimumCurveOutput())) {
-    idfObject.setDouble(Curve_ExponentFields::MinimumCurveOutput,*d);
-  }
-  if ((d = modelObject.maximumCurveOutput())) {
-    idfObject.setDouble(Curve_ExponentFields::MaximumCurveOutput,*d);
-  }
-  if (!modelObject.isInputUnitTypeforXDefaulted()) {
-    idfObject.setString(Curve_ExponentFields::InputUnitTypeforX,modelObject.inputUnitTypeforX());
-  }
-  if (!modelObject.isOutputUnitTypeDefaulted()) {
-    idfObject.setString(Curve_ExponentFields::OutputUnitType,modelObject.outputUnitType());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

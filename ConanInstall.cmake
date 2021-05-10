@@ -23,19 +23,33 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  conan_check(VERSION 1.21.0 REQUIRED)
+  conan_check(VERSION 1.28.0 REQUIRED)
 
   message(STATUS "openstudio: RUNNING CONAN")
 
+  # Add NREL remote and place it first in line, since we vendored dependencies to NREL's repo, they will be picked first
+  # TJC 2021-04-27 bintray.com is decommissioned as of 2021-05-01. See commercialbuildings as replacement below.
+  conan_add_remote(NAME nrel INDEX 0
+     URL https://conan.commercialbuildings.dev/artifactory/api/conan/openstudio)
+
   conan_add_remote(NAME bincrafters
-    URL https://api.bintray.com/conan/bincrafters/public-conan)
-  conan_add_remote(NAME nrel
-    URL https://api.bintray.com/conan/commercialbuilding/nrel)
+    URL https://bincrafters.jfrog.io/artifactory/api/conan/public-conan)
+
   #conan_add_remote(NAME jmarrec
   #  URL https://api.bintray.com/conan/jmarrec/testing)
 
-  # Convenience variable to set a consistent version for individual boost packages
-  # set(BOOST_VERSION "1.71.0")
+  # Enable revisions in conan: check if they are already enabled, if not do it and warn user
+  execute_process(
+    COMMAND ${CONAN_CMD} config get general.revisions_enabled
+    OUTPUT_VARIABLE CONAN_REV_STATUS
+    ERROR_VARIABLE CONAN_REV_STATUS
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+  message(STATUS "Conan: config get general.revisions_enabled=${CONAN_REV_STATUS}")
+  if (NOT "${CONAN_REV_STATUS}" STREQUAL "True")
+    message(AUTHOR_WARNING "Conan: Force enabling revisions (conan config set general.revisions_enabled=True)")
+    execute_process(COMMAND ${CONAN_CMD} config set general.revisions_enabled=True)
+  endif()
 
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   # TODO:  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
@@ -43,54 +57,52 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
   # 'outdated' also acts like 'missing': if no binary, will build them.
-  list(APPEND CONAN_BUILD "outdated")
+  # list(APPEND CONAN_BUILD "outdated")
+  list(APPEND CONAN_BUILD "missing")
 
   if (BUILD_TESTING)
-    set(CONAN_GTEST "gtest/1.10.0")
+    set(CONAN_GTEST "gtest/1.10.0#ef88ba8e54f5ffad7d706062d0731a40")
   else()
     set(CONAN_GTEST "")
   endif()
 
-  # DLM: add option for shared libs if we are building shared?
+  if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
+    # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
+    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#5cc83469365344df986cd820cca4884d")
+  endif()
+
+  if(BUILD_BENCHMARK)
+    set (CONAN_BENCHMARK "benchmark/1.5.2")
+  endif()
 
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
-    openssl/1.1.0l # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
-    # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    openstudio_ruby/2.5.5@nrel/stable    # TODO: Temp #@nrel/stable
-    boost/1.71.0
-    #boost_asio/${BOOST_VERSION}@bincrafters/stable
-    #boost_program_options/${BOOST_VERSION}@bincrafters/stable
-    #boost_regex/${BOOST_VERSION}@bincrafters/stable
-    #boost_filesystem/${BOOST_VERSION}@bincrafters/stable
-    #boost_crc/${BOOST_VERSION}@bincrafters/stable
-    #boost_algorithm/${BOOST_VERSION}@bincrafters/stable
-    #boost_uuid/${BOOST_VERSION}@bincrafters/stable
-    #boost_log/${BOOST_VERSION}@bincrafters/stable
-    #boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
-    #boost_functional/${BOOST_VERSION}@bincrafters/stable
-    #boost_geometry/${BOOST_VERSION}@bincrafters/stable
-    pugixml/1.10@bincrafters/stable
-    jsoncpp/1.9.2
-    zlib/1.2.11@nrel/testing # TODO: Temp, pending merging of https://github.com/conan-io/conan-center-index/pull/1526, to resolve #3961
-    fmt/6.2.0
-    sqlite3/3.30.1
-    cpprestsdk/2.10.14@bincrafters/stable
-    websocketpp/0.8.1@bincrafters/stable
-    geographiclib/1.49@bincrafters/stable
-    swig_installer/4.0.1@bincrafters/stable
+    ${CONAN_RUBY}
+    "openssl/1.1.0l#7f3fa5cfcfba31fffa344c71a9795176" # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
+    "boost/1.73.0#4129a76c9b83c300fc103e36d1908792"
+    "pugixml/1.10#64b3ebc897bb9d9854c8a2443bf112a8"
+    "jsoncpp/1.9.3#073a6d3cb40911d7c8027bddb6ae7dbf"
+    "zlib/1.2.11#0df31fd24179543f5720ec7beb2a88d7"
+    "fmt/7.0.1#0580b1492b1dddb43b1768e68f25c43c"
+    "sqlite3/3.32.3#914492672c458f8be511e3800c14c717"
+    "cpprestsdk/2.10.16#d097ff9a8719d9d0ed34293c2ebd90ed"
+    "websocketpp/0.8.2#6d77b9b8a2368fa5fd5377af0c0ca211"
+    "geographiclib/1.50.1#b1a7966385dead17ec170b25a99cf71b"
+    "swig/4.0.2#bfafb16cd2bea6af3b8003163abcbd09"
     ${CONAN_GTEST}
-
+    ${CONAN_BENCHMARK}
     # Override to avoid dependency mismatches
-    bzip2/1.0.8
+    #"bzip2/1.0.8#d4a5c7144832d75fc3f349c5346160b0"
+    #"libyaml/0.2.5#9e234874df88c3ba7249f6d1368fceaf"
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${CONAN_BUILD}
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right
-    UPDATE
+    # Now that we pin dependencies, there is no point looking upstream really, so we'll save valuable configuration time by not doing it
+    #UPDATE
   )
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
@@ -103,4 +115,3 @@ else()
   message(STATUS "openstudio: CONAN RUN BY CALLING SCRIPT")
 
 endif()
-

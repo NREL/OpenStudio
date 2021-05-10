@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,8 +46,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, People_DefaultConstructor)
-{
+TEST_F(ModelFixture, People_DefaultConstructor) {
   Model model;
 
   // make a new People object
@@ -67,8 +66,7 @@ TEST_F(ModelFixture, People_DefaultConstructor)
   EXPECT_FALSE(definition.spaceFloorAreaperPerson());
 }
 
-TEST_F(ModelFixture, People_DesignLevels)
-{
+TEST_F(ModelFixture, People_DesignLevels) {
   Model model;
 
   // make a new People object
@@ -85,7 +83,7 @@ TEST_F(ModelFixture, People_DesignLevels)
   EXPECT_EQ(1.0, definition.getNumberOfPeople(0.0));
   EXPECT_EQ(1.0, definition.getNumberOfPeople(100.0));
   EXPECT_THROW(definition.getPeoplePerFloorArea(0.0), std::exception);
-  EXPECT_EQ(1.0/100.0, definition.getPeoplePerFloorArea(100.0));
+  EXPECT_EQ(1.0 / 100.0, definition.getPeoplePerFloorArea(100.0));
   EXPECT_EQ(0.0, definition.getFloorAreaPerPerson(0.0));
   EXPECT_EQ(100.0, definition.getFloorAreaPerPerson(100.0));
 
@@ -112,14 +110,13 @@ TEST_F(ModelFixture, People_DesignLevels)
   EXPECT_EQ(1.0, definition.spaceFloorAreaperPerson().get());
   EXPECT_EQ(0.0, definition.getNumberOfPeople(0.0));
   EXPECT_EQ(100.0, definition.getNumberOfPeople(100.0));
-  EXPECT_EQ(1.0,definition.getPeoplePerFloorArea(0.0));
+  EXPECT_EQ(1.0, definition.getPeoplePerFloorArea(0.0));
   EXPECT_EQ(1.0, definition.getPeoplePerFloorArea(100.0));
   EXPECT_EQ(1.0, definition.getFloorAreaPerPerson(0.0));
   EXPECT_EQ(1.0, definition.getFloorAreaPerPerson(100.0));
 }
 
-TEST_F(ModelFixture, People_Remove)
-{
+TEST_F(ModelFixture, People_Remove) {
   Model model;
 
   PeopleDefinition definition(model);
@@ -136,8 +133,7 @@ TEST_F(ModelFixture, People_Remove)
   EXPECT_EQ(1u, model.numObjects());
 }
 
-TEST_F(ModelFixture, People_Remove2)
-{
+TEST_F(ModelFixture, People_Remove2) {
   Model model;
 
   PeopleDefinition definition(model);
@@ -155,8 +151,7 @@ TEST_F(ModelFixture, People_Remove2)
   EXPECT_EQ(2u, model.numObjects());
 }
 
-TEST_F(ModelFixture, People_RemoveDefinition)
-{
+TEST_F(ModelFixture, People_RemoveDefinition) {
   Model model;
 
   PeopleDefinition definition(model);
@@ -174,8 +169,7 @@ TEST_F(ModelFixture, People_RemoveDefinition)
   EXPECT_EQ(0u, model.numObjects());
 }
 
-TEST_F(ModelFixture, People_RemoveDefinition2)
-{
+TEST_F(ModelFixture, People_RemoveDefinition2) {
   Model model;
 
   PeopleDefinition definition(model);
@@ -195,60 +189,58 @@ TEST_F(ModelFixture, People_RemoveDefinition2)
   EXPECT_EQ(0u, model.numObjects());
 }
 
-
-TEST_F(ModelFixture,People_Schedule_Quantities) {
+TEST_F(ModelFixture, People_Schedule_Quantities) {
   Model model;
   PeopleDefinition definition(model);
   definition.setNumberofPeople(100.0);
 
   People people(definition);
   ScheduleRuleset activityLevelSchedule(model);
-  EXPECT_TRUE(checkOrAssignScheduleTypeLimits("People","Activity Level",activityLevelSchedule));
+  EXPECT_TRUE(checkOrAssignScheduleTypeLimits("People", "Activity Level", activityLevelSchedule));
   ScheduleDay defaultSchedule = activityLevelSchedule.defaultDaySchedule();
-  defaultSchedule.addValue(Time(0,24,0,0), 150.0);
+  defaultSchedule.addValue(Time(0, 24, 0, 0), 150.0);
   EXPECT_TRUE(people.setActivityLevelSchedule(activityLevelSchedule));
   std::vector<double> values = defaultSchedule.values();
   EXPECT_DOUBLE_EQ(150.0, values[0]);
 }
 
-TEST_F(ModelFixture,People_Clone) {
+TEST_F(ModelFixture, People_Clone) {
   Model library;
   Model model;
 
-  PeopleDefinition definition(library); // ResourceObject
+  PeopleDefinition definition(library);  // ResourceObject
   definition.setNumberofPeople(100.0);
 
-  People people(definition); // Not a ResourceObject
-  ScheduleRuleset activityLevelSchedule(library); // ResourceObject
+  People people(definition);                       // Not a ResourceObject
+  ScheduleRuleset activityLevelSchedule(library);  // ResourceObject
   people.setActivityLevelSchedule(activityLevelSchedule);
 
-  EXPECT_EQ(5u,library.modelObjects().size()); // PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+  EXPECT_EQ(5u, library.modelObjects().size());  // PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
   // Clone into the same Model
   people.clone(library);
-  EXPECT_EQ(6u,library.modelObjects().size()); // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+  EXPECT_EQ(6u, library.modelObjects().size());  // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
   auto allPeople = library.getModelObjects<People>();
-  EXPECT_EQ(2u,allPeople.size());
+  EXPECT_EQ(2u, allPeople.size());
 
   // Note the PeopleDefinition is shared because it is a ResourceObject
   auto allPeopleDefinitions = library.getModelObjects<PeopleDefinition>();
-  EXPECT_EQ(1u,allPeopleDefinitions.size());
+  EXPECT_EQ(1u, allPeopleDefinitions.size());
 
   // Clone into a different Model
   people.clone(model);
 
-  EXPECT_EQ(5u,model.modelObjects().size()); // PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+  EXPECT_EQ(5u, model.modelObjects().size());  // PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
   // Clone from library into the model again
   people.clone(model);
-  EXPECT_EQ(6u,model.modelObjects().size()); // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+  EXPECT_EQ(6u, model.modelObjects().size());  // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
   allPeople = model.getModelObjects<People>();
-  EXPECT_EQ(2u,allPeople.size());
+  EXPECT_EQ(2u, allPeople.size());
 
   // Note the PeopleDefinition is shared because it is a ResourceObject
   allPeopleDefinitions = model.getModelObjects<PeopleDefinition>();
-  EXPECT_EQ(1u,allPeopleDefinitions.size());
+  EXPECT_EQ(1u, allPeopleDefinitions.size());
 }
-

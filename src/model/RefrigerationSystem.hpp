@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,145 +37,169 @@ namespace openstudio {
 
 namespace model {
 
-class RefrigerationAirChiller;
-class RefrigerationCase;
-class RefrigerationCompressor;
-class RefrigerationWalkIn;
-class RefrigerationSecondarySystem;
-class RefrigerationCondenserCascade;
-class RefrigerationSubcoolerLiquidSuction;
-class RefrigerationSubcoolerMechanical;
-class ThermalZone;
+  class RefrigerationAirChiller;
+  class RefrigerationCase;
+  class RefrigerationCompressor;
+  class RefrigerationWalkIn;
+  class RefrigerationSecondarySystem;
+  class RefrigerationCondenserCascade;
+  class RefrigerationSubcoolerLiquidSuction;
+  class RefrigerationSubcoolerMechanical;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationSystem_Impl;
+    class RefrigerationSystem_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:System'. */
-class MODEL_API RefrigerationSystem : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:System'. */
+  class MODEL_API RefrigerationSystem : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationSystem(const Model& model);
+    explicit RefrigerationSystem(const Model& model);
 
-  virtual ~RefrigerationSystem() {}
+    virtual ~RefrigerationSystem() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> refrigerationSystemWorkingFluidTypeValues();
+    static std::vector<std::string> refrigerationSystemWorkingFluidTypeValues();
 
-  static std::vector<std::string> suctionTemperatureControlTypeValues();
+    static std::vector<std::string> suctionTemperatureControlTypeValues();
 
-  static std::vector<std::string> intercoolerTypeValues();
+    static std::vector<std::string> intercoolerTypeValues();
 
-  std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove();
 
-  ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const;
 
-  bool addCase( const RefrigerationCase & refrigerationCase);
+    // RefrigerationCase will be removed from any ModelObjectList it is already on. Clone the case if you want it on several.
+    bool addCase(const RefrigerationCase& refrigerationCase);
 
-  void removeCase( const RefrigerationCase & refrigerationCase);
+    // Removes child from the list, but does not remove the child object itself
+    void removeCase(const RefrigerationCase& refrigerationCase);
 
-  void removeAllCases();
+    // Removes all child object from the list, but does not remove the children themselves
+    void removeAllCases();
 
-  std::vector<RefrigerationCase> cases() const;
+    std::vector<RefrigerationCase> cases() const;
 
-  bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    // RefrigerationWalkIn will be removed from any ModelObjectList it is already on. Clone the walkin if you want it on several.
+    bool addWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    // Removes child from the list, but does not remove the child object itself
+    void removeWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeAllWalkins();
+    // Removes all child object from the list, but does not remove the children themselves
+    void removeAllWalkins();
 
-  std::vector<RefrigerationWalkIn> walkins() const;
+    std::vector<RefrigerationWalkIn> walkins() const;
 
-  bool addCompressor( const RefrigerationCompressor & compressor);
+    // Compressor will be removed from any ModelObjectList (either as a compressor or high stage compressor) it is already on.
+    // Clone the walkin if you want it on several.
+    bool addCompressor(const RefrigerationCompressor& compressor);
 
-  void removeCompressor( const RefrigerationCompressor & compressor);
+    // Removes child from the list, but does not remove the child object itself
+    void removeCompressor(const RefrigerationCompressor& compressor);
 
-  void removeAllCompressors();
+    // Removes all child object from the list, but does not remove the children themselves
+    void removeAllCompressors();
 
-  std::vector<RefrigerationCompressor> compressors() const;
+    std::vector<RefrigerationCompressor> compressors() const;
 
-  bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+    // Compressor will be removed from any ModelObjectList (either as a compressor or high stage compressor) it is already on.
+    // Clone the walkin if you want it on several.
+    bool addHighStageCompressor(const RefrigerationCompressor& highStageCompressor);
 
-  void removeHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+    // Removes child from the list, but does not remove the child object itself
+    void removeHighStageCompressor(const RefrigerationCompressor& highStageCompressor);
 
-  void removeAllHighStageCompressors();
+    // Removes all child object from the list, but does not remove the children themselves
+    void removeAllHighStageCompressors();
 
-  std::vector<RefrigerationCompressor> highStageCompressors() const;
+    std::vector<RefrigerationCompressor> highStageCompressors() const;
 
-  bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+    // RefrigerationSecondarySystem will be removed from any ModelObjectList it is already on. Clone it if you want it on several.
+    bool addSecondarySystemLoad(const RefrigerationSecondarySystem& refrigerationSecondarySystem);
 
-  void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+    // Removes child from the list, but does not remove the child object itself
+    void removeSecondarySystemLoad(const RefrigerationSecondarySystem& refrigerationSecondarySystem);
 
-  void removeAllSecondarySystemLoads();
+    // Removes all child object from the list, but does not remove the children themselves
+    void removeAllSecondarySystemLoads();
 
-  std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
+    std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
-  bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+    // RefrigerationCondenserCascade will be removed from any ModelObjectList it is already on. Clone it if you want it on several.
+    bool addCascadeCondenserLoad(const RefrigerationCondenserCascade& refrigerationCondenserCascade);
 
-  void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+    // Removes child from the list, but does not remove the child object itself
+    void removeCascadeCondenserLoad(const RefrigerationCondenserCascade& refrigerationCondenserCascade);
 
-  void removeAllCascadeCondenserLoads();
+    // Removes all child object from the list, but does not remove the children themselves
+    void removeAllCascadeCondenserLoads();
 
-  std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
+    std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
-  bool addAirChiller( const RefrigerationAirChiller & airChiller);
+    // RefrigerationAirChiller will be removed from any ModelObjectList it is already on. Clone it if you want it on several.
+    bool addAirChiller(const RefrigerationAirChiller& airChiller);
 
-  void removeAirChiller( const RefrigerationAirChiller & airChiller);
+    // Removes child from the list, but does not remove the child object itself
+    void removeAirChiller(const RefrigerationAirChiller& airChiller);
 
-  void removeAllAirChillers();
+    // Removes all child object from the list, but does not remove the children themselves
+    void removeAllAirChillers();
 
-  std::vector<RefrigerationAirChiller> airChillers() const;
+    std::vector<RefrigerationAirChiller> airChillers() const;
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<ModelObject> refrigerationCondenser() const;
+    boost::optional<ModelObject> refrigerationCondenser() const;
 
-  double minimumCondensingTemperature() const;
+    double minimumCondensingTemperature() const;
 
-  std::string refrigerationSystemWorkingFluidType() const;
+    std::string refrigerationSystemWorkingFluidType() const;
 
-  std::string suctionTemperatureControlType() const;
+    std::string suctionTemperatureControlType() const;
 
-  bool isSuctionTemperatureControlTypeDefaulted() const;
+    bool isSuctionTemperatureControlTypeDefaulted() const;
 
-  boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler() const;
+    boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler() const;
 
-  boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler() const;
+    boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler() const;
 
-  double sumUASuctionPiping() const;
+    double sumUASuctionPiping() const;
 
-  bool isSumUASuctionPipingDefaulted() const;
+    bool isSumUASuctionPipingDefaulted() const;
 
-  boost::optional<ThermalZone> suctionPipingZone() const;
+    boost::optional<ThermalZone> suctionPipingZone() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  std::string numberofCompressorStages() const;
+    std::string numberofCompressorStages() const;
 
-  std::string intercoolerType() const;
+    std::string intercoolerType() const;
 
-  bool isIntercoolerTypeDefaulted() const;
+    bool isIntercoolerTypeDefaulted() const;
 
-  double shellandCoilIntercoolerEffectiveness() const;
+    double shellandCoilIntercoolerEffectiveness() const;
 
-  bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
+    bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** \fn bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser)
-      \brief Sets the refrigeration condenser for this refrigeration system.
+    /** \fn bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser)
+      \brief Sets the refrigeration condenser for this refrigeration system. Will remove it from any existing Refrigeration System (unicity enforced)
       \param[in] refrigerationCondenser The refrigeration condenser.
 
       Valid inputs: \n
@@ -184,71 +208,75 @@ class MODEL_API RefrigerationSystem : public ModelObject {
       \ref RefrigerationCondenserEvaporativeCooled \n
       \ref RefrigerationCondenserWaterCooled \n
   */
-  bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
+    bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
-  bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
+    void resetRefrigerationCondenser();
 
-  bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+    bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
-  bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
+    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
-  void resetSuctionTemperatureControlType();
+    bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
 
-  bool setMechanicalSubcooler(const RefrigerationSubcoolerMechanical& refrigerationSubcoolerMechanical);
+    void resetSuctionTemperatureControlType();
 
-  void resetMechanicalSubcooler();
+    // Will remove it from any existing Refrigeration System (unicity enforced)
+    bool setMechanicalSubcooler(const RefrigerationSubcoolerMechanical& refrigerationSubcoolerMechanical);
 
-  bool setLiquidSuctionHeatExchangerSubcooler(const RefrigerationSubcoolerLiquidSuction& refrigerationSubcoolerLiquidSuction);
+    void resetMechanicalSubcooler();
 
-  void resetLiquidSuctionHeatExchangerSubcooler();
+    // Will remove it from any existing Refrigeration System (unicity enforced)
+    bool setLiquidSuctionHeatExchangerSubcooler(const RefrigerationSubcoolerLiquidSuction& refrigerationSubcoolerLiquidSuction);
 
-  bool setSumUASuctionPiping(double sumUASuctionPiping);
+    void resetLiquidSuctionHeatExchangerSubcooler();
 
-  void resetSumUASuctionPiping();
+    bool setSumUASuctionPiping(double sumUASuctionPiping);
 
-  bool setSuctionPipingZone(const ThermalZone& thermalZone);
+    void resetSumUASuctionPiping();
 
-  void resetSuctionPipingZone();
+    bool setSuctionPipingZone(const ThermalZone& thermalZone);
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    void resetSuctionPipingZone();
 
-  void resetEndUseSubcategory();
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  bool setIntercoolerType(std::string intercoolerType);
+    void resetEndUseSubcategory();
 
-  void resetIntercoolerType();
+    bool setIntercoolerType(std::string intercoolerType);
 
-  bool setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
+    void resetIntercoolerType();
 
-  void resetShellandCoilIntercoolerEffectiveness();
+    bool setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
 
-  //@}
-  /** @name Other */
-  //@{
+    void resetShellandCoilIntercoolerEffectiveness();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationSystem_Impl ImplType;
+    //@}
+    /** @name Other */
+    //@{
 
-  explicit RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationSystem_Impl ImplType;
 
-  friend class detail::RefrigerationSystem_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationSystem");
-};
+    explicit RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl);
 
-/** \relates RefrigerationSystem*/
-typedef boost::optional<RefrigerationSystem> OptionalRefrigerationSystem;
+    friend class detail::RefrigerationSystem_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationSystem");
+  };
 
-/** \relates RefrigerationSystem*/
-typedef std::vector<RefrigerationSystem> RefrigerationSystemVector;
+  /** \relates RefrigerationSystem*/
+  typedef boost::optional<RefrigerationSystem> OptionalRefrigerationSystem;
 
-} // model
-} // openstudio
+  /** \relates RefrigerationSystem*/
+  typedef std::vector<RefrigerationSystem> RefrigerationSystemVector;
 
-#endif // MODEL_REFRIGERATIONSYSTEM_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONSYSTEM_HPP

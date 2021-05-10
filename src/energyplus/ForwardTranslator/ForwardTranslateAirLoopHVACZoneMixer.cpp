@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,48 +40,42 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneMixer( AirLoopHVACZoneMixer & modelObject )
-{
-  std::string s;
-  OptionalString optS;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneMixer(AirLoopHVACZoneMixer& modelObject) {
+    std::string s;
+    OptionalString optS;
+    OptionalModelObject temp;
 
-  IdfObject idfObject(openstudio::IddObjectType::AirLoopHVAC_ZoneMixer);
+    IdfObject idfObject(openstudio::IddObjectType::AirLoopHVAC_ZoneMixer);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Name ////////////////////////////////////////////////////////////
-  s = modelObject.name().get();
-  idfObject.setName(s);
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Name ////////////////////////////////////////////////////////////
+    s = modelObject.name().get();
+    idfObject.setName(s);
 
-  ////////////////////////////////////////////////////////////////////////////
-  // Field: Outlet Node Name /////////////////////////////////////////////////
-  temp = modelObject.outletModelObject();
-  if(temp)
-  {
-    optS = temp->name();
-    if(optS)
-      idfObject.setString(openstudio::AirLoopHVAC_ZoneMixerFields::OutletNodeName,*optS);
-  }
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Inlet 1-N Node Name ///////////////////////////////////////////////
-  std::vector<ModelObject> inletModelObjects = modelObject.inletModelObjects();
-  int i = 2;
-  for( const auto & inletModelObject : inletModelObjects )
-  {
-    optS = inletModelObject.name();
-    if(optS)
-    {
-      idfObject.setString(i,*optS);
+    ////////////////////////////////////////////////////////////////////////////
+    // Field: Outlet Node Name /////////////////////////////////////////////////
+    temp = modelObject.outletModelObject();
+    if (temp) {
+      optS = temp->name();
+      if (optS) idfObject.setString(openstudio::AirLoopHVAC_ZoneMixerFields::OutletNodeName, *optS);
     }
-    i++;
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Inlet 1-N Node Name ///////////////////////////////////////////////
+    std::vector<ModelObject> inletModelObjects = modelObject.inletModelObjects();
+    int i = 2;
+    for (const auto& inletModelObject : inletModelObjects) {
+      optS = inletModelObject.name();
+      if (optS) {
+        idfObject.setString(i, *optS);
+      }
+      i++;
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -46,32 +46,30 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Output_Table_SummaryReports ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: OutputTableSummaryReports");
-    return boost::none;
+  OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Output_Table_SummaryReports) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: OutputTableSummaryReports");
+      return boost::none;
+    }
+
+    OutputTableSummaryReports outputTableSummaryReports = m_model.getUniqueModelObject<OutputTableSummaryReports>();
+
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      OptionalString summaryReport = workspaceGroup.getString(Output_Table_SummaryReportsExtensibleFields::ReportName);
+
+      // add the summary report
+      outputTableSummaryReports.addSummaryReport(*summaryReport);
+    }
+
+    std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
+    if (summaryReports.empty()) {
+      return boost::none;
+    }
+
+    return outputTableSummaryReports;
   }
 
-  OutputTableSummaryReports outputTableSummaryReports = m_model.getUniqueModelObject<OutputTableSummaryReports>();
+}  // namespace energyplus
 
-  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-    OptionalString summaryReport = workspaceGroup.getString(Output_Table_SummaryReportsExtensibleFields::ReportName);
-
-    // add the summary report
-    outputTableSummaryReports.addSummaryReport(*summaryReport);
-  }
-
-  std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
-  if (summaryReports.empty()) {
-    return boost::none;
-  }
-
-  return outputTableSummaryReports;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

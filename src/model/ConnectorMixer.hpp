@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,63 +37,59 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
-  class ConnectorMixer_Impl;
-} // detail
+  namespace detail {
+    class ConnectorMixer_Impl;
+  }  // namespace detail
 
-/** Mixer is an interface to the IDD object named "OS:Connector:Mixer"
+  /** Mixer is an interface to the IDD object named "OS:Connector:Mixer"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of mixer objects in EnergyPlus.  Methods are built around the
  *  acts of getting the inlet and outlet ports to the mixer.  Branch indexes
  *  are used to refer to the many inlet ports of the mixer
  */
-class MODEL_API ConnectorMixer : public Mixer {
-  public:
+  class MODEL_API ConnectorMixer : public Mixer
+  {
+   public:
+    /** Constructs a new Mixer object and places it inside the model. */
+    explicit ConnectorMixer(const Model& model);
 
-  /** Constructs a new Mixer object and places it inside the model. */
-  explicit ConnectorMixer(const Model& model);
+    virtual ~ConnectorMixer() {}
 
-  virtual ~ConnectorMixer() {}
+    unsigned outletPort() const override;
 
-  unsigned outletPort() const override;
+    unsigned inletPort(unsigned branchIndex) const override;
 
-  unsigned inletPort(unsigned branchIndex) const override;
+    unsigned nextInletPort() const override;
 
-  unsigned nextInletPort() const override;
+    virtual bool addToNode(Node& node);
 
-  virtual bool addToNode(Node & node);
+    virtual std::vector<openstudio::IdfObject> remove();
 
-  virtual std::vector<openstudio::IdfObject> remove();
+    virtual ModelObject clone(Model model) const;
 
-  virtual ModelObject clone(Model model) const;
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+   protected:
+    typedef detail::ConnectorMixer_Impl ImplType;
 
-  protected:
+    friend class Model;
 
-  typedef detail::ConnectorMixer_Impl ImplType;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    explicit ConnectorMixer(std::shared_ptr<detail::ConnectorMixer_Impl> impl);
 
-  friend class openstudio::IdfObject;
+   private:
+    REGISTER_LOGGER("openstudio.model.ConnectorMixer");
 
-  explicit ConnectorMixer(std::shared_ptr<detail::ConnectorMixer_Impl> impl);
+    ConnectorMixer(const Handle& handle, const Model& model);
+  };
 
-  private:
+  /** \relates ConnectorMixer */
+  typedef boost::optional<ConnectorMixer> OptionalConnectorMixer;
 
-  REGISTER_LOGGER("openstudio.model.ConnectorMixer");
+}  // namespace model
 
-  ConnectorMixer(const Handle& handle, const Model& model);
+}  // namespace openstudio
 
-};
-
-/** \relates ConnectorMixer */
-typedef boost::optional<ConnectorMixer> OptionalConnectorMixer;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_CONNECTORMIXER_HPP
-
+#endif  // MODEL_CONNECTORMIXER_HPP

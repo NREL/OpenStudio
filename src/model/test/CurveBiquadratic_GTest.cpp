@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveBiquadratic_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveBiquadratic_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveBiquadratic curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveBiquadratic curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate) {
 
   Model m;
   CurveBiquadratic curve(m);
@@ -63,7 +61,6 @@ TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate)
   EXPECT_EQ(0.0, curve.coefficient4y());
   EXPECT_EQ(0.0, curve.coefficient5yPOW2());
   EXPECT_EQ(0.0, curve.coefficient6xTIMESY());
-
 
   EXPECT_EQ(0.0, curve.minimumValueofx());
   EXPECT_EQ(1.0, curve.maximumValueofx());
@@ -81,9 +78,7 @@ TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate)
   double min_y = 10;
   double max_y = 30;
 
-  auto calc = [c1, c2, c3, c4, c5, c6](double x, double y) {
-    return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * y + c5 * std::pow(y, 2) + c6 * x * y;
-  };
+  auto calc = [c1, c2, c3, c4, c5, c6](double x, double y) { return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * y + c5 * std::pow(y, 2) + c6 * x * y; };
 
   EXPECT_TRUE(curve.setCoefficient1Constant(c1));
   EXPECT_TRUE(curve.setCoefficient2x(c2));
@@ -113,7 +108,8 @@ TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate)
   EXPECT_FALSE(curve.maximumCurveOutput());
 
   // x and y in range, no output limit
-  double x = 0.5; double y = 15;
+  double x = 0.5;
+  double y = 15;
   EXPECT_DOUBLE_EQ(calc(x, y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(1232.75, curve.evaluate(x, y));
 
@@ -139,12 +135,14 @@ TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate)
   EXPECT_DOUBLE_EQ(4712.75, curve.evaluate(x, y));
 
   // x < min_x, y < min_y
-  x = 0.05; y = 5.0;
+  x = 0.05;
+  y = 5.0;
   EXPECT_DOUBLE_EQ(calc(min_x, min_y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(547.23, curve.evaluate(x, y));
 
   // x > max_x, y > max_y
-  x = 20.0; y = 50.0;
+  x = 20.0;
+  y = 50.0;
   EXPECT_DOUBLE_EQ(calc(max_x, max_y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(5194.0, curve.evaluate(x, y));
 
@@ -159,7 +157,6 @@ TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // out < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x, min_y));
   // out > max output
@@ -168,5 +165,4 @@ TEST_F(ModelFixture, CurveBiquadratic_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
-
 }

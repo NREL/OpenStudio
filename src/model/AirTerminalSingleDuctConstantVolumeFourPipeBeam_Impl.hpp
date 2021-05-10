@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,168 +36,160 @@
 namespace openstudio {
 namespace model {
 
-class HVACComponent;
-class Schedule;
-class Node;
-class HVACComponent;
-class PlantLoop;
+  class HVACComponent;
+  class Schedule;
+  class Node;
+  class HVACComponent;
+  class PlantLoop;
 
-namespace detail {
+  namespace detail {
 
-  /** AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctConstantVolumeFourPipeBeam.*/
-  class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctConstantVolumeFourPipeBeam.*/
+    class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl(const IdfObject& idfObject,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl(const AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl(const AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl& other, Model_Impl* model,
+                                                           bool keepHandle);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl() {}
+      virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual bool isRemovable() const override;
+      virtual bool isRemovable() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    /** Availability Schedules */
+      /** Availability Schedules */
 
-    Schedule primaryAirAvailabilitySchedule() const;
+      Schedule primaryAirAvailabilitySchedule() const;
 
-    Schedule coolingAvailabilitySchedule() const;
+      Schedule coolingAvailabilitySchedule() const;
 
-    Schedule heatingAvailabilitySchedule() const;
+      Schedule heatingAvailabilitySchedule() const;
 
-    boost::optional<Node> primaryAirInletNode() const;
-    boost::optional<Node> primaryAirOutletNode() const;
+      boost::optional<Node> primaryAirInletNode() const;
+      boost::optional<Node> primaryAirOutletNode() const;
 
-    boost::optional<HVACComponent> coolingCoil() const;
+      boost::optional<HVACComponent> coolingCoil() const;
 
-    boost::optional<HVACComponent> heatingCoil() const;
+      boost::optional<HVACComponent> heatingCoil() const;
 
-    /** Autosizable fields */
+      /** Autosizable fields */
 
-    boost::optional<double> designPrimaryAirVolumeFlowRate() const;
-    bool isDesignPrimaryAirVolumeFlowRateAutosized() const;
+      boost::optional<double> designPrimaryAirVolumeFlowRate() const;
+      bool isDesignPrimaryAirVolumeFlowRateAutosized() const;
 
+      boost::optional<double> designChilledWaterVolumeFlowRate() const;
+      bool isDesignChilledWaterVolumeFlowRateAutosized() const;
 
-    boost::optional<double> designChilledWaterVolumeFlowRate() const;
-    bool isDesignChilledWaterVolumeFlowRateAutosized() const;
+      boost::optional<double> designHotWaterVolumeFlowRate() const;
+      bool isDesignHotWaterVolumeFlowRateAutosized() const;
 
+      boost::optional<double> zoneTotalBeamLength() const;
+      bool isZoneTotalBeamLengthAutosized() const;
 
-    boost::optional<double> designHotWaterVolumeFlowRate() const;
-    bool isDesignHotWaterVolumeFlowRateAutosized() const;
+      /* Double fields with defaults */
+      double ratedPrimaryAirFlowRateperBeamLength() const;
+      bool isRatedPrimaryAirFlowRateperBeamLengthDefaulted() const;
 
+      //@}
+      /** @name Setters */
+      //@{
 
-    boost::optional<double> zoneTotalBeamLength() const;
-    bool isZoneTotalBeamLengthAutosized() const;
+      bool setPrimaryAirAvailabilitySchedule(Schedule& schedule);
 
-    /* Double fields with defaults */
-    double ratedPrimaryAirFlowRateperBeamLength() const;
-    bool isRatedPrimaryAirFlowRateperBeamLengthDefaulted() const;
+      bool setCoolingAvailabilitySchedule(Schedule& schedule);
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setHeatingAvailabilitySchedule(Schedule& schedule);
 
-    bool setPrimaryAirAvailabilitySchedule(Schedule& schedule);
+      /* Set Cooling and Heating Coil. */
+      bool setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam);
+      bool setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam);
 
-    bool setCoolingAvailabilitySchedule(Schedule& schedule);
+      /* Autosizable fields */
+      bool setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate);
+      void autosizeDesignPrimaryAirVolumeFlowRate();
 
-    bool setHeatingAvailabilitySchedule(Schedule& schedule);
+      bool setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate);
+      void autosizeDesignChilledWaterVolumeFlowRate();
 
-    /* Set Cooling and Heating Coil. */
-    bool setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam);
-    bool setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam);
+      bool setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate);
+      void autosizeDesignHotWaterVolumeFlowRate();
 
-    /* Autosizable fields */
-    bool setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate);
-    void autosizeDesignPrimaryAirVolumeFlowRate();
+      bool setZoneTotalBeamLength(double zoneTotalBeamLength);
+      void autosizeZoneTotalBeamLength();
 
-    bool setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate);
-    void autosizeDesignChilledWaterVolumeFlowRate();
+      bool setRatedPrimaryAirFlowRateperBeamLength(double ratedPrimaryAirFlowRateperBeamLength);
+      void resetRatedPrimaryAirFlowRateperBeamLength();
 
-    bool setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate);
-    void autosizeDesignHotWaterVolumeFlowRate();
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setZoneTotalBeamLength(double zoneTotalBeamLength);
-    void autosizeZoneTotalBeamLength();
+      /* Convenience method to return the chilled water PlantLoop */
+      boost::optional<PlantLoop> chilledWaterPlantLoop() const;
+      boost::optional<Node> chilledWaterInletNode() const;
+      boost::optional<Node> chilledWaterOutletNode() const;
 
-    bool setRatedPrimaryAirFlowRateperBeamLength(double ratedPrimaryAirFlowRateperBeamLength);
-    void resetRatedPrimaryAirFlowRateperBeamLength();
+      /* Convenience method to return the hot water PlantLoop */
+      boost::optional<PlantLoop> hotWaterPlantLoop() const;
+      boost::optional<Node> hotWaterInletNode() const;
+      boost::optional<Node> hotWaterOutletNode() const;
 
-    //@}
-    /** @name Other */
-    //@{
+      /* Queries the SQL file after a successful sizing run */
+      boost::optional<double> autosizedDesignPrimaryAirVolumeFlowRate();
+      boost::optional<double> autosizedDesignChilledWaterVolumeFlowRate();
+      boost::optional<double> autosizedDesignHotWaterVolumeFlowRate();
+      boost::optional<double> autosizedZoneTotalBeamLength();
 
-    /* Convenience method to return the chilled water PlantLoop */
-    boost::optional<PlantLoop> chilledWaterPlantLoop() const;
-    boost::optional<Node> chilledWaterInletNode() const;
-    boost::optional<Node> chilledWaterOutletNode() const;
+      virtual void autosize() override;
 
-    /* Convenience method to return the hot water PlantLoop */
-    boost::optional<PlantLoop> hotWaterPlantLoop() const;
-    boost::optional<Node> hotWaterInletNode() const;
-    boost::optional<Node> hotWaterOutletNode() const;
+      virtual void applySizingValues() override;
 
-    /* Queries the SQL file after a successful sizing run */
-    boost::optional <double> autosizedDesignPrimaryAirVolumeFlowRate();
-    boost::optional <double> autosizedDesignChilledWaterVolumeFlowRate();
-    boost::optional <double> autosizedDesignHotWaterVolumeFlowRate();
-    boost::optional <double> autosizedZoneTotalBeamLength();
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeFourPipeBeam");
 
-    virtual void autosize() override;
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Node> optionalPrimaryAirInletNode() const;
+      boost::optional<Node> optionalPrimaryAirOutletNode() const;
+    };
 
-    virtual void applySizingValues() override;
+  }  // namespace detail
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeFourPipeBeam");
+}  // namespace model
+}  // namespace openstudio
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Node> optionalPrimaryAirInletNode() const;
-    boost::optional<Node> optionalPrimaryAirOutletNode() const;
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEBEAM_IMPL_HPP
-
+#endif  // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEBEAM_IMPL_HPP

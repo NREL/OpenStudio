@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,89 +37,81 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class DistrictHeating_Impl;
+    class DistrictHeating_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DistrictHeating is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictHeating'. */
+  /** DistrictHeating is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictHeating'. */
 
-class MODEL_API DistrictHeating : public StraightComponent {
+  class MODEL_API DistrictHeating : public StraightComponent
+  {
 
- public:
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    explicit DistrictHeating(const Model& model);
 
-  explicit DistrictHeating(const Model& model);
+    virtual ~DistrictHeating() {}
 
-  virtual ~DistrictHeating() {}
+    //@}
 
-  //@}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    boost::optional<double> nominalCapacity() const;
 
+    bool isNominalCapacityAutosized() const;
 
-  boost::optional<double> nominalCapacity() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool isNominalCapacityAutosized() const;
+    bool setNominalCapacity(double nominalCapacity);
 
-  //@}
-  /** @name Setters */
-  //@{
+    void autosizeNominalCapacity();
 
-  bool setNominalCapacity(double nominalCapacity);
+    //@}
+    /** @name Other */
+    //@{
 
-  void autosizeNominalCapacity();
+    //@}
 
-  //@}
-  /** @name Other */
-  //@{
+    boost::optional<double> autosizedNominalCapacity() const;
 
-  //@}
+   protected:
+    /// @cond
+    typedef detail::DistrictHeating_Impl ImplType;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+    explicit DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl);
 
+    friend class detail::DistrictHeating_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
+    /// @endcond
 
- protected:
-  /// @cond
-  typedef detail::DistrictHeating_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.DistrictHeating");
+  };
 
-  explicit DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl);
+  /** \relates DistrictHeating*/
+  typedef boost::optional<DistrictHeating> OptionalDistrictHeating;
 
-  friend class detail::DistrictHeating_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+  /** \relates DistrictHeating*/
+  typedef std::vector<DistrictHeating> DistrictHeatingVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
- private:
-
-  REGISTER_LOGGER("openstudio.model.DistrictHeating");
-
-};
-
-
-/** \relates DistrictHeating*/
-typedef boost::optional<DistrictHeating> OptionalDistrictHeating;
-
-/** \relates DistrictHeating*/
-typedef std::vector<DistrictHeating> DistrictHeatingVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_DISTRICTHEATING_HPP
-
-
+#endif  // MODEL_DISTRICTHEATING_HPP

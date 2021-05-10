@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,14 +71,14 @@
 #include "../ScheduleConstant.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
+#include "../../osversion/VersionTranslator.hpp"
 
 #include <math.h>
 
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, Building)
-{
+TEST_F(ModelFixture, Building) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -87,7 +87,6 @@ TEST_F(ModelFixture, Building)
   EXPECT_TRUE(building.isNorthAxisDefaulted());
   EXPECT_FALSE(building.nominalFloortoFloorHeight());
   EXPECT_FALSE(building.getDouble(3));
-
 
   OptionalString buildingName = building.name();
   ASSERT_TRUE(buildingName);
@@ -100,8 +99,7 @@ TEST_F(ModelFixture, Building)
   EXPECT_EQ("Edificio", *buildingName);
 }
 
-TEST_F(ModelFixture, Building_SpaceAttributes)
-{
+TEST_F(ModelFixture, Building_SpaceAttributes) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -145,7 +143,7 @@ TEST_F(ModelFixture, Building_SpaceAttributes)
   EXPECT_FALSE(building.conditionedFloorArea());
   EXPECT_NEAR(100, building.lightingPower(), 0.0001);
   EXPECT_NEAR(1, building.lightingPowerPerFloorArea(), 0.0001);
-  EXPECT_NEAR(1.0/100.0, building.peoplePerFloorArea(), 0.0001);
+  EXPECT_NEAR(1.0 / 100.0, building.peoplePerFloorArea(), 0.0001);
 
   EXPECT_TRUE(light.setMultiplier(2));
   EXPECT_TRUE(person.setMultiplier(2));
@@ -154,7 +152,7 @@ TEST_F(ModelFixture, Building_SpaceAttributes)
   EXPECT_FALSE(building.conditionedFloorArea());
   EXPECT_NEAR(200, building.lightingPower(), 0.0001);
   EXPECT_NEAR(2, building.lightingPowerPerFloorArea(), 0.0001);
-  EXPECT_NEAR(2.0/100.0, building.peoplePerFloorArea(), 0.0001);
+  EXPECT_NEAR(2.0 / 100.0, building.peoplePerFloorArea(), 0.0001);
 
   ThermalZone thermalZone(model);
   EXPECT_TRUE(thermalZone.setMultiplier(2));
@@ -165,12 +163,10 @@ TEST_F(ModelFixture, Building_SpaceAttributes)
   EXPECT_FALSE(building.conditionedFloorArea());
   EXPECT_NEAR(400, building.lightingPower(), 0.0001);
   EXPECT_NEAR(2, building.lightingPowerPerFloorArea(), 0.0001);
-  EXPECT_NEAR(2.0/100.0, building.peoplePerFloorArea(), 0.0001);
-
+  EXPECT_NEAR(2.0 / 100.0, building.peoplePerFloorArea(), 0.0001);
 }
 
-TEST_F(ModelFixture, Building_SpaceTypeAttributes)
-{
+TEST_F(ModelFixture, Building_SpaceTypeAttributes) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -215,7 +211,7 @@ TEST_F(ModelFixture, Building_SpaceTypeAttributes)
   EXPECT_FALSE(building.conditionedFloorArea());
   EXPECT_NEAR(100, building.lightingPower(), 0.0001);
   EXPECT_NEAR(1, building.lightingPowerPerFloorArea(), 0.0001);
-  EXPECT_NEAR(1.0/100.0, building.peoplePerFloorArea(), 0.0001);
+  EXPECT_NEAR(1.0 / 100.0, building.peoplePerFloorArea(), 0.0001);
 
   EXPECT_TRUE(light.setMultiplier(2));
   EXPECT_TRUE(person.setMultiplier(2));
@@ -224,7 +220,7 @@ TEST_F(ModelFixture, Building_SpaceTypeAttributes)
   EXPECT_FALSE(building.conditionedFloorArea());
   EXPECT_NEAR(200, building.lightingPower(), 0.0001);
   EXPECT_NEAR(2, building.lightingPowerPerFloorArea(), 0.0001);
-  EXPECT_NEAR(2.0/100.0, building.peoplePerFloorArea(), 0.0001);
+  EXPECT_NEAR(2.0 / 100.0, building.peoplePerFloorArea(), 0.0001);
 
   ThermalZone thermalZone(model);
   EXPECT_TRUE(thermalZone.setMultiplier(2));
@@ -235,12 +231,10 @@ TEST_F(ModelFixture, Building_SpaceTypeAttributes)
   EXPECT_FALSE(building.conditionedFloorArea());
   EXPECT_NEAR(400, building.lightingPower(), 0.0001);
   EXPECT_NEAR(2, building.lightingPowerPerFloorArea(), 0.0001);
-  EXPECT_NEAR(2.0/100.0, building.peoplePerFloorArea(), 0.0001);
-
+  EXPECT_NEAR(2.0 / 100.0, building.peoplePerFloorArea(), 0.0001);
 }
 
-TEST_F(ModelFixture, Building_SpaceType)
-{
+TEST_F(ModelFixture, Building_SpaceType) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -260,18 +254,16 @@ TEST_F(ModelFixture, Building_SpaceType)
   EXPECT_TRUE(space.isSpaceTypeDefaulted());
 }
 
-TEST_F(ModelFixture,Building_StandardsInformation) {
+TEST_F(ModelFixture, Building_StandardsInformation) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   EXPECT_FALSE(building.standardsNumberOfStories());
   building.setStandardsNumberOfStories(3);
   ASSERT_TRUE(building.standardsNumberOfStories());
-  EXPECT_EQ(3,building.standardsNumberOfStories().get());
+  EXPECT_EQ(3, building.standardsNumberOfStories().get());
 }
 
-
-TEST_F(ModelFixture, Building_Cost)
-{
+TEST_F(ModelFixture, Building_Cost) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
 
@@ -309,8 +301,7 @@ TEST_F(ModelFixture, Building_Cost)
   EXPECT_DOUBLE_EQ(120, cost3->totalCost());
 }
 
-TEST_F(ModelFixture, Building_Clone)
-{
+TEST_F(ModelFixture, Building_Clone) {
   // Remember that Building is a unique object
   // There are basically three scenarios to consider,
   // cloning into the same model, cloning into a different model that already has a building object,
@@ -325,7 +316,7 @@ TEST_F(ModelFixture, Building_Clone)
 
     // Don't expect cloning into the same model to do anything.
     // Just return the Building instance
-    EXPECT_EQ(building,buildingClone);
+    EXPECT_EQ(building, buildingClone);
   }
 
   // Clone into a different model that already has a Building instance.
@@ -348,25 +339,25 @@ TEST_F(ModelFixture, Building_Clone)
     space1.setThermalZone(zone);
     space2.setThermalZone(zone);
 
-    EXPECT_NE(modelBuilding,libraryBuilding);
+    EXPECT_NE(modelBuilding, libraryBuilding);
 
     // Expect that the original modelBuilding will be removed and replaced by a clone of the libraryBuilding
     auto clone = libraryBuilding.clone(model);
 
     EXPECT_TRUE(modelBuilding.handle().isNull());
-    EXPECT_NE(modelBuilding,clone);
+    EXPECT_NE(modelBuilding, clone);
 
-    EXPECT_EQ(1u,model.getModelObjects<Building>().size());
-    EXPECT_EQ(2u,model.getModelObjects<Space>().size());
+    EXPECT_EQ(1u, model.getModelObjects<Building>().size());
+    EXPECT_EQ(2u, model.getModelObjects<Space>().size());
 
     auto zones = model.getModelObjects<ThermalZone>();
 
-    ASSERT_EQ(1u,zones.size());
-    EXPECT_EQ(2u,zones.front().spaces().size());
+    ASSERT_EQ(1u, zones.size());
+    EXPECT_EQ(2u, zones.front().spaces().size());
 
     auto stories = model.getModelObjects<BuildingStory>();
-    ASSERT_EQ(1u,stories.size());
-    ASSERT_EQ(2u,stories.front().spaces().size());
+    ASSERT_EQ(1u, stories.size());
+    ASSERT_EQ(2u, stories.front().spaces().size());
   }
 
   // Clone into a different model that does not already have a Building instance.
@@ -388,32 +379,31 @@ TEST_F(ModelFixture, Building_Clone)
     space1.setThermalZone(zone);
     space2.setThermalZone(zone);
 
-    EXPECT_EQ(1u,library.getModelObjects<Building>().size());
-    EXPECT_EQ(2u,library.getModelObjects<Space>().size());
-    EXPECT_EQ(1u,library.getModelObjects<ThermalZone>().size());
-    EXPECT_EQ(1u,library.getModelObjects<BuildingStory>().size());
-    EXPECT_EQ(2u,zone.spaces().size());
+    EXPECT_EQ(1u, library.getModelObjects<Building>().size());
+    EXPECT_EQ(2u, library.getModelObjects<Space>().size());
+    EXPECT_EQ(1u, library.getModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u, library.getModelObjects<BuildingStory>().size());
+    EXPECT_EQ(2u, zone.spaces().size());
 
     auto modelBuilding = libraryBuilding.clone(model).cast<Building>();
 
-    EXPECT_NE(libraryBuilding,modelBuilding);
+    EXPECT_NE(libraryBuilding, modelBuilding);
 
-    EXPECT_EQ(1u,model.getModelObjects<Building>().size());
-    EXPECT_EQ(2u,model.getModelObjects<Space>().size());
+    EXPECT_EQ(1u, model.getModelObjects<Building>().size());
+    EXPECT_EQ(2u, model.getModelObjects<Space>().size());
 
     auto zones = model.getModelObjects<ThermalZone>();
 
-    ASSERT_EQ(1u,zones.size());
-    EXPECT_EQ(2u,zones.front().spaces().size());
+    ASSERT_EQ(1u, zones.size());
+    EXPECT_EQ(2u, zones.front().spaces().size());
 
     auto stories = model.getModelObjects<BuildingStory>();
-    ASSERT_EQ(1u,stories.size());
-    ASSERT_EQ(2u,stories.front().spaces().size());
+    ASSERT_EQ(1u, stories.size());
+    ASSERT_EQ(2u, stories.front().spaces().size());
   }
 }
 
-TEST_F(ModelFixture, Building_Rotations)
-{
+TEST_F(ModelFixture, Building_Rotations) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   Space space(model);
@@ -465,7 +455,6 @@ TEST_F(ModelFixture, Building_Rotations)
   EXPECT_NEAR(1, spaceGroup.transformation().matrix()(0, 0), 0.0001);
   EXPECT_NEAR(1, spaceGroup.buildingTransformation().matrix()(0, 0), 0.0001);
   EXPECT_NEAR(cos(degToRad(degrees)), spaceGroup.siteTransformation().matrix()(0, 0), 0.0001);
-
 }
 
 TEST_F(ModelFixture, Building_remove) {
@@ -494,7 +483,6 @@ TEST_F(ModelFixture, Building_remove) {
   // For now this tests that at least we don't end up with bad connections
   ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
   EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
-
 }
 
 TEST_F(ModelFixture, Building_remove_exampleModel) {
@@ -530,9 +518,7 @@ TEST_F(ModelFixture, Building_remove_exampleModel) {
   EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
 }
 
-
-TEST_F(ModelFixture, Building_getDefaultSchedule)
-{
+TEST_F(ModelFixture, Building_getDefaultSchedule) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -540,7 +526,6 @@ TEST_F(ModelFixture, Building_getDefaultSchedule)
   ScheduleConstant sch_bldg_people(model);
   EXPECT_TRUE(bldgDefaultScheduleSet.setNumberofPeopleSchedule(sch_bldg_people));
   EXPECT_TRUE(building.setDefaultScheduleSet(bldgDefaultScheduleSet));
-
 
   SpaceType spaceType(model);
   EXPECT_TRUE(building.setSpaceType(spaceType));
@@ -552,7 +537,6 @@ TEST_F(ModelFixture, Building_getDefaultSchedule)
   EXPECT_TRUE(spDefaultScheduleSet.setHoursofOperationSchedule(sch_sp_hours));
   EXPECT_TRUE(spaceType.setDefaultScheduleSet(spDefaultScheduleSet));
 
-
   // Building and its SpaceType both have a people schedule. It should return the building's one in priority
   ASSERT_TRUE(building.getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule));
   EXPECT_EQ(sch_bldg_people.handle(), building.getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule)->handle());
@@ -560,4 +544,246 @@ TEST_F(ModelFixture, Building_getDefaultSchedule)
   // Building doesn't have an hours of operation schedule, but its SpaceType does so it should return the SpaceType's one
   ASSERT_TRUE(building.getDefaultSchedule(DefaultScheduleType::HoursofOperationSchedule));
   EXPECT_EQ(sch_sp_hours.handle(), building.getDefaultSchedule(DefaultScheduleType::HoursofOperationSchedule)->handle());
+}
+
+// DA
+
+boost::optional<Model> CreatePerimeterTestModel1() {
+  Model model;
+
+  ThermalZone tz1(model);
+
+  BuildingStory story1(model);
+
+  Point3dVector p1;
+  p1.push_back(Point3d(36, 168, 0));
+  p1.push_back(Point3d(36, 138, 0));
+  p1.push_back(Point3d(0, 138, 0));
+  p1.push_back(Point3d(0, 168, 0));
+  auto sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 101");
+
+  p1.clear();
+  p1.push_back(Point3d(220, 168, 0));
+  p1.push_back(Point3d(220, 150, 0));
+  p1.push_back(Point3d(220, 124, 0));
+  p1.push_back(Point3d(220, 70, 0));
+  p1.push_back(Point3d(220, 30, 0));
+  p1.push_back(Point3d(200, 30, 0));
+  p1.push_back(Point3d(200, 168, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Mechanical 114");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 70, 0));
+  p1.push_back(Point3d(288, 0, 0));
+  p1.push_back(Point3d(220, 0, 0));
+  p1.push_back(Point3d(220, 30, 0));
+  p1.push_back(Point3d(220, 70, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Offices 117");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 124, 0));
+  p1.push_back(Point3d(288, 70, 0));
+  p1.push_back(Point3d(220, 70, 0));
+  p1.push_back(Point3d(220, 124, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Gym 118");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 168, 0));
+  p1.push_back(Point3d(158, 138, 0));
+  p1.push_back(Point3d(98, 138, 0));
+  p1.push_back(Point3d(98, 168, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Artroom 103");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 150, 0));
+  p1.push_back(Point3d(288, 124, 0));
+  p1.push_back(Point3d(220, 124, 0));
+  p1.push_back(Point3d(220, 150, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Kitchen 119");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 200, 0));
+  p1.push_back(Point3d(288, 150, 0));
+  p1.push_back(Point3d(220, 150, 0));
+  p1.push_back(Point3d(220, 168, 0));
+  p1.push_back(Point3d(220, 200, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Cafeteria 120");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 138, 0));
+  p1.push_back(Point3d(158, 128, 0));
+  p1.push_back(Point3d(36, 128, 0));
+  p1.push_back(Point3d(0, 128, 0));
+  p1.push_back(Point3d(0, 138, 0));
+  p1.push_back(Point3d(36, 138, 0));
+  p1.push_back(Point3d(98, 138, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Corridor 104");
+
+  p1.clear();
+  p1.push_back(Point3d(36, 128, 0));
+  p1.push_back(Point3d(36, 98, 0));
+  p1.push_back(Point3d(0, 98, 0));
+  p1.push_back(Point3d(0, 128, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 105");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 128, 0));
+  p1.push_back(Point3d(158, 98, 0));
+  p1.push_back(Point3d(36, 98, 0));
+  p1.push_back(Point3d(36, 128, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 106");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(158, 40, 0));
+  p1.push_back(Point3d(158, 70, 0));
+  p1.push_back(Point3d(158, 98, 0));
+  p1.push_back(Point3d(158, 128, 0));
+  p1.push_back(Point3d(158, 138, 0));
+  p1.push_back(Point3d(158, 168, 0));
+  p1.push_back(Point3d(200, 168, 0));
+  p1.push_back(Point3d(200, 30, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Corridor 107");
+
+  p1.clear();
+  p1.push_back(Point3d(36, 40, 0));
+  p1.push_back(Point3d(36, 70, 0));
+  p1.push_back(Point3d(158, 70, 0));
+  p1.push_back(Point3d(158, 40, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 108");
+
+  p1.clear();
+  p1.push_back(Point3d(0, 40, 0));
+  p1.push_back(Point3d(0, 70, 0));
+  p1.push_back(Point3d(36, 70, 0));
+  p1.push_back(Point3d(36, 40, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 109");
+
+  p1.clear();
+  p1.push_back(Point3d(98, 168, 0));
+  p1.push_back(Point3d(98, 138, 0));
+  p1.push_back(Point3d(36, 138, 0));
+  p1.push_back(Point3d(36, 168, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 102");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 40, 0));
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(36, 30, 0));
+  p1.push_back(Point3d(0, 30, 0));
+  p1.push_back(Point3d(0, 40, 0));
+  p1.push_back(Point3d(36, 40, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Corridor 110");
+
+  p1.clear();
+  p1.push_back(Point3d(36, 30, 0));
+  p1.push_back(Point3d(36, 0, 0));
+  p1.push_back(Point3d(0, 0, 0));
+  p1.push_back(Point3d(0, 30, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 111");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(158, 0, 0));
+  p1.push_back(Point3d(36, 0, 0));
+  p1.push_back(Point3d(36, 30, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 112");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 0, 0));
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(200, 30, 0));
+  p1.push_back(Point3d(220, 30, 0));
+  p1.push_back(Point3d(220, 0, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Lobby 113");
+
+  p1.clear();
+  p1.push_back(Point3d(220, 200, 0));
+  p1.push_back(Point3d(220, 168, 0));
+  p1.push_back(Point3d(200, 168, 0));
+  p1.push_back(Point3d(158, 168, 0));
+  p1.push_back(Point3d(158, 200, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Bathroom 115");
+
+  p1.clear();
+  p1.push_back(Point3d(220, 268, 0));
+  p1.push_back(Point3d(220, 200, 0));
+  p1.push_back(Point3d(158, 200, 0));
+  p1.push_back(Point3d(158, 268, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Media Center 116");
+
+  return model;
+}
+
+TEST_F(ModelFixture, Building_exteriorPerimeter) {
+  // Open a test model
+  model::OptionalModel model = CreatePerimeterTestModel1();
+
+  EXPECT_TRUE(model);
+
+  auto buildings = model->getConcreteModelObjects<Building>();
+  for (auto building : buildings) {
+    double perimeter = building.exteriorPerimeter();
+    ASSERT_NEAR(perimeter, 1428.0, 0.01);
+  }
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,135 +50,136 @@ namespace energyplus {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemOutputVariable_Impl;
+    class EnergyManagementSystemOutputVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemOutputVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:OutputVariable'. */
-class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const std::string eMSVariableName);
+  /** EnergyManagementSystemOutputVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:OutputVariable'. */
+  class MODEL_API EnergyManagementSystemOutputVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const std::string eMSVariableName);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemActuator& object);
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemActuator& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemSensor& object);
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemSensor& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object);
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemTrendVariable& object);
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemTrendVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemInternalVariable& object);
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemInternalVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object);
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object);
 
-  explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
+    explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
-  virtual ~EnergyManagementSystemOutputVariable() {}
+    virtual ~EnergyManagementSystemOutputVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> typeOfDataInVariableValues();
+    static std::vector<std::string> typeOfDataInVariableValues();
 
-  static std::vector<std::string> updateFrequencyValues();
+    static std::vector<std::string> updateFrequencyValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string emsVariableName() const;
+    std::string emsVariableName() const;
 
-  std::string typeOfDataInVariable() const;
+    std::string typeOfDataInVariable() const;
 
-  std::string updateFrequency() const;
+    std::string updateFrequency() const;
 
-  std::string emsProgramOrSubroutineName() const;
+    std::string emsProgramOrSubroutineName() const;
 
-  boost::optional<EnergyManagementSystemProgram> emsProgram() const;
+    boost::optional<EnergyManagementSystemProgram> emsProgram() const;
 
-  boost::optional<EnergyManagementSystemSubroutine> emsSubroutine() const;
+    boost::optional<EnergyManagementSystemSubroutine> emsSubroutine() const;
 
-  std::string units() const;
+    std::string units() const;
 
-  boost::optional<ModelObject> emsVariableObject() const;
+    boost::optional<ModelObject> emsVariableObject() const;
 
-  boost::optional<EnergyManagementSystemActuator> emsActuator() const;
-  boost::optional<EnergyManagementSystemSensor> emsSensor() const;
-  boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
-  boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
-  boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
-  boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
-  boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
+    boost::optional<EnergyManagementSystemActuator> emsActuator() const;
+    boost::optional<EnergyManagementSystemSensor> emsSensor() const;
+    boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
+    boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
+    boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
+    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
+    boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
 
-  bool exportToBCVTB() const;
+    bool exportToBCVTB() const;
 
-  bool isExportToBCVTBDefaulted() const;
+    bool isExportToBCVTBDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setEMSVariableName(const std::string& eMSVariableName);
+    bool setEMSVariableName(const std::string& eMSVariableName);
 
-  bool setTypeOfDataInVariable(const std::string& typeofDatainVariable);
+    bool setTypeOfDataInVariable(const std::string& typeofDatainVariable);
 
-  bool setUpdateFrequency(const std::string& updateFrequency);
+    bool setUpdateFrequency(const std::string& updateFrequency);
 
-  bool setEMSProgramOrSubroutineName(const EnergyManagementSystemProgram& program);
+    bool setEMSProgramOrSubroutineName(const EnergyManagementSystemProgram& program);
 
-  bool setEMSProgramOrSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
+    bool setEMSProgramOrSubroutineName(const EnergyManagementSystemSubroutine& subroutine);
 
-  void resetEMSProgramOrSubroutineName();
+    void resetEMSProgramOrSubroutineName();
 
-  bool setUnits(const std::string& units);
+    bool setUnits(const std::string& units);
 
-  void resetUnits();
+    void resetUnits();
 
-  bool setEMSVariableName(const EnergyManagementSystemActuator& object);
-  bool setEMSVariableName(const EnergyManagementSystemSensor& object);
-  bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemActuator& object);
+    bool setEMSVariableName(const EnergyManagementSystemSensor& object);
+    bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
 
-  bool setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
-  void resetExportToBCVTB();
+    void resetExportToBCVTB();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemOutputVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemOutputVariable_Impl ImplType;
 
-  explicit EnergyManagementSystemOutputVariable(std::shared_ptr<detail::EnergyManagementSystemOutputVariable_Impl> impl);
+    explicit EnergyManagementSystemOutputVariable(std::shared_ptr<detail::EnergyManagementSystemOutputVariable_Impl> impl);
 
-  friend class detail::EnergyManagementSystemOutputVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class energyplus::ReverseTranslator;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemOutputVariable");
-  explicit EnergyManagementSystemOutputVariable(const Model& model);
-};
+    friend class detail::EnergyManagementSystemOutputVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class energyplus::ReverseTranslator;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemOutputVariable");
+    explicit EnergyManagementSystemOutputVariable(const Model& model);
+  };
 
-/** \relates EnergyManagementSystemOutputVariable*/
-typedef boost::optional<EnergyManagementSystemOutputVariable> OptionalEnergyManagementSystemOutputVariable;
+  /** \relates EnergyManagementSystemOutputVariable*/
+  typedef boost::optional<EnergyManagementSystemOutputVariable> OptionalEnergyManagementSystemOutputVariable;
 
-/** \relates EnergyManagementSystemOutputVariable*/
-typedef std::vector<EnergyManagementSystemOutputVariable> EnergyManagementSystemOutputVariableVector;
+  /** \relates EnergyManagementSystemOutputVariable*/
+  typedef std::vector<EnergyManagementSystemOutputVariable> EnergyManagementSystemOutputVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMOUTPUTVARIABLE_HPP
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMOUTPUTVARIABLE_HPP

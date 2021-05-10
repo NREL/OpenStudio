@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,14 +35,14 @@
 
 #include "../utilities/core/Optional.hpp"
 
-namespace openstudio{
-namespace model{
+namespace openstudio {
+namespace model {
 
-namespace detail{
-  class ComponentCostAdjustments_Impl;
-}
+  namespace detail {
+    class ComponentCostAdjustments_Impl;
+  }
 
-/** ComponentCostAdjustments derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:ComponentCost:Adjustments".
+  /** ComponentCostAdjustments derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:ComponentCost:Adjustments".
  *
  *  ComponentCostAdjustments is a unique object which modifies the construction costs calculated by ComponentCost_LineItem
  *  objects.
@@ -50,84 +50,82 @@ namespace detail{
  *  \todo The IDD object "OS:ComponentCost:Adjustments" should be marked as unique
  *
  */
-class MODEL_API ComponentCostAdjustments : public ParentObject {
-public:
+  class MODEL_API ComponentCostAdjustments : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~ComponentCostAdjustments() {}
 
-  virtual ~ComponentCostAdjustments() {}
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    boost::optional<double> miscellaneousCostPerConditionedArea() const;
 
-  boost::optional<double> miscellaneousCostPerConditionedArea() const;
+    boost::optional<double> designAndEngineeringFees() const;
 
-  boost::optional<double> designAndEngineeringFees() const;
+    boost::optional<double> contractorFee() const;
 
-  boost::optional<double> contractorFee() const;
+    boost::optional<double> contingency() const;
 
-  boost::optional<double> contingency() const;
+    boost::optional<double> permitsBondingAndInsurance() const;
 
-  boost::optional<double> permitsBondingAndInsurance() const;
+    boost::optional<double> commissioningFee() const;
 
-  boost::optional<double> commissioningFee() const;
+    boost::optional<double> regionalAdjustmentFactor() const;
 
-  boost::optional<double> regionalAdjustmentFactor() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setMiscellaneousCostPerConditionedArea(double miscellaneousCostPerConditionedArea);
 
-  bool setMiscellaneousCostPerConditionedArea(double miscellaneousCostPerConditionedArea);
+    bool setDesignAndEngineeringFees(double designAndEngineeringFees);
 
-  bool setDesignAndEngineeringFees(double designAndEngineeringFees);
+    bool setContractorFee(double contractorFee);
 
-  bool setContractorFee(double contractorFee);
+    bool setContingency(double contingency);
 
-  bool setContingency(double contingency);
+    bool setPermitsBondingAndInsurance(double permitsBondingAndInsurance);
 
-  bool setPermitsBondingAndInsurance(double permitsBondingAndInsurance);
+    bool setCommissioningFee(double commissioningFee);
 
-  bool setCommissioningFee(double commissioningFee);
+    bool setRegionalAdjustmentFactor(double regionalAdjustmentFactor);
 
-  bool setRegionalAdjustmentFactor(double regionalAdjustmentFactor);
+    //@}
 
-  //@}
+    /// Returns the IddObjectType.
+    static IddObjectType iddObjectType();
 
-  /// Returns the IddObjectType.
-  static IddObjectType iddObjectType();
+   protected:
+    /// @cond
 
-protected:
+    typedef detail::ComponentCostAdjustments_Impl ImplType;
 
-  /// @cond
+    friend class Model;
+    friend class IdfObject;
 
-  typedef detail::ComponentCostAdjustments_Impl ImplType;
+    /// Constructs a new ComponentCostAdjustments object in the model.
+    explicit ComponentCostAdjustments(const Model& model);
 
-  friend class Model;
-  friend class IdfObject;
+    // constructor
+    explicit ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
 
-  /// Constructs a new ComponentCostAdjustments object in the model.
-  explicit ComponentCostAdjustments(const Model& model);
+   private:
+    REGISTER_LOGGER("openstudio.model.ComponentCostAdjustments");
 
-  // constructor
-  explicit ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
+    /// @endcond
+  };
 
-private:
-  REGISTER_LOGGER("openstudio.model.ComponentCostAdjustments");
+  /** \relates ComponentCostAdjustments */
+  typedef boost::optional<ComponentCostAdjustments> OptionalComponentCostAdjustments;
 
-  /// @endcond
+  /** \relates ComponentCostAdjustments */
+  typedef std::vector<ComponentCostAdjustments> ComponentCostAdjustmentsVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ComponentCostAdjustments */
-typedef boost::optional<ComponentCostAdjustments> OptionalComponentCostAdjustments;
-
-/** \relates ComponentCostAdjustments */
-typedef std::vector<ComponentCostAdjustments> ComponentCostAdjustmentsVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COMPONENTCOSTADJUSTMENTS_HPP
+#endif  // MODEL_COMPONENTCOSTADJUSTMENTS_HPP

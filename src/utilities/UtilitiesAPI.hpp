@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,34 +30,34 @@
 #ifndef UTILITIES_UTILITIESAPI_HPP
 #define UTILITIES_UTILITIESAPI_HPP
 
-  #if (_WIN32 || _MSC_VER) && !OPENSTUDIO_DIRECT_INCLUDE
+#if (_WIN32 || _MSC_VER) && !OPENSTUDIO_DIRECT_INCLUDE
 
-    #ifdef SHARED_OS_LIBS
+#  ifdef SHARED_OS_LIBS
 
-      #if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
-        #define UTILITIES_API __declspec(dllexport)
-        #define UTILITIES_TEMPLATE_EXT
-      #else
-        #define UTILITIES_API __declspec(dllimport)
-        #define UTILITIES_TEMPLATE_EXT extern
-      #endif
+#    if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
+#      define UTILITIES_API __declspec(dllexport)
+#      define UTILITIES_TEMPLATE_EXT
+#    else
+#      define UTILITIES_API __declspec(dllimport)
+#      define UTILITIES_TEMPLATE_EXT extern
+#    endif
 
-    #else
+#  else
 
-      #define UTILITIES_API
-      #if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
-        #define UTILITIES_TEMPLATE_EXT
-      #else
-        #define UTILITIES_TEMPLATE_EXT extern
-      #endif
+#    define UTILITIES_API
+#    if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
+#      define UTILITIES_TEMPLATE_EXT
+#    else
+#      define UTILITIES_TEMPLATE_EXT extern
+#    endif
 
-    #endif
+#  endif
 
-  #else
+#else
 
-    #define UTILITIES_API
-    #define UTILITIES_TEMPLATE_EXT
+#  define UTILITIES_API
+#  define UTILITIES_TEMPLATE_EXT
 
-  #endif
+#endif
 
 #endif

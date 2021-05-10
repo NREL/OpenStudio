@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,86 +37,79 @@ namespace openstudio {
 
 namespace model {
 
-class ExternalFile;
-class ScheduleFile;
+  class ExternalFile;
+  class ScheduleFile;
 
-namespace detail {
+  namespace detail {
 
-  /** ExternalFile_Impl is a ResourceObject_Impl that is the implementation class for ExternalFile.*/
-  class MODEL_API ExternalFile_Impl : public ResourceObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ExternalFile_Impl is a ResourceObject_Impl that is the implementation class for ExternalFile.*/
+    class MODEL_API ExternalFile_Impl : public ResourceObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExternalFile_Impl(const IdfObject& idfObject,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ExternalFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExternalFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ExternalFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ExternalFile_Impl(const ExternalFile_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ExternalFile_Impl(const ExternalFile_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ExternalFile_Impl();
+      virtual ~ExternalFile_Impl();
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string fileName() const;
+      std::string fileName() const;
 
-    path filePath() const;
+      path filePath() const;
 
-    //boost::optional<std::string> columnSeparator() const;
+      //boost::optional<std::string> columnSeparator() const;
 
-    //char columnSeparatorChar() const;
+      //char columnSeparatorChar() const;
 
-    //bool isColumnSeparatorDefaulted() const;
+      //bool isColumnSeparatorDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    //bool setColumnSeparator(const std::string& columnSeparator);
+      //bool setColumnSeparator(const std::string& columnSeparator);
 
-    //void resetColumnSeparator();
+      //void resetColumnSeparator();
 
-    //@}
-    /** @name Other */
-    //@{
-    //bool isValid();
+      //@}
+      /** @name Other */
+      //@{
+      //bool isValid();
 
-    std::vector<ScheduleFile> scheduleFiles() const;
+      std::vector<ScheduleFile> scheduleFiles() const;
 
-    //@}
-   protected:
-     bool setFileName(const std::string& fileName);
-     friend class openstudio::model::ExternalFile;
+      //@}
+     protected:
+      bool setFileName(const std::string& fileName);
+      friend class openstudio::model::ExternalFile;
 
-   private:
-     REGISTER_LOGGER("openstudio.model.ExternalFile");
+     private:
+      REGISTER_LOGGER("openstudio.model.ExternalFile");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEFILE_IMPL_HPP
-
+#endif  // MODEL_SCHEDULEFILE_IMPL_HPP

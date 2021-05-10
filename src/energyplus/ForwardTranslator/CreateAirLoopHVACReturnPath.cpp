@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,37 +58,34 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath( AirLoopHVAC & airLoopHVAC )
-{
-  IdfObject returnPathIdf(openstudio::IddObjectType::AirLoopHVAC_ReturnPath);
-  m_idfObjects.push_back(returnPathIdf);
+  boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath(AirLoopHVAC& airLoopHVAC) {
+    IdfObject returnPathIdf(openstudio::IddObjectType::AirLoopHVAC_ReturnPath);
+    m_idfObjects.push_back(returnPathIdf);
 
-  returnPathIdf.setName(airLoopHVAC.name().get() + " Return Path");
+    returnPathIdf.setName(airLoopHVAC.name().get() + " Return Path");
 
-  Node node = airLoopHVAC.demandOutletNode();
-  returnPathIdf.setString(openstudio::AirLoopHVAC_ReturnPathFields::ReturnAirPathOutletNodeName,node.name().get());
+    Node node = airLoopHVAC.demandOutletNode();
+    returnPathIdf.setString(openstudio::AirLoopHVAC_ReturnPathFields::ReturnAirPathOutletNodeName, node.name().get());
 
-  std::vector<ModelObject> returnPlenums = airLoopHVAC.demandComponents(AirLoopHVACReturnPlenum::iddObjectType());
-  for( auto & returnPlenum : returnPlenums )
-  {
+    std::vector<ModelObject> returnPlenums = airLoopHVAC.demandComponents(AirLoopHVACReturnPlenum::iddObjectType());
+    for (auto& returnPlenum : returnPlenums) {
+      IdfExtensibleGroup eg = returnPathIdf.pushExtensibleGroup();
+      boost::optional<IdfObject> _returnPlenum = translateAndMapModelObject(returnPlenum);
+      OS_ASSERT(_returnPlenum);
+      eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentObjectType, _returnPlenum->iddObject().name());
+      eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentName, _returnPlenum->name().get());
+    }
+
+    AirLoopHVACZoneMixer zoneMixer = airLoopHVAC.zoneMixer();
+    boost::optional<IdfObject> _zoneMixer = translateAndMapModelObject(zoneMixer);
+    OS_ASSERT(_zoneMixer);
     IdfExtensibleGroup eg = returnPathIdf.pushExtensibleGroup();
-    boost::optional<IdfObject> _returnPlenum = translateAndMapModelObject(returnPlenum);
-    OS_ASSERT(_returnPlenum);
-    eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentObjectType,_returnPlenum->iddObject().name());
-    eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentName,_returnPlenum->name().get());
+    eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentObjectType, _zoneMixer->iddObject().name());
+    eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentName, _zoneMixer->name().get());
+
+    return boost::optional<IdfObject>(returnPathIdf);
   }
 
-  AirLoopHVACZoneMixer zoneMixer = airLoopHVAC.zoneMixer();
-  boost::optional<IdfObject> _zoneMixer = translateAndMapModelObject(zoneMixer);
-  OS_ASSERT(_zoneMixer);
-  IdfExtensibleGroup eg = returnPathIdf.pushExtensibleGroup();
-  eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentObjectType,_zoneMixer->iddObject().name());
-  eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentName,_zoneMixer->name().get());
+}  // namespace energyplus
 
-  return boost::optional<IdfObject>(returnPathIdf);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

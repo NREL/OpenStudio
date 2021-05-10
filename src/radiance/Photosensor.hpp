@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,24 +37,25 @@
 #include "../utilities/data/TimeSeries.hpp"
 #include <vector>
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
   /** Photosensor represents the physical location, orientation, and sensitivity pattern of a photocell. As well as
    *   output from simulation.
    */
-  class RADIANCE_API Photosensor{
-    public:
-      openstudio::Vector location;
-      openstudio::Vector orientation;
-      openstudio::path iesFile;
-      openstudio::TimeSeries illuminanceValues();
+  class RADIANCE_API Photosensor
+  {
+   public:
+    openstudio::Vector location;
+    openstudio::Vector orientation;
+    openstudio::path iesFile;
+    openstudio::TimeSeries illuminanceValues();
   };
 
   // vector of Photosensor
   typedef std::vector<Photosensor> PhotosensorVector;
 
-} // radiance
-} // openstudio
+}  // namespace radiance
+}  // namespace openstudio
 
-#endif //RADIANCE_PHOTOSENSOR_HPP
+#endif  //RADIANCE_PHOTOSENSOR_HPP

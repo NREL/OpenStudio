@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,79 +44,64 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateFanConstantVolume( const WorkspaceObject & workspaceObject )
-{
-OptionalModelObject result,temp;
-  OptionalSchedule schedule;
+  OptionalModelObject ReverseTranslator::translateFanConstantVolume(const WorkspaceObject& workspaceObject) {
+    OptionalModelObject result, temp;
+    OptionalSchedule schedule;
 
-  OptionalWorkspaceObject owo = workspaceObject.getTarget(Fan_ConstantVolumeFields::AvailabilityScheduleName);
-  if(!owo)
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             << " Can't find Schedule: ");
+    OptionalWorkspaceObject owo = workspaceObject.getTarget(Fan_ConstantVolumeFields::AvailabilityScheduleName);
+    if (!owo) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription() << " Can't find Schedule: ");
+      return result;
+    }
+    temp = translateAndMapWorkspaceObject(*owo);
+    if (temp) {
+      schedule = temp->optionalCast<Schedule>();
+    }
+
+    if (!schedule) {
+      LOG(Error, "Error importing object: " << workspaceObject.name().get()
+                                            << "Failed to convert iddObjects into model Objects. Maybe they do not exist in model yet");
+
+      return result;
+    }
+
+    openstudio::model::FanConstantVolume fan(m_model, *schedule);
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      fan.setName(*optS);
+    }
+    //inlet and outlet nodes are set my the HVACAirLoop
+    OptionalDouble d;
+    d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::FanTotalEfficiency);
+    if (d) {
+      fan.setFanEfficiency(*d);
+    }
+    d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::PressureRise);
+    if (d) {
+      fan.setPressureRise(*d);
+    }
+    d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::MaximumFlowRate);
+    if (d) {
+      fan.setMaximumFlowRate(*d);
+    }
+    d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::MotorEfficiency);
+    if (d) {
+      fan.setMotorEfficiency(*d);
+    }
+    d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::MotorInAirstreamFraction);
+    if (d) {
+      fan.setMotorInAirstreamFraction(*d);
+    }
+
+    optS = workspaceObject.getString(openstudio::Fan_ConstantVolumeFields::EndUseSubcategory);
+    if (optS) {
+      fan.setEndUseSubcategory(*optS);
+    }
+
+    result = fan;
     return result;
   }
-  temp = translateAndMapWorkspaceObject( *owo);
-  if(temp)
-  {
-    schedule = temp->optionalCast<Schedule>();
-  }
 
-  if( !schedule )
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.name().get()
-             <<"Failed to convert iddObjects into model Objects. Maybe they do not exist in model yet");
+}  // namespace energyplus
 
-    return result;
-  }
-
-  openstudio::model::FanConstantVolume fan( m_model, *schedule );
-  OptionalString optS = workspaceObject.name();
-  if(optS)
-  {
-    fan.setName(*optS);
-  }
-  //inlet and outlet nodes are set my the HVACAirLoop
-  OptionalDouble d;
-  d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::FanTotalEfficiency);
-  if(d)
-  {
-    fan.setFanEfficiency(*d);
-  }
-  d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::PressureRise);
-  if(d)
-  {
-    fan.setPressureRise(*d);
-  }
-  d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::MaximumFlowRate);
-  if(d)
-  {
-    fan.setMaximumFlowRate(*d);
-  }
-  d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::MotorEfficiency);
-  if(d)
-  {
-    fan.setMotorEfficiency(*d);
-  }
-  d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::MotorInAirstreamFraction);
-  if(d)
-  {
-    fan.setMotorInAirstreamFraction(*d);
-  }
-
-  optS=workspaceObject.getString(openstudio::Fan_ConstantVolumeFields::EndUseSubcategory);
-  if(optS)
-  {
-    fan.setEndUseSubcategory(*optS);
-  }
-
-  result=fan;
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

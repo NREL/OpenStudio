@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,68 +36,64 @@ namespace openstudio {
 
 namespace model {
 
-class ZoneHVACEquipmentConnections;
+  class ZoneHVACEquipmentConnections;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API SetpointManagerSingleZoneReheat_Impl : public SetpointManager_Impl {
+    class MODEL_API SetpointManagerSingleZoneReheat_Impl : public SetpointManager_Impl
+    {
 
-   public:
+     public:
+      SetpointManagerSingleZoneReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SetpointManagerSingleZoneReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      SetpointManagerSingleZoneReheat_Impl(const SetpointManagerSingleZoneReheat_Impl& other, Model_Impl* model, bool keepHandles);
 
-    SetpointManagerSingleZoneReheat_Impl(const SetpointManagerSingleZoneReheat_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandles);
+      virtual ~SetpointManagerSingleZoneReheat_Impl();
 
-    virtual ~SetpointManagerSingleZoneReheat_Impl();
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual bool addToNode(Node & node) override;
+      double minimumSupplyAirTemperature();
 
-    double minimumSupplyAirTemperature();
+      bool setMinimumSupplyAirTemperature(double value);
 
-    bool setMinimumSupplyAirTemperature( double value );
+      double maximumSupplyAirTemperature();
 
-    double maximumSupplyAirTemperature();
+      bool setMaximumSupplyAirTemperature(double value);
 
-    bool setMaximumSupplyAirTemperature( double value );
+      virtual boost::optional<Node> setpointNode() const override;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual std::string controlVariable() const override;
 
-    virtual std::string controlVariable() const override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    virtual bool setControlVariable( const std::string& controlVariable ) override;
+      boost::optional<ThermalZone> controlZone();
 
-    boost::optional<ThermalZone> controlZone();
+      bool setControlZone(ThermalZone& thermalZone);
 
-    bool setControlZone(ThermalZone& thermalZone);
+      void resetControlZone();
 
-    void resetControlZone();
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-   private:
-    virtual bool setSetpointNode( const Node & node ) override;
+      virtual void resetSetpointNode() override;
 
-    virtual void resetSetpointNode() override;
+      boost::optional<ModelObject> controlZoneAsModelObject();
 
-    boost::optional<ModelObject> controlZoneAsModelObject();
+      bool setControlZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setControlZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
 
-} // model
+}  // namespace openstudio
 
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP

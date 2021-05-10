@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,8 +44,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
-{
+TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable) {
   Model model;
 
   // add global variable
@@ -61,4 +60,3 @@ TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
   n2 = model.objects().size();
   EXPECT_EQ(n1, n2);
 }
-

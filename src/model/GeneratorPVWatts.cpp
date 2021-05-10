@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,8 +38,6 @@
 #include "Surface_Impl.hpp"
 #include "ShadingSurface.hpp"
 #include "ShadingSurface_Impl.hpp"
-#include "ElectricLoadCenterDistribution.hpp"
-#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
@@ -54,409 +52,382 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  GeneratorPVWatts_Impl::GeneratorPVWatts_Impl(const IdfObject& idfObject,
-                                               Model_Impl* model,
-                                               bool keepHandle)
-    : Generator_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == GeneratorPVWatts::iddObjectType());
-  }
-
-  GeneratorPVWatts_Impl::GeneratorPVWatts_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle)
-    : Generator_Impl(other, model, keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == GeneratorPVWatts::iddObjectType());
-  }
-
-  GeneratorPVWatts_Impl::GeneratorPVWatts_Impl(const GeneratorPVWatts_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle)
-    : Generator_Impl(other, model, keepHandle)
-  {}
-
-  const std::vector<std::string>& GeneratorPVWatts_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Generator Produced DC Electric Power",
-      "Generator Produced DC Electric Energy",
-      "Generator PV Cell Temperature",
-      "Generator PV Short Circuit Current",
-      "Generator PV Open Circuit Voltage",
-      "Generator PV Array Efficiency"
-    };
-    return result;
-  }
-
-  IddObjectType GeneratorPVWatts_Impl::iddObjectType() const {
-    return GeneratorPVWatts::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> GeneratorPVWatts_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-    std::vector<ScheduleTypeKey> result;
-    return result;
-  }
-
-  std::string GeneratorPVWatts_Impl::generatorObjectType() const {
-    return "Generator:PVWatts";
-  }
-
-  boost::optional<Schedule> GeneratorPVWatts_Impl::availabilitySchedule() const {
-    boost::optional<Schedule> schedule;
-    return schedule;
-  }
-
-  boost::optional<double> GeneratorPVWatts_Impl::ratedElectricPowerOutput() const {
-    return getDouble(OS_Generator_PVWattsFields::DCSystemCapacity);
-  }
-
-  boost::optional<double> GeneratorPVWatts_Impl::ratedThermaltoElectricalPowerRatio() const {
-    return boost::none;
-  }
-
-  std::string GeneratorPVWatts_Impl::pvWattsVersion() const {
-    boost::optional<std::string> value = getString(OS_Generator_PVWattsFields::PVWattsVersion,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double GeneratorPVWatts_Impl::dcSystemCapacity() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::DCSystemCapacity);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string GeneratorPVWatts_Impl::moduleType() const {
-    boost::optional<std::string> value = getString(OS_Generator_PVWattsFields::ModuleType, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GeneratorPVWatts_Impl::isModuleTypeDefaulted() const {
-    return isEmpty(OS_Generator_PVWattsFields::ModuleType);
-  }
-
-  std::string GeneratorPVWatts_Impl::arrayType() const {
-    boost::optional<std::string> value = getString(OS_Generator_PVWattsFields::ArrayType, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GeneratorPVWatts_Impl::isArrayTypeDefaulted() const {
-    return isEmpty(OS_Generator_PVWattsFields::ArrayType);
-  }
-
-  double GeneratorPVWatts_Impl::systemLosses() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::SystemLosses, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GeneratorPVWatts_Impl::isSystemLossesDefaulted() const {
-    return isEmpty(OS_Generator_PVWattsFields::SystemLosses);
-  }
-
-  double GeneratorPVWatts_Impl::tiltAngle() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::TiltAngle, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GeneratorPVWatts_Impl::isTiltAngleDefaulted() const {
-    return isEmpty(OS_Generator_PVWattsFields::TiltAngle);
-  }
-
-  double GeneratorPVWatts_Impl::azimuthAngle() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::AzimuthAngle, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GeneratorPVWatts_Impl::isAzimuthAngleDefaulted() const {
-    return isEmpty(OS_Generator_PVWattsFields::AzimuthAngle);
-  }
-
-  boost::optional<PlanarSurface> GeneratorPVWatts_Impl::surface() const {
-    return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_Generator_PVWattsFields::SurfaceName);
-  }
-
-  double GeneratorPVWatts_Impl::groundCoverageRatio() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::GroundCoverageRatio, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GeneratorPVWatts_Impl::isGroundCoverageRatioDefaulted() const {
-    return isEmpty(OS_Generator_PVWattsFields::GroundCoverageRatio);
-  }
-
-  bool GeneratorPVWatts_Impl::setDCSystemCapacity(double dcSystemCapacity) {
-    bool result = setDouble(OS_Generator_PVWattsFields::DCSystemCapacity, dcSystemCapacity);
-    return result;
-  }
-
-  bool GeneratorPVWatts_Impl::setModuleType(std::string moduleType) {
-    bool result = setString(OS_Generator_PVWattsFields::ModuleType, moduleType);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorPVWatts_Impl::resetModuleType() {
-    bool result = setString(OS_Generator_PVWattsFields::ModuleType, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorPVWatts_Impl::setArrayType(std::string arrayType) {
-    bool result = setString(OS_Generator_PVWattsFields::ArrayType, arrayType);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorPVWatts_Impl::resetArrayType() {
-    bool result = setString(OS_Generator_PVWattsFields::ArrayType, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorPVWatts_Impl::setSystemLosses(double systemLosses) {
-    bool result = setDouble(OS_Generator_PVWattsFields::SystemLosses, systemLosses);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorPVWatts_Impl::resetSystemLosses() {
-    bool result = setString(OS_Generator_PVWattsFields::SystemLosses, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorPVWatts_Impl::setTiltAngle(double tiltAngle) {
-    bool result = true;
-    result = result && setString(OS_Generator_PVWattsFields::SurfaceName, "");
-    result = result && setDouble(OS_Generator_PVWattsFields::TiltAngle, tiltAngle);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorPVWatts_Impl::resetTiltAngle() {
-    bool result = setString(OS_Generator_PVWattsFields::TiltAngle, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorPVWatts_Impl::setAzimuthAngle(double azimuthAngle) {
-    bool result = true;
-    result = result && setString(OS_Generator_PVWattsFields::SurfaceName, "");
-    result = result && setDouble(OS_Generator_PVWattsFields::AzimuthAngle, azimuthAngle);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorPVWatts_Impl::resetAzimuthAngle() {
-    bool result = setString(OS_Generator_PVWattsFields::AzimuthAngle, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorPVWatts_Impl::setSurface(const PlanarSurface& surface) {
-    bool result = true;
-    result = result && setString(OS_Generator_PVWattsFields::TiltAngle, "");
-    result = result && setString(OS_Generator_PVWattsFields::AzimuthAngle, "");
-    if (surface.optionalCast<Surface>()){
-      result = result && setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
+    GeneratorPVWatts_Impl::GeneratorPVWatts_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : Generator_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == GeneratorPVWatts::iddObjectType());
     }
-    else if (surface.optionalCast<ShadingSurface>()){
-      result = result && setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
+
+    GeneratorPVWatts_Impl::GeneratorPVWatts_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : Generator_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == GeneratorPVWatts::iddObjectType());
     }
-    return result;
+
+    GeneratorPVWatts_Impl::GeneratorPVWatts_Impl(const GeneratorPVWatts_Impl& other, Model_Impl* model, bool keepHandle)
+      : Generator_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& GeneratorPVWatts_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Generator Produced DC Electricity Rate", "Generator Produced DC Electricity Energy",
+                                                   "Generator PV Cell Temperature",          "Generator PV Short Circuit Current",
+                                                   "Generator PV Open Circuit Voltage",      "Generator PV Array Efficiency"};
+      return result;
+    }
+
+    IddObjectType GeneratorPVWatts_Impl::iddObjectType() const {
+      return GeneratorPVWatts::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> GeneratorPVWatts_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      return result;
+    }
+
+    std::string GeneratorPVWatts_Impl::generatorObjectType() const {
+      return "Generator:PVWatts";
+    }
+
+    boost::optional<Schedule> GeneratorPVWatts_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> schedule;
+      return schedule;
+    }
+
+    boost::optional<double> GeneratorPVWatts_Impl::ratedElectricPowerOutput() const {
+      return getDouble(OS_Generator_PVWattsFields::DCSystemCapacity);
+    }
+
+    boost::optional<double> GeneratorPVWatts_Impl::ratedThermaltoElectricalPowerRatio() const {
+      return boost::none;
+    }
+
+    std::string GeneratorPVWatts_Impl::pvWattsVersion() const {
+      boost::optional<std::string> value = getString(OS_Generator_PVWattsFields::PVWattsVersion, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double GeneratorPVWatts_Impl::dcSystemCapacity() const {
+      boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::DCSystemCapacity);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string GeneratorPVWatts_Impl::moduleType() const {
+      boost::optional<std::string> value = getString(OS_Generator_PVWattsFields::ModuleType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GeneratorPVWatts_Impl::isModuleTypeDefaulted() const {
+      return isEmpty(OS_Generator_PVWattsFields::ModuleType);
+    }
+
+    std::string GeneratorPVWatts_Impl::arrayType() const {
+      boost::optional<std::string> value = getString(OS_Generator_PVWattsFields::ArrayType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GeneratorPVWatts_Impl::isArrayTypeDefaulted() const {
+      return isEmpty(OS_Generator_PVWattsFields::ArrayType);
+    }
+
+    double GeneratorPVWatts_Impl::systemLosses() const {
+      boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::SystemLosses, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GeneratorPVWatts_Impl::isSystemLossesDefaulted() const {
+      return isEmpty(OS_Generator_PVWattsFields::SystemLosses);
+    }
+
+    double GeneratorPVWatts_Impl::tiltAngle() const {
+      boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::TiltAngle, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GeneratorPVWatts_Impl::isTiltAngleDefaulted() const {
+      return isEmpty(OS_Generator_PVWattsFields::TiltAngle);
+    }
+
+    double GeneratorPVWatts_Impl::azimuthAngle() const {
+      boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::AzimuthAngle, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GeneratorPVWatts_Impl::isAzimuthAngleDefaulted() const {
+      return isEmpty(OS_Generator_PVWattsFields::AzimuthAngle);
+    }
+
+    boost::optional<PlanarSurface> GeneratorPVWatts_Impl::surface() const {
+      return getObject<ModelObject>().getModelObjectTarget<PlanarSurface>(OS_Generator_PVWattsFields::SurfaceName);
+    }
+
+    double GeneratorPVWatts_Impl::groundCoverageRatio() const {
+      boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::GroundCoverageRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GeneratorPVWatts_Impl::isGroundCoverageRatioDefaulted() const {
+      return isEmpty(OS_Generator_PVWattsFields::GroundCoverageRatio);
+    }
+
+    bool GeneratorPVWatts_Impl::setDCSystemCapacity(double dcSystemCapacity) {
+      bool result = setDouble(OS_Generator_PVWattsFields::DCSystemCapacity, dcSystemCapacity);
+      return result;
+    }
+
+    bool GeneratorPVWatts_Impl::setModuleType(std::string moduleType) {
+      bool result = setString(OS_Generator_PVWattsFields::ModuleType, moduleType);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorPVWatts_Impl::resetModuleType() {
+      bool result = setString(OS_Generator_PVWattsFields::ModuleType, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorPVWatts_Impl::setArrayType(std::string arrayType) {
+      bool result = setString(OS_Generator_PVWattsFields::ArrayType, arrayType);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorPVWatts_Impl::resetArrayType() {
+      bool result = setString(OS_Generator_PVWattsFields::ArrayType, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorPVWatts_Impl::setSystemLosses(double systemLosses) {
+      bool result = setDouble(OS_Generator_PVWattsFields::SystemLosses, systemLosses);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorPVWatts_Impl::resetSystemLosses() {
+      bool result = setString(OS_Generator_PVWattsFields::SystemLosses, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorPVWatts_Impl::setTiltAngle(double tiltAngle) {
+      bool result = true;
+      result = result && setString(OS_Generator_PVWattsFields::SurfaceName, "");
+      result = result && setDouble(OS_Generator_PVWattsFields::TiltAngle, tiltAngle);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorPVWatts_Impl::resetTiltAngle() {
+      bool result = setString(OS_Generator_PVWattsFields::TiltAngle, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorPVWatts_Impl::setAzimuthAngle(double azimuthAngle) {
+      bool result = true;
+      result = result && setString(OS_Generator_PVWattsFields::SurfaceName, "");
+      result = result && setDouble(OS_Generator_PVWattsFields::AzimuthAngle, azimuthAngle);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorPVWatts_Impl::resetAzimuthAngle() {
+      bool result = setString(OS_Generator_PVWattsFields::AzimuthAngle, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorPVWatts_Impl::setSurface(const PlanarSurface& surface) {
+      bool result = true;
+      result = result && setString(OS_Generator_PVWattsFields::TiltAngle, "");
+      result = result && setString(OS_Generator_PVWattsFields::AzimuthAngle, "");
+      if (surface.optionalCast<Surface>()) {
+        result = result && setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
+      } else if (surface.optionalCast<ShadingSurface>()) {
+        result = result && setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
+      }
+      return result;
+    }
+
+    void GeneratorPVWatts_Impl::resetSurface() {
+      bool result = setString(OS_Generator_PVWattsFields::SurfaceName, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorPVWatts_Impl::setGroundCoverageRatio(double groundCoverageRatio) {
+      bool result = setDouble(OS_Generator_PVWattsFields::GroundCoverageRatio, groundCoverageRatio);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorPVWatts_Impl::resetGroundCoverageRatio() {
+      bool result = setString(OS_Generator_PVWattsFields::GroundCoverageRatio, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  GeneratorPVWatts::GeneratorPVWatts(const Model& model, double dcSystemCapacity) : Generator(GeneratorPVWatts::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GeneratorPVWatts_Impl>());
+
+    bool ok = true;
+
+    ok = this->setDCSystemCapacity(dcSystemCapacity);
+    if (!ok) {
+      this->remove();
+      LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
+    }
   }
 
-  void GeneratorPVWatts_Impl::resetSurface() {
-    bool result = setString(OS_Generator_PVWattsFields::SurfaceName, "");
-    OS_ASSERT(result);
+  GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity)
+    : Generator(GeneratorPVWatts::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GeneratorPVWatts_Impl>());
+
+    bool ok = true;
+
+    ok = this->setSurface(surface);
+    if (!ok) {
+      this->remove();
+      LOG_AND_THROW("Cannot create a pvwatts generator without surface");
+    }
+
+    ok = this->setDCSystemCapacity(dcSystemCapacity);
+    if (!ok) {
+      this->remove();
+      LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
+    }
   }
 
-  bool GeneratorPVWatts_Impl::setGroundCoverageRatio(double groundCoverageRatio) {
-    bool result = setDouble(OS_Generator_PVWattsFields::GroundCoverageRatio, groundCoverageRatio);
-    OS_ASSERT(result);
-    return result;
+  IddObjectType GeneratorPVWatts::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Generator_PVWatts);
   }
 
-  void GeneratorPVWatts_Impl::resetGroundCoverageRatio() {
-    bool result = setString(OS_Generator_PVWattsFields::GroundCoverageRatio, "");
-    OS_ASSERT(result);
+  std::string GeneratorPVWatts::pvWattsVersion() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->pvWattsVersion();
   }
 
-} // detail
-
-GeneratorPVWatts::GeneratorPVWatts(const Model& model, double dcSystemCapacity)
-  : Generator(GeneratorPVWatts::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::GeneratorPVWatts_Impl>());
-
-  bool ok = true;
-
-  ok = this->setDCSystemCapacity(dcSystemCapacity);
-  if (!ok){
-    this->remove();
-    LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
-  }
-  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-  ElectricLoadCenterDistribution elcd(model);
-  elcd.addGenerator(*this);
-}
-
-GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity)
-  : Generator(GeneratorPVWatts::iddObjectType(), model)
-{
-  OS_ASSERT(getImpl<detail::GeneratorPVWatts_Impl>());
-
-  bool ok = true;
-
-  ok = this->setSurface(surface);
-  if (!ok){
-    this->remove();
-    LOG_AND_THROW("Cannot create a pvwatts generator without surface");
+  double GeneratorPVWatts::dcSystemCapacity() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->dcSystemCapacity();
   }
 
-  ok = this->setDCSystemCapacity(dcSystemCapacity);
-  if (!ok){
-    this->remove();
-    LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
+  std::string GeneratorPVWatts::moduleType() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->moduleType();
   }
-  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-  ElectricLoadCenterDistribution elcd(model);
-  elcd.addGenerator(*this);
-}
 
-IddObjectType GeneratorPVWatts::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Generator_PVWatts);
-}
+  bool GeneratorPVWatts::isModuleTypeDefaulted() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->isModuleTypeDefaulted();
+  }
 
-std::string GeneratorPVWatts::pvWattsVersion() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->pvWattsVersion();
-}
+  std::string GeneratorPVWatts::arrayType() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->arrayType();
+  }
 
-double GeneratorPVWatts::dcSystemCapacity() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->dcSystemCapacity();
-}
+  bool GeneratorPVWatts::isArrayTypeDefaulted() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->isArrayTypeDefaulted();
+  }
 
-std::string GeneratorPVWatts::moduleType() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->moduleType();
-}
+  double GeneratorPVWatts::systemLosses() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->systemLosses();
+  }
 
-bool GeneratorPVWatts::isModuleTypeDefaulted() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->isModuleTypeDefaulted();
-}
+  bool GeneratorPVWatts::isSystemLossesDefaulted() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->isSystemLossesDefaulted();
+  }
 
-std::string GeneratorPVWatts::arrayType() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->arrayType();
-}
+  double GeneratorPVWatts::tiltAngle() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->tiltAngle();
+  }
 
-bool GeneratorPVWatts::isArrayTypeDefaulted() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->isArrayTypeDefaulted();
-}
+  bool GeneratorPVWatts::isTiltAngleDefaulted() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->isTiltAngleDefaulted();
+  }
 
-double GeneratorPVWatts::systemLosses() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->systemLosses();
-}
+  double GeneratorPVWatts::azimuthAngle() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->azimuthAngle();
+  }
 
-bool GeneratorPVWatts::isSystemLossesDefaulted() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->isSystemLossesDefaulted();
-}
+  bool GeneratorPVWatts::isAzimuthAngleDefaulted() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->isAzimuthAngleDefaulted();
+  }
 
-double GeneratorPVWatts::tiltAngle() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->tiltAngle();
-}
+  boost::optional<PlanarSurface> GeneratorPVWatts::surface() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->surface();
+  }
 
-bool GeneratorPVWatts::isTiltAngleDefaulted() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->isTiltAngleDefaulted();
-}
+  double GeneratorPVWatts::groundCoverageRatio() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->groundCoverageRatio();
+  }
 
-double GeneratorPVWatts::azimuthAngle() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->azimuthAngle();
-}
+  bool GeneratorPVWatts::isGroundCoverageRatioDefaulted() const {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->isGroundCoverageRatioDefaulted();
+  }
 
-bool GeneratorPVWatts::isAzimuthAngleDefaulted() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->isAzimuthAngleDefaulted();
-}
+  bool GeneratorPVWatts::setDCSystemCapacity(double dcSystemCapacity) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setDCSystemCapacity(dcSystemCapacity);
+  }
 
-boost::optional<PlanarSurface> GeneratorPVWatts::surface() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->surface();
-}
+  bool GeneratorPVWatts::setModuleType(std::string moduleType) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setModuleType(moduleType);
+  }
 
-double GeneratorPVWatts::groundCoverageRatio() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->groundCoverageRatio();
-}
+  void GeneratorPVWatts::resetModuleType() {
+    getImpl<detail::GeneratorPVWatts_Impl>()->resetModuleType();
+  }
 
-bool GeneratorPVWatts::isGroundCoverageRatioDefaulted() const {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->isGroundCoverageRatioDefaulted();
-}
+  bool GeneratorPVWatts::setArrayType(std::string arrayType) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setArrayType(arrayType);
+  }
 
-bool GeneratorPVWatts::setDCSystemCapacity(double dcSystemCapacity) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setDCSystemCapacity(dcSystemCapacity);
-}
+  void GeneratorPVWatts::resetArrayType() {
+    getImpl<detail::GeneratorPVWatts_Impl>()->resetArrayType();
+  }
 
-bool GeneratorPVWatts::setModuleType(std::string moduleType) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setModuleType(moduleType);
-}
+  bool GeneratorPVWatts::setSystemLosses(double systemLosses) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setSystemLosses(systemLosses);
+  }
 
-void GeneratorPVWatts::resetModuleType() {
-  getImpl<detail::GeneratorPVWatts_Impl>()->resetModuleType();
-}
+  void GeneratorPVWatts::resetSystemLosses() {
+    getImpl<detail::GeneratorPVWatts_Impl>()->resetSystemLosses();
+  }
 
-bool GeneratorPVWatts::setArrayType(std::string arrayType) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setArrayType(arrayType);
-}
+  bool GeneratorPVWatts::setTiltAngle(double tiltAngle) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setTiltAngle(tiltAngle);
+  }
 
-void GeneratorPVWatts::resetArrayType() {
-  getImpl<detail::GeneratorPVWatts_Impl>()->resetArrayType();
-}
+  void GeneratorPVWatts::resetTiltAngle() {
+    getImpl<detail::GeneratorPVWatts_Impl>()->resetTiltAngle();
+  }
 
-bool GeneratorPVWatts::setSystemLosses(double systemLosses) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setSystemLosses(systemLosses);
-}
+  bool GeneratorPVWatts::setAzimuthAngle(double azimuthAngle) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setAzimuthAngle(azimuthAngle);
+  }
 
-void GeneratorPVWatts::resetSystemLosses() {
-  getImpl<detail::GeneratorPVWatts_Impl>()->resetSystemLosses();
-}
+  void GeneratorPVWatts::resetAzimuthAngle() {
+    getImpl<detail::GeneratorPVWatts_Impl>()->resetAzimuthAngle();
+  }
 
-bool GeneratorPVWatts::setTiltAngle(double tiltAngle) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setTiltAngle(tiltAngle);
-}
+  bool GeneratorPVWatts::setSurface(const PlanarSurface& surface) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setSurface(surface);
+  }
 
-void GeneratorPVWatts::resetTiltAngle() {
-  getImpl<detail::GeneratorPVWatts_Impl>()->resetTiltAngle();
-}
+  void GeneratorPVWatts::resetSurface() {
+    getImpl<detail::GeneratorPVWatts_Impl>()->resetSurface();
+  }
 
-bool GeneratorPVWatts::setAzimuthAngle(double azimuthAngle) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setAzimuthAngle(azimuthAngle);
-}
+  bool GeneratorPVWatts::setGroundCoverageRatio(double groundCoverageRatio) {
+    return getImpl<detail::GeneratorPVWatts_Impl>()->setGroundCoverageRatio(groundCoverageRatio);
+  }
 
-void GeneratorPVWatts::resetAzimuthAngle() {
-  getImpl<detail::GeneratorPVWatts_Impl>()->resetAzimuthAngle();
-}
+  void GeneratorPVWatts::resetGroundCoverageRatio() {
+    getImpl<detail::GeneratorPVWatts_Impl>()->resetGroundCoverageRatio();
+  }
 
-bool GeneratorPVWatts::setSurface(const PlanarSurface& surface) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setSurface(surface);
-}
+  /// @cond
+  GeneratorPVWatts::GeneratorPVWatts(std::shared_ptr<detail::GeneratorPVWatts_Impl> impl) : Generator(std::move(impl)) {}
+  /// @endcond
 
-void GeneratorPVWatts::resetSurface() {
-  getImpl<detail::GeneratorPVWatts_Impl>()->resetSurface();
-}
-
-bool GeneratorPVWatts::setGroundCoverageRatio(double groundCoverageRatio) {
-  return getImpl<detail::GeneratorPVWatts_Impl>()->setGroundCoverageRatio(groundCoverageRatio);
-}
-
-void GeneratorPVWatts::resetGroundCoverageRatio() {
-  getImpl<detail::GeneratorPVWatts_Impl>()->resetGroundCoverageRatio();
-}
-
-/// @cond
-GeneratorPVWatts::GeneratorPVWatts(std::shared_ptr<detail::GeneratorPVWatts_Impl> impl)
-  : Generator(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

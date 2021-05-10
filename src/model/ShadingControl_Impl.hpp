@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,99 +36,151 @@
 namespace openstudio {
 namespace model {
 
-class Construction;
-class ShadingMaterial;
-class Schedule;
-class SubSurface;
+  class Construction;
+  class ShadingMaterial;
+  class Schedule;
+  class SubSurface;
 
-namespace detail {
+  namespace detail {
 
-  /** ShadingControl_Impl is a ResourceObject_Impl that is the implementation class for ShadingControl.*/
-  class MODEL_API ShadingControl_Impl : public ResourceObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ShadingControl_Impl is a ResourceObject_Impl that is the implementation class for ShadingControl.*/
+    class MODEL_API ShadingControl_Impl : public ResourceObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ShadingControl_Impl(const IdfObject& idfObject,
-                        Model_Impl* model,
-                        bool keepHandle);
+      ShadingControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ShadingControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      ShadingControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ShadingControl_Impl(const ShadingControl_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      ShadingControl_Impl(const ShadingControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ShadingControl_Impl() {}
+      virtual ~ShadingControl_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      // If cloning in the same model, will keep on referencing the same SubSurfaces as the original
+      // If cloning in another model, will clear out its extensible Sub Surface Name group
+      virtual ModelObject clone(Model model) const override;
 
-    boost::optional<Construction> construction() const;
+      //@}
 
-    boost::optional<ShadingMaterial> shadingMaterial() const;
+      static bool isControlTypeValueNeedingSetpoint1(const std::string& controlType);
+      static bool isControlTypeValueNeedingSetpoint2(const std::string& controlType);
 
-    std::string shadingType() const;
+      // **Allows** a schedule
+      static bool isControlTypeValueAllowingSchedule(const std::string& controlType);
+      // **Requires** a Schedule
+      static bool isControlTypeValueRequiringSchedule(const std::string& controlType);
 
-    std::string shadingControlType() const;
+      // **Allows** a slat angle control
+      static bool isTypeValueAllowingSlatAngleControl(const std::string& type);
 
-    bool isShadingControlTypeDefaulted() const;
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> schedule() const;
+      std::string shadingType() const;
 
-    boost::optional<double> setpoint() const;
+      boost::optional<Construction> construction() const;
 
-    bool isSetpointDefaulted() const;
+      boost::optional<ShadingMaterial> shadingMaterial() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      std::string shadingControlType() const;
 
-    bool setShadingType(const std::string& shadingType);
+      bool isShadingControlTypeDefaulted() const;
 
-    bool setShadingControlType(const std::string& shadingControlType);
+      boost::optional<Schedule> schedule() const;
 
-    void resetShadingControlType();
+      boost::optional<double> setpoint() const;
 
-    bool setSchedule(const Schedule& schedule);
+      bool isSetpointDefaulted() const;
 
-    void resetSchedule();
+      bool glareControlIsActive() const;
 
-    bool setSetpoint(double setpoint);
+      std::string typeofSlatAngleControlforBlinds() const;
 
-    void resetSetpoint();
+      bool isTypeofSlatAngleControlforBlindsDefaulted() const;
 
-    //@}
-    /** @name Other */
-    //@{
+      boost::optional<Schedule> slatAngleSchedule() const;
 
-    std::vector<SubSurface> subSurfaces() const;
-    
-    //@}
-   protected:
+      boost::optional<double> setpoint2() const;
 
-   private:
+      std::string multipleSurfaceControlType() const;
 
-    REGISTER_LOGGER("openstudio.model.ShadingControl");
+      //@}
+      /** @name Setters */
+      //@{
 
-  };
+      bool setShadingType(const std::string& shadingType);
 
-} // detail
+      bool setShadingControlType(const std::string& shadingControlType);
 
-} // model
-} // openstudio
+      void resetShadingControlType();
 
-#endif // MODEL_SHADINGCONTROL_IMPL_HPP
+      bool setSchedule(const Schedule& schedule);
 
+      void resetSchedule();
+
+      bool setSetpoint(double setpoint);
+
+      void resetSetpoint();
+
+      bool setGlareControlIsActive(bool glareControlIsActive);
+
+      void resetGlareControlIsActive();
+
+      bool setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds);
+
+      void resetTypeofSlatAngleControlforBlinds();
+
+      bool setSlatAngleSchedule(const Schedule& slatAngleSchedule);
+
+      void resetSlatAngleSchedule();
+
+      bool setSetpoint2(double setpoint2);
+
+      // Impl only
+      void resetSetpoint2();
+
+      bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
+
+      //@}
+      /** @name Other */
+      //@{
+
+      // Extensible: Surfaces
+      std::vector<SubSurface> subSurfaces() const;
+      unsigned numberofSubSurfaces() const;
+      boost::optional<unsigned> subSurfaceIndex(const SubSurface& subSurface) const;
+
+      bool addSubSurface(const SubSurface& subSurface);
+      bool addSubSurface(const SubSurface& subSurface, unsigned index);
+      bool setSubSurfaceIndex(const SubSurface& subSurface, unsigned index);
+      bool removeSubSurface(const SubSurface& subSurface);
+      bool removeSubSurface(unsigned index);
+      // Bulk operations
+      bool addSubSurfaces(const std::vector<SubSurface>& subSurfaces);
+      // Clears existing first, then bulk add
+      bool setSubSurfaces(const std::vector<SubSurface>& subSurfaces);
+      void removeAllSubSurfaces();
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ShadingControl");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SHADINGCONTROL_IMPL_HPP

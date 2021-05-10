@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,133 +35,126 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  OpaqueMaterial_Impl::OpaqueMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : Material_Impl(idfObject, model, keepHandle)
-  {}
+    OpaqueMaterial_Impl::OpaqueMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : Material_Impl(idfObject, model, keepHandle) {}
 
-  OpaqueMaterial_Impl::OpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : Material_Impl(other, model, keepHandle)
-  {}
+    OpaqueMaterial_Impl::OpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : Material_Impl(other, model, keepHandle) {}
 
-  OpaqueMaterial_Impl::OpaqueMaterial_Impl(const OpaqueMaterial_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : Material_Impl(other, model, keepHandle)
-  {}
+    OpaqueMaterial_Impl::OpaqueMaterial_Impl(const OpaqueMaterial_Impl& other, Model_Impl* model, bool keepHandle)
+      : Material_Impl(other, model, keepHandle) {}
 
-  boost::optional<double> OpaqueMaterial_Impl::getVisibleTransmittance() const { return 0.0; }
+    boost::optional<double> OpaqueMaterial_Impl::getVisibleTransmittance() const {
+      return 0.0;
+    }
 
-  boost::optional<double> OpaqueMaterial_Impl::interiorVisibleAbsorptance() const {
-    return this->visibleAbsorptance();
+    boost::optional<double> OpaqueMaterial_Impl::interiorVisibleAbsorptance() const {
+      return this->visibleAbsorptance();
+    }
+
+    boost::optional<double> OpaqueMaterial_Impl::exteriorVisibleAbsorptance() const {
+      return this->visibleAbsorptance();
+    }
+
+    boost::optional<double> OpaqueMaterial_Impl::heatCapacity() const {
+      return boost::none;
+    }
+
+  }  // namespace detail
+
+  OpaqueMaterial::OpaqueMaterial(IddObjectType type, const Model& model) : Material(type, model) {
+    OS_ASSERT(getImpl<detail::OpaqueMaterial_Impl>());
   }
 
-  boost::optional<double> OpaqueMaterial_Impl::exteriorVisibleAbsorptance() const {
-    return this->visibleAbsorptance();
+  double OpaqueMaterial::thermalConductivity() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->thermalConductivity();
   }
 
-  boost::optional<double> OpaqueMaterial_Impl::heatCapacity() const { return boost::none; }
+  double OpaqueMaterial::thermalConductance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->thermalConductance();
+  }
 
-} // detail
+  double OpaqueMaterial::thermalResistivity() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->thermalResistivity();
+  }
 
-OpaqueMaterial::OpaqueMaterial(IddObjectType type,const Model& model)
-  : Material(type,model)
-{
-  OS_ASSERT(getImpl<detail::OpaqueMaterial_Impl>());
-}
+  double OpaqueMaterial::thermalResistance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->thermalResistance();
+  }
 
-double OpaqueMaterial::thermalConductivity() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->thermalConductivity();
-}
+  double OpaqueMaterial::thermalAbsorptance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->thermalAbsorptance();
+  }
 
-double OpaqueMaterial::thermalConductance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->thermalConductance();
-}
+  boost::optional<double> OpaqueMaterial::thermalReflectance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->thermalReflectance();
+  }
 
-double OpaqueMaterial::thermalResistivity() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->thermalResistivity();
-}
+  double OpaqueMaterial::solarAbsorptance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->solarAbsorptance();
+  }
 
-double OpaqueMaterial::thermalResistance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->thermalResistance();
-}
+  boost::optional<double> OpaqueMaterial::solarReflectance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->solarReflectance();
+  }
 
-double OpaqueMaterial::thermalAbsorptance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->thermalAbsorptance();
-}
+  double OpaqueMaterial::visibleAbsorptance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->visibleAbsorptance();
+  }
 
-boost::optional<double> OpaqueMaterial::thermalReflectance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->thermalReflectance();
-}
+  boost::optional<double> OpaqueMaterial::visibleReflectance() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->visibleReflectance();
+  }
 
-double OpaqueMaterial::solarAbsorptance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->solarAbsorptance();
-}
+  bool OpaqueMaterial::setThermalConductivity(double value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setThermalConductivity(value);
+  }
 
-boost::optional<double> OpaqueMaterial::solarReflectance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->solarReflectance();
-}
+  bool OpaqueMaterial::setThermalConductance(double value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setThermalConductance(value);
+  }
 
-double OpaqueMaterial::visibleAbsorptance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->visibleAbsorptance();
-}
+  bool OpaqueMaterial::setThermalResistivity(double value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setThermalResistivity(value);
+  }
 
-boost::optional<double> OpaqueMaterial::visibleReflectance() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->visibleReflectance();
-}
+  bool OpaqueMaterial::setThermalResistance(double value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setThermalResistance(value);
+  }
 
-bool OpaqueMaterial::setThermalConductivity(double value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setThermalConductivity(value);
-}
+  bool OpaqueMaterial::setThermalAbsorptance(double value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setThermalAbsorptance(value);
+  }
 
-bool OpaqueMaterial::setThermalConductance(double value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setThermalConductance(value);
-}
+  bool OpaqueMaterial::setThermalReflectance(boost::optional<double> value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setThermalReflectance(value);
+  }
 
-bool OpaqueMaterial::setThermalResistivity(double value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setThermalResistivity(value);
-}
+  bool OpaqueMaterial::setSolarAbsorptance(boost::optional<double> value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setSolarAbsorptance(value);
+  }
 
-bool OpaqueMaterial::setThermalResistance(double value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setThermalResistance(value);
-}
+  bool OpaqueMaterial::setSolarReflectance(boost::optional<double> value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setSolarReflectance(value);
+  }
 
-bool OpaqueMaterial::setThermalAbsorptance(double value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setThermalAbsorptance(value);
-}
+  bool OpaqueMaterial::setVisibleAbsorptance(boost::optional<double> value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setVisibleAbsorptance(value);
+  }
 
-bool OpaqueMaterial::setThermalReflectance(boost::optional<double> value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setThermalReflectance(value);
-}
+  bool OpaqueMaterial::setVisibleReflectance(boost::optional<double> value) {
+    return getImpl<detail::OpaqueMaterial_Impl>()->setVisibleReflectance(value);
+  }
 
-bool OpaqueMaterial::setSolarAbsorptance(boost::optional<double> value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setSolarAbsorptance(value);
-}
+  boost::optional<double> OpaqueMaterial::heatCapacity() const {
+    return getImpl<detail::OpaqueMaterial_Impl>()->heatCapacity();
+  }
 
-bool OpaqueMaterial::setSolarReflectance(boost::optional<double> value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setSolarReflectance(value);
-}
+  /// @cond
+  OpaqueMaterial::OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl) : Material(std::move(impl)) {}
+  /// @endcond
 
-bool OpaqueMaterial::setVisibleAbsorptance(boost::optional<double> value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setVisibleAbsorptance(value);
-}
-
-bool OpaqueMaterial::setVisibleReflectance(boost::optional<double> value) {
-  return getImpl<detail::OpaqueMaterial_Impl>()->setVisibleReflectance(value);
-}
-
-boost::optional<double> OpaqueMaterial::heatCapacity() const {
-  return getImpl<detail::OpaqueMaterial_Impl>()->heatCapacity();
-}
-
-/// @cond
-OpaqueMaterial::OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl)
-  : Material(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

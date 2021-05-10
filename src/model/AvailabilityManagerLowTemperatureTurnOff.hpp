@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,79 +37,78 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
-class Schedule;
+  class Node;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerLowTemperatureTurnOff_Impl;
+    class AvailabilityManagerLowTemperatureTurnOff_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerLowTemperatureTurnOff is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:LowTemperatureTurnOff'. */
-class MODEL_API AvailabilityManagerLowTemperatureTurnOff : public AvailabilityManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AvailabilityManagerLowTemperatureTurnOff is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:LowTemperatureTurnOff'. */
+  class MODEL_API AvailabilityManagerLowTemperatureTurnOff : public AvailabilityManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AvailabilityManagerLowTemperatureTurnOff(const Model& model);
+    explicit AvailabilityManagerLowTemperatureTurnOff(const Model& model);
 
-  virtual ~AvailabilityManagerLowTemperatureTurnOff() {}
+    virtual ~AvailabilityManagerLowTemperatureTurnOff() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> sensorNode() const;
+    boost::optional<Node> sensorNode() const;
 
-  double temperature() const;
+    double temperature() const;
 
-  Schedule applicabilitySchedule() const;
+    Schedule applicabilitySchedule() const;
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setSensorNode(const Node& node);
 
-  bool setSensorNode(const Node& node);
+    void resetSensorNode();
 
-  void resetSensorNode();
+    bool setTemperature(double temperature);
 
-  bool setTemperature(double temperature);
+    bool setApplicabilitySchedule(Schedule& schedule);
 
-  bool setApplicabilitySchedule(Schedule& schedule);
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerLowTemperatureTurnOff_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AvailabilityManagerLowTemperatureTurnOff_Impl ImplType;
+    explicit AvailabilityManagerLowTemperatureTurnOff(std::shared_ptr<detail::AvailabilityManagerLowTemperatureTurnOff_Impl> impl);
 
-  explicit AvailabilityManagerLowTemperatureTurnOff(std::shared_ptr<detail::AvailabilityManagerLowTemperatureTurnOff_Impl> impl);
+    friend class detail::AvailabilityManagerLowTemperatureTurnOff_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerLowTemperatureTurnOff");
+  };
 
-  friend class detail::AvailabilityManagerLowTemperatureTurnOff_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerLowTemperatureTurnOff");
-};
+  /** \relates AvailabilityManagerLowTemperatureTurnOff*/
+  typedef boost::optional<AvailabilityManagerLowTemperatureTurnOff> OptionalAvailabilityManagerLowTemperatureTurnOff;
 
-/** \relates AvailabilityManagerLowTemperatureTurnOff*/
-typedef boost::optional<AvailabilityManagerLowTemperatureTurnOff> OptionalAvailabilityManagerLowTemperatureTurnOff;
+  /** \relates AvailabilityManagerLowTemperatureTurnOff*/
+  typedef std::vector<AvailabilityManagerLowTemperatureTurnOff> AvailabilityManagerLowTemperatureTurnOffVector;
 
-/** \relates AvailabilityManagerLowTemperatureTurnOff*/
-typedef std::vector<AvailabilityManagerLowTemperatureTurnOff> AvailabilityManagerLowTemperatureTurnOffVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AVAILABILITYMANAGERLOWTEMPERATURETURNOFF_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGERLOWTEMPERATURETURNOFF_HPP

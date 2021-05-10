@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,63 +43,43 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-AvailabilityManager_Impl::AvailabilityManager_Impl(IddObjectType type, Model_Impl* model)
-  : ModelObject_Impl(type,model)
-{
-}
+    AvailabilityManager_Impl::AvailabilityManager_Impl(IddObjectType type, Model_Impl* model) : ModelObject_Impl(type, model) {}
 
-AvailabilityManager_Impl::AvailabilityManager_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
-{
-}
+    AvailabilityManager_Impl::AvailabilityManager_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {}
 
-AvailabilityManager_Impl::AvailabilityManager_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle)
-  : ModelObject_Impl(other,model,keepHandle)
-{
-}
+    AvailabilityManager_Impl::AvailabilityManager_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-AvailabilityManager_Impl::AvailabilityManager_Impl(const AvailabilityManager_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandles)
-  : ModelObject_Impl(other,model,keepHandles)
-{
-}
+    AvailabilityManager_Impl::AvailabilityManager_Impl(const AvailabilityManager_Impl& other, Model_Impl* model, bool keepHandles)
+      : ModelObject_Impl(other, model, keepHandles) {}
 
-boost::optional<Loop> AvailabilityManager_Impl::loop() const {
-  auto t_handle = handle();
-  for( const auto & avmList : model().getConcreteModelObjects<AvailabilityManagerAssignmentList>() ) {
-    for( const auto & avm : avmList.availabilityManagers() ) {
-      if( avm.handle() == t_handle ) {
-        return avmList.loop();
+    boost::optional<Loop> AvailabilityManager_Impl::loop() const {
+      auto t_handle = handle();
+      for (const auto& avmList : model().getConcreteModelObjects<AvailabilityManagerAssignmentList>()) {
+        for (const auto& avm : avmList.availabilityManagers()) {
+          if (avm.handle() == t_handle) {
+            return avmList.loop();
+          }
+        }
       }
+      return boost::none;
     }
+
+  }  // namespace detail
+
+  AvailabilityManager::AvailabilityManager(IddObjectType type, const Model& model) : ModelObject(type, model) {
+    OS_ASSERT(getImpl<detail::AvailabilityManager_Impl>());
   }
-  return boost::none;
-}
 
-} // detail
+  AvailabilityManager::AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> p) : ModelObject(std::move(p)) {}
 
-AvailabilityManager::AvailabilityManager(IddObjectType type,const Model& model)
-  : ModelObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::AvailabilityManager_Impl>());
-}
+  boost::optional<Loop> AvailabilityManager::loop() const {
+    return getImpl<detail::AvailabilityManager_Impl>()->loop();
+  }
 
-AvailabilityManager::AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> p)
-  : ModelObject(std::move(p))
-{}
+}  // namespace model
 
-boost::optional<Loop> AvailabilityManager::loop() const {
-  return getImpl<detail::AvailabilityManager_Impl>()->loop();
-}
-
-
-} // model
-
-} // openstudio
-
+}  // namespace openstudio

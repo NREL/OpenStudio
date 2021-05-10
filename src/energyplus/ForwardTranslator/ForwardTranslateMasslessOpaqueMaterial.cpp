@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,7 +37,6 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -46,36 +45,35 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial( MasslessOpaqueMaterial & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
+  boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial(MasslessOpaqueMaterial& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
+    idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
 
-  idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
+    idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
 
-  idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
+    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
 
-  OptionalDouble d = modelObject.thermalAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
+    OptionalDouble d = modelObject.thermalAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
+    }
+
+    d = modelObject.solarAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
+    }
+
+    d = modelObject.visibleAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  d = modelObject.solarAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
-  }
+}  // namespace energyplus
 
-  d = modelObject.visibleAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

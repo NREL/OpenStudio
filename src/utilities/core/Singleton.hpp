@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,28 +28,28 @@
 ***********************************************************************************************************************/
 
 #ifndef UTILITIES_CORE_SINGLETON_HPP
-#define UTILITIES_CORE_SINGLETON_HPP
+#  define UTILITIES_CORE_SINGLETON_HPP
 
 // Warning: If T's constructor throws, instance() will return a null reference.
 
 namespace openstudio {
 
-  // Ripped from boost http://www.boost.org/doc/libs/1_42_0/libs/pool/doc/implementation/singleton.html
-  // T must be: no-throw default constructible and no-throw destructible
-  template <typename T>
-  class Singleton
-  {
-    public:
-    Singleton() = delete;
-    typedef T object_type;
+// Ripped from boost http://www.boost.org/doc/libs/1_42_0/libs/pool/doc/implementation/singleton.html
+// T must be: no-throw default constructible and no-throw destructible
+template <typename T>
+class Singleton
+{
+ public:
+  Singleton() = delete;
+  typedef T object_type;
 
-    // If, at any point (in user code), Singleton<T>::instance()
-    //  is called, then the following function is instantiated.
-    static object_type& instance() {
-      static object_type obj;
-      return obj;
-    }   
-  };
+  // If, at any point (in user code), Singleton<T>::instance()
+  //  is called, then the following function is instantiated.
+  static object_type& instance() {
+    static object_type obj;
+    return obj;
+  }
+};
 }  // namespace openstudio
 
 #endif  // UTILITIES_CORE_SINGLETON_HPP

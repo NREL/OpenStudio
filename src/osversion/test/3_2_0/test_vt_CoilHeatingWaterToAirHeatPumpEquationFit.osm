@@ -1,0 +1,27 @@
+
+OS:Version,
+  {42484f88-33f5-4967-b335-8e3a4f7d5cb2}, !- Handle
+  3.1.0;                                  !- Version Identifier
+
+OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
+  {9e8acb9c-992d-4bc5-8634-70338d44e7df}, !- Handle
+  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Heating Capacity {W}
+  4.5,                                    !- Rated Heating Coefficient of Performance {W/W}
+  -5.50102734,                            !- Heating Capacity Coefficient 1
+  -0.96688754,                            !- Heating Capacity Coefficient 2
+  7.70755007,                             !- Heating Capacity Coefficient 3
+  0.031928881,                            !- Heating Capacity Coefficient 4
+  0.028112522,                            !- Heating Capacity Coefficient 5
+  -7.47517858,                            !- Heating Power Consumption Coefficient 1
+  6.40876653,                             !- Heating Power Consumption Coefficient 2
+  1.99711665,                             !- Heating Power Consumption Coefficient 3
+  -0.050682973,                           !- Heating Power Consumption Coefficient 4
+  0.011385145;                            !- Heating Power Consumption Coefficient 5
+

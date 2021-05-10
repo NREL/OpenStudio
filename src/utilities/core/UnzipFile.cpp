@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,125 +30,96 @@
 #include "UnzipFile.hpp"
 #include <unzip.h>
 
-
 namespace openstudio {
 
-  UnzipFile::UnzipFile(const openstudio::path &filename)
-    : m_unzFile(unzOpen(openstudio::toString(filename).c_str()))
-  {
-    if (!m_unzFile) {
-      if (!openstudio::filesystem::exists(filename))
-      {
-        throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + " does not exist, could not be opened");
-      } else {
-        throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + "  exists, could not be opened");
-      }
+UnzipFile::UnzipFile(const openstudio::path& filename) : m_unzFile(unzOpen(openstudio::toString(filename).c_str())) {
+  if (!m_unzFile) {
+    if (!openstudio::filesystem::exists(filename)) {
+      throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + " does not exist, could not be opened");
+    } else {
+      throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + "  exists, could not be opened");
     }
   }
-
-  UnzipFile::~UnzipFile()
-  {
-    unzClose(m_unzFile);
-  }
-
-  std::vector<openstudio::path> UnzipFile::extractAllFiles(const openstudio::path &outputPath) const
-  {
-    std::vector<openstudio::path> files = listFiles();
-
-    std::vector<openstudio::path> retfiles;
-
-    for (std::vector<openstudio::path>::const_iterator itr = files.begin();
-         itr != files.end();
-         ++itr)
-    {
-      if (toString(itr->filename())=="." || toString(itr->filename())=="/")
-      {
-        // This is a directory - skip it
-      } else {
-        retfiles.push_back(extractFile(*itr, outputPath));
-      }
-    }
-
-    return retfiles;
-  }
-
-  openstudio::path UnzipFile::extractFile(const openstudio::path &filename, const openstudio::path &outputPath) const
-  {
-    if (unzLocateFile(m_unzFile, openstudio::toString(filename).c_str(), 1) != UNZ_OK)
-    {
-      throw std::runtime_error("File does not exist in archive: " + openstudio::toString(filename));
-    }
-
-    if (unzOpenCurrentFile(m_unzFile) != UNZ_OK)
-    {
-      throw std::runtime_error("Unable to open file in archive: " + openstudio::toString(filename));
-    }
-
-    try {
-      bool cont = true;
-
-      openstudio::path createdFile = outputPath / filename;
-      openstudio::filesystem::create_directories(createdFile.parent_path());
-
-      openstudio::filesystem::ofstream file(createdFile, std::ios_base::trunc | std::ios_base::binary);
-      while (cont)
-      {
-        std::vector<char> buffer(1024);
-        int bytesread = unzReadCurrentFile(m_unzFile, &buffer.front(), buffer.size());
-
-        if (bytesread == 0)
-        {
-          cont = false;
-        }
-        else if (bytesread < 0)
-        {
-          throw std::runtime_error("Unable to read from file");
-        }
-        else
-        {
-          file.write(&buffer.front(), bytesread);
-          if (!file.good())
-          {
-            throw std::runtime_error("Error writing to output file: " + toString(createdFile));
-          }
-        }
-      }
-      file.close();
-
-      return createdFile;
-    } catch (...) {
-      unzCloseCurrentFile(m_unzFile);
-      throw;
-    }
-
-    unzCloseCurrentFile(m_unzFile);
-
-  }
-
-
-  std::vector<openstudio::path> UnzipFile::listFiles() const
-  {
-    bool cont = unzGoToFirstFile(m_unzFile) == UNZ_OK;
-
-    std::vector<openstudio::path> paths;
-
-    do {
-      unz_file_info file_info;
-      std::vector<char> filename(300);
-
-      unzGetCurrentFileInfo(m_unzFile, &file_info,
-          &filename.front(), filename.size(),
-          nullptr,0,
-          nullptr,0);
-
-      paths.push_back(openstudio::toPath(std::string(&filename.front(), file_info.size_filename)));
-      cont = unzGoToNextFile(m_unzFile) == UNZ_OK;
-    } while (cont);
-
-    return paths;
-  }
-
-
 }
 
+UnzipFile::~UnzipFile() {
+  unzClose(m_unzFile);
+}
 
+std::vector<openstudio::path> UnzipFile::extractAllFiles(const openstudio::path& outputPath) const {
+  std::vector<openstudio::path> files = listFiles();
+
+  std::vector<openstudio::path> retfiles;
+
+  for (std::vector<openstudio::path>::const_iterator itr = files.begin(); itr != files.end(); ++itr) {
+    if (toString(itr->filename()) == "." || toString(itr->filename()) == "/") {
+      // This is a directory - skip it
+    } else {
+      retfiles.push_back(extractFile(*itr, outputPath));
+    }
+  }
+
+  return retfiles;
+}
+
+openstudio::path UnzipFile::extractFile(const openstudio::path& filename, const openstudio::path& outputPath) const {
+  if (unzLocateFile(m_unzFile, openstudio::toString(filename).c_str(), 1) != UNZ_OK) {
+    throw std::runtime_error("File does not exist in archive: " + openstudio::toString(filename));
+  }
+
+  if (unzOpenCurrentFile(m_unzFile) != UNZ_OK) {
+    throw std::runtime_error("Unable to open file in archive: " + openstudio::toString(filename));
+  }
+
+  try {
+    bool cont = true;
+
+    openstudio::path createdFile = outputPath / filename;
+    openstudio::filesystem::create_directories(createdFile.parent_path());
+
+    openstudio::filesystem::ofstream file(createdFile, std::ios_base::trunc | std::ios_base::binary);
+    while (cont) {
+      std::vector<char> buffer(1024);
+      int bytesread = unzReadCurrentFile(m_unzFile, &buffer.front(), buffer.size());
+
+      if (bytesread == 0) {
+        cont = false;
+      } else if (bytesread < 0) {
+        throw std::runtime_error("Unable to read from file");
+      } else {
+        file.write(&buffer.front(), bytesread);
+        if (!file.good()) {
+          throw std::runtime_error("Error writing to output file: " + toString(createdFile));
+        }
+      }
+    }
+    file.close();
+
+    return createdFile;
+  } catch (...) {
+    unzCloseCurrentFile(m_unzFile);
+    throw;
+  }
+
+  unzCloseCurrentFile(m_unzFile);
+}
+
+std::vector<openstudio::path> UnzipFile::listFiles() const {
+  bool cont = unzGoToFirstFile(m_unzFile) == UNZ_OK;
+
+  std::vector<openstudio::path> paths;
+
+  do {
+    unz_file_info file_info;
+    std::vector<char> filename(300);
+
+    unzGetCurrentFileInfo(m_unzFile, &file_info, &filename.front(), filename.size(), nullptr, 0, nullptr, 0);
+
+    paths.push_back(openstudio::toPath(std::string(&filename.front(), file_info.size_filename)));
+    cont = unzGoToNextFile(m_unzFile) == UNZ_OK;
+  } while (cont);
+
+  return paths;
+}
+
+}  // namespace openstudio

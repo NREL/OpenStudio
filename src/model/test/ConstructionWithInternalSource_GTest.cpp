@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,8 +42,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ConstructionWithInternalSource_DefaultConstructed)
-{
+TEST_F(ModelFixture, ConstructionWithInternalSource_DefaultConstructed) {
   Model model;
 
   ConstructionWithInternalSource construction(model);
@@ -53,10 +52,10 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_DefaultConstructed)
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
   EXPECT_EQ(1, construction.dimensionsForTheCTFCalculation());
   EXPECT_EQ(0.154, construction.tubeSpacing());
+  EXPECT_EQ(0, construction.twoDimensionalTemperatureCalculationPosition());
 }
 
-TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
-{
+TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers) {
   Model model;
 
   // Create some materials
@@ -89,6 +88,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
   EXPECT_EQ(1, construction.dimensionsForTheCTFCalculation());
   EXPECT_EQ(0.154, construction.tubeSpacing());
+  EXPECT_EQ(0, construction.twoDimensionalTemperatureCalculationPosition());
 
   // check that we can't mess up the construction
   EXPECT_FALSE(construction.setSourcePresentAfterLayerNumber(3));
@@ -103,7 +103,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
   EXPECT_EQ(1u, construction.numLayers());
 
   MaterialVector testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(1),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(1), testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
 
   testLayers.push_back(interior);
@@ -113,7 +113,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
   EXPECT_EQ(3u, construction.numLayers());
 
   testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(3),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(3), testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
   EXPECT_TRUE(testLayers[1] == interior);
   EXPECT_TRUE(testLayers[2] == exterior);
@@ -131,7 +131,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
   EXPECT_EQ(2u, construction.numLayers());
 
   testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(2),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(2), testLayers.size());
   EXPECT_TRUE(testLayers[0] == interior);
   EXPECT_TRUE(testLayers[1] == exterior);
 
@@ -149,8 +149,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
   EXPECT_THROW((ConstructionWithInternalSource(layers)), std::exception);
 }
 
-TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInternalSource_1)
-{
+TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInternalSource_1) {
   Model model;
 
   // Create some materials
@@ -170,8 +169,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInter
   EXPECT_EQ(construction.handle(), construction2.handle());
 }
 
-TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInternalSource_2)
-{
+TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInternalSource_2) {
   Model model;
 
   // Create some materials
@@ -192,7 +190,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInter
   EXPECT_NE(construction.handle(), construction2.handle());
 
   MaterialVector testLayers = construction2.layers();
-  ASSERT_EQ(static_cast<unsigned>(2),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(2), testLayers.size());
   EXPECT_TRUE(testLayers[0] == interior);
   EXPECT_TRUE(testLayers[1] == exterior);
 
@@ -201,4 +199,3 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInter
   EXPECT_NE(construction.handle(), construction3.handle());
   EXPECT_EQ(construction2.handle(), construction3.handle());
 }
-

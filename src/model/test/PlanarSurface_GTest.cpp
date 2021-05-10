@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,50 +39,49 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, PlanarSurface_FilmResistanceConversions)
-{
+TEST_F(ModelFixture, PlanarSurface_FilmResistanceConversions) {
   Quantity q;
   OptionalQuantity qc;
 
-  q = createQuantity(0.61,"ft^2*R*h/Btu").get();
-  qc = QuantityConverter::instance().convert(q,UnitSystem(UnitSystem::SI));
+  q = createQuantity(0.61, "ft^2*R*h/Btu").get();
+  qc = QuantityConverter::instance().convert(q, UnitSystem(UnitSystem::SI));
   ASSERT_TRUE(qc);
-  EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
-  EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsUpward),1.0E-8);
+  EXPECT_EQ("s^3*K/kg", qc->standardUnitsString());
+  EXPECT_NEAR(qc->value(), PlanarSurface::filmResistance(FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsUpward), 1.0E-8);
 
-  q = createQuantity(0.62,"ft^2*R*h/Btu").get();
-  qc = QuantityConverter::instance().convert(q,UnitSystem(UnitSystem::SI));
+  q = createQuantity(0.62, "ft^2*R*h/Btu").get();
+  qc = QuantityConverter::instance().convert(q, UnitSystem(UnitSystem::SI));
   ASSERT_TRUE(qc);
-  EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
-  EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsUpward),1.0E-8);
+  EXPECT_EQ("s^3*K/kg", qc->standardUnitsString());
+  EXPECT_NEAR(qc->value(), PlanarSurface::filmResistance(FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsUpward), 1.0E-8);
 
-  q = createQuantity(0.68,"ft^2*R*h/Btu").get();
-  qc = QuantityConverter::instance().convert(q,UnitSystem(UnitSystem::SI));
+  q = createQuantity(0.68, "ft^2*R*h/Btu").get();
+  qc = QuantityConverter::instance().convert(q, UnitSystem(UnitSystem::SI));
   ASSERT_TRUE(qc);
-  EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
-  EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::StillAir_VerticalSurface),1.0E-8);
+  EXPECT_EQ("s^3*K/kg", qc->standardUnitsString());
+  EXPECT_NEAR(qc->value(), PlanarSurface::filmResistance(FilmResistanceType::StillAir_VerticalSurface), 1.0E-8);
 
-  q = createQuantity(0.76,"ft^2*R*h/Btu").get();
-  qc = QuantityConverter::instance().convert(q,UnitSystem(UnitSystem::SI));
+  q = createQuantity(0.76, "ft^2*R*h/Btu").get();
+  qc = QuantityConverter::instance().convert(q, UnitSystem(UnitSystem::SI));
   ASSERT_TRUE(qc);
-  EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
-  EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsDownward),1.0E-8);
+  EXPECT_EQ("s^3*K/kg", qc->standardUnitsString());
+  EXPECT_NEAR(qc->value(), PlanarSurface::filmResistance(FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsDownward), 1.0E-8);
 
-  q = createQuantity(0.92,"ft^2*R*h/Btu").get();
-  qc = QuantityConverter::instance().convert(q,UnitSystem(UnitSystem::SI));
+  q = createQuantity(0.92, "ft^2*R*h/Btu").get();
+  qc = QuantityConverter::instance().convert(q, UnitSystem(UnitSystem::SI));
   ASSERT_TRUE(qc);
-  EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
-  EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsDownward),1.0E-8);
+  EXPECT_EQ("s^3*K/kg", qc->standardUnitsString());
+  EXPECT_NEAR(qc->value(), PlanarSurface::filmResistance(FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsDownward), 1.0E-8);
 
-  q = createQuantity(0.17,"ft^2*R*h/Btu").get();
-  qc = QuantityConverter::instance().convert(q,UnitSystem(UnitSystem::SI));
+  q = createQuantity(0.17, "ft^2*R*h/Btu").get();
+  qc = QuantityConverter::instance().convert(q, UnitSystem(UnitSystem::SI));
   ASSERT_TRUE(qc);
-  EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
-  EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::MovingAir_15mph),1.0E-8);
+  EXPECT_EQ("s^3*K/kg", qc->standardUnitsString());
+  EXPECT_NEAR(qc->value(), PlanarSurface::filmResistance(FilmResistanceType::MovingAir_15mph), 1.0E-8);
 
-  q = createQuantity(0.25,"ft^2*R*h/Btu").get();
-  qc = QuantityConverter::instance().convert(q,UnitSystem(UnitSystem::SI));
+  q = createQuantity(0.25, "ft^2*R*h/Btu").get();
+  qc = QuantityConverter::instance().convert(q, UnitSystem(UnitSystem::SI));
   ASSERT_TRUE(qc);
-  EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
-  EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::MovingAir_7p5mph),1.0E-8);
+  EXPECT_EQ("s^3*K/kg", qc->standardUnitsString());
+  EXPECT_NEAR(qc->value(), PlanarSurface::filmResistance(FilmResistanceType::MovingAir_7p5mph), 1.0E-8);
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,36 +44,40 @@
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../ModelExtensibleGroup.hpp"
+#include <utilities/idd/OS_PortList_FieldEnums.hxx>
+
+using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_AirTerminalSingleDuctConstantVolumeFourPipeInduction)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_AirTerminalSingleDuctConstantVolumeFourPipeInduction) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    CoilHeatingWater heatingCoil(m,s);
-    AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      CoilHeatingWater heatingCoil(m, s);
+      AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m, heatingCoil);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_addToNode) {
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  CoilHeatingWater heatingCoil(m,s);
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
+  CoilHeatingWater heatingCoil(m, s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m, heatingCoil);
 
   AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -83,27 +87,27 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_addToNo
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone =
+    testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
-  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)10, airLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_remove)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_remove) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  CoilHeatingWater heatingCoil(m,s);
-  CoilCoolingWater coolingCoil(m,s);
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
+  CoilHeatingWater heatingCoil(m, s);
+  CoilCoolingWater coolingCoil(m, s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m, heatingCoil);
 
   testObject.setCoolingCoil(coolingCoil);
 
@@ -113,35 +117,38 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_remove
 
   // KSB: I don't think it is the greatest idea to test these private methods,
   // but this area has resulted in a simulation error so it needs to be tested
-  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+  // (Note: JM 2021-03-02 These aren't private anymore)
+  EXPECT_EQ(0u, thermalZone.exhaustPortList().numExtensibleGroups());
+  EXPECT_EQ(0u, thermalZone.inletPortList().numExtensibleGroups());
 
   airLoop.addBranchForZone(thermalZone, testObject);
   plantLoop.addDemandBranchForComponent(heatingCoil);
   plantLoop.addDemandBranchForComponent(coolingCoil);
 
-  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+  ASSERT_EQ(1u, thermalZone.exhaustPortList().numExtensibleGroups());
+  EXPECT_TRUE(thermalZone.exhaustPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
+  ASSERT_EQ(1u, thermalZone.inletPortList().numExtensibleGroups());
+  EXPECT_TRUE(thermalZone.inletPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
 
   EXPECT_EQ((unsigned)10, plantLoop.demandComponents().size());
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
 
   testObject.remove();
 
-  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+  EXPECT_EQ(0u, thermalZone.exhaustPortList().numExtensibleGroups());
+  ASSERT_EQ(1u, thermalZone.inletPortList().numExtensibleGroups());
+  EXPECT_TRUE(thermalZone.inletPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
 
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  CoilHeatingWater heatingCoil(m,s);
-  CoilCoolingWater coolingCoil(m,s);
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
+  CoilHeatingWater heatingCoil(m, s);
+  CoilCoolingWater coolingCoil(m, s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m, heatingCoil);
 
   testObject.setCoolingCoil(coolingCoil);
 
@@ -153,33 +160,35 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
   plantLoop.addDemandBranchForComponent(heatingCoil);
   plantLoop.addDemandBranchForComponent(coolingCoil);
 
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone =
+    testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   ASSERT_NO_THROW(testObjectClone.heatingCoil());
   ASSERT_TRUE(testObjectClone.coolingCoil());
   EXPECT_FALSE(testObjectClone.airLoopHVAC());
 
-  EXPECT_NE(testObjectClone.heatingCoil(),testObject.heatingCoil());
-  EXPECT_NE(testObjectClone.coolingCoil().get(),testObject.coolingCoil().get());
+  EXPECT_NE(testObjectClone.heatingCoil(), testObject.heatingCoil());
+  EXPECT_NE(testObjectClone.coolingCoil().get(), testObject.coolingCoil().get());
 
   Model m2;
 
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone2 = testObject.clone(m2).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone2 =
+    testObject.clone(m2).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   ASSERT_NO_THROW(testObjectClone2.heatingCoil());
   ASSERT_TRUE(testObjectClone2.coolingCoil());
   EXPECT_FALSE(testObjectClone.airLoopHVAC());
 
-  EXPECT_NE(testObjectClone2.heatingCoil(),testObject.heatingCoil());
-  EXPECT_NE(testObjectClone2.coolingCoil().get(),testObject.coolingCoil().get());
+  EXPECT_NE(testObjectClone2.heatingCoil(), testObject.heatingCoil());
+  EXPECT_NE(testObjectClone2.coolingCoil().get(), testObject.coolingCoil().get());
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_connectSecondaryAirInlet_regularCase_2033) {
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_connectSecondaryAirInlet_regularCase_2033) {
 
   // Test for #2033
   // Base case: works fine
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  CoilHeatingWater heatingCoil(m,s);
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m,heatingCoil);
+  CoilHeatingWater heatingCoil(m, s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m, heatingCoil);
 
   ThermalZone zone(m);
   AirLoopHVAC airLoopHVAC(m);
@@ -188,20 +197,20 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_connect
   EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
 
   // Connect simulateanously the branch and atu
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,atu));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone, atu));
 
   ASSERT_TRUE(atu.inducedAirInletNode());
   ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
   EXPECT_EQ(atu.inducedAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_connectSecondaryAirInlet_atuFirst_2033) {
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_connectSecondaryAirInlet_atuFirst_2033) {
 
   // Test for #2033: When you connect the atu first, then add a zone it should work as well.
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  CoilHeatingWater heatingCoil(m,s);
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m,heatingCoil);
+  CoilHeatingWater heatingCoil(m, s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m, heatingCoil);
   AirLoopHVAC airLoopHVAC(m);
 
   // Connect atu only first
@@ -215,7 +224,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_connect
 
     // Now add zone (this was the problematic case)
     EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone));
-    ASSERT_TRUE(atu.inducedAirInletNode());   // <===== Actual test is here
+    ASSERT_TRUE(atu.inducedAirInletNode());  // <===== Actual test is here
     ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
     EXPECT_EQ(atu.inducedAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
   }

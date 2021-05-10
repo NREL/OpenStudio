@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,29 +49,26 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, ExteriorWaterEquipment_ExteriorWaterEquipment)
-{
+TEST_F(ModelFixture, ExteriorWaterEquipment_ExteriorWaterEquipment) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    // make a new waterEqs object
-    ExteriorWaterEquipmentDefinition definition(model);
-    ExteriorWaterEquipment waterEq(definition);
-    EXPECT_EQ(2u, model.numObjects());
+  ASSERT_EXIT(
+    {
+      Model model;
+      // make a new waterEqs object
+      ExteriorWaterEquipmentDefinition definition(model);
+      ExteriorWaterEquipment waterEq(definition);
+      EXPECT_EQ(2u, model.numObjects());
 
-    EXPECT_EQ(definition.handle(), waterEq.exteriorWaterEquipmentDefinition().handle());
+      EXPECT_EQ(definition.handle(), waterEq.exteriorWaterEquipmentDefinition().handle());
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 // Test the various setters and getters
-TEST_F(ModelFixture, ExteriorWaterEquipment_SettersGetters)
-{
+TEST_F(ModelFixture, ExteriorWaterEquipment_SettersGetters) {
 
   Model model;
 
@@ -113,10 +110,8 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_SettersGetters)
   EXPECT_EQ(facility.handle(), waterEq.facility().handle());
 }
 
-
 /* Checks that if the Equipment is removed, the Definition stays */
-TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveEquipment)
-{
+TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveEquipment) {
   {
     Model model;
 
@@ -134,7 +129,6 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveEquipment)
     EXPECT_EQ(0u, model.getModelObjects<ExteriorWaterEquipment>().size());
     EXPECT_EQ(1u, model.getModelObjects<ExteriorWaterEquipmentDefinition>().size());
     EXPECT_EQ(3u, model.numObjects());
-
   }
 
   {
@@ -159,8 +153,7 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveEquipment)
 }
 
 /* Checks that if the Definition is removed, all equipment is removed too */
-TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveDefinition)
-{
+TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveDefinition) {
   {
     Model model;
 
@@ -204,8 +197,7 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_RemoveDefinition)
 }
 
 /* If you clone the equipment, the definition comes with, and vice versa */
-TEST_F(ModelFixture, ExteriorWaterEquipment_Clone)
-{
+TEST_F(ModelFixture, ExteriorWaterEquipment_Clone) {
   Model model;
 
   // make a new waterEqs object
@@ -228,11 +220,9 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_Clone)
     waterEq.clone(model2);
     EXPECT_EQ(4u, model2.numObjects());
   }
-
 }
 
-TEST_F(ModelFixture, ExteriorWaterEquipment_Costs)
-{
+TEST_F(ModelFixture, ExteriorWaterEquipment_Costs) {
   Model model;
 
   // make a new waterEqs object
@@ -248,7 +238,7 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_Costs)
   EXPECT_EQ(4u, model.numObjects());
 
   // This will be useful if we implement the lifecyclecost for this
-/*
+  /*
  *  // clone definition into new model
  *  {
  *    Model model2;

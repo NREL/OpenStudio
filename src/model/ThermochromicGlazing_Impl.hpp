@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,126 +37,120 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ThermochromicGlazing_Impl is a Glazing_Impl that is the implementation class for ThermochromicGlazing.*/
-  class MODEL_API ThermochromicGlazing_Impl : public Glazing_Impl {
+    /** ThermochromicGlazing_Impl is a Glazing_Impl that is the implementation class for ThermochromicGlazing.*/
+    class MODEL_API ThermochromicGlazing_Impl : public Glazing_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ThermochromicGlazing_Impl(const IdfObject& idfObject,
-                              Model_Impl* model,
-                              bool keepHandle);
+      ThermochromicGlazing_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ThermochromicGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      ThermochromicGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ThermochromicGlazing_Impl(const ThermochromicGlazing_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      ThermochromicGlazing_Impl(const ThermochromicGlazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ThermochromicGlazing_Impl() {}
+      virtual ~ThermochromicGlazing_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual double thickness() const override;
+      virtual double thickness() const override;
 
-    virtual double thermalConductivity() const;
+      virtual double thermalConductivity() const;
 
-    virtual double thermalConductance() const;
+      virtual double thermalConductance() const;
 
-    virtual double thermalResistivity() const;
+      virtual double thermalResistivity() const;
 
-    virtual double thermalResistance() const;
+      virtual double thermalResistance() const;
 
-    virtual double thermalTransmittance() const;
+      virtual double thermalTransmittance() const;
 
-    virtual double thermalAbsorptance() const;
+      virtual double thermalAbsorptance() const;
 
-    virtual double thermalReflectance() const;
+      virtual double thermalReflectance() const;
 
-    virtual double solarTransmittance() const;
+      virtual double solarTransmittance() const;
 
-    virtual double solarAbsorptance() const;
+      virtual double solarAbsorptance() const;
 
-    virtual double solarReflectance() const;
+      virtual double solarReflectance() const;
 
-    virtual boost::optional<double> getVisibleTransmittance() const override;
+      virtual boost::optional<double> getVisibleTransmittance() const override;
 
-    virtual double visibleAbsorptance() const;
+      virtual double visibleAbsorptance() const;
 
-    virtual double visibleReflectance() const;
+      virtual double visibleReflectance() const;
 
-    double opticalDataTemperature() const;
+      double opticalDataTemperature() const;
 
-    // TODO: Handle this object's extensible fields.
+      // TODO: Handle this object's extensible fields.
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setThickness(double value) override;
+      virtual bool setThickness(double value) override;
 
-    virtual bool setThermalConductivity(double value);
+      virtual bool setThermalConductivity(double value);
 
-    virtual bool setThermalConductance(double value);
+      virtual bool setThermalConductance(double value);
 
-    virtual bool setThermalResistivity(double value);
+      virtual bool setThermalResistivity(double value);
 
-    virtual bool setThermalResistance(double value);
+      virtual bool setThermalResistance(double value);
 
-    virtual bool setThermalTransmittance(double value);
+      virtual bool setThermalTransmittance(double value);
 
-    virtual bool setThermalAbsorptance(double value);
+      virtual bool setThermalAbsorptance(double value);
 
-    virtual bool setThermalReflectance(double value);
+      virtual bool setThermalReflectance(double value);
 
-    virtual bool setSolarTransmittance(double value);
+      virtual bool setSolarTransmittance(double value);
 
-    virtual bool setSolarAbsorptance(double value);
+      virtual bool setSolarAbsorptance(double value);
 
-    virtual bool setSolarReflectance(double value);
+      virtual bool setSolarReflectance(double value);
 
-    virtual bool setVisibleTransmittance(double value);
+      virtual bool setVisibleTransmittance(double value);
 
-    virtual bool setVisibleAbsorptance(double value);
+      virtual bool setVisibleAbsorptance(double value);
 
-    virtual bool setVisibleReflectance(double value);
+      virtual bool setVisibleReflectance(double value);
 
-    bool setOpticalDataTemperature(double value);
+      bool setOpticalDataTemperature(double value);
 
-    // TODO: Handle this object's extensible fields.
+      // TODO: Handle this object's extensible fields.
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ThermochromicGlazing");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ThermochromicGlazing");
 
-    std::vector<Glazing> mf_glazings() const;
+      std::vector<Glazing> mf_glazings() const;
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_THERMOCHROMICGLAZING_IMPL_HPP
+#endif  // MODEL_THERMOCHROMICGLAZING_IMPL_HPP

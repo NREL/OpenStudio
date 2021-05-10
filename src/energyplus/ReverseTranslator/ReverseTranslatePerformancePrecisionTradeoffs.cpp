@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,43 +44,44 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translatePerformancePrecisionTradeoffs( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::PerformancePrecisionTradeoffs ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: PerformancePrecisionTradeoffs");
-    return boost::none;
-  }
-
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffs = m_model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
-
-  OptionalString optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions);
-  if (optS) {
-    std::string temp = *optS;
-    boost::to_lower(temp);
-    if ( temp == "no" ) {
-      performancePrecisionTradeoffs.setUseCoilDirectSolutions(false);
-    } else {
-      performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
+  OptionalModelObject ReverseTranslator::translatePerformancePrecisionTradeoffs(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::PerformancePrecisionTradeoffs) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: PerformancePrecisionTradeoffs");
+      return boost::none;
     }
+
+    PerformancePrecisionTradeoffs performancePrecisionTradeoffs = m_model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
+
+    OptionalString optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        performancePrecisionTradeoffs.setUseCoilDirectSolutions(false);
+      } else {
+        performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
+      }
+    }
+
+    if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm))) {
+      performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm(optS.get());
+    }
+
+    if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode))) {
+      performancePrecisionTradeoffs.setOverrideMode(optS.get());
+    }
+
+    if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff)) {
+      performancePrecisionTradeoffs.setMaxZoneTempDiff(optD.get());
+    }
+
+    if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp)) {
+      performancePrecisionTradeoffs.setMaxAllowedDelTemp(optD.get());
+    }
+
+    return performancePrecisionTradeoffs;
   }
 
-  if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm))) {
-    performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm(optS.get());
-  }
+}  // namespace energyplus
 
-  if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode))) {
-    performancePrecisionTradeoffs.setOverrideMode(optS.get());
-  }
-
-  if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff)) {
-    performancePrecisionTradeoffs.setMaxZoneTempDiff(optD.get());
-  }
-
-
-  return performancePrecisionTradeoffs;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

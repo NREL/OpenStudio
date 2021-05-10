@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,89 +34,86 @@
 #include "ParentObject.hpp"
 #include "../utilities/core/Optional.hpp"
 
-namespace openstudio{
-namespace model{
+namespace openstudio {
+namespace model {
 
-namespace detail{
-  class LifeCycleCostUsePriceEscalation_Impl;
-}
+  namespace detail {
+    class LifeCycleCostUsePriceEscalation_Impl;
+  }
 
-/** LifeCycleCostUsePriceEscalation derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:LifeCycleCost:UsePriceEscalation".
+  /** LifeCycleCostUsePriceEscalation derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:LifeCycleCost:UsePriceEscalation".
  *
  *  LifeCycleCostUsePriceEscalation specifies escalation about energy and water costs separately from general inflation assumptions.
  */
-class MODEL_API LifeCycleCostUsePriceEscalation : public ParentObject{
+  class MODEL_API LifeCycleCostUsePriceEscalation : public ParentObject
+  {
 
-public:
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    virtual ~LifeCycleCostUsePriceEscalation() {}
 
-  /** @name Constructors and Destructors */
-  //@{
-  virtual ~LifeCycleCostUsePriceEscalation() {}
+    /// Constructs a new LifeCycleCostUsePriceEscalation object in the model.
+    explicit LifeCycleCostUsePriceEscalation(const Model& model);
 
-  /// Constructs a new LifeCycleCostUsePriceEscalation object in the model.
-  explicit LifeCycleCostUsePriceEscalation(const Model& model);
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    boost::optional<std::string> resource() const;
 
-  boost::optional<std::string> resource() const;
+    boost::optional<std::string> escalationStartMonth() const;
 
-  boost::optional<std::string> escalationStartMonth() const;
+    boost::optional<int> escalationStartYear() const;
 
-  boost::optional<int> escalationStartYear() const;
+    /** Get the escalation for the year at index. Indexing starts at 0. */
+    boost::optional<double> yearEscalation(unsigned index) const;
 
-  /** Get the escalation for the year at index. Indexing starts at 0. */
-  boost::optional<double> yearEscalation(unsigned index) const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setResource(const std::string& str);
 
-  bool setResource(const std::string& str);
+    bool setEscalationStartMonth(const std::string& str);
 
-  bool setEscalationStartMonth(const std::string& str);
+    /** Set the escalation for the year at index. Indexing starts at 0. */
+    bool setEscalationStartYear(int num);
 
-  /** Set the escalation for the year at index. Indexing starts at 0. */
-  bool setEscalationStartYear(int num);
+    bool setYearEscalation(unsigned index, double num);
 
-  bool setYearEscalation(unsigned index, double num);
+    //@}
 
-  //@}
+    /// Returns the IddObjectType.
+    static IddObjectType iddObjectType();
 
-  /// Returns the IddObjectType.
-  static IddObjectType iddObjectType();
+    /// Returns the number of years for which escalation data is specified, e.g. the number of extensible fields.
+    unsigned numYears() const;
 
-  /// Returns the number of years for which escalation data is specified, e.g. the number of extensible fields.
-  unsigned numYears() const;
+   protected:
+    /// @cond
 
-protected:
+    typedef detail::LifeCycleCostUsePriceEscalation_Impl ImplType;
 
-  /// @cond
+    friend class Model;
+    friend class IdfObject;
 
-  typedef detail::LifeCycleCostUsePriceEscalation_Impl ImplType;
+    // constructor
+    explicit LifeCycleCostUsePriceEscalation(std::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl);
 
-  friend class Model;
-  friend class IdfObject;
+   private:
+    REGISTER_LOGGER("openstudio.model.LifeCycleCostUsePriceEscalation");
 
-  // constructor
-  explicit LifeCycleCostUsePriceEscalation(std::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl);
+    /// @endcond
+  };
 
-private:
+  /** \relates LifeCycleCostUsePriceEscalation */
+  typedef boost::optional<LifeCycleCostUsePriceEscalation> OptionalLifeCycleCostUsePriceEscalation;
 
-  REGISTER_LOGGER("openstudio.model.LifeCycleCostUsePriceEscalation");
+  /** \relates LifeCycleCostUsePriceEscalation */
+  typedef std::vector<LifeCycleCostUsePriceEscalation> LifeCycleCostUsePriceEscalationVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates LifeCycleCostUsePriceEscalation */
-typedef boost::optional<LifeCycleCostUsePriceEscalation> OptionalLifeCycleCostUsePriceEscalation;
-
-/** \relates LifeCycleCostUsePriceEscalation */
-typedef std::vector<LifeCycleCostUsePriceEscalation> LifeCycleCostUsePriceEscalationVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_LIFECYCLECOSTUSEPRICEESCALATION_HPP
+#endif  // MODEL_LIFECYCLECOSTUSEPRICEESCALATION_HPP

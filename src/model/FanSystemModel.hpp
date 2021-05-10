@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,20 +37,21 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
-class ThermalZone;
-class AirflowNetworkFan;
+  class Schedule;
+  class Curve;
+  class ThermalZone;
+  class AirflowNetworkFan;
 
-namespace detail {
+  namespace detail {
 
-  class FanSystemModel_Impl;
+    class FanSystemModel_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** This class implements a speed */
-class MODEL_API FanSystemModelSpeed {
-  public:
+  /** This class implements a speed */
+  class MODEL_API FanSystemModelSpeed
+  {
+   public:
     /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
     FanSystemModelSpeed(double flowFraction, double electricPowerFraction);
 
@@ -60,176 +61,174 @@ class MODEL_API FanSystemModelSpeed {
     // this operator is to support sorting of TableMultiVariableLookupPoint in the order required by EnergyPlus Table:Lookup object
     bool operator<(const FanSystemModelSpeed& other) const;
 
-  private:
+   private:
     double m_flowFraction;
     double m_electricPowerFraction;
     REGISTER_LOGGER("openstudio.model.FanSystemModelSpeed");
-};
+  };
 
-// Overload operator<<
-MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed);
+  // Overload operator<<
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed);
 
+  /** FanSystemModel is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:SystemModel'. */
+  class MODEL_API FanSystemModel : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-/** FanSystemModel is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:SystemModel'. */
-class MODEL_API FanSystemModel : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    explicit FanSystemModel(const Model& model);
 
-  explicit FanSystemModel(const Model& model);
+    virtual ~FanSystemModel() {}
 
-  virtual ~FanSystemModel() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> speedControlMethodValues();
 
-  static std::vector<std::string> speedControlMethodValues();
+    static std::vector<std::string> designPowerSizingMethodValues();
 
-  static std::vector<std::string> designPowerSizingMethodValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    Schedule availabilitySchedule() const;
 
-  Schedule availabilitySchedule() const;
+    boost::optional<double> designMaximumAirFlowRate() const;
+    bool isDesignMaximumAirFlowRateAutosized() const;
+    boost::optional<double> autosizedDesignMaximumAirFlowRate();
 
-  boost::optional<double> designMaximumAirFlowRate() const;
-  bool isDesignMaximumAirFlowRateAutosized() const;
-  boost::optional <double> autosizedDesignMaximumAirFlowRate();
+    std::string speedControlMethod() const;
 
-  std::string speedControlMethod() const;
+    double electricPowerMinimumFlowRateFraction() const;
 
-  double electricPowerMinimumFlowRateFraction() const;
+    double designPressureRise() const;
 
-  double designPressureRise() const;
+    double motorEfficiency() const;
 
-  double motorEfficiency() const;
+    double motorInAirStreamFraction() const;
 
-  double motorInAirStreamFraction() const;
+    boost::optional<double> designElectricPowerConsumption() const;
+    bool isDesignElectricPowerConsumptionAutosized() const;
+    boost::optional<double> autosizedDesignElectricPowerConsumption();
 
-  boost::optional<double> designElectricPowerConsumption() const;
-  bool isDesignElectricPowerConsumptionAutosized() const;
-  boost::optional <double> autosizedDesignElectricPowerConsumption();
+    std::string designPowerSizingMethod() const;
 
-  std::string designPowerSizingMethod() const;
+    double electricPowerPerUnitFlowRate() const;
 
-  double electricPowerPerUnitFlowRate() const;
+    double electricPowerPerUnitFlowRatePerUnitPressure() const;
 
-  double electricPowerPerUnitFlowRatePerUnitPressure() const;
+    double fanTotalEfficiency() const;
 
-  double fanTotalEfficiency() const;
+    boost::optional<Curve> electricPowerFunctionofFlowFractionCurve() const;
 
-  boost::optional<Curve> electricPowerFunctionofFlowFractionCurve() const;
+    boost::optional<double> nightVentilationModePressureRise() const;
 
-  boost::optional<double> nightVentilationModePressureRise() const;
+    boost::optional<double> nightVentilationModeFlowFraction() const;
 
-  boost::optional<double> nightVentilationModeFlowFraction() const;
+    boost::optional<ThermalZone> motorLossZone() const;
 
-  boost::optional<ThermalZone> motorLossZone() const;
+    double motorLossRadiativeFraction() const;
 
-  double motorLossRadiativeFraction() const;
+    std::string endUseSubcategory() const;
 
-  std::string endUseSubcategory() const;
+    unsigned numberofSpeeds() const;
+    std::vector<FanSystemModelSpeed> speeds() const;
 
-  unsigned numberofSpeeds() const;
-  std::vector<FanSystemModelSpeed> speeds() const;
+    /** Find a given speed by the flowFraction (key) */
+    boost::optional<unsigned> speedIndex(const FanSystemModelSpeed& speed) const;
 
-  /** Find a given speed by the flowFraction (key) */
-  boost::optional<unsigned> speedIndex(const FanSystemModelSpeed& speed) const;
+    boost::optional<FanSystemModelSpeed> getSpeed(unsigned speedIndex) const;
 
-  boost::optional<FanSystemModelSpeed> getSpeed(unsigned speedIndex) const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    /** If a speed group is already present (= the flowFraction already exists) (cf `speedIndex()`), it will Warn and override the electricPowerFraction value */
+    bool addSpeed(const FanSystemModelSpeed& speed);
 
-  /** If a speed group is already present (= the flowFraction already exists) (cf `speedIndex()`), it will Warn and override the electricPowerFraction value */
-  bool addSpeed(const FanSystemModelSpeed& speed);
+    // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+    bool addSpeed(double flowFraction, double electricPowerFraction);
 
-  // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
-  bool addSpeed(double flowFraction, double electricPowerFraction);
+    bool removeSpeed(unsigned speedIndex);
 
-  bool removeSpeed(unsigned speedIndex);
+    void removeAllSpeeds();
 
-  void removeAllSpeeds();
+    // Directly set the speeds from a vector, will delete any existing speeds. Will sort out the speeds too, ascending by flowFraction
+    bool setSpeeds(const std::vector<FanSystemModelSpeed>& speeds);
 
-  // Directly set the speeds from a vector, will delete any existing speeds. Will sort out the speeds too, ascending by flowFraction
-  bool setSpeeds(const std::vector<FanSystemModelSpeed>& speeds);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
+    bool setDesignMaximumAirFlowRate(double designMaximumAirFlowRate);
+    void autosizeDesignMaximumAirFlowRate();
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setSpeedControlMethod(const std::string& speedControlMethod);
 
-  bool setDesignMaximumAirFlowRate(double designMaximumAirFlowRate);
-  void autosizeDesignMaximumAirFlowRate();
+    bool setElectricPowerMinimumFlowRateFraction(double electricPowerMinimumFlowRateFraction);
 
-  bool setSpeedControlMethod(const std::string& speedControlMethod);
+    bool setDesignPressureRise(double designPressureRise);
 
-  bool setElectricPowerMinimumFlowRateFraction(double electricPowerMinimumFlowRateFraction);
+    bool setMotorEfficiency(double motorEfficiency);
 
-  bool setDesignPressureRise(double designPressureRise);
+    bool setMotorInAirStreamFraction(double motorInAirStreamFraction);
 
-  bool setMotorEfficiency(double motorEfficiency);
+    bool setDesignElectricPowerConsumption(double designElectricPowerConsumption);
+    void autosizeDesignElectricPowerConsumption();
 
-  bool setMotorInAirStreamFraction(double motorInAirStreamFraction);
+    bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
 
-  bool setDesignElectricPowerConsumption(double designElectricPowerConsumption);
-  void autosizeDesignElectricPowerConsumption();
+    bool setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate);
 
-  bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
+    bool setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure);
 
-  bool setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate);
+    bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-  bool setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure);
+    bool setElectricPowerFunctionofFlowFractionCurve(const Curve& univariateFunctions);
+    void resetElectricPowerFunctionofFlowFractionCurve();
 
-  bool setFanTotalEfficiency(double fanTotalEfficiency);
+    bool setNightVentilationModePressureRise(double nightVentilationModePressureRise);
+    void resetNightVentilationModePressureRise();
 
-  bool setElectricPowerFunctionofFlowFractionCurve(const Curve& univariateFunctions);
-  void resetElectricPowerFunctionofFlowFractionCurve();
+    bool setNightVentilationModeFlowFraction(double nightVentilationModeFlowFraction);
+    void resetNightVentilationModeFlowFraction();
 
-  bool setNightVentilationModePressureRise(double nightVentilationModePressureRise);
-  void resetNightVentilationModePressureRise();
+    bool setMotorLossZone(const ThermalZone& thermalZone);
+    void resetMotorLossZone();
 
-  bool setNightVentilationModeFlowFraction(double nightVentilationModeFlowFraction);
-  void resetNightVentilationModeFlowFraction();
+    bool setMotorLossRadiativeFraction(double motorLossRadiativeFraction);
 
-  bool setMotorLossZone(const ThermalZone& thermalZone);
-  void resetMotorLossZone();
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-  bool setMotorLossRadiativeFraction(double motorLossRadiativeFraction);
+    //@}
+    /** @name Other */
+    //@{
 
-  bool setEndUseSubcategory(const std::string& endUseSubcategory);
+    AirflowNetworkFan getAirflowNetworkFan();
+    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FanSystemModel_Impl ImplType;
 
-  AirflowNetworkFan getAirflowNetworkFan();
-  boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+    explicit FanSystemModel(std::shared_ptr<detail::FanSystemModel_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::FanSystemModel_Impl ImplType;
+    friend class detail::FanSystemModel_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FanSystemModel");
+  };
 
-  explicit FanSystemModel(std::shared_ptr<detail::FanSystemModel_Impl> impl);
+  /** \relates FanSystemModel*/
+  typedef boost::optional<FanSystemModel> OptionalFanSystemModel;
 
-  friend class detail::FanSystemModel_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FanSystemModel");
-};
+  /** \relates FanSystemModel*/
+  typedef std::vector<FanSystemModel> FanSystemModelVector;
 
-/** \relates FanSystemModel*/
-typedef boost::optional<FanSystemModel> OptionalFanSystemModel;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates FanSystemModel*/
-typedef std::vector<FanSystemModel> FanSystemModelVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_FANSYSTEMMODEL_HPP
-
+#endif  // MODEL_FANSYSTEMMODEL_HPP

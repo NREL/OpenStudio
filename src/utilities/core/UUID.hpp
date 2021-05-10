@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,79 +40,78 @@
 #include <string>
 
 namespace openstudio {
-  class UTILITIES_API UUID;
+class UTILITIES_API UUID;
 
-  /// create a UUID
-  UTILITIES_API UUID createUUID();
+/// create a UUID
+UTILITIES_API UUID createUUID();
 
-  /// create a UUID from a std::string, does not throw, may return a null UUID
-  UTILITIES_API UUID toUUID(const std::string& str);
+/// create a UUID from a std::string, does not throw, may return a null UUID
+UTILITIES_API UUID toUUID(const std::string& str);
 
-  /// create a std::string from a UUID
-  UTILITIES_API std::string toString(const UUID& uuid);
+/// create a std::string from a UUID
+UTILITIES_API std::string toString(const UUID& uuid);
 
-  /// create a unique name, prefix << " " << UUID.
-  UTILITIES_API std::string createUniqueName(const std::string& prefix);
+/// create a unique name, prefix << " " << UUID.
+UTILITIES_API std::string createUniqueName(const std::string& prefix);
 
-  /// create a std::string without curly brackets from a UUID
-  UTILITIES_API std::string removeBraces(const UUID& uuid);
+/// create a std::string without curly brackets from a UUID
+UTILITIES_API std::string removeBraces(const UUID& uuid);
 
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const UUID& uuid);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const UUID& uuid);
 
-  UTILITIES_API bool operator!= (const UUID & lhs, const UUID & rhs);
-  UTILITIES_API bool operator< (const UUID & lhs, const UUID & rhs);
-  UTILITIES_API bool operator== (const UUID & lhs, const UUID & rhs);
-  UTILITIES_API bool operator> (const UUID & lhs, const UUID & rhs);
+UTILITIES_API bool operator!=(const UUID& lhs, const UUID& rhs);
+UTILITIES_API bool operator<(const UUID& lhs, const UUID& rhs);
+UTILITIES_API bool operator==(const UUID& lhs, const UUID& rhs);
+UTILITIES_API bool operator>(const UUID& lhs, const UUID& rhs);
 
-  /// Universally Unique Identifier
-  class UTILITIES_API UUID : public boost::uuids::uuid
-  {
-  public:
-    UUID();
+/// Universally Unique Identifier
+class UTILITIES_API UUID : public boost::uuids::uuid
+{
+ public:
+  UUID();
 
-    bool isNull() const {
-      return is_nil();
-    }
+  bool isNull() const {
+    return is_nil();
+  }
 
-    bool isEqual(const UUID& other) const {
-      return (*this == other);
-    }
+  bool isEqual(const UUID& other) const {
+    return (*this == other);
+  }
 
-    using boost::uuids::uuid::iterator;
-    using boost::uuids::uuid::const_iterator;
-    using boost::uuids::uuid::begin;
-    using boost::uuids::uuid::end;
+  using boost::uuids::uuid::iterator;
+  using boost::uuids::uuid::const_iterator;
+  using boost::uuids::uuid::begin;
+  using boost::uuids::uuid::end;
 
-  private:
-    explicit UUID(const boost::uuids::uuid &);
+ private:
+  explicit UUID(const boost::uuids::uuid&);
 
-    UTILITIES_API friend UUID openstudio::createUUID();
-    UTILITIES_API friend UUID openstudio::toUUID(const std::string& str);
-    UTILITIES_API friend std::string openstudio::toString(const UUID& uuid);
-    UTILITIES_API friend std::string openstudio::createUniqueName(const std::string& prefix);
-    UTILITIES_API friend std::string openstudio::removeBraces(const UUID& uuid);
-    UTILITIES_API friend bool openstudio::operator!= (const UUID & lhs, const UUID & rhs);
-    UTILITIES_API friend bool openstudio::operator< (const UUID & lhs, const UUID & rhs);
-    UTILITIES_API friend bool openstudio::operator== (const UUID & lhs, const UUID & rhs);
-    UTILITIES_API friend bool openstudio::operator> (const UUID & lhs, const UUID & rhs);
+  UTILITIES_API friend UUID openstudio::createUUID();
+  UTILITIES_API friend UUID openstudio::toUUID(const std::string& str);
+  UTILITIES_API friend std::string openstudio::toString(const UUID& uuid);
+  UTILITIES_API friend std::string openstudio::createUniqueName(const std::string& prefix);
+  UTILITIES_API friend std::string openstudio::removeBraces(const UUID& uuid);
+  UTILITIES_API friend bool openstudio::operator!=(const UUID& lhs, const UUID& rhs);
+  UTILITIES_API friend bool openstudio::operator<(const UUID& lhs, const UUID& rhs);
+  UTILITIES_API friend bool openstudio::operator==(const UUID& lhs, const UUID& rhs);
+  UTILITIES_API friend bool openstudio::operator>(const UUID& lhs, const UUID& rhs);
 
-    static UUID random_generate();
-    static UUID string_generate(const std::string &);
-  };
+  static UUID random_generate();
+  static UUID string_generate(const std::string&);
+};
 
-  /// Find version 4 UUIDs in a string.
-  UTILITIES_API const boost::regex &uuidInString();
+/// Find version 4 UUIDs in a string.
+UTILITIES_API const boost::regex& uuidInString();
 
-  /// create a unique name, prefix << " " << UUID.
-  UTILITIES_API std::string createUniqueName(const std::string& prefix);
+/// create a unique name, prefix << " " << UUID.
+UTILITIES_API std::string createUniqueName(const std::string& prefix);
 
-  /// optional UUID
-  typedef boost::optional<UUID> OptionalUUID;
+/// optional UUID
+typedef boost::optional<UUID> OptionalUUID;
 
-  /// vector of UUID
-  typedef std::vector<UUID> UUIDVector;
+/// vector of UUID
+typedef std::vector<UUID> UUIDVector;
 
+}  // namespace openstudio
 
-} // openstudio
-
-#endif // UTILITIES_CORE_UUID_HPP
+#endif  // UTILITIES_CORE_UUID_HPP

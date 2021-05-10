@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,64 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ExternalInterfaceVariable_Impl is a ModelObject_Impl that is the implementation class for ExternalInterfaceVariable.*/
-  class MODEL_API ExternalInterfaceVariable_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ExternalInterfaceVariable_Impl is a ModelObject_Impl that is the implementation class for ExternalInterfaceVariable.*/
+    class MODEL_API ExternalInterfaceVariable_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExternalInterfaceVariable_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ExternalInterfaceVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExternalInterfaceVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ExternalInterfaceVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ExternalInterfaceVariable_Impl(const ExternalInterfaceVariable_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ExternalInterfaceVariable_Impl(const ExternalInterfaceVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ExternalInterfaceVariable_Impl() {}
+      virtual ~ExternalInterfaceVariable_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double initialValue() const;
+      double initialValue() const;
 
-    bool exportToBCVTB() const;
+      bool exportToBCVTB() const;
 
-    bool isExportToBCVTBDefaulted() const;
+      bool isExportToBCVTBDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setInitialValue(double initialValue);
+      bool setInitialValue(double initialValue);
 
-    bool setExportToBCVTB(bool exportToBCVTB);
+      bool setExportToBCVTB(bool exportToBCVTB);
 
-    void resetExportToBCVTB();
+      void resetExportToBCVTB();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalInterfaceVariable");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ExternalInterfaceVariable");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEVARIABLE_IMPL_HPP
+#endif  // MODEL_EXTERNALINTERFACEVARIABLE_IMPL_HPP

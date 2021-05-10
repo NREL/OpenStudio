@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,20 +34,17 @@
 
 namespace openstudio {
 
-template<class T>
+template <class T>
 bool isPrime(T val) {
   bool prime = true;
 
   if (val < 2) {
     return false;
-  }
-  else if (val == 2) {
+  } else if (val == 2) {
     return true;
-  }
-  else if (val % 2 == 0) {
+  } else if (val % 2 == 0) {
     return false;
-  }
-  else {
+  } else {
     T divisor(3);
     double dval = static_cast<double>(val);
     T upperLimit = static_cast<T>(std::sqrt(dval) + 1);
@@ -63,6 +60,6 @@ bool isPrime(T val) {
   return prime;
 }
 
-}
+}  // namespace openstudio
 
-#endif // UTILITIES_MATH_PRIMES_HPP
+#endif  // UTILITIES_MATH_PRIMES_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,7 +40,7 @@
 
 class Filetypes_WorkflowJSON_Signals_Test;
 
-namespace openstudio{
+namespace openstudio {
 
 class WorkflowStep;
 class RunOptions;
@@ -48,15 +48,14 @@ class MeasureStep;
 class DateTime;
 class OSDocument;
 
-namespace detail{
+namespace detail {
   class WorkflowJSON_Impl;
 }
 
 /** Class for accessing the OpenStudio Workflow (OSW) JSON format. */
 class UTILITIES_API WorkflowJSON
 {
-public:
-
+ public:
   /** Create a new, empty workflow. */
   WorkflowJSON();
 
@@ -76,7 +75,7 @@ public:
   static boost::optional<WorkflowJSON> load(const openstudio::path& p);
 
   /** Get the workflow as a string. */
-  std::string string(bool includeHash=true) const;
+  std::string string(bool includeHash = true) const;
 
   /** Get a stored hash of the workflow. */
   std::string hash() const;
@@ -254,23 +253,21 @@ public:
   /** Reset RunOptions for this workflow. */
   void resetRunOptions();
 
-protected:
-
+ protected:
   // get the impl
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   friend class OSDocument;
   friend class detail::WorkflowJSON_Impl;
-  friend class ::Filetypes_WorkflowJSON_Signals_Test; // for testing
+  friend class ::Filetypes_WorkflowJSON_Signals_Test;  // for testing
 
   /** Protected constructor from impl. */
   WorkflowJSON(std::shared_ptr<detail::WorkflowJSON_Impl> impl);
 
-private:
-
+ private:
   // configure logging
   REGISTER_LOGGER("openstudio.WorkflowJSON");
 
@@ -280,6 +277,6 @@ private:
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_WORKFLOWJSON_HPP
+#endif  //UTILITIES_FILETYPES_WORKFLOWJSON_HPP

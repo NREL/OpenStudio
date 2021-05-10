@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,28 +38,29 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
-class AirflowNetworkEquivlentDuct;
-class Schedule;
+  class Curve;
+  class AirflowNetworkEquivlentDuct;
+  class Schedule;
 
-namespace detail {
-  class CoilHeatingGas_Impl;
-} // detail
+  namespace detail {
+    class CoilHeatingGas_Impl;
+  }  // namespace detail
 
-/** CoilHeatingGas is an interface to the IDD object named "OS:Coil:Heating:Gas"
+  /** CoilHeatingGas is an interface to the IDD object named "OS:Coil:Heating:Gas"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  OS:Coil:Heating:Gas objects in energyplus.
  *
  *  As of EnergyPlus Version 8.6 this object maps to Coil:Heating:Fuel.
  */
-class MODEL_API CoilHeatingGas : public StraightComponent {
+  class MODEL_API CoilHeatingGas : public StraightComponent
+  {
 
- public:
-  /** @name Constructors and Destructors */
-  //@{
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Constructs a new CoilHeatingGas object and places it inside the
+    /** Constructs a new CoilHeatingGas object and places it inside the
    *  model.  The object is fully initialized with all companion objects.
    *
    * Sets GasBurnerEffeciency to .8
@@ -67,112 +68,109 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
    * Sets ParasiticElectricLoad to 0
    * Sets ParasiticGasLoad to 0
    */
-  explicit CoilHeatingGas(const Model& model,
-                          Schedule& schedule);
+    explicit CoilHeatingGas(const Model& model, Schedule& schedule);
 
-  explicit CoilHeatingGas(const Model& model);
+    explicit CoilHeatingGas(const Model& model);
 
-  virtual ~CoilHeatingGas() {}
+    virtual ~CoilHeatingGas() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters and Setters */
-  //@{
+    /** @name Getters and Setters */
+    //@{
 
-  /**  Returns the Schedule referred to by the Availability Schedule field. **/
-  Schedule availabilitySchedule() const;
+    /**  Returns the Schedule referred to by the Availability Schedule field. **/
+    Schedule availabilitySchedule() const;
 
-  /** \deprecated */
-  Schedule availableSchedule() const;
+    /** \deprecated */
+    Schedule availableSchedule() const;
 
-  /** Sets the Schedule referred to by the Availability Schedule field. **/
-  bool setAvailabilitySchedule(Schedule& schedule);
+    /** Sets the Schedule referred to by the Availability Schedule field. **/
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  /** \deprecated */
-  bool setAvailableSchedule(Schedule& schedule);
+    /** \deprecated */
+    bool setAvailableSchedule(Schedule& schedule);
 
-  /** Returns a list of valid fuel types. **/
-  static std::vector<std::string> validFuelTypeValues();
+    /** Returns a list of valid fuel types. **/
+    static std::vector<std::string> validFuelTypeValues();
 
-  /** Gets the coil fuel type **/
-  std::string fuelType() const;
+    /** Gets the coil fuel type **/
+    std::string fuelType() const;
 
-  /** Sets the fuel type. **/
-  bool setFuelType(const std::string& fuelType);
+    /** Sets the fuel type. **/
+    bool setFuelType(const std::string& fuelType);
 
-  /** Resets the fuel type to its default. **/
-  void resetFuelType();
+    /** Resets the fuel type to its default. **/
+    void resetFuelType();
 
-  /** Returns the value of the GasBurnerEfficiency field. **/
-  double gasBurnerEfficiency() const;
+    /** Returns the value of the GasBurnerEfficiency field. **/
+    double gasBurnerEfficiency() const;
 
-  /** Sets the value of the GasBurnerEfficiency field. **/
-  bool setGasBurnerEfficiency(double value);
+    /** Sets the value of the GasBurnerEfficiency field. **/
+    bool setGasBurnerEfficiency(double value);
 
-  /** Returns the value of the ParasiticElectricLoad field. **/
-  double parasiticElectricLoad() const;
+    /** Returns the value of the ParasiticElectricLoad field. **/
+    double parasiticElectricLoad() const;
 
-  /** Sets the value of the ParasiticElectricLoad field. **/
-  bool setParasiticElectricLoad(double value);
+    /** Sets the value of the ParasiticElectricLoad field. **/
+    bool setParasiticElectricLoad(double value);
 
-  /** Returns the value of the ParasiticGasLoad field. **/
-  double parasiticGasLoad() const;
+    /** Returns the value of the ParasiticGasLoad field. **/
+    double parasiticGasLoad() const;
 
-  /** Sets the value of the ParasiticGasLoad field. **/
-  bool setParasiticGasLoad(double value);
+    /** Sets the value of the ParasiticGasLoad field. **/
+    bool setParasiticGasLoad(double value);
 
-  boost::optional<double> nominalCapacity() const;
+    boost::optional<double> nominalCapacity() const;
 
-  bool isNominalCapacityAutosized() const;
+    bool isNominalCapacityAutosized() const;
 
-  bool setNominalCapacity(double nominalCapacity);
+    bool setNominalCapacity(double nominalCapacity);
 
-  void resetNominalCapacity();
+    void resetNominalCapacity();
 
-  void autosizeNominalCapacity();
+    void autosizeNominalCapacity();
 
-  boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
-  bool setPartLoadFractionCorrelationCurve( const Curve& curve );
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  void resetPartLoadFractionCorrelationCurve();
+    void resetPartLoadFractionCorrelationCurve();
 
-  /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
-  /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-  boost::optional<double> autosizedNominalCapacity() const ;
-  //@}
- protected:
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-  friend class Model;
+    boost::optional<double> autosizedNominalCapacity() const;
+    //@}
+   protected:
+    friend class Model;
 
-  friend class openstudio::IdfObject;
+    friend class openstudio::IdfObject;
 
-  /// @cond
+    /// @cond
 
-  typedef detail::CoilHeatingGas_Impl ImplType;
+    typedef detail::CoilHeatingGas_Impl ImplType;
 
-  explicit CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> impl);
+    explicit CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> impl);
 
- private:
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingGas");
 
-  REGISTER_LOGGER("openstudio.model.CoilHeatingGas");
+    /// @endcond
+  };
 
-  /// @endcond
-};
+  /** \relates CoilHeatingGas */
+  typedef boost::optional<CoilHeatingGas> OptionalCoilHeatingGas;
 
-/** \relates CoilHeatingGas */
-typedef boost::optional<CoilHeatingGas> OptionalCoilHeatingGas;
+  /** \relates CoilHeatingGas */
+  typedef std::vector<CoilHeatingGas> CoilHeatingGasVector;
 
-/** \relates CoilHeatingGas */
-typedef std::vector<CoilHeatingGas> CoilHeatingGasVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGGAS_HPP
+#endif  // MODEL_COILHEATINGGAS_HPP

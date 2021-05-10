@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,243 +37,241 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
-// For the optional Generator:MicroTurbine:HeatRecovery
-// It was broken out because that part needs to connect to a plant loop
-class StraightComponent;
+  class Curve;
+  // For the optional Generator:MicroTurbine:HeatRecovery
+  // It was broken out because that part needs to connect to a plant loop
+  class StraightComponent;
 
-// TODO: add the tables class if they get added to OS later?
-//class DataTables // UniVariateTables and BiVariateTables
+  // TODO: add the tables class if they get added to OS later?
+  //class DataTables // UniVariateTables and BiVariateTables
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorMicroTurbine_Impl is a Generator_Impl that is the implementation class for GeneratorMicroTurbine.*/
-  class MODEL_API GeneratorMicroTurbine_Impl : public Generator_Impl {
+    /** GeneratorMicroTurbine_Impl is a Generator_Impl that is the implementation class for GeneratorMicroTurbine.*/
+    class MODEL_API GeneratorMicroTurbine_Impl : public Generator_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorMicroTurbine_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+      GeneratorMicroTurbine_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorMicroTurbine_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      GeneratorMicroTurbine_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorMicroTurbine_Impl(const GeneratorMicroTurbine_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      GeneratorMicroTurbine_Impl(const GeneratorMicroTurbine_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorMicroTurbine_Impl() {}
+      virtual ~GeneratorMicroTurbine_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::string generatorObjectType() const override;
+      virtual std::string generatorObjectType() const override;
 
-    virtual boost::optional<double> ratedElectricPowerOutput() const override;
+      virtual boost::optional<double> ratedElectricPowerOutput() const override;
 
-    virtual boost::optional<Schedule> availabilitySchedule() const override;
+      virtual boost::optional<Schedule> availabilitySchedule() const override;
 
-    virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
+      virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      // Will clone also the mchpHR if any
+      virtual ModelObject clone(Model model) const override;
 
-    double referenceElectricalPowerOutput() const;
+      // Will also remove the mchpHR (and remove it from loop) if any
+      virtual std::vector<IdfObject> remove() override;
 
-    double minimumFullLoadElectricalPowerOutput() const;
-    bool isMinimumFullLoadElectricalPowerOutputDefaulted() const;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    // This will default to referenceElectricalPowerOutput if not defined, like E+ does
-    double maximumFullLoadElectricalPowerOutput() const;
-    bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
+      virtual std::vector<ModelObject> children() const override;
 
-    double referenceElectricalEfficiencyUsingLowerHeatingValue() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    double referenceCombustionAirInletTemperature() const;
-    bool isReferenceCombustionAirInletTemperatureDefaulted() const;
+      double referenceElectricalPowerOutput() const;
 
-    double referenceCombustionAirInletHumidityRatio() const;
-    bool isReferenceCombustionAirInletHumidityRatioDefaulted() const;
+      double minimumFullLoadElectricalPowerOutput() const;
+      bool isMinimumFullLoadElectricalPowerOutputDefaulted() const;
 
-    double referenceElevation() const;
-    bool isReferenceElevationDefaulted() const;
+      // This will default to referenceElectricalPowerOutput if not defined, like E+ does
+      double maximumFullLoadElectricalPowerOutput() const;
+      bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-    Curve electricalPowerFunctionofTemperatureandElevationCurve() const;
+      double referenceElectricalEfficiencyUsingLowerHeatingValue() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves.
-    Curve electricalEfficiencyFunctionofTemperatureCurve() const;
+      double referenceCombustionAirInletTemperature() const;
+      bool isReferenceCombustionAirInletTemperatureDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves.
-    Curve electricalEfficiencyFunctionofPartLoadRatioCurve() const;
+      double referenceCombustionAirInletHumidityRatio() const;
+      bool isReferenceCombustionAirInletHumidityRatioDefaulted() const;
 
-    std::string fuelType() const;
-    bool isFuelTypeDefaulted() const;
+      double referenceElevation() const;
+      bool isReferenceElevationDefaulted() const;
 
-    double fuelHigherHeatingValue() const;
-    bool isFuelHigherHeatingValueDefaulted() const;
+      // TODO: Check return type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
+      Curve electricalPowerFunctionofTemperatureandElevationCurve() const;
 
-    double fuelLowerHeatingValue() const;
-    bool isFuelLowerHeatingValueDefaulted() const;
+      // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves.
+      Curve electricalEfficiencyFunctionofTemperatureCurve() const;
 
-    double standbyPower() const;
-    bool isStandbyPowerDefaulted() const;
+      // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves.
+      Curve electricalEfficiencyFunctionofPartLoadRatioCurve() const;
 
-    double ancillaryPower() const;
-    bool isAncillaryPowerDefaulted() const;
+      std::string fuelType() const;
+      bool isFuelTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    boost::optional<Curve> ancillaryPowerFunctionofFuelInputCurve() const;
+      double fuelHigherHeatingValue() const;
+      bool isFuelHigherHeatingValueDefaulted() const;
 
-    // Optional Generator:MicroTurbine:HeatRecovery
-    boost::optional<GeneratorMicroTurbineHeatRecovery> generatorMicroTurbineHeatRecovery() const;
+      double fuelLowerHeatingValue() const;
+      bool isFuelLowerHeatingValueDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    //boost::optional<Connection> combustionAirInletNode() const;
+      double standbyPower() const;
+      bool isStandbyPowerDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    //boost::optional<Connection> combustionAirOutletNode() const;
+      double ancillaryPower() const;
+      bool isAncillaryPowerDefaulted() const;
 
-    boost::optional<double> referenceExhaustAirMassFlowRate() const;
+      // TODO: Check return type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
+      boost::optional<Curve> ancillaryPowerFunctionofFuelInputCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    boost::optional<Curve> exhaustAirFlowRateFunctionofTemperatureCurve() const;
+      // Optional Generator:MicroTurbine:HeatRecovery
+      boost::optional<GeneratorMicroTurbineHeatRecovery> generatorMicroTurbineHeatRecovery() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    boost::optional<Curve> exhaustAirFlowRateFunctionofPartLoadRatioCurve() const;
+      // TODO: Check return type. From object lists, some candidates are: Connection.
+      //boost::optional<Connection> combustionAirInletNode() const;
 
-    boost::optional<double> nominalExhaustAirOutletTemperature() const;
+      // TODO: Check return type. From object lists, some candidates are: Connection.
+      //boost::optional<Connection> combustionAirOutletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    boost::optional<Curve> exhaustAirTemperatureFunctionofTemperatureCurve() const;
+      boost::optional<double> referenceExhaustAirMassFlowRate() const;
 
-    // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    boost::optional<Curve> exhaustAirTemperatureFunctionofPartLoadRatioCurve() const;
+      // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      boost::optional<Curve> exhaustAirFlowRateFunctionofTemperatureCurve() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      boost::optional<Curve> exhaustAirFlowRateFunctionofPartLoadRatioCurve() const;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      boost::optional<double> nominalExhaustAirOutletTemperature() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      boost::optional<Curve> exhaustAirTemperatureFunctionofTemperatureCurve() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
-    void resetAvailabilitySchedule();
+      // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      boost::optional<Curve> exhaustAirTemperatureFunctionofPartLoadRatioCurve() const;
 
-    bool setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput);
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    bool setMinimumFullLoadElectricalPowerOutput(double minimumFullLoadElectricalPowerOutput);
-    void resetMinimumFullLoadElectricalPowerOutput();
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    bool setMaximumFullLoadElectricalPowerOutput(double maximumFullLoadElectricalPowerOutput);
-    void resetMaximumFullLoadElectricalPowerOutput();
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setReferenceElectricalEfficiencyUsingLowerHeatingValue(double referenceElectricalEfficiencyUsingLowerHeatingValue);
+      bool setAvailabilitySchedule(Schedule& schedule);
+      void resetAvailabilitySchedule();
 
-    bool setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
-    void resetReferenceCombustionAirInletTemperature();
+      bool setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput);
 
-    bool setReferenceCombustionAirInletHumidityRatio(double referenceCombustionAirInletHumidityRatio);
-    void resetReferenceCombustionAirInletHumidityRatio();
+      bool setMinimumFullLoadElectricalPowerOutput(double minimumFullLoadElectricalPowerOutput);
+      void resetMinimumFullLoadElectricalPowerOutput();
 
-    bool setReferenceElevation(double referenceElevation);
-    void resetReferenceElevation();
+      bool setMaximumFullLoadElectricalPowerOutput(double maximumFullLoadElectricalPowerOutput);
+      void resetMaximumFullLoadElectricalPowerOutput();
 
-    // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
-    bool setElectricalPowerFunctionofTemperatureandElevationCurve(const Curve& electricalPowerFunctionofTemperatureandElevationCurve);
+      bool setReferenceElectricalEfficiencyUsingLowerHeatingValue(double referenceElectricalEfficiencyUsingLowerHeatingValue);
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves.
-    bool setElectricalEfficiencyFunctionofTemperatureCurve(const Curve& electricalEfficiencyFunctionofTemperatureCurve);
+      bool setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
+      void resetReferenceCombustionAirInletTemperature();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves.
-    bool setElectricalEfficiencyFunctionofPartLoadRatioCurve(const Curve& electricalEfficiencyFunctionofPartLoadRatioCurve);
+      bool setReferenceCombustionAirInletHumidityRatio(double referenceCombustionAirInletHumidityRatio);
+      void resetReferenceCombustionAirInletHumidityRatio();
 
-    bool setFuelType(const std::string& fuelType);
-    void resetFuelType();
+      bool setReferenceElevation(double referenceElevation);
+      void resetReferenceElevation();
 
-    bool setFuelHigherHeatingValue(double fuelHigherHeatingValue);
-    void resetFuelHigherHeatingValue();
+      // TODO: Check argument type. From object lists, some candidates are: BiquadraticCurves, BiVariateTables.
+      bool setElectricalPowerFunctionofTemperatureandElevationCurve(const Curve& electricalPowerFunctionofTemperatureandElevationCurve);
 
-    bool setFuelLowerHeatingValue(double fuelLowerHeatingValue);
-    void resetFuelLowerHeatingValue();
+      // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves.
+      bool setElectricalEfficiencyFunctionofTemperatureCurve(const Curve& electricalEfficiencyFunctionofTemperatureCurve);
 
-    bool setStandbyPower(double standbyPower);
-    void resetStandbyPower();
+      // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves.
+      bool setElectricalEfficiencyFunctionofPartLoadRatioCurve(const Curve& electricalEfficiencyFunctionofPartLoadRatioCurve);
 
-    bool setAncillaryPower(double ancillaryPower);
-    void resetAncillaryPower();
+      bool setFuelType(const std::string& fuelType);
+      void resetFuelType();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
-    bool setAncillaryPowerFunctionofFuelInputCurve(const Curve& ancillaryPowerFunctionofFuelInputCurve);
-    void resetAncillaryPowerFunctionofFuelInputCurve();
+      bool setFuelHigherHeatingValue(double fuelHigherHeatingValue);
+      void resetFuelHigherHeatingValue();
 
-    // Private setter
-    bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
-    //void resetGeneratorMicroTurbineHeatRecovery();
+      bool setFuelLowerHeatingValue(double fuelLowerHeatingValue);
+      void resetFuelLowerHeatingValue();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    //bool setCombustionAirInletNode(const Connection& connection);
-    //void resetCombustionAirInletNode();
+      bool setStandbyPower(double standbyPower);
+      void resetStandbyPower();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    //bool setCombustionAirOutletNode(const Connection& connection);
-    //void resetCombustionAirOutletNode();
+      bool setAncillaryPower(double ancillaryPower);
+      void resetAncillaryPower();
 
-    bool setReferenceExhaustAirMassFlowRate(double referenceExhaustAirMassFlowRate);
-    void resetReferenceExhaustAirMassFlowRate();
+      // TODO: Check argument type. From object lists, some candidates are: QuadraticCurves, UniVariateTables.
+      bool setAncillaryPowerFunctionofFuelInputCurve(const Curve& ancillaryPowerFunctionofFuelInputCurve);
+      void resetAncillaryPowerFunctionofFuelInputCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    bool setExhaustAirFlowRateFunctionofTemperatureCurve(const Curve& exhaustAirFlowRateFunctionofTemperatureCurve);
-    void resetExhaustAirFlowRateFunctionofTemperatureCurve();
+      // Private setter
+      bool setGeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& generatorMicroTurbineHeatRecovery);
+      //void resetGeneratorMicroTurbineHeatRecovery();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    bool setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& exhaustAirFlowRateFunctionofPartLoadRatioCurve);
-    void resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
+      // TODO: Check argument type. From object lists, some candidates are: Connection.
+      //bool setCombustionAirInletNode(const Connection& connection);
+      //void resetCombustionAirInletNode();
 
-    bool setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
-    void resetNominalExhaustAirOutletTemperature();
+      // TODO: Check argument type. From object lists, some candidates are: Connection.
+      //bool setCombustionAirOutletNode(const Connection& connection);
+      //void resetCombustionAirOutletNode();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    bool setExhaustAirTemperatureFunctionofTemperatureCurve(const Curve& exhaustAirTemperatureFunctionofTemperatureCurve);
-    void resetExhaustAirTemperatureFunctionofTemperatureCurve();
+      bool setReferenceExhaustAirMassFlowRate(double referenceExhaustAirMassFlowRate);
+      void resetReferenceExhaustAirMassFlowRate();
 
-    // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
-    bool setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const Curve& exhaustAirTemperatureFunctionofPartLoadRatioCurve);
-    void resetExhaustAirTemperatureFunctionofPartLoadRatioCurve();
+      // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      bool setExhaustAirFlowRateFunctionofTemperatureCurve(const Curve& exhaustAirFlowRateFunctionofTemperatureCurve);
+      void resetExhaustAirFlowRateFunctionofTemperatureCurve();
 
-    //@}
-    /** @name Other */
-    //@{
+      // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      bool setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& exhaustAirFlowRateFunctionofPartLoadRatioCurve);
+      void resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
 
-    ModelObject clone(Model model) const override;
+      bool setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
+      void resetNominalExhaustAirOutletTemperature();
 
-    std::vector<IddObjectType> allowableChildTypes() const override;
+      // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      bool setExhaustAirTemperatureFunctionofTemperatureCurve(const Curve& exhaustAirTemperatureFunctionofTemperatureCurve);
+      void resetExhaustAirTemperatureFunctionofTemperatureCurve();
 
-    std::vector<ModelObject> children() const override;
+      // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
+      bool setExhaustAirTemperatureFunctionofPartLoadRatioCurve(const Curve& exhaustAirTemperatureFunctionofPartLoadRatioCurve);
+      void resetExhaustAirTemperatureFunctionofPartLoadRatioCurve();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorMicroTurbine");
+      //@}
+      /** @name Other */
+      //@{
 
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorMicroTurbine");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORMICROTURBINE_IMPL_HPP
+#endif  // MODEL_GENERATORMICROTURBINE_IMPL_HPP

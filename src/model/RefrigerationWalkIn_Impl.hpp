@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,321 +41,330 @@ class Time;
 
 namespace model {
 
-class Schedule;
-class RefrigerationSystem;
-class RefrigerationWalkInZoneBoundary;
-class RefrigerationDefrostCycleParameters;
+  class Schedule;
+  class RefrigerationSystem;
+  class RefrigerationSecondarySystem;
+  class RefrigerationCompressorRack;
+  class RefrigerationWalkInZoneBoundary;
+  class RefrigerationDefrostCycleParameters;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationWalkIn_Impl is a ModelObject_Impl that is the implementation class for RefrigerationWalkIn.*/
-  class MODEL_API RefrigerationWalkIn_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationWalkIn_Impl is a ModelObject_Impl that is the implementation class for RefrigerationWalkIn.*/
+    class MODEL_API RefrigerationWalkIn_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationWalkIn_Impl(const IdfObject& idfObject,
-                             Model_Impl* model,
-                             bool keepHandle);
+      RefrigerationWalkIn_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationWalkIn_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      RefrigerationWalkIn_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationWalkIn_Impl(const RefrigerationWalkIn_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      RefrigerationWalkIn_Impl(const RefrigerationWalkIn_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationWalkIn_Impl() {}
+      virtual ~RefrigerationWalkIn_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    bool addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary);
+      bool addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary);
 
-    void removeZoneBoundary(unsigned index);
+      void removeZoneBoundary(unsigned index);
 
-    void removeAllZoneBoundaries();
+      void removeAllZoneBoundaries();
 
-    std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const;
+      std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    double ratedCoilCoolingCapacity() const;
+      double ratedCoilCoolingCapacity() const;
 
-    double operatingTemperature() const;
+      double operatingTemperature() const;
 
-    double ratedCoolingSourceTemperature() const;
+      double ratedCoolingSourceTemperature() const;
 
-    double ratedTotalHeatingPower() const;
+      double ratedTotalHeatingPower() const;
 
-    boost::optional<Schedule> heatingPowerSchedule() const;
+      boost::optional<Schedule> heatingPowerSchedule() const;
 
-    double ratedCoolingCoilFanPower() const;
+      double ratedCoolingCoilFanPower() const;
 
-    bool isRatedCoolingCoilFanPowerDefaulted() const;
+      bool isRatedCoolingCoilFanPowerDefaulted() const;
 
-    double ratedCirculationFanPower() const;
+      double ratedCirculationFanPower() const;
 
-    bool isRatedCirculationFanPowerDefaulted() const;
+      bool isRatedCirculationFanPowerDefaulted() const;
 
-    double ratedTotalLightingPower() const;
+      double ratedTotalLightingPower() const;
 
-    boost::optional<Schedule> lightingSchedule() const;
+      boost::optional<Schedule> lightingSchedule() const;
 
-    std::string defrostType() const;
+      std::string defrostType() const;
 
-    bool isDefrostTypeDefaulted() const;
+      bool isDefrostTypeDefaulted() const;
 
-    std::string defrostControlType() const;
+      std::string defrostControlType() const;
 
-    bool isDefrostControlTypeDefaulted() const;
+      bool isDefrostControlTypeDefaulted() const;
 
-    Schedule defrostSchedule() const;
+      Schedule defrostSchedule() const;
 
-    boost::optional<Schedule> defrostDripDownSchedule() const;
+      boost::optional<Schedule> defrostDripDownSchedule() const;
 
-    boost::optional<double> defrostPower() const;
+      boost::optional<double> defrostPower() const;
 
-    boost::optional<double> temperatureTerminationDefrostFractiontoIce() const;
+      boost::optional<double> temperatureTerminationDefrostFractiontoIce() const;
 
-    boost::optional<Schedule> restockingSchedule() const;
+      boost::optional<Schedule> restockingSchedule() const;
 
-    double averageRefrigerantChargeInventory() const;
+      double averageRefrigerantChargeInventory() const;
 
-    bool isAverageRefrigerantChargeInventoryDefaulted() const;
+      bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
-    double insulatedFloorSurfaceArea() const;
+      double insulatedFloorSurfaceArea() const;
 
-    double insulatedFloorUValue() const;
+      double insulatedFloorUValue() const;
 
-    bool isInsulatedFloorUValueDefaulted() const;
+      bool isInsulatedFloorUValueDefaulted() const;
 
-    boost::optional<RefrigerationDefrostCycleParameters> optionalWalkinDefrostCycleParameters() const;
+      boost::optional<RefrigerationDefrostCycleParameters> optionalWalkinDefrostCycleParameters() const;
 
-    RefrigerationDefrostCycleParameters walkinDefrostCycleParameters();
+      RefrigerationDefrostCycleParameters walkinDefrostCycleParameters();
 
-    boost::optional<int> durationofDefrostCycle() const;
+      boost::optional<int> durationofDefrostCycle() const;
 
-    boost::optional<int> dripDownTime() const;
+      boost::optional<int> dripDownTime() const;
 
-    boost::optional<openstudio::Time> defrost1StartTime() const;
+      boost::optional<openstudio::Time> defrost1StartTime() const;
 
-    boost::optional<openstudio::Time> defrost2StartTime() const;
+      boost::optional<openstudio::Time> defrost2StartTime() const;
 
-    boost::optional<openstudio::Time> defrost3StartTime() const;
+      boost::optional<openstudio::Time> defrost3StartTime() const;
 
-    boost::optional<openstudio::Time> defrost4StartTime() const;
+      boost::optional<openstudio::Time> defrost4StartTime() const;
 
-    boost::optional<openstudio::Time> defrost5StartTime() const;
+      boost::optional<openstudio::Time> defrost5StartTime() const;
 
-    boost::optional<openstudio::Time> defrost6StartTime() const;
+      boost::optional<openstudio::Time> defrost6StartTime() const;
 
-    boost::optional<openstudio::Time> defrost7StartTime() const;
+      boost::optional<openstudio::Time> defrost7StartTime() const;
 
-    boost::optional<openstudio::Time> defrost8StartTime() const;
+      boost::optional<openstudio::Time> defrost8StartTime() const;
 
-    std::vector<openstudio::Time> defrostStartTimes() const;
+      std::vector<openstudio::Time> defrostStartTimes() const;
 
-    boost::optional<RefrigerationSystem> system() const;
+      boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
 
-    boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
+      boost::optional<double> zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const;
 
-    boost::optional<double> zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const;
+      boost::optional<double> zoneBoundaryAreaofGlassReachInDoorsFacingZone() const;
 
-    boost::optional<double> zoneBoundaryAreaofGlassReachInDoorsFacingZone() const;
+      boost::optional<double> zoneBoundaryHeightofGlassReachInDoorsFacingZone() const;
 
-    boost::optional<double> zoneBoundaryHeightofGlassReachInDoorsFacingZone() const;
+      boost::optional<double> zoneBoundaryAreaofStockingDoorsFacingZone() const;
 
-    boost::optional<double> zoneBoundaryAreaofStockingDoorsFacingZone() const;
+      boost::optional<double> zoneBoundaryHeightofStockingDoorsFacingZone() const;
 
-    boost::optional<double> zoneBoundaryHeightofStockingDoorsFacingZone() const;
+      boost::optional<double> zoneBoundaryInsulatedSurfaceUValueFacingZone() const;
 
-    boost::optional<double> zoneBoundaryInsulatedSurfaceUValueFacingZone() const;
+      boost::optional<double> zoneBoundaryGlassReachInDoorUValueFacingZone() const;
 
-    boost::optional<double> zoneBoundaryGlassReachInDoorUValueFacingZone() const;
+      boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
 
-    boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
+      boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
 
-    boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
+      boost::optional<RefrigerationSystem> system() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      boost::optional<RefrigerationCompressorRack> compressorRack() const;
 
-    void resetAvailabilitySchedule();
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setOperatingTemperature(double operatingTemperature);
+      void resetAvailabilitySchedule();
 
-    bool setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature);
+      bool setRatedCoilCoolingCapacity(double ratedCoilCoolingCapacity);
 
-    bool setRatedTotalHeatingPower(double ratedTotalHeatingPower);
+      bool setOperatingTemperature(double operatingTemperature);
 
-    bool setHeatingPowerSchedule(Schedule& schedule);
+      bool setRatedCoolingSourceTemperature(double ratedCoolingSourceTemperature);
 
-    void resetHeatingPowerSchedule();
+      bool setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
-    bool setRatedCoolingCoilFanPower(double ratedCoolingCoilFanPower);
+      bool setHeatingPowerSchedule(Schedule& schedule);
 
-    void resetRatedCoolingCoilFanPower();
+      void resetHeatingPowerSchedule();
 
-    bool setRatedCirculationFanPower(double ratedCirculationFanPower);
+      bool setRatedCoolingCoilFanPower(double ratedCoolingCoilFanPower);
 
-    void resetRatedCirculationFanPower();
+      void resetRatedCoolingCoilFanPower();
 
-    bool setRatedTotalLightingPower(double ratedTotalLightingPower);
+      bool setRatedCirculationFanPower(double ratedCirculationFanPower);
 
-    bool setLightingSchedule(Schedule& schedule);
+      void resetRatedCirculationFanPower();
 
-    void resetLightingSchedule();
+      bool setRatedTotalLightingPower(double ratedTotalLightingPower);
 
-    bool setDefrostType(std::string defrostType);
+      bool setLightingSchedule(Schedule& schedule);
 
-    void resetDefrostType();
+      void resetLightingSchedule();
 
-    bool setDefrostControlType(std::string defrostControlType);
+      bool setDefrostType(std::string defrostType);
 
-    void resetDefrostControlType();
+      void resetDefrostType();
 
-    bool setDefrostSchedule(Schedule& schedule);
+      bool setDefrostControlType(std::string defrostControlType);
 
-    bool setDefrostDripDownSchedule(Schedule& schedule);
+      void resetDefrostControlType();
 
-    void resetDefrostDripDownSchedule();
+      bool setDefrostSchedule(Schedule& schedule);
 
-    bool setDefrostPower(boost::optional<double> defrostPower);
+      bool setDefrostDripDownSchedule(Schedule& schedule);
 
-    void resetDefrostPower();
+      void resetDefrostDripDownSchedule();
 
-    bool setTemperatureTerminationDefrostFractiontoIce(boost::optional<double> temperatureTerminationDefrostFractiontoIce);
+      bool setDefrostPower(boost::optional<double> defrostPower);
 
-    void resetTemperatureTerminationDefrostFractiontoIce();
+      void resetDefrostPower();
 
-    bool setRestockingSchedule(Schedule& schedule);
+      bool setTemperatureTerminationDefrostFractiontoIce(boost::optional<double> temperatureTerminationDefrostFractiontoIce);
 
-    void resetRestockingSchedule();
+      void resetTemperatureTerminationDefrostFractiontoIce();
 
-    bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+      bool setRestockingSchedule(Schedule& schedule);
 
-    void resetAverageRefrigerantChargeInventory();
+      void resetRestockingSchedule();
 
-    bool setInsulatedFloorSurfaceArea(double insulatedFloorSurfaceArea);
+      bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
-    bool setInsulatedFloorUValue(double insulatedFloorUValue);
+      void resetAverageRefrigerantChargeInventory();
 
-    void resetInsulatedFloorUValue();
+      bool setInsulatedFloorSurfaceArea(double insulatedFloorSurfaceArea);
 
-    bool setWalkinDefrostCycleParameters(const RefrigerationDefrostCycleParameters& walkinDefrostCycleParameters);
+      bool setInsulatedFloorUValue(double insulatedFloorUValue);
 
-    bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
+      void resetInsulatedFloorUValue();
 
-    void resetDurationofDefrostCycle();
+      bool setWalkinDefrostCycleParameters(const RefrigerationDefrostCycleParameters& walkinDefrostCycleParameters);
 
-    bool setDripDownTime(boost::optional<int> dripDownTime);
+      bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
 
-    void resetDripDownTime();
+      void resetDurationofDefrostCycle();
 
-    bool setDefrost1StartTime(const openstudio::Time& defrost1StartTime);
+      bool setDripDownTime(boost::optional<int> dripDownTime);
 
-    void resetDefrost1StartTime();
+      void resetDripDownTime();
 
-    bool setDefrost2StartTime(const openstudio::Time& defrost2StartTime);
+      bool setDefrost1StartTime(const openstudio::Time& defrost1StartTime);
 
-    void resetDefrost2StartTime();
+      void resetDefrost1StartTime();
 
-    bool setDefrost3StartTime(const openstudio::Time& defrost3StartTime);
+      bool setDefrost2StartTime(const openstudio::Time& defrost2StartTime);
 
-    void resetDefrost3StartTime();
+      void resetDefrost2StartTime();
 
-    bool setDefrost4StartTime(const openstudio::Time& defrost4StartTime);
+      bool setDefrost3StartTime(const openstudio::Time& defrost3StartTime);
 
-    void resetDefrost4StartTime();
+      void resetDefrost3StartTime();
 
-    bool setDefrost5StartTime(const openstudio::Time& defrost5StartTime);
+      bool setDefrost4StartTime(const openstudio::Time& defrost4StartTime);
 
-    void resetDefrost5StartTime();
+      void resetDefrost4StartTime();
 
-    bool setDefrost6StartTime(const openstudio::Time& defrost6StartTime);
+      bool setDefrost5StartTime(const openstudio::Time& defrost5StartTime);
 
-    void resetDefrost6StartTime();
+      void resetDefrost5StartTime();
 
-    bool setDefrost7StartTime(const openstudio::Time& defrost7StartTime);
+      bool setDefrost6StartTime(const openstudio::Time& defrost6StartTime);
 
-    void resetDefrost7StartTime();
+      void resetDefrost6StartTime();
 
-    bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
+      bool setDefrost7StartTime(const openstudio::Time& defrost7StartTime);
 
-    void resetDefrost8StartTime();
+      void resetDefrost7StartTime();
 
-    bool addToSystem(RefrigerationSystem & system);
+      bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
-    void removeFromSystem();
+      void resetDefrost8StartTime();
 
-    bool setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone);
+      bool setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone);
 
-    void resetZoneBoundaryThermalZone();
+      void resetZoneBoundaryThermalZone();
 
-    bool setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
+      bool setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
 
-    bool setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+      bool setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
 
-    bool setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+      bool setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
 
-    bool setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
+      bool setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
 
-    bool setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
+      bool setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
 
-    bool setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone);
+      bool setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone);
 
-    bool setZoneBoundaryGlassReachInDoorUValueFacingZone(double zoneBoundaryGlassReachInDoorUValueFacingZone);
+      bool setZoneBoundaryGlassReachInDoorUValueFacingZone(double zoneBoundaryGlassReachInDoorUValueFacingZone);
 
-    bool setZoneBoundaryStockingDoorUValueFacingZone(double zoneBoundaryStockingDoorUValueFacingZone);
+      bool setZoneBoundaryStockingDoorUValueFacingZone(double zoneBoundaryStockingDoorUValueFacingZone);
 
-    bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
+      bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
 
-    void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
+      void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
 
-    //@}
-    /** @name Other */
-    //@{
+      bool addToSystem(RefrigerationSystem& system);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationWalkIn");
+      void removeFromSystem();
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalDefrostSchedule() const;
+      bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
 
-    RefrigerationWalkInZoneBoundary frontZoneBoundary();
+      void removeFromSecondarySystem();
 
-    boost::optional<RefrigerationWalkInZoneBoundary> zoneBoundary() const;
-  };
+      bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
 
-} // detail
+      void removeFromCompressorRack();
 
-} // model
-} // openstudio
+      //@}
+      /** @name Other */
+      //@{
 
-#endif // MODEL_REFRIGERATIONWALKIN_IMPL_HPP
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationWalkIn");
+
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalDefrostSchedule() const;
+
+      RefrigerationWalkInZoneBoundary frontZoneBoundary();
+
+      boost::optional<RefrigerationWalkInZoneBoundary> zoneBoundary() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONWALKIN_IMPL_HPP

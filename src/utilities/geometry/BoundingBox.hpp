@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,63 +37,62 @@
 
 #include <vector>
 
-namespace openstudio{
+namespace openstudio {
 
-  // forward declaration
-  class Point3d;
+// forward declaration
+class Point3d;
 
-  /** BoundingBox is an axis aligned cuboid that can check for intersections with another BoundingBox.
+/** BoundingBox is an axis aligned cuboid that can check for intersections with another BoundingBox.
    *  BoundingBox intersections require that both boxes are specified in the same coordinate system.
    */
-  class UTILITIES_API BoundingBox{
-  public:
+class UTILITIES_API BoundingBox
+{
+ public:
+  /// default constructor creates empty BoundingBox, will not intersect with anything
+  BoundingBox();
 
-    /// default constructor creates empty BoundingBox, will not intersect with anything
-    BoundingBox();
+  /// add another BoundingBox
+  void add(const BoundingBox& other);
 
-    /// add another BoundingBox
-    void add(const BoundingBox& other);
+  /// add a point to the BoundingBox
+  void addPoint(const Point3d& point);
 
-    /// add a point to the BoundingBox
-    void addPoint(const Point3d& point);
+  /// add points to the BoundingBox
+  void addPoints(const std::vector<Point3d>& points);
 
-    /// add points to the BoundingBox
-    void addPoints(const std::vector<Point3d>& points);
+  /// test for intersection. Default tolerance is 1cm
+  bool intersects(const BoundingBox& other, double tol = 0.01) const;
 
-    /// test for intersection
-    bool intersects(const BoundingBox& other, double tol = 0.001);
+  bool isEmpty() const;
 
-    bool isEmpty() const;
+  boost::optional<double> minX() const;
+  boost::optional<double> minY() const;
+  boost::optional<double> minZ() const;
 
-    boost::optional<double> minX() const;
-    boost::optional<double> minY() const;
-    boost::optional<double> minZ() const;
+  boost::optional<double> maxX() const;
+  boost::optional<double> maxY() const;
+  boost::optional<double> maxZ() const;
 
-    boost::optional<double> maxX() const;
-    boost::optional<double> maxY() const;
-    boost::optional<double> maxZ() const;
+  std::vector<Point3d> corners() const;
 
-    std::vector<Point3d> corners() const;
+ private:
+  REGISTER_LOGGER("utilities.BoundingBox");
 
-  private:
+  boost::optional<double> m_minX;
+  boost::optional<double> m_minY;
+  boost::optional<double> m_minZ;
 
-    REGISTER_LOGGER("utilities.BoundingBox");
+  boost::optional<double> m_maxX;
+  boost::optional<double> m_maxY;
+  boost::optional<double> m_maxZ;
+};
 
-    boost::optional<double> m_minX;
-    boost::optional<double> m_minY;
-    boost::optional<double> m_minZ;
+// optional BoundingBox
+typedef boost::optional<BoundingBox> OptionalBoundingBox;
 
-    boost::optional<double> m_maxX;
-    boost::optional<double> m_maxY;
-    boost::optional<double> m_maxZ;
-  };
+// vector of BoundingBox
+typedef std::vector<BoundingBox> BoundingBoxVector;
 
-  // optional BoundingBox
-  typedef boost::optional<BoundingBox> OptionalBoundingBox;
+}  // namespace openstudio
 
-  // vector of BoundingBox
-  typedef std::vector<BoundingBox> BoundingBoxVector;
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_BOUNDINGBOX_HPP
+#endif  //UTILITIES_GEOMETRY_BOUNDINGBOX_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,87 +36,89 @@
 #include "../core/Path.hpp"
 #include "../data/Vector.hpp"
 
-namespace openstudio{
+namespace openstudio {
+
+class CSVFile;
+class Variant;
+class DateTime;
 
 namespace detail {
 
-    class UTILITIES_API CSVFile_Impl
-    {
-    public:
+  class UTILITIES_API CSVFile_Impl
+  {
+   public:
+    CSVFile_Impl();
 
-      CSVFile_Impl();
+    CSVFile_Impl(const std::string& s);
 
-      CSVFile_Impl(const std::string& s);
+    CSVFile_Impl(const openstudio::path& p);
 
-      CSVFile_Impl(const openstudio::path& p);
+    CSVFile clone() const;
 
-      CSVFile clone() const;
+    std::string string() const;
 
-      std::string string() const;
+    // cppcheck-suppress functionStatic
+    bool save() const;
 
-      bool save() const;
+    bool saveAs(const openstudio::path& p);
 
-      bool saveAs(const openstudio::path& p);
-        
-      boost::optional<openstudio::path> path() const;
+    boost::optional<openstudio::path> path() const;
 
-      bool setPath(const openstudio::path& path);
-      
-      void resetPath();
+    bool setPath(const openstudio::path& path);
 
-      unsigned numColumns() const;
-      
-      unsigned numRows() const;
-      
-      std::vector<std::vector<Variant> > rows() const;
-      
-      void addRow(const std::vector<Variant>& row);
+    void resetPath();
 
-      void setRows(const std::vector<std::vector<Variant> >& rows);  
+    unsigned numColumns() const;
 
-      void clear();
+    unsigned numRows() const;
 
-      /** Add a column of std::vector<DateTime>, returns column index (first column is index 0). */
-      unsigned addColumn(const std::vector<DateTime>& dateTimes);
+    std::vector<std::vector<Variant>> rows() const;
 
-      /** Add a column of values in a Vector, returns column index (first column is index 0). */
-      unsigned addColumn(const Vector& values);
+    void addRow(const std::vector<Variant>& row);
 
-      /** Add a column of values in a std::vector<double>, returns column index (first column is index 0). */
-      unsigned addColumn(const std::vector<double>& values);
+    void setRows(const std::vector<std::vector<Variant>>& rows);
 
-      /** Add a column of values in a std::vector<std::string>, returns column index (first column is index 0). */
-      unsigned addColumn(const std::vector<std::string>& values);
+    void clear();
 
-      /** Get column of DateTime values (first column is index 0). Empty vector is returned if any cell is not a valid DateTime or if column index is invalid.*/
-      std::vector<DateTime> getColumnAsDateTimes(unsigned columnIndex) const;
+    /** Add a column of std::vector<DateTime>, returns column index (first column is index 0). */
+    unsigned addColumn(const std::vector<DateTime>& dateTimes);
 
-      /** Get column as a Vector (first column is index 0). Empty vector is returned if any cell is not a valid number or if column index is invalid.*/
-      std::vector<double> getColumnAsDoubleVector(unsigned columnIndex) const;
+    /** Add a column of values in a Vector, returns column index (first column is index 0). */
+    unsigned addColumn(const Vector& values);
 
-      /** Get column as a Vector (first column is index 0). Numeric cells will be converted to strings. Empty vector is returned if column index is invalid.*/
-      std::vector<std::string> getColumnAsStringVector(unsigned columnIndex) const;
+    /** Add a column of values in a std::vector<double>, returns column index (first column is index 0). */
+    unsigned addColumn(const std::vector<double>& values);
 
-    private:
+    /** Add a column of values in a std::vector<std::string>, returns column index (first column is index 0). */
+    unsigned addColumn(const std::vector<std::string>& values);
 
-      REGISTER_LOGGER("openstudio.CSVFile");
+    /** Get column of DateTime values (first column is index 0). Empty vector is returned if any cell is not a valid DateTime or if column index is invalid.*/
+    std::vector<DateTime> getColumnAsDateTimes(unsigned columnIndex) const;
 
-      // throws on error
-      std::vector<std::vector<Variant> > parseRows(std::istream& input);
+    /** Get column as a Vector (first column is index 0). Empty vector is returned if any cell is not a valid number or if column index is invalid.*/
+    std::vector<double> getColumnAsDoubleVector(unsigned columnIndex) const;
 
-      void assignNumColumns();
+    /** Get column as a Vector (first column is index 0). Numeric cells will be converted to strings. Empty vector is returned if column index is invalid.*/
+    std::vector<std::string> getColumnAsStringVector(unsigned columnIndex) const;
 
-      void ensureNumRows(unsigned numRows);
+   private:
+    REGISTER_LOGGER("openstudio.CSVFile");
 
-      void padRows();
+    // throws on error
+    static std::vector<std::vector<Variant>> parseRows(std::istream& input);
 
-      boost::optional<openstudio::path> m_path;
-      unsigned m_numColumns;
-      std::vector<std::vector<Variant> > m_rows;
+    void assignNumColumns();
 
-    };
+    void ensureNumRows(unsigned numRows);
 
-} // detail
-} // openstudio
+    void padRows();
 
-#endif //UTILITIES_FILETYPES_CSVFILE_IMPL_HPP
+    boost::optional<openstudio::path> m_path;
+    unsigned m_numColumns;
+    std::vector<std::vector<Variant>> m_rows;
+  };
+
+}  // namespace detail
+}  // namespace openstudio
+
+#endif  //UTILITIES_FILETYPES_CSVFILE_IMPL_HPP

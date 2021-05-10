@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,114 +36,109 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** AvailabilityManagerOptimumStart_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerOptimumStart.*/
-  class MODEL_API AvailabilityManagerOptimumStart_Impl : public AvailabilityManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AvailabilityManagerOptimumStart_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerOptimumStart.*/
+    class MODEL_API AvailabilityManagerOptimumStart_Impl : public AvailabilityManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AvailabilityManagerOptimumStart_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      AvailabilityManagerOptimumStart_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerOptimumStart_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      AvailabilityManagerOptimumStart_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerOptimumStart_Impl(const AvailabilityManagerOptimumStart_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      AvailabilityManagerOptimumStart_Impl(const AvailabilityManagerOptimumStart_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AvailabilityManagerOptimumStart_Impl() {}
+      virtual ~AvailabilityManagerOptimumStart_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule applicabilitySchedule() const;
+      Schedule applicabilitySchedule() const;
 
-    std::string controlType() const;
+      std::string controlType() const;
 
-    boost::optional<ThermalZone> controlZone() const;
+      boost::optional<ThermalZone> controlZone() const;
 
-    double maximumValueforOptimumStartTime() const;
+      double maximumValueforOptimumStartTime() const;
 
-    std::string controlAlgorithm() const;
+      std::string controlAlgorithm() const;
 
-    double constantTemperatureGradientduringCooling() const;
+      double constantTemperatureGradientduringCooling() const;
 
-    double constantTemperatureGradientduringHeating() const;
+      double constantTemperatureGradientduringHeating() const;
 
-    double initialTemperatureGradientduringCooling() const;
+      double initialTemperatureGradientduringCooling() const;
 
-    double initialTemperatureGradientduringHeating() const;
+      double initialTemperatureGradientduringHeating() const;
 
-    double constantStartTime() const;
+      double constantStartTime() const;
 
-    int numberofPreviousDays() const;
+      int numberofPreviousDays() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setApplicabilitySchedule(Schedule& schedule);
+      bool setApplicabilitySchedule(Schedule& schedule);
 
-    bool setControlType(std::string controlType);
+      bool setControlType(std::string controlType);
 
-    bool setControlZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setControlZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetControlZone();
+      void resetControlZone();
 
-    bool setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
+      bool setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
 
-    bool setControlAlgorithm(std::string controlAlgorithm);
+      bool setControlAlgorithm(std::string controlAlgorithm);
 
-    bool setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
+      bool setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
 
-    bool setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating);
+      bool setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating);
 
-    bool setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling);
+      bool setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling);
 
-    bool setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating);
+      bool setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating);
 
-    bool setConstantStartTime(double constantStartTime);
+      bool setConstantStartTime(double constantStartTime);
 
-    bool setNumberofPreviousDays(int numberofPreviousDays);
+      bool setNumberofPreviousDays(int numberofPreviousDays);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AvailabilityManagerOptimumStart");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AvailabilityManagerOptimumStart");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalApplicabilitySchedule() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalApplicabilitySchedule() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGEROPTIMUMSTART_IMPL_HPP
+#endif  // MODEL_AVAILABILITYMANAGEROPTIMUMSTART_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,290 +51,256 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObject & workspaceObject )
-{
-  boost::optional<WorkspaceObject> target = workspaceObject.getTarget(Sizing_ZoneFields::ZoneorZoneListName);
+  OptionalModelObject ReverseTranslator::translateSizingZone(const WorkspaceObject& workspaceObject) {
+    boost::optional<WorkspaceObject> target = workspaceObject.getTarget(Sizing_ZoneFields::ZoneorZoneListName);
 
-  std::vector<ThermalZone> thermalZones;
+    std::vector<ThermalZone> thermalZones;
 
-  if( target ){
+    if (target) {
 
-    // just one thermal zone
-    boost::optional<ModelObject> mo;
-    if (target->iddObject().type() == IddObjectType::Zone){
-      mo = translateAndMapWorkspaceObject(target.get());
-      if( mo ) {
-        if( boost::optional<Space> space = mo->optionalCast<Space>() ) {
-          boost::optional<ThermalZone> thermalZone = space->thermalZone();
-          if (thermalZone){
-            thermalZones.push_back(*thermalZone);
+      // just one thermal zone
+      boost::optional<ModelObject> mo;
+      if (target->iddObject().type() == IddObjectType::Zone) {
+        mo = translateAndMapWorkspaceObject(target.get());
+        if (mo) {
+          if (boost::optional<Space> space = mo->optionalCast<Space>()) {
+            boost::optional<ThermalZone> thermalZone = space->thermalZone();
+            if (thermalZone) {
+              thermalZones.push_back(*thermalZone);
+            }
           }
         }
-      }
-    }else if (target->iddObject().type() == IddObjectType::ZoneList){
+      } else if (target->iddObject().type() == IddObjectType::ZoneList) {
 
-      // get all thermal zones in zone list
-      for (const IdfExtensibleGroup& idfGroup : target->extensibleGroups()){
-        WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-        OptionalWorkspaceObject owo = workspaceGroup.getTarget(0);
-        if (owo){
-          mo = translateAndMapWorkspaceObject(owo.get());
-          if( mo ) {
-            if( boost::optional<Space> space = mo->optionalCast<Space>() ) {
-              boost::optional<ThermalZone> thermalZone = space->thermalZone();
-              if (thermalZone){
-                thermalZones.push_back(*thermalZone);
+        // get all thermal zones in zone list
+        for (const IdfExtensibleGroup& idfGroup : target->extensibleGroups()) {
+          WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+          OptionalWorkspaceObject owo = workspaceGroup.getTarget(0);
+          if (owo) {
+            mo = translateAndMapWorkspaceObject(owo.get());
+            if (mo) {
+              if (boost::optional<Space> space = mo->optionalCast<Space>()) {
+                boost::optional<ThermalZone> thermalZone = space->thermalZone();
+                if (thermalZone) {
+                  thermalZones.push_back(*thermalZone);
+                }
               }
             }
           }
         }
       }
     }
-  }
 
-  if(thermalZones.empty())
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             << " Can't find associated ThermalZone(s).");
+    if (thermalZones.empty()) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription() << " Can't find associated ThermalZone(s).");
 
-    return boost::none;
-  }
-
-  boost::optional<ModelObject> result;
-  for (ThermalZone thermalZone : thermalZones){
-
-    // sizing zone is constructed in thermal zone ctor
-    openstudio::model::SizingZone sizingZone = thermalZone.sizingZone();
-
-    // return first sizing zone
-    if (!result){
-      result = sizingZone;
+      return boost::none;
     }
 
-    boost::optional<std::string> s;
-    boost::optional<double> value;
+    boost::optional<ModelObject> result;
+    for (ThermalZone thermalZone : thermalZones) {
 
-    // ZoneCoolingDesignSupplyAirTemperatureInputMethod
-    s = workspaceObject.getString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod);
-    if( s )
-    {
-      sizingZone.setZoneCoolingDesignSupplyAirTemperatureInputMethod(s.get());
-    }
+      // sizing zone is constructed in thermal zone ctor
+      openstudio::model::SizingZone sizingZone = thermalZone.sizingZone();
 
-    // ZoneCoolingDesignSupplyAirTemperature
+      // return first sizing zone
+      if (!result) {
+        result = sizingZone;
+      }
 
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature);
-    if( value )
-    {
-      sizingZone.setZoneCoolingDesignSupplyAirTemperature(value.get());
-    }
+      boost::optional<std::string> s;
+      boost::optional<double> value;
 
-    // ZoneCoolingDesignSupplyAirTemperatureDifference
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference);
-    if( value )
-    {
-      sizingZone.setZoneCoolingDesignSupplyAirTemperatureDifference(value.get());
-    }
+      // ZoneCoolingDesignSupplyAirTemperatureInputMethod
+      s = workspaceObject.getString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod);
+      if (s) {
+        sizingZone.setZoneCoolingDesignSupplyAirTemperatureInputMethod(s.get());
+      }
 
+      // ZoneCoolingDesignSupplyAirTemperature
 
-    // ZoneHeatingDesignSupplyAirTemperatureInputMethod
-    s = workspaceObject.getString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod);
-    if( s )
-    {
-      sizingZone.setZoneHeatingDesignSupplyAirTemperatureInputMethod(s.get());
-    }
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature);
+      if (value) {
+        sizingZone.setZoneCoolingDesignSupplyAirTemperature(value.get());
+      }
 
-    // ZoneHeatingDesignSupplyAirTemperature
+      // ZoneCoolingDesignSupplyAirTemperatureDifference
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference);
+      if (value) {
+        sizingZone.setZoneCoolingDesignSupplyAirTemperatureDifference(value.get());
+      }
 
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature);
-    if( value )
-    {
-      sizingZone.setZoneHeatingDesignSupplyAirTemperature(value.get());
-    }
+      // ZoneHeatingDesignSupplyAirTemperatureInputMethod
+      s = workspaceObject.getString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod);
+      if (s) {
+        sizingZone.setZoneHeatingDesignSupplyAirTemperatureInputMethod(s.get());
+      }
 
-    // ZoneHeatingDesignSupplyAirTemperatureDifference
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference);
-    if( value )
-    {
-      sizingZone.setZoneHeatingDesignSupplyAirTemperatureDifference(value.get());
-    }
+      // ZoneHeatingDesignSupplyAirTemperature
 
-    // ZoneCoolingDesignSupplyAirHumidityRatio
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature);
+      if (value) {
+        sizingZone.setZoneHeatingDesignSupplyAirTemperature(value.get());
+      }
 
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio);
-    if( value )
-    {
-      sizingZone.setZoneHeatingDesignSupplyAirHumidityRatio(value.get());
-    }
+      // ZoneHeatingDesignSupplyAirTemperatureDifference
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference);
+      if (value) {
+        sizingZone.setZoneHeatingDesignSupplyAirTemperatureDifference(value.get());
+      }
 
-    // ZoneHeatingDesignSupplyAirHumidityRatio
+      // ZoneCoolingDesignSupplyAirHumidityRatio
 
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio);
-    if( value )
-    {
-      sizingZone.setZoneHeatingDesignSupplyAirHumidityRatio(value.get());
-    }
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio);
+      if (value) {
+        sizingZone.setZoneHeatingDesignSupplyAirHumidityRatio(value.get());
+      }
 
-    // DesignSpecificationOutdoorAirObjectName
+      // ZoneHeatingDesignSupplyAirHumidityRatio
 
-    target = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName);
-    if (target){
-      OptionalModelObject mo = translateDesignSpecificationOutdoorAir(*target);
-      if (mo){
-        if (mo->optionalCast<DesignSpecificationOutdoorAir>()){
-          std::vector<Space> spaces = thermalZone.spaces();
-          OS_ASSERT(spaces.size() == 1);
-          spaces[0].setDesignSpecificationOutdoorAir(mo->cast<DesignSpecificationOutdoorAir>());
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio);
+      if (value) {
+        sizingZone.setZoneHeatingDesignSupplyAirHumidityRatio(value.get());
+      }
+
+      // DesignSpecificationOutdoorAirObjectName
+
+      target = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName);
+      if (target) {
+        OptionalModelObject mo = translateDesignSpecificationOutdoorAir(*target);
+        if (mo) {
+          if (mo->optionalCast<DesignSpecificationOutdoorAir>()) {
+            std::vector<Space> spaces = thermalZone.spaces();
+            OS_ASSERT(spaces.size() == 1);
+            spaces[0].setDesignSpecificationOutdoorAir(mo->cast<DesignSpecificationOutdoorAir>());
+          }
+        }
+      }
+
+      // ZoneHeatingSizingFactor
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingSizingFactor);
+      if (value) {
+        sizingZone.setZoneHeatingSizingFactor(value.get());
+      }
+
+      // ZoneCoolingSizingFactor
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingSizingFactor);
+      if (value) {
+        sizingZone.setZoneCoolingSizingFactor(value.get());
+      }
+
+      // CoolingDesignAirFlowMethod
+
+      s = workspaceObject.getString(Sizing_ZoneFields::CoolingDesignAirFlowMethod);
+      if (s) {
+        sizingZone.setCoolingDesignAirFlowMethod(s.get());
+      }
+
+      // CoolingDesignAirFlowRate
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingDesignAirFlowRate);
+      if (value) {
+        sizingZone.setCoolingDesignAirFlowRate(value.get());
+      }
+
+      // CoolingMinimumAirFlowperZoneFloorArea
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlowperZoneFloorArea);
+      if (value) {
+        sizingZone.setCoolingMinimumAirFlowperZoneFloorArea(value.get());
+      }
+
+      // CoolingMinimumAirFlow
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlow);
+      if (value) {
+        sizingZone.setCoolingMinimumAirFlow(value.get());
+      }
+
+      // CoolingMinimumAirFlowFraction
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlowFraction);
+      if (value) {
+        sizingZone.setCoolingMinimumAirFlowFraction(value.get());
+      }
+
+      // HeatingDesignAirFlowMethod
+
+      s = workspaceObject.getString(Sizing_ZoneFields::HeatingDesignAirFlowMethod);
+      if (s) {
+        sizingZone.setHeatingDesignAirFlowMethod(s.get());
+      }
+
+      // HeatingDesignAirFlowRate
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingDesignAirFlowRate);
+      if (value) {
+        sizingZone.setHeatingDesignAirFlowRate(value.get());
+      }
+
+      // HeatingMaximumAirFlowperZoneFloorArea
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlowperZoneFloorArea);
+      if (value) {
+        sizingZone.setHeatingMaximumAirFlowperZoneFloorArea(value.get());
+      }
+
+      // HeatingMaximumAirFlow
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlow);
+      if (value) {
+        sizingZone.setHeatingMaximumAirFlow(value.get());
+      }
+
+      // HeatingMaximumAirFlowFraction
+
+      value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlowFraction);
+      if (value) {
+        sizingZone.setHeatingMaximumAirFlowFraction(value.get());
+      }
+
+      // DesignSpecification_ZoneAirDistribution
+
+      boost::optional<WorkspaceObject> _designSpecification =
+        workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName);
+
+      if (_designSpecification) {
+        // ZoneAirDistributionEffectivenessinCoolingMode
+
+        value = _designSpecification->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode);
+        if (value) {
+          sizingZone.setDesignZoneAirDistributionEffectivenessinCoolingMode(value.get());
+        }
+
+        // ZoneAirDistributionEffectivenessinHeatingMode
+
+        value = _designSpecification->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode);
+        if (value) {
+          sizingZone.setDesignZoneAirDistributionEffectivenessinHeatingMode(value.get());
+        }
+
+        // MinimumZoneVentilationEfficiency
+
+        value = _designSpecification->getDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency);
+        if (value) {
+          sizingZone.setDesignMinimumZoneVentilationEfficiency(value.get());
+        }
+
+        // Zone Air Distribution Effectiveness Schedule Name: not translated
+        s = workspaceObject.getString(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessScheduleName);
+
+        if (s && !s->empty()) {
+          LOG(Warn, _designSpecification->nameString()
+                      << ", field Zone Air Distribution Effectiveness Schedule Name (='" << s.get() << "') isn't translated back to OS:Sizing:Zone");
         }
       }
     }
 
-    // ZoneHeatingSizingFactor
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingSizingFactor);
-    if( value )
-    {
-      sizingZone.setZoneHeatingSizingFactor(value.get());
-    }
-
-    // ZoneCoolingSizingFactor
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingSizingFactor);
-    if( value )
-    {
-      sizingZone.setZoneCoolingSizingFactor(value.get());
-    }
-
-    // CoolingDesignAirFlowMethod
-
-    s = workspaceObject.getString(Sizing_ZoneFields::CoolingDesignAirFlowMethod);
-    if( s )
-    {
-      sizingZone.setCoolingDesignAirFlowMethod(s.get());
-    }
-
-    // CoolingDesignAirFlowRate
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingDesignAirFlowRate);
-    if( value )
-    {
-      sizingZone.setCoolingDesignAirFlowRate(value.get());
-    }
-
-    // CoolingMinimumAirFlowperZoneFloorArea
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlowperZoneFloorArea);
-    if( value )
-    {
-      sizingZone.setCoolingMinimumAirFlowperZoneFloorArea(value.get());
-    }
-
-    // CoolingMinimumAirFlow
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlow);
-    if( value )
-    {
-      sizingZone.setCoolingMinimumAirFlow(value.get());
-    }
-
-    // CoolingMinimumAirFlowFraction
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlowFraction);
-    if( value )
-    {
-      sizingZone.setCoolingMinimumAirFlowFraction(value.get());
-    }
-
-    // HeatingDesignAirFlowMethod
-
-    s = workspaceObject.getString(Sizing_ZoneFields::HeatingDesignAirFlowMethod);
-    if( s )
-    {
-      sizingZone.setHeatingDesignAirFlowMethod(s.get());
-    }
-
-    // HeatingDesignAirFlowRate
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingDesignAirFlowRate);
-    if( value )
-    {
-      sizingZone.setHeatingDesignAirFlowRate(value.get());
-    }
-
-    // HeatingMaximumAirFlowperZoneFloorArea
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlowperZoneFloorArea);
-    if( value )
-    {
-      sizingZone.setHeatingMaximumAirFlowperZoneFloorArea(value.get());
-    }
-
-    // HeatingMaximumAirFlow
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlow);
-    if( value )
-    {
-      sizingZone.setHeatingMaximumAirFlow(value.get());
-    }
-
-    // HeatingMaximumAirFlowFraction
-
-    value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlowFraction);
-    if( value )
-    {
-      sizingZone.setHeatingMaximumAirFlowFraction(value.get());
-    }
-
-    // DesignSpecification_ZoneAirDistribution
-
-    boost::optional<WorkspaceObject> _designSpecification
-        = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName);
-
-    if( _designSpecification )
-    {
-      // ZoneAirDistributionEffectivenessinCoolingMode
-
-      value = _designSpecification->getDouble(
-                DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode);
-      if( value )
-      {
-        sizingZone.setDesignZoneAirDistributionEffectivenessinCoolingMode(value.get());
-      }
-
-      // ZoneAirDistributionEffectivenessinHeatingMode
-
-      value = _designSpecification->getDouble(
-                DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode);
-      if( value )
-      {
-        sizingZone.setDesignZoneAirDistributionEffectivenessinHeatingMode(value.get());
-      }
-
-      // MinimumZoneVentilationEfficiency
-
-      value = _designSpecification->getDouble(
-                DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency);
-      if( value )
-      {
-        sizingZone.setDesignMinimumZoneVentilationEfficiency(value.get());
-      }
-
-      // Zone Air Distribution Effectiveness Schedule Name: not translated
-      s = workspaceObject.getString(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessScheduleName);
-
-      if( s && !s->empty()) {
-        LOG(Warn, _designSpecification->nameString() << ", field Zone Air Distribution Effectiveness Schedule Name (='"
-            << s.get() << "') isn't translated back to OS:Sizing:Zone");
-      }
-    }
-
+    return result;
   }
 
-  return result;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

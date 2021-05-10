@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,16 +45,15 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSpace( model::Space & modelObject )
-{
+  boost::optional<IdfObject> ForwardTranslator::translateSpace(model::Space& modelObject) {
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
 
-  return boost::none;
+    return boost::none;
 
-  /*
+    /*
   IdfObject idfObject(openstudio::IddObjectType::CommentOnly);
 
   idfObject.setComment(
@@ -66,9 +65,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSpace( model::Space & mod
 
   return idfObject;
   */
-}
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,93 +57,77 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableRefrigerantFlow( CoilCoolingDXVariableRefrigerantFlow & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableRefrigerantFlow(CoilCoolingDXVariableRefrigerantFlow& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    IdfObject idfObject(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
+    // Name
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // AvailabilityScheduleName
-
-  if( boost::optional<model::Schedule> schedule = modelObject.availabilitySchedule() )
-  {
-    if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
-    {
-      idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilityScheduleName,_schedule->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // RatedTotalCoolingCapacity
+    // AvailabilityScheduleName
 
-  if( modelObject.isRatedTotalCoolingCapacityAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,"Autosize");
-  }
-  else if( (value = modelObject.ratedTotalCoolingCapacity()) )
-  {
-    idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,value.get());
-  }
-
-  // RatedSensibleHeatRatio
-
-  if( modelObject.isRatedSensibleHeatRatioAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedSensibleHeatRatio,"Autosize");
-  }
-  else if( (value = modelObject.ratedSensibleHeatRatio()) )
-  {
-    idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedSensibleHeatRatio,value.get());
-  }
-
-  // RatedAirFlowRate
-
-  if( modelObject.isRatedAirFlowRateAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.ratedAirFlowRate()) )
-  {
-    idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate,value.get());
-  }
-
-  // CoolingCapacityRatioModifierFunctionofTemperatureCurveName
-
-  if( boost::optional<model::Curve> curve = modelObject.coolingCapacityRatioModifierFunctionofTemperatureCurve() )
-  {
-    if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
-    {
-      idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofTemperatureCurveName,_curve->name().get());
+    if (boost::optional<model::Schedule> schedule = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilityScheduleName, _schedule->name().get());
+      }
     }
-  }
 
-  // CoolingCapacityModifierCurveFunctionofFlowFractionName
+    // RatedTotalCoolingCapacity
 
-  if( boost::optional<model::Curve> curve = modelObject.coolingCapacityModifierCurveFunctionofFlowFraction() )
-  {
-    if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
-    {
-      idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFractionName,_curve->name().get());
+    if (modelObject.isRatedTotalCoolingCapacityAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity, "Autosize");
+    } else if ((value = modelObject.ratedTotalCoolingCapacity())) {
+      idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity, value.get());
     }
+
+    // RatedSensibleHeatRatio
+
+    if (modelObject.isRatedSensibleHeatRatioAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedSensibleHeatRatio, "Autosize");
+    } else if ((value = modelObject.ratedSensibleHeatRatio())) {
+      idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedSensibleHeatRatio, value.get());
+    }
+
+    // RatedAirFlowRate
+
+    if (modelObject.isRatedAirFlowRateAutosized()) {
+      idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, "Autosize");
+    } else if ((value = modelObject.ratedAirFlowRate())) {
+      idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, value.get());
+    }
+
+    // CoolingCapacityRatioModifierFunctionofTemperatureCurveName
+
+    if (boost::optional<model::Curve> curve = modelObject.coolingCapacityRatioModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofTemperatureCurveName,
+                            _curve->name().get());
+      }
+    }
+
+    // CoolingCapacityModifierCurveFunctionofFlowFractionName
+
+    if (boost::optional<model::Curve> curve = modelObject.coolingCapacityModifierCurveFunctionofFlowFraction()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFractionName,
+                            _curve->name().get());
+      }
+    }
+
+    // TODO CoilAirInletNode
+    // TODO CoilAirOutletNode
+
+    return idfObject;
   }
 
-  // TODO CoilAirInletNode
-  // TODO CoilAirOutletNode
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,68 +36,67 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExteriorLightsDefinition_Impl;
+    class ExteriorLightsDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExteriorLightsDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
+  /** ExteriorLightsDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
  *  'OS:Exterior:Lights:Definition'. */
-class MODEL_API ExteriorLightsDefinition : public ExteriorLoadDefinition {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ExteriorLightsDefinition : public ExteriorLoadDefinition
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Defaults design level to 0.0 W. */
-  explicit ExteriorLightsDefinition(const Model& model);
+    /** Defaults design level to 0.0 W. */
+    explicit ExteriorLightsDefinition(const Model& model);
 
-  virtual ~ExteriorLightsDefinition() {}
+    virtual ~ExteriorLightsDefinition() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double designLevel() const;
+    double designLevel() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDesignLevel(double designLevel);
+    bool setDesignLevel(double designLevel);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExteriorLightsDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExteriorLightsDefinition_Impl ImplType;
 
-  explicit ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl);
+    explicit ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl);
 
-  friend class detail::ExteriorLightsDefinition_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExteriorLightsDefinition");
-};
+    friend class detail::ExteriorLightsDefinition_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorLightsDefinition");
+  };
 
-/** \relates ExteriorLightsDefinition*/
-typedef boost::optional<ExteriorLightsDefinition> OptionalExteriorLightsDefinition;
+  /** \relates ExteriorLightsDefinition*/
+  typedef boost::optional<ExteriorLightsDefinition> OptionalExteriorLightsDefinition;
 
-/** \relates ExteriorLightsDefinition*/
-typedef std::vector<ExteriorLightsDefinition> ExteriorLightsDefinitionVector;
+  /** \relates ExteriorLightsDefinition*/
+  typedef std::vector<ExteriorLightsDefinition> ExteriorLightsDefinitionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERIORLIGHTSDEFINITION_HPP
-
-
+#endif  // MODEL_EXTERIORLIGHTSDEFINITION_HPP

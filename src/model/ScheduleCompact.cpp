@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,190 +53,172 @@ using openstudio::Workspace;
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ScheduleCompact_Impl::ScheduleCompact_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : Schedule_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ScheduleCompact::iddObjectType());
-  }
+    ScheduleCompact_Impl::ScheduleCompact_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ScheduleCompact::iddObjectType());
+    }
 
-  ScheduleCompact_Impl::ScheduleCompact_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : Schedule_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ScheduleCompact::iddObjectType());
-  }
+    ScheduleCompact_Impl::ScheduleCompact_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ScheduleCompact::iddObjectType());
+    }
 
-  ScheduleCompact_Impl::ScheduleCompact_Impl(const ScheduleCompact_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : Schedule_Impl(other,model,keepHandle)
-  {}
+    ScheduleCompact_Impl::ScheduleCompact_Impl(const ScheduleCompact_Impl& other, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(other, model, keepHandle) {}
 
-  // return the parent object in the hierarchy
-  boost::optional<ParentObject> ScheduleCompact_Impl::parent() const
-  {
-    return boost::optional<ParentObject>();
-  }
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> ScheduleCompact_Impl::parent() const {
+      return boost::optional<ParentObject>();
+    }
 
-  // return any children objects in the hierarchy
-  std::vector<ModelObject> ScheduleCompact_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    return result;
-  }
+    // return any children objects in the hierarchy
+    std::vector<ModelObject> ScheduleCompact_Impl::children() const {
+      std::vector<ModelObject> result;
+      return result;
+    }
 
-  // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& ScheduleCompact_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Schedule Value"
-    };
-    return result;
-  }
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& ScheduleCompact_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Schedule Value"};
+      return result;
+    }
 
-  IddObjectType ScheduleCompact_Impl::iddObjectType() const {
-    return ScheduleCompact::iddObjectType();
-  }
+    IddObjectType ScheduleCompact_Impl::iddObjectType() const {
+      return ScheduleCompact::iddObjectType();
+    }
 
-  std::vector<double> ScheduleCompact_Impl::values() const {
-    DoubleVector result;
-    for (const IdfExtensibleGroup& eg : extensibleGroups()) {
-      std::string str = eg.getString(0,true).get();
-      boost::trim(str);
-      if (!str.empty()) {
-        char firstChar = str[0];
-        switch (firstChar) {
-        case 'T':
-          break;
-        case 'F':
-          break;
-        case 'U':
-          break;
-        default :
-        {
-          try {
-            double value = boost::lexical_cast<double>(str);
-            result.push_back(value);
+    std::vector<double> ScheduleCompact_Impl::values() const {
+      DoubleVector result;
+      for (const IdfExtensibleGroup& eg : extensibleGroups()) {
+        std::string str = eg.getString(0, true).get();
+        boost::trim(str);
+        if (!str.empty()) {
+          char firstChar = str[0];
+          switch (firstChar) {
+            case 'T':
+              break;
+            case 'F':
+              break;
+            case 'U':
+              break;
+            default: {
+              try {
+                double value = boost::lexical_cast<double>(str);
+                result.push_back(value);
+              } catch (...) {
+              }
+            }
           }
-          catch (...) {}
-        }
         }
       }
+      return result;
     }
+
+    boost::optional<ScheduleTypeLimits> ScheduleCompact_Impl::scheduleTypeLimits() const {
+      return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_CompactFields::ScheduleTypeLimitsName);
+    }
+
+    bool ScheduleCompact_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
+      if (scheduleTypeLimits.model() != model()) {
+        return false;
+      }
+      if (!candidateIsCompatibleWithCurrentUse(scheduleTypeLimits)) {
+        return false;
+      }
+      return setPointer(OS_Schedule_CompactFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
+    }
+
+    bool ScheduleCompact_Impl::resetScheduleTypeLimits() {
+      if (okToResetScheduleTypeLimits()) {
+        return setString(OS_Schedule_CompactFields::ScheduleTypeLimitsName, "");
+      }
+      return false;
+    }
+
+    bool ScheduleCompact_Impl::setToConstantValue(double value) {
+      clearExtensibleGroups();
+      StringVector values;
+      values.push_back("Through: 12/31");
+      IdfExtensibleGroup eg = pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "For: AllDays";
+      eg = pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "Until: 24:00";
+      eg = pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0, value);
+      OS_ASSERT(ok);
+      return true;
+    }
+
+    void ScheduleCompact_Impl::ensureNoLeapDays() {
+      LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
+    }
+
+    bool ScheduleCompact_Impl::isConstantValue() const {
+      IdfExtensibleGroupVector scheduleData = extensibleGroups();
+      if (scheduleData.size() == 4u) {
+        if (scheduleData[3].getDouble(0)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    boost::optional<double> ScheduleCompact_Impl::constantValue() const {
+      IdfExtensibleGroupVector scheduleData = extensibleGroups();
+      if (scheduleData.size() == 4u) {
+        return scheduleData[3].getDouble(0);
+      }
+      return boost::none;
+    }
+
+    std::vector<EMSActuatorNames> ScheduleCompact_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"Schedule:Compact", "Schedule Value"}};
+      return actuators;
+    }
+
+    std::vector<std::string> ScheduleCompact_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types;
+      return types;
+    }
+  }  // namespace detail
+
+  // create a new ScheduleCompact object in the model's workspace
+  ScheduleCompact::ScheduleCompact(const Model& model) : Schedule(ScheduleCompact::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
+  }
+
+  ScheduleCompact::ScheduleCompact(const Model& model, double constantValue) : Schedule(ScheduleCompact::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
+    setToConstantValue(constantValue);
+  }
+
+  // constructor
+  ScheduleCompact::ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl) : Schedule(std::move(impl)) {}
+
+  bool ScheduleCompact::setToConstantValue(double value) {
+    return getImpl<detail::ScheduleCompact_Impl>()->setToConstantValue(value);
+  }
+
+  bool ScheduleCompact::isConstantValue() const {
+    return getImpl<detail::ScheduleCompact_Impl>()->isConstantValue();
+  }
+
+  boost::optional<double> ScheduleCompact::constantValue() const {
+    return getImpl<detail::ScheduleCompact_Impl>()->constantValue();
+  }
+
+  IddObjectType ScheduleCompact::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_Schedule_Compact);
     return result;
   }
 
-  boost::optional<ScheduleTypeLimits> ScheduleCompact_Impl::scheduleTypeLimits() const {
-    return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_CompactFields::ScheduleTypeLimitsName);
-  }
-
-  bool ScheduleCompact_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-    if (scheduleTypeLimits.model() != model()) {
-      return false;
-    }
-    if (!candidateIsCompatibleWithCurrentUse(scheduleTypeLimits)) {
-      return false;
-    }
-    return setPointer(OS_Schedule_CompactFields::ScheduleTypeLimitsName,scheduleTypeLimits.handle());
-  }
-
-  bool ScheduleCompact_Impl::resetScheduleTypeLimits() {
-    if (okToResetScheduleTypeLimits()) {
-      return setString(OS_Schedule_CompactFields::ScheduleTypeLimitsName,"");
-    }
-    return false;
-  }
-
-  bool ScheduleCompact_Impl::setToConstantValue(double value) {
-    clearExtensibleGroups();
-    StringVector values;
-    values.push_back("Through: 12/31");
-    IdfExtensibleGroup eg = pushExtensibleGroup(values);
-    OS_ASSERT(!eg.empty());
-    values[0] = "For: AllDays";
-    eg = pushExtensibleGroup(values);
-    OS_ASSERT(!eg.empty());
-    values[0] = "Until: 24:00";
-    eg = pushExtensibleGroup(values);
-    OS_ASSERT(!eg.empty());
-    values[0] = "";
-    eg = pushExtensibleGroup(values);
-    OS_ASSERT(!eg.empty());
-    bool ok = eg.setDouble(0,value);
-    OS_ASSERT(ok);
-    return true;
-  }
-
-  void ScheduleCompact_Impl::ensureNoLeapDays()
-  {
-    LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
-  }
-
-  bool ScheduleCompact_Impl::isConstantValue() const {
-    IdfExtensibleGroupVector scheduleData = extensibleGroups();
-    if (scheduleData.size() == 4u) {
-      if (scheduleData[3].getDouble(0)) { return true; }
-    }
-    return false;
-  }
-
-  boost::optional<double> ScheduleCompact_Impl::constantValue() const {
-    IdfExtensibleGroupVector scheduleData = extensibleGroups();
-    if (scheduleData.size() == 4u) {
-      return scheduleData[3].getDouble(0);
-    }
-    return boost::none;
-  }
-
-  std::vector<EMSActuatorNames> ScheduleCompact_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"Schedule:Compact", "Schedule Value"}};
-    return actuators;
-  }
-
-  std::vector<std::string> ScheduleCompact_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types;
-    return types;
-  }
-} // detail
-
-// create a new ScheduleCompact object in the model's workspace
-ScheduleCompact::ScheduleCompact(const Model& model)
-  : Schedule(ScheduleCompact::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
-}
-
-ScheduleCompact::ScheduleCompact(const Model& model,double constantValue)
-  : Schedule(ScheduleCompact::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
-  setToConstantValue(constantValue);
-}
-
-// constructor
-ScheduleCompact::ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl)
-  : Schedule(std::move(impl))
-{}
-
-bool ScheduleCompact::setToConstantValue(double value) {
-  return getImpl<detail::ScheduleCompact_Impl>()->setToConstantValue(value);
-}
-
-bool ScheduleCompact::isConstantValue() const {
-  return getImpl<detail::ScheduleCompact_Impl>()->isConstantValue();
-}
-
-boost::optional<double> ScheduleCompact::constantValue() const {
-  return getImpl<detail::ScheduleCompact_Impl>()->constantValue();
-}
-
-IddObjectType ScheduleCompact::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_Schedule_Compact);
-  return result;
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

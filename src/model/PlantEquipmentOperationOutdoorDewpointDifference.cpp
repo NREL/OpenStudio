@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,101 +38,90 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  PlantEquipmentOperationOutdoorDewpointDifference_Impl::PlantEquipmentOperationOutdoorDewpointDifference_Impl(const IdfObject& idfObject,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType());
-  }
-
-  PlantEquipmentOperationOutdoorDewpointDifference_Impl::PlantEquipmentOperationOutdoorDewpointDifference_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType());
-  }
-
-  PlantEquipmentOperationOutdoorDewpointDifference_Impl::PlantEquipmentOperationOutdoorDewpointDifference_Impl(const PlantEquipmentOperationOutdoorDewpointDifference_Impl& other,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& PlantEquipmentOperationOutdoorDewpointDifference_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType PlantEquipmentOperationOutdoorDewpointDifference_Impl::iddObjectType() const {
-    return PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType();
-  }
-
-  boost::optional<Node> PlantEquipmentOperationOutdoorDewpointDifference_Impl::referenceTemperatureNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_PlantEquipmentOperation_OutdoorDewpointDifferenceFields::ReferenceTemperatureNodeName);
-  }
-
-  bool PlantEquipmentOperationOutdoorDewpointDifference_Impl::setReferenceTemperatureNode(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_PlantEquipmentOperation_OutdoorDewpointDifferenceFields::ReferenceTemperatureNodeName, node.get().handle());
+    PlantEquipmentOperationOutdoorDewpointDifference_Impl::PlantEquipmentOperationOutdoorDewpointDifference_Impl(const IdfObject& idfObject,
+                                                                                                                 Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType());
     }
-    else {
-      resetReferenceTemperatureNode();
-      result = true;
+
+    PlantEquipmentOperationOutdoorDewpointDifference_Impl::PlantEquipmentOperationOutdoorDewpointDifference_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType());
     }
-    return result;
+
+    PlantEquipmentOperationOutdoorDewpointDifference_Impl::PlantEquipmentOperationOutdoorDewpointDifference_Impl(
+      const PlantEquipmentOperationOutdoorDewpointDifference_Impl& other, Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& PlantEquipmentOperationOutdoorDewpointDifference_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType PlantEquipmentOperationOutdoorDewpointDifference_Impl::iddObjectType() const {
+      return PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType();
+    }
+
+    boost::optional<Node> PlantEquipmentOperationOutdoorDewpointDifference_Impl::referenceTemperatureNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(
+        OS_PlantEquipmentOperation_OutdoorDewpointDifferenceFields::ReferenceTemperatureNodeName);
+    }
+
+    bool PlantEquipmentOperationOutdoorDewpointDifference_Impl::setReferenceTemperatureNode(const boost::optional<Node>& node) {
+      bool result(false);
+      if (node) {
+        result = setPointer(OS_PlantEquipmentOperation_OutdoorDewpointDifferenceFields::ReferenceTemperatureNodeName, node.get().handle());
+      } else {
+        resetReferenceTemperatureNode();
+        result = true;
+      }
+      return result;
+    }
+
+    void PlantEquipmentOperationOutdoorDewpointDifference_Impl::resetReferenceTemperatureNode() {
+      bool result = setString(OS_PlantEquipmentOperation_OutdoorDewpointDifferenceFields::ReferenceTemperatureNodeName, "");
+      OS_ASSERT(result);
+    }
+
+    double PlantEquipmentOperationOutdoorDewpointDifference_Impl::maximumUpperLimit() const {
+      return 100.0;
+    }
+
+    double PlantEquipmentOperationOutdoorDewpointDifference_Impl::minimumLowerLimit() const {
+      return -50.0;
+    }
+
+  }  // namespace detail
+
+  PlantEquipmentOperationOutdoorDewpointDifference::PlantEquipmentOperationOutdoorDewpointDifference(const Model& model)
+    : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>());
   }
 
-  void PlantEquipmentOperationOutdoorDewpointDifference_Impl::resetReferenceTemperatureNode() {
-    bool result = setString(OS_PlantEquipmentOperation_OutdoorDewpointDifferenceFields::ReferenceTemperatureNodeName, "");
-    OS_ASSERT(result);
+  IddObjectType PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpointDifference);
   }
 
-  double PlantEquipmentOperationOutdoorDewpointDifference_Impl::maximumUpperLimit() const
-  {
-    return 100.0;
+  boost::optional<Node> PlantEquipmentOperationOutdoorDewpointDifference::referenceTemperatureNode() const {
+    return getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>()->referenceTemperatureNode();
   }
 
-  double PlantEquipmentOperationOutdoorDewpointDifference_Impl::minimumLowerLimit() const
-  {
-    return -50.0;
+  bool PlantEquipmentOperationOutdoorDewpointDifference::setReferenceTemperatureNode(const Node& node) {
+    return getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>()->setReferenceTemperatureNode(node);
   }
 
-} // detail
+  void PlantEquipmentOperationOutdoorDewpointDifference::resetReferenceTemperatureNode() {
+    getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>()->resetReferenceTemperatureNode();
+  }
 
-PlantEquipmentOperationOutdoorDewpointDifference::PlantEquipmentOperationOutdoorDewpointDifference(const Model& model)
-  : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>());
-}
+  /// @cond
+  PlantEquipmentOperationOutdoorDewpointDifference::PlantEquipmentOperationOutdoorDewpointDifference(
+    std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl> impl)
+    : PlantEquipmentOperationRangeBasedScheme(std::move(impl)) {}
+  /// @endcond
 
-IddObjectType PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpointDifference);
-}
-
-boost::optional<Node> PlantEquipmentOperationOutdoorDewpointDifference::referenceTemperatureNode() const {
-  return getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>()->referenceTemperatureNode();
-}
-
-bool PlantEquipmentOperationOutdoorDewpointDifference::setReferenceTemperatureNode(const Node& node) {
-  return getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>()->setReferenceTemperatureNode(node);
-}
-
-void PlantEquipmentOperationOutdoorDewpointDifference::resetReferenceTemperatureNode() {
-  getImpl<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl>()->resetReferenceTemperatureNode();
-}
-
-/// @cond
-PlantEquipmentOperationOutdoorDewpointDifference::PlantEquipmentOperationOutdoorDewpointDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

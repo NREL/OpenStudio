@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,71 +36,64 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API DaylightRedirectionDevice_Impl : public ShadingMaterial_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API DaylightRedirectionDevice_Impl : public ShadingMaterial_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    DaylightRedirectionDevice_Impl(const IdfObject& idfObject,
-               Model_Impl* model,
-               bool keepHandle);
+      DaylightRedirectionDevice_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    DaylightRedirectionDevice_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+      DaylightRedirectionDevice_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    DaylightRedirectionDevice_Impl(const DaylightRedirectionDevice_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+      DaylightRedirectionDevice_Impl(const DaylightRedirectionDevice_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~DaylightRedirectionDevice_Impl() {}
+      virtual ~DaylightRedirectionDevice_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    /** Throws because blind has beam and diffuse visible transmittance. */
-    virtual boost::optional<double> getVisibleTransmittance() const override;
+      /** Throws because blind has beam and diffuse visible transmittance. */
+      virtual boost::optional<double> getVisibleTransmittance() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string daylightRedirectionDeviceType() const;
+      std::string daylightRedirectionDeviceType() const;
 
-    bool isDaylightRedirectionDeviceTypeDefaulted() const;
+      bool isDaylightRedirectionDeviceTypeDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType);
+      bool setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType);
 
-    void resetDaylightRedirectionDeviceType();
+      void resetDaylightRedirectionDeviceType();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
+      //@}
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.DaylightRedirectionDevice");
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.DaylightRedirectionDevice");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_BLIND_IMPL_HPP
-
+#endif  // MODEL_BLIND_IMPL_HPP

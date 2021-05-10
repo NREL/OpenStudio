@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,21 +43,13 @@
 
 namespace openstudio {
 
-OSQuantityVector::OSQuantityVector(const Unit& units)
-  : m_units(units.clone())
-{}
+OSQuantityVector::OSQuantityVector(const Unit& units) : m_units(units.clone()) {}
 
-OSQuantityVector::OSQuantityVector(const Unit& units, unsigned n, double value)
-  : m_units(units.clone()), m_values(n,value)
-{}
+OSQuantityVector::OSQuantityVector(const Unit& units, unsigned n, double value) : m_units(units.clone()), m_values(n, value) {}
 
-OSQuantityVector::OSQuantityVector(const Unit& units, const std::vector<double>& values)
-  : m_units(units.clone()), m_values(values)
-{}
+OSQuantityVector::OSQuantityVector(const Unit& units, const std::vector<double>& values) : m_units(units.clone()), m_values(values) {}
 
-OSQuantityVector::OSQuantityVector(const std::vector<Quantity>& values)
-  : m_units(), m_values(values.size(),0.0)
-{
+OSQuantityVector::OSQuantityVector(const std::vector<Quantity>& values) : m_units(), m_values(values.size(), 0.0) {
   if (!values.empty()) {
     m_units = values[0].units();
   }
@@ -65,22 +57,19 @@ OSQuantityVector::OSQuantityVector(const std::vector<Quantity>& values)
   for (unsigned i = 0, n = size(); i < n; ++i) {
     if (!(values[i].units() == m_units)) {
       LOG_AND_THROW("Quantity " << values[i] << " has units inconsistent with the first "
-                    << "Quantity in vector values, " << values[0] << ".");
+                                << "Quantity in vector values, " << values[0] << ".");
     }
     if (values[i].scale() != myScale) {
       Quantity working = values[i];
       working.setScale(myScale.exponent);
       m_values[i] = working.value();
-    }
-    else {
+    } else {
       m_values[i] = values[i].value();
     }
   }
 }
 
-OSQuantityVector::OSQuantityVector(const OSQuantityVector& other)
-  : m_units(other.units()), m_values(other.values())
-{}
+OSQuantityVector::OSQuantityVector(const OSQuantityVector& other) : m_units(other.units()), m_values(other.values()) {}
 
 OSQuantityVector& OSQuantityVector::operator=(const OSQuantityVector& other) {
   if (this == &other) {
@@ -106,7 +95,7 @@ Scale OSQuantityVector::scale() const {
 std::vector<Quantity> OSQuantityVector::quantities() const {
   QuantityVector result;
   for (double value : values()) {
-    result.push_back(Quantity(value,units()));
+    result.push_back(Quantity(value, units()));
   }
   return result;
 }
@@ -116,7 +105,7 @@ std::vector<double> OSQuantityVector::values() const {
 }
 
 Quantity OSQuantityVector::getQuantity(unsigned i) const {
-  return Quantity(m_values[i],units());
+  return Quantity(m_values[i], units());
 }
 
 bool OSQuantityVector::empty() const {
@@ -153,10 +142,11 @@ bool OSQuantityVector::setScale(const std::string& scaleAbbreviation) {
 
 void OSQuantityVector::push_back(Quantity q) {
   if (!(q.units() == units())) {
-    LOG_AND_THROW("Quantity " << q << " is incompatible with this OSQuantityVector, which has "
-                  "units " << units() << ".");
-  }
-  else if (q.scale() != scale()) {
+    LOG_AND_THROW("Quantity " << q
+                              << " is incompatible with this OSQuantityVector, which has "
+                                 "units "
+                              << units() << ".");
+  } else if (q.scale() != scale()) {
     q.setScale(scale().exponent);
   }
   m_values.push_back(q.value());
@@ -167,7 +157,7 @@ void OSQuantityVector::pop_back() {
 }
 
 void OSQuantityVector::resize(unsigned n, double value) {
-  m_values.resize(n,value);
+  m_values.resize(n, value);
 }
 
 void OSQuantityVector::clear() {
@@ -182,8 +172,8 @@ bool OSQuantityVector::isAbsolute() const {
   if (OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>()) {
     return tu->isAbsolute();
   }
-  LOG_AND_THROW("Could not evaluate OSQuantityVector::isAbsolute because the units are in system "
-                << system().valueName() << ", not Celsius or Fahrenheit.");
+  LOG_AND_THROW("Could not evaluate OSQuantityVector::isAbsolute because the units are in system " << system().valueName()
+                                                                                                   << ", not Celsius or Fahrenheit.");
   return false;
 }
 
@@ -194,20 +184,18 @@ bool OSQuantityVector::isRelative() const {
 void OSQuantityVector::setAsAbsolute() {
   if (OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>()) {
     tu->setAsAbsolute();
-  }
-  else {
-    LOG_AND_THROW("Could not OSQuantityVector::setAsAbsolute because the units are in system "
-                  << system().valueName() << ", not Celsius or Fahrenheit.");
+  } else {
+    LOG_AND_THROW("Could not OSQuantityVector::setAsAbsolute because the units are in system " << system().valueName()
+                                                                                               << ", not Celsius or Fahrenheit.");
   }
 }
 
 void OSQuantityVector::setAsRelative() {
   if (OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>()) {
     tu->setAsRelative();
-  }
-  else {
-    LOG_AND_THROW("Could not OSQuantityVector::setAsRelative because the units are in system "
-                  << system().valueName() << ", not Celsius or Fahrenheit.");
+  } else {
+    LOG_AND_THROW("Could not OSQuantityVector::setAsRelative because the units are in system " << system().valueName()
+                                                                                               << ", not Celsius or Fahrenheit.");
   }
 }
 
@@ -215,26 +203,24 @@ void OSQuantityVector::lbmToLbf() {
   if (OptionalIPUnit iu = m_units.optionalCast<IPUnit>()) {
     int x = m_units.baseUnitExponent("lb_m");
     if (x != 0) {
-      (*this) /= std::pow(IPUnit::gc(),x);
+      (*this) /= std::pow(IPUnit::gc(), x);
       iu->lbmToLbf();
     }
     OS_ASSERT(m_units.baseUnitExponent("lb_m") == 0);
   }
-  LOG_AND_THROW("Cannot convert non-IP units " << m_units << " in system " << system().valueName()
-                << " from lb_m to lb_f.");
+  LOG_AND_THROW("Cannot convert non-IP units " << m_units << " in system " << system().valueName() << " from lb_m to lb_f.");
 }
 
 void OSQuantityVector::lbfToLbm() {
   if (OptionalIPUnit iu = m_units.optionalCast<IPUnit>()) {
     int x = m_units.baseUnitExponent("lb_f");
     if (x != 0) {
-      (*this) *= std::pow(IPUnit::gc(),x);
+      (*this) *= std::pow(IPUnit::gc(), x);
       iu->lbmToLbf();
     }
     OS_ASSERT(m_units.baseUnitExponent("lb_f") == 0);
   }
-  LOG_AND_THROW("Cannot convert non-IP units " << m_units << " in system " << system().valueName()
-                << " from lb_f to lb_m.");
+  LOG_AND_THROW("Cannot convert non-IP units " << m_units << " in system " << system().valueName() << " from lb_f to lb_m.");
 }
 
 OSQuantityVector& OSQuantityVector::operator+=(OSQuantityVector rVector) {
@@ -247,14 +233,13 @@ OSQuantityVector& OSQuantityVector::operator+=(OSQuantityVector rVector) {
   if (isTemperature() && rVector.isTemperature()) {
     if (!isAbsolute() && rVector.isAbsolute()) {
       setAsAbsolute();
-    }else if (isAbsolute() && !rVector.isAbsolute()) {
+    } else if (isAbsolute() && !rVector.isAbsolute()) {
       rVector.setAsAbsolute();
     }
   }
 
   if (units() != rVector.units()) {
-    LOG_AND_THROW("Cannot add OSQuantityVectors with different units (" << units()
-                  << " and " << rVector.units() << ").");
+    LOG_AND_THROW("Cannot add OSQuantityVectors with different units (" << units() << " and " << rVector.units() << ").");
   }
 
   unsigned n = size();
@@ -285,8 +270,7 @@ OSQuantityVector& OSQuantityVector::operator+=(Quantity rQuantity) {
   }
 
   if (units() != rQuantity.units()) {
-    LOG_AND_THROW("Cannot add OSQuantityVector and Quantity with different units (" << units()
-                  << " and " << rQuantity.units() << ").");
+    LOG_AND_THROW("Cannot add OSQuantityVector and Quantity with different units (" << units() << " and " << rQuantity.units() << ").");
   }
 
   if (scale() != rQuantity.scale()) {
@@ -306,7 +290,7 @@ OSQuantityVector& OSQuantityVector::operator-=(OSQuantityVector rVector) {
   unsigned n = size();
   if (this == &rVector) {
     clear();
-    resize(n,0.0);
+    resize(n, 0.0);
     return *this;
   }
 
@@ -327,8 +311,7 @@ OSQuantityVector& OSQuantityVector::operator-=(OSQuantityVector rVector) {
   }
 
   if (units() != rVector.units()) {
-    LOG_AND_THROW("Cannot subtract OSQuantityVectors with different units (" << units()
-                  << " and " << rVector.units() << ").");
+    LOG_AND_THROW("Cannot subtract OSQuantityVectors with different units (" << units() << " and " << rVector.units() << ").");
   }
 
   if (rVector.size() != n) {
@@ -366,8 +349,7 @@ OSQuantityVector& OSQuantityVector::operator-=(Quantity rQuantity) {
   }
 
   if (units() != rQuantity.units()) {
-    LOG_AND_THROW("Cannot subtract OSQuantityVector and Quantity with different units (" << units()
-                  << " and " << rQuantity.units() << ").");
+    LOG_AND_THROW("Cannot subtract OSQuantityVector and Quantity with different units (" << units() << " and " << rQuantity.units() << ").");
   }
 
   if (scale() != rQuantity.scale()) {
@@ -393,12 +375,11 @@ OSQuantityVector& OSQuantityVector::operator*=(const Quantity& rQuantity) {
   OptionalTemperatureUnit tu2 = rUnits.optionalCast<TemperatureUnit>();
   if (tu1 && tu2) {
     *tu1 *= *tu2;
-  }
-  else {
+  } else {
     m_units *= rUnits;
   }
-  ScaleOpReturnType resultScale = scale()*rQuantity.scale();
-  (*this) *= ( rQuantity.value() * resultScale.second );
+  ScaleOpReturnType resultScale = scale() * rQuantity.scale();
+  (*this) *= (rQuantity.value() * resultScale.second);
 
   return *this;
 }
@@ -414,12 +395,11 @@ OSQuantityVector& OSQuantityVector::operator/=(const Quantity& rQuantity) {
   OptionalTemperatureUnit tu2 = rUnits.optionalCast<TemperatureUnit>();
   if (tu1 && tu2) {
     *tu1 /= *tu2;
-  }
-  else {
+  } else {
     m_units /= rUnits;
   }
-  ScaleOpReturnType resultScale = scale()/rQuantity.scale();
-  (*this) *= ( resultScale.second / rQuantity.value() );
+  ScaleOpReturnType resultScale = scale() / rQuantity.scale();
+  (*this) *= (resultScale.second / rQuantity.value());
 
   return *this;
 }
@@ -450,13 +430,13 @@ OSQuantityVector operator+(const OSQuantityVector& lVector, const OSQuantityVect
   return result;
 }
 
-OSQuantityVector operator+(const OSQuantityVector& lVector,const Quantity& rQuantity) {
+OSQuantityVector operator+(const OSQuantityVector& lVector, const Quantity& rQuantity) {
   OSQuantityVector result(lVector);
   result += rQuantity;
   return result;
 }
 
-OSQuantityVector operator+(const Quantity& lQuantity,const OSQuantityVector& rVector) {
+OSQuantityVector operator+(const Quantity& lQuantity, const OSQuantityVector& rVector) {
   OSQuantityVector result(rVector);
   result += lQuantity;
   return result;
@@ -505,7 +485,7 @@ OSQuantityVector operator*(double d, const OSQuantityVector& rVector) {
   return result;
 }
 
-OSQuantityVector operator/(const OSQuantityVector& lVector,const Quantity& rQuantity) {
+OSQuantityVector operator/(const OSQuantityVector& lVector, const Quantity& rQuantity) {
   OSQuantityVector result(lVector);
   result /= rQuantity;
   return result;
@@ -524,23 +504,22 @@ Quantity dot(OSQuantityVector lVector, const OSQuantityVector& rVector) {
   Unit resultUnits;
   if (ltu && rtu) {
     resultUnits = ltu.get() * rtu.get();
-  }
-  else {
+  } else {
     resultUnits = lUnits * rUnits;
   }
   ScaleOpReturnType resultScale = lVector.scale() * rVector.scale();
   lVector *= resultScale.second;
   DoubleVector lValues(lVector.values()), rValues(rVector.values());
-  double resultValue = dot(createVector(lValues),createVector(rValues));
-  return Quantity(resultValue,resultUnits);
+  double resultValue = dot(createVector(lValues), createVector(rValues));
+  return Quantity(resultValue, resultUnits);
 }
 
-bool operator==(const OSQuantityVector& lVector,const OSQuantityVector& rVector) {
+bool operator==(const OSQuantityVector& lVector, const OSQuantityVector& rVector) {
   return (&lVector == &rVector) || ((lVector.units() == rVector.units()) && (lVector.values() == rVector.values()));
 }
 
-bool operator!=(const OSQuantityVector& lVector,const OSQuantityVector& rVector) {
+bool operator!=(const OSQuantityVector& lVector, const OSQuantityVector& rVector) {
   return !(lVector == rVector);
 }
 
-} // openstudio
+}  // namespace openstudio

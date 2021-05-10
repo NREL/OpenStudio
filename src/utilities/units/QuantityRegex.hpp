@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,7 +51,6 @@ UTILITIES_API bool isFixedPrecisionValue(const std::string& s);
  *  but ScientificNotationValues and the like are not. */
 UTILITIES_API bool containsFixedPrecisionValue(const std::string& s);
 
-
 /// Scientific notation values: 23E10, 1.2E+0, 0.361D-32, .3E100
 UTILITIES_API const boost::regex& regexScientificNotationValue();
 
@@ -65,7 +64,6 @@ UTILITIES_API bool isScientificNotationValue(const std::string& s);
 /** Returns true if s contains a ScientificNotationValue. Other text is tolerated as long as it is
  *  separated from the value by whitespace. */
 UTILITIES_API bool containsScientificNotationValue(const std::string& s);
-
 
 /// Base unit: kg, kN, etc. Limits unit strings to 10 characters.
 UTILITIES_API const boost::regex& regexBaseUnit();
@@ -87,7 +85,6 @@ UTILITIES_API bool isAtomicUnit(const std::string& s);
  *  from the unit by whitespace, *, /, (, or ) */
 UTILITIES_API bool containsAtomicUnit(const std::string& s);
 
-
 /** Compound unit: kg*m^2/s^2, kN, s, 1/s. An atomic unit is a compound unit. A compound unit is not
  *  surrounded by Scale.abbr( ). */
 UTILITIES_API const boost::regex& regexCompoundUnit();
@@ -103,7 +100,6 @@ UTILITIES_API bool isCompoundUnit(const std::string& s);
  *  is set off by whitespace or parentheses. */
 UTILITIES_API bool containsCompoundUnit(const std::string& s);
 
-
 /** Scaled unit: k(kg^2/m^2). A compound unit surrounded by Scale.abbr\(\). */
 UTILITIES_API const boost::regex& regexScaledUnit();
 
@@ -117,7 +113,6 @@ UTILITIES_API bool isScaledUnit(const std::string& s);
 /** Returns true if s contains a scaled unit. Other text is tolerated as long as the scaled unit
  *  is set off by spaces or newline characters. May be terminated with a '. ', ', ', or ';'. */
 UTILITIES_API bool containsScaledUnit(const std::string& s);
-
 
 /** Textual scaled unit: people/1000 ft^2. A compound unit with 10+ embedded in the denominator.
  *
@@ -141,9 +136,7 @@ UTILITIES_API bool containsDirectScaledUnit(const std::string& s);
 
 /** Decomposes a direct scaled unit string into numerator, exponent of scale in denominator
  *  (3 for /1000), and denominator. */
-UTILITIES_API std::pair<std::string,std::pair<unsigned,std::string> >
-  decomposeDirectScaledUnit(const std::string& s);
-
+UTILITIES_API std::pair<std::string, std::pair<unsigned, std::string>> decomposeDirectScaledUnit(const std::string& s);
 
 /** Unit: kg/s, kBtu/h, k(m^2), 1/m^2. A compound unit (which includes atomic units) or a scaled
  *  unit. */
@@ -159,7 +152,6 @@ UTILITIES_API bool isUnit(const std::string& s);
 /** Returns true if s contains a scaled unit. Other text is tolerated as long as the scaled unit
  *  is set off by spaces or newline characters. May be terminated with  a '. ', ', ', or ';'. */
 UTILITIES_API bool containsUnit(const std::string& s);
-
 
 /** Quantity: 3 kN, -1.021D-2 k(m^2), 2 Hz, 3.0 1/ms, 3.0/ms. A value (fixed precision, or
  *  scientific noation) and a unit separated by a space or a '/'.
@@ -180,24 +172,22 @@ UTILITIES_API bool isQuantity(const std::string& s);
  *  is set off by spaces or newline characters. May be terminated with  a '. ', ', ', or ';'. */
 UTILITIES_API bool containsQuantity(const std::string& s);
 
-
 /** Returns value string as .first and unit string as .second. Precondition: isQuantity(s) == true.
  *  Throws otherwise. */
-UTILITIES_API std::pair<std::string,std::string> decomposeQuantityString(const std::string& s);
+UTILITIES_API std::pair<std::string, std::string> decomposeQuantityString(const std::string& s);
 
 /** Returns scale abbreviation as .first and compoundUnitString as .second. Precondition:
  *  isScaledUnit(s) == true. Throws otherwise. */
-UTILITIES_API std::pair<std::string,std::string> decomposeScaledUnitString(const std::string& s);
+UTILITIES_API std::pair<std::string, std::string> decomposeScaledUnitString(const std::string& s);
 
 /** Returns vectors of strings, where each string contains atomic unit. First vector is numerator,
  *  second is denominator. Precondition: isCompoundUnit(s) == true. Throws otherwise. */
-UTILITIES_API std::pair< std::vector<std::string>,std::vector<std::string> > decomposeCompoundUnitString(
-    const std::string& s);
+UTILITIES_API std::pair<std::vector<std::string>, std::vector<std::string>> decomposeCompoundUnitString(const std::string& s);
 
 /** Returns baseUnit string and integer exponent. Precondition: isAtomicUnit(s) == true. Throws
  *  otherwise. */
-UTILITIES_API std::pair<std::string,int> decomposeAtomicUnitString(const std::string& s);
+UTILITIES_API std::pair<std::string, int> decomposeAtomicUnitString(const std::string& s);
 
-}
+}  // namespace openstudio
 
-#endif // UTIILITIES_UNITS_QUANTITYREGEX_HPP
+#endif  // UTIILITIES_UNITS_QUANTITYREGEX_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,95 +30,83 @@
 #ifndef MODEL_MATERIAL_IMPL_HPP
 #define MODEL_MATERIAL_IMPL_HPP
 
-
 #include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class Material;
-class StandardsInformationMaterial;
+  // forward declaration
+  class Material;
+  class StandardsInformationMaterial;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API Material_Impl : public ResourceObject_Impl {
+    class MODEL_API Material_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      // Construct completely new object.
+      Material_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      // Clone copy constructor.
+      Material_Impl(const Material_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~Material_Impl() {}
 
+      //@}
+      /** @name Getters */
+      //@{
 
-   public:
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    /** @name Constructors and Destructors */
-    //@{
+      /** Get the thickness of the material. For some materials, 0.0 is always returned. */
+      virtual double thickness() const;
 
-    // Construct completely new object.
-    Material_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual boost::optional<double> getVisibleTransmittance() const = 0;
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      virtual boost::optional<double> interiorVisibleAbsorptance() const;
 
-    // Clone copy constructor.
-    Material_Impl(const Material_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual boost::optional<double> exteriorVisibleAbsorptance() const;
 
-    virtual ~Material_Impl() {}
+      StandardsInformationMaterial standardsInformation() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      /** Set thickness to value (m). For some materials, false is always returned. */
+      virtual bool setThickness(double value);
 
-    /** Get the thickness of the material. For some materials, 0.0 is always returned. */
-    virtual double thickness() const;
+      // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it;
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+        createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+                                                               double moistureEquationCoefficientB, double moistureEquationCoefficientC,
+                                                               double moistureEquationCoefficientD, double coatingLayerThickness,
+                                                               double coatingLayerWaterVaporDiffusionResistanceFactor);
 
-    virtual boost::optional<double> getVisibleTransmittance() const = 0;
+      // returns the material property moisture penetration depth settings if set
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
 
-    virtual boost::optional<double> interiorVisibleAbsorptance() const;
+      // resets the material property moisture penetration depth settings
+      void resetMaterialPropertyMoisturePenetrationDepthSettings();
 
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+      //@}
 
-    StandardsInformationMaterial standardsInformation() const;
+     private:
+      REGISTER_LOGGER("openstudio.model.Material");
+    };
 
-    //@}
-    /** @name Setters */
-    //@{
+  }  // namespace detail
 
-    /** Set thickness to value (m). For some materials, false is always returned. */
-    virtual bool setThickness(double value);
+}  // namespace model
+}  // namespace openstudio
 
-    // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it;
-    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
-                                                                                                                             double moistureEquationCoefficientA,
-                                                                                                                             double moistureEquationCoefficientB,
-                                                                                                                             double moistureEquationCoefficientC,
-                                                                                                                             double moistureEquationCoefficientD,
-                                                                                                                             double coatingLayerThickness,
-                                                                                                                             double coatingLayerWaterVaporDiffusionResistanceFactor);
-
-    // returns the material property moisture penetration depth settings if set
-    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
-
-    // resets the material property moisture penetration depth settings
-    void resetMaterialPropertyMoisturePenetrationDepthSettings();
-
-    //@}
-
-   private:
-
-    REGISTER_LOGGER("openstudio.model.Material");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_MATERIAL_IMPL_HPP
+#endif  // MODEL_MATERIAL_IMPL_HPP

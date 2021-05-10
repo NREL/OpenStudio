@@ -5,19 +5,27 @@
     <version>@OpenStudio_VERSION@</version>
     <authors>NREL</authors>
     <owners>NREL</owners>
-    <licenseUrl>http://github.com/NREL/OpenStudio/blob/develop/LICENSE.md</licenseUrl>
+    <license type="file">LICENSE.md</license>
     <projectUrl>http://github.com/NREL/OpenStudio</projectUrl>
     <description>Whole building energy simulation</description>
     <tags>OpenStudio EnergyPlus Simulation Modeling</tags>
-    <references>
-        <reference file="OpenStudio.dll" />
-    </references>
+    <dependencies>
+      <group targetFramework=".NETFramework3.5" />
+    </dependencies>
   </metadata>
   <files>
-    <file src="@OPENSTUDIO_CSHARP_DLLNAME@" target="lib" /> <!-- TODO: target should be lib\{framework}, eg `lib\netcoreapp3.0` -->
-    <file src="@OPENSTUDIO_CSHARP_LIBNAME@" target="build" /> <!-- target to 'build' is probably not right either -->
-    <file src="@OPENSTUDIO_MODEL_CSHARP_LIBNAME@" target="build" />
-    <file src="@OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME@" target="build" />
-    <file src="@PROJECT_SOURCE_DIR@/csharp/OpenStudio.targets" target="build" /> <!-- To copy native binaries -->
+    <file src="Products/csharp/${OPENSTUDIO_CONFIGURATION_TYPE}/OpenStudio.dll" target="lib/net35" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudiolib.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_csharp.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_model_csharp.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_translators_csharp.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_model_csharp.dll" target="build/x64" />
+    <file src="OS-32/Products/Release/openstudiolib.dll" target="build/x86" />
+    <file src="OS-32/Products/Release/openstudio_csharp.dll" target="build/x86" />
+    <file src="OS-32/Products/Release/openstudio_model_csharp.dll" target="build/x86" />
+    <file src="OS-32/Products/Release/openstudio_translators_csharp.dll" target="build/x86" />
+    <file src="OS-32/Products/Release/openstudio_model_csharp.dll" target="build/x86" />
+    <file src="@PROJECT_SOURCE_DIR@/csharp/OpenStudio.targets" target="build" />
+    <file src="@PROJECT_SOURCE_DIR@/LICENSE.md" target="" />
   </files>
 </package>

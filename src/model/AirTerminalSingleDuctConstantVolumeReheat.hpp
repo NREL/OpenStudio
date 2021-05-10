@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,135 +38,133 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
-class HVACComponent;
+  // TODO: Check the following class names against object getters and setters.
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctConstantVolumeReheat_Impl;
+    class AirTerminalSingleDuctConstantVolumeReheat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctConstantVolumeReheat is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:ConstantVolume:Reheat'. */
-class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirTerminalSingleDuctConstantVolumeReheat is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:ConstantVolume:Reheat'. */
+  class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalSingleDuctConstantVolumeReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
+    explicit AirTerminalSingleDuctConstantVolumeReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
-  virtual ~AirTerminalSingleDuctConstantVolumeReheat() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeReheat() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
-  Schedule availabilitySchedule() const;
+    // TODO: Check return type. From object lists, some candidates are: Schedule.
+    Schedule availabilitySchedule() const;
 
-  boost::optional<double> maximumAirFlowRate() const;
+    boost::optional<double> maximumAirFlowRate() const;
 
-  bool isMaximumAirFlowRateAutosized() const;
+    bool isMaximumAirFlowRateAutosized() const;
 
-  // TODO: Check return type. From object lists, some candidates are: HeatingCoilName.
-  HVACComponent reheatCoil() const;
+    // TODO: Check return type. From object lists, some candidates are: HeatingCoilName.
+    HVACComponent reheatCoil() const;
 
-  boost::optional<double> maximumHotWaterorSteamFlowRate() const;
+    boost::optional<double> maximumHotWaterorSteamFlowRate() const;
 
-  bool isMaximumHotWaterorSteamFlowRateAutosized() const;
+    bool isMaximumHotWaterorSteamFlowRateAutosized() const;
 
-  double minimumHotWaterorSteamFlowRate() const;
+    double minimumHotWaterorSteamFlowRate() const;
 
-  bool isMinimumHotWaterorSteamFlowRateDefaulted() const;
+    bool isMinimumHotWaterorSteamFlowRateDefaulted() const;
 
-  double convergenceTolerance() const;
+    double convergenceTolerance() const;
 
-  bool isConvergenceToleranceDefaulted() const;
+    bool isConvergenceToleranceDefaulted() const;
 
-  double maximumReheatAirTemperature() const;
+    double maximumReheatAirTemperature() const;
 
-  bool isMaximumReheatAirTemperatureDefaulted() const;
+    bool isMaximumReheatAirTemperatureDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  bool setAvailabilitySchedule(Schedule& schedule);
+    // TODO: Check argument type. From object lists, some candidates are: Schedule.
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setMaximumAirFlowRate(double maximumAirFlowRate);
+    bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
-  void resetMaximumAirFlowRate();
+    void resetMaximumAirFlowRate();
 
-  void autosizeMaximumAirFlowRate();
+    void autosizeMaximumAirFlowRate();
 
-  // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName.
-  bool setReheatCoil(const HVACComponent& coil);
+    // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName.
+    bool setReheatCoil(const HVACComponent& coil);
 
-  void resetReheatCoil();
+    void resetReheatCoil();
 
-  bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
+    bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
 
-  void resetMaximumHotWaterorSteamFlowRate();
+    void resetMaximumHotWaterorSteamFlowRate();
 
-  void autosizeMaximumHotWaterorSteamFlowRate();
+    void autosizeMaximumHotWaterorSteamFlowRate();
 
-  bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
+    bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
-  void resetMinimumHotWaterorSteamFlowRate();
+    void resetMinimumHotWaterorSteamFlowRate();
 
-  bool setConvergenceTolerance(double convergenceTolerance);
+    bool setConvergenceTolerance(double convergenceTolerance);
 
-  void resetConvergenceTolerance();
+    void resetConvergenceTolerance();
 
-  bool setMaximumReheatAirTemperature(double maximumReheatAirTemperature);
+    bool setMaximumReheatAirTemperature(double maximumReheatAirTemperature);
 
-  void resetMaximumReheatAirTemperature();
+    void resetMaximumReheatAirTemperature();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
-  /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
 
+    boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctConstantVolumeReheat_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctConstantVolumeReheat_Impl ImplType;
+    explicit AirTerminalSingleDuctConstantVolumeReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl);
 
-  explicit AirTerminalSingleDuctConstantVolumeReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl);
+    friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeReheat");
+  };
 
-  friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeReheat");
-};
+  /** \relates AirTerminalSingleDuctConstantVolumeReheat*/
+  typedef boost::optional<AirTerminalSingleDuctConstantVolumeReheat> OptionalAirTerminalSingleDuctConstantVolumeReheat;
 
-/** \relates AirTerminalSingleDuctConstantVolumeReheat*/
-typedef boost::optional<AirTerminalSingleDuctConstantVolumeReheat> OptionalAirTerminalSingleDuctConstantVolumeReheat;
+  /** \relates AirTerminalSingleDuctConstantVolumeReheat*/
+  typedef std::vector<AirTerminalSingleDuctConstantVolumeReheat> AirTerminalSingleDuctConstantVolumeReheatVector;
 
-/** \relates AirTerminalSingleDuctConstantVolumeReheat*/
-typedef std::vector<AirTerminalSingleDuctConstantVolumeReheat> AirTerminalSingleDuctConstantVolumeReheatVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEREHEAT_HPP
-
+#endif  // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEREHEAT_HPP

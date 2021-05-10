@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,119 +55,114 @@
 namespace openstudio {
 namespace model {
 
-class GeneratorFuelCellPowerModule;
-class GeneratorFuelCellAirSupply;
-class GeneratorFuelSupply;
-class GeneratorFuelCellWaterSupply;
-class GeneratorFuelCellAuxiliaryHeater;
-class GeneratorFuelCellExhaustGasToWaterHeatExchanger;
-class GeneratorFuelCellElectricalStorage;
-class GeneratorFuelCellInverter;
-class GeneratorFuelCellStackCooler;
+  class GeneratorFuelCellPowerModule;
+  class GeneratorFuelCellAirSupply;
+  class GeneratorFuelSupply;
+  class GeneratorFuelCellWaterSupply;
+  class GeneratorFuelCellAuxiliaryHeater;
+  class GeneratorFuelCellExhaustGasToWaterHeatExchanger;
+  class GeneratorFuelCellElectricalStorage;
+  class GeneratorFuelCellInverter;
+  class GeneratorFuelCellStackCooler;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorFuelCell_Impl;
+    class GeneratorFuelCell_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorFuelCell is a Generator that wraps the OpenStudio IDD object 'OS:Generator:FuelCell'. */
-class MODEL_API GeneratorFuelCell : public Generator {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorFuelCell is a Generator that wraps the OpenStudio IDD object 'OS:Generator:FuelCell'. */
+  class MODEL_API GeneratorFuelCell : public Generator
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GeneratorFuelCell(const Model& model,
-                             const GeneratorFuelCellPowerModule& fCPM,
-                             const GeneratorFuelCellAirSupply& fCAS,
-                             const GeneratorFuelCellWaterSupply& fCWS,
-                             const GeneratorFuelCellAuxiliaryHeater& fCAH,
-                             const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX,
-                             const GeneratorFuelCellElectricalStorage& fCES,
-                             const GeneratorFuelCellInverter& fCInverter,
-                             const GeneratorFuelSupply& fS);
+    explicit GeneratorFuelCell(const Model& model, const GeneratorFuelCellPowerModule& fCPM, const GeneratorFuelCellAirSupply& fCAS,
+                               const GeneratorFuelCellWaterSupply& fCWS, const GeneratorFuelCellAuxiliaryHeater& fCAH,
+                               const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX, const GeneratorFuelCellElectricalStorage& fCES,
+                               const GeneratorFuelCellInverter& fCInverter, const GeneratorFuelSupply& fS);
 
-  explicit GeneratorFuelCell(const Model& model);
+    explicit GeneratorFuelCell(const Model& model);
 
-  virtual ~GeneratorFuelCell() {}
+    virtual ~GeneratorFuelCell() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  GeneratorFuelCellPowerModule powerModule() const;
+    GeneratorFuelCellPowerModule powerModule() const;
 
-  GeneratorFuelCellAirSupply airSupply() const;
+    GeneratorFuelCellAirSupply airSupply() const;
 
-  GeneratorFuelSupply fuelSupply() const;
+    GeneratorFuelSupply fuelSupply() const;
 
-  GeneratorFuelCellWaterSupply waterSupply() const;
+    GeneratorFuelCellWaterSupply waterSupply() const;
 
-  GeneratorFuelCellAuxiliaryHeater auxiliaryHeater() const;
+    GeneratorFuelCellAuxiliaryHeater auxiliaryHeater() const;
 
-  GeneratorFuelCellExhaustGasToWaterHeatExchanger heatExchanger() const;
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger heatExchanger() const;
 
-  GeneratorFuelCellElectricalStorage electricalStorage() const;
+    GeneratorFuelCellElectricalStorage electricalStorage() const;
 
-  GeneratorFuelCellInverter inverter() const;
+    GeneratorFuelCellInverter inverter() const;
 
-  boost::optional<GeneratorFuelCellStackCooler> stackCooler() const;
+    boost::optional<GeneratorFuelCellStackCooler> stackCooler() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setPowerModule(const GeneratorFuelCellPowerModule& fCPM);
+    bool setPowerModule(const GeneratorFuelCellPowerModule& fCPM);
 
-  bool setAirSupply(const GeneratorFuelCellAirSupply& fCAirSup);
+    bool setAirSupply(const GeneratorFuelCellAirSupply& fCAirSup);
 
-  bool setFuelSupply(const GeneratorFuelSupply& genFuelSup);
+    bool setFuelSupply(const GeneratorFuelSupply& genFuelSup);
 
-  bool setWaterSupply(const GeneratorFuelCellWaterSupply& fCWaterSup);
+    bool setWaterSupply(const GeneratorFuelCellWaterSupply& fCWaterSup);
 
-  bool setAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& fCAuxHeat);
+    bool setAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& fCAuxHeat);
 
-  bool setHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX);
+    bool setHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& fCExhaustHX);
 
-  bool setElectricalStorage(const GeneratorFuelCellElectricalStorage& fCStorage);
+    bool setElectricalStorage(const GeneratorFuelCellElectricalStorage& fCStorage);
 
-  bool setInverter(const GeneratorFuelCellInverter& fCInverter);
+    bool setInverter(const GeneratorFuelCellInverter& fCInverter);
 
-  bool setStackCooler(const GeneratorFuelCellStackCooler& fCStackCooler);
+    bool setStackCooler(const GeneratorFuelCellStackCooler& fCStackCooler);
 
-  void resetStackCooler();
+    void resetStackCooler();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorFuelCell_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorFuelCell_Impl ImplType;
 
-  explicit GeneratorFuelCell(std::shared_ptr<detail::GeneratorFuelCell_Impl> impl);
+    explicit GeneratorFuelCell(std::shared_ptr<detail::GeneratorFuelCell_Impl> impl);
 
-  friend class detail::GeneratorFuelCell_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorFuelCell");
-};
+    friend class detail::GeneratorFuelCell_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorFuelCell");
+  };
 
-/** \relates GeneratorFuelCell*/
-typedef boost::optional<GeneratorFuelCell> OptionalGeneratorFuelCell;
+  /** \relates GeneratorFuelCell*/
+  typedef boost::optional<GeneratorFuelCell> OptionalGeneratorFuelCell;
 
-/** \relates GeneratorFuelCell*/
-typedef std::vector<GeneratorFuelCell> GeneratorFuelCellVector;
+  /** \relates GeneratorFuelCell*/
+  typedef std::vector<GeneratorFuelCell> GeneratorFuelCellVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORFUELCELL_HPP
-
+#endif  // MODEL_GENERATORFUELCELL_HPP

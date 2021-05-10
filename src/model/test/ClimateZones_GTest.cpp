@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,43 +41,38 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ClimateZones)
-{
+TEST_F(ModelFixture, ClimateZones) {
   // construct directly
   Model model;
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ClimateZones>());
   ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
 
   // default
-  ASSERT_EQ(0u,czs.numClimateZones());
-  ASSERT_EQ(0u,czs.climateZones().size());
+  ASSERT_EQ(0u, czs.numClimateZones());
+  ASSERT_EQ(0u, czs.climateZones().size());
 
   // after clear
   czs.clear();
-  EXPECT_EQ(0u,czs.numClimateZones());
-  EXPECT_EQ(0,czs.climateZones().size());
+  EXPECT_EQ(0u, czs.numClimateZones());
+  EXPECT_EQ(0, czs.climateZones().size());
 
   // append a climate zone
   ClimateZone cz = czs.appendClimateZone(ClimateZones::cecInstitutionName(),
-                                         ClimateZones::validClimateZoneValues(
-                                             ClimateZones::cecInstitutionName(),
-                                             ClimateZones::cecDefaultYear())[0]);
+                                         ClimateZones::validClimateZoneValues(ClimateZones::cecInstitutionName(), ClimateZones::cecDefaultYear())[0]);
   ASSERT_FALSE(cz.empty());
-  EXPECT_EQ(ClimateZones::cecInstitutionName(),cz.institution());
-  EXPECT_EQ(ClimateZones::cecDocumentName(),cz.documentName());
-  EXPECT_EQ(ClimateZones::cecDefaultYear(),cz.year());
-  EXPECT_EQ("1",cz.value());
+  EXPECT_EQ(ClimateZones::cecInstitutionName(), cz.institution());
+  EXPECT_EQ(ClimateZones::cecDocumentName(), cz.documentName());
+  EXPECT_EQ(ClimateZones::cecDefaultYear(), cz.year());
+  EXPECT_EQ("1", cz.value());
 }
 
-TEST_F(ModelFixture, ClimateZones_Site)
-{
+TEST_F(ModelFixture, ClimateZones_Site) {
   // construct Site
   Model model;
   Site site = model.getUniqueModelObject<Site>();
   EXPECT_FALSE(site.climateZones());
 
   // set value creates ClimateZones object
-  StringVector validValues = ClimateZones::validClimateZoneValues(
-      ClimateZones::ashraeInstitutionName(),ClimateZones::ashraeDefaultYear());
-  ASSERT_EQ(17u,validValues.size());
+  StringVector validValues = ClimateZones::validClimateZoneValues(ClimateZones::ashraeInstitutionName(), ClimateZones::ashraeDefaultYear());
+  ASSERT_EQ(17u, validValues.size());
 }

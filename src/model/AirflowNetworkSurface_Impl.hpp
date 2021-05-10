@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,160 +36,158 @@
 namespace openstudio {
 namespace model {
 
-class PlanarSurface;
-class AirflowNetworkComponent;
-class AirflowNetworkExternalNode;
-class Schedule;
-class AirflowNetworkOccupantVentilationControl;
+  class PlanarSurface;
+  class AirflowNetworkComponent;
+  class AirflowNetworkExternalNode;
+  class Schedule;
+  class AirflowNetworkOccupantVentilationControl;
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkSurface_Impl is a AirflowNetworkLinkage_Impl that is the implementation class for AirflowNetworkSurface.*/
-  class MODEL_API AirflowNetworkSurface_Impl : public AirflowNetworkLinkage_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkSurface_Impl is a AirflowNetworkLinkage_Impl that is the implementation class for AirflowNetworkSurface.*/
+    class MODEL_API AirflowNetworkSurface_Impl : public AirflowNetworkLinkage_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkSurface_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+      AirflowNetworkSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      AirflowNetworkSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkSurface_Impl(const AirflowNetworkSurface_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      AirflowNetworkSurface_Impl(const AirflowNetworkSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkSurface_Impl() {}
+      virtual ~AirflowNetworkSurface_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual bool setParent(ParentObject& surfAndSubSurf) override;
 
-    PlanarSurface surface() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<AirflowNetworkComponent> leakageComponent() const;
+      PlanarSurface surface() const;
 
-    boost::optional<AirflowNetworkExternalNode> externalNode() const;
+      boost::optional<AirflowNetworkComponent> leakageComponent() const;
 
-    double windowDoorOpeningFactorOrCrackFactor() const;
+      boost::optional<AirflowNetworkExternalNode> externalNode() const;
 
-    bool isWindowDoorOpeningFactorOrCrackFactorDefaulted() const;
+      double windowDoorOpeningFactorOrCrackFactor() const;
 
-    std::string ventilationControlMode() const;
+      bool isWindowDoorOpeningFactorOrCrackFactorDefaulted() const;
 
-    bool isVentilationControlModeDefaulted() const;
+      std::string ventilationControlMode() const;
 
-    boost::optional<Schedule> ventilationControlZoneTemperatureSetpointSchedule() const;
+      bool isVentilationControlModeDefaulted() const;
 
-    double minimumVentingOpenFactor() const;
+      boost::optional<Schedule> ventilationControlZoneTemperatureSetpointSchedule() const;
 
-    bool isMinimumVentingOpenFactorDefaulted() const;
+      double minimumVentingOpenFactor() const;
 
-    double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const;
+      bool isMinimumVentingOpenFactorDefaulted() const;
 
-    bool isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
+      double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const;
 
-    double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const;
+      bool isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
 
-    bool isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
+      double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const;
 
-    double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const;
+      bool isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-    bool isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
+      double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const;
 
-    double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const;
+      bool isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
 
-    bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
+      double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const;
 
-    boost::optional<Schedule> ventingAvailabilitySchedule() const;
+      bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-    boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
+      boost::optional<Schedule> ventingAvailabilitySchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
 
-    bool setSurface(const PlanarSurface& surfAndSubSurf);
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetSurface();
+      bool setSurface(const PlanarSurface& surfAndSubSurf);
 
-    bool setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage);
+      void resetSurface();
 
-    bool setExternalNode(const AirflowNetworkExternalNode& externalNode);
+      bool setLeakageComponent(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
-    void resetExternalNode();
+      bool setExternalNode(const AirflowNetworkExternalNode& externalNode);
 
-    bool setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor);
+      void resetExternalNode();
 
-    void resetWindowDoorOpeningFactorOrCrackFactor();
+      bool setWindowDoorOpeningFactorOrCrackFactor(double windowDoorOpeningFactorOrCrackFactor);
 
-    bool setVentilationControlMode(std::string ventilationControlMode);
+      void resetWindowDoorOpeningFactorOrCrackFactor();
 
-    void resetVentilationControlMode();
+      bool setVentilationControlMode(const std::string& ventilationControlMode);
 
-    bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
+      void resetVentilationControlMode();
 
-    void resetVentilationControlZoneTemperatureSetpointSchedule();
+      bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
 
-    bool setMinimumVentingOpenFactor(double minimumVentingOpenFactor);
+      void resetVentilationControlZoneTemperatureSetpointSchedule();
 
-    void resetMinimumVentingOpenFactor();
+      bool setMinimumVentingOpenFactor(double minimumVentingOpenFactor);
 
-    bool setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
+      void resetMinimumVentingOpenFactor();
 
-    void resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
+      bool setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(
+        double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
 
-    bool setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
+      void resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
 
-    void resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
+      bool setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(
+        double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
 
-    bool setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
+      void resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-    void resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
+      bool setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(
+        double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
 
-    bool setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
+      void resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
 
-    void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
+      bool setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(
+        double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
 
-    bool setVentingAvailabilitySchedule(Schedule& schedule);
+      void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-    void resetVentingAvailabilitySchedule();
+      bool setVentingAvailabilitySchedule(Schedule& schedule);
 
-    bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
+      void resetVentingAvailabilitySchedule();
 
-    void resetOccupantVentilationControl();
+      bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
 
-    //@}
-    /** @name Other */
-    //@{
+      void resetOccupantVentilationControl();
 
-    bool setParent(ParentObject& surfAndSubSurf);
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkSurface");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkSurface");
 
-    boost::optional<PlanarSurface> optionalSurface() const;
-  };
+      boost::optional<PlanarSurface> optionalSurface() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKSURFACE_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKSURFACE_IMPL_HPP

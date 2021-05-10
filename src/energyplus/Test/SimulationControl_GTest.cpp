@@ -65,8 +65,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl) {
   // Get the unique object
   SimulationControl simCon = m.getUniqueModelObject<SimulationControl>();
 
-    // Check all cases where a single output request is True so we know we assigned the fields correctly
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  // Check all cases where a single output request is True so we know we assigned the fields correctly
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (int i = 0; i < 6; ++i) {
     bool status[] = {false, false, false, false, false, false};
@@ -92,7 +92,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl) {
     EXPECT_EQ(boolToString(status[4]), idf_simCon.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods, false).get());
     EXPECT_EQ(boolToString(status[5]), idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false).get());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
@@ -118,8 +117,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforSizingPeriods, false).get());
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods, false).get());
 
-    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false, false));
-    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, false));
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false, true));
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, true));
   }
 
   // Add a plantLoop, and a SizingPeriod, so it forces DoPlantSizingCalculation
@@ -141,8 +140,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::DoPlantSizingCalculation, false).get());
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforSizingPeriods, false).get());
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods, false).get());
-    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false, false));
-    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, false));
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false, true));
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, true));
   }
 
   // Set the SizingPlant to "Coincident" => should force the "DoHVACSizingSimulationforSizingPeriods"
@@ -161,7 +160,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods, false).get());
     // Now it's 'Yes' automagically
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false).get());
-    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, false));
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, true));
   }
 
   // Check if the new Integer is translated too
@@ -182,7 +181,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false).get());
     EXPECT_EQ(2, idf_simCon.getInt(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false).get());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_SimulationControl) {
@@ -200,7 +198,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SimulationControl) {
 
   EXPECT_TRUE(_i_simCon->setInt(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, 2));
 
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (int i = 0; i < 6; ++i) {
     bool status[] = {false, false, false, false, false, false};
@@ -226,5 +224,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SimulationControl) {
 
     EXPECT_EQ(2, simCon.maximumNumberofHVACSizingSimulationPasses());
   }
-
 }

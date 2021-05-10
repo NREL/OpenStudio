@@ -62,6 +62,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 // These cannot easily be wrapped due to default constructor requirements in the swig wrapper of std::pair
 %ignore openstudio::model::Space::getDefaultConstructionWithSearchDistance;
 %ignore openstudio::model::PlanarSurface::constructionWithSearchDistance;
@@ -99,6 +105,7 @@ class IlluminanceMap;
 class GlareSensor;
 class SpaceInfiltrationDesignFlowRate;
 class SpaceInfiltrationEffectiveLeakageArea;
+class SpaceInfiltrationFlowCoefficient;
 class DesignSpecificationOutdoorAir;
 class SpaceLoadInstance;
 class SpaceLoadDefinition;
@@ -185,6 +192,7 @@ MODELOBJECT_TEMPLATES(OtherEquipment);
 MODELOBJECT_TEMPLATES(InternalMass);
 MODELOBJECT_TEMPLATES(SpaceInfiltrationDesignFlowRate);
 MODELOBJECT_TEMPLATES(SpaceInfiltrationEffectiveLeakageArea);
+MODELOBJECT_TEMPLATES(SpaceInfiltrationFlowCoefficient);
 MODELOBJECT_TEMPLATES(DaylightingControl);
 MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
@@ -236,6 +244,7 @@ SWIG_MODELOBJECT(OtherEquipment, 1);
 SWIG_MODELOBJECT(InternalMass, 1);
 SWIG_MODELOBJECT(SpaceInfiltrationDesignFlowRate, 1);
 SWIG_MODELOBJECT(SpaceInfiltrationEffectiveLeakageArea, 1);
+SWIG_MODELOBJECT(SpaceInfiltrationFlowCoefficient, 1);
 SWIG_MODELOBJECT(DaylightingControl, 1);
 SWIG_MODELOBJECT(GlareSensor, 1);
 SWIG_MODELOBJECT(IlluminanceMap, 1);
@@ -265,6 +274,34 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
 
         std::vector<openstudio::model::SubSurface> getSubSurfaces(const openstudio::model::ShadingControl& sc) {
           return sc.subSurfaces();
+        }
+
+        boost::optional<unsigned> getSubSurfaceIndexForShadingControl(const openstudio::model::ShadingControl& sc, const openstudio::model::SubSurface& subSurface) {
+          return sc.subSurfaceIndex(subSurface);
+        }
+
+        bool addSubSurfaceForShadingControl(openstudio::model::ShadingControl sc, const openstudio::model::SubSurface& subSurface) {
+          return sc.addSubSurface(subSurface);
+        }
+
+        bool addSubSurfaceForShadingControlWithIndex(openstudio::model::ShadingControl sc, const openstudio::model::SubSurface& subSurface, unsigned index) {
+          return sc.addSubSurface(subSurface, index);
+        }
+
+        bool setSubSurfaceIndexForShadingControl(openstudio::model::ShadingControl sc, const openstudio::model::SubSurface& subSurface, unsigned index) {
+          return sc.setSubSurfaceIndex(subSurface, index);
+        }
+
+        bool removeSubSurfaceForShadingControl(openstudio::model::ShadingControl sc,  const openstudio::model::SubSurface& subSurface) {
+          return sc.removeSubSurface(subSurface);
+        }
+
+        bool addSubSurfacesForShadingControl(openstudio::model::ShadingControl sc, const std::vector<openstudio::model::SubSurface>& subSurfaces) {
+          return sc.addSubSurfaces(subSurfaces);
+        }
+
+        bool setSubSurfacesForShadingControl(openstudio::model::ShadingControl sc, const std::vector<openstudio::model::SubSurface>& subSurfaces) {
+          return sc.setSubSurfaces(subSurfaces);
         }
 
         // EMS Actuator setter for Space (reimplemented from ModelCore.i)
@@ -314,6 +351,34 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
     public partial class ShadingControl : ResourceObject {
       public SubSurfaceVector subSurfaces() {
         return OpenStudio.OpenStudioModelGeometry.getSubSurfaces(this);
+      }
+
+      public OptionalUnsigned subSurfaceIndex(OpenStudio.SubSurface subSurface) {
+        return OpenStudio.OpenStudioModelGeometry.getSubSurfaceIndexForShadingControl(this, subSurface);
+      }
+
+      public bool addSubSurface(OpenStudio.SubSurface subSurface) {
+        return OpenStudio.OpenStudioModelGeometry.addSubSurfaceForShadingControl(this, subSurface);
+      }
+
+      public bool addSubSurface(OpenStudio.SubSurface subSurface, uint index) {
+        return OpenStudio.OpenStudioModelGeometry.addSubSurfaceForShadingControlWithIndex(this, subSurface, index);
+      }
+
+      public bool setSubSurfaceIndex(OpenStudio.SubSurface subSurface, uint index) {
+        return OpenStudio.OpenStudioModelGeometry.setSubSurfaceIndexForShadingControl(this, subSurface, index);
+      }
+
+      public bool removeSubSurface(OpenStudio.SubSurface subSurface) {
+        return OpenStudio.OpenStudioModelGeometry.removeSubSurfaceForShadingControl(this, subSurface);
+      }
+
+      public bool addSubSurfaces(SubSurfaceVector subSurfaces) {
+        return OpenStudio.OpenStudioModelGeometry.addSubSurfacesForShadingControl(this, subSurfaces);
+      }
+
+      public bool setSubSurfaces(SubSurfaceVector subSurfaces) {
+        return OpenStudio.OpenStudioModelGeometry.setSubSurfacesForShadingControl(this, subSurfaces);
       }
     }
 

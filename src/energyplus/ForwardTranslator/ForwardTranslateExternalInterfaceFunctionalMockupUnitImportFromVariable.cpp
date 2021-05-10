@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,46 +47,45 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunctionalMockupUnitImportFromVariable(ExternalInterfaceFunctionalMockupUnitImportFromVariable & modelObject)
-{
-  boost::optional<std::string> s;
+  boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceFunctionalMockupUnitImportFromVariable(
+    ExternalInterfaceFunctionalMockupUnitImportFromVariable& modelObject) {
+    boost::optional<std::string> s;
 
-  IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_FunctionalMockupUnitImport_From_Variable);
-  m_idfObjects.push_back(idfObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_FunctionalMockupUnitImport_From_Variable);
+    m_idfObjects.push_back(idfObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    s = modelObject.outputVariableIndexKeyName();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableIndexKeyName, s.get());
+    }
+
+    s = modelObject.outputVariableName();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableName, s.get());
+    }
+
+    boost::optional<ExternalInterfaceFunctionalMockupUnitImport> file = modelObject.fMUFile();
+    if (file.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName, file.get().fMUFileName());
+    }
+
+    s = modelObject.fMUInstanceName();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUInstanceName, s.get());
+    }
+
+    s = modelObject.fMUVariableName();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, s.get());
+    }
+    return idfObject;
   }
 
-  s = modelObject.outputVariableIndexKeyName();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableIndexKeyName, s.get());
-  }
+}  // namespace energyplus
 
-  s = modelObject.outputVariableName();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::Output_VariableName, s.get());
-  }
-
-  boost::optional<ExternalInterfaceFunctionalMockupUnitImport> file = modelObject.fMUFile();
-  if (file.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUFileName, file.get().fMUFileName());
-  }
-
-  s = modelObject.fMUInstanceName();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUInstanceName, s.get());
-  }
-
-  s = modelObject.fMUVariableName();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, s.get());
-  }
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,22 +41,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilCoolingFourPipeBeam_DefaultConstructors)
-{
+TEST_F(ModelFixture, CoilCoolingFourPipeBeam_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CoilCoolingFourPipeBeam coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingFourPipeBeam coil(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Getters_Setters)
-{
+TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Getters_Setters) {
   Model m;
   CoilCoolingFourPipeBeam coil(m);
 
@@ -95,12 +93,9 @@ TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Getters_Setters)
   TableMultiVariableLookup capModFuncOfWaterFlow(m, 1);
   EXPECT_TRUE(coil.setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(capModFuncOfWaterFlow));
   EXPECT_EQ(capModFuncOfWaterFlow.handle(), coil.beamCoolingCapacityChilledWaterFlowModificationFactorCurve().handle());
-
 }
 
-
-TEST_F(ModelFixture, CoilCoolingFourPipeBeam_LoopConnections)
-{
+TEST_F(ModelFixture, CoilCoolingFourPipeBeam_LoopConnections) {
 
   Model m;
   CoilCoolingFourPipeBeam coil(m);
@@ -126,11 +121,9 @@ TEST_F(ModelFixture, CoilCoolingFourPipeBeam_LoopConnections)
   EXPECT_FALSE(coil.plantLoop());
   EXPECT_FALSE(coil.chilledWaterInletNode());
   EXPECT_FALSE(coil.chilledWaterOutletNode());
-
 }
 
-TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Clone)
-{
+TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Clone) {
 
   Model m;
   CoilCoolingFourPipeBeam coil(m);
@@ -138,13 +131,11 @@ TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Clone)
   CoilCoolingFourPipeBeam coilClone = coil.clone(m).cast<CoilCoolingFourPipeBeam>();
 
   // Are curves shared now?
-  EXPECT_EQ(     coil.beamCoolingCapacityTemperatureDifferenceModificationFactorCurve(),
-            coilClone.beamCoolingCapacityTemperatureDifferenceModificationFactorCurve() );
+  EXPECT_EQ(coil.beamCoolingCapacityTemperatureDifferenceModificationFactorCurve(),
+            coilClone.beamCoolingCapacityTemperatureDifferenceModificationFactorCurve());
 
-  EXPECT_EQ(     coil.beamCoolingCapacityAirFlowModificationFactorCurve(),
-            coilClone.beamCoolingCapacityAirFlowModificationFactorCurve() );
+  EXPECT_EQ(coil.beamCoolingCapacityAirFlowModificationFactorCurve(), coilClone.beamCoolingCapacityAirFlowModificationFactorCurve());
 
-  EXPECT_EQ(     coil.beamCoolingCapacityChilledWaterFlowModificationFactorCurve(),
-            coilClone.beamCoolingCapacityChilledWaterFlowModificationFactorCurve() );
-
+  EXPECT_EQ(coil.beamCoolingCapacityChilledWaterFlowModificationFactorCurve(),
+            coilClone.beamCoolingCapacityChilledWaterFlowModificationFactorCurve());
 }

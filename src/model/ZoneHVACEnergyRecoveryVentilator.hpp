@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,130 +37,124 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class HVACComponent;
-class ZoneHVACEnergyRecoveryVentilatorController;
+  class Schedule;
+  class HVACComponent;
+  class ZoneHVACEnergyRecoveryVentilatorController;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACEnergyRecoveryVentilator_Impl;
+    class ZoneHVACEnergyRecoveryVentilator_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACEnergyRecoveryVentilator is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:EnergyRecoveryVentilator'. */
-class MODEL_API ZoneHVACEnergyRecoveryVentilator : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACEnergyRecoveryVentilator is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:EnergyRecoveryVentilator'. */
+  class MODEL_API ZoneHVACEnergyRecoveryVentilator : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneHVACEnergyRecoveryVentilator(const Model& model);
+    explicit ZoneHVACEnergyRecoveryVentilator(const Model& model);
 
-  explicit ZoneHVACEnergyRecoveryVentilator(
-  const Model& model,
-  const HVACComponent& heatExchanger,
-  const HVACComponent& supplyAirFan,
-  const HVACComponent& exhaustAirFan
-  );
+    explicit ZoneHVACEnergyRecoveryVentilator(const Model& model, const HVACComponent& heatExchanger, const HVACComponent& supplyAirFan,
+                                              const HVACComponent& exhaustAirFan);
 
-  virtual ~ZoneHVACEnergyRecoveryVentilator() {}
+    virtual ~ZoneHVACEnergyRecoveryVentilator() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  HVACComponent heatExchanger() const;
+    HVACComponent heatExchanger() const;
 
-  boost::optional<double> supplyAirFlowRate() const;
+    boost::optional<double> supplyAirFlowRate() const;
 
-  bool isSupplyAirFlowRateAutosized() const;
+    bool isSupplyAirFlowRateAutosized() const;
 
-  boost::optional<double> exhaustAirFlowRate() const;
+    boost::optional<double> exhaustAirFlowRate() const;
 
-  bool isExhaustAirFlowRateAutosized() const;
+    bool isExhaustAirFlowRateAutosized() const;
 
-  HVACComponent supplyAirFan() const;
+    HVACComponent supplyAirFan() const;
 
-  HVACComponent exhaustAirFan() const;
+    HVACComponent exhaustAirFan() const;
 
-  boost::optional<ZoneHVACEnergyRecoveryVentilatorController> controller() const;
+    boost::optional<ZoneHVACEnergyRecoveryVentilatorController> controller() const;
 
-  double ventilationRateperUnitFloorArea() const;
+    double ventilationRateperUnitFloorArea() const;
 
-  double ventilationRateperOccupant() const;
+    double ventilationRateperOccupant() const;
 
-  // boost::optional<ModelObject> availabilityManagerList() const;
+    // boost::optional<ModelObject> availabilityManagerList() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setHeatExchanger(const HVACComponent& hxAirToAirSensibleAndLatent);
+    bool setHeatExchanger(const HVACComponent& hxAirToAirSensibleAndLatent);
 
-  bool setSupplyAirFlowRate(double supplyAirFlowRate);
+    bool setSupplyAirFlowRate(double supplyAirFlowRate);
 
-  void autosizeSupplyAirFlowRate();
+    void autosizeSupplyAirFlowRate();
 
-  bool setExhaustAirFlowRate(double exhaustAirFlowRate);
+    bool setExhaustAirFlowRate(double exhaustAirFlowRate);
 
-  void autosizeExhaustAirFlowRate();
+    void autosizeExhaustAirFlowRate();
 
-  bool setSupplyAirFan(const HVACComponent& supplyAirFan);
+    bool setSupplyAirFan(const HVACComponent& supplyAirFan);
 
-  bool setExhaustAirFan(const HVACComponent& exhaustAirFan);
+    bool setExhaustAirFan(const HVACComponent& exhaustAirFan);
 
-  bool setController(const ZoneHVACEnergyRecoveryVentilatorController& zoneHVACEnergyRecoveryVentilatorController);
+    bool setController(const ZoneHVACEnergyRecoveryVentilatorController& zoneHVACEnergyRecoveryVentilatorController);
 
-  void resetController();
+    void resetController();
 
-  bool setVentilationRateperUnitFloorArea(double ventilationRateperUnitFloorArea);
+    bool setVentilationRateperUnitFloorArea(double ventilationRateperUnitFloorArea);
 
-  bool setVentilationRateperOccupant(double ventilationRateperOccupant);
+    bool setVentilationRateperOccupant(double ventilationRateperOccupant);
 
-  // bool setAvailabilityManagerList(const ModelObject& systemAvailabilityManagerLists);
+    // bool setAvailabilityManagerList(const ModelObject& systemAvailabilityManagerLists);
 
-  // void resetAvailabilityManagerList();
+    // void resetAvailabilityManagerList();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedSupplyAirFlowRate() const ;
+    boost::optional<double> autosizedSupplyAirFlowRate() const;
 
-  boost::optional<double> autosizedExhaustAirFlowRate() const ;
+    boost::optional<double> autosizedExhaustAirFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACEnergyRecoveryVentilator_Impl ImplType;
 
+    explicit ZoneHVACEnergyRecoveryVentilator(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilator_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACEnergyRecoveryVentilator_Impl ImplType;
+    friend class detail::ZoneHVACEnergyRecoveryVentilator_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACEnergyRecoveryVentilator");
+  };
 
-  explicit ZoneHVACEnergyRecoveryVentilator(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilator_Impl> impl);
+  /** \relates ZoneHVACEnergyRecoveryVentilator*/
+  typedef boost::optional<ZoneHVACEnergyRecoveryVentilator> OptionalZoneHVACEnergyRecoveryVentilator;
 
-  friend class detail::ZoneHVACEnergyRecoveryVentilator_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACEnergyRecoveryVentilator");
-};
+  /** \relates ZoneHVACEnergyRecoveryVentilator*/
+  typedef std::vector<ZoneHVACEnergyRecoveryVentilator> ZoneHVACEnergyRecoveryVentilatorVector;
 
-/** \relates ZoneHVACEnergyRecoveryVentilator*/
-typedef boost::optional<ZoneHVACEnergyRecoveryVentilator> OptionalZoneHVACEnergyRecoveryVentilator;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ZoneHVACEnergyRecoveryVentilator*/
-typedef std::vector<ZoneHVACEnergyRecoveryVentilator> ZoneHVACEnergyRecoveryVentilatorVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACENERGYRECOVERYVENTILATOR_HPP
-
+#endif  // MODEL_ZONEHVACENERGYRECOVERYVENTILATOR_HPP

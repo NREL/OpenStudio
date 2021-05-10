@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,102 +48,102 @@ namespace energyplus {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemTrendVariable_Impl;
+    class EnergyManagementSystemTrendVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemTrendVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:TrendVariable'. */
-class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const std::string& eMSVariableName);
+  /** EnergyManagementSystemTrendVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:TrendVariable'. */
+  class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const std::string& eMSVariableName);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemActuator& object);
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemActuator& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemSensor& object);
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemSensor& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object);
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemGlobalVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemTrendVariable& object);
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemTrendVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemInternalVariable& object);
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemInternalVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object);
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemCurveOrTableIndexVariable& object);
 
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
+    explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
-  virtual ~EnergyManagementSystemTrendVariable() {}
+    virtual ~EnergyManagementSystemTrendVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string emsVariableName() const;
+    std::string emsVariableName() const;
 
-  int numberOfTimestepsToBeLogged() const;
+    int numberOfTimestepsToBeLogged() const;
 
-  boost::optional<ModelObject> emsVariableObject() const;
+    boost::optional<ModelObject> emsVariableObject() const;
 
-  boost::optional<EnergyManagementSystemActuator> emsActuator() const;
-  boost::optional<EnergyManagementSystemSensor> emsSensor() const;
-  boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
-  boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
-  boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
-  boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
-  boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
+    boost::optional<EnergyManagementSystemActuator> emsActuator() const;
+    boost::optional<EnergyManagementSystemSensor> emsSensor() const;
+    boost::optional<EnergyManagementSystemGlobalVariable> emsGlobalVariable() const;
+    boost::optional<EnergyManagementSystemTrendVariable> emsTrendVariable() const;
+    boost::optional<EnergyManagementSystemInternalVariable> emsInternalVariable() const;
+    boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> emsCurveOrTableIndexVariable() const;
+    boost::optional<EnergyManagementSystemConstructionIndexVariable> emsConstructionIndexVariable() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setEMSVariableName(const std::string& eMSVariableName);
+    bool setEMSVariableName(const std::string& eMSVariableName);
 
-  bool setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged);
+    bool setNumberOfTimestepsToBeLogged(int numberofTimestepstobeLogged);
 
-  bool setEMSVariableName(const EnergyManagementSystemActuator& object);
-  bool setEMSVariableName(const EnergyManagementSystemSensor& object);
-  bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
-  bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemActuator& object);
+    bool setEMSVariableName(const EnergyManagementSystemSensor& object);
+    bool setEMSVariableName(const EnergyManagementSystemGlobalVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemTrendVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemInternalVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemCurveOrTableIndexVariable& object);
+    bool setEMSVariableName(const EnergyManagementSystemConstructionIndexVariable& object);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemTrendVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemTrendVariable_Impl ImplType;
 
-  explicit EnergyManagementSystemTrendVariable(std::shared_ptr<detail::EnergyManagementSystemTrendVariable_Impl> impl);
+    explicit EnergyManagementSystemTrendVariable(std::shared_ptr<detail::EnergyManagementSystemTrendVariable_Impl> impl);
 
-  friend class detail::EnergyManagementSystemTrendVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class energyplus::ReverseTranslator;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemTrendVariable");
-  explicit EnergyManagementSystemTrendVariable(const Model& model);
-};
+    friend class detail::EnergyManagementSystemTrendVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class energyplus::ReverseTranslator;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemTrendVariable");
+    explicit EnergyManagementSystemTrendVariable(const Model& model);
+  };
 
-/** \relates EnergyManagementSystemTrendVariable*/
-typedef boost::optional<EnergyManagementSystemTrendVariable> OptionalEnergyManagementSystemTrendVariable;
+  /** \relates EnergyManagementSystemTrendVariable*/
+  typedef boost::optional<EnergyManagementSystemTrendVariable> OptionalEnergyManagementSystemTrendVariable;
 
-/** \relates EnergyManagementSystemTrendVariable*/
-typedef std::vector<EnergyManagementSystemTrendVariable> EnergyManagementSystemTrendVariableVector;
+  /** \relates EnergyManagementSystemTrendVariable*/
+  typedef std::vector<EnergyManagementSystemTrendVariable> EnergyManagementSystemTrendVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMTRENDVARIABLE_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMTRENDVARIABLE_HPP

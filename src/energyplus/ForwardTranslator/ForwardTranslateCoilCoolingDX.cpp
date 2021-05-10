@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,71 +51,70 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::CoilCoolingDX& modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX(model::CoilCoolingDX& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  // PerformanceObjectName, is required, so start by that
-  CoilCoolingDXCurveFitPerformance performance = modelObject.performanceObject();
-  if (boost::optional<IdfObject> _performance = translateAndMapModelObject(performance)) {
-    s = _performance->name().get();
-  } else {
-    LOG(Warn, modelObject.briefDescription() << " cannot be translated as its performance object cannot be translated: "
-        << performance.briefDescription() << ".");
-    return boost::none;
-  }
-
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX, modelObject);
-
-  // PerformanceObjectName
-  idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, s.get());
-
-  // Evaporator Nodes are handled in the FT for AirLoopHVACUnitarySystem
-  // EvaporatorInletNodeName
-  // EvaporatorOutletNodeName
-
-  // AvailabilityScheduleName
-  {
-    auto schedule = modelObject.availabilitySchedule();
-    if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule)) {
-      idfObject.setString(Coil_Cooling_DXFields::AvailabilityScheduleName, _schedule->name().get());
+    // PerformanceObjectName, is required, so start by that
+    CoilCoolingDXCurveFitPerformance performance = modelObject.performanceObject();
+    if (boost::optional<IdfObject> _performance = translateAndMapModelObject(performance)) {
+      s = _performance->name().get();
+    } else {
+      LOG(Warn, modelObject.briefDescription() << " cannot be translated as its performance object cannot be translated: "
+                                               << performance.briefDescription() << ".");
+      return boost::none;
     }
-  }
 
-  // CondenserZoneName: as of E+ 9.3.0, this appears unused.
-  // TODO: eventually handle the condenser inlet/outlet node connections if the Condenser Zone is used?
-  if (boost::optional<ThermalZone> thermalZone = modelObject.condenserZone() ) {
-    if (boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone.get())) {
-      idfObject.setString(Coil_Cooling_DXFields::CondenserZoneName, _thermalZone->name().get());
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX, modelObject);
+
+    // PerformanceObjectName
+    idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, s.get());
+
+    // Evaporator Nodes are handled in the FT for AirLoopHVACUnitarySystem
+    // EvaporatorInletNodeName
+    // EvaporatorOutletNodeName
+
+    // AvailabilityScheduleName
+    {
+      auto schedule = modelObject.availabilitySchedule();
+      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule)) {
+        idfObject.setString(Coil_Cooling_DXFields::AvailabilityScheduleName, _schedule->name().get());
+      }
     }
-  }
 
-  // CondenserInletNodeName
-  std::string condenserInletNodeName(modelObject.nameString() + " Condenser Inlet Node");
-  // if (auto _s = modelObject.condenserInletNodeName()) {
-  //   condenserInletNodeName =  _s.get();
-  // } else {
+    // CondenserZoneName: as of E+ 9.3.0, this appears unused.
+    // TODO: eventually handle the condenser inlet/outlet node connections if the Condenser Zone is used?
+    if (boost::optional<ThermalZone> thermalZone = modelObject.condenserZone()) {
+      if (boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone.get())) {
+        idfObject.setString(Coil_Cooling_DXFields::CondenserZoneName, _thermalZone->name().get());
+      }
+    }
+
+    // CondenserInletNodeName
+    std::string condenserInletNodeName(modelObject.nameString() + " Condenser Inlet Node");
+    // if (auto _s = modelObject.condenserInletNodeName()) {
+    //   condenserInletNodeName =  _s.get();
+    // } else {
     // Create an OutdoorAir:NodeList for the condenser inlet conditions to be set directly from weather file
     IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
     oaNodeListIdf.setString(0, condenserInletNodeName);
     m_idfObjects.push_back(oaNodeListIdf);
-  // }
-  idfObject.setString(Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
+    // }
+    idfObject.setString(Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
 
-  // CondenserOutletNodeName
-  std::string condenserOutletNodeName(modelObject.nameString() + " Condenser Outlet Node");
-  //if (auto _s = modelObject.condenserOutletNodeName()) {
+    // CondenserOutletNodeName
+    std::string condenserOutletNodeName(modelObject.nameString() + " Condenser Outlet Node");
+    //if (auto _s = modelObject.condenserOutletNodeName()) {
     //condenserOutletNodeName =  _s.get();
-  //}
-  idfObject.setString(Coil_Cooling_DXFields::CondenserOutletNodeName, condenserOutletNodeName);
+    //}
+    idfObject.setString(Coil_Cooling_DXFields::CondenserOutletNodeName, condenserOutletNodeName);
 
-  // CondensateCollectionWaterStorageTankName
+    // CondensateCollectionWaterStorageTankName
 
-  // EvaporativeCondenserSupplyWaterStorageTankName
+    // EvaporativeCondenserSupplyWaterStorageTankName
 
-  return boost::optional<IdfObject>(idfObject);
-} // End of translate function
+    return boost::optional<IdfObject>(idfObject);
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

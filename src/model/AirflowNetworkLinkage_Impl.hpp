@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,53 +35,48 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API AirflowNetworkLinkage_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API AirflowNetworkLinkage_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkLinkage_Impl(IddObjectType type, Model_Impl* model);
+      AirflowNetworkLinkage_Impl(IddObjectType type, Model_Impl* model);
 
-    AirflowNetworkLinkage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      AirflowNetworkLinkage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkLinkage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      AirflowNetworkLinkage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkLinkage_Impl(const AirflowNetworkLinkage_Impl& other, Model_Impl* model, bool keepHandles);
+      AirflowNetworkLinkage_Impl(const AirflowNetworkLinkage_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~AirflowNetworkLinkage_Impl() {}
+      virtual ~AirflowNetworkLinkage_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkLinkage");
+    };
 
+  }  // namespace detail
 
-    //@}
-    /** @name Other */
-    //@{
+}  // namespace model
+}  // namespace openstudio
 
-    //@}
-   private:
-
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkLinkage");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKLINKAGE_IMPL_HPP
+#endif  // MODEL_AIRFLOWNETWORKLINKAGE_IMPL_HPP

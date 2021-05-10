@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,30 +42,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData( model::OutputDebuggingData& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Output_DebuggingData );
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData(model::OutputDebuggingData& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Output_DebuggingData);
+    m_idfObjects.push_back(idfObject);
 
-  // This stuff is stored as numeric in E+ right now... So if true = 1, else 0
-  // cf https://github.com/NREL/EnergyPlus/issues/7740
+    // Report Debugging Data
+    if (modelObject.reportDebuggingData()) {
+      idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "Yes");
+    } else {
+      idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "No");
+    }
 
-  // Report Debugging Data
-  if (modelObject.reportDebuggingData()) {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, 1);
-  } else {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, 0);
-  }
+    // Report During Warmup
+    if (modelObject.reportDuringWarmup()) {
+      idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
+    } else {
+      idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "No");
+    }
 
-  // Report During Warmup
-  if (modelObject.reportDuringWarmup()) {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, 1);
-  } else {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, 0);
-  }
+    return idfObject;
+  }  // End of translate function
 
-  return idfObject;
-} // End of translate function
-
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

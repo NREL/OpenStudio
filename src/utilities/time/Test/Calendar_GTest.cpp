@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,8 +37,7 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST(Calendar, StandardDaylightSavings)
-{
+TEST(Calendar, StandardDaylightSavings) {
   Calendar calendar(2009);
 
   Date jan1(MonthOfYear::Jan, 1, 2009);
@@ -75,11 +74,9 @@ TEST(Calendar, StandardDaylightSavings)
   EXPECT_FALSE(calendar.isDaylightSavings(nov1));
   EXPECT_FALSE(calendar.isDaylightSavings(nov2));
   EXPECT_FALSE(calendar.isDaylightSavings(dec31));
-
 };
 
-TEST(Calendar, StandardHolidays)
-{
+TEST(Calendar, StandardHolidays) {
   Calendar calendar(2009);
   calendar.standardHolidays();
 
@@ -109,8 +106,7 @@ TEST(Calendar, StandardHolidays)
   EXPECT_EQ("", calendar.getName(nov28));
 };
 
-TEST(Calendar, CustomDays)
-{
+TEST(Calendar, CustomDays) {
   Calendar calendar(2009);
 
   Date apr12(MonthOfYear::Apr, 12, 2009);
@@ -134,7 +130,6 @@ TEST(Calendar, CustomDays)
   EXPECT_FALSE(calendar.isHoliday(jun12));
   EXPECT_EQ("Dan's Birthday", calendar.getName(jun12));
 };
-
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2008.  Format is day of month, day of year //
@@ -240,8 +235,6 @@ December 2008
 28,363  29,364  30,365  31,366
 */
 /////////////////////////////////////////////////////////////
-
-
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2009.  Format is day of month, day of year //

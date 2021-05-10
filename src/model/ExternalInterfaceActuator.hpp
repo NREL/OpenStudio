@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,88 +37,90 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceActuator_Impl;
+    class ExternalInterfaceActuator_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceActuator is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:Actuator'. */
-class MODEL_API ExternalInterfaceActuator : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceActuator is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:Actuator'. */
+  class MODEL_API ExternalInterfaceActuator : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ExternalInterfaceActuator(const ModelObject& modelObject);
+    explicit ExternalInterfaceActuator(const ModelObject& modelObject);
 
-  explicit ExternalInterfaceActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType);
+    explicit ExternalInterfaceActuator(const ModelObject& modelObject, const std::string actuatedComponentType,
+                                       const std::string actuatedComponentControlType);
 
-  virtual ~ExternalInterfaceActuator() {}
+    virtual ~ExternalInterfaceActuator() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ModelObject actuatedComponentUnique() const;
+    ModelObject actuatedComponentUnique() const;
 
-  std::string actuatedComponentType() const;
+    std::string actuatedComponentType() const;
 
-  std::string actuatedComponentControlType() const;
+    std::string actuatedComponentControlType() const;
 
-  boost::optional<double> optionalInitialValue() const;
+    boost::optional<double> optionalInitialValue() const;
 
-  bool exportToBCVTB() const;
+    bool exportToBCVTB() const;
 
-  bool isExportToBCVTBDefaulted() const;
+    bool isExportToBCVTBDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setActuatedComponentUnique(const ModelObject& modelObject);
+    bool setActuatedComponentUnique(const ModelObject& modelObject);
 
-  bool setActuatedComponentType(const std::string& actuatedComponentType);
+    bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-  bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+    bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-  bool setOptionalInitialValue(double optionalInitialValue);
+    bool setOptionalInitialValue(double optionalInitialValue);
 
-  void resetOptionalInitialValue();
+    void resetOptionalInitialValue();
 
-  bool setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
-  void resetExportToBCVTB();
+    void resetExportToBCVTB();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceActuator_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceActuator_Impl ImplType;
 
-  explicit ExternalInterfaceActuator(std::shared_ptr<detail::ExternalInterfaceActuator_Impl> impl);
+    explicit ExternalInterfaceActuator(std::shared_ptr<detail::ExternalInterfaceActuator_Impl> impl);
 
-  friend class detail::ExternalInterfaceActuator_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceActuator");
-};
+    friend class detail::ExternalInterfaceActuator_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceActuator");
+  };
 
-/** \relates ExternalInterfaceActuator*/
-typedef boost::optional<ExternalInterfaceActuator> OptionalExternalInterfaceActuator;
+  /** \relates ExternalInterfaceActuator*/
+  typedef boost::optional<ExternalInterfaceActuator> OptionalExternalInterfaceActuator;
 
-/** \relates ExternalInterfaceActuator*/
-typedef std::vector<ExternalInterfaceActuator> ExternalInterfaceActuatorVector;
+  /** \relates ExternalInterfaceActuator*/
+  typedef std::vector<ExternalInterfaceActuator> ExternalInterfaceActuatorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEACTUATOR_HPP
+#endif  // MODEL_EXTERNALINTERFACEACTUATOR_HPP

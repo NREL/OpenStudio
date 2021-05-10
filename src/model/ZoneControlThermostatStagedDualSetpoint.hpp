@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,123 +37,123 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneControlThermostatStagedDualSetpoint_Impl;
+    class ZoneControlThermostatStagedDualSetpoint_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneControlThermostatStagedDualSetpoint is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneControl:Thermostat:StagedDualSetpoint'. */
-class MODEL_API ZoneControlThermostatStagedDualSetpoint : public Thermostat {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneControlThermostatStagedDualSetpoint is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneControl:Thermostat:StagedDualSetpoint'. */
+  class MODEL_API ZoneControlThermostatStagedDualSetpoint : public Thermostat
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneControlThermostatStagedDualSetpoint(const Model& model);
+    explicit ZoneControlThermostatStagedDualSetpoint(const Model& model);
 
-  virtual ~ZoneControlThermostatStagedDualSetpoint() {}
+    virtual ~ZoneControlThermostatStagedDualSetpoint() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  int numberofHeatingStages() const;
+    int numberofHeatingStages() const;
 
-  boost::optional<Schedule> heatingTemperatureSetpointSchedule() const;
+    boost::optional<Schedule> heatingTemperatureSetpointSchedule() const;
 
-  double heatingThrottlingTemperatureRange() const;
+    double heatingThrottlingTemperatureRange() const;
 
-  double stage1HeatingTemperatureOffset() const;
+    double stage1HeatingTemperatureOffset() const;
 
-  double stage2HeatingTemperatureOffset() const;
+    double stage2HeatingTemperatureOffset() const;
 
-  double stage3HeatingTemperatureOffset() const;
+    double stage3HeatingTemperatureOffset() const;
 
-  double stage4HeatingTemperatureOffset() const;
+    double stage4HeatingTemperatureOffset() const;
 
-  int numberofCoolingStages() const;
+    int numberofCoolingStages() const;
 
-  boost::optional<Schedule> coolingTemperatureSetpointBaseSchedule() const;
+    boost::optional<Schedule> coolingTemperatureSetpointBaseSchedule() const;
 
-  double coolingThrottlingTemperatureRange() const;
+    double coolingThrottlingTemperatureRange() const;
 
-  double stage1CoolingTemperatureOffset() const;
+    double stage1CoolingTemperatureOffset() const;
 
-  double stage2CoolingTemperatureOffset() const;
+    double stage2CoolingTemperatureOffset() const;
 
-  double stage3CoolingTemperatureOffset() const;
+    double stage3CoolingTemperatureOffset() const;
 
-  double stage4CoolingTemperatureOffset() const;
+    double stage4CoolingTemperatureOffset() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setNumberofHeatingStages(int numberofHeatingStages);
+    bool setNumberofHeatingStages(int numberofHeatingStages);
 
-  bool setHeatingTemperatureSetpointSchedule(Schedule& schedule);
+    bool setHeatingTemperatureSetpointSchedule(Schedule& schedule);
 
-  void resetHeatingTemperatureSetpointSchedule();
+    void resetHeatingTemperatureSetpointSchedule();
 
-  bool setHeatingThrottlingTemperatureRange(double heatingThrottlingTemperatureRange);
+    bool setHeatingThrottlingTemperatureRange(double heatingThrottlingTemperatureRange);
 
-  bool setStage1HeatingTemperatureOffset(double stage1HeatingTemperatureOffset);
+    bool setStage1HeatingTemperatureOffset(double stage1HeatingTemperatureOffset);
 
-  bool setStage2HeatingTemperatureOffset(double stage2HeatingTemperatureOffset);
+    bool setStage2HeatingTemperatureOffset(double stage2HeatingTemperatureOffset);
 
-  bool setStage3HeatingTemperatureOffset(double stage3HeatingTemperatureOffset);
+    bool setStage3HeatingTemperatureOffset(double stage3HeatingTemperatureOffset);
 
-  bool setStage4HeatingTemperatureOffset(double stage4HeatingTemperatureOffset);
+    bool setStage4HeatingTemperatureOffset(double stage4HeatingTemperatureOffset);
 
-  bool setNumberofCoolingStages(int numberofCoolingStages);
+    bool setNumberofCoolingStages(int numberofCoolingStages);
 
-  bool setCoolingTemperatureSetpointBaseSchedule(Schedule& schedule);
+    bool setCoolingTemperatureSetpointBaseSchedule(Schedule& schedule);
 
-  void resetCoolingTemperatureSetpointBaseSchedule();
+    void resetCoolingTemperatureSetpointBaseSchedule();
 
-  bool setCoolingThrottlingTemperatureRange(double coolingThrottlingTemperatureRange);
+    bool setCoolingThrottlingTemperatureRange(double coolingThrottlingTemperatureRange);
 
-  bool setStage1CoolingTemperatureOffset(double stage1CoolingTemperatureOffset);
+    bool setStage1CoolingTemperatureOffset(double stage1CoolingTemperatureOffset);
 
-  bool setStage2CoolingTemperatureOffset(double stage2CoolingTemperatureOffset);
+    bool setStage2CoolingTemperatureOffset(double stage2CoolingTemperatureOffset);
 
-  bool setStage3CoolingTemperatureOffset(double stage3CoolingTemperatureOffset);
+    bool setStage3CoolingTemperatureOffset(double stage3CoolingTemperatureOffset);
 
-  bool setStage4CoolingTemperatureOffset(double stage4CoolingTemperatureOffset);
+    bool setStage4CoolingTemperatureOffset(double stage4CoolingTemperatureOffset);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneControlThermostatStagedDualSetpoint_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneControlThermostatStagedDualSetpoint_Impl ImplType;
 
-  explicit ZoneControlThermostatStagedDualSetpoint(std::shared_ptr<detail::ZoneControlThermostatStagedDualSetpoint_Impl> impl);
+    explicit ZoneControlThermostatStagedDualSetpoint(std::shared_ptr<detail::ZoneControlThermostatStagedDualSetpoint_Impl> impl);
 
-  friend class detail::ZoneControlThermostatStagedDualSetpoint_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneControlThermostatStagedDualSetpoint");
-};
+    friend class detail::ZoneControlThermostatStagedDualSetpoint_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneControlThermostatStagedDualSetpoint");
+  };
 
-/** \relates ZoneControlThermostatStagedDualSetpoint*/
-typedef boost::optional<ZoneControlThermostatStagedDualSetpoint> OptionalZoneControlThermostatStagedDualSetpoint;
+  /** \relates ZoneControlThermostatStagedDualSetpoint*/
+  typedef boost::optional<ZoneControlThermostatStagedDualSetpoint> OptionalZoneControlThermostatStagedDualSetpoint;
 
-/** \relates ZoneControlThermostatStagedDualSetpoint*/
-typedef std::vector<ZoneControlThermostatStagedDualSetpoint> ZoneControlThermostatStagedDualSetpointVector;
+  /** \relates ZoneControlThermostatStagedDualSetpoint*/
+  typedef std::vector<ZoneControlThermostatStagedDualSetpoint> ZoneControlThermostatStagedDualSetpointVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONECONTROLTHERMOSTATSTAGEDDUALSETPOINT_HPP
-
+#endif  // MODEL_ZONECONTROLTHERMOSTATSTAGEDDUALSETPOINT_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,204 +37,203 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
-class Connection;
-class Schedule;
+  class Curve;
+  class Connection;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-class ElectricEquipmentITEAirCooledDefinition_Impl;
+    class ElectricEquipmentITEAirCooledDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ElectricEquipmentITEAirCooledDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object 'OS:ElectricEquipment:ITE:AirCooled:Definition'. */
-class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefinition {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ElectricEquipmentITEAirCooledDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object 'OS:ElectricEquipment:ITE:AirCooled:Definition'. */
+  class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefinition
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ElectricEquipmentITEAirCooledDefinition(const Model& model,
-    Curve& cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
-    Curve& airFlowFunctionofLoadingandAirTemperatureCurve,
-    Curve& fanPowerInputFunctionofFlowCurve);
+    explicit ElectricEquipmentITEAirCooledDefinition(const Model& model, const Curve& cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
+                                                     const Curve& airFlowFunctionofLoadingandAirTemperatureCurve,
+                                                     const Curve& fanPowerInputFunctionofFlowCurve);
 
-  /** Create ElectricEquipmentITEAirCooledDefinition with default curves **/
-  explicit ElectricEquipmentITEAirCooledDefinition(const Model& model);
+    /** Create ElectricEquipmentITEAirCooledDefinition with default curves **/
+    explicit ElectricEquipmentITEAirCooledDefinition(const Model& model);
 
-  virtual ~ElectricEquipmentITEAirCooledDefinition() {}
+    virtual ~ElectricEquipmentITEAirCooledDefinition() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validAirFlowCalculationMethodValues();
+    static std::vector<std::string> validAirFlowCalculationMethodValues();
 
-  static std::vector<std::string> validDesignPowerInputCalculationMethodValues();
+    static std::vector<std::string> validDesignPowerInputCalculationMethodValues();
 
-  static std::vector<std::string> validEnvironmentalClassValues();
+    static std::vector<std::string> validEnvironmentalClassValues();
 
-  static std::vector<std::string> validAirInletConnectionTypeValues();
+    static std::vector<std::string> validAirInletConnectionTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string airFlowCalculationMethod() const;
+    std::string airFlowCalculationMethod() const;
 
-  std::string designPowerInputCalculationMethod() const;
+    std::string designPowerInputCalculationMethod() const;
 
-  boost::optional<double> wattsperUnit() const;
+    boost::optional<double> wattsperUnit() const;
 
-  boost::optional<double> wattsperZoneFloorArea() const;
+    boost::optional<double> wattsperZoneFloorArea() const;
 
-  Curve cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
+    Curve cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
 
-  double designFanPowerInputFraction() const;
+    double designFanPowerInputFraction() const;
 
-  bool isDesignFanPowerInputFractionDefaulted() const;
+    bool isDesignFanPowerInputFractionDefaulted() const;
 
-  boost::optional<double> designFanAirFlowRateperPowerInput() const;
+    boost::optional<double> designFanAirFlowRateperPowerInput() const;
 
-  Curve airFlowFunctionofLoadingandAirTemperatureCurve() const;
+    Curve airFlowFunctionofLoadingandAirTemperatureCurve() const;
 
-  Curve fanPowerInputFunctionofFlowCurve() const;
+    Curve fanPowerInputFunctionofFlowCurve() const;
 
-  double designEnteringAirTemperature() const;
+    double designEnteringAirTemperature() const;
 
-  bool isDesignEnteringAirTemperatureDefaulted() const;
+    bool isDesignEnteringAirTemperatureDefaulted() const;
 
-  std::string environmentalClass() const;
+    std::string environmentalClass() const;
 
-  std::string airInletConnectionType() const;
+    std::string airInletConnectionType() const;
 
-  double designRecirculationFraction() const;
+    double designRecirculationFraction() const;
 
-  bool isDesignRecirculationFractionDefaulted() const;
+    bool isDesignRecirculationFractionDefaulted() const;
 
-  boost::optional<Curve> recirculationFunctionofLoadingandSupplyTemperatureCurve() const;
+    boost::optional<Curve> recirculationFunctionofLoadingandSupplyTemperatureCurve() const;
 
-  double designElectricPowerSupplyEfficiency() const;
+    double designElectricPowerSupplyEfficiency() const;
 
-  bool isDesignElectricPowerSupplyEfficiencyDefaulted() const;
+    bool isDesignElectricPowerSupplyEfficiencyDefaulted() const;
 
-  boost::optional<Curve> electricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve() const;
+    boost::optional<Curve> electricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve() const;
 
-  double fractionofElectricPowerSupplyLossestoZone() const;
+    double fractionofElectricPowerSupplyLossestoZone() const;
 
-  bool isFractionofElectricPowerSupplyLossestoZoneDefaulted() const;
+    bool isFractionofElectricPowerSupplyLossestoZoneDefaulted() const;
 
-  double supplyTemperatureDifference() const;
+    double supplyTemperatureDifference() const;
 
-  bool isSupplyTemperatureDifferenceDefaulted() const;
+    bool isSupplyTemperatureDifferenceDefaulted() const;
 
-  boost::optional<Schedule> supplyTemperatureDifferenceSchedule() const;
+    boost::optional<Schedule> supplyTemperatureDifferenceSchedule() const;
 
-  double returnTemperatureDifference() const;
+    double returnTemperatureDifference() const;
 
-  bool isReturnTemperatureDifferenceDefaulted() const;
+    bool isReturnTemperatureDifferenceDefaulted() const;
 
-  boost::optional<Schedule> returnTemperatureDifferenceSchedule() const;
+    boost::optional<Schedule> returnTemperatureDifferenceSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAirFlowCalculationMethod(const std::string& airFlowCalculationMethod);
+    bool setAirFlowCalculationMethod(const std::string& airFlowCalculationMethod);
 
-  bool setDesignPowerInputCalculationMethod(const std::string& designPowerInputCalculationMethod, double floorArea);
+    bool setDesignPowerInputCalculationMethod(const std::string& designPowerInputCalculationMethod, double floorArea);
 
-  bool setWattsperUnit(double wattsperUnit);
+    bool setWattsperUnit(double wattsperUnit);
 
-  bool setWattsperZoneFloorArea(double wattsperZoneFloorArea);
+    bool setWattsperZoneFloorArea(double wattsperZoneFloorArea);
 
-  bool setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
+    bool setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
-  bool setDesignFanPowerInputFraction(double designFanPowerInputFraction);
+    bool setDesignFanPowerInputFraction(double designFanPowerInputFraction);
 
-  void resetDesignFanPowerInputFraction();
+    void resetDesignFanPowerInputFraction();
 
-  bool setDesignFanAirFlowRateperPowerInput(double designFanAirFlowRateperPowerInput);
+    bool setDesignFanAirFlowRateperPowerInput(double designFanAirFlowRateperPowerInput);
 
-  bool setAirFlowFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
+    bool setAirFlowFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
-  bool setFanPowerInputFunctionofFlowCurve(const Curve& curve);
+    bool setFanPowerInputFunctionofFlowCurve(const Curve& curve);
 
-  void setDesignEnteringAirTemperature(double designEnteringAirTemperature);
+    void setDesignEnteringAirTemperature(double designEnteringAirTemperature);
 
-  void resetDesignEnteringAirTemperature();
+    void resetDesignEnteringAirTemperature();
 
-  bool setEnvironmentalClass(const std::string& environmentalClass);
+    bool setEnvironmentalClass(const std::string& environmentalClass);
 
-  bool setAirInletConnectionType(const std::string& airInletConnectionType);
+    bool setAirInletConnectionType(const std::string& airInletConnectionType);
 
-  bool setDesignRecirculationFraction(double designRecirculationFraction);
+    bool setDesignRecirculationFraction(double designRecirculationFraction);
 
-  void resetDesignRecirculationFraction();
+    void resetDesignRecirculationFraction();
 
-  bool setRecirculationFunctionofLoadingandSupplyTemperatureCurve(const Curve& curve);
+    bool setRecirculationFunctionofLoadingandSupplyTemperatureCurve(const Curve& curve);
 
-  void resetRecirculationFunctionofLoadingandSupplyTemperatureCurve();
+    void resetRecirculationFunctionofLoadingandSupplyTemperatureCurve();
 
-  bool setDesignElectricPowerSupplyEfficiency(double designElectricPowerSupplyEfficiency);
+    bool setDesignElectricPowerSupplyEfficiency(double designElectricPowerSupplyEfficiency);
 
-  void resetDesignElectricPowerSupplyEfficiency();
+    void resetDesignElectricPowerSupplyEfficiency();
 
-  bool setElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve(const Curve& curve);
+    bool setElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve(const Curve& curve);
 
-  void resetElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve();
+    void resetElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve();
 
-  bool setFractionofElectricPowerSupplyLossestoZone(double fractionofElectricPowerSupplyLossestoZone);
+    bool setFractionofElectricPowerSupplyLossestoZone(double fractionofElectricPowerSupplyLossestoZone);
 
-  void resetFractionofElectricPowerSupplyLossestoZone();
+    void resetFractionofElectricPowerSupplyLossestoZone();
 
-  bool setSupplyTemperatureDifference(double supplyTemperatureDifference);
+    bool setSupplyTemperatureDifference(double supplyTemperatureDifference);
 
-  void resetSupplyTemperatureDifference();
+    void resetSupplyTemperatureDifference();
 
-  // Note Schedules are passed by reference, not const reference.
-  bool setSupplyTemperatureDifferenceSchedule(Schedule& schedule);
+    // Note Schedules are passed by reference, not const reference.
+    bool setSupplyTemperatureDifferenceSchedule(Schedule& schedule);
 
-  void resetSupplyTemperatureDifferenceSchedule();
+    void resetSupplyTemperatureDifferenceSchedule();
 
-  bool setReturnTemperatureDifference(double returnTemperatureDifference);
+    bool setReturnTemperatureDifference(double returnTemperatureDifference);
 
-  void resetReturnTemperatureDifference();
+    void resetReturnTemperatureDifference();
 
-  // Note Schedules are passed by reference, not const reference.
-  bool setReturnTemperatureDifferenceSchedule(Schedule& schedule);
+    // Note Schedules are passed by reference, not const reference.
+    bool setReturnTemperatureDifferenceSchedule(Schedule& schedule);
 
-  void resetReturnTemperatureDifferenceSchedule();
+    void resetReturnTemperatureDifferenceSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  double getWattsperUnit(double floorArea) const;
+    double getWattsperUnit(double floorArea) const;
 
-  double getWattsperZoneFloorArea(double floorArea) const;
+    double getWattsperZoneFloorArea(double floorArea) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ElectricEquipmentITEAirCooledDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ElectricEquipmentITEAirCooledDefinition_Impl ImplType;
 
-  explicit ElectricEquipmentITEAirCooledDefinition(std::shared_ptr<detail::ElectricEquipmentITEAirCooledDefinition_Impl> impl);
+    explicit ElectricEquipmentITEAirCooledDefinition(std::shared_ptr<detail::ElectricEquipmentITEAirCooledDefinition_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ElectricEquipmentITEAirCooledDefinition");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ElectricEquipmentITEAirCooledDefinition");
+  };
 
-/** \relates ElectricEquipmentITEAirCooledDefinition*/
-typedef boost::optional<ElectricEquipmentITEAirCooledDefinition> OptionalElectricEquipmentITEAirCooledDefinition;
+  /** \relates ElectricEquipmentITEAirCooledDefinition*/
+  typedef boost::optional<ElectricEquipmentITEAirCooledDefinition> OptionalElectricEquipmentITEAirCooledDefinition;
 
-/** \relates ElectricEquipmentITEAirCooledDefinition*/
-typedef std::vector<ElectricEquipmentITEAirCooledDefinition> ElectricEquipmentITEAirCooledDefinitionVector;
+  /** \relates ElectricEquipmentITEAirCooledDefinition*/
+  typedef std::vector<ElectricEquipmentITEAirCooledDefinition> ElectricEquipmentITEAirCooledDefinitionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICEQUIPMENTITEAIRCOOLEDDEFINITION_HPP
-
+#endif  // MODEL_ELECTRICEQUIPMENTITEAIRCOOLEDDEFINITION_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,42 +41,37 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateRunPeriodControlSpecialDays( RunPeriodControlSpecialDays & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::RunPeriodControl_SpecialDays);
+  boost::optional<IdfObject> ForwardTranslator::translateRunPeriodControlSpecialDays(RunPeriodControlSpecialDays& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::RunPeriodControl_SpecialDays);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  boost::optional<std::string> s;
+    boost::optional<std::string> s;
 
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::StartDate);
+    if (s) {
+      const auto temp = openstudio::replace(s.get(), "5th", "Last");
+      idfObject.setString(RunPeriodControl_SpecialDaysFields::StartDate, temp);
+    }
+
+    s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::Duration);
+    if (s) {
+      idfObject.setString(RunPeriodControl_SpecialDaysFields::Duration, s.get());
+    }
+
+    s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::SpecialDayType);
+    if (s) {
+      idfObject.setString(RunPeriodControl_SpecialDaysFields::SpecialDayType, s.get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::StartDate);
-  if( s )
-  {
-    const auto temp = openstudio::replace(s.get(), "5th", "Last");
-    idfObject.setString(RunPeriodControl_SpecialDaysFields::StartDate,temp);
-  }
+}  // namespace energyplus
 
-  s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::Duration);
-  if( s )
-  {
-    idfObject.setString(RunPeriodControl_SpecialDaysFields::Duration,s.get());
-  }
-
-  s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::SpecialDayType);
-  if( s )
-  {
-    idfObject.setString(RunPeriodControl_SpecialDaysFields::SpecialDayType,s.get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

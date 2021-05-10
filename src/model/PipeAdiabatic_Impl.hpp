@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,48 +36,42 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API PipeAdiabatic_Impl : public StraightComponent_Impl {
-  public:
+    class MODEL_API PipeAdiabatic_Impl : public StraightComponent_Impl
+    {
+     public:
+      // constructor
+      PipeAdiabatic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    PipeAdiabatic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      PipeAdiabatic_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    PipeAdiabatic_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+      // copy constructor
+      PipeAdiabatic_Impl(const PipeAdiabatic_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // copy constructor
-    PipeAdiabatic_Impl(const PipeAdiabatic_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+      // virtual destructor
+      virtual ~PipeAdiabatic_Impl();
 
-    // virtual destructor
-    virtual ~PipeAdiabatic_Impl();
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      bool addToNode(Node& node) override;
 
-    bool addToNode(Node & node) override;
+     private:
+      REGISTER_LOGGER("openstudio.model.PipeAdiabatic");
+    };
 
-  private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.PipeAdiabatic");
-  };
+}  // namespace model
 
-} // detail
+}  // namespace openstudio
 
-} // model
-
-} // openstudio
-
-#endif // MODEL_PIPEADIABATIC_IMPL_HPP
-
+#endif  // MODEL_PIPEADIABATIC_IMPL_HPP

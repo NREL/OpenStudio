@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,238 +49,217 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  AvailabilityManagerNightVentilation_Impl::AvailabilityManagerNightVentilation_Impl(const IdfObject& idfObject,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : AvailabilityManager_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerNightVentilation::iddObjectType());
-  }
+    AvailabilityManagerNightVentilation_Impl::AvailabilityManagerNightVentilation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : AvailabilityManager_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerNightVentilation::iddObjectType());
+    }
 
-  AvailabilityManagerNightVentilation_Impl::AvailabilityManagerNightVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : AvailabilityManager_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == AvailabilityManagerNightVentilation::iddObjectType());
-  }
+    AvailabilityManagerNightVentilation_Impl::AvailabilityManagerNightVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : AvailabilityManager_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == AvailabilityManagerNightVentilation::iddObjectType());
+    }
 
-  AvailabilityManagerNightVentilation_Impl::AvailabilityManagerNightVentilation_Impl(const AvailabilityManagerNightVentilation_Impl& other,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : AvailabilityManager_Impl(other,model,keepHandle)
-  {}
+    AvailabilityManagerNightVentilation_Impl::AvailabilityManagerNightVentilation_Impl(const AvailabilityManagerNightVentilation_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : AvailabilityManager_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& AvailabilityManagerNightVentilation_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Availability Manager Night Ventilation Control Status"
-    };
-    return result;
-  }
+    const std::vector<std::string>& AvailabilityManagerNightVentilation_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Availability Manager Night Ventilation Control Status"};
+      return result;
+    }
 
-  IddObjectType AvailabilityManagerNightVentilation_Impl::iddObjectType() const {
-    return AvailabilityManagerNightVentilation::iddObjectType();
-  }
+    IddObjectType AvailabilityManagerNightVentilation_Impl::iddObjectType() const {
+      return AvailabilityManagerNightVentilation::iddObjectType();
+    }
 
-  std::vector<ScheduleTypeKey> AvailabilityManagerNightVentilation_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    // TODO: Check schedule display names.
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_AvailabilityManager_NightVentilationFields::ApplicabilitySchedule) != e)
+    std::vector<ScheduleTypeKey> AvailabilityManagerNightVentilation_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      // TODO: Check schedule display names.
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_AvailabilityManager_NightVentilationFields::ApplicabilitySchedule) != e) {
+        result.push_back(ScheduleTypeKey("AvailabilityManagerNightVentilation", "Applicability Schedule"));
+      }
+      if (std::find(b, e, OS_AvailabilityManager_NightVentilationFields::FanSchedule) != e) {
+        result.push_back(ScheduleTypeKey("AvailabilityManagerNightVentilation", "Fan Schedule"));
+      }
+      if (std::find(b, e, OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule) != e) {
+        result.push_back(ScheduleTypeKey("AvailabilityManagerNightVentilation", "Ventilation Temperature Schedule"));
+      }
+      return result;
+    }
+
+    Schedule AvailabilityManagerNightVentilation_Impl::applicabilitySchedule() const {
+      boost::optional<Schedule> value = optionalApplicabilitySchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Applicability Schedule attached.");
+      }
+      return value.get();
+    }
+
+    boost::optional<Schedule> AvailabilityManagerNightVentilation_Impl::ventilationTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule);
+    }
+
+    double AvailabilityManagerNightVentilation_Impl::ventilationTemperatureDifference() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerNightVentilation_Impl::ventilationTemperatureLowLimit() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerNightVentilation_Impl::nightVentingFlowFraction() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_NightVentilationFields::NightVentingFlowFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<ThermalZone> AvailabilityManagerNightVentilation_Impl::controlZone() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_AvailabilityManager_NightVentilationFields::ControlZone);
+    }
+
+    bool AvailabilityManagerNightVentilation_Impl::setApplicabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AvailabilityManager_NightVentilationFields::ApplicabilitySchedule, "AvailabilityManagerNightVentilation",
+                                "Applicability Schedule", schedule);
+      return result;
+    }
+
+    bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule, "AvailabilityManagerNightVentilation",
+                                "Ventilation Temperature Schedule", schedule);
+      return result;
+    }
+
+    void AvailabilityManagerNightVentilation_Impl::resetVentilationTemperatureSchedule() {
+      bool result = setString(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule, "");
+      OS_ASSERT(result);
+    }
+
+    bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
+      bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference, ventilationTemperatureDifference);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
+      bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit, ventilationTemperatureLowLimit);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool AvailabilityManagerNightVentilation_Impl::setNightVentingFlowFraction(double nightVentingFlowFraction) {
+      bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::NightVentingFlowFraction, nightVentingFlowFraction);
+      return result;
+    }
+
+    bool AvailabilityManagerNightVentilation_Impl::setControlZone(const boost::optional<ThermalZone>& thermalZone) {
+      bool result(false);
+      if (thermalZone) {
+        result = setPointer(OS_AvailabilityManager_NightVentilationFields::ControlZone, thermalZone.get().handle());
+      } else {
+        resetControlZone();
+        result = true;
+      }
+      return result;
+    }
+
+    void AvailabilityManagerNightVentilation_Impl::resetControlZone() {
+      bool result = setString(OS_AvailabilityManager_NightVentilationFields::ControlZone, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> AvailabilityManagerNightVentilation_Impl::optionalApplicabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_NightVentilationFields::ApplicabilitySchedule);
+    }
+
+  }  // namespace detail
+
+  AvailabilityManagerNightVentilation::AvailabilityManagerNightVentilation(const Model& model)
+    : AvailabilityManager(AvailabilityManagerNightVentilation::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AvailabilityManagerNightVentilation_Impl>());
+
     {
-      result.push_back(ScheduleTypeKey("AvailabilityManagerNightVentilation","Applicability Schedule"));
+      auto schedule = model.alwaysOnDiscreteSchedule();
+      setApplicabilitySchedule(schedule);
     }
-    if (std::find(b,e,OS_AvailabilityManager_NightVentilationFields::FanSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("AvailabilityManagerNightVentilation","Fan Schedule"));
-    }
-    if (std::find(b,e,OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("AvailabilityManagerNightVentilation","Ventilation Temperature Schedule"));
-    }
-    return result;
+
+    setVentilationTemperatureDifference(2.0);
+    setVentilationTemperatureLowLimit(15.0);
+    setNightVentingFlowFraction(0.333);
   }
 
-  Schedule AvailabilityManagerNightVentilation_Impl::applicabilitySchedule() const {
-    boost::optional<Schedule> value = optionalApplicabilitySchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Applicability Schedule attached.");
-    }
-    return value.get();
+  IddObjectType AvailabilityManagerNightVentilation::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_AvailabilityManager_NightVentilation);
   }
 
-  boost::optional<Schedule> AvailabilityManagerNightVentilation_Impl::ventilationTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule);
+  Schedule AvailabilityManagerNightVentilation::applicabilitySchedule() const {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->applicabilitySchedule();
   }
 
-  double AvailabilityManagerNightVentilation_Impl::ventilationTemperatureDifference() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<Schedule> AvailabilityManagerNightVentilation::ventilationTemperatureSchedule() const {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->ventilationTemperatureSchedule();
   }
 
-  double AvailabilityManagerNightVentilation_Impl::ventilationTemperatureLowLimit() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit,true);
-    OS_ASSERT(value);
-    return value.get();
+  double AvailabilityManagerNightVentilation::ventilationTemperatureDifference() const {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->ventilationTemperatureDifference();
   }
 
-  double AvailabilityManagerNightVentilation_Impl::nightVentingFlowFraction() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_NightVentilationFields::NightVentingFlowFraction,true);
-    OS_ASSERT(value);
-    return value.get();
+  double AvailabilityManagerNightVentilation::ventilationTemperatureLowLimit() const {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->ventilationTemperatureLowLimit();
   }
 
-  boost::optional<ThermalZone> AvailabilityManagerNightVentilation_Impl::controlZone() const {
-    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_AvailabilityManager_NightVentilationFields::ControlZone);
+  double AvailabilityManagerNightVentilation::nightVentingFlowFraction() const {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->nightVentingFlowFraction();
   }
 
-  bool AvailabilityManagerNightVentilation_Impl::setApplicabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AvailabilityManager_NightVentilationFields::ApplicabilitySchedule,
-                              "AvailabilityManagerNightVentilation",
-                              "Applicability Schedule",
-                              schedule);
-    return result;
+  boost::optional<ThermalZone> AvailabilityManagerNightVentilation::controlZone() const {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->controlZone();
   }
 
-  bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule,
-                              "AvailabilityManagerNightVentilation",
-                              "Ventilation Temperature Schedule",
-                              schedule);
-    return result;
+  bool AvailabilityManagerNightVentilation::setApplicabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setApplicabilitySchedule(schedule);
   }
 
-  void AvailabilityManagerNightVentilation_Impl::resetVentilationTemperatureSchedule() {
-    bool result = setString(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureSchedule, "");
-    OS_ASSERT(result);
+  bool AvailabilityManagerNightVentilation::setVentilationTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureSchedule(schedule);
   }
 
-  bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
-    bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference, ventilationTemperatureDifference);
-    OS_ASSERT(result);
-    return result;
+  void AvailabilityManagerNightVentilation::resetVentilationTemperatureSchedule() {
+    getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->resetVentilationTemperatureSchedule();
   }
 
-  bool AvailabilityManagerNightVentilation_Impl::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
-    bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit, ventilationTemperatureLowLimit);
-    OS_ASSERT(result);
-    return result;
+  bool AvailabilityManagerNightVentilation::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureDifference(ventilationTemperatureDifference);
   }
 
-  bool AvailabilityManagerNightVentilation_Impl::setNightVentingFlowFraction(double nightVentingFlowFraction) {
-    bool result = setDouble(OS_AvailabilityManager_NightVentilationFields::NightVentingFlowFraction, nightVentingFlowFraction);
-    return result;
+  bool AvailabilityManagerNightVentilation::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureLowLimit(ventilationTemperatureLowLimit);
   }
 
-  bool AvailabilityManagerNightVentilation_Impl::setControlZone(const boost::optional<ThermalZone>& thermalZone) {
-    bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_AvailabilityManager_NightVentilationFields::ControlZone, thermalZone.get().handle());
-    }
-    else {
-      resetControlZone();
-      result = true;
-    }
-    return result;
+  bool AvailabilityManagerNightVentilation::setNightVentingFlowFraction(double nightVentingFlowFraction) {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setNightVentingFlowFraction(nightVentingFlowFraction);
   }
 
-  void AvailabilityManagerNightVentilation_Impl::resetControlZone() {
-    bool result = setString(OS_AvailabilityManager_NightVentilationFields::ControlZone, "");
-    OS_ASSERT(result);
+  bool AvailabilityManagerNightVentilation::setControlZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setControlZone(thermalZone);
   }
 
-  boost::optional<Schedule> AvailabilityManagerNightVentilation_Impl::optionalApplicabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_NightVentilationFields::ApplicabilitySchedule);
+  void AvailabilityManagerNightVentilation::resetControlZone() {
+    getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->resetControlZone();
   }
 
-} // detail
+  /// @cond
+  AvailabilityManagerNightVentilation::AvailabilityManagerNightVentilation(std::shared_ptr<detail::AvailabilityManagerNightVentilation_Impl> impl)
+    : AvailabilityManager(std::move(impl)) {}
+  /// @endcond
 
-AvailabilityManagerNightVentilation::AvailabilityManagerNightVentilation(const Model& model)
-  : AvailabilityManager(AvailabilityManagerNightVentilation::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AvailabilityManagerNightVentilation_Impl>());
-
-  {
-    auto schedule = model.alwaysOnDiscreteSchedule();
-    setApplicabilitySchedule(schedule);
-  }
-
-  setVentilationTemperatureDifference(2.0);
-  setVentilationTemperatureLowLimit(15.0);
-  setNightVentingFlowFraction(0.333);
-}
-
-IddObjectType AvailabilityManagerNightVentilation::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_AvailabilityManager_NightVentilation);
-}
-
-Schedule AvailabilityManagerNightVentilation::applicabilitySchedule() const {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->applicabilitySchedule();
-}
-
-boost::optional<Schedule> AvailabilityManagerNightVentilation::ventilationTemperatureSchedule() const {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->ventilationTemperatureSchedule();
-}
-
-double AvailabilityManagerNightVentilation::ventilationTemperatureDifference() const {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->ventilationTemperatureDifference();
-}
-
-double AvailabilityManagerNightVentilation::ventilationTemperatureLowLimit() const {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->ventilationTemperatureLowLimit();
-}
-
-double AvailabilityManagerNightVentilation::nightVentingFlowFraction() const {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->nightVentingFlowFraction();
-}
-
-boost::optional<ThermalZone> AvailabilityManagerNightVentilation::controlZone() const {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->controlZone();
-}
-
-bool AvailabilityManagerNightVentilation::setApplicabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setApplicabilitySchedule(schedule);
-}
-
-bool AvailabilityManagerNightVentilation::setVentilationTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureSchedule(schedule);
-}
-
-void AvailabilityManagerNightVentilation::resetVentilationTemperatureSchedule() {
-  getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->resetVentilationTemperatureSchedule();
-}
-
-bool AvailabilityManagerNightVentilation::setVentilationTemperatureDifference(double ventilationTemperatureDifference) {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureDifference(ventilationTemperatureDifference);
-}
-
-bool AvailabilityManagerNightVentilation::setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit) {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setVentilationTemperatureLowLimit(ventilationTemperatureLowLimit);
-}
-
-bool AvailabilityManagerNightVentilation::setNightVentingFlowFraction(double nightVentingFlowFraction) {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setNightVentingFlowFraction(nightVentingFlowFraction);
-}
-
-bool AvailabilityManagerNightVentilation::setControlZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->setControlZone(thermalZone);
-}
-
-void AvailabilityManagerNightVentilation::resetControlZone() {
-  getImpl<detail::AvailabilityManagerNightVentilation_Impl>()->resetControlZone();
-}
-
-/// @cond
-AvailabilityManagerNightVentilation::AvailabilityManagerNightVentilation(std::shared_ptr<detail::AvailabilityManagerNightVentilation_Impl> impl)
-  : AvailabilityManager(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

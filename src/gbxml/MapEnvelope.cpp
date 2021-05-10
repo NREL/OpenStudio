@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,7 +30,6 @@
 #include "ReverseTranslator.hpp"
 #include "ForwardTranslator.hpp"
 
-
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
@@ -58,8 +57,9 @@
 namespace openstudio {
 namespace gbxml {
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstruction(const pugi::xml_node& element, const std::unordered_map<std::string, pugi::xml_node> &layerElements, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject>
+    ReverseTranslator::translateConstruction(const pugi::xml_node& element, const std::unordered_map<std::string, pugi::xml_node>& layerElements,
+                                             openstudio::model::Model& model) {
     // Krishnan, this constructor should only be used for unique objects like Building and Site
     //openstudio::model::Construction construction = model.getUniqueModelObject<openstudio::model::Construction>();
 
@@ -73,18 +73,18 @@ namespace gbxml {
     // auto layerIdList = element.children("LayerId");
     // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
     std::vector<openstudio::model::Material> materials;
-    for (auto &layerIdEl : element.children("LayerId")) {
+    for (auto& layerIdEl : element.children("LayerId")) {
       std::string layerId = layerIdEl.attribute("layerIdRef").value();
 
       // find this layerId in all the layers
       auto result = layerElements.find(layerId);
       if (result != layerElements.end()) {
-        for (auto &materialIdElement : result->second.children("MaterialId")) {
+        for (auto& materialIdElement : result->second.children("MaterialId")) {
           std::string materialId = materialIdElement.attribute("materialIdRef").value();
           auto materialIt = m_idToObjectMap.find(materialId);
           if (materialIt != m_idToObjectMap.end()) {
             boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
-            OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+            OS_ASSERT(material);  // Krishnan, what type of error handling do you want?
             materials.push_back(*material);
           }
         }
@@ -109,14 +109,14 @@ namespace gbxml {
         test = construction.setLayer(materials[i].cast<openstudio::model::ModelPartitionMaterial>());
       }
 
-      OS_ASSERT(test); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(test);  // Krishnan, what type of error handling do you want?
     }
 
     return construction;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const pugi::xml_node &element, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const pugi::xml_node& element,
+                                                                                         openstudio::model::Model& model) {
     openstudio::model::Construction construction(model);
     std::string windowTypeId = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
@@ -129,21 +129,21 @@ namespace gbxml {
     boost::optional<double> shgc;
     boost::optional<double> tVis;
 
-    for (auto &uValueElement : element.children("U-value")) {
+    for (auto& uValueElement : element.children("U-value")) {
       if (uValueElement.attribute("unit").value() == std::string("WPerSquareMeterK")) {
         uValue = uValueElement.text().as_double();
         break;
       }
     }
 
-    for (auto &shgcElement : element.children("SolarHeatGainCoeff")) {
+    for (auto& shgcElement : element.children("SolarHeatGainCoeff")) {
       if (shgcElement.attribute("unit").value() == std::string("Fraction")) {
         shgc = shgcElement.text().as_double();
         break;
       }
     }
 
-    for (auto &transmittanceElement : element.children("Transmittance")) {
+    for (auto& transmittanceElement : element.children("Transmittance")) {
       if (transmittanceElement.attribute("type").value() == std::string("Visible")) {
         tVis = transmittanceElement.text().as_double();
         break;
@@ -164,8 +164,8 @@ namespace gbxml {
     return construction;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const pugi::xml_node& element,
+                                                                                       openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     auto rvalueElement = element.child("R-value");
@@ -182,7 +182,7 @@ namespace gbxml {
       double thickness = thicknessElement.text().as_double();
       double specificHeat = specificHeatElement.text().as_double();
 
-      std::string roughness = "MediumRough"; // TODO: Shouldn't that be the same default as OS (Smooth)?
+      std::string roughness = "MediumRough";  // TODO: Shouldn't that be the same default as OS (Smooth)?
       if (!roughnessElement.empty()) {
         roughness = roughnessElement.attribute("value").value();
       }
@@ -246,8 +246,8 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase,
+                                                                               pugi::xml_node& root) {
     boost::optional<pugi::xml_node> result;
 
     bool isOpaque = constructionBase.isOpaque();
@@ -305,7 +305,6 @@ namespace gbxml {
       //  solarHeatGainCoefficient = constructionBase.solarHeatGainCoefficient();
       //}
 
-
       if (visibleTransmittance) {
         auto element = result->append_child("Transmittance");
         element.text() = *visibleTransmittance;
@@ -329,8 +328,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateLayer(const openstudio::model::Material& material, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateLayer(const openstudio::model::Material& material, pugi::xml_node& root) {
     auto result = root.append_child("Layer");
 
     std::string materialName = material.name().get();
@@ -350,8 +348,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, pugi::xml_node& root)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, pugi::xml_node& root) {
     auto result = root.append_child("Material");
 
     std::string name = material.name().get();
@@ -516,5 +513,5 @@ namespace gbxml {
     return result;
   }
 
-} // gbxml
-} // openstudio
+}  // namespace gbxml
+}  // namespace openstudio

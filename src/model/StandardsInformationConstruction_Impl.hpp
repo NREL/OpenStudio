@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,167 +35,160 @@
 namespace openstudio {
 namespace model {
 
-class StandardsInformationConstruction;
-class ConstructionBase;
-class Material;
+  class StandardsInformationConstruction;
+  class ConstructionBase;
+  class Material;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API StandardsInformationConstruction_Impl : public ModelObject_Impl {
-   public:
-    /** Constructors and Destructors */
-    //@{
+    class MODEL_API StandardsInformationConstruction_Impl : public ModelObject_Impl
+    {
+     public:
+      /** Constructors and Destructors */
+      //@{
 
-    // constructor
-    StandardsInformationConstruction_Impl(const IdfObject& idfObject,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      // constructor
+      StandardsInformationConstruction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    StandardsInformationConstruction_Impl(
-        const openstudio::detail::WorkspaceObject_Impl& other,
-        Model_Impl* model,
-        bool keepHandle);
+      // construct from workspace
+      StandardsInformationConstruction_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    StandardsInformationConstruction_Impl(
-        const StandardsInformationConstruction_Impl& other,
-        Model_Impl* model,
-        bool keepHandle);
+      StandardsInformationConstruction_Impl(const StandardsInformationConstruction_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // virtual destructor
-    virtual ~StandardsInformationConstruction_Impl(){}
+      // virtual destructor
+      virtual ~StandardsInformationConstruction_Impl() {}
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    ConstructionBase construction() const;
+      ConstructionBase construction() const;
 
-    boost::optional<std::string> intendedSurfaceType() const;
+      boost::optional<std::string> intendedSurfaceType() const;
 
-    boost::optional<std::string> standardsConstructionType() const;
+      boost::optional<std::string> standardsConstructionType() const;
 
-    std::vector<std::string> suggestedStandardsConstructionTypes() const;
+      std::vector<std::string> suggestedStandardsConstructionTypes() const;
 
-    boost::optional<Material> perturbableLayer() const;
+      boost::optional<Material> perturbableLayer() const;
 
-    std::string perturbableLayerType() const;
+      std::string perturbableLayerType() const;
 
-    bool isPerturbableLayerTypeDefaulted() const;
+      bool isPerturbableLayerTypeDefaulted() const;
 
-    boost::optional<std::string> otherPerturbableLayerType() const;
+      boost::optional<std::string> otherPerturbableLayerType() const;
 
-    std::vector<std::string> suggestedConstructionStandards() const;
+      std::vector<std::string> suggestedConstructionStandards() const;
 
-    boost::optional<std::string> constructionStandard() const;
+      boost::optional<std::string> constructionStandard() const;
 
-    std::vector<std::string> suggestedConstructionStandardSources() const;
+      std::vector<std::string> suggestedConstructionStandardSources() const;
 
-    boost::optional<std::string> constructionStandardSource() const;
+      boost::optional<std::string> constructionStandardSource() const;
 
-    boost::optional<std::string> fenestrationType() const;
+      boost::optional<std::string> fenestrationType() const;
 
-    boost::optional<std::string> fenestrationAssemblyContext() const;
+      boost::optional<std::string> fenestrationAssemblyContext() const;
 
-    boost::optional<std::string> fenestrationNumberOfPanes() const;
+      boost::optional<std::string> fenestrationNumberOfPanes() const;
 
-    boost::optional<std::string> fenestrationFrameType() const;
+      boost::optional<std::string> fenestrationFrameType() const;
 
-    boost::optional<std::string> fenestrationDividerType() const;
+      boost::optional<std::string> fenestrationDividerType() const;
 
-    boost::optional<std::string> fenestrationTint() const;
+      boost::optional<std::string> fenestrationTint() const;
 
-    boost::optional<std::string> fenestrationGasFill() const;
+      boost::optional<std::string> fenestrationGasFill() const;
 
-    bool fenestrationLowEmissivityCoating() const;
+      bool fenestrationLowEmissivityCoating() const;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    /// set the parent, child may have to call non-const methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      /// set the parent, child may have to call non-const methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    /** Get all output variables names that could be associated with this object. These variables
+      /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary
      *  to see if the variable is available. Each concrete class should override this method.*/
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setIntendedSurfaceType(const std::string& type);
-    void resetIntendedSurfaceType();
+      bool setIntendedSurfaceType(const std::string& type);
+      void resetIntendedSurfaceType();
 
-    bool setStandardsConstructionType(const std::string& type);
-    void resetStandardsConstructionType();
+      bool setStandardsConstructionType(const std::string& type);
+      void resetStandardsConstructionType();
 
-    bool setPerturbableLayer(unsigned layerIndex);
+      bool setPerturbableLayer(unsigned layerIndex);
 
-    bool setPerturbableLayer(const Material& material);
+      bool setPerturbableLayer(const Material& material);
 
-    /** Clears all PerturbableLayer information, including type. */
-    void resetPerturbableLayer();
+      /** Clears all PerturbableLayer information, including type. */
+      void resetPerturbableLayer();
 
-    bool setPerturbableLayerType(const std::string& type);
+      bool setPerturbableLayerType(const std::string& type);
 
-    void resetPerturbableLayerType();
+      void resetPerturbableLayerType();
 
-    bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
+      bool setOtherPerturbableLayerType(const std::string& otherPerturbableLayerType);
 
-    void resetOtherPerturbableLayerType();
+      void resetOtherPerturbableLayerType();
 
-    bool setConstructionStandard(const std::string& constructionStandard);
+      bool setConstructionStandard(const std::string& constructionStandard);
 
-    void resetConstructionStandard();
+      void resetConstructionStandard();
 
-    bool setConstructionStandardSource(const std::string& constructionStandardSource);
+      bool setConstructionStandardSource(const std::string& constructionStandardSource);
 
-    void resetConstructionStandardSource();
+      void resetConstructionStandardSource();
 
-    bool setFenestrationType(const std::string& fenestrationType);
+      bool setFenestrationType(const std::string& fenestrationType);
 
-    void resetFenestrationType();
+      void resetFenestrationType();
 
-    bool setFenestrationAssemblyContext(const std::string& fenestrationAssemblyContext);
+      bool setFenestrationAssemblyContext(const std::string& fenestrationAssemblyContext);
 
-    void resetFenestrationAssemblyContext();
+      void resetFenestrationAssemblyContext();
 
-    bool setFenestrationNumberOfPanes(const std::string& fenestrationNumberOfPanes);
+      bool setFenestrationNumberOfPanes(const std::string& fenestrationNumberOfPanes);
 
-    void resetFenestrationNumberOfPanes();
+      void resetFenestrationNumberOfPanes();
 
-    bool setFenestrationFrameType(const std::string& fenestrationFrameType);
+      bool setFenestrationFrameType(const std::string& fenestrationFrameType);
 
-    void resetFenestrationFrameType();
+      void resetFenestrationFrameType();
 
-    bool setFenestrationDividerType(const std::string& fenestrationDividerType);
+      bool setFenestrationDividerType(const std::string& fenestrationDividerType);
 
-    void resetFenestrationDividerType();
+      void resetFenestrationDividerType();
 
-    bool setFenestrationTint(const std::string& fenestrationTint);
+      bool setFenestrationTint(const std::string& fenestrationTint);
 
-    void resetFenestrationTint();
+      void resetFenestrationTint();
 
-    bool setFenestrationGasFill(const std::string& fenestrationGasFill);
+      bool setFenestrationGasFill(const std::string& fenestrationGasFill);
 
-    void resetFenestrationGasFill();
+      void resetFenestrationGasFill();
 
-    bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
+      bool setFenestrationLowEmissivityCoating(bool fenestrationLowEmissivityCoating);
 
-    void resetFenestrationLowEmissivityCoating();
+      void resetFenestrationLowEmissivityCoating();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_STANDARDSINFORMATIONCONSTRUCTION_IMPL_HPP
+#endif  // MODEL_STANDARDSINFORMATIONCONSTRUCTION_IMPL_HPP

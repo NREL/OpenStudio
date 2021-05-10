@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,79 +37,72 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-/** AirflowNetworkSimpleOpening_Impl is a AirflowNetworkComponent_Impl that is the implementation class for AirflowNetworkSimpleOpening.*/
-class MODEL_API AirflowNetworkSimpleOpening_Impl : public AirflowNetworkComponent_Impl
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
+    /** AirflowNetworkSimpleOpening_Impl is a AirflowNetworkComponent_Impl that is the implementation class for AirflowNetworkSimpleOpening.*/
+    class MODEL_API AirflowNetworkSimpleOpening_Impl : public AirflowNetworkComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  AirflowNetworkSimpleOpening_Impl(const IdfObject& idfObject,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkSimpleOpening_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  AirflowNetworkSimpleOpening_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkSimpleOpening_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AirflowNetworkSimpleOpening_Impl(const AirflowNetworkSimpleOpening_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkSimpleOpening_Impl(const AirflowNetworkSimpleOpening_Impl& other, Model_Impl* model, bool keepHandle);
 
-  virtual ~AirflowNetworkSimpleOpening_Impl() {}
+      virtual ~AirflowNetworkSimpleOpening_Impl() {}
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-  //@}
-  /** @name Getters */
-  //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-  double airMassFlowCoefficientWhenOpeningisClosed() const;
+      double airMassFlowCoefficientWhenOpeningisClosed() const;
 
-  double airMassFlowExponentWhenOpeningisClosed() const;
+      double airMassFlowExponentWhenOpeningisClosed() const;
 
-  bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
+      bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
 
-  double minimumDensityDifferenceforTwoWayFlow() const;
+      double minimumDensityDifferenceforTwoWayFlow() const;
 
-  double dischargeCoefficient() const;
+      double dischargeCoefficient() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
+      bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
 
-  bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
+      bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
 
-  void resetAirMassFlowExponentWhenOpeningisClosed();
+      void resetAirMassFlowExponentWhenOpeningisClosed();
 
-  bool setMinimumDensityDifferenceforTwoWayFlow(double minimumDensityDifferenceforTwoWayFlow);
+      bool setMinimumDensityDifferenceforTwoWayFlow(double minimumDensityDifferenceforTwoWayFlow);
 
-  bool setDischargeCoefficient(double dischargeCoefficient);
+      bool setDischargeCoefficient(double dischargeCoefficient);
 
-  //@}
-  /** @name Other */
-  //@{
+      //@}
+      /** @name Other */
+      //@{
 
-  //@}
-protected:
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkSimpleOpening");
-};
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkSimpleOpening");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKSIMPLEOPENING_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKSIMPLEOPENING_IMPL_HPP

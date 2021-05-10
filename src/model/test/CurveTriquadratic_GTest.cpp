@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,26 +37,23 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveTriquadratic_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveTriquadratic_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveTriquadratic curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveTriquadratic curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate) {
 
   Model m;
   CurveTriquadratic curve(m);
-
 
   EXPECT_FALSE(curve.coefficient1Constant());
   EXPECT_FALSE(curve.coefficient2xPOW2());
@@ -131,17 +128,13 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   double max_z = 10.0;
 
   auto calc = [=](double x, double y, double z) {
-    return c1 + c2 * std::pow(x, 2) + c3 * x + c4 * std::pow(y, 2) +
-           c5 * y + c6 * std::pow(z, 2) + c7 * z + c8 * std::pow(x, 2) * std::pow(y, 2) +
-           c9 * x * y + c10 * x * std::pow(y, 2) + c11 * std::pow(x, 2) * y +
-           c12 * std::pow(x, 2) * std::pow(z, 2) + c13 * x * z + c14 * x * std::pow(z, 2) +
-           c15 * std::pow(x, 2) * z + c16 * std::pow(y, 2) * std::pow(z, 2) + c17 * y * z +
-           c18 * y * std::pow(z, 2) + c19 * std::pow(y, 2) * z + c20 * std::pow(x, 2) * std::pow(y, 2) * std::pow(z, 2) +
-           c21 * std::pow(x, 2) * std::pow(y, 2) * z + c22 * std::pow(x, 2) * y * std::pow(z, 2) + c23 * x * std::pow(y, 2) * std::pow(z, 2) +
-           c24 * std::pow(x, 2) * y * z + c25 * x * std::pow(y, 2) * z + c26 * x * y * std::pow(z, 2) +
-           c27 * x * y * z;
+    return c1 + c2 * std::pow(x, 2) + c3 * x + c4 * std::pow(y, 2) + c5 * y + c6 * std::pow(z, 2) + c7 * z + c8 * std::pow(x, 2) * std::pow(y, 2)
+           + c9 * x * y + c10 * x * std::pow(y, 2) + c11 * std::pow(x, 2) * y + c12 * std::pow(x, 2) * std::pow(z, 2) + c13 * x * z
+           + c14 * x * std::pow(z, 2) + c15 * std::pow(x, 2) * z + c16 * std::pow(y, 2) * std::pow(z, 2) + c17 * y * z + c18 * y * std::pow(z, 2)
+           + c19 * std::pow(y, 2) * z + c20 * std::pow(x, 2) * std::pow(y, 2) * std::pow(z, 2) + c21 * std::pow(x, 2) * std::pow(y, 2) * z
+           + c22 * std::pow(x, 2) * y * std::pow(z, 2) + c23 * x * std::pow(y, 2) * std::pow(z, 2) + c24 * std::pow(x, 2) * y * z
+           + c25 * x * std::pow(y, 2) * z + c26 * x * y * std::pow(z, 2) + c27 * x * y * z;
   };
-
 
   EXPECT_TRUE(curve.setCoefficient1Constant(c1));
   EXPECT_TRUE(curve.setCoefficient2xPOW2(c2));
@@ -227,7 +220,6 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   EXPECT_EQ(c26, curve.coefficient26xTIMESYTIMESZPOW2().get());
   EXPECT_EQ(c27, curve.coefficient27xTIMESYTIMESZ().get());
 
-
   // Lims
   EXPECT_TRUE(curve.setMinimumValueofx(min_x));
   EXPECT_TRUE(curve.setMaximumValueofx(max_x));
@@ -254,7 +246,9 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   EXPECT_FALSE(curve.maximumCurveOutput());
 
   // x, y and z in range, no output limit
-  double x = 0.5; double y = 5.0; double z = 9.0;
+  double x = 0.5;
+  double y = 5.0;
+  double z = 9.0;
   EXPECT_DOUBLE_EQ(calc(x, y, z), curve.evaluate(x, y, z));
   EXPECT_DOUBLE_EQ(92296.75, curve.evaluate(x, y, z));
 
@@ -269,7 +263,8 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   EXPECT_DOUBLE_EQ(751098.0, curve.evaluate(x, y, z));
 
   // y < min_y
-  x = 0.5; y = 3.5;
+  x = 0.5;
+  y = 3.5;
   EXPECT_DOUBLE_EQ(calc(x, min_y, z), curve.evaluate(x, y, z));
   EXPECT_DOUBLE_EQ(62231.25, curve.evaluate(x, y, z));
 
@@ -279,7 +274,9 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   EXPECT_DOUBLE_EQ(128310.75, curve.evaluate(x, y, z));
 
   // z < min_z
-  x = 0.5; y = 5.0; z = 3.0;
+  x = 0.5;
+  y = 5.0;
+  z = 3.0;
   EXPECT_DOUBLE_EQ(calc(x, y, min_z), curve.evaluate(x, y, z));
   EXPECT_DOUBLE_EQ(73991.25, curve.evaluate(x, y, z));
 
@@ -289,12 +286,16 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   EXPECT_DOUBLE_EQ(112624.25, curve.evaluate(x, y, z));
 
   // x < min_x, y < min_y, z < min_z
-  x = -5.0; y = -5.0; z= - 5.0;
+  x = -5.0;
+  y = -5.0;
+  z = -5.0;
   EXPECT_DOUBLE_EQ(calc(min_x, min_y, min_z), curve.evaluate(x, y, z));
   EXPECT_DOUBLE_EQ(28346.4, curve.evaluate(x, y, z));
 
   // x > max_x, y, z > max_y
-  x = 10.0; y = 10.0; z = 10.0;
+  x = 10.0;
+  y = 10.0;
+  z = 10.0;
   EXPECT_DOUBLE_EQ(calc(max_x, max_y, max_z), curve.evaluate(x, y, z));
   EXPECT_DOUBLE_EQ(1273160.0, curve.evaluate(x, y, z));
 
@@ -309,7 +310,6 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // out < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x, min_y, min_z));
   // out > max output
@@ -318,5 +318,4 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0), openstudio::Exception);
-
 }

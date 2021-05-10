@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,10 +58,8 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
 /* It should allow for up to 4 stages. Tests that issue #2812 is fixed and doesn't come back */
-TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_4Stages)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_4Stages) {
 
   Model m;
   CoilCoolingDXMultiSpeed coil(m);
@@ -78,8 +76,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_4Stages)
   CoilCoolingDXMultiSpeedStageData stage4(m);
   coil.addStage(stage4);
 
-  ASSERT_EQ(4u,coil.stages().size());
-
+  ASSERT_EQ(4u, coil.stages().size());
 
   // The coil can only be wrapped in E+ in AirLoopHVAC:UnitaryHeatPump:AirToAir:Multispeed
   // In OpenStudio, you can use UnitarySystem, the FT does the job
@@ -106,20 +103,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_4Stages)
 
   // WorkspaceExtensibleGroup eg = idf_coil.extensibleGroups()[0] or getExtensibleGroup(0);
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(0).getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName).get(),
+  ASSERT_EQ(idf_coil.getExtensibleGroup(0)
+              .getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
+              .get(),
             stage1.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(1).getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName).get(),
+  ASSERT_EQ(idf_coil.getExtensibleGroup(1)
+              .getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
+              .get(),
             stage2.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(2).getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName).get(),
+  ASSERT_EQ(idf_coil.getExtensibleGroup(2)
+              .getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
+              .get(),
             stage3.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(3).getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName).get(),
+  ASSERT_EQ(idf_coil.getExtensibleGroup(3)
+              .getString(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
+              .get(),
             stage4.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
-
 }
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_MinOATCompressor) {
   Model m;

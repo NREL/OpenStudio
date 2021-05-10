@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,23 +35,23 @@
 #include "../utilities/data/Vector.hpp"
 #include "../utilities/core/Path.hpp"
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
   /** LightFixture represents the physical location, orientation, and illuminance distribution of a light fixture.
   */
-  class RADIANCE_API LightFixture{
-    public:
-      openstudio::Vector location;
-      openstudio::Vector orientation;
-      openstudio::path iesFile;
+  class RADIANCE_API LightFixture
+  {
+   public:
+    openstudio::Vector location;
+    openstudio::Vector orientation;
+    openstudio::path iesFile;
   };
 
   // vector of LightFixture
   typedef std::vector<LightFixture> LightFixtureVector;
 
+}  // namespace radiance
+}  // namespace openstudio
 
-} // radiance
-} // openstudio
-
-#endif //RADIANCE_LIGHTFIXTURE_HPP
+#endif  //RADIANCE_LIGHTFIXTURE_HPP

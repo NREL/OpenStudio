@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,7 +39,8 @@
 #include <vector>
 #include <string>
 
-class EnergyPlusFixture : public ::testing::Test {
+class EnergyPlusFixture : public ::testing::Test
+{
  protected:
   /// initialize for each test
   virtual void SetUp() override;
@@ -58,9 +59,8 @@ class EnergyPlusFixture : public ::testing::Test {
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  typedef std::pair<openstudio::path,std::string> ComponentDirectoryAndType;
+  typedef std::pair<openstudio::path, std::string> ComponentDirectoryAndType;
   static std::vector<ComponentDirectoryAndType> idfComponents;
 };
 
-#endif // ENERGYPLUS_TEST_ENERGYPLUSFIXTURE_HPP
-
+#endif  // ENERGYPLUS_TEST_ENERGYPLUSFIXTURE_HPP

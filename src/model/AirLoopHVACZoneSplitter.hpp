@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,83 +37,80 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
-class AirflowNetworkDistributionNode;
+  class ThermalZone;
+  class AirflowNetworkDistributionNode;
 
-namespace detail {
-  class AirLoopHVACZoneSplitter_Impl;
-} // detail
+  namespace detail {
+    class AirLoopHVACZoneSplitter_Impl;
+  }  // namespace detail
 
-/** AirLoopHVACZoneSplitter is an interface to the EnergyPlus IDD object named "AirLoopHVAC:ZoneSplitter"
+  /** AirLoopHVACZoneSplitter is an interface to the EnergyPlus IDD object named "AirLoopHVAC:ZoneSplitter"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of zone splitter objects in EnergyPlus.  Methods are built around the
  *  acts of getting the inlet and outlet ports to the splitter.  Branch indexes
  *  are used to refer to the many outlet ports of the mixer
  */
-class MODEL_API AirLoopHVACZoneSplitter : public Splitter {
-  public:
+  class MODEL_API AirLoopHVACZoneSplitter : public Splitter
+  {
+   public:
+    /** Constructs a new AirLoopHVACZoneSplitter object and places it inside the model. */
+    explicit AirLoopHVACZoneSplitter(const Model& model);
 
-  /** Constructs a new AirLoopHVACZoneSplitter object and places it inside the model. */
-  explicit AirLoopHVACZoneSplitter(const Model& model);
+    virtual ~AirLoopHVACZoneSplitter() {}
 
-  virtual ~AirLoopHVACZoneSplitter() {}
+    /// Returns the IddObjectType.
+    static IddObjectType iddObjectType();
 
-  /// Returns the IddObjectType.
-  static IddObjectType iddObjectType();
+    /** Returns the inlet port to the zone splitter. */
+    unsigned inletPort() const override;
 
-  /** Returns the inlet port to the zone splitter. */
-  unsigned inletPort() const override;
-
-  /** Returns the outlet port for branchIndex.  Branches are sequentially
+    /** Returns the outlet port for branchIndex.  Branches are sequentially
    *  indexed starting from 0.
    */
-  unsigned outletPort(unsigned branchIndex) const override;
+    unsigned outletPort(unsigned branchIndex) const override;
 
-  /** Returns the next available outlet port.  This will be the first port
+    /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  unsigned nextOutletPort() const override;
+    unsigned nextOutletPort() const override;
 
-  /** Returns a vector of all ZoneHVACEquipmentConnections objects connected
+    /** Returns a vector of all ZoneHVACEquipmentConnections objects connected
    *  to the splitter's outlets.
    */
-  std::vector<ThermalZone> thermalZones();
+    std::vector<ThermalZone> thermalZones();
 
-  std::vector<openstudio::IdfObject> remove();
+    std::vector<openstudio::IdfObject> remove();
 
-  void disconnect();
+    void disconnect();
 
-  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
-  protected:
+   protected:
+    /// @cond
 
-  /// @cond
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    typedef detail::AirLoopHVACZoneSplitter_Impl ImplType;
 
-  typedef detail::AirLoopHVACZoneSplitter_Impl ImplType;
+    explicit AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> impl);
 
-  explicit AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneSplitter");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneSplitter");
+  /** \relates AirLoopHVACZoneSplitter */
+  typedef boost::optional<AirLoopHVACZoneSplitter> OptionalAirLoopHVACZoneSplitter;
 
-  /// @endcond
+  /** \relates AirLoopHVACZoneSplitter */
+  typedef std::vector<AirLoopHVACZoneSplitter> AirLoopHVACZoneSplitterVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates AirLoopHVACZoneSplitter */
-typedef boost::optional<AirLoopHVACZoneSplitter> OptionalAirLoopHVACZoneSplitter;
-
-/** \relates AirLoopHVACZoneSplitter */
-typedef std::vector<AirLoopHVACZoneSplitter> AirLoopHVACZoneSplitterVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACZONESPLITTER_HPP
+#endif  // MODEL_AIRLOOPHVACZONESPLITTER_HPP

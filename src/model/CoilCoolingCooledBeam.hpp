@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,137 +37,137 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingCooledBeam_Impl;
+    class CoilCoolingCooledBeam_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingCooledBeam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:CooledBeam'. */
-class MODEL_API CoilCoolingCooledBeam : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingCooledBeam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:CooledBeam'. */
+  class MODEL_API CoilCoolingCooledBeam : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingCooledBeam(const Model& model);
+    explicit CoilCoolingCooledBeam(const Model& model);
 
-  virtual ~CoilCoolingCooledBeam() {}
+    virtual ~CoilCoolingCooledBeam() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  //unsigned inletPort() const;
+    //unsigned inletPort() const;
 
-  //unsigned outletPort() const;
+    //unsigned outletPort() const;
 
-  double coilSurfaceAreaperCoilLength() const;
+    double coilSurfaceAreaperCoilLength() const;
 
-  bool isCoilSurfaceAreaperCoilLengthDefaulted() const;
+    bool isCoilSurfaceAreaperCoilLengthDefaulted() const;
 
-  double modelParametera() const;
+    double modelParametera() const;
 
-  bool isModelParameteraDefaulted() const;
+    bool isModelParameteraDefaulted() const;
 
-  double modelParametern1() const;
+    double modelParametern1() const;
 
-  bool isModelParametern1Defaulted() const;
+    bool isModelParametern1Defaulted() const;
 
-  double modelParametern2() const;
+    double modelParametern2() const;
 
-  bool isModelParametern2Defaulted() const;
+    bool isModelParametern2Defaulted() const;
 
-  double modelParametern3() const;
+    double modelParametern3() const;
 
-  bool isModelParametern3Defaulted() const;
+    bool isModelParametern3Defaulted() const;
 
-  double modelParametera0() const;
+    double modelParametera0() const;
 
-  bool isModelParametera0Defaulted() const;
+    bool isModelParametera0Defaulted() const;
 
-  double modelParameterK1() const;
+    double modelParameterK1() const;
 
-  bool isModelParameterK1Defaulted() const;
+    bool isModelParameterK1Defaulted() const;
 
-  double modelParametern() const;
+    double modelParametern() const;
 
-  bool isModelParameternDefaulted() const;
+    bool isModelParameternDefaulted() const;
 
-  double leavingPipeInsideDiameter() const;
+    double leavingPipeInsideDiameter() const;
 
-  bool isLeavingPipeInsideDiameterDefaulted() const;
+    bool isLeavingPipeInsideDiameterDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCoilSurfaceAreaperCoilLength(double coilSurfaceAreaperCoilLength);
+    bool setCoilSurfaceAreaperCoilLength(double coilSurfaceAreaperCoilLength);
 
-  void resetCoilSurfaceAreaperCoilLength();
+    void resetCoilSurfaceAreaperCoilLength();
 
-  bool setModelParametera(double modelParametera);
+    bool setModelParametera(double modelParametera);
 
-  void resetModelParametera();
+    void resetModelParametera();
 
-  bool setModelParametern1(double modelParametern1);
+    bool setModelParametern1(double modelParametern1);
 
-  void resetModelParametern1();
+    void resetModelParametern1();
 
-  bool setModelParametern2(double modelParametern2);
+    bool setModelParametern2(double modelParametern2);
 
-  void resetModelParametern2();
+    void resetModelParametern2();
 
-  bool setModelParametern3(double modelParametern3);
+    bool setModelParametern3(double modelParametern3);
 
-  void resetModelParametern3();
+    void resetModelParametern3();
 
-  bool setModelParametera0(double modelParametera0);
+    bool setModelParametera0(double modelParametera0);
 
-  void resetModelParametera0();
+    void resetModelParametera0();
 
-  bool setModelParameterK1(double modelParameterK1);
+    bool setModelParameterK1(double modelParameterK1);
 
-  void resetModelParameterK1();
+    void resetModelParameterK1();
 
-  bool setModelParametern(double modelParametern);
+    bool setModelParametern(double modelParametern);
 
-  void resetModelParametern();
+    void resetModelParametern();
 
-  bool setLeavingPipeInsideDiameter(double leavingPipeInsideDiameter);
+    bool setLeavingPipeInsideDiameter(double leavingPipeInsideDiameter);
 
-  void resetLeavingPipeInsideDiameter();
+    void resetLeavingPipeInsideDiameter();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingCooledBeam_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingCooledBeam_Impl ImplType;
 
-  explicit CoilCoolingCooledBeam(std::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl);
+    explicit CoilCoolingCooledBeam(std::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl);
 
-  friend class detail::CoilCoolingCooledBeam_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingCooledBeam");
-};
+    friend class detail::CoilCoolingCooledBeam_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingCooledBeam");
+  };
 
-/** \relates CoilCoolingCooledBeam*/
-typedef boost::optional<CoilCoolingCooledBeam> OptionalCoilCoolingCooledBeam;
+  /** \relates CoilCoolingCooledBeam*/
+  typedef boost::optional<CoilCoolingCooledBeam> OptionalCoilCoolingCooledBeam;
 
-/** \relates CoilCoolingCooledBeam*/
-typedef std::vector<CoilCoolingCooledBeam> CoilCoolingCooledBeamVector;
+  /** \relates CoilCoolingCooledBeam*/
+  typedef std::vector<CoilCoolingCooledBeam> CoilCoolingCooledBeamVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGCOOLEDBEAM_HPP
-
+#endif  // MODEL_COILCOOLINGCOOLEDBEAM_HPP

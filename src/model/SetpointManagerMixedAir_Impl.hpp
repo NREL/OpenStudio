@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,68 +36,64 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API SetpointManagerMixedAir_Impl : public SetpointManager_Impl {
+    class MODEL_API SetpointManagerMixedAir_Impl : public SetpointManager_Impl
+    {
 
+     public:
+      SetpointManagerMixedAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-   public:
+      SetpointManagerMixedAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMixedAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model, bool keepHandles);
 
-    SetpointManagerMixedAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      virtual ~SetpointManagerMixedAir_Impl();
 
-    SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model,bool keepHandles);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual ~SetpointManagerMixedAir_Impl();
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual std::string controlVariable() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    virtual std::string controlVariable() const override;
+      boost::optional<Node> referenceSetpointNode();
 
-    virtual bool setControlVariable( const std::string& controlVariable ) override;
+      bool setReferenceSetpointNode(Node& node);
 
-    boost::optional<Node> referenceSetpointNode();
+      void resetReferenceSetpointNode();
 
-    bool setReferenceSetpointNode(Node& node );
+      boost::optional<Node> fanInletNode();
 
-    void resetReferenceSetpointNode();
+      bool setFanInletNode(Node& node);
 
-    boost::optional<Node> fanInletNode();
+      void resetFanInletNode();
 
-    bool setFanInletNode(Node& node );
+      boost::optional<Node> fanOutletNode();
 
-    void resetFanInletNode();
+      bool setFanOutletNode(Node& node);
 
-    boost::optional<Node> fanOutletNode();
+      void resetFanOutletNode();
 
-    bool setFanOutletNode(Node& node );
+      virtual boost::optional<Node> setpointNode() const override;
 
-    void resetFanOutletNode();
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual void resetSetpointNode() override;
 
-   private:
-    virtual bool setSetpointNode( const Node & node ) override;
+      REGISTER_LOGGER("openstudio.model.SetpointManagerMixedAir");
+    };
 
-    virtual void resetSetpointNode() override;
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerMixedAir");
-  };
+}  // namespace model
 
-} // detail
+}  // namespace openstudio
 
-} // model
-
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERMIXEDAIR_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMIXEDAIR_IMPL_HPP

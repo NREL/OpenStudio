@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,73 +37,73 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerHighTemperatureTurnOn_Impl;
+    class AvailabilityManagerHighTemperatureTurnOn_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerHighTemperatureTurnOn is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:HighTemperatureTurnOn'. */
-class MODEL_API AvailabilityManagerHighTemperatureTurnOn : public AvailabilityManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AvailabilityManagerHighTemperatureTurnOn is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:HighTemperatureTurnOn'. */
+  class MODEL_API AvailabilityManagerHighTemperatureTurnOn : public AvailabilityManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AvailabilityManagerHighTemperatureTurnOn(const Model& model);
+    explicit AvailabilityManagerHighTemperatureTurnOn(const Model& model);
 
-  virtual ~AvailabilityManagerHighTemperatureTurnOn() {}
+    virtual ~AvailabilityManagerHighTemperatureTurnOn() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> sensorNode() const;
+    boost::optional<Node> sensorNode() const;
 
-  double temperature() const;
+    double temperature() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setSensorNode(const Node& node);
+    bool setSensorNode(const Node& node);
 
-  void resetSensorNode();
+    void resetSensorNode();
 
-  bool setTemperature(double temperature);
+    bool setTemperature(double temperature);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AvailabilityManagerHighTemperatureTurnOn_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerHighTemperatureTurnOn_Impl ImplType;
 
-  explicit AvailabilityManagerHighTemperatureTurnOn(std::shared_ptr<detail::AvailabilityManagerHighTemperatureTurnOn_Impl> impl);
+    explicit AvailabilityManagerHighTemperatureTurnOn(std::shared_ptr<detail::AvailabilityManagerHighTemperatureTurnOn_Impl> impl);
 
-  friend class detail::AvailabilityManagerHighTemperatureTurnOn_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerHighTemperatureTurnOn");
-};
+    friend class detail::AvailabilityManagerHighTemperatureTurnOn_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerHighTemperatureTurnOn");
+  };
 
-/** \relates AvailabilityManagerHighTemperatureTurnOn*/
-typedef boost::optional<AvailabilityManagerHighTemperatureTurnOn> OptionalAvailabilityManagerHighTemperatureTurnOn;
+  /** \relates AvailabilityManagerHighTemperatureTurnOn*/
+  typedef boost::optional<AvailabilityManagerHighTemperatureTurnOn> OptionalAvailabilityManagerHighTemperatureTurnOn;
 
-/** \relates AvailabilityManagerHighTemperatureTurnOn*/
-typedef std::vector<AvailabilityManagerHighTemperatureTurnOn> AvailabilityManagerHighTemperatureTurnOnVector;
+  /** \relates AvailabilityManagerHighTemperatureTurnOn*/
+  typedef std::vector<AvailabilityManagerHighTemperatureTurnOn> AvailabilityManagerHighTemperatureTurnOnVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNON_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNON_HPP

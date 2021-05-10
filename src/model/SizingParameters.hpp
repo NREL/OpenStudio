@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,90 +35,88 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class SizingParameters_Impl;
+    class SizingParameters_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SizingParameters is a ModelObject that wraps the OpenStudio IDD object 'OS:Sizing:Parameters'. */
-class MODEL_API SizingParameters : public ModelObject {
- public:
+  /** SizingParameters is a ModelObject that wraps the OpenStudio IDD object 'OS:Sizing:Parameters'. */
+  class MODEL_API SizingParameters : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~SizingParameters() {}
 
-  virtual ~SizingParameters() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    double heatingSizingFactor() const;
 
-  double heatingSizingFactor() const;
+    bool isHeatingSizingFactorDefaulted() const;
 
-  bool isHeatingSizingFactorDefaulted() const;
+    double coolingSizingFactor() const;
 
-  double coolingSizingFactor() const;
+    bool isCoolingSizingFactorDefaulted() const;
 
-  bool isCoolingSizingFactorDefaulted() const;
+    boost::optional<int> timestepsinAveragingWindow() const;
 
-  boost::optional<int> timestepsinAveragingWindow() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setHeatingSizingFactor(double heatingSizingFactor);
 
-  bool setHeatingSizingFactor(double heatingSizingFactor);
+    void resetHeatingSizingFactor();
 
-  void resetHeatingSizingFactor();
+    bool setCoolingSizingFactor(double coolingSizingFactor);
 
-  bool setCoolingSizingFactor(double coolingSizingFactor);
+    void resetCoolingSizingFactor();
 
-  void resetCoolingSizingFactor();
+    bool setTimestepsinAveragingWindow(int timestepsinAveragingWindow);
 
-  bool setTimestepsinAveragingWindow(int timestepsinAveragingWindow);
+    void resetTimestepsinAveragingWindow();
 
-  void resetTimestepsinAveragingWindow();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SizingParameters_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SizingParameters_Impl ImplType;
+    explicit SizingParameters(std::shared_ptr<detail::SizingParameters_Impl> impl);
 
-  explicit SizingParameters(std::shared_ptr<detail::SizingParameters_Impl> impl);
+    friend class detail::SizingParameters_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit SizingParameters(Model& model);
 
-  friend class detail::SizingParameters_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit SizingParameters(Model& model);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SizingParameters");
+  };
 
-  /// @endcond
- private:
+  /** \relates SizingParameters*/
+  typedef boost::optional<SizingParameters> OptionalSizingParameters;
 
-  REGISTER_LOGGER("openstudio.model.SizingParameters");
-};
+  /** \relates SizingParameters*/
+  typedef std::vector<SizingParameters> SizingParametersVector;
 
-/** \relates SizingParameters*/
-typedef boost::optional<SizingParameters> OptionalSizingParameters;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates SizingParameters*/
-typedef std::vector<SizingParameters> SizingParametersVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SIZINGPARAMETERS_HPP
+#endif  // MODEL_SIZINGPARAMETERS_HPP

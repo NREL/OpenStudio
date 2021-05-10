@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,29 +35,33 @@
 
 namespace openstudio {
 
-template<class T>
-bool equal(T val1,T val2,T tol=std::numeric_limits<T>::epsilon()) {
+template <class T>
+bool equal(T val1, T val2, T tol = std::numeric_limits<T>::epsilon()) {
   T diff = val1 - val2;
-  if (fabs(diff) < tol) { return true; }
-  return fabs(diff) <= ((fabs(val1) < fabs(val2) ? fabs(val2) : fabs(val1) )*tol);
+  if (fabs(diff) < tol) {
+    return true;
+  }
+  return fabs(diff) <= ((fabs(val1) < fabs(val2) ? fabs(val2) : fabs(val1)) * tol);
 }
 
-template<class T>
-bool lessThanOrEqual(T val1,T val2,T tol=std::numeric_limits<T>::epsilon()) {
-  return (val1 < val2) || equal(val1,val2,tol);
+template <class T>
+bool lessThanOrEqual(T val1, T val2, T tol = std::numeric_limits<T>::epsilon()) {
+  return (val1 < val2) || equal(val1, val2, tol);
 }
 
-template<class T>
-bool greaterThanOrEqual(T val1,T val2,T tol=std::numeric_limits<T>::epsilon()) {
-  return (val1 > val2) || equal(val1,val2,tol);
+template <class T>
+bool greaterThanOrEqual(T val1, T val2, T tol = std::numeric_limits<T>::epsilon()) {
+  return (val1 > val2) || equal(val1, val2, tol);
 }
 
-template<class T>
-double relativeError(T expected,T actual,T tol = std::numeric_limits<T>::epsilon()) {
-  if (fabs(expected) <= tol) { return fabs(expected - actual); }
-  return (fabs(expected - actual)/fabs(expected));
+template <class T>
+double relativeError(T expected, T actual, T tol = std::numeric_limits<T>::epsilon()) {
+  if (fabs(expected) <= tol) {
+    return fabs(expected - actual);
+  }
+  return (fabs(expected - actual) / fabs(expected));
 }
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_MATH_FLOATCOMPARE_HPP
+#endif  // UTILITIES_MATH_FLOATCOMPARE_HPP

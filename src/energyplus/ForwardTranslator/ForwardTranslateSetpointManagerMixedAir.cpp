@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,54 +40,48 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerMixedAir( SetpointManagerMixedAir & modelObject )
-{
-  boost::optional<Node> node;
-  std::string s;
+  boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerMixedAir(SetpointManagerMixedAir& modelObject) {
+    boost::optional<Node> node;
+    std::string s;
 
-  IdfObject idfObject(IddObjectType::SetpointManager_MixedAir);
+    IdfObject idfObject(IddObjectType::SetpointManager_MixedAir);
 
-  // Name
-  s = modelObject.name().get();
-  idfObject.setString(SetpointManager_MixedAirFields::Name,s);
+    // Name
+    s = modelObject.name().get();
+    idfObject.setString(SetpointManager_MixedAirFields::Name, s);
 
-  // ControlVariable
-  idfObject.setString(SetpointManager_MixedAirFields::ControlVariable,"Temperature");
+    // ControlVariable
+    idfObject.setString(SetpointManager_MixedAirFields::ControlVariable, "Temperature");
 
-  // ReferenceSetpointNodeName
-  node = modelObject.referenceSetpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName,node->name().get());
+    // ReferenceSetpointNodeName
+    node = modelObject.referenceSetpointNode();
+    if (node) {
+      idfObject.setString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName, node->name().get());
+    }
+
+    // FanInletNodeName
+    node = modelObject.fanInletNode();
+    if (node) {
+      idfObject.setString(SetpointManager_MixedAirFields::FanInletNodeName, node->name().get());
+    }
+
+    // FanOutletNodeName
+    node = modelObject.fanOutletNode();
+    if (node) {
+      idfObject.setString(SetpointManager_MixedAirFields::FanOutletNodeName, node->name().get());
+    }
+
+    // SetpointNodeorNodeListName
+    node = modelObject.setpointNode();
+    if (node) {
+      idfObject.setString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return idfObject;
   }
 
-  // FanInletNodeName
-  node = modelObject.fanInletNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_MixedAirFields::FanInletNodeName,node->name().get());
-  }
+}  // namespace energyplus
 
-  // FanOutletNodeName
-  node = modelObject.fanOutletNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_MixedAirFields::FanOutletNodeName,node->name().get());
-  }
-
-  // SetpointNodeorNodeListName
-  node = modelObject.setpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName,node->name().get());
-  }
-
-  m_idfObjects.push_back(idfObject);
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,41 +35,38 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class Glazing;
+  // forward declaration
+  class Glazing;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API Glazing_Impl : public FenestrationMaterial_Impl {
-   public:
+    class MODEL_API Glazing_Impl : public FenestrationMaterial_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      // Construct completely new object.
+      Glazing_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    Glazing_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      Glazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    Glazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                 Model_Impl* model,
-                 bool keepHandle);
+      // Clone copy constructor.
+      Glazing_Impl(const Glazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Clone copy constructor.
-    Glazing_Impl(const Glazing_Impl& other,Model_Impl* model,bool keepHandle);
+      virtual ~Glazing_Impl() {}
 
-    virtual ~Glazing_Impl() {}
+      //@}
 
-    //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.Glazing");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.Glazing");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_GLAZING_IMPL_HPP
+#endif  // MODEL_GLAZING_IMPL_HPP

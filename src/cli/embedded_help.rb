@@ -1,3 +1,11 @@
+module EmbeddedScripting
+  @@fileNames = EmbeddedScripting::allFileNamesAsString.split(';')
+
+  def self.fileNames
+    @@fileNames
+  end
+end
+
 
 module OpenStudio
 
@@ -16,7 +24,7 @@ module OpenStudio
       absolute_path = File.expand_path p2
 
       # strip Windows drive letters
-      if /[A-Z]\:/.match(absolute_path)
+      if /^[A-Za-z]\:/.match(absolute_path.strip)
         absolute_path = absolute_path[2..-1]
       end
       absolute_path = ':' + absolute_path
@@ -50,9 +58,11 @@ module Kernel
     ENV['RUBYLIB'].split(File::PATH_SEPARATOR).each {|lib| $LOAD_PATH.unshift(lib)}
   end
   $LOAD_PATH << ':'
-  $LOAD_PATH << ':/ruby/2.5.0'
-  $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
-  $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
+  $LOAD_PATH << ':/ruby/2.7.0'
+  $LOAD_PATH << ':/ruby/2.7.0/x86_64-darwin16'
+  $LOAD_PATH << ':/ruby/2.7.0/x86_64-darwin17'
+  $LOAD_PATH << ':/ruby/2.7.0/x86_64-darwin18'
+  $LOAD_PATH << ':/ruby/2.7.0/x64-mswin64_140'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
@@ -171,7 +181,9 @@ module Kernel
     $LOADED << path
     s = EmbeddedScripting::getFileAsString(path)
     s = OpenStudio::preprocess_ruby_script(s)
+
     result = Kernel::eval(s,BINDING,path)
+
 
     current_directory = Dir.pwd
     if original_directory != current_directory
@@ -242,7 +254,7 @@ module Kernel
 
     # Loop through all the files in the embedded system
     matches = []
-    EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+    EmbeddedScripting::fileNames.each do |file|
       # Skip files outside of the specified directory
       next unless file.start_with?(absolute_path)
       # Skip files that don't match the file_name_pattern criterion
@@ -254,7 +266,7 @@ module Kernel
     return matches
   end
 
-  def open(name, *args)
+  def open(name, *args, **options)
     #puts "I'm in Kernel.open!"
     #STDOUT.flush
     if name.to_s.chars.first == ':' then
@@ -295,7 +307,7 @@ module Kernel
 
     if block_given?
       # if a block is given, then a new IO is created and closed
-      io = original_open(name, *args)
+      io = original_open(name, *args, **options)
       begin
         result = yield(io)
       ensure
@@ -303,7 +315,7 @@ module Kernel
       end
       return result
     else
-      return original_open(name, *args)
+      return original_open(name, *args, **options)
     end
   end
 
@@ -359,10 +371,14 @@ class IO
     alias :original_read :read
     alias :original_open :open
   end
+  
+  # NOTES ruby2.7+ now issues warning: "Using the last argument as keyword parameters is deprecated"
+  # https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/
+  # Fix by capturing keywords in options hsah
 
-  def self.read(name, *args)
+  def self.read(name, *args, **options)
     if name.to_s.chars.first == ':' then
-      #puts "self.read(name, *args), name = #{name}, args = #{args}"
+      #puts "self.read(name, *args), name = #{name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       absolute_path = OpenStudio.get_absolute_path(name)
       #puts "absolute_path = #{absolute_path}"
@@ -377,13 +393,14 @@ class IO
 
     #puts "self.original_read, name = #{name}, args = #{args}, block_given? = #{block_given?}"
     #STDOUT.flush
-    return original_read(name, *args)
+
+    return original_read(name, *args, **options)
   end
 
-  def self.open(name, *args)
+  def self.open(name, *args, **options)
 
     if name.to_s.chars.first == ':' then
-      #puts "self.open(name, *args), name = #{name}, args = #{args}"
+      #puts "self.open(name, *args), name = #{name}, args = #{args}, options = #{options}"
       absolute_path = OpenStudio.get_absolute_path(name)
       #puts "absolute_path = #{absolute_path}"
       if EmbeddedScripting::hasFile(absolute_path) then
@@ -420,7 +437,7 @@ class IO
 
     if block_given?
       # if a block is given, then a new IO is created and closed
-      io = self.original_open(name, *args)
+      io = self.original_open(name, *args, **options)
       begin
         result = yield(io)
       ensure
@@ -428,7 +445,7 @@ class IO
       end
       return result
     else
-      return self.original_open(name, *args)
+      return self.original_open(name, *args, **options)
     end
   end
 end
@@ -442,58 +459,58 @@ class File
     alias :original_file? :file?
   end
 
-  def self.expand_path(file_name, *args)
+  def self.expand_path(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
-      #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      #puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #puts "x = #{File.join(args[0], file_name)}"
       #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
       #STDOUT.flush
       #return original_expand_path(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
-    return original_expand_path(file_name, *args)
+    return original_expand_path(file_name, *args, **options)
   end
 
-  def self.absolute_path(file_name, *args)
+  def self.absolute_path(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
-      #puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      #puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #puts "x = #{File.join(args[0], file_name)}"
       #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
       #STDOUT.flush
       #return original_absolute_path(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
-    return original_absolute_path(file_name, *args)
+    return original_absolute_path(file_name, *args, **options)
   end
 
-  def self.realpath(file_name, *args)
+  def self.realpath(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
-      #puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      #puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #puts "x = #{File.join(args[0], file_name)}"
       #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
       #STDOUT.flush
       #return original_realpath(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
-    return original_realpath(file_name, *args)
+    return original_realpath(file_name, *args, **options)
   end
 
   def self.directory?(file_name)
     if file_name.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(file_name)
-      EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+      EmbeddedScripting::fileNames.each do |file|
         # true if a file starts with this absolute path
         next unless file.start_with?(absolute_path)
 
@@ -511,7 +528,7 @@ class File
   def self.file?(file_name)
     if file_name.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(file_name)
-      EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+      EmbeddedScripting::fileNames.each do |file|
         # Skip files unless exact match
         next unless (file == absolute_path)
 
@@ -539,7 +556,7 @@ class Dir
     end
   end
 
-  def self.glob(pattern, *args)
+  def self.glob(pattern, *args, **options)
 
     pattern_array = []
     if pattern.is_a? String
@@ -550,7 +567,7 @@ class Dir
       pattern_array = pattern
     end
 
-    #puts "Dir.glob pattern = #{pattern}, pattern_array = #{pattern_array}, args = #{args}"
+    #puts "Dir.glob pattern = #{pattern}, pattern_array = #{pattern_array}, args = #{args}, options = #{options}"
     override_args_extglob = false
 
     result = []
@@ -565,9 +582,7 @@ class Dir
         absolute_pattern = OpenStudio.get_absolute_path(pattern)
         #puts "absolute_pattern #{absolute_pattern}"
 
-        # DLM: this does not appear to be swig'd correctly
-        #EmbeddedScripting::fileNames.each do |name|
-        EmbeddedScripting::allFileNamesAsString.split(';').each do |name|
+        EmbeddedScripting::fileNames.each do |name|
           absolute_path = OpenStudio.get_absolute_path(name)
 
           if override_args_extglob
@@ -576,7 +591,7 @@ class Dir
               result << absolute_path
             end
           else
-            if File.fnmatch( absolute_pattern, absolute_path, *args )
+            if File.fnmatch( absolute_pattern, absolute_path, *args, **options )
               #puts "#{absolute_path} is a match!"
               result << absolute_path
             end
@@ -588,7 +603,7 @@ class Dir
         if override_args_extglob
           result.concat(self.original_glob(pattern, File::FNM_EXTGLOB))
         else
-          result.concat(self.original_glob(pattern, *args))
+          result.concat(self.original_glob(pattern, *args, **options))
         end
       end
     end
@@ -637,7 +652,7 @@ module FileUtils
 
       # Loop through all he files in the embedded system
       matches = []
-      EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+      EmbeddedScripting::fileNames.each do |file|
         # Skip files outside of the specified directory
         next unless file.start_with?(absolute_path)
 

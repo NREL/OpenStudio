@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,495 +43,479 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const IdfObject& idfObject,
-                                                         Model_Impl* model,
-                                                         bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SiteGroundReflectance::iddObjectType());
-  }
+    SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SiteGroundReflectance::iddObjectType());
+    }
 
-  SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SiteGroundReflectance::iddObjectType());
-  }
+    SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SiteGroundReflectance::iddObjectType());
+    }
 
-  SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const SiteGroundReflectance_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
+    SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const SiteGroundReflectance_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  boost::optional<ParentObject> SiteGroundReflectance_Impl::parent() const
-  {
-    boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
-    return boost::optional<ParentObject>(result);
-  }
+    boost::optional<ParentObject> SiteGroundReflectance_Impl::parent() const {
+      boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
+      return boost::optional<ParentObject>(result);
+    }
 
-  const std::vector<std::string>& SiteGroundReflectance_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+    const std::vector<std::string>& SiteGroundReflectance_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType SiteGroundReflectance_Impl::iddObjectType() const {
+      return SiteGroundReflectance::iddObjectType();
+    }
+
+    double SiteGroundReflectance_Impl::januaryGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isJanuaryGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::februaryGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isFebruaryGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::marchGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::MarchGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isMarchGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::MarchGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::aprilGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::AprilGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isAprilGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::AprilGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::mayGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::MayGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isMayGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::MayGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::juneGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JuneGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isJuneGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::JuneGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::julyGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JulyGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isJulyGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::JulyGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::augustGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::AugustGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isAugustGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::AugustGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::septemberGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isSeptemberGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::octoberGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isOctoberGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::OctoberGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::novemberGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isNovemberGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::NovemberGroundReflectance);
+    }
+
+    double SiteGroundReflectance_Impl::decemberGroundReflectance() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundReflectance_Impl::isDecemberGroundReflectanceDefaulted() const {
+      return isEmpty(OS_Site_GroundReflectanceFields::DecemberGroundReflectance);
+    }
+
+    bool SiteGroundReflectance_Impl::setJanuaryGroundReflectance(double januaryGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, januaryGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetJanuaryGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setFebruaryGroundReflectance(double februaryGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, februaryGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetFebruaryGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setMarchGroundReflectance(double marchGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::MarchGroundReflectance, marchGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetMarchGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::MarchGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setAprilGroundReflectance(double aprilGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::AprilGroundReflectance, aprilGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetAprilGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::AprilGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setMayGroundReflectance(double mayGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::MayGroundReflectance, mayGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetMayGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::MayGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setJuneGroundReflectance(double juneGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::JuneGroundReflectance, juneGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetJuneGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::JuneGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setJulyGroundReflectance(double julyGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::JulyGroundReflectance, julyGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetJulyGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::JulyGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setAugustGroundReflectance(double augustGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::AugustGroundReflectance, augustGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetAugustGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::AugustGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setSeptemberGroundReflectance(double septemberGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, septemberGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetSeptemberGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setOctoberGroundReflectance(double octoberGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, octoberGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetOctoberGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setNovemberGroundReflectance(double novemberGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, novemberGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetNovemberGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundReflectance_Impl::setDecemberGroundReflectance(double decemberGroundReflectance) {
+      bool result = setDouble(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, decemberGroundReflectance);
+      return result;
+    }
+
+    void SiteGroundReflectance_Impl::resetDecemberGroundReflectance() {
+      bool result = setString(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  IddObjectType SiteGroundReflectance::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_Site_GroundReflectance);
     return result;
   }
 
-  IddObjectType SiteGroundReflectance_Impl::iddObjectType() const {
-    return SiteGroundReflectance::iddObjectType();
+  double SiteGroundReflectance::januaryGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->januaryGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::januaryGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isJanuaryGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isJanuaryGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isJanuaryGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance);
+  double SiteGroundReflectance::februaryGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->februaryGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::februaryGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isFebruaryGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isFebruaryGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isFebruaryGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance);
+  double SiteGroundReflectance::marchGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->marchGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::marchGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::MarchGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isMarchGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isMarchGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isMarchGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::MarchGroundReflectance);
+  double SiteGroundReflectance::aprilGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->aprilGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::aprilGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::AprilGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isAprilGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isAprilGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isAprilGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::AprilGroundReflectance);
+  double SiteGroundReflectance::mayGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->mayGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::mayGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::MayGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isMayGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isMayGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isMayGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::MayGroundReflectance);
+  double SiteGroundReflectance::juneGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->juneGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::juneGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JuneGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isJuneGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isJuneGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isJuneGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::JuneGroundReflectance);
+  double SiteGroundReflectance::julyGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->julyGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::julyGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JulyGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isJulyGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isJulyGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isJulyGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::JulyGroundReflectance);
+  double SiteGroundReflectance::augustGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->augustGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::augustGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::AugustGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isAugustGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isAugustGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isAugustGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::AugustGroundReflectance);
+  double SiteGroundReflectance::septemberGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->septemberGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::septemberGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isSeptemberGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isSeptemberGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isSeptemberGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance);
+  double SiteGroundReflectance::octoberGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->octoberGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::octoberGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::OctoberGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isOctoberGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isOctoberGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isOctoberGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::OctoberGroundReflectance);
+  double SiteGroundReflectance::novemberGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->novemberGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::novemberGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::NovemberGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isNovemberGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isNovemberGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isNovemberGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::NovemberGroundReflectance);
+  double SiteGroundReflectance::decemberGroundReflectance() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->decemberGroundReflectance();
   }
 
-  double SiteGroundReflectance_Impl::decemberGroundReflectance() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::DecemberGroundReflectance,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool SiteGroundReflectance::isDecemberGroundReflectanceDefaulted() const {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->isDecemberGroundReflectanceDefaulted();
   }
 
-  bool SiteGroundReflectance_Impl::isDecemberGroundReflectanceDefaulted() const {
-    return isEmpty(OS_Site_GroundReflectanceFields::DecemberGroundReflectance);
+  bool SiteGroundReflectance::setJanuaryGroundReflectance(double januaryGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setJanuaryGroundReflectance(januaryGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setJanuaryGroundReflectance(double januaryGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, januaryGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetJanuaryGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetJanuaryGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetJanuaryGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setFebruaryGroundReflectance(double februaryGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setFebruaryGroundReflectance(februaryGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setFebruaryGroundReflectance(double februaryGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, februaryGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetFebruaryGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetFebruaryGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetFebruaryGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setMarchGroundReflectance(double marchGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setMarchGroundReflectance(marchGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setMarchGroundReflectance(double marchGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::MarchGroundReflectance, marchGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetMarchGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetMarchGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetMarchGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::MarchGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setAprilGroundReflectance(double aprilGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setAprilGroundReflectance(aprilGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setAprilGroundReflectance(double aprilGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::AprilGroundReflectance, aprilGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetAprilGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetAprilGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetAprilGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::AprilGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setMayGroundReflectance(double mayGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setMayGroundReflectance(mayGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setMayGroundReflectance(double mayGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::MayGroundReflectance, mayGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetMayGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetMayGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetMayGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::MayGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setJuneGroundReflectance(double juneGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setJuneGroundReflectance(juneGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setJuneGroundReflectance(double juneGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::JuneGroundReflectance, juneGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetJuneGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetJuneGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetJuneGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::JuneGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setJulyGroundReflectance(double julyGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setJulyGroundReflectance(julyGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setJulyGroundReflectance(double julyGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::JulyGroundReflectance, julyGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetJulyGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetJulyGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetJulyGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::JulyGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setAugustGroundReflectance(double augustGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setAugustGroundReflectance(augustGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setAugustGroundReflectance(double augustGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::AugustGroundReflectance, augustGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetAugustGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetAugustGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetAugustGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::AugustGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setSeptemberGroundReflectance(double septemberGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setSeptemberGroundReflectance(septemberGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setSeptemberGroundReflectance(double septemberGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, septemberGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetSeptemberGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetSeptemberGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetSeptemberGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setOctoberGroundReflectance(double octoberGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setOctoberGroundReflectance(octoberGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setOctoberGroundReflectance(double octoberGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, octoberGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetOctoberGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetOctoberGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetOctoberGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setNovemberGroundReflectance(double novemberGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setNovemberGroundReflectance(novemberGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setNovemberGroundReflectance(double novemberGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, novemberGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetNovemberGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetNovemberGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetNovemberGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, "");
-    OS_ASSERT(result);
+  bool SiteGroundReflectance::setDecemberGroundReflectance(double decemberGroundReflectance) {
+    return getImpl<detail::SiteGroundReflectance_Impl>()->setDecemberGroundReflectance(decemberGroundReflectance);
   }
 
-  bool SiteGroundReflectance_Impl::setDecemberGroundReflectance(double decemberGroundReflectance) {
-    bool result = setDouble(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, decemberGroundReflectance);
-    return result;
+  void SiteGroundReflectance::resetDecemberGroundReflectance() {
+    getImpl<detail::SiteGroundReflectance_Impl>()->resetDecemberGroundReflectance();
   }
 
-  void SiteGroundReflectance_Impl::resetDecemberGroundReflectance() {
-    bool result = setString(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, "");
-    OS_ASSERT(result);
-  }
+  /// @cond
+  SiteGroundReflectance::SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl) : ModelObject(std::move(impl)) {}
+  SiteGroundReflectance::SiteGroundReflectance(Model& model) : ModelObject(SiteGroundReflectance::iddObjectType(), model) {}
 
-} // detail
+  /// @endcond
 
-IddObjectType SiteGroundReflectance::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_Site_GroundReflectance);
-  return result;
-}
-
-double SiteGroundReflectance::januaryGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->januaryGroundReflectance();
-}
-
-bool SiteGroundReflectance::isJanuaryGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isJanuaryGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::februaryGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->februaryGroundReflectance();
-}
-
-bool SiteGroundReflectance::isFebruaryGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isFebruaryGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::marchGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->marchGroundReflectance();
-}
-
-bool SiteGroundReflectance::isMarchGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isMarchGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::aprilGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->aprilGroundReflectance();
-}
-
-bool SiteGroundReflectance::isAprilGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isAprilGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::mayGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->mayGroundReflectance();
-}
-
-bool SiteGroundReflectance::isMayGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isMayGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::juneGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->juneGroundReflectance();
-}
-
-bool SiteGroundReflectance::isJuneGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isJuneGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::julyGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->julyGroundReflectance();
-}
-
-bool SiteGroundReflectance::isJulyGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isJulyGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::augustGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->augustGroundReflectance();
-}
-
-bool SiteGroundReflectance::isAugustGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isAugustGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::septemberGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->septemberGroundReflectance();
-}
-
-bool SiteGroundReflectance::isSeptemberGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isSeptemberGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::octoberGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->octoberGroundReflectance();
-}
-
-bool SiteGroundReflectance::isOctoberGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isOctoberGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::novemberGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->novemberGroundReflectance();
-}
-
-bool SiteGroundReflectance::isNovemberGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isNovemberGroundReflectanceDefaulted();
-}
-
-double SiteGroundReflectance::decemberGroundReflectance() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->decemberGroundReflectance();
-}
-
-bool SiteGroundReflectance::isDecemberGroundReflectanceDefaulted() const {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->isDecemberGroundReflectanceDefaulted();
-}
-
-bool SiteGroundReflectance::setJanuaryGroundReflectance(double januaryGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setJanuaryGroundReflectance(januaryGroundReflectance);
-}
-
-void SiteGroundReflectance::resetJanuaryGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetJanuaryGroundReflectance();
-}
-
-bool SiteGroundReflectance::setFebruaryGroundReflectance(double februaryGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setFebruaryGroundReflectance(februaryGroundReflectance);
-}
-
-void SiteGroundReflectance::resetFebruaryGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetFebruaryGroundReflectance();
-}
-
-bool SiteGroundReflectance::setMarchGroundReflectance(double marchGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setMarchGroundReflectance(marchGroundReflectance);
-}
-
-void SiteGroundReflectance::resetMarchGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetMarchGroundReflectance();
-}
-
-bool SiteGroundReflectance::setAprilGroundReflectance(double aprilGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setAprilGroundReflectance(aprilGroundReflectance);
-}
-
-void SiteGroundReflectance::resetAprilGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetAprilGroundReflectance();
-}
-
-bool SiteGroundReflectance::setMayGroundReflectance(double mayGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setMayGroundReflectance(mayGroundReflectance);
-}
-
-void SiteGroundReflectance::resetMayGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetMayGroundReflectance();
-}
-
-bool SiteGroundReflectance::setJuneGroundReflectance(double juneGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setJuneGroundReflectance(juneGroundReflectance);
-}
-
-void SiteGroundReflectance::resetJuneGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetJuneGroundReflectance();
-}
-
-bool SiteGroundReflectance::setJulyGroundReflectance(double julyGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setJulyGroundReflectance(julyGroundReflectance);
-}
-
-void SiteGroundReflectance::resetJulyGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetJulyGroundReflectance();
-}
-
-bool SiteGroundReflectance::setAugustGroundReflectance(double augustGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setAugustGroundReflectance(augustGroundReflectance);
-}
-
-void SiteGroundReflectance::resetAugustGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetAugustGroundReflectance();
-}
-
-bool SiteGroundReflectance::setSeptemberGroundReflectance(double septemberGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setSeptemberGroundReflectance(septemberGroundReflectance);
-}
-
-void SiteGroundReflectance::resetSeptemberGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetSeptemberGroundReflectance();
-}
-
-bool SiteGroundReflectance::setOctoberGroundReflectance(double octoberGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setOctoberGroundReflectance(octoberGroundReflectance);
-}
-
-void SiteGroundReflectance::resetOctoberGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetOctoberGroundReflectance();
-}
-
-bool SiteGroundReflectance::setNovemberGroundReflectance(double novemberGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setNovemberGroundReflectance(novemberGroundReflectance);
-}
-
-void SiteGroundReflectance::resetNovemberGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetNovemberGroundReflectance();
-}
-
-bool SiteGroundReflectance::setDecemberGroundReflectance(double decemberGroundReflectance) {
-  return getImpl<detail::SiteGroundReflectance_Impl>()->setDecemberGroundReflectance(decemberGroundReflectance);
-}
-
-void SiteGroundReflectance::resetDecemberGroundReflectance() {
-  getImpl<detail::SiteGroundReflectance_Impl>()->resetDecemberGroundReflectance();
-}
-
-/// @cond
-SiteGroundReflectance::SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-SiteGroundReflectance::SiteGroundReflectance(Model& model)
-  : ModelObject(SiteGroundReflectance::iddObjectType(),model)
-{}
-
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

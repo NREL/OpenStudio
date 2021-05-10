@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -66,7 +66,6 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
   EXPECT_TRUE(elcConv.setSimpleFixedEfficiency(0.80));
   EXPECT_EQ(elcConv.simpleFixedEfficiency().get(), 0.80);
 
-
   // designMaximumContinuousInputPower
   EXPECT_FALSE(elcConv.designMaximumContinuousInputPower());
   EXPECT_TRUE(elcConv.setDesignMaximumContinuousInputPower(10000.0));
@@ -79,7 +78,6 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
   EXPECT_EQ(elcConv.powerConversionEfficiencyMethod(), "SimpleFixed");
   EXPECT_FALSE(elcConv.designMaximumContinuousInputPower());
   EXPECT_FALSE(elcConv.efficiencyFunctionofPowerCurve());
-
 
   // efficiencyFunctionofPowerCurveName
   CurveQuadratic effFPower = CurveQuadratic(model);
@@ -109,7 +107,6 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
   elcConv.resetAncillaryPowerConsumedInStandby();
   EXPECT_TRUE(elcConv.isAncillaryPowerConsumedInStandbyDefaulted());
 
-
   // ZoneName
   EXPECT_FALSE(elcConv.thermalZone());
   EXPECT_TRUE(elcConv.setThermalZone(thermalZone));
@@ -132,5 +129,4 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageConverter_Instantiate) {
   }
   elcd.resetStorageConverter();
   EXPECT_TRUE(elcd.setStorageConverter(elcConv));
-
 }

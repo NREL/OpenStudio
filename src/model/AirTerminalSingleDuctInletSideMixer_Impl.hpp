@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,70 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** AirTerminalSingleDuctInletSideMixer_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctInletSideMixer.*/
-  class MODEL_API AirTerminalSingleDuctInletSideMixer_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirTerminalSingleDuctInletSideMixer_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctInletSideMixer.*/
+    class MODEL_API AirTerminalSingleDuctInletSideMixer_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirTerminalSingleDuctInletSideMixer_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      AirTerminalSingleDuctInletSideMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctInletSideMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      AirTerminalSingleDuctInletSideMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctInletSideMixer_Impl(const AirTerminalSingleDuctInletSideMixer_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      AirTerminalSingleDuctInletSideMixer_Impl(const AirTerminalSingleDuctInletSideMixer_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirTerminalSingleDuctInletSideMixer_Impl() {}
+      virtual ~AirTerminalSingleDuctInletSideMixer_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
+      virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
+      bool addToNode(Node& node) override;
+      std::vector<openstudio::IdfObject> remove() override;
+      bool isRemovable() const override;
 
-    //@}
-    /** @name Other */
-    //@{
+      unsigned secondaryAirInletPort() const;
+      boost::optional<Node> secondaryAirInletNode() const;
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
-    bool addToNode(Node& node) override;
-    std::vector<openstudio::IdfObject> remove() override;
-    bool isRemovable() const override;
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctInletSideMixer");
+    };
 
-    unsigned secondaryAirInletPort() const;
-    boost::optional<Node> secondaryAirInletNode() const;
+  }  // namespace detail
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctInletSideMixer");
+}  // namespace model
+}  // namespace openstudio
 
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTINLETSIDEMIXER_IMPL_HPP
-
+#endif  // MODEL_AIRTERMINALSINGLEDUCTINLETSIDEMIXER_IMPL_HPP

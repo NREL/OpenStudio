@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,7 +50,6 @@
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
-
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
@@ -68,8 +67,7 @@ using namespace openstudio;
 /**
  * Tests only the minimumRuntimeBeforeOperatingModeChange and the plenumorMixer of the ForwardTranslator which I exposed after the fact
  **/
-TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_plenumorMixer)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_plenumorMixer) {
   ForwardTranslator ft;
 
   Model m;
@@ -77,7 +75,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeov
   CoilHeatingElectric heatingCoil(m);
   CoilCoolingDXSingleSpeed coolingCoil(m);
 
-  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil ,heatingCoil);
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
 
   EXPECT_TRUE(unitary.setMinimumRuntimeBeforeOperatingModeChange(0.25));
   EXPECT_EQ(0.25, unitary.minimumRuntimeBeforeOperatingModeChange());
@@ -94,7 +92,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeov
   ASSERT_EQ(1u, plenums.size());
   AirLoopHVACReturnPlenum plenum = plenums[0];
 
-
   Node supplyOutletNode = a.supplyOutletNode();
   unitary.addToNode(supplyOutletNode);
 
@@ -102,16 +99,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeov
   // AirLoopHVAC:ReturnPlenum fields (they have the same extensible groups structure)
   auto checkIfFoundInExtensibleGroups = [](const WorkspaceObject& idf_object, const std::string& plenumNodeName, unsigned extFieldIndex) {
     std::vector<IdfExtensibleGroup> groups = idf_object.extensibleGroups();
-    auto it = std::find_if(groups.begin(), groups.end(), [&plenumNodeName, extFieldIndex](IdfExtensibleGroup eg)
-      {
-        if (boost::optional<std::string> _inletNodeName = eg.getString(extFieldIndex)) {
-          if (openstudio::istringEqual(plenumNodeName, _inletNodeName.get())) {
-            return true;
-          }
+    auto it = std::find_if(groups.begin(), groups.end(), [&plenumNodeName, extFieldIndex](IdfExtensibleGroup eg) {
+      if (boost::optional<std::string> _inletNodeName = eg.getString(extFieldIndex)) {
+        if (openstudio::istringEqual(plenumNodeName, _inletNodeName.get())) {
+          return true;
         }
-        return false;
       }
-    );
+      return false;
+    });
     return it != groups.end();
   };
 
@@ -142,10 +137,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeov
     EXPECT_EQ(1u, idf_zonemixer.numExtensibleGroups());
     EXPECT_EQ(1u, idf_returnplenum.numExtensibleGroups());
 
-    boost::optional<std::string> _plenumNodeName = idf_unitary.getString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, false, true);
+    boost::optional<std::string> _plenumNodeName =
+      idf_unitary.getString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, false, true);
     EXPECT_FALSE(_plenumNodeName);
   }
-
 
   // Connected to AirLoopHVAC:ZoneMixer
   {
@@ -173,17 +168,15 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeov
     EXPECT_EQ(2u, idf_zonemixer.numExtensibleGroups());
     EXPECT_EQ(1u, idf_returnplenum.numExtensibleGroups());
 
-    boost::optional<std::string> _plenumNodeName = idf_unitary.getString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, false, true);
+    boost::optional<std::string> _plenumNodeName =
+      idf_unitary.getString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, false, true);
     ASSERT_TRUE(_plenumNodeName);
 
-    EXPECT_TRUE(
-        checkIfFoundInExtensibleGroups(idf_zonemixer, _plenumNodeName.get(), AirLoopHVAC_ZoneMixerExtensibleFields::InletNodeName)
-    ) << "Expected to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ZoneMixer extensible fields";
+    EXPECT_TRUE(checkIfFoundInExtensibleGroups(idf_zonemixer, _plenumNodeName.get(), AirLoopHVAC_ZoneMixerExtensibleFields::InletNodeName))
+      << "Expected to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ZoneMixer extensible fields";
 
-    EXPECT_FALSE(
-        checkIfFoundInExtensibleGroups(idf_returnplenum, _plenumNodeName.get(), AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName)
-    ) << "Did not expect to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ReturnPlenum extensible fields";
-
+    EXPECT_FALSE(checkIfFoundInExtensibleGroups(idf_returnplenum, _plenumNodeName.get(), AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName))
+      << "Did not expect to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ReturnPlenum extensible fields";
   }
 
   // Connected to AirLoopHVAC:ReturnPlenum
@@ -211,16 +204,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeov
     EXPECT_EQ(1u, idf_zonemixer.numExtensibleGroups());
     EXPECT_EQ(2u, idf_returnplenum.numExtensibleGroups());
 
-    boost::optional<std::string> _plenumNodeName = idf_unitary.getString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, false, true);
+    boost::optional<std::string> _plenumNodeName =
+      idf_unitary.getString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, false, true);
     ASSERT_TRUE(_plenumNodeName);
 
-    EXPECT_FALSE(
-        checkIfFoundInExtensibleGroups(idf_zonemixer, _plenumNodeName.get(), AirLoopHVAC_ZoneMixerExtensibleFields::InletNodeName)
-    ) << "Expected to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ZoneMixer extensible fields";
+    EXPECT_FALSE(checkIfFoundInExtensibleGroups(idf_zonemixer, _plenumNodeName.get(), AirLoopHVAC_ZoneMixerExtensibleFields::InletNodeName))
+      << "Expected to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ZoneMixer extensible fields";
 
-    EXPECT_TRUE(
-        checkIfFoundInExtensibleGroups(idf_returnplenum, _plenumNodeName.get(), AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName)
-    ) << "Did not expect to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ReturnPlenum extensible fields";
+    EXPECT_TRUE(checkIfFoundInExtensibleGroups(idf_returnplenum, _plenumNodeName.get(), AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName))
+      << "Did not expect to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ReturnPlenum extensible fields";
   }
-
 }

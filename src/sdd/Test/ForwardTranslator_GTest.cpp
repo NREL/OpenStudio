@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,8 +48,7 @@ using namespace openstudio::model;
 using namespace openstudio::sdd;
 using namespace openstudio;
 
-TEST_F(SDDFixture, ForwardTranslator_exampleModel)
-{
+TEST_F(SDDFixture, ForwardTranslator_exampleModel) {
   Model model = exampleModel();
 
   // change to constructions that can be translated to sdd
@@ -74,10 +73,10 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
   Construction doorConstruction(model);
   doorConstruction.setLayers(doorLayers);
 
-  for (SubSurface subSurface : model.getModelObjects<SubSurface>()){
-    if ((subSurface.subSurfaceType() == "FixedWindow") || (subSurface.subSurfaceType() == "OperableWindow")){
+  for (SubSurface subSurface : model.getModelObjects<SubSurface>()) {
+    if ((subSurface.subSurfaceType() == "FixedWindow") || (subSurface.subSurfaceType() == "OperableWindow")) {
       subSurface.setConstruction(windowConstruction);
-    }else if ((subSurface.subSurfaceType() == "Door") || (subSurface.subSurfaceType() == "OverheadDoor")){
+    } else if ((subSurface.subSurfaceType() == "Door") || (subSurface.subSurfaceType() == "OverheadDoor")) {
       subSurface.setConstruction(doorConstruction);
     }
   }

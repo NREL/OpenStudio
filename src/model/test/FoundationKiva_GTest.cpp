@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,8 @@
 
 #include "../FoundationKiva.hpp"
 #include "../FoundationKiva_Impl.hpp"
+#include "../FoundationKivaSettings.hpp"
+#include "../FoundationKivaSettings_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
@@ -57,13 +59,11 @@ TEST_F(ModelFixture, FoundationKiva_FoundationKiva) {
 
       // create a foundation kiva object to use
       FoundationKiva kiva(model);
-      
+
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
-    
+    ::testing::ExitedWithCode(0), "");
+
   // create a model to use
   Model model;
 
@@ -193,6 +193,7 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
 
   // create a foundation kiva object to use
   FoundationKiva kiva(model);
+  auto kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
 
   // create a material object to use
   StandardOpaqueMaterial material(model);
@@ -208,10 +209,12 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
 
   // clone it into a different model
   Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<FoundationKivaSettings>());
   FoundationKiva kivaClone2 = kiva.clone(model2).cast<FoundationKiva>();
   ASSERT_FALSE(kivaClone2.isInteriorHorizontalInsulationDepthDefaulted());
   ASSERT_EQ(2.5, kivaClone2.interiorHorizontalInsulationDepth());
   ASSERT_TRUE(kivaClone2.isExteriorHorizontalInsulationWidthDefaulted());
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<FoundationKivaSettings>());
 }
 
 // test setting on outside boundary of surface
@@ -263,9 +266,9 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   Model model;
   FoundationKiva kiva(model);
   StandardOpaqueMaterial material(model);
-  
+
   kiva.removeAllCustomBlocks();
-  
+
   EXPECT_EQ(0, kiva.numberofCustomBlocks());
   ASSERT_TRUE(kiva.addCustomBlock(material, 0.5, 1, -1));
   EXPECT_EQ(1, kiva.numberofCustomBlocks());
@@ -287,13 +290,13 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   EXPECT_EQ(9, kiva.numberofCustomBlocks());
   ASSERT_TRUE(kiva.addCustomBlock(material, 99.99999, -45.9999, 0));
   EXPECT_EQ(10, kiva.numberofCustomBlocks());
-  
+
   // should fail since only 10 allowed
   ASSERT_FALSE(kiva.addCustomBlock(material, 1, 1, 1));
   kiva.removeCustomBlock(8);
   kiva.removeCustomBlock(3);
   EXPECT_EQ(8, kiva.numberofCustomBlocks());
-  
+
   // check that remaining blocks moved correctly
   std::vector<CustomBlock> customBlocks = kiva.customBlocks();
   EXPECT_EQ(0.5, customBlocks[0].depth());
@@ -304,7 +307,7 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   EXPECT_EQ(10, customBlocks[5].depth());
   EXPECT_EQ(20, customBlocks[6].depth());
   EXPECT_EQ(99.99999, customBlocks[7].depth());
-  
+
   // more remove checking
   kiva.removeAllCustomBlocks();
   EXPECT_EQ(0, kiva.numberofCustomBlocks());
@@ -315,7 +318,7 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   CustomBlock customBlock(material, 0.5, 1, -1);
   ASSERT_TRUE(kiva.addCustomBlock(customBlock));
   EXPECT_EQ(1, kiva.numberofCustomBlocks());
-  
+
   // check bulk-adding custom blocks
   std::vector<CustomBlock> customBlocksToAdd;
   CustomBlock customBlock1(material, 3.5, 4, -9);
@@ -325,7 +328,7 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   ASSERT_TRUE(kiva.addCustomBlocks(customBlocksToAdd));
   EXPECT_EQ(3, kiva.numberofCustomBlocks());
   EXPECT_EQ(3, kiva.customBlocks().size());
-  
+
   // check bulk-adding too many custom blocks
   CustomBlock customBlock3(material, 3.5, 4, -9);
   customBlocksToAdd.push_back(customBlock1);

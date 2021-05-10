@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,52 +38,47 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed)
-{
+TEST_F(ModelFixture, CoilCoolingDXVariableSpeed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilCoolingDXVariableSpeed coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingDXVariableSpeed coil(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Speeds)
-{
+TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Speeds) {
   Model m;
   CoilCoolingDXVariableSpeed coil(m);
 
-  CoilCoolingDXVariableSpeedSpeedData speed1( m );
+  CoilCoolingDXVariableSpeedSpeedData speed1(m);
   coil.addSpeed(speed1);
 
-  CoilCoolingDXVariableSpeedSpeedData speed2( m );
+  CoilCoolingDXVariableSpeedSpeedData speed2(m);
   coil.addSpeed(speed2);
 
-  ASSERT_EQ(2u,coil.speeds().size());
-
+  ASSERT_EQ(2u, coil.speeds().size());
 }
 
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Remove)
-{
+TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Remove) {
   Model m;
   auto count = m.modelObjects().size();
 
   CoilCoolingDXVariableSpeed coil(m);
-  CoilCoolingDXVariableSpeedSpeedData speed1( m );
+  CoilCoolingDXVariableSpeedSpeedData speed1(m);
   coil.addSpeed(speed1);
   coil.remove();
 
   auto curves = m.getModelObjects<model::Curve>();
 
-  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
+  EXPECT_EQ(count, m.modelObjects().size() - curves.size());
 }
 
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_MinOATCompressor)
-{
+TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_MinOATCompressor) {
   Model m;
 
   CoilCoolingDXVariableSpeed coil(m);

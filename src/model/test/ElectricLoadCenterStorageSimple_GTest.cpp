@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,7 +35,6 @@
 #include "../ElectricLoadCenterStorageSimple_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleCompact.hpp"
-
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -110,5 +109,4 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   EXPECT_EQ(elcStorSimple.initialStateofCharge(), 1E5);
   elcStorSimple.resetInitialStateofCharge();
   EXPECT_TRUE(elcStorSimple.isInitialStateofChargeDefaulted());
-
 }

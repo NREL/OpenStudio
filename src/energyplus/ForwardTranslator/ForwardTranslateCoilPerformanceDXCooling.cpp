@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,161 +46,159 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilPerformanceDXCooling(
-    CoilPerformanceDXCooling & modelObject)
-{
-  IdfObject idfObject(IddObjectType::CoilPerformance_DX_Cooling);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateCoilPerformanceDXCooling(CoilPerformanceDXCooling& modelObject) {
+    IdfObject idfObject(IddObjectType::CoilPerformance_DX_Cooling);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  // GrossRatedTotalCoolingCapacity
-  if( modelObject.isGrossRatedTotalCoolingCapacityAutosized() ) {
-    idfObject.setString(CoilPerformance_DX_CoolingFields::GrossRatedTotalCoolingCapacity,"Autosize");
-  } else if( auto value = modelObject.grossRatedTotalCoolingCapacity() ) {
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::GrossRatedTotalCoolingCapacity,value.get());
-  }
-
-  // GrossRatedSensibleHeatRatio
-  if( modelObject.isGrossRatedSensibleHeatRatioAutosized() ) {
-    idfObject.setString(CoilPerformance_DX_CoolingFields::GrossRatedSensibleHeatRatio,"Autosize");
-  } else if( auto value = modelObject.grossRatedSensibleHeatRatio() ) {
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::GrossRatedSensibleHeatRatio,value.get());
-  }
-
-  // GrossRatedCoolingCOP
-  {
-    auto value = modelObject.grossRatedCoolingCOP();
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::GrossRatedCoolingCOP,value);
-  }
-
-  // RatedAirFlowRate
-  if( modelObject.isRatedAirFlowRateAutosized() ) {
-    idfObject.setString(CoilPerformance_DX_CoolingFields::RatedAirFlowRate,"Autosize");
-  } else if( auto value = modelObject.ratedAirFlowRate() ) {
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::RatedAirFlowRate,value.get());
-  }
-
-  // FractionofAirFlowBypassedAroundCoil
-  {
-    auto value = modelObject.fractionofAirFlowBypassedAroundCoil();
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::FractionofAirFlowBypassedAroundCoil,value);
-  }
-
-  // TotalCoolingCapacityFunctionofTemperatureCurveName
-  {
-    auto curve = modelObject.totalCoolingCapacityFunctionofTemperatureCurve();
-    if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(CoilPerformance_DX_CoolingFields::TotalCoolingCapacityFunctionofTemperatureCurveName,idf->name().get());
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
     }
-  }
 
-  // TotalCoolingCapacityFunctionofFlowFractionCurveName
-  {
-    auto curve = modelObject.totalCoolingCapacityFunctionofFlowFractionCurve();
-    if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(CoilPerformance_DX_CoolingFields::TotalCoolingCapacityFunctionofFlowFractionCurveName,idf->name().get());
+    // GrossRatedTotalCoolingCapacity
+    if (modelObject.isGrossRatedTotalCoolingCapacityAutosized()) {
+      idfObject.setString(CoilPerformance_DX_CoolingFields::GrossRatedTotalCoolingCapacity, "Autosize");
+    } else if (auto value = modelObject.grossRatedTotalCoolingCapacity()) {
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::GrossRatedTotalCoolingCapacity, value.get());
     }
-  }
 
-  // EnergyInputRatioFunctionofTemperatureCurve
-  {
-    auto curve = modelObject.energyInputRatioFunctionofTemperatureCurve();
-    if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(CoilPerformance_DX_CoolingFields::EnergyInputRatioFunctionofTemperatureCurveName,idf->name().get());
+    // GrossRatedSensibleHeatRatio
+    if (modelObject.isGrossRatedSensibleHeatRatioAutosized()) {
+      idfObject.setString(CoilPerformance_DX_CoolingFields::GrossRatedSensibleHeatRatio, "Autosize");
+    } else if (auto value = modelObject.grossRatedSensibleHeatRatio()) {
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::GrossRatedSensibleHeatRatio, value.get());
     }
-  }
 
-  // EnergyInputRatioFunctionofFlowFractionCurve
-  {
-    auto curve = modelObject.energyInputRatioFunctionofFlowFractionCurve();
-    if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(CoilPerformance_DX_CoolingFields::EnergyInputRatioFunctionofFlowFractionCurveName,idf->name().get());
+    // GrossRatedCoolingCOP
+    {
+      auto value = modelObject.grossRatedCoolingCOP();
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::GrossRatedCoolingCOP, value);
     }
-  }
 
-  // PartLoadFractionCorrelationCurveName
-  {
-    auto curve = modelObject.partLoadFractionCorrelationCurve();
-    if( auto idf = translateAndMapModelObject(curve) ) {
-      idfObject.setString(CoilPerformance_DX_CoolingFields::PartLoadFractionCorrelationCurveName,idf->name().get());
+    // RatedAirFlowRate
+    if (modelObject.isRatedAirFlowRateAutosized()) {
+      idfObject.setString(CoilPerformance_DX_CoolingFields::RatedAirFlowRate, "Autosize");
+    } else if (auto value = modelObject.ratedAirFlowRate()) {
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::RatedAirFlowRate, value.get());
     }
-  }
 
-  // NominalTimeforCondensateRemovaltoBegin
-  {
-    auto value = modelObject.nominalTimeforCondensateRemovaltoBegin();
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::NominalTimeforCondensateRemovaltoBegin,value);
-  }
-
-  // RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity
-  {
-    auto value = modelObject.ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity,value);
-  }
-
-  // MaximumCyclingRate
-  {
-    auto value = modelObject.maximumCyclingRate();
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::MaximumCyclingRate,value);
-  }
-
-  // LatentCapacityTimeConstant
-  {
-    auto value = modelObject.latentCapacityTimeConstant();
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::LatentCapacityTimeConstant,value);
-  }
-
-  // CondenserAirInletNode
-  if( auto node = modelObject.condenserAirInletNode() ) {
-    idfObject.setString(CoilPerformance_DX_CoolingFields::CondenserAirInletNodeName,node->name().get());
-  }
-
-  // CondenserType
-  {
-    auto value = modelObject.condenserType();
-    idfObject.setString(CoilPerformance_DX_CoolingFields::CondenserType,value);
-  }
-
-  // EvaporativeCondenserEffectiveness
-  {
-    auto value = modelObject.evaporativeCondenserEffectiveness();
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::EvaporativeCondenserEffectiveness,value);
-  }
-
-  // EvaporativeCondenserAirFlowRate
-  if( modelObject.isEvaporativeCondenserAirFlowRateAutosized() ) {
-    idfObject.setString(CoilPerformance_DX_CoolingFields::EvaporativeCondenserAirFlowRate,"Autosize");
-  } else if( auto value = modelObject.evaporativeCondenserAirFlowRate() ) {
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::EvaporativeCondenserAirFlowRate,value.get());
-  }
-
-  // EvaporativeCondenserPumpRatedPowerConsumption
-  if( modelObject.isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() ) {
-    idfObject.setString(CoilPerformance_DX_CoolingFields::EvaporativeCondenserPumpRatedPowerConsumption,"Autosize");
-  } else if( auto value = modelObject.evaporativeCondenserPumpRatedPowerConsumption() ) {
-    idfObject.setDouble(CoilPerformance_DX_CoolingFields::EvaporativeCondenserPumpRatedPowerConsumption,value.get());
-  }
-
-  // SensibleHeatRatioFunctionofTemperatureCurveName
-  if( auto curve = modelObject.sensibleHeatRatioFunctionofTemperatureCurve() ) {
-    if( auto idf = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(CoilPerformance_DX_CoolingFields::SensibleHeatRatioFunctionofTemperatureCurveName,idf->name().get());
+    // FractionofAirFlowBypassedAroundCoil
+    {
+      auto value = modelObject.fractionofAirFlowBypassedAroundCoil();
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::FractionofAirFlowBypassedAroundCoil, value);
     }
-  }
 
-  // SensibleHeatRatioFunctionofFlowFractionCurveName
-  if( auto curve = modelObject.sensibleHeatRatioFunctionofFlowFractionCurve() ) {
-    if( auto idf = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(CoilPerformance_DX_CoolingFields::SensibleHeatRatioFunctionofFlowFractionCurveName,idf->name().get());
+    // TotalCoolingCapacityFunctionofTemperatureCurveName
+    {
+      auto curve = modelObject.totalCoolingCapacityFunctionofTemperatureCurve();
+      if (auto idf = translateAndMapModelObject(curve)) {
+        idfObject.setString(CoilPerformance_DX_CoolingFields::TotalCoolingCapacityFunctionofTemperatureCurveName, idf->name().get());
+      }
     }
+
+    // TotalCoolingCapacityFunctionofFlowFractionCurveName
+    {
+      auto curve = modelObject.totalCoolingCapacityFunctionofFlowFractionCurve();
+      if (auto idf = translateAndMapModelObject(curve)) {
+        idfObject.setString(CoilPerformance_DX_CoolingFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, idf->name().get());
+      }
+    }
+
+    // EnergyInputRatioFunctionofTemperatureCurve
+    {
+      auto curve = modelObject.energyInputRatioFunctionofTemperatureCurve();
+      if (auto idf = translateAndMapModelObject(curve)) {
+        idfObject.setString(CoilPerformance_DX_CoolingFields::EnergyInputRatioFunctionofTemperatureCurveName, idf->name().get());
+      }
+    }
+
+    // EnergyInputRatioFunctionofFlowFractionCurve
+    {
+      auto curve = modelObject.energyInputRatioFunctionofFlowFractionCurve();
+      if (auto idf = translateAndMapModelObject(curve)) {
+        idfObject.setString(CoilPerformance_DX_CoolingFields::EnergyInputRatioFunctionofFlowFractionCurveName, idf->name().get());
+      }
+    }
+
+    // PartLoadFractionCorrelationCurveName
+    {
+      auto curve = modelObject.partLoadFractionCorrelationCurve();
+      if (auto idf = translateAndMapModelObject(curve)) {
+        idfObject.setString(CoilPerformance_DX_CoolingFields::PartLoadFractionCorrelationCurveName, idf->name().get());
+      }
+    }
+
+    // NominalTimeforCondensateRemovaltoBegin
+    {
+      auto value = modelObject.nominalTimeforCondensateRemovaltoBegin();
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::NominalTimeforCondensateRemovaltoBegin, value);
+    }
+
+    // RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity
+    {
+      auto value = modelObject.ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, value);
+    }
+
+    // MaximumCyclingRate
+    {
+      auto value = modelObject.maximumCyclingRate();
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::MaximumCyclingRate, value);
+    }
+
+    // LatentCapacityTimeConstant
+    {
+      auto value = modelObject.latentCapacityTimeConstant();
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::LatentCapacityTimeConstant, value);
+    }
+
+    // CondenserAirInletNode
+    if (auto node = modelObject.condenserAirInletNode()) {
+      idfObject.setString(CoilPerformance_DX_CoolingFields::CondenserAirInletNodeName, node->name().get());
+    }
+
+    // CondenserType
+    {
+      auto value = modelObject.condenserType();
+      idfObject.setString(CoilPerformance_DX_CoolingFields::CondenserType, value);
+    }
+
+    // EvaporativeCondenserEffectiveness
+    {
+      auto value = modelObject.evaporativeCondenserEffectiveness();
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::EvaporativeCondenserEffectiveness, value);
+    }
+
+    // EvaporativeCondenserAirFlowRate
+    if (modelObject.isEvaporativeCondenserAirFlowRateAutosized()) {
+      idfObject.setString(CoilPerformance_DX_CoolingFields::EvaporativeCondenserAirFlowRate, "Autosize");
+    } else if (auto value = modelObject.evaporativeCondenserAirFlowRate()) {
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::EvaporativeCondenserAirFlowRate, value.get());
+    }
+
+    // EvaporativeCondenserPumpRatedPowerConsumption
+    if (modelObject.isEvaporativeCondenserPumpRatedPowerConsumptionAutosized()) {
+      idfObject.setString(CoilPerformance_DX_CoolingFields::EvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
+    } else if (auto value = modelObject.evaporativeCondenserPumpRatedPowerConsumption()) {
+      idfObject.setDouble(CoilPerformance_DX_CoolingFields::EvaporativeCondenserPumpRatedPowerConsumption, value.get());
+    }
+
+    // SensibleHeatRatioFunctionofTemperatureCurveName
+    if (auto curve = modelObject.sensibleHeatRatioFunctionofTemperatureCurve()) {
+      if (auto idf = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(CoilPerformance_DX_CoolingFields::SensibleHeatRatioFunctionofTemperatureCurveName, idf->name().get());
+      }
+    }
+
+    // SensibleHeatRatioFunctionofFlowFractionCurveName
+    if (auto curve = modelObject.sensibleHeatRatioFunctionofFlowFractionCurve()) {
+      if (auto idf = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(CoilPerformance_DX_CoolingFields::SensibleHeatRatioFunctionofFlowFractionCurveName, idf->name().get());
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

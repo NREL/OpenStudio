@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,90 +51,87 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAuxiliaryHeater(GeneratorFuelCellAuxiliaryHeater & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
-  boost::optional<ThermalZone> tz;
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAuxiliaryHeater(GeneratorFuelCellAuxiliaryHeater& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
+    boost::optional<ThermalZone> tz;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AuxiliaryHeater, modelObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    pcm.setName(*s);
+    IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AuxiliaryHeater, modelObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      pcm.setName(*s);
+    }
+
+    //ExcessAirRatio
+    d = modelObject.excessAirRatio();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio, d.get());
+    }
+
+    //AncillaryPowerConstantTerm
+    d = modelObject.ancillaryPowerConstantTerm();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, d.get());
+    }
+
+    //AncillaryPowerLinearTerm
+    d = modelObject.ancillaryPowerLinearTerm();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, d.get());
+    }
+
+    //SkinLossUFactorTimesAreaValue
+    d = modelObject.skinLossUFactorTimesAreaValue();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, d.get());
+    }
+
+    //SkinLossDestination
+    s = modelObject.skinLossDestination();
+    if (s) {
+      pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination, s.get());
+    }
+
+    //ZoneNametoReceiveSkinLosses
+    tz = modelObject.zonetoReceiveSkinLosses();
+    if (tz) {
+      pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, tz.get().nameString());
+    }
+
+    //HeatingCapacityUnits
+    s = modelObject.heatingCapacityUnits();
+    if (s) {
+      pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::HeatingCapacityUnits, s.get());
+    }
+
+    //MaximumHeatingCapacityinWatts
+    d = modelObject.maximumHeatingCapacityinWatts();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinWatts, d.get());
+    }
+
+    //MinimumHeatingCapacityinWatts
+    d = modelObject.minimumHeatingCapacityinWatts();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinWatts, d.get());
+    }
+
+    //MaximumHeatingCapacityinKmolperSecond
+    d = modelObject.maximumHeatingCapacityinKmolperSecond();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinKmolperSecond, d.get());
+    }
+
+    //MinimumHeatingCapacityinKmolperSecond
+    d = modelObject.minimumHeatingCapacityinKmolperSecond();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinKmolperSecond, d.get());
+    }
+
+    return pcm;
   }
 
-  //ExcessAirRatio
-  d = modelObject.excessAirRatio();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio, d.get());
-  }
+}  // namespace energyplus
 
-  //AncillaryPowerConstantTerm
-  d = modelObject.ancillaryPowerConstantTerm();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, d.get());
-  }
-
-  //AncillaryPowerLinearTerm
-  d = modelObject.ancillaryPowerLinearTerm();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, d.get());
-  }
-
-  //SkinLossUFactorTimesAreaValue
-  d = modelObject.skinLossUFactorTimesAreaValue();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, d.get());
-  }
-
-  //SkinLossDestination
-  s = modelObject.skinLossDestination();
-  if (s) {
-    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::SkinLossDestination, s.get());
-  }
-
-  //ZoneNametoReceiveSkinLosses
-  tz = modelObject.zonetoReceiveSkinLosses();
-  if (tz) {
-    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::ZoneNametoReceiveSkinLosses, tz.get().nameString());
-  }
-
-  //HeatingCapacityUnits
-  s = modelObject.heatingCapacityUnits();
-  if (s) {
-    pcm.setString(Generator_FuelCell_AuxiliaryHeaterFields::HeatingCapacityUnits, s.get());
-  }
-
-  //MaximumHeatingCapacityinWatts
-  d = modelObject.maximumHeatingCapacityinWatts();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinWatts, d.get());
-  }
-
-  //MinimumHeatingCapacityinWatts
-  d = modelObject.minimumHeatingCapacityinWatts();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinWatts, d.get());
-  }
-
-  //MaximumHeatingCapacityinKmolperSecond
-  d = modelObject.maximumHeatingCapacityinKmolperSecond();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinKmolperSecond, d.get());
-  }
-
-  //MinimumHeatingCapacityinKmolperSecond
-  d = modelObject.minimumHeatingCapacityinKmolperSecond();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinKmolperSecond, d.get());
-  }
-
-  return pcm;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

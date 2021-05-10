@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,105 +36,99 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** AirTerminalDualDuctConstantVolume_Impl is a Mixer_Impl that is the implementation class for AirTerminalDualDuctConstantVolume.*/
-  class MODEL_API AirTerminalDualDuctConstantVolume_Impl : public Mixer_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirTerminalDualDuctConstantVolume_Impl is a Mixer_Impl that is the implementation class for AirTerminalDualDuctConstantVolume.*/
+    class MODEL_API AirTerminalDualDuctConstantVolume_Impl : public Mixer_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirTerminalDualDuctConstantVolume_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      AirTerminalDualDuctConstantVolume_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirTerminalDualDuctConstantVolume_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      AirTerminalDualDuctConstantVolume_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirTerminalDualDuctConstantVolume_Impl(const AirTerminalDualDuctConstantVolume_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      AirTerminalDualDuctConstantVolume_Impl(const AirTerminalDualDuctConstantVolume_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirTerminalDualDuctConstantVolume_Impl() {}
+      virtual ~AirTerminalDualDuctConstantVolume_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    boost::optional<double> maximumAirFlowRate() const;
+      boost::optional<double> maximumAirFlowRate() const;
 
-    bool isMaximumAirFlowRateAutosized() const;
+      bool isMaximumAirFlowRateAutosized() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  // Note Schedules are passed by reference, not const reference.
-    bool setAvailabilitySchedule(Schedule& schedule);
+      // Note Schedules are passed by reference, not const reference.
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setMaximumAirFlowRate(double maximumAirFlowRate);
+      bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
-    void autosizeMaximumAirFlowRate();
+      void autosizeMaximumAirFlowRate();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual unsigned inletPort(unsigned branchIndex) const override;
+      virtual unsigned inletPort(unsigned branchIndex) const override;
 
-    virtual unsigned nextInletPort() const override;
+      virtual unsigned nextInletPort() const override;
 
-    virtual unsigned newInletPortAfterBranch(unsigned branchIndex) override;
+      virtual unsigned newInletPortAfterBranch(unsigned branchIndex) override;
 
-    void removePortForBranch(unsigned branchIndex) override;
+      void removePortForBranch(unsigned branchIndex) override;
 
-    boost::optional<Node> hotAirInletNode() const;
+      boost::optional<Node> hotAirInletNode() const;
 
-    boost::optional<Node> coldAirInletNode() const;
+      boost::optional<Node> coldAirInletNode() const;
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    bool isRemovable() const override;
+      bool isRemovable() const override;
 
-    boost::optional<double> autosizedMaximumAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-    //@}
+      //@}
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctConstantVolume");
-  };
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctConstantVolume");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_IMPL_HPP
-
+#endif  // MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_IMPL_HPP

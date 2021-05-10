@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,12 +33,10 @@
 
 #include <iostream>
 
-TEST(FloatCompare, Equal)
-{
-  std::cout << "Machine epsilon for double is: "
-            << std::numeric_limits<double>::epsilon() << std::endl;
+TEST(FloatCompare, Equal) {
+  std::cout << "Machine epsilon for double is: " << std::numeric_limits<double>::epsilon() << '\n';
 
-  EXPECT_TRUE(openstudio::equal(1.0+1.0,2.0));
-  EXPECT_TRUE(openstudio::equal(std::pow(400.0,2),160000.0));
-  EXPECT_TRUE(openstudio::equal(std::numeric_limits<double>::min(),-std::numeric_limits<double>::min()));
+  EXPECT_TRUE(openstudio::equal(1.0 + 1.0, 2.0));
+  EXPECT_TRUE(openstudio::equal(std::pow(400.0, 2), 160000.0));
+  EXPECT_TRUE(openstudio::equal(std::numeric_limits<double>::min(), -std::numeric_limits<double>::min()));
 }

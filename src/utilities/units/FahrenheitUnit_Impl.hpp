@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,7 +38,8 @@ namespace detail {
 
   /** FahrenheitUnit_Impl is a TemperatureUnit_Impl that is the implementation class for
    *  FahrenheitUnit.*/
-  class UTILITIES_API FahrenheitUnit_Impl : public TemperatureUnit_Impl {
+  class UTILITIES_API FahrenheitUnit_Impl : public TemperatureUnit_Impl
+  {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -48,7 +49,7 @@ namespace detail {
      *  \param[in] FExp exponent on baseUnit F.
      *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    FahrenheitUnit_Impl(int FExp=0,int scaleExponent=0,const std::string& prettyString="");
+    FahrenheitUnit_Impl(int FExp = 0, int scaleExponent = 0, const std::string& prettyString = "");
 
     /** Alternate constructor creates an absolute temperature. Specify the abbreviation of the scale,
      *  rather than its exponent.
@@ -57,9 +58,7 @@ namespace detail {
      *    "k" for kilo.
      *  \param[in] FExp exponent on baseUnit F.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    FahrenheitUnit_Impl(const std::string& scaleAbbreviation,
-                        int FExp=0,
-                        const std::string& prettyString="");
+    FahrenheitUnit_Impl(const std::string& scaleAbbreviation, int FExp = 0, const std::string& prettyString = "");
 
     virtual ~FahrenheitUnit_Impl() {}
 
@@ -79,9 +78,8 @@ namespace detail {
     REGISTER_LOGGER("openstudio.units.FahrenheitUnit");
   };
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_FAHRENHEITUNIT_IMPL_HPP
-
+#endif  // UTILITIES_UNITS_FAHRENHEITUNIT_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,6 +48,10 @@
 #include "../CoilCoolingWater_Impl.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "../ScheduleCompact.hpp"
@@ -56,182 +60,160 @@ using namespace openstudio;
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ZoneHVACPackagedTerminalAirConditioner_ZoneHVACPackagedTerminalAirConditioner)
-{
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_ZoneHVACPackagedTerminalAirConditioner) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::ScheduleCompact availabilitySchedule(m);
+      model::ScheduleCompact availabilitySchedule(m);
 
-     model::FanConstantVolume fan(m,availabilitySchedule);
+      model::FanConstantVolume fan(m, availabilitySchedule);
 
-     model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
+      model::CoilHeatingWater heatingCoil(m, availabilitySchedule);
 
-     model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(m);
-     coolingCurveFofTemp.setCoefficient1Constant(0.42415);
-     coolingCurveFofTemp.setCoefficient2x(0.04426);
-     coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
-     coolingCurveFofTemp.setCoefficient4y(0.00333);
-     coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
-     coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
-     coolingCurveFofTemp.setMinimumValueofx(17.0);
-     coolingCurveFofTemp.setMaximumValueofx(22.0);
-     coolingCurveFofTemp.setMinimumValueofy(13.0);
-     coolingCurveFofTemp.setMaximumValueofy(46.0);
+      model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(m);
+      coolingCurveFofTemp.setCoefficient1Constant(0.42415);
+      coolingCurveFofTemp.setCoefficient2x(0.04426);
+      coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
+      coolingCurveFofTemp.setCoefficient4y(0.00333);
+      coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
+      coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
+      coolingCurveFofTemp.setMinimumValueofx(17.0);
+      coolingCurveFofTemp.setMaximumValueofx(22.0);
+      coolingCurveFofTemp.setMinimumValueofy(13.0);
+      coolingCurveFofTemp.setMaximumValueofy(46.0);
 
-     CurveQuadratic coolingCurveFofFlow = CurveQuadratic(m);
-     coolingCurveFofFlow.setCoefficient1Constant(0.77136);
-     coolingCurveFofFlow.setCoefficient2x(0.34053);
-     coolingCurveFofFlow.setCoefficient3xPOW2(-0.11088);
-     coolingCurveFofFlow.setMinimumValueofx(0.75918);
-     coolingCurveFofFlow.setMaximumValueofx(1.13877);
+      CurveQuadratic coolingCurveFofFlow = CurveQuadratic(m);
+      coolingCurveFofFlow.setCoefficient1Constant(0.77136);
+      coolingCurveFofFlow.setCoefficient2x(0.34053);
+      coolingCurveFofFlow.setCoefficient3xPOW2(-0.11088);
+      coolingCurveFofFlow.setMinimumValueofx(0.75918);
+      coolingCurveFofFlow.setMaximumValueofx(1.13877);
 
-     CurveBiquadratic energyInputRatioFofTemp = CurveBiquadratic(m);
-     energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
-     energyInputRatioFofTemp.setCoefficient2x(-0.02431);
-     energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
-     energyInputRatioFofTemp.setCoefficient4y(-0.01434);
-     energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
-     energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
-     energyInputRatioFofTemp.setMinimumValueofx(17.0);
-     energyInputRatioFofTemp.setMaximumValueofx(22.0);
-     energyInputRatioFofTemp.setMinimumValueofy(13.0);
-     energyInputRatioFofTemp.setMaximumValueofy(46.0);
+      CurveBiquadratic energyInputRatioFofTemp = CurveBiquadratic(m);
+      energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
+      energyInputRatioFofTemp.setCoefficient2x(-0.02431);
+      energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
+      energyInputRatioFofTemp.setCoefficient4y(-0.01434);
+      energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
+      energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
+      energyInputRatioFofTemp.setMinimumValueofx(17.0);
+      energyInputRatioFofTemp.setMaximumValueofx(22.0);
+      energyInputRatioFofTemp.setMinimumValueofy(13.0);
+      energyInputRatioFofTemp.setMaximumValueofy(46.0);
 
-     CurveQuadratic energyInputRatioFofFlow = CurveQuadratic(m);
-     energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
-     energyInputRatioFofFlow.setCoefficient2x(-0.32953);
-     energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
-     energyInputRatioFofFlow.setMinimumValueofx(0.75918);
-     energyInputRatioFofFlow.setMaximumValueofx(1.13877);
+      CurveQuadratic energyInputRatioFofFlow = CurveQuadratic(m);
+      energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
+      energyInputRatioFofFlow.setCoefficient2x(-0.32953);
+      energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
+      energyInputRatioFofFlow.setMinimumValueofx(0.75918);
+      energyInputRatioFofFlow.setMaximumValueofx(1.13877);
 
-     CurveQuadratic partLoadFraction = CurveQuadratic(m);
-     partLoadFraction.setCoefficient1Constant(0.77100);
-     partLoadFraction.setCoefficient2x(0.22900);
-     partLoadFraction.setCoefficient3xPOW2(0.0);
-     partLoadFraction.setMinimumValueofx(0.0);
-     partLoadFraction.setMaximumValueofx(1.0);
+      CurveQuadratic partLoadFraction = CurveQuadratic(m);
+      partLoadFraction.setCoefficient1Constant(0.77100);
+      partLoadFraction.setCoefficient2x(0.22900);
+      partLoadFraction.setCoefficient3xPOW2(0.0);
+      partLoadFraction.setMinimumValueofx(0.0);
+      partLoadFraction.setMaximumValueofx(1.0);
 
-     CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed( m,
-                                                                      availabilitySchedule,
-                                                                      coolingCurveFofTemp,
-                                                                      coolingCurveFofFlow,
-                                                                      energyInputRatioFofTemp,
-                                                                      energyInputRatioFofFlow,
-                                                                      partLoadFraction );
+      CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed(m, availabilitySchedule, coolingCurveFofTemp, coolingCurveFofFlow,
+                                                                      energyInputRatioFofTemp, energyInputRatioFofFlow, partLoadFraction);
 
+      model::ZoneHVACPackagedTerminalAirConditioner ptac(m, availabilitySchedule, fan, heatingCoil, coolingCoil);
 
-     model::ZoneHVACPackagedTerminalAirConditioner ptac( m,
-                                                         availabilitySchedule,
-                                                         fan,
-                                                         heatingCoil,
-                                                         coolingCoil );
+      ptac.availabilitySchedule();
 
-     ptac.availabilitySchedule();
+      ptac.supplyAirFan();
 
-     ptac.supplyAirFan();
+      ptac.heatingCoil();
 
-     ptac.heatingCoil();
+      ptac.coolingCoil();
 
-     ptac.coolingCoil();
-
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,ZoneHVACPackagedTerminalAirConditioner_clone)
-{
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_clone) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::ScheduleCompact availabilitySchedule(m);
+      model::ScheduleCompact availabilitySchedule(m);
 
-     model::FanConstantVolume fan(m,availabilitySchedule);
+      model::FanConstantVolume fan(m, availabilitySchedule);
 
-     model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
+      model::CoilHeatingWater heatingCoil(m, availabilitySchedule);
 
-     model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(m);
-     coolingCurveFofTemp.setCoefficient1Constant(0.42415);
-     coolingCurveFofTemp.setCoefficient2x(0.04426);
-     coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
-     coolingCurveFofTemp.setCoefficient4y(0.00333);
-     coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
-     coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
-     coolingCurveFofTemp.setMinimumValueofx(17.0);
-     coolingCurveFofTemp.setMaximumValueofx(22.0);
-     coolingCurveFofTemp.setMinimumValueofy(13.0);
-     coolingCurveFofTemp.setMaximumValueofy(46.0);
+      model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(m);
+      coolingCurveFofTemp.setCoefficient1Constant(0.42415);
+      coolingCurveFofTemp.setCoefficient2x(0.04426);
+      coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
+      coolingCurveFofTemp.setCoefficient4y(0.00333);
+      coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
+      coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
+      coolingCurveFofTemp.setMinimumValueofx(17.0);
+      coolingCurveFofTemp.setMaximumValueofx(22.0);
+      coolingCurveFofTemp.setMinimumValueofy(13.0);
+      coolingCurveFofTemp.setMaximumValueofy(46.0);
 
-     CurveQuadratic coolingCurveFofFlow = CurveQuadratic(m);
-     coolingCurveFofFlow.setCoefficient1Constant(0.77136);
-     coolingCurveFofFlow.setCoefficient2x(0.34053);
-     coolingCurveFofFlow.setCoefficient3xPOW2(-0.11088);
-     coolingCurveFofFlow.setMinimumValueofx(0.75918);
-     coolingCurveFofFlow.setMaximumValueofx(1.13877);
+      CurveQuadratic coolingCurveFofFlow = CurveQuadratic(m);
+      coolingCurveFofFlow.setCoefficient1Constant(0.77136);
+      coolingCurveFofFlow.setCoefficient2x(0.34053);
+      coolingCurveFofFlow.setCoefficient3xPOW2(-0.11088);
+      coolingCurveFofFlow.setMinimumValueofx(0.75918);
+      coolingCurveFofFlow.setMaximumValueofx(1.13877);
 
-     CurveBiquadratic energyInputRatioFofTemp = CurveBiquadratic(m);
-     energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
-     energyInputRatioFofTemp.setCoefficient2x(-0.02431);
-     energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
-     energyInputRatioFofTemp.setCoefficient4y(-0.01434);
-     energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
-     energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
-     energyInputRatioFofTemp.setMinimumValueofx(17.0);
-     energyInputRatioFofTemp.setMaximumValueofx(22.0);
-     energyInputRatioFofTemp.setMinimumValueofy(13.0);
-     energyInputRatioFofTemp.setMaximumValueofy(46.0);
+      CurveBiquadratic energyInputRatioFofTemp = CurveBiquadratic(m);
+      energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
+      energyInputRatioFofTemp.setCoefficient2x(-0.02431);
+      energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
+      energyInputRatioFofTemp.setCoefficient4y(-0.01434);
+      energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
+      energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
+      energyInputRatioFofTemp.setMinimumValueofx(17.0);
+      energyInputRatioFofTemp.setMaximumValueofx(22.0);
+      energyInputRatioFofTemp.setMinimumValueofy(13.0);
+      energyInputRatioFofTemp.setMaximumValueofy(46.0);
 
-     CurveQuadratic energyInputRatioFofFlow = CurveQuadratic(m);
-     energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
-     energyInputRatioFofFlow.setCoefficient2x(-0.32953);
-     energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
-     energyInputRatioFofFlow.setMinimumValueofx(0.75918);
-     energyInputRatioFofFlow.setMaximumValueofx(1.13877);
+      CurveQuadratic energyInputRatioFofFlow = CurveQuadratic(m);
+      energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
+      energyInputRatioFofFlow.setCoefficient2x(-0.32953);
+      energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
+      energyInputRatioFofFlow.setMinimumValueofx(0.75918);
+      energyInputRatioFofFlow.setMaximumValueofx(1.13877);
 
-     CurveQuadratic partLoadFraction = CurveQuadratic(m);
-     partLoadFraction.setCoefficient1Constant(0.77100);
-     partLoadFraction.setCoefficient2x(0.22900);
-     partLoadFraction.setCoefficient3xPOW2(0.0);
-     partLoadFraction.setMinimumValueofx(0.0);
-     partLoadFraction.setMaximumValueofx(1.0);
+      CurveQuadratic partLoadFraction = CurveQuadratic(m);
+      partLoadFraction.setCoefficient1Constant(0.77100);
+      partLoadFraction.setCoefficient2x(0.22900);
+      partLoadFraction.setCoefficient3xPOW2(0.0);
+      partLoadFraction.setMinimumValueofx(0.0);
+      partLoadFraction.setMaximumValueofx(1.0);
 
-     CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed( m,
-                                                                      availabilitySchedule,
-                                                                      coolingCurveFofTemp,
-                                                                      coolingCurveFofFlow,
-                                                                      energyInputRatioFofTemp,
-                                                                      energyInputRatioFofFlow,
-                                                                      partLoadFraction );
+      CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed(m, availabilitySchedule, coolingCurveFofTemp, coolingCurveFofFlow,
+                                                                      energyInputRatioFofTemp, energyInputRatioFofFlow, partLoadFraction);
 
+      model::ZoneHVACPackagedTerminalAirConditioner ptac(m, availabilitySchedule, fan, heatingCoil, coolingCoil);
 
-     model::ZoneHVACPackagedTerminalAirConditioner ptac( m,
-                                                         availabilitySchedule,
-                                                         fan,
-                                                         heatingCoil,
-                                                         coolingCoil );
+      model::Model m2;
 
-     model::Model m2;
+      model::ZoneHVACPackagedTerminalAirConditioner ptac2 = ptac.clone(m2).cast<model::ZoneHVACPackagedTerminalAirConditioner>();
 
-     model::ZoneHVACPackagedTerminalAirConditioner ptac2 = ptac.clone(m2).cast<model::ZoneHVACPackagedTerminalAirConditioner>();
+      ptac2.availabilitySchedule();
 
-     ptac2.availabilitySchedule();
+      ptac2.supplyAirFan();
 
-     ptac2.supplyAirFan();
+      ptac2.heatingCoil();
 
-     ptac2.heatingCoil();
+      ptac2.coolingCoil();
 
-     ptac2.coolingCoil();
-
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
   {
     model::Model m;
@@ -240,7 +222,7 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalAirConditioner_clone)
     model::FanConstantVolume fan(m);
     auto s = m.alwaysOnDiscreteSchedule();
 
-    model::ZoneHVACPackagedTerminalAirConditioner ptac(m,s,fan,heatingCoil,coolingCoil);
+    model::ZoneHVACPackagedTerminalAirConditioner ptac(m, s, fan, heatingCoil, coolingCoil);
     model::PlantLoop plant(m);
     EXPECT_TRUE(plant.addDemandBranchForComponent(heatingCoil));
 
@@ -250,16 +232,35 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalAirConditioner_clone)
     EXPECT_TRUE(heatingClone.plantLoop());
 
     auto heatingCoils = plant.demandComponents(model::CoilHeatingWater::iddObjectType());
-    EXPECT_EQ(2u,heatingCoils.size());
+    EXPECT_EQ(2u, heatingCoils.size());
 
     // If for some reason you try to add coil to plant again (like expecting older API behavior),
     // everything is ok.
     plant.addDemandBranchForComponent(heatingClone);
 
     heatingCoils = plant.demandComponents(model::CoilHeatingWater::iddObjectType());
-    EXPECT_EQ(2u,heatingCoils.size());
+    EXPECT_EQ(2u, heatingCoils.size());
 
-    EXPECT_EQ(2u,plant.demandSplitter().outletModelObjects().size());
+    EXPECT_EQ(2u, plant.demandSplitter().outletModelObjects().size());
   }
 }
 
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_CoilCoolingDXVariableSpeed) {
+  model::Model m;
+  model::CoilHeatingWater heatingCoil(m);
+  model::CoilCoolingDXVariableSpeed coolingCoil(m);
+  model::FanConstantVolume fan(m);
+  auto s = m.alwaysOnDiscreteSchedule();
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptac(m, s, fan, heatingCoil, coolingCoil);
+}
+
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_CoilSystemCoolingDXHeatExchangerAssisted) {
+  model::Model m;
+  model::CoilHeatingWater heatingCoil(m);
+  model::CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
+  model::FanConstantVolume fan(m);
+  auto s = m.alwaysOnDiscreteSchedule();
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptac(m, s, fan, heatingCoil, coolingCoil);
+}

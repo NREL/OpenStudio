@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,15 +37,15 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class AirflowNetworkEquivalentDuct;
-class ControllerWaterCoil;
+  class Schedule;
+  class AirflowNetworkEquivalentDuct;
+  class ControllerWaterCoil;
 
-namespace detail {
-  class CoilCoolingWater_Impl;
-} // detail
+  namespace detail {
+    class CoilCoolingWater_Impl;
+  }  // namespace detail
 
-/** CoilCoolingWater is a WaterToAirComponent that wraps the IDD object named
+  /** CoilCoolingWater is a WaterToAirComponent that wraps the IDD object named
  *  "OS:Coil:Cooling:Water".
  *
  *  Polymorphic behavior:
@@ -59,192 +59,188 @@ namespace detail {
  *    </ul>
  *  </ol>
  */
-class MODEL_API CoilCoolingWater : public WaterToAirComponent {
- public:
+  class MODEL_API CoilCoolingWater : public WaterToAirComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
-
-  /** Constructs a new CoilCoolingWater object and places it inside the
+    /** Constructs a new CoilCoolingWater object and places it inside the
    *  model.  The coil is fully initialized with all companion objects. */
-  CoilCoolingWater(const Model& model, Schedule & availableSchedule);
+    CoilCoolingWater(const Model& model, Schedule& availableSchedule);
 
-  CoilCoolingWater(const Model& model);
+    CoilCoolingWater(const Model& model);
 
-  virtual ~CoilCoolingWater() {}
+    virtual ~CoilCoolingWater() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters and Setters */
-  //@{
+    /** @name Getters and Setters */
+    //@{
 
-  /** Returns the schedule referred to by the Availability Schedule Name field. **/
-  Schedule availabilitySchedule() const;
+    /** Returns the schedule referred to by the Availability Schedule Name field. **/
+    Schedule availabilitySchedule() const;
 
-  /** \deprecated */
-  Schedule availableSchedule() const;
+    /** \deprecated */
+    Schedule availableSchedule() const;
 
-  /** Sets the schedule referred to by the Availability Schedule Name field. **/
-  bool setAvailabilitySchedule(Schedule& schedule);
+    /** Sets the schedule referred to by the Availability Schedule Name field. **/
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  /** \deprecated */
-  bool setAvailableSchedule(Schedule& schedule);
+    /** \deprecated */
+    bool setAvailableSchedule(Schedule& schedule);
 
-  /** Returns the value of the DesignWaterFlowRate field. **/
-  boost::optional<double> designWaterFlowRate();
+    /** Returns the value of the DesignWaterFlowRate field. **/
+    boost::optional<double> designWaterFlowRate();
 
-  /** Sets the value of the DesignWaterFlowRate field. **/
-  bool setDesignWaterFlowRate( double value );
+    /** Sets the value of the DesignWaterFlowRate field. **/
+    bool setDesignWaterFlowRate(double value);
 
-  /** Returns true if the DesignWaterFlowRate field is set to autosize **/
-  bool isDesignWaterFlowRateAutosized();
+    /** Returns true if the DesignWaterFlowRate field is set to autosize **/
+    bool isDesignWaterFlowRateAutosized();
 
-  /** Set the DesignWaterFlowRate field to autosize **/
-  void autosizeDesignWaterFlowRate();
+    /** Set the DesignWaterFlowRate field to autosize **/
+    void autosizeDesignWaterFlowRate();
 
-  /** Returns the value of the DesignAirFlowRate field. **/
-  boost::optional<double> designAirFlowRate();
+    /** Returns the value of the DesignAirFlowRate field. **/
+    boost::optional<double> designAirFlowRate();
 
-  /** Sets the value of the DesignAirFlowRate field. **/
-  bool setDesignAirFlowRate( double value );
+    /** Sets the value of the DesignAirFlowRate field. **/
+    bool setDesignAirFlowRate(double value);
 
-  /** Returns true if the DesignAirFlowRate field is set to autosize **/
-  bool isDesignAirFlowRateAutosized();
+    /** Returns true if the DesignAirFlowRate field is set to autosize **/
+    bool isDesignAirFlowRateAutosized();
 
-  /** Set the DesignAirFlowRate field to autosize **/
-  void autosizeDesignAirFlowRate();
+    /** Set the DesignAirFlowRate field to autosize **/
+    void autosizeDesignAirFlowRate();
 
-  /** Returns the value of the DesignInletWaterTemperature field. **/
-  boost::optional<double> designInletWaterTemperature();
+    /** Returns the value of the DesignInletWaterTemperature field. **/
+    boost::optional<double> designInletWaterTemperature();
 
-  /** Sets the value of the DesignInletWaterTemperature field. **/
-  bool setDesignInletWaterTemperature( double value );
+    /** Sets the value of the DesignInletWaterTemperature field. **/
+    bool setDesignInletWaterTemperature(double value);
 
-  /** Returns true if the DesignInletWaterTemperature field is set to autosize **/
-  bool isDesignInletWaterTemperatureAutosized();
+    /** Returns true if the DesignInletWaterTemperature field is set to autosize **/
+    bool isDesignInletWaterTemperatureAutosized();
 
-  /** Set the DesignInletWaterTemperature field to autosize **/
-  void autosizeDesignInletWaterTemperature();
+    /** Set the DesignInletWaterTemperature field to autosize **/
+    void autosizeDesignInletWaterTemperature();
 
-  /** Returns the value of the DesignInletAirTemperature field. **/
-  boost::optional<double> designInletAirTemperature();
+    /** Returns the value of the DesignInletAirTemperature field. **/
+    boost::optional<double> designInletAirTemperature();
 
-  /** Sets the value of the DesignInletAirTemperature field. **/
-  bool setDesignInletAirTemperature( double value );
+    /** Sets the value of the DesignInletAirTemperature field. **/
+    bool setDesignInletAirTemperature(double value);
 
-  /** Returns true if the DesignInletAirTemperature field is set to autosize **/
-  bool isDesignInletAirTemperatureAutosized();
+    /** Returns true if the DesignInletAirTemperature field is set to autosize **/
+    bool isDesignInletAirTemperatureAutosized();
 
-  /** Set the DesignInletAirTemperature field to autosize **/
-  void autosizeDesignInletAirTemperature();
+    /** Set the DesignInletAirTemperature field to autosize **/
+    void autosizeDesignInletAirTemperature();
 
-  /** Returns the value of the DesignOutletAirTemperature field. **/
-  boost::optional<double> designOutletAirTemperature();
+    /** Returns the value of the DesignOutletAirTemperature field. **/
+    boost::optional<double> designOutletAirTemperature();
 
-  /** Sets the value of the DesignOutletAirTemperature field. **/
-  bool setDesignOutletAirTemperature( double value );
+    /** Sets the value of the DesignOutletAirTemperature field. **/
+    bool setDesignOutletAirTemperature(double value);
 
-  /** Returns true if the DesignOutletAirTemperature field is set to autosize **/
-  bool isDesignOutletAirTemperatureAutosized();
+    /** Returns true if the DesignOutletAirTemperature field is set to autosize **/
+    bool isDesignOutletAirTemperatureAutosized();
 
-  /** Set the DesignOutletAirTemperature field to autosize **/
-  void autosizeDesignOutletAirTemperature();
+    /** Set the DesignOutletAirTemperature field to autosize **/
+    void autosizeDesignOutletAirTemperature();
 
-  /** Returns the value of the DesignInletAirHumidityRatio field. **/
-  boost::optional<double> designInletAirHumidityRatio();
+    /** Returns the value of the DesignInletAirHumidityRatio field. **/
+    boost::optional<double> designInletAirHumidityRatio();
 
-  /** Sets the value of the DesignInletAirHumidityRatio field. **/
-  bool setDesignInletAirHumidityRatio( double value );
+    /** Sets the value of the DesignInletAirHumidityRatio field. **/
+    bool setDesignInletAirHumidityRatio(double value);
 
-  /** Returns true if the DesignInletAirHumidityRatio field is set to autosize **/
-  bool isDesignInletAirHumidityRatioAutosized();
+    /** Returns true if the DesignInletAirHumidityRatio field is set to autosize **/
+    bool isDesignInletAirHumidityRatioAutosized();
 
-  /** Set the DesignInletAirHumidityRatio field to autosize **/
-  void autosizeDesignInletAirHumidityRatio();
+    /** Set the DesignInletAirHumidityRatio field to autosize **/
+    void autosizeDesignInletAirHumidityRatio();
 
-  /** Returns the value of the DesignOutletAirHumidityRatio field. **/
-  boost::optional<double> designOutletAirHumidityRatio();
+    /** Returns the value of the DesignOutletAirHumidityRatio field. **/
+    boost::optional<double> designOutletAirHumidityRatio();
 
-  /** Sets the value of the DesignOutletAirHumidityRatio field. **/
-  bool setDesignOutletAirHumidityRatio( double value );
+    /** Sets the value of the DesignOutletAirHumidityRatio field. **/
+    bool setDesignOutletAirHumidityRatio(double value);
 
-  /** Returns true if the DesignOutletAirHumidityRatio field is set to autosize **/
-  bool isDesignOutletAirHumidityRatioAutosized();
+    /** Returns true if the DesignOutletAirHumidityRatio field is set to autosize **/
+    bool isDesignOutletAirHumidityRatioAutosized();
 
-  /** Set the DesignOutletAirHumidityRatio field to autosize **/
-  void autosizeDesignOutletAirHumidityRatio();
+    /** Set the DesignOutletAirHumidityRatio field to autosize **/
+    void autosizeDesignOutletAirHumidityRatio();
 
-  /** Returns the value of the TypeOfAnalysis field. **/
-  std::string typeOfAnalysis();
+    /** Returns the value of the TypeOfAnalysis field. **/
+    std::string typeOfAnalysis();
 
-  /** Sets the value of the TypeOfAnalysis field.
+    /** Sets the value of the TypeOfAnalysis field.
    *  Options are SimpleAnalysis and DetailedAnalysis
    */
-  bool setTypeOfAnalysis( std::string value );
+    bool setTypeOfAnalysis(std::string value);
 
-  /** Returns the value of the HeatExchangerConfiguration field. **/
-  std::string heatExchangerConfiguration();
+    /** Returns the value of the HeatExchangerConfiguration field. **/
+    std::string heatExchangerConfiguration();
 
-  /** Sets the value of the HeatExchangerConfiguration field.
+    /** Sets the value of the HeatExchangerConfiguration field.
    *  Options are CrossFlow and CounterFlow.
    */
-  bool setHeatExchangerConfiguration( std::string value );
+    bool setHeatExchangerConfiguration(std::string value);
 
-  /** Returns the optional ControllerWaterCoil associated with this coil.
+    /** Returns the optional ControllerWaterCoil associated with this coil.
    */
-  boost::optional<ControllerWaterCoil> controllerWaterCoil();
+    boost::optional<ControllerWaterCoil> controllerWaterCoil();
 
-  /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
-  /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-  boost::optional<double> autosizedDesignAirFlowRate() const ;
+    boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-  boost::optional<double> autosizedDesignInletWaterTemperature() const ;
+    boost::optional<double> autosizedDesignAirFlowRate() const;
 
-  boost::optional<double> autosizedDesignInletAirTemperature() const ;
+    boost::optional<double> autosizedDesignInletWaterTemperature() const;
 
-  boost::optional<double> autosizedDesignOutletAirTemperature() const ;
+    boost::optional<double> autosizedDesignInletAirTemperature() const;
 
-  boost::optional<double> autosizedDesignInletAirHumidityRatio() const ;
+    boost::optional<double> autosizedDesignOutletAirTemperature() const;
 
-  boost::optional<double> autosizedDesignOutletAirHumidityRatio() const ;
+    boost::optional<double> autosizedDesignInletAirHumidityRatio() const;
 
+    boost::optional<double> autosizedDesignOutletAirHumidityRatio() const;
 
+    //@}
+   protected:
+    friend class Model;
 
-  //@}
- protected:
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class openstudio::IdfObject;
+    /// @cond
+    typedef detail::CoilCoolingWater_Impl ImplType;
 
-  friend class openstudio::detail::IdfObject_Impl;
+    explicit CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> impl);
 
-  /// @cond
-  typedef detail::CoilCoolingWater_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 
-  explicit CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> impl);
+    CoilCoolingWater(const Handle& handle, const Model& model);
 
- private:
+    /// @endcond
 
-  REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
+  };  // detail
 
-  CoilCoolingWater(const Handle& handle, const Model& model);
+  typedef boost::optional<CoilCoolingWater> OptionalCoilCoolingWater;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-}; // detail
-
-typedef boost::optional<CoilCoolingWater> OptionalCoilCoolingWater;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGWATER_HPP
+#endif  // MODEL_COILCOOLINGWATER_HPP

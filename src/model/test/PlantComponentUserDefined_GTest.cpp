@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,36 +49,34 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, PlantComponentUserDefined_PlantComponentUserDefined)
-{
+TEST_F(ModelFixture, PlantComponentUserDefined_PlantComponentUserDefined) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     PlantComponentUserDefined boiler(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      PlantComponentUserDefined boiler(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, PlantComponentUserDefined_connections)
-{
+TEST_F(ModelFixture, PlantComponentUserDefined_connections) {
   Model m;
   PlantComponentUserDefined boiler(m);
 
   Node inletNode(m);
   Node outletNode(m);
 
-  m.connect(inletNode,inletNode.outletPort(),boiler,boiler.inletPort());
-  m.connect(boiler,boiler.outletPort(),outletNode,outletNode.inletPort());
+  m.connect(inletNode, inletNode.outletPort(), boiler, boiler.inletPort());
+  m.connect(boiler, boiler.outletPort(), outletNode, outletNode.inletPort());
 
-  ASSERT_TRUE( boiler.inletModelObject() );
-  ASSERT_TRUE( boiler.outletModelObject() );
+  ASSERT_TRUE(boiler.inletModelObject());
+  ASSERT_TRUE(boiler.outletModelObject());
 
-  EXPECT_EQ( inletNode.handle(), boiler.inletModelObject()->handle() );
-  EXPECT_EQ( outletNode.handle(), boiler.outletModelObject()->handle() );
+  EXPECT_EQ(inletNode.handle(), boiler.inletModelObject()->handle());
+  EXPECT_EQ(outletNode.handle(), boiler.outletModelObject()->handle());
 }
 
 TEST_F(ModelFixture, PlantComponentUserDefined_addToNode) {
@@ -90,7 +88,7 @@ TEST_F(ModelFixture, PlantComponentUserDefined_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -182,7 +180,7 @@ TEST_F(ModelFixture, PlantComponentUserDefined_programs) {
   EnergyManagementSystemProgramCallingManager initPCM(m);
   EnergyManagementSystemProgramCallingManager simPCM(m);
   EXPECT_TRUE(b1.setMainModelProgramCallingManager(mainPCM));
-  EXPECT_EQ(mainPCM,b1.mainModelProgramCallingManager());
+  EXPECT_EQ(mainPCM, b1.mainModelProgramCallingManager());
   EXPECT_TRUE(b1.setPlantInitializationProgramCallingManager(initPCM));
   EXPECT_EQ(initPCM, b1.plantInitializationProgramCallingManager());
   EXPECT_TRUE(b1.setPlantSimulationProgramCallingManager(simPCM));
@@ -214,7 +212,7 @@ TEST_F(ModelFixture, PlantComponentUserDefined_constructor) {
   PlantLoop plant(m);
   PlantComponentUserDefined b1(m);
 
-  EXPECT_EQ("MeetsLoadWithNominalCapacityHiOutLimit",b1.plantLoadingMode());
+  EXPECT_EQ("MeetsLoadWithNominalCapacityHiOutLimit", b1.plantLoadingMode());
   EXPECT_EQ("NeedsFlowIfLoopOn", b1.plantLoopFlowRequestMode());
   EXPECT_FALSE(b1.setPlantLoopFlowRequestMode("bad value"));
   EXPECT_FALSE(b1.setPlantLoadingMode("bad value"));
@@ -235,6 +233,5 @@ TEST_F(ModelFixture, PlantComponentUserDefined_constructor) {
   EXPECT_TRUE(b1.massFlowRateActuator());
 
   EXPECT_TRUE(b1.designVolumeFlowRateActuator().get().actuatedComponent());
-  EXPECT_EQ(b1.handle(),b1.designVolumeFlowRateActuator().get().actuatedComponent().get().handle());
-
+  EXPECT_EQ(b1.handle(), b1.designVolumeFlowRateActuator().get().actuatedComponent().get().handle());
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,22 +40,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerSingleZoneOneStageHeating testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerSingleZoneOneStageHeating testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -77,7 +75,8 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSingleZoneOneStageHeatings = m.getModelObjects<SetpointManagerSingleZoneOneStageHeating>();
+  std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSingleZoneOneStageHeatings =
+    m.getModelObjects<SetpointManagerSingleZoneOneStageHeating>();
   EXPECT_EQ(3, SetpointManagerSingleZoneOneStageHeatings.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode());
@@ -91,8 +90,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_addToNode)
   EXPECT_EQ(2, SetpointManagerSingleZoneOneStageHeatings.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_remove)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -104,7 +102,8 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSingleZoneOneStageHeatings = m.getModelObjects<SetpointManagerSingleZoneOneStageHeating>();
+  std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSingleZoneOneStageHeatings =
+    m.getModelObjects<SetpointManagerSingleZoneOneStageHeating>();
   EXPECT_EQ(1, SetpointManagerSingleZoneOneStageHeatings.size());
 
   spm.remove();
@@ -115,8 +114,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_remove)
   EXPECT_EQ(0, SetpointManagerSingleZoneOneStageHeatings.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_clone)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -138,8 +136,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_clone)
   EXPECT_EQ(99.0, testObjectClone.heatingStageOnSupplyAirSetpointTemperature());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_cloneTwoAirloop)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_cloneTwoAirloop) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -178,8 +175,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_cloneTwoAirloop)
   EXPECT_NE(testObject.controlZone().get(), testObjectClone.controlZone().get());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,87 +36,81 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** ElectricLoadCenterInverterSimple_Impl is a Inverter_Impl that is the implementation class for ElectricLoadCenterInverterSimple.*/
-  class MODEL_API ElectricLoadCenterInverterSimple_Impl : public Inverter_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ElectricLoadCenterInverterSimple_Impl is a Inverter_Impl that is the implementation class for ElectricLoadCenterInverterSimple.*/
+    class MODEL_API ElectricLoadCenterInverterSimple_Impl : public Inverter_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ElectricLoadCenterInverterSimple_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      ElectricLoadCenterInverterSimple_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterInverterSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      ElectricLoadCenterInverterSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterInverterSimple_Impl(const ElectricLoadCenterInverterSimple_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      ElectricLoadCenterInverterSimple_Impl(const ElectricLoadCenterInverterSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ElectricLoadCenterInverterSimple_Impl() {}
+      virtual ~ElectricLoadCenterInverterSimple_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    virtual boost::optional<ThermalZone> thermalZone() const override;
+      virtual boost::optional<ThermalZone> thermalZone() const override;
 
-    boost::optional<double> radiativeFraction() const;
+      boost::optional<double> radiativeFraction() const;
 
-    boost::optional<double> inverterEfficiency() const;
+      boost::optional<double> inverterEfficiency() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    virtual bool setThermalZone(const ThermalZone& thermalZone) override;
+      virtual bool setThermalZone(const ThermalZone& thermalZone) override;
 
-    virtual void resetThermalZone() override;
+      virtual void resetThermalZone() override;
 
-    bool setRadiativeFraction(boost::optional<double> radiativeFraction);
+      bool setRadiativeFraction(boost::optional<double> radiativeFraction);
 
-    void resetRadiativeFraction();
+      void resetRadiativeFraction();
 
-    bool setInverterEfficiency(boost::optional<double> inverterEfficiency);
+      bool setInverterEfficiency(boost::optional<double> inverterEfficiency);
 
-    void resetInverterEfficiency();
+      void resetInverterEfficiency();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterSimple");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterSimple");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERINVERTERSIMPLE_IMPL_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERINVERTERSIMPLE_IMPL_HPP

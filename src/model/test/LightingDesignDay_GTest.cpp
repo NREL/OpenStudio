@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,12 +43,12 @@ TEST_F(ModelFixture, LightingDesignDay) {
   EXPECT_EQ("Clear", lightingDesignDay.cieSkyModel());
   EXPECT_EQ(Date(MonthOfYear::Dec, 21), lightingDesignDay.date());
   EXPECT_EQ(0u, lightingDesignDay.simulationTimes().size());
-  EXPECT_FALSE(lightingDesignDay.addSimulationTime(Time(1,9,0)));
-  EXPECT_FALSE(lightingDesignDay.addSimulationTime(Time(0,-9,0)));
+  EXPECT_FALSE(lightingDesignDay.addSimulationTime(Time(1, 9, 0)));
+  EXPECT_FALSE(lightingDesignDay.addSimulationTime(Time(0, -9, 0)));
   EXPECT_EQ(0u, lightingDesignDay.simulationTimes().size());
-  EXPECT_TRUE(lightingDesignDay.addSimulationTime(Time(0,9,0)));
-  EXPECT_TRUE(lightingDesignDay.addSimulationTime(Time(0,12,0)));
-  EXPECT_TRUE(lightingDesignDay.addSimulationTime(Time(0,15,0)));
+  EXPECT_TRUE(lightingDesignDay.addSimulationTime(Time(0, 9, 0)));
+  EXPECT_TRUE(lightingDesignDay.addSimulationTime(Time(0, 12, 0)));
+  EXPECT_TRUE(lightingDesignDay.addSimulationTime(Time(0, 15, 0)));
   EXPECT_EQ(3u, lightingDesignDay.simulationTimes().size());
   EXPECT_EQ(3u, lightingDesignDay.simulationDateTimes().size());
 }

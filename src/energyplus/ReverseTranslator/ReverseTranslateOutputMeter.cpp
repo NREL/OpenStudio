@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,28 +40,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOutputMeter( const WorkspaceObject & workspaceObject )
-{
-  openstudio::model::OutputMeter meter( m_model );
+  OptionalModelObject ReverseTranslator::translateOutputMeter(const WorkspaceObject& workspaceObject) {
+    openstudio::model::OutputMeter meter(m_model);
 
-  OptionalString s = workspaceObject.getString(Output_MeterFields::KeyName);
-  if(s){
-    meter.setName(*s);
+    OptionalString s = workspaceObject.getString(Output_MeterFields::KeyName);
+    if (s) {
+      meter.setName(*s);
+    }
+
+    s = workspaceObject.getString(Output_MeterFields::ReportingFrequency);
+    if (s) {
+      meter.setReportingFrequency(*s);
+    }
+
+    meter.setMeterFileOnly(false);
+
+    meter.setCumulative(false);
+
+    return meter;
   }
 
-  s = workspaceObject.getString(Output_MeterFields::ReportingFrequency);
-  if(s){
-    meter.setReportingFrequency(*s);
-  }
+}  // namespace energyplus
 
-  meter.setMeterFileOnly(false);
-
-  meter.setCumulative(false);
-
-  return meter;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

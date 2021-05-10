@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,48 +46,45 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateZoneList( const WorkspaceObject & workspaceObject )
-{
-   if( workspaceObject.iddObject().type() != IddObjectType::ZoneList ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: ZoneList");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateZoneList(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::ZoneList) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: ZoneList");
+      return boost::none;
+    }
 
-  openstudio::model::SpaceType spaceType( m_model );
+    openstudio::model::SpaceType spaceType(m_model);
 
-  OptionalString s = workspaceObject.name();
-  if(s){
-    spaceType.setName(*s);
-  }
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      spaceType.setName(*s);
+    }
 
-  // Note that this is coarse: it will create a space type for each Zonelist it finds, but if a zone is referenced by multiple zonelists,
-  // its spaces will end up with a spacetype corresponding to the last Zonelist it found that references it.
-  // You'll get a warning that the previous SpaceType was overwritten though
-  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+    // Note that this is coarse: it will create a space type for each Zonelist it finds, but if a zone is referenced by multiple zonelists,
+    // its spaces will end up with a spacetype corresponding to the last Zonelist it found that references it.
+    // You'll get a warning that the previous SpaceType was overwritten though
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
-    OptionalWorkspaceObject target = workspaceGroup.getTarget(0);
-    if (target){
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject){
-        if (modelObject->optionalCast<Space>()){
-          Space space = modelObject->cast<Space>();
+      OptionalWorkspaceObject target = workspaceGroup.getTarget(0);
+      if (target) {
+        OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+        if (modelObject) {
+          if (modelObject->optionalCast<Space>()) {
+            Space space = modelObject->cast<Space>();
 
-          if (space.spaceType()){
-            LOG(Warn, "Overriding previously assigned SpaceType for Space '" << space.name().get() << "'");
+            if (space.spaceType()) {
+              LOG(Warn, "Overriding previously assigned SpaceType for Space '" << space.name().get() << "'");
+            }
+
+            space.setSpaceType(spaceType);
           }
-
-          space.setSpaceType(spaceType);
-
         }
       }
     }
+
+    return spaceType;
   }
 
-  return spaceType;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

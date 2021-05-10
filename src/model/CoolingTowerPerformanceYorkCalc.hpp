@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,204 +37,205 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CoolingTowerPerformanceYorkCalc_Impl;
+    class CoolingTowerPerformanceYorkCalc_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoolingTowerPerformanceYorkCalc is a ModelObject that wraps the OpenStudio IDD object 'OS:CoolingTowerPerformance:YorkCalc'. */
-class MODEL_API CoolingTowerPerformanceYorkCalc : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoolingTowerPerformanceYorkCalc is a ModelObject that wraps the OpenStudio IDD object 'OS:CoolingTowerPerformance:YorkCalc'. */
+  class MODEL_API CoolingTowerPerformanceYorkCalc : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoolingTowerPerformanceYorkCalc(const Model& model);
+    explicit CoolingTowerPerformanceYorkCalc(const Model& model);
 
-  virtual ~CoolingTowerPerformanceYorkCalc() {}
+    virtual ~CoolingTowerPerformanceYorkCalc() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double minimumInletAirWetBulbTemperature() const;
+    double minimumInletAirWetBulbTemperature() const;
 
-  double maximumInletAirWetBulbTemperature() const;
+    double maximumInletAirWetBulbTemperature() const;
 
-  double minimumRangeTemperature() const;
+    double minimumRangeTemperature() const;
 
-  double maximumRangeTemperature() const;
+    double maximumRangeTemperature() const;
 
-  double minimumApproachTemperature() const;
+    double minimumApproachTemperature() const;
 
-  double maximumApproachTemperature() const;
+    double maximumApproachTemperature() const;
 
-  double minimumWaterFlowRateRatio() const;
+    double minimumWaterFlowRateRatio() const;
 
-  double maximumWaterFlowRateRatio() const;
+    double maximumWaterFlowRateRatio() const;
 
-  double maximumLiquidtoGasRatio() const;
+    double maximumLiquidtoGasRatio() const;
 
-  double coefficient1() const;
+    double coefficient1() const;
 
-  double coefficient2() const;
+    double coefficient2() const;
 
-  double coefficient3() const;
+    double coefficient3() const;
 
-  double coefficient4() const;
+    double coefficient4() const;
 
-  double coefficient5() const;
+    double coefficient5() const;
 
-  double coefficient6() const;
+    double coefficient6() const;
 
-  double coefficient7() const;
+    double coefficient7() const;
 
-  double coefficient8() const;
+    double coefficient8() const;
 
-  double coefficient9() const;
+    double coefficient9() const;
 
-  double coefficient10() const;
+    double coefficient10() const;
 
-  double coefficient11() const;
+    double coefficient11() const;
 
-  double coefficient12() const;
+    double coefficient12() const;
 
-  double coefficient13() const;
+    double coefficient13() const;
 
-  double coefficient14() const;
+    double coefficient14() const;
 
-  double coefficient15() const;
+    double coefficient15() const;
 
-  double coefficient16() const;
+    double coefficient16() const;
 
-  double coefficient17() const;
+    double coefficient17() const;
 
-  double coefficient18() const;
+    double coefficient18() const;
 
-  double coefficient19() const;
+    double coefficient19() const;
 
-  double coefficient20() const;
+    double coefficient20() const;
 
-  double coefficient21() const;
+    double coefficient21() const;
 
-  double coefficient22() const;
+    double coefficient22() const;
 
-  double coefficient23() const;
+    double coefficient23() const;
 
-  double coefficient24() const;
+    double coefficient24() const;
 
-  double coefficient25() const;
+    double coefficient25() const;
 
-  double coefficient26() const;
+    double coefficient26() const;
 
-  double coefficient27() const;
+    double coefficient27() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature);
+    bool setMinimumInletAirWetBulbTemperature(double minimumInletAirWetBulbTemperature);
 
-  bool setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature);
+    bool setMaximumInletAirWetBulbTemperature(double maximumInletAirWetBulbTemperature);
 
-  bool setMinimumRangeTemperature(double minimumRangeTemperature);
+    bool setMinimumRangeTemperature(double minimumRangeTemperature);
 
-  bool setMaximumRangeTemperature(double maximumRangeTemperature);
+    bool setMaximumRangeTemperature(double maximumRangeTemperature);
 
-  bool setMinimumApproachTemperature(double minimumApproachTemperature);
+    bool setMinimumApproachTemperature(double minimumApproachTemperature);
 
-  bool setMaximumApproachTemperature(double maximumApproachTemperature);
+    bool setMaximumApproachTemperature(double maximumApproachTemperature);
 
-  bool setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio);
+    bool setMinimumWaterFlowRateRatio(double minimumWaterFlowRateRatio);
 
-  bool setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio);
+    bool setMaximumWaterFlowRateRatio(double maximumWaterFlowRateRatio);
 
-  bool setMaximumLiquidtoGasRatio(double maximumLiquidtoGasRatio);
+    bool setMaximumLiquidtoGasRatio(double maximumLiquidtoGasRatio);
 
-  bool setCoefficient1(double coefficient1);
+    bool setCoefficient1(double coefficient1);
 
-  bool setCoefficient2(double coefficient2);
+    bool setCoefficient2(double coefficient2);
 
-  bool setCoefficient3(double coefficient3);
+    bool setCoefficient3(double coefficient3);
 
-  bool setCoefficient4(double coefficient4);
+    bool setCoefficient4(double coefficient4);
 
-  bool setCoefficient5(double coefficient5);
+    bool setCoefficient5(double coefficient5);
 
-  bool setCoefficient6(double coefficient6);
+    bool setCoefficient6(double coefficient6);
 
-  bool setCoefficient7(double coefficient7);
+    bool setCoefficient7(double coefficient7);
 
-  bool setCoefficient8(double coefficient8);
+    bool setCoefficient8(double coefficient8);
 
-  bool setCoefficient9(double coefficient9);
+    bool setCoefficient9(double coefficient9);
 
-  bool setCoefficient10(double coefficient10);
+    bool setCoefficient10(double coefficient10);
 
-  bool setCoefficient11(double coefficient11);
+    bool setCoefficient11(double coefficient11);
 
-  bool setCoefficient12(double coefficient12);
+    bool setCoefficient12(double coefficient12);
 
-  bool setCoefficient13(double coefficient13);
+    bool setCoefficient13(double coefficient13);
 
-  bool setCoefficient14(double coefficient14);
+    bool setCoefficient14(double coefficient14);
 
-  bool setCoefficient15(double coefficient15);
+    bool setCoefficient15(double coefficient15);
 
-  bool setCoefficient16(double coefficient16);
+    bool setCoefficient16(double coefficient16);
 
-  bool setCoefficient17(double coefficient17);
+    bool setCoefficient17(double coefficient17);
 
-  bool setCoefficient18(double coefficient18);
+    bool setCoefficient18(double coefficient18);
 
-  bool setCoefficient19(double coefficient19);
+    bool setCoefficient19(double coefficient19);
 
-  bool setCoefficient20(double coefficient20);
+    bool setCoefficient20(double coefficient20);
 
-  bool setCoefficient21(double coefficient21);
+    bool setCoefficient21(double coefficient21);
 
-  bool setCoefficient22(double coefficient22);
+    bool setCoefficient22(double coefficient22);
 
-  bool setCoefficient23(double coefficient23);
+    bool setCoefficient23(double coefficient23);
 
-  bool setCoefficient24(double coefficient24);
+    bool setCoefficient24(double coefficient24);
 
-  bool setCoefficient25(double coefficient25);
+    bool setCoefficient25(double coefficient25);
 
-  bool setCoefficient26(double coefficient26);
+    bool setCoefficient26(double coefficient26);
 
-  bool setCoefficient27(double coefficient27);
+    bool setCoefficient27(double coefficient27);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoolingTowerPerformanceYorkCalc_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoolingTowerPerformanceYorkCalc_Impl ImplType;
 
-  explicit CoolingTowerPerformanceYorkCalc(std::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl);
+    explicit CoolingTowerPerformanceYorkCalc(std::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl);
 
-  friend class detail::CoolingTowerPerformanceYorkCalc_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoolingTowerPerformanceYorkCalc");
-};
+    friend class detail::CoolingTowerPerformanceYorkCalc_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoolingTowerPerformanceYorkCalc");
+  };
 
-/** \relates CoolingTowerPerformanceYorkCalc*/
-typedef boost::optional<CoolingTowerPerformanceYorkCalc> OptionalCoolingTowerPerformanceYorkCalc;
+  /** \relates CoolingTowerPerformanceYorkCalc*/
+  typedef boost::optional<CoolingTowerPerformanceYorkCalc> OptionalCoolingTowerPerformanceYorkCalc;
 
-/** \relates CoolingTowerPerformanceYorkCalc*/
-typedef std::vector<CoolingTowerPerformanceYorkCalc> CoolingTowerPerformanceYorkCalcVector;
+  /** \relates CoolingTowerPerformanceYorkCalc*/
+  typedef std::vector<CoolingTowerPerformanceYorkCalc> CoolingTowerPerformanceYorkCalcVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COOLINGTOWERPERFORMANCEYORKCALC_HPP
+#endif  // MODEL_COOLINGTOWERPERFORMANCEYORKCALC_HPP

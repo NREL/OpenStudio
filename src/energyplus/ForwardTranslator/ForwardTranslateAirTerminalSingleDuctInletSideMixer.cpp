@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,80 +51,73 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInletSideMixer( AirTerminalSingleDuctInletSideMixer & modelObject )
-{
-  OptionalModelObject temp;
-  OptionalString optS;
-  boost::optional<std::string> s;
+  boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctInletSideMixer(AirTerminalSingleDuctInletSideMixer& modelObject) {
+    OptionalModelObject temp;
+    OptionalString optS;
+    boost::optional<std::string> s;
 
-  std::string baseName = modelObject.name().get();
+    std::string baseName = modelObject.name().get();
 
-  IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
-  _airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
+    IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
+    _airDistributionUnit.setName("ADU " + baseName);  //ADU: Air Distribution Unit
 
-  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_Mixer);
+    IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_Mixer);
 
-  idfObject.setName(baseName);
+    idfObject.setName(baseName);
 
-  m_idfObjects.push_back(_airDistributionUnit);
+    m_idfObjects.push_back(_airDistributionUnit);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  boost::optional<std::string> inletNodeName;
-  boost::optional<std::string> outletNodeName;
+    boost::optional<std::string> inletNodeName;
+    boost::optional<std::string> outletNodeName;
 
-  if( boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject() )
-  {
-    if( boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>() )
-    {
-      inletNodeName = inletNode->name().get();
-    }
-  }
-
-  if( boost::optional<ModelObject> outletModelObject = modelObject.outletModelObject() )
-  {
-    if( boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>() )
-    {
-      outletNodeName = outletNode->name().get();
-    }
-  }
-
-  if( outletNodeName && inletNodeName )
-  {
-    idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerOutletNodeName,outletNodeName.get());
-    idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerPrimaryAirInletNodeName,inletNodeName.get());
-  }
-
-  if( boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC() ) {
-    std::vector<ZoneHVACComponent> zoneHVACs = subsetCastVector<ZoneHVACComponent>(airLoopHVAC->demandComponents(modelObject,airLoopHVAC->demandOutletNode()));
-    if( ! zoneHVACs.empty() ) {
-      ZoneHVACComponent zoneHVAC = zoneHVACs.front();
-      if( boost::optional<IdfObject> _zoneHVAC= translateAndMapModelObject(zoneHVAC) ) {
-        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACUnitObjectType,_zoneHVAC->iddObject().name());
-        idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACUnitObjectName,_zoneHVAC->name().get());
+    if (boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject()) {
+      if (boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>()) {
+        inletNodeName = inletNode->name().get();
       }
     }
+
+    if (boost::optional<ModelObject> outletModelObject = modelObject.outletModelObject()) {
+      if (boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>()) {
+        outletNodeName = outletNode->name().get();
+      }
+    }
+
+    if (outletNodeName && inletNodeName) {
+      idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerOutletNodeName, outletNodeName.get());
+      idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerPrimaryAirInletNodeName, inletNodeName.get());
+    }
+
+    if (boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC()) {
+      std::vector<ZoneHVACComponent> zoneHVACs =
+        subsetCastVector<ZoneHVACComponent>(airLoopHVAC->demandComponents(modelObject, airLoopHVAC->demandOutletNode()));
+      if (!zoneHVACs.empty()) {
+        ZoneHVACComponent zoneHVAC = zoneHVACs.front();
+        if (boost::optional<IdfObject> _zoneHVAC = translateAndMapModelObject(zoneHVAC)) {
+          idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACUnitObjectType, _zoneHVAC->iddObject().name());
+          idfObject.setString(AirTerminal_SingleDuct_MixerFields::ZoneHVACUnitObjectName, _zoneHVAC->name().get());
+        }
+      }
+    }
+
+    idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerConnectionType, "InletSide");
+
+    // TerminalUnitSecondaryAirInletNodeName
+    if (boost::optional<Node> secondaryInletNode = modelObject.secondaryAirInletNode()) {
+      idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerSecondaryAirInletNodeName, secondaryInletNode->name().get());
+    }
+
+    // Populate fields for AirDistributionUnit
+    if (boost::optional<ModelObject> outletNode = modelObject.outletModelObject()) {
+      _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName, outletNode->name().get());
+    }
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType, idfObject.iddObject().name());
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName, idfObject.name().get());
+
+    return _airDistributionUnit;
   }
 
-  idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerConnectionType,"InletSide");
+}  // namespace energyplus
 
-  // TerminalUnitSecondaryAirInletNodeName
-  if( boost::optional<Node> secondaryInletNode = modelObject.secondaryAirInletNode() ) {
-    idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerSecondaryAirInletNodeName,secondaryInletNode->name().get());
-  }
-
-  // Populate fields for AirDistributionUnit
-  if( boost::optional<ModelObject> outletNode = modelObject.outletModelObject() )
-  {
-    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName,outletNode->name().get());
-  }
-  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType,idfObject.iddObject().name());
-  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName,idfObject.name().get());
-
-  return _airDistributionUnit;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

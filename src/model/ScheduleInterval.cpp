@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,91 +57,74 @@ using openstudio::Workspace;
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ScheduleInterval_Impl::ScheduleInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : Schedule_Impl(idfObject, model, keepHandle)
-  {}
+    ScheduleInterval_Impl::ScheduleInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(idfObject, model, keepHandle) {}
 
-  ScheduleInterval_Impl::ScheduleInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : Schedule_Impl(other,model,keepHandle)
-  {}
+    ScheduleInterval_Impl::ScheduleInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(other, model, keepHandle) {}
 
-  ScheduleInterval_Impl::ScheduleInterval_Impl(const ScheduleInterval_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : Schedule_Impl(other,model,keepHandle)
-  {}
+    ScheduleInterval_Impl::ScheduleInterval_Impl(const ScheduleInterval_Impl& other, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(other, model, keepHandle) {}
 
-  // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& ScheduleInterval_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& ScheduleInterval_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> ScheduleInterval_Impl::parent() const {
+      return boost::optional<ParentObject>();
+    }
+
+    // return any children objects in the hierarchy
+    std::vector<ModelObject> ScheduleInterval_Impl::children() const {
+      std::vector<ModelObject> result;
+      return result;
+    }
+
+    std::vector<double> ScheduleInterval_Impl::values() const {
+      return toStandardVector(timeSeries().values());
+    }
+
+  }  // namespace detail
+
+  boost::optional<ScheduleInterval> ScheduleInterval::fromTimeSeries(const openstudio::TimeSeries& timeSeries, Model& model) {
+    boost::optional<ScheduleInterval> result;
+    if (timeSeries.intervalLength()) {
+      result = ScheduleFixedInterval(model);
+      if (!result->setTimeSeries(timeSeries)) {
+        result->remove();
+        return boost::optional<ScheduleInterval>();
+      }
+    } else {
+      result = ScheduleVariableInterval(model);
+      if (!result->setTimeSeries(timeSeries)) {
+        result->remove();
+        return boost::optional<ScheduleInterval>();
+      }
+    }
     return result;
   }
 
-  // return the parent object in the hierarchy
-  boost::optional<ParentObject> ScheduleInterval_Impl::parent() const
-  {
-    return boost::optional<ParentObject>();
+  openstudio::TimeSeries ScheduleInterval::timeSeries() const {
+    return getImpl<detail::ScheduleInterval_Impl>()->timeSeries();
   }
 
-  // return any children objects in the hierarchy
-  std::vector<ModelObject> ScheduleInterval_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    return result;
+  bool ScheduleInterval::setTimeSeries(const openstudio::TimeSeries& timeSeries) {
+    return getImpl<detail::ScheduleInterval_Impl>()->setTimeSeries(timeSeries);
   }
 
-  std::vector<double> ScheduleInterval_Impl::values() const {
-    return toStandardVector(timeSeries().values());
+  // constructor
+  ScheduleInterval::ScheduleInterval(IddObjectType type, const Model& model) : Schedule(type, model) {
+    OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
   }
 
-} // detail
-
-boost::optional<ScheduleInterval> ScheduleInterval::fromTimeSeries(const openstudio::TimeSeries& timeSeries, Model& model)
-{
-  boost::optional<ScheduleInterval> result;
-  if (timeSeries.intervalLength()){
-    result = ScheduleFixedInterval(model);
-    if(!result->setTimeSeries(timeSeries)){
-      result->remove();
-      return boost::optional<ScheduleInterval>();
-    }
-  }else{
-    result = ScheduleVariableInterval(model);
-    if(!result->setTimeSeries(timeSeries)){
-      result->remove();
-      return boost::optional<ScheduleInterval>();
-    }
+  ScheduleInterval::ScheduleInterval(std::shared_ptr<detail::ScheduleInterval_Impl> impl) : Schedule(std::move(impl)) {
+    OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
   }
-  return result;
-}
 
-openstudio::TimeSeries ScheduleInterval::timeSeries() const
-{
-  return getImpl<detail::ScheduleInterval_Impl>()->timeSeries();
-}
-
-bool ScheduleInterval::setTimeSeries(const openstudio::TimeSeries& timeSeries)
-{
-  return getImpl<detail::ScheduleInterval_Impl>()->setTimeSeries(timeSeries);
-}
-
-// constructor
-ScheduleInterval::ScheduleInterval(IddObjectType type,const Model& model)
-  : Schedule(type,model)
-{
-  OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
-}
-
-ScheduleInterval::ScheduleInterval(std::shared_ptr<detail::ScheduleInterval_Impl> impl)
-  : Schedule(std::move(impl))
-{
-  OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

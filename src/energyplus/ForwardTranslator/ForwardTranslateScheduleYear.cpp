@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,55 +56,52 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateScheduleYear( ScheduleYear & modelObject )
-{
-  IdfObject scheduleYear = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Year,
-                                                          modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateScheduleYear(ScheduleYear& modelObject) {
+    IdfObject scheduleYear = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Year, modelObject);
 
-  std::vector<ScheduleWeek> scheduleWeeks = modelObject.scheduleWeeks();
-  std::vector<openstudio::Date> dates = modelObject.dates();
+    std::vector<ScheduleWeek> scheduleWeeks = modelObject.scheduleWeeks();
+    std::vector<openstudio::Date> dates = modelObject.dates();
 
-  unsigned N = scheduleWeeks.size();
+    unsigned N = scheduleWeeks.size();
 
-  if( N != dates.size() )
-  {
-    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because the number of week schedules does not match the number of dates.");
+    if (N != dates.size()) {
+      LOG(Error,
+          "Could not translate " << modelObject.briefDescription() << ", because the number of week schedules does not match the number of dates.");
 
-    return boost::none;
-  }
-
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
-  if (scheduleTypeLimits){
-    boost::optional<IdfObject> idfScheduleTypeLimits = translateAndMapModelObject(*scheduleTypeLimits);
-    if (idfScheduleTypeLimits){
-      scheduleYear.setString(Schedule_YearFields::ScheduleTypeLimitsName, idfScheduleTypeLimits->name().get());
-    }
-  }
-
-  openstudio::Date startDate(MonthOfYear::Jan, 1);
-
-  scheduleYear.clearExtensibleGroups();
-
-  for (unsigned i = 0; i < N; ++i){
-    IdfExtensibleGroup group = scheduleYear.pushExtensibleGroup();
-
-    boost::optional<IdfObject> idfScheduleWeek = translateAndMapModelObject(scheduleWeeks[i]);
-    if (idfScheduleWeek){
-      group.setString(Schedule_YearExtensibleFields::Schedule_WeekName, idfScheduleWeek->name().get());
+      return boost::none;
     }
 
-    group.setInt(Schedule_YearExtensibleFields::StartMonth, startDate.monthOfYear().value());
-    group.setUnsigned(Schedule_YearExtensibleFields::StartDay, startDate.dayOfMonth());
-    group.setInt(Schedule_YearExtensibleFields::EndMonth, dates[i].monthOfYear().value());
-    group.setUnsigned(Schedule_YearExtensibleFields::EndDay, dates[i].dayOfMonth());
+    boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
+    if (scheduleTypeLimits) {
+      boost::optional<IdfObject> idfScheduleTypeLimits = translateAndMapModelObject(*scheduleTypeLimits);
+      if (idfScheduleTypeLimits) {
+        scheduleYear.setString(Schedule_YearFields::ScheduleTypeLimitsName, idfScheduleTypeLimits->name().get());
+      }
+    }
 
-    startDate = dates[i] + openstudio::Time(1,0,0);
+    openstudio::Date startDate(MonthOfYear::Jan, 1);
+
+    scheduleYear.clearExtensibleGroups();
+
+    for (unsigned i = 0; i < N; ++i) {
+      IdfExtensibleGroup group = scheduleYear.pushExtensibleGroup();
+
+      boost::optional<IdfObject> idfScheduleWeek = translateAndMapModelObject(scheduleWeeks[i]);
+      if (idfScheduleWeek) {
+        group.setString(Schedule_YearExtensibleFields::Schedule_WeekName, idfScheduleWeek->name().get());
+      }
+
+      group.setInt(Schedule_YearExtensibleFields::StartMonth, startDate.monthOfYear().value());
+      group.setUnsigned(Schedule_YearExtensibleFields::StartDay, startDate.dayOfMonth());
+      group.setInt(Schedule_YearExtensibleFields::EndMonth, dates[i].monthOfYear().value());
+      group.setUnsigned(Schedule_YearExtensibleFields::EndDay, dates[i].dayOfMonth());
+
+      startDate = dates[i] + openstudio::Time(1, 0, 0);
+    }
+
+    return scheduleYear;
   }
 
-  return scheduleYear;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

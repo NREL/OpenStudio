@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,8 +37,8 @@
 using namespace openstudio;
 
 // Test in context of Workspace, since order needs objectGetter.
-TEST_F(IdfFixture,WorkspaceObjectOrder) {
-  Workspace workspace(IdfFixture::epIdfFile,openstudio::StrictnessLevel::Draft);
+TEST_F(IdfFixture, WorkspaceObjectOrder) {
+  Workspace workspace(IdfFixture::epIdfFile, openstudio::StrictnessLevel::Draft);
 
   WorkspaceObjectOrder wsOrder = workspace.order();
 
@@ -51,9 +51,9 @@ TEST_F(IdfFixture,WorkspaceObjectOrder) {
   // order by enum
   wsOrder.setOrderByIddEnum();
   WorkspaceObjectVector objects = workspace.objects(true);
-  for (WorkspaceObjectVector::const_iterator it = objects.begin(), itEnd = objects.end() - 1;
-       it != itEnd; ++ it) {
-    auto nxt = it; ++nxt;
+  for (WorkspaceObjectVector::const_iterator it = objects.begin(), itEnd = objects.end() - 1; it != itEnd; ++it) {
+    auto nxt = it;
+    ++nxt;
     EXPECT_TRUE(it->iddObject().type() <= nxt->iddObject().type());
   }
 
@@ -62,26 +62,26 @@ TEST_F(IdfFixture,WorkspaceObjectOrder) {
   HandleVector handles = workspace.handles(true);
   // handles does not include version object, while direct order does
   HandleVector tempOrder = *workspaceOrder;
-  auto it = std::find(tempOrder.begin(),tempOrder.end(),workspace.versionObject()->handle());
+  auto it = std::find(tempOrder.begin(), tempOrder.end(), workspace.versionObject()->handle());
   tempOrder.erase(it);
   EXPECT_TRUE(tempOrder == handles);
 
   // move objects directly
-  wsOrder.insert(handles[32],handles[12]);
+  wsOrder.insert(handles[32], handles[12]);
   HandleVector newOrder = workspace.handles(true);
-  EXPECT_EQ(handles.size(),newOrder.size());
+  EXPECT_EQ(handles.size(), newOrder.size());
   EXPECT_TRUE(handles[32] == newOrder[12]);
   EXPECT_TRUE(handles[12] == newOrder[13]);
 
-  wsOrder.swap(handles[80],handles[100]);
+  wsOrder.swap(handles[80], handles[100]);
   newOrder = workspace.handles(true);
-  EXPECT_EQ(handles.size(),newOrder.size());
+  EXPECT_EQ(handles.size(), newOrder.size());
   EXPECT_TRUE(handles[80] == newOrder[100]);
   EXPECT_TRUE(handles[100] == newOrder[80]);
 }
 
-TEST_F(IdfFixture,WorkspaceObjectOrder_ByIddObjectType) {
-  Workspace workspace(IdfFixture::epIdfFile,openstudio::StrictnessLevel::Draft);
+TEST_F(IdfFixture, WorkspaceObjectOrder_ByIddObjectType) {
+  Workspace workspace(IdfFixture::epIdfFile, openstudio::StrictnessLevel::Draft);
   WorkspaceObjectVector objectsInOriginalOrder = workspace.objects(true);
 
   WorkspaceObjectOrder wsOrder = workspace.order();
@@ -92,7 +92,7 @@ TEST_F(IdfFixture,WorkspaceObjectOrder_ByIddObjectType) {
   }
   wsOrder.setIddOrder(orderByType);
   WorkspaceObjectVector objectsInNewOrder = workspace.objects(true);
-  EXPECT_EQ(objectsInOriginalOrder.size(),objectsInNewOrder.size());
+  EXPECT_EQ(objectsInOriginalOrder.size(), objectsInNewOrder.size());
   EXPECT_FALSE(objectsInOriginalOrder == objectsInNewOrder);
 
   // expect Materials before Constructions
@@ -108,11 +108,13 @@ TEST_F(IdfFixture,WorkspaceObjectOrder_ByIddObjectType) {
     if (!oConstruction && (object.iddObject().type() == IddObjectType::Construction)) {
       oConstruction = object;
     }
-    if (oMaterial && oConstruction) { break; }
+    if (oMaterial && oConstruction) {
+      break;
+    }
   }
 
   // change to Constructions before Materials
-  wsOrder.move(IddObjectType::Construction,IddObjectType::Material);
+  wsOrder.move(IddObjectType::Construction, IddObjectType::Material);
   objectsInNewOrder = workspace.objects(true);
   oMaterial = boost::none;
   oConstruction = boost::none;
@@ -124,7 +126,8 @@ TEST_F(IdfFixture,WorkspaceObjectOrder_ByIddObjectType) {
       oConstruction = object;
       EXPECT_FALSE(oMaterial);
     }
-    if (oMaterial && oConstruction) { break; }
+    if (oMaterial && oConstruction) {
+      break;
+    }
   }
-
 }

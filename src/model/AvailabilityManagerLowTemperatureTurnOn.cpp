@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,108 +40,97 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  AvailabilityManagerLowTemperatureTurnOn_Impl::AvailabilityManagerLowTemperatureTurnOn_Impl(const IdfObject& idfObject,
-                                                                                               Model_Impl* model,
+    AvailabilityManagerLowTemperatureTurnOn_Impl::AvailabilityManagerLowTemperatureTurnOn_Impl(const IdfObject& idfObject, Model_Impl* model,
                                                                                                bool keepHandle)
-    : AvailabilityManager_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerLowTemperatureTurnOn::iddObjectType());
+      : AvailabilityManager_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerLowTemperatureTurnOn::iddObjectType());
+    }
+
+    AvailabilityManagerLowTemperatureTurnOn_Impl::AvailabilityManagerLowTemperatureTurnOn_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                               Model_Impl* model, bool keepHandle)
+      : AvailabilityManager_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == AvailabilityManagerLowTemperatureTurnOn::iddObjectType());
+    }
+
+    AvailabilityManagerLowTemperatureTurnOn_Impl::AvailabilityManagerLowTemperatureTurnOn_Impl(
+      const AvailabilityManagerLowTemperatureTurnOn_Impl& other, Model_Impl* model, bool keepHandle)
+      : AvailabilityManager_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& AvailabilityManagerLowTemperatureTurnOn_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Availability Manager Low Temperature Turn On Control Status"};
+      return result;
+    }
+
+    IddObjectType AvailabilityManagerLowTemperatureTurnOn_Impl::iddObjectType() const {
+      return AvailabilityManagerLowTemperatureTurnOn::iddObjectType();
+    }
+
+    boost::optional<Node> AvailabilityManagerLowTemperatureTurnOn_Impl::sensorNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_AvailabilityManager_LowTemperatureTurnOnFields::SensorNodeName);
+    }
+
+    double AvailabilityManagerLowTemperatureTurnOn_Impl::temperature() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_LowTemperatureTurnOnFields::Temperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AvailabilityManagerLowTemperatureTurnOn_Impl::setSensorNode(const Node& node) {
+      bool result = setPointer(OS_AvailabilityManager_LowTemperatureTurnOnFields::SensorNodeName, node.handle());
+      return result;
+    }
+
+    void AvailabilityManagerLowTemperatureTurnOn_Impl::resetSensorNode() {
+      bool result = setString(OS_AvailabilityManager_LowTemperatureTurnOnFields::SensorNodeName, "");
+      OS_ASSERT(result);
+    }
+
+    bool AvailabilityManagerLowTemperatureTurnOn_Impl::setTemperature(double temperature) {
+      bool result = setDouble(OS_AvailabilityManager_LowTemperatureTurnOnFields::Temperature, temperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+  }  // namespace detail
+
+  AvailabilityManagerLowTemperatureTurnOn::AvailabilityManagerLowTemperatureTurnOn(const Model& model)
+    : AvailabilityManager(AvailabilityManagerLowTemperatureTurnOn::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>());
+
+    setTemperature(30);
   }
 
-  AvailabilityManagerLowTemperatureTurnOn_Impl::AvailabilityManagerLowTemperatureTurnOn_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                               Model_Impl* model,
-                                                                                               bool keepHandle)
-    : AvailabilityManager_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == AvailabilityManagerLowTemperatureTurnOn::iddObjectType());
+  IddObjectType AvailabilityManagerLowTemperatureTurnOn::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn);
   }
 
-  AvailabilityManagerLowTemperatureTurnOn_Impl::AvailabilityManagerLowTemperatureTurnOn_Impl(const AvailabilityManagerLowTemperatureTurnOn_Impl& other,
-                                                                                               Model_Impl* model,
-                                                                                               bool keepHandle)
-    : AvailabilityManager_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& AvailabilityManagerLowTemperatureTurnOn_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Availability Manager Low Temperature Turn On Control Status"
-    };
-    return result;
+  boost::optional<Node> AvailabilityManagerLowTemperatureTurnOn::sensorNode() const {
+    return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->sensorNode();
   }
 
-  IddObjectType AvailabilityManagerLowTemperatureTurnOn_Impl::iddObjectType() const {
-    return AvailabilityManagerLowTemperatureTurnOn::iddObjectType();
+  double AvailabilityManagerLowTemperatureTurnOn::temperature() const {
+    return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->temperature();
   }
 
-  boost::optional<Node> AvailabilityManagerLowTemperatureTurnOn_Impl::sensorNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_AvailabilityManager_LowTemperatureTurnOnFields::SensorNodeName);
+  bool AvailabilityManagerLowTemperatureTurnOn::setSensorNode(const Node& node) {
+    return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->setSensorNode(node);
   }
 
-  double AvailabilityManagerLowTemperatureTurnOn_Impl::temperature() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_LowTemperatureTurnOnFields::Temperature,true);
-    OS_ASSERT(value);
-    return value.get();
+  void AvailabilityManagerLowTemperatureTurnOn::resetSensorNode() {
+    getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->resetSensorNode();
   }
 
-  bool AvailabilityManagerLowTemperatureTurnOn_Impl::setSensorNode(const Node& node) {
-    bool result = setPointer(OS_AvailabilityManager_LowTemperatureTurnOnFields::SensorNodeName, node.handle());
-    return result;
+  bool AvailabilityManagerLowTemperatureTurnOn::setTemperature(double temperature) {
+    return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->setTemperature(temperature);
   }
 
-  void AvailabilityManagerLowTemperatureTurnOn_Impl::resetSensorNode() {
-    bool result = setString(OS_AvailabilityManager_LowTemperatureTurnOnFields::SensorNodeName, "");
-    OS_ASSERT(result);
-  }
+  /// @cond
+  AvailabilityManagerLowTemperatureTurnOn::AvailabilityManagerLowTemperatureTurnOn(
+    std::shared_ptr<detail::AvailabilityManagerLowTemperatureTurnOn_Impl> impl)
+    : AvailabilityManager(impl) {}
+  /// @endcond
 
-  bool AvailabilityManagerLowTemperatureTurnOn_Impl::setTemperature(double temperature) {
-    bool result = setDouble(OS_AvailabilityManager_LowTemperatureTurnOnFields::Temperature, temperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-} // detail
-
-AvailabilityManagerLowTemperatureTurnOn::AvailabilityManagerLowTemperatureTurnOn(const Model& model)
-  : AvailabilityManager(AvailabilityManagerLowTemperatureTurnOn::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>());
-
-  setTemperature(30);
-}
-
-IddObjectType AvailabilityManagerLowTemperatureTurnOn::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn);
-}
-
-boost::optional<Node> AvailabilityManagerLowTemperatureTurnOn::sensorNode() const {
-  return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->sensorNode();
-}
-
-double AvailabilityManagerLowTemperatureTurnOn::temperature() const {
-  return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->temperature();
-}
-
-bool AvailabilityManagerLowTemperatureTurnOn::setSensorNode(const Node& node) {
-  return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->setSensorNode(node);
-}
-
-void AvailabilityManagerLowTemperatureTurnOn::resetSensorNode() {
-  getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->resetSensorNode();
-}
-
-bool AvailabilityManagerLowTemperatureTurnOn::setTemperature(double temperature) {
-  return getImpl<detail::AvailabilityManagerLowTemperatureTurnOn_Impl>()->setTemperature(temperature);
-}
-
-/// @cond
-AvailabilityManagerLowTemperatureTurnOn::AvailabilityManagerLowTemperatureTurnOn(std::shared_ptr<detail::AvailabilityManagerLowTemperatureTurnOn_Impl> impl)
-  : AvailabilityManager(impl)
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

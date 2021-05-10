@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,76 +36,71 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class AirflowNetworkComponent_Impl;
-}
+  namespace detail {
+    class AirflowNetworkComponent_Impl;
+  }
 
-/** AirflowNetworkComponent is the base class for AirflowNetwork component objects that determine linkage flows in the pressure network.
+  /** AirflowNetworkComponent is the base class for AirflowNetwork component objects that determine linkage flows in the pressure network.
  *
  */
-class MODEL_API AirflowNetworkComponent : public ModelObject
-{
+  class MODEL_API AirflowNetworkComponent : public ModelObject
+  {
 
-  public:
+   public:
+    AirflowNetworkComponent(IddObjectType type, const Model& model);
 
-  AirflowNetworkComponent(IddObjectType type,const Model& model);
+    virtual ~AirflowNetworkComponent() {}
 
-  virtual ~AirflowNetworkComponent() {}
+    //std::vector<openstudio::IdfObject> remove();
 
-  //std::vector<openstudio::IdfObject> remove();
+    //bool removeFromLoop();
 
-  //bool removeFromLoop();
+    //** Returns the inlet port. **/
+    //unsigned inletPort() const;
 
-  //** Returns the inlet port. **/
-  //unsigned inletPort() const;
+    //** Returns the outlet port. **/
+    //unsigned outletPort() const;
 
-  //** Returns the outlet port. **/
-  //unsigned outletPort() const;
+    //** Returns the optional ModelObject that this component represents. **/
+    boost::optional<ModelObject> componentModelObject() const;
 
-  //** Returns the optional ModelObject that this component represents. **/
-  boost::optional<ModelObject> componentModelObject() const;
+    //** Returns the optional ModelObject connected to the outlet port. **/
+    //boost::optional<ModelObject> outletModelObject() const;
 
-  //** Returns the optional ModelObject connected to the outlet port. **/
-  //boost::optional<ModelObject> outletModelObject() const;
+    //** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
+    // *
+    // *  Reimplemented from HVACComponent.
+    // */
+    //boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  //** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
-  // *
-  // *  Reimplemented from HVACComponent.
-  // */
-  //boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    //bool addToNode(Node & node);
 
-  //bool addToNode(Node & node);
+    //ModelObject clone(Model model) const;
 
-  //ModelObject clone(Model model) const;
+    //void disconnect();
 
-  //void disconnect();
+   protected:
+    friend class Model;
 
-  protected:
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    /// @cond
 
-  friend class openstudio::IdfObject;
+    typedef detail::AirflowNetworkComponent_Impl ImplType;
 
-  /// @cond
+    explicit AirflowNetworkComponent(std::shared_ptr<detail::AirflowNetworkComponent_Impl> impl);
 
-  typedef detail::AirflowNetworkComponent_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkComponent");
 
-  explicit AirflowNetworkComponent(std::shared_ptr<detail::AirflowNetworkComponent_Impl> impl);
+    /// @endcond
+  };
 
-  private:
+  typedef boost::optional<AirflowNetworkComponent> OptionalAirflowNetworkComponent;
 
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkComponent");
+  typedef std::vector<AirflowNetworkComponent> AirflowNetworkComponentVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-typedef boost::optional<AirflowNetworkComponent> OptionalAirflowNetworkComponent;
-
-typedef std::vector<AirflowNetworkComponent> AirflowNetworkComponentVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKCOMPONENT_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKCOMPONENT_HPP

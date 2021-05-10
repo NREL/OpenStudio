@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,43 +37,38 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
+  class ThermalZone;
 
-namespace detail {
-  class Thermostat_Impl;
-};
+  namespace detail {
+    class Thermostat_Impl;
+  };
 
-/** Thermostat is the base class for all types of thermostats.
+  /** Thermostat is the base class for all types of thermostats.
  */
-class MODEL_API Thermostat : public ModelObject
-{
-  public:
+  class MODEL_API Thermostat : public ModelObject
+  {
+   public:
+    virtual ~Thermostat() {}
 
-  virtual ~Thermostat() {}
+    boost::optional<ThermalZone> thermalZone() const;
 
-  boost::optional<ThermalZone> thermalZone() const;
+   protected:
+    Thermostat(IddObjectType type, const Model& model);
 
-  protected:
+    typedef detail::Thermostat_Impl ImplType;
 
-  Thermostat(IddObjectType type,const Model& model);
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit Thermostat(std::shared_ptr<ImplType> impl);
 
-  typedef detail::Thermostat_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.Thermostat");
+  };
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit Thermostat(std::shared_ptr<ImplType> impl);
+  typedef boost::optional<Thermostat> OptionalThermostat;
 
-  private:
+}  // namespace model
+}  // namespace openstudio
 
-  REGISTER_LOGGER("openstudio.model.Thermostat");
-
-};
-
-typedef boost::optional<Thermostat> OptionalThermostat;
-
-} // model
-} // openstudio
-
-#endif // MODEL_THERMOSTAT_HPP
-
+#endif  // MODEL_THERMOSTAT_HPP

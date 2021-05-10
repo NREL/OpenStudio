@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,69 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class PlantEquipmentOperationOutdoorDryBulbDifference_Impl;
+    class PlantEquipmentOperationOutdoorDryBulbDifference_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantEquipmentOperationOutdoorDryBulbDifference is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDryBulbDifference'. */
-class MODEL_API PlantEquipmentOperationOutdoorDryBulbDifference : public PlantEquipmentOperationRangeBasedScheme {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantEquipmentOperationOutdoorDryBulbDifference is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDryBulbDifference'. */
+  class MODEL_API PlantEquipmentOperationOutdoorDryBulbDifference : public PlantEquipmentOperationRangeBasedScheme
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantEquipmentOperationOutdoorDryBulbDifference(const Model& model);
+    explicit PlantEquipmentOperationOutdoorDryBulbDifference(const Model& model);
 
-  virtual ~PlantEquipmentOperationOutdoorDryBulbDifference() {}
+    virtual ~PlantEquipmentOperationOutdoorDryBulbDifference() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> referenceTemperatureNode() const;
+    boost::optional<Node> referenceTemperatureNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setReferenceTemperatureNode(const Node& node);
+    bool setReferenceTemperatureNode(const Node& node);
 
-  void resetReferenceTemperatureNode();
+    void resetReferenceTemperatureNode();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationOutdoorDryBulbDifference_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationOutdoorDryBulbDifference_Impl ImplType;
 
-  explicit PlantEquipmentOperationOutdoorDryBulbDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulbDifference_Impl> impl);
+    explicit PlantEquipmentOperationOutdoorDryBulbDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulbDifference_Impl> impl);
 
-  friend class detail::PlantEquipmentOperationOutdoorDryBulbDifference_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDryBulbDifference");
-};
+    friend class detail::PlantEquipmentOperationOutdoorDryBulbDifference_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDryBulbDifference");
+  };
 
-/** \relates PlantEquipmentOperationOutdoorDryBulbDifference*/
-typedef boost::optional<PlantEquipmentOperationOutdoorDryBulbDifference> OptionalPlantEquipmentOperationOutdoorDryBulbDifference;
+  /** \relates PlantEquipmentOperationOutdoorDryBulbDifference*/
+  typedef boost::optional<PlantEquipmentOperationOutdoorDryBulbDifference> OptionalPlantEquipmentOperationOutdoorDryBulbDifference;
 
-/** \relates PlantEquipmentOperationOutdoorDryBulbDifference*/
-typedef std::vector<PlantEquipmentOperationOutdoorDryBulbDifference> PlantEquipmentOperationOutdoorDryBulbDifferenceVector;
+  /** \relates PlantEquipmentOperationOutdoorDryBulbDifference*/
+  typedef std::vector<PlantEquipmentOperationOutdoorDryBulbDifference> PlantEquipmentOperationOutdoorDryBulbDifferenceVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDRYBULBDIFFERENCE_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDRYBULBDIFFERENCE_HPP

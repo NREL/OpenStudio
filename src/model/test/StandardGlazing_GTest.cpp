@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,25 +38,22 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, StandardGlazing_DefaultConstructor)
-{
+TEST_F(ModelFixture, StandardGlazing_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    StandardGlazing standardGlazing(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      StandardGlazing standardGlazing(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, StandardGlazing_GettersSetters)
-{
+TEST_F(ModelFixture, StandardGlazing_GettersSetters) {
   Model m;
   StandardGlazing standardGlazing(m);
-
 
   // Ctor arg defaults
   std::string opticalDataType = "SpectralAverage";
@@ -74,7 +71,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   EXPECT_EQ("Spectral", standardGlazing.opticalDataType());
   EXPECT_TRUE(standardGlazing.setOpticalDataType("SpectralAverage"));
   EXPECT_EQ("SpectralAverage", standardGlazing.opticalDataType());
-
 
   // Window Glass Spectral Data Set Name: Optional Object
   // No Default
@@ -95,7 +91,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   EXPECT_TRUE(standardGlazing.setThickness(1.0));
   EXPECT_EQ(1.0, standardGlazing.thickness());
 
-
   // Solar Transmittance at Normal Incidence: Optional Double
   // No Default
   EXPECT_TRUE(standardGlazing.setSolarTransmittanceatNormalIncidence(0.5));
@@ -104,7 +99,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   // Test reset
   standardGlazing.resetSolarTransmittanceatNormalIncidence();
   EXPECT_FALSE(standardGlazing.solarTransmittanceatNormalIncidence());
-
 
   // Front Side Solar Reflectance at Normal Incidence: Optional Double
   // No Default
@@ -115,7 +109,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   standardGlazing.resetFrontSideSolarReflectanceatNormalIncidence();
   EXPECT_FALSE(standardGlazing.frontSideSolarReflectanceatNormalIncidence());
 
-
   // Back Side Solar Reflectance at Normal Incidence: Optional Double
   // No Default
   EXPECT_TRUE(standardGlazing.setBackSideSolarReflectanceatNormalIncidence(0.5));
@@ -124,7 +117,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   // Test reset
   standardGlazing.resetBackSideSolarReflectanceatNormalIncidence();
   EXPECT_FALSE(standardGlazing.backSideSolarReflectanceatNormalIncidence());
-
 
   // Visible Transmittance at Normal Incidence: Optional Double
   // No Default
@@ -135,7 +127,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   standardGlazing.resetVisibleTransmittanceatNormalIncidence();
   EXPECT_FALSE(standardGlazing.visibleTransmittanceatNormalIncidence());
 
-
   // Front Side Visible Reflectance at Normal Incidence: Optional Double
   // No Default
   EXPECT_TRUE(standardGlazing.setFrontSideVisibleReflectanceatNormalIncidence(0.5));
@@ -145,7 +136,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   standardGlazing.resetFrontSideVisibleReflectanceatNormalIncidence();
   EXPECT_FALSE(standardGlazing.frontSideVisibleReflectanceatNormalIncidence());
 
-
   // Back Side Visible Reflectance at Normal Incidence: Optional Double
   // No Default
   EXPECT_TRUE(standardGlazing.setBackSideVisibleReflectanceatNormalIncidence(0.5));
@@ -154,7 +144,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   // Test reset
   standardGlazing.resetBackSideVisibleReflectanceatNormalIncidence();
   EXPECT_FALSE(standardGlazing.backSideVisibleReflectanceatNormalIncidence());
-
 
   // Infrared Transmittance at Normal Incidence:  Double
   // Check Idd default: 0.0
@@ -168,7 +157,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   EXPECT_EQ(0.0, standardGlazing.infraredTransmittanceatNormalIncidence());
   EXPECT_TRUE(standardGlazing.isInfraredTransmittanceatNormalIncidenceDefaulted());
 
-
   // Front Side Infrared Hemispherical Emissivity:  Double
   // Check Idd default: 0.84
   EXPECT_TRUE(standardGlazing.isFrontSideInfraredHemisphericalEmissivityDefaulted());
@@ -180,7 +168,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   standardGlazing.resetFrontSideInfraredHemisphericalEmissivity();
   EXPECT_EQ(0.84, standardGlazing.frontSideInfraredHemisphericalEmissivity());
   EXPECT_TRUE(standardGlazing.isFrontSideInfraredHemisphericalEmissivityDefaulted());
-
 
   // Back Side Infrared Hemispherical Emissivity:  Double
   // Check Idd default: 0.84
@@ -194,7 +181,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   EXPECT_EQ(0.84, standardGlazing.backSideInfraredHemisphericalEmissivity());
   EXPECT_TRUE(standardGlazing.isBackSideInfraredHemisphericalEmissivityDefaulted());
 
-
   // Conductivity:  Double
   // Check Idd default: 0.9
   EXPECT_TRUE(standardGlazing.isConductivityDefaulted());
@@ -207,7 +193,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   EXPECT_EQ(0.9, standardGlazing.conductivity());
   EXPECT_TRUE(standardGlazing.isConductivityDefaulted());
 
-
   // Dirt Correction Factor for Solar and Visible Transmittance:  Double
   // Check Idd default: 1.0
   EXPECT_TRUE(standardGlazing.isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted());
@@ -219,7 +204,6 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   standardGlazing.resetDirtCorrectionFactorforSolarandVisibleTransmittance();
   EXPECT_EQ(1.0, standardGlazing.dirtCorrectionFactorforSolarandVisibleTransmittance());
   EXPECT_TRUE(standardGlazing.isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted());
-
 
   // Solar Diffusing:  Boolean
   // Check Idd default: false
@@ -236,5 +220,4 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   standardGlazing.resetSolarDiffusing();
   EXPECT_TRUE(standardGlazing.isSolarDiffusingDefaulted());
   EXPECT_FALSE(standardGlazing.solarDiffusing());
-
 }

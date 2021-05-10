@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,15 +30,13 @@
 #include "Path.hpp"
 #include "String.hpp"
 
-
-#if (defined (_WIN32) || defined (_WIN64))
-#include <locale>
-#include <codecvt>
-#include "Logger.hpp"
+#if (defined(_WIN32) || defined(_WIN64))
+#  include <locale>
+#  include <codecvt>
+#  include "Logger.hpp"
 #endif
 
 namespace openstudio {
-
 
 /*
   | Class       | Internal      | Platform  |
@@ -49,43 +47,37 @@ namespace openstudio {
 
 */
 
-
 // allow path to be written to cout on Windows
-std::ostream& operator<<(std::ostream& os, const path& p)
-{
+std::ostream& operator<<(std::ostream& os, const path& p) {
   os << toString(p);
   return os;
 }
 
 /** path to a temporary directory. */
-path tempDir()
-{
+path tempDir() {
   return openstudio::filesystem::temp_directory_path();
 }
 
 /** path to UTF-8 encoding. */
-std::string toString(const path& p)
-{
-  #if (defined (_WIN32) || defined (_WIN64))
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
-    std::string s = converter.to_bytes(p.generic_wstring());
-    return s;
-  #endif
+std::string toString(const path& p) {
+#if (defined(_WIN32) || defined(_WIN64))
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
+  std::string s = converter.to_bytes(p.generic_wstring());
+  return s;
+#endif
 
+  // cppcheck-suppress duplicateBreak
   return p.generic_string();
 }
 
-
 /** UTF-8 encoded char* to path*/
-path toPath(const char* s)
-{
+path toPath(const char* s) {
   return toPath(toString(s));
 }
 
 /** UTF-8 encoded std::string to path*/
-path toPath(const std::string& s)
-{
-  #if (defined (_WIN32) || defined (_WIN64))
+path toPath(const std::string& s) {
+#if (defined(_WIN32) || defined(_WIN64))
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
   try {
     std::wstring wstr = converter.from_bytes(s);
@@ -101,13 +93,12 @@ path toPath(const std::string& s)
     for (size_t i = 0; i < length; ++i) {
       wstr.push_back(s[i] & 0xFF);
     }
-    LOG_FREE(Debug, "Path", "An error occurred trying to convert the input to a wide string."
-      << "\n  Reason: " << e.what()
-      << "\n  Input =" << s
-      << "\n  Result=" << wstr);
+    LOG_FREE(Debug, "Path",
+             "An error occurred trying to convert the input to a wide string."
+               << "\n  Reason: " << e.what() << "\n  Input =" << s << "\n  Result=" << wstr);
     return path(wstr);
   }
-  #endif
+#endif
 
   // else
   return path(s);
@@ -115,17 +106,14 @@ path toPath(const std::string& s)
 
 #ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/
-std::wstring toSystemFilename(const path& p)
-{
+std::wstring toSystemFilename(const path& p) {
   return p.wstring();
 }
 #else
 /** UTF-8 encoded std::string for opening fstreams*/
-std::string toSystemFilename(const path& p)
-{
+std::string toSystemFilename(const path& p) {
   return p.string();
 }
 #endif
 
-} // openstudio
-
+}  // namespace openstudio

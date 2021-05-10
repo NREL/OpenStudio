@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,69 +37,67 @@
 #include <vector>
 #include <boost/optional.hpp>
 
-namespace openstudio{
+namespace openstudio {
 
-  // forward declaration
-  class Vector3d;
+// forward declaration
+class Vector3d;
 
-  class UTILITIES_API Point3d{
-  public:
+class UTILITIES_API Point3d
+{
+ public:
+  /// default constructor creates point at 0, 0, 0
+  Point3d();
 
-    /// default constructor creates point at 0, 0, 0
-    Point3d();
+  /// constructor with x, y, z
+  Point3d(double x, double y, double z);
 
-    /// constructor with x, y, z
-    Point3d(double x, double y, double z);
+  /// copy constructor
+  Point3d(const Point3d& other);
 
-    /// copy constructor
-    Point3d(const Point3d& other);
+  /// get x
+  double x() const;
 
-    /// get x
-    double x() const;
+  /// get y
+  double y() const;
 
-    /// get y
-    double y() const;
+  /// get z
+  double z() const;
 
-    /// get z
-    double z() const;
+  /// point plus a vector is a new point
+  Point3d operator+(const Vector3d& vec) const;
 
-    /// point plus a vector is a new point
-    Point3d operator+(const Vector3d& vec) const;
+  /// point plus a vector is a new point
+  Point3d& operator+=(const Vector3d& vec);
 
-    /// point plus a vector is a new point
-    Point3d& operator+=(const Vector3d& vec);
+  /// point minus another point is a vector
+  Vector3d operator-(const Point3d& other) const;
 
-    /// point minus another point is a vector
-    Vector3d operator-(const Point3d& other) const;
+  /// check equality
+  bool operator==(const Point3d& other) const;
 
-    /// check equality
-    bool operator==(const Point3d& other) const;
+  /// check inequality
+  bool operator!=(const Point3d& other) const;
 
-    /// check inequality
-    bool operator!=(const Point3d& other) const;
+ private:
+  REGISTER_LOGGER("utilities.Point3d");
+  Vector m_storage;
+};
 
-  private:
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
 
-    REGISTER_LOGGER("utilities.Point3d");
-    Vector m_storage;
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
 
-  };
+// optional Point3d
+typedef boost::optional<Point3d> OptionalPoint3d;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Point3d& point);
+// vector of Point3d
+typedef std::vector<Point3d> Point3dVector;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Point3d>& pointVector);
+// vector of Point3dVector
+typedef std::vector<Point3dVector> Point3dVectorVector;
 
-  // optional Point3d
-  typedef boost::optional<Point3d> OptionalPoint3d;
+}  // namespace openstudio
 
-  // vector of Point3d
-  typedef std::vector<Point3d> Point3dVector;
-
-  // vector of Point3dVector
-  typedef std::vector<Point3dVector> Point3dVectorVector;
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_POINT3D_HPP
+#endif  //UTILITIES_GEOMETRY_POINT3D_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,41 +35,37 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class ResourceObject;
+  // forward declaration
+  class ResourceObject;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API ResourceObject_Impl : public ParentObject_Impl
-  {
-   public:
+    class MODEL_API ResourceObject_Impl : public ParentObject_Impl
+    {
+     public:
+      // Construct completely new object.
+      ResourceObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    ResourceObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      ResourceObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    ResourceObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      // Clone copy constructor.
+      ResourceObject_Impl(const ResourceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Clone copy constructor.
-    ResourceObject_Impl(const ResourceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual ~ResourceObject_Impl() {}
 
-    virtual ~ResourceObject_Impl() {}
+      unsigned directUseCount(bool excludeChildren) const;
 
-    unsigned directUseCount(bool excludeChildren) const;
+      unsigned nonResourceObjectUseCount(bool excludeChildren) const;
 
-    unsigned nonResourceObjectUseCount(bool excludeChildren) const;
+     private:
+      REGISTER_LOGGER("openstudio.model.ResourceObject");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.ResourceObject");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_RESOURCEOBJECT_IMPL_HPP
+#endif  // MODEL_RESOURCEOBJECT_IMPL_HPP

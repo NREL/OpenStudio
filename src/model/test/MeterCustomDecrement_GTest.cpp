@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,23 +35,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, MeterCustomDecrement_DefaultConstructor)
-{
+TEST_F(ModelFixture, MeterCustomDecrement_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    MeterCustomDecrement testObject(model, "Electricity:Facility");
+  ASSERT_EXIT(
+    {
+      Model model;
+      MeterCustomDecrement testObject(model, "Electricity:Facility");
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-
-TEST_F(ModelFixture, MeterCustomDecrement_Remove)
-{
+TEST_F(ModelFixture, MeterCustomDecrement_Remove) {
   Model model;
   MeterCustomDecrement testObject(model, "Electricity:Facility");
 
@@ -61,8 +58,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_Remove)
   EXPECT_EQ((unsigned)0, model.getModelObjects<MeterCustomDecrement>().size());
 }
 
-TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
-{
+TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups) {
   Model model;
   MeterCustomDecrement testObject(model, "Electricity:Facility");
 
@@ -70,9 +66,9 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
   testObject.setSourceMeterName("Electricity:Building");
   EXPECT_EQ("Electricity:Building", testObject.sourceMeterName());
 
-  std::vector< std::pair<std::string,std::string> > keyVarGroups = testObject.keyVarGroups();
+  std::vector<std::pair<std::string, std::string>> keyVarGroups = testObject.keyVarGroups();
 
-  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electric Energy"));
+  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electricity Energy"));
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ(1, keyVarGroups.size());
   // Also test the numKeyVarGroups method
@@ -81,7 +77,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
   testObject.removeAllKeyVarGroups();
   EXPECT_EQ(0, testObject.numKeyVarGroups());
 
-  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electric Energy"));
+  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electricity Energy"));
   EXPECT_EQ(1, testObject.numKeyVarGroups());
 
   EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Equipment 1", "Equipment Electric Energy"));
@@ -105,13 +101,11 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ("A new output var name", keyVarGroups[0].second);
 
-
   testObject.removeAllKeyVarGroups();
-  for (int i=0; i<100; i++) {
+  for (int i = 0; i < 100; i++) {
     testObject.addKeyVarGroup("key " + std::to_string(i), "var " + std::to_string(i));
   }
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ(100, keyVarGroups.size());
   EXPECT_EQ(100, testObject.numKeyVarGroups());
-
 }

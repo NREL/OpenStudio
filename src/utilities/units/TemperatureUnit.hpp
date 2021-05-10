@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,7 +38,7 @@ namespace detail {
 
   class TemperatureUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** TemperatureUnit is an abstract Unit for handling temperatures. Temperatures can be absolute
  *  or relative. The temperature of a material is absolute temperature. Temperature differences are
@@ -47,7 +47,8 @@ namespace detail {
  *  There are no public constructors, because this is an abstract class. By default, derived
  *  classes should set absoute=true. Temperatures that start as relative should be handled by regular
  *  Unit classes. */
-class UTILITIES_API TemperatureUnit : public Unit {
+class UTILITIES_API TemperatureUnit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -76,7 +77,6 @@ class UTILITIES_API TemperatureUnit : public Unit {
 
   /// @endcond
  private:
-
   REGISTER_LOGGER("openstudio.units.TemperatureUnit");
 };
 
@@ -86,7 +86,6 @@ typedef boost::optional<TemperatureUnit> OptionalTemperatureUnit;
 /** \relates TemperatureUnit*/
 typedef std::vector<TemperatureUnit> TemperatureUnitVector;
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_TEMPERATUREUNIT_HPP
-
+#endif  // UTILITIES_UNITS_TEMPERATUREUNIT_HPP

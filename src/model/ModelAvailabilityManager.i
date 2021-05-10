@@ -18,6 +18,12 @@
   #define _csharp_module_name OpenStudioModelAvailabilityManager
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 MODELOBJECT_TEMPLATES(AvailabilityManagerNightCycle);
 MODELOBJECT_TEMPLATES(AvailabilityManagerHybridVentilation);
 MODELOBJECT_TEMPLATES(AvailabilityManagerOptimumStart);

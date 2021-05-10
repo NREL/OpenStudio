@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,216 +46,207 @@
 namespace openstudio {
 namespace airflow {
 
-SurfaceNetworkBuilder::SurfaceNetworkBuilder(ProgressBar *progressBar) : m_progressBar(progressBar)
-{
-  m_logSink.setLogLevel(Info);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.SurfaceNetworkBuilder"));
-  m_logSink.setThreadId(std::this_thread::get_id());
-  m_progressBar = nullptr;
-}
-
-void SurfaceNetworkBuilder::progress()
-{
-  if (m_progressBar) {
-    m_progressBar->setValue(m_progressBar->value() + 1);
+  SurfaceNetworkBuilder::SurfaceNetworkBuilder(ProgressBar* progressBar) : m_progressBar(progressBar) {
+    m_logSink.setLogLevel(Info);
+    m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.SurfaceNetworkBuilder"));
+    m_logSink.setThreadId(std::this_thread::get_id());
+    m_progressBar = nullptr;
   }
-}
 
-void SurfaceNetworkBuilder::initProgress(int max, std::string label)
-{
-  if (m_progressBar) {
-    m_progressBar->setWindowTitle(label);
-    m_progressBar->setMinimum(0);
-    m_progressBar->setMaximum(max);
-    m_progressBar->setValue(0);
+  void SurfaceNetworkBuilder::progress() {
+    if (m_progressBar) {
+      m_progressBar->setValue(m_progressBar->value() + 1);
+    }
   }
-}
 
-bool SurfaceNetworkBuilder::linkExteriorSurface(model::ThermalZone zone, model::Space space, model::Surface surface)
-{
-  LOG(Info, "Surface '" << surface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
-  return true;
-}
+  void SurfaceNetworkBuilder::initProgress(int max, std::string label) {
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(label);
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(max);
+      m_progressBar->setValue(0);
+    }
+  }
 
-bool SurfaceNetworkBuilder::linkInteriorSurface(model::ThermalZone zone, model::Space space, model::Surface surface,
-  model::Surface adjacentSurface, model::Space adjacentSpace, model::ThermalZone adjacentZone)
-{
-  LOG(Info, "Surfaces '" << surface.name().get() << "' and '" << adjacentSurface.name().get() << "' connect zone '"
-    << zone.name().get() << "' to zone '" << adjacentZone.name().get() << "'");
-  return true;
-}
+  bool SurfaceNetworkBuilder::linkExteriorSurface(model::ThermalZone zone, model::Space space, model::Surface surface) {
+    LOG(Info, "Surface '" << surface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
+    return true;
+  }
 
-bool SurfaceNetworkBuilder::linkExteriorSubSurface(model::ThermalZone zone, model::Space space, model::Surface surface, model::SubSurface subSurface)
-{
-  LOG(Info, "Subsurface '" << subSurface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
-  return true;
-}
+  bool SurfaceNetworkBuilder::linkInteriorSurface(model::ThermalZone zone, model::Space space, model::Surface surface, model::Surface adjacentSurface,
+                                                  model::Space adjacentSpace, model::ThermalZone adjacentZone) {
+    LOG(Info, "Surfaces '" << surface.name().get() << "' and '" << adjacentSurface.name().get() << "' connect zone '" << zone.name().get()
+                           << "' to zone '" << adjacentZone.name().get() << "'");
+    return true;
+  }
 
-bool SurfaceNetworkBuilder::linkInteriorSubSurface(model::ThermalZone zone, model::Space space, model::Surface surface, model::SubSurface subSurface,
-  model::SubSurface adjacentSubSurface, model::Surface adjacentSurface, model::Space adjacentSpace, model::ThermalZone adjacentZone)
-{
-  LOG(Info, "Subsurfaces '" << subSurface.name().get() << "' and '" << adjacentSubSurface.name().get() << "' connect zone '"
-    << zone.name().get() << "' to zone '" << adjacentZone.name().get() << "'");
-  return true;
-}
+  bool SurfaceNetworkBuilder::linkExteriorSubSurface(model::ThermalZone zone, model::Space space, model::Surface surface,
+                                                     model::SubSurface subSurface) {
+    LOG(Info, "Subsurface '" << subSurface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
+    return true;
+  }
 
-bool SurfaceNetworkBuilder::build(model::Model &model)
-{
-  bool first = true;
-  bool nowarnings = true;
-  std::vector<openstudio::Handle> used;
+  bool SurfaceNetworkBuilder::linkInteriorSubSurface(model::ThermalZone zone, model::Space space, model::Surface surface,
+                                                     model::SubSurface subSurface, model::SubSurface adjacentSubSurface,
+                                                     model::Surface adjacentSurface, model::Space adjacentSpace, model::ThermalZone adjacentZone) {
+    LOG(Info, "Subsurfaces '" << subSurface.name().get() << "' and '" << adjacentSubSurface.name().get() << "' connect zone '" << zone.name().get()
+                              << "' to zone '" << adjacentZone.name().get() << "'");
+    return true;
+  }
 
-  m_logSink.setThreadId(std::this_thread::get_id());
-  m_logSink.resetStringStream();
+  bool SurfaceNetworkBuilder::build(model::Model& model) {
+    bool first = true;
+    bool nowarnings = true;
+    std::vector<openstudio::Handle> used;
 
-  std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();
+    m_logSink.setThreadId(std::this_thread::get_id());
+    m_logSink.resetStringStream();
 
-  initProgress(surfaces.size(),"Processing surfaces for network creation");
+    std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();
 
-  for (model::Surface surface : surfaces) {
-    if(!first) {
+    initProgress(surfaces.size(), "Processing surfaces for network creation");
+
+    for (model::Surface surface : surfaces) {
+      if (!first) {
+        progress();
+      }
+      first = false;
+      std::string bc = surface.outsideBoundaryCondition();
+      if (bc == "Outdoors") {
+        // Get the associated thermal zone
+        boost::optional<openstudio::model::Space> space = surface.space();
+        if (!space) {
+          LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
+          nowarnings = false;
+          continue;
+        }
+        boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
+        if (!thermalZone) {
+          LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
+          nowarnings = false;
+          continue;
+        }
+        // If we made it to here, then the exterior surface is good.
+        linkExteriorSurface(thermalZone.get(), space.get(), surface);
+        for (model::SubSurface subSurface : surface.subSurfaces()) {
+          linkExteriorSubSurface(thermalZone.get(), space.get(), surface, subSurface);
+        }
+      } else if ((std::find(used.begin(), used.end(), surface.handle()) == used.end()) && (bc == "Surface")) {
+        // Get the associated thermal zone
+        boost::optional<openstudio::model::Space> space = surface.space();
+        if (!space) {
+          LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
+          nowarnings = false;
+          continue;
+        }
+        boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
+        if (!thermalZone) {
+          LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
+          nowarnings = false;
+          continue;
+        }
+        boost::optional<openstudio::model::Surface> adjacentSurface = surface.adjacentSurface();
+        if (!adjacentSurface) {
+          LOG(Error, "Unable to find adjacent surface for surface '" << openstudio::toString(surface.handle()) << "'");
+          nowarnings = false;
+          continue;
+        }
+        boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
+        if (!adjacentSpace) {
+          LOG(Error, "Unattached adjacent surface '" << openstudio::toString(adjacentSurface->handle()) << "'");
+          nowarnings = false;
+          continue;
+        }
+        boost::optional<openstudio::model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
+        if (!thermalZone) {
+          LOG(Warn, "Unzoned adjacent space '" << openstudio::toString(adjacentSpace->handle()) << "'");
+          nowarnings = false;
+          continue;
+        }
+        // We could punt the checking of subsurfaces until later, but it is best to get this out of the way now
+        for (model::SubSurface subSurface : surface.subSurfaces()) {
+          boost::optional<model::SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
+          if (!adjacentSubSurface) {
+            LOG(Warn, "Unable to find adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "'");
+            nowarnings = false;
+            continue;
+          }
+          if (adjacentSubSurface->surface() != adjacentSurface) {
+            LOG(Warn,
+                "Adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "' is not attached to the expected surface");
+            nowarnings = false;
+            continue;
+          }
+        }
+        // Ok, now we a surface, a space, a zone, an adjacent surface, an adjacent space, and an adjacent zone. Finally.
+        used.push_back(adjacentSurface->handle());
+        if (thermalZone == adjacentZone) {
+          continue;
+        }
+        // Now have a surface that is fully connected and separates two zones so it can be linked
+        linkInteriorSurface(thermalZone.get(), space.get(), surface, adjacentSurface.get(), adjacentSpace.get(), adjacentZone.get());
+        // Link subsurfaces
+        for (model::SubSurface subSurface : surface.subSurfaces()) {
+          // Now we need to check the connections as we did with the surface
+          boost::optional<model::SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
+          if (!adjacentSubSurface) {
+            LOG(Warn, "Unable to find adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "'");
+            nowarnings = false;
+            continue;
+          }
+          if (adjacentSubSurface->surface() != adjacentSurface) {
+            LOG(Warn,
+                "Adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "' is not attached to the expected surface");
+            nowarnings = false;
+            continue;
+          }
+          // If we made it here, then the subsurface is fully connected and can be linked
+          linkInteriorSubSurface(thermalZone.get(), space.get(), surface, subSurface, adjacentSubSurface.get(), adjacentSurface.get(),
+                                 adjacentSpace.get(), adjacentZone.get());
+        }
+      }
+    }
+    if (surfaces.size() > 0) {
       progress();
     }
-    first=false;
-    std::string bc = surface.outsideBoundaryCondition();
-    if(bc == "Outdoors") {
-      // Get the associated thermal zone
-      boost::optional<openstudio::model::Space> space = surface.space();
-      if(!space) {
-        LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
-        nowarnings = false;
-        continue;
-      }
-      boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
-      if(!thermalZone) {
-        LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
-        nowarnings = false;
-        continue;
-      }
-      // If we made it to here, then the exterior surface is good.
-      linkExteriorSurface(thermalZone.get(),space.get(),surface);
-      for(model::SubSurface subSurface : surface.subSurfaces()) {
-        linkExteriorSubSurface(thermalZone.get(),space.get(),surface,subSurface);
-      }
-    } else if((std::find(used.begin(), used.end(), surface.handle())==used.end()) && (bc == "Surface")) {
-      // Get the associated thermal zone
-      boost::optional<openstudio::model::Space> space = surface.space();
-      if(!space) {
-        LOG(Warn, "Unattached surface '" << openstudio::toString(surface.handle()) << "'");
-        nowarnings = false;
-        continue;
-      }
-      boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
-      if(!thermalZone) {
-        LOG(Warn, "Unzoned space '" << openstudio::toString(space->handle()) << "'");
-        nowarnings = false;
-        continue;
-      }
-      boost::optional<openstudio::model::Surface> adjacentSurface = surface.adjacentSurface();
-      if(!adjacentSurface) {
-        LOG(Error, "Unable to find adjacent surface for surface '" << openstudio::toString(surface.handle()) << "'");
-        nowarnings = false;
-        continue;
-      }
-      boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
-      if(!adjacentSpace) {
-        LOG(Error, "Unattached adjacent surface '" << openstudio::toString(adjacentSurface->handle()) << "'");
-        nowarnings = false;
-        continue;
-      }
-      boost::optional<openstudio::model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
-      if(!thermalZone) {
-        LOG(Warn, "Unzoned adjacent space '" << openstudio::toString(adjacentSpace->handle()) << "'");
-        nowarnings = false;
-        continue;
-      }
-      // We could punt the checking of subsurfaces until later, but it is best to get this out of the way now
-      for(model::SubSurface subSurface : surface.subSurfaces()) {
-        boost::optional<model::SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
-        if(!adjacentSubSurface) {
-          LOG(Warn, "Unable to find adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "'");
-          nowarnings = false;
-          continue;
-        }
-        if(adjacentSubSurface->surface() != adjacentSurface) {
-          LOG(Warn, "Adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "' is not attached to the expected surface");
-          nowarnings = false;
-          continue;
-        }
-      }
-      // Ok, now we a surface, a space, a zone, an adjacent surface, an adjacent space, and an adjacent zone. Finally.
-      used.push_back(adjacentSurface->handle());
-      if(thermalZone == adjacentZone) {
-        continue;
-      }
-      // Now have a surface that is fully connected and separates two zones so it can be linked
-      linkInteriorSurface(thermalZone.get(),space.get(),surface,adjacentSurface.get(),adjacentSpace.get(),adjacentZone.get());
-      // Link subsurfaces
-      for(model::SubSurface subSurface : surface.subSurfaces()) {
-        // Now we need to check the connections as we did with the surface
-        boost::optional<model::SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
-        if(!adjacentSubSurface) {
-          LOG(Warn, "Unable to find adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "'");
-          nowarnings = false;
-          continue;
-        }
-        if(adjacentSubSurface->surface() != adjacentSurface) {
-          LOG(Warn, "Adjacent subsurface for subsurface of '" << openstudio::toString(surface.handle()) << "' is not attached to the expected surface");
-          nowarnings = false;
-          continue;
-        }
-        // If we made it here, then the subsurface is fully connected and can be linked
-        linkInteriorSubSurface(thermalZone.get(),space.get(),surface,subSurface,adjacentSubSurface.get(),adjacentSurface.get(),
-          adjacentSpace.get(),adjacentZone.get());
+    return nowarnings;
+  }
+
+  std::vector<LogMessage> SurfaceNetworkBuilder::warnings() const {
+    std::vector<LogMessage> result;
+
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() == Warn) {
+        result.push_back(logMessage);
       }
     }
-  }
-  if(surfaces.size()>0) {
-    progress();
-  }
-  return nowarnings;
-}
 
-std::vector<LogMessage> SurfaceNetworkBuilder::warnings() const
-{
-  std::vector<LogMessage> result;
+    return result;
+  }
 
-  for(LogMessage logMessage : m_logSink.logMessages()) {
-    if (logMessage.logLevel() == Warn) {
-      result.push_back(logMessage);
+  std::vector<LogMessage> SurfaceNetworkBuilder::errors() const {
+    std::vector<LogMessage> result;
+
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() > Warn) {
+        result.push_back(logMessage);
+      }
     }
+
+    return result;
   }
 
-  return result;
-}
-
-std::vector<LogMessage> SurfaceNetworkBuilder::errors() const
-{
-  std::vector<LogMessage> result;
-
-  for(LogMessage logMessage : m_logSink.logMessages()) {
-    if (logMessage.logLevel() > Warn) {
-      result.push_back(logMessage);
-    }
+  std::vector<LogMessage> SurfaceNetworkBuilder::logMessages() const {
+    return m_logSink.logMessages();
   }
 
-  return result;
-}
+  ProgressBar* SurfaceNetworkBuilder::progressBar() const {
+    return m_progressBar;
+  }
 
-std::vector<LogMessage> SurfaceNetworkBuilder::logMessages() const
-{
-  return m_logSink.logMessages();
-}
+  void SurfaceNetworkBuilder::setProgressBar(ProgressBar* progressBar) {
+    m_progressBar = progressBar;
+  }
 
-ProgressBar * SurfaceNetworkBuilder::progressBar() const
-{
-  return m_progressBar;
-}
-
-void SurfaceNetworkBuilder::setProgressBar(ProgressBar *progressBar)
-{
-  m_progressBar = progressBar;
-}
-
-} // airflow
-} // openstudio
+}  // namespace airflow
+}  // namespace openstudio

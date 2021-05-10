@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,26 +34,24 @@
 
 #include "LogSink.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
-  class UTILITIES_API StringStreamLogSink : public LogSink
-  {
-    public:
+class UTILITIES_API StringStreamLogSink : public LogSink
+{
+ public:
+  /// constructor makes a new string stream to write to and registers in the global logger
+  StringStreamLogSink();
 
-    /// constructor makes a new string stream to write to and registers in the global logger
-    StringStreamLogSink();
+  /// get the string stream's content
+  std::string string() const;
 
-    /// get the string stream's content
-    std::string string() const;
+  /// get messages out of the string stream's content
+  std::vector<LogMessage> logMessages() const;
 
-    /// get messages out of the string stream's content
-    std::vector<LogMessage> logMessages() const;
+  /// reset the string stream's content
+  void resetStringStream();
+};
 
-    /// reset the string stream's content
-    void resetStringStream();
+}  // namespace openstudio
 
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_STRINGSTREAMLOGSINK_HPP
+#endif  // UTILITIES_CORE_STRINGSTREAMLOGSINK_HPP

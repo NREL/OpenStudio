@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,33 +36,31 @@
 #include <sstream>
 #include <time.h>
 
-namespace openstudio
-{
+namespace openstudio {
 
-  TEST(UpdateManager, QtGUI_GeneralTest)
-  {
-    UpdateManager manager("GTest");
-    EXPECT_EQ("GTest", manager.appName());
-    auto result = manager.waitForFinished();
-    ASSERT_TRUE(result);
-    EXPECT_TRUE(manager.finished());
-    EXPECT_FALSE(manager.error());
-  }
-
-  TEST(UpdateManager, QtGUI_ExpandedTest)
-  {
-    std::string url("https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0");
-    UpdateManager manager("GTest", url);
-    EXPECT_EQ("GTest", manager.appName());
-    auto result = manager.waitForFinished();
-    ASSERT_TRUE(result);
-    EXPECT_TRUE(manager.finished());
-    EXPECT_FALSE(manager.error());
-    EXPECT_TRUE(manager.newMajorRelease());
-    EXPECT_FALSE(manager.newMinorRelease());
-    EXPECT_FALSE(manager.newPatchRelease());
-    EXPECT_EQ("99.99.99.99", manager.mostRecentVersion());
-    EXPECT_EQ("https://www.openstudio.net/downloads/99", manager.mostRecentDownloadUrl());
-    ASSERT_EQ(2u, manager.updateMessages().size());
-  }
+TEST(UpdateManager, QtGUI_GeneralTest) {
+  UpdateManager manager("GTest");
+  EXPECT_EQ("GTest", manager.appName());
+  auto result = manager.waitForFinished();
+  ASSERT_TRUE(result);
+  EXPECT_TRUE(manager.finished());
+  EXPECT_FALSE(manager.error());
 }
+
+// cppcheck-suppress syntaxError
+TEST(UpdateManager, QtGUI_ExpandedTest) {
+  std::string url("https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0");
+  UpdateManager manager("GTest", url);
+  EXPECT_EQ("GTest", manager.appName());
+  auto result = manager.waitForFinished();
+  ASSERT_TRUE(result);
+  EXPECT_TRUE(manager.finished());
+  EXPECT_FALSE(manager.error());
+  EXPECT_TRUE(manager.newMajorRelease());
+  EXPECT_FALSE(manager.newMinorRelease());
+  EXPECT_FALSE(manager.newPatchRelease());
+  EXPECT_EQ("99.99.99.99", manager.mostRecentVersion());
+  EXPECT_EQ("https://www.openstudio.net/downloads/99", manager.mostRecentDownloadUrl());
+  ASSERT_EQ(2u, manager.updateMessages().size());
+}
+}  // namespace openstudio

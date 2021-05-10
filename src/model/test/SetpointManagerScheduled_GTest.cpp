@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,24 +40,22 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerScheduled_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerScheduled_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    ScheduleConstant tempSch(m);
-    tempSch.setValue(50);
-    SetpointManagerScheduled testObject(m,tempSch);
+  ASSERT_EXIT(
+    {
+      Model m;
+      ScheduleConstant tempSch(m);
+      tempSch.setValue(50);
+      SetpointManagerScheduled testObject(m, tempSch);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerScheduled_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerScheduled_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -65,19 +63,19 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode)
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduled spm_1(m,tempSch);
+  SetpointManagerScheduled spm_1(m, tempSch);
   spm_1.setControlVariable("MaximumTemperature");
 
-  SetpointManagerScheduled spm_2(m,tempSch);
+  SetpointManagerScheduled spm_2(m, tempSch);
   spm_2.setControlVariable("MinimumTemperature");
 
-  SetpointManagerScheduled spm_3(m,tempSch);
+  SetpointManagerScheduled spm_3(m, tempSch);
   spm_3.setControlVariable("Temperature");
 
-  SetpointManagerScheduled spm_4(m,tempSch);
+  SetpointManagerScheduled spm_4(m, tempSch);
   spm_4.setControlVariable("Temperature");
 
-  SetpointManagerScheduled spm_5(m,tempSch);
+  SetpointManagerScheduled spm_5(m, tempSch);
   spm_5.setControlVariable("Temperature");
 
   EXPECT_TRUE(spm_1.addToNode(testObject));
@@ -103,15 +101,14 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode)
   EXPECT_EQ(4, setpointManagerScheduleds.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerScheduled_remove)
-{
+TEST_F(ModelFixture, SetpointManagerScheduled_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduled spm(m,tempSch);
+  SetpointManagerScheduled spm(m, tempSch);
   spm.setControlVariable("Temperature");
 
   EXPECT_TRUE(spm.addToNode(testObject));
@@ -129,15 +126,14 @@ TEST_F(ModelFixture, SetpointManagerScheduled_remove)
   EXPECT_EQ(0, setpointManagerScheduleds.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerScheduled_clone)
-{
+TEST_F(ModelFixture, SetpointManagerScheduled_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduled testObject(m,tempSch);
+  SetpointManagerScheduled testObject(m, tempSch);
   testObject.setControlVariable("Temperature");
   testObject.addToNode(outletNode);
   ASSERT_TRUE(testObject.setpointNode());
@@ -151,12 +147,11 @@ TEST_F(ModelFixture, SetpointManagerScheduled_clone)
   EXPECT_EQ(testObject.schedule(), testObjectClone.schedule());
 }
 
-TEST_F(ModelFixture, SetpointManagerScheduled_controlVariables)
-{
+TEST_F(ModelFixture, SetpointManagerScheduled_controlVariables) {
   Model m;
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
-  SetpointManagerScheduled spm(m,tempSch);
+  SetpointManagerScheduled spm(m, tempSch);
 
   EXPECT_TRUE(spm.setControlVariable("Temperature"));
   EXPECT_EQ("Temperature", spm.controlVariable());

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,244 +36,241 @@
 namespace openstudio {
 namespace model {
 
-class ModelObjectList;
-class RefrigerationAirChiller;
-class RefrigerationCase;
-class RefrigerationCompressor;
-class RefrigerationWalkIn;
-class RefrigerationSecondarySystem;
-class RefrigerationCondenserCascade;
-class RefrigerationSubcoolerLiquidSuction;
-class RefrigerationSubcoolerMechanical;
-class ThermalZone;
+  class ModelObjectList;
+  class RefrigerationAirChiller;
+  class RefrigerationCase;
+  class RefrigerationCompressor;
+  class RefrigerationWalkIn;
+  class RefrigerationSecondarySystem;
+  class RefrigerationCondenserCascade;
+  class RefrigerationSubcoolerLiquidSuction;
+  class RefrigerationSubcoolerMechanical;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationSystem_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSystem.*/
-  class MODEL_API RefrigerationSystem_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationSystem_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSystem.*/
+    class MODEL_API RefrigerationSystem_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationSystem_Impl(const IdfObject& idfObject,
-                             Model_Impl* model,
-                             bool keepHandle);
+      RefrigerationSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      RefrigerationSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationSystem_Impl(const RefrigerationSystem_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      RefrigerationSystem_Impl(const RefrigerationSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationSystem_Impl() {}
+      virtual ~RefrigerationSystem_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    ModelObject clone(Model model) const override;
+      ModelObject clone(Model model) const override;
 
-    std::vector<RefrigerationCase> cases() const;
+      std::vector<RefrigerationCase> cases() const;
 
-    std::vector<RefrigerationWalkIn> walkins() const;
+      std::vector<RefrigerationWalkIn> walkins() const;
 
-    std::vector<RefrigerationCompressor> compressors() const;
+      std::vector<RefrigerationCompressor> compressors() const;
 
-    std::vector<RefrigerationCompressor> highStageCompressors() const;
+      std::vector<RefrigerationCompressor> highStageCompressors() const;
 
-    std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
+      std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
-    std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
+      std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
-    std::vector<RefrigerationAirChiller> airChillers() const;
+      std::vector<RefrigerationAirChiller> airChillers() const;
 
-    template <class T>
-    std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
+      template <class T>
+      std::vector<T> listTemplate(const boost::optional<ModelObjectList>& modelObjectList) const;
 
-    boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
+      boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
-    boost::optional<ModelObjectList> refrigerationTransferLoadList() const;
+      boost::optional<ModelObjectList> refrigerationTransferLoadList() const;
 
-    boost::optional<ModelObject> refrigerationCondenser() const;
+      boost::optional<ModelObject> refrigerationCondenser() const;
 
-    ModelObjectList compressorList() const;
+      ModelObjectList compressorList() const;
 
-    double minimumCondensingTemperature() const;
+      double minimumCondensingTemperature() const;
 
-    std::string refrigerationSystemWorkingFluidType() const;
+      std::string refrigerationSystemWorkingFluidType() const;
 
-    std::string suctionTemperatureControlType() const;
+      std::string suctionTemperatureControlType() const;
 
-    bool isSuctionTemperatureControlTypeDefaulted() const;
+      bool isSuctionTemperatureControlTypeDefaulted() const;
 
-    boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler() const;
+      boost::optional<RefrigerationSubcoolerMechanical> mechanicalSubcooler() const;
 
-    boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler() const;
+      boost::optional<RefrigerationSubcoolerLiquidSuction> liquidSuctionHeatExchangerSubcooler() const;
 
-    double sumUASuctionPiping() const;
+      double sumUASuctionPiping() const;
 
-    bool isSumUASuctionPipingDefaulted() const;
+      bool isSumUASuctionPipingDefaulted() const;
 
-    boost::optional<ThermalZone> suctionPipingZone() const;
+      boost::optional<ThermalZone> suctionPipingZone() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    std::string numberofCompressorStages() const;
+      std::string numberofCompressorStages() const;
 
-    std::string intercoolerType() const;
+      std::string intercoolerType() const;
 
-    bool isIntercoolerTypeDefaulted() const;
+      bool isIntercoolerTypeDefaulted() const;
 
-    double shellandCoilIntercoolerEffectiveness() const;
+      double shellandCoilIntercoolerEffectiveness() const;
 
-    bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
+      bool isShellandCoilIntercoolerEffectivenessDefaulted() const;
 
-    boost::optional<ModelObjectList> highStageCompressorList() const;
+      boost::optional<ModelObjectList> highStageCompressorList() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    template <class T>
-    void removeAllTemplate( boost::optional<ModelObjectList>& modelObjectList );
+      template <class T>
+      void removeAllTemplate(boost::optional<ModelObjectList>& modelObjectList);
 
-    template <class T>
-    void removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
+      template <class T>
+      void removeTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList);
 
-    template <class T>
-    bool addTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
+      template <class T>
+      bool addTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList);
 
-    bool addCase( const RefrigerationCase & refrigerationCase);
+      bool addCase(const RefrigerationCase& refrigerationCase);
 
-    void removeCase( const RefrigerationCase & refrigerationCase);
+      void removeCase(const RefrigerationCase& refrigerationCase);
 
-    void removeAllCases();
+      void removeAllCases();
 
-    bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+      bool addWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-    void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+      void removeWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-    void removeAllWalkins();
+      void removeAllWalkins();
 
-    bool addCompressor( const RefrigerationCompressor & compressor);
+      bool addCompressor(const RefrigerationCompressor& compressor);
 
-    void removeCompressor( const RefrigerationCompressor & compressor);
+      void removeCompressor(const RefrigerationCompressor& compressor);
 
-    void removeAllCompressors();
+      void removeAllCompressors();
 
-    bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+      bool addHighStageCompressor(const RefrigerationCompressor& highStageCompressor);
 
-    void removeHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
+      void removeHighStageCompressor(const RefrigerationCompressor& highStageCompressor);
 
-    void removeAllHighStageCompressors();
+      void removeAllHighStageCompressors();
 
-    bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+      bool addSecondarySystemLoad(const RefrigerationSecondarySystem& refrigerationSecondarySystem);
 
-    void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+      void removeSecondarySystemLoad(const RefrigerationSecondarySystem& refrigerationSecondarySystem);
 
-    void removeAllSecondarySystemLoads();
+      void removeAllSecondarySystemLoads();
 
-    bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+      bool addCascadeCondenserLoad(const RefrigerationCondenserCascade& refrigerationCondenserCascade);
 
-    void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+      void removeCascadeCondenserLoad(const RefrigerationCondenserCascade& refrigerationCondenserCascade);
 
-    void removeAllCascadeCondenserLoads();
+      void removeAllCascadeCondenserLoads();
 
-    bool addAirChiller( const RefrigerationAirChiller & airChiller);
+      bool addAirChiller(const RefrigerationAirChiller& airChiller);
 
-    void removeAirChiller( const RefrigerationAirChiller & airChiller);
+      void removeAirChiller(const RefrigerationAirChiller& airChiller);
 
-    void removeAllAirChillers();
+      void removeAllAirChillers();
 
-    bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
+      bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    void resetRefrigeratedCaseAndWalkInList();
+      void resetRefrigeratedCaseAndWalkInList();
 
-    bool setRefrigerationTransferLoadList(const boost::optional<ModelObjectList>& modelObjectList);
+      bool setRefrigerationTransferLoadList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    void resetRefrigerationTransferLoadList();
+      void resetRefrigerationTransferLoadList();
 
-    bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
+      bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
-    bool setCompressorList(const ModelObjectList& modelObjectList);
+      void resetRefrigerationCondenser();
 
-    bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
+      bool setCompressorList(const ModelObjectList& modelObjectList);
 
-    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+      bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
-    bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
+      bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
-    void resetSuctionTemperatureControlType();
+      bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
 
-    bool setMechanicalSubcooler(const boost::optional<RefrigerationSubcoolerMechanical>& refrigerationSubcoolerMechanical);
+      void resetSuctionTemperatureControlType();
 
-    void resetMechanicalSubcooler();
+      bool setMechanicalSubcooler(const boost::optional<RefrigerationSubcoolerMechanical>& refrigerationSubcoolerMechanical);
 
-    bool setLiquidSuctionHeatExchangerSubcooler(const boost::optional<RefrigerationSubcoolerLiquidSuction>& refrigerationSubcoolerLiquidSuction);
+      void resetMechanicalSubcooler();
 
-    void resetLiquidSuctionHeatExchangerSubcooler();
+      bool setLiquidSuctionHeatExchangerSubcooler(const boost::optional<RefrigerationSubcoolerLiquidSuction>& refrigerationSubcoolerLiquidSuction);
 
-    bool setSumUASuctionPiping(double sumUASuctionPiping);
+      void resetLiquidSuctionHeatExchangerSubcooler();
 
-    void resetSumUASuctionPiping();
+      bool setSumUASuctionPiping(double sumUASuctionPiping);
 
-    bool setSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
+      void resetSumUASuctionPiping();
 
-    void resetSuctionPipingZone();
+      bool setSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      void resetSuctionPipingZone();
 
-    void resetEndUseSubcategory();
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    bool setIntercoolerType(std::string intercoolerType);
+      void resetEndUseSubcategory();
 
-    void resetIntercoolerType();
+      bool setIntercoolerType(std::string intercoolerType);
 
-    bool setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
+      void resetIntercoolerType();
 
-    void resetShellandCoilIntercoolerEffectiveness();
+      bool setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
 
-    bool setHighStageCompressorList(const boost::optional<ModelObjectList>& modelObjectList);
+      void resetShellandCoilIntercoolerEffectiveness();
 
-    void resetHighStageCompressorList();
+      bool setHighStageCompressorList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    //@}
-    /** @name Other */
-    //@{
+      void resetHighStageCompressorList();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationSystem");
+      //@}
+      /** @name Other */
+      //@{
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<ModelObject> optionalRefrigerationCondenser() const;
-    boost::optional<ModelObjectList> optionalCompressorList() const;
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationSystem");
 
-} // detail
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<ModelObject> optionalRefrigerationCondenser() const;
+      boost::optional<ModelObjectList> optionalCompressorList() const;
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_REFRIGERATIONSYSTEM_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONSYSTEM_IMPL_HPP

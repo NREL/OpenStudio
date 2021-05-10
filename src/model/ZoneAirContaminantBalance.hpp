@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,78 +36,79 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneAirContaminantBalance_Impl;
+    class ZoneAirContaminantBalance_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneAirContaminantBalance is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirContaminantBalance'. */
-class MODEL_API ZoneAirContaminantBalance : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneAirContaminantBalance is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirContaminantBalance'. */
+  class MODEL_API ZoneAirContaminantBalance : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ZoneAirContaminantBalance() {}
+    virtual ~ZoneAirContaminantBalance() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool carbonDioxideConcentration() const;
+    bool carbonDioxideConcentration() const;
 
-  bool isCarbonDioxideConcentrationDefaulted() const;
+    bool isCarbonDioxideConcentrationDefaulted() const;
 
-  boost::optional<Schedule> outdoorCarbonDioxideSchedule() const;
+    boost::optional<Schedule> outdoorCarbonDioxideSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
+    bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
 
-  void setCarbonDioxideConcentrationNoFail(bool carbonDioxideConcentration);
+    void setCarbonDioxideConcentrationNoFail(bool carbonDioxideConcentration);
 
-  void resetCarbonDioxideConcentration();
+    void resetCarbonDioxideConcentration();
 
-  bool setOutdoorCarbonDioxideSchedule(Schedule& schedule);
+    bool setOutdoorCarbonDioxideSchedule(Schedule& schedule);
 
-  void resetOutdoorCarbonDioxideSchedule();
+    void resetOutdoorCarbonDioxideSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneAirContaminantBalance_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneAirContaminantBalance_Impl ImplType;
 
-  explicit ZoneAirContaminantBalance(std::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl);
+    explicit ZoneAirContaminantBalance(std::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl);
 
-  friend class detail::ZoneAirContaminantBalance_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit ZoneAirContaminantBalance(Model& model);
+    friend class detail::ZoneAirContaminantBalance_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit ZoneAirContaminantBalance(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneAirContaminantBalance");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneAirContaminantBalance");
+  };
 
-/** \relates ZoneAirContaminantBalance*/
-typedef boost::optional<ZoneAirContaminantBalance> OptionalZoneAirContaminantBalance;
+  /** \relates ZoneAirContaminantBalance*/
+  typedef boost::optional<ZoneAirContaminantBalance> OptionalZoneAirContaminantBalance;
 
-/** \relates ZoneAirContaminantBalance*/
-typedef std::vector<ZoneAirContaminantBalance> ZoneAirContaminantBalanceVector;
+  /** \relates ZoneAirContaminantBalance*/
+  typedef std::vector<ZoneAirContaminantBalance> ZoneAirContaminantBalanceVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEAIRCONTAMINANTBALANCE_HPP
+#endif  // MODEL_ZONEAIRCONTAMINANTBALANCE_HPP

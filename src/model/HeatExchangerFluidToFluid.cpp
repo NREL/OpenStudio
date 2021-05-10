@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,675 +53,652 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  HeatExchangerFluidToFluid_Impl::HeatExchangerFluidToFluid_Impl(const IdfObject& idfObject,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : WaterToWaterComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == HeatExchangerFluidToFluid::iddObjectType());
-  }
-
-  HeatExchangerFluidToFluid_Impl::HeatExchangerFluidToFluid_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : WaterToWaterComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == HeatExchangerFluidToFluid::iddObjectType());
-  }
-
-  HeatExchangerFluidToFluid_Impl::HeatExchangerFluidToFluid_Impl(const HeatExchangerFluidToFluid_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : WaterToWaterComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& HeatExchangerFluidToFluid_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Fluid Heat Exchanger Heat Transfer Rate",
-      "Fluid Heat Exchanger Heat Transfer Energy",
-      "Fluid Heat Exchanger Loop Supply Side Mass Flow Rate",
-      "Fluid Heat Exchanger Loop Supply Side Inlet Temperature",
-      "Fluid Heat Exchanger Loop Supply Side Outlet Temperature",
-      "Fluid Heat Exchanger Loop Demand Side Mass Flow Rate",
-      "Fluid Heat Exchanger Loop Demand Side Inlet Temperature",
-      "Fluid Heat Exchanger Loop Demand Side Outlet Temperature",
-      "Fluid Heat Exchanger Operation Status",
-      "Fluid Heat Exchanger Effectiveness"
-    };
-    return result;
-  }
-
-  IddObjectType HeatExchangerFluidToFluid_Impl::iddObjectType() const {
-    return HeatExchangerFluidToFluid::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> HeatExchangerFluidToFluid_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    // TODO: Check schedule display names.
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("HeatExchangerFluidToFluid","Availability"));
+    HeatExchangerFluidToFluid_Impl::HeatExchangerFluidToFluid_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : WaterToWaterComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == HeatExchangerFluidToFluid::iddObjectType());
     }
-    return result;
-  }
 
-  boost::optional<Schedule> HeatExchangerFluidToFluid_Impl::availabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName);
-  }
-
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::loopDemandSideDesignFlowRate() const {
-    return getDouble(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate,true);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isLoopDemandSideDesignFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    HeatExchangerFluidToFluid_Impl::HeatExchangerFluidToFluid_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                   bool keepHandle)
+      : WaterToWaterComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == HeatExchangerFluidToFluid::iddObjectType());
     }
-    return result;
-  }
 
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::loopSupplySideDesignFlowRate() const {
-    return getDouble(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate,true);
-  }
+    HeatExchangerFluidToFluid_Impl::HeatExchangerFluidToFluid_Impl(const HeatExchangerFluidToFluid_Impl& other, Model_Impl* model, bool keepHandle)
+      : WaterToWaterComponent_Impl(other, model, keepHandle) {}
 
-  bool HeatExchangerFluidToFluid_Impl::isLoopSupplySideDesignFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    const std::vector<std::string>& HeatExchangerFluidToFluid_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Fluid Heat Exchanger Heat Transfer Rate",
+                                                   "Fluid Heat Exchanger Heat Transfer Energy",
+                                                   "Fluid Heat Exchanger Loop Supply Side Mass Flow Rate",
+                                                   "Fluid Heat Exchanger Loop Supply Side Inlet Temperature",
+                                                   "Fluid Heat Exchanger Loop Supply Side Outlet Temperature",
+                                                   "Fluid Heat Exchanger Loop Demand Side Mass Flow Rate",
+                                                   "Fluid Heat Exchanger Loop Demand Side Inlet Temperature",
+                                                   "Fluid Heat Exchanger Loop Demand Side Outlet Temperature",
+                                                   "Fluid Heat Exchanger Operation Status",
+                                                   "Fluid Heat Exchanger Effectiveness"};
+      return result;
     }
-    return result;
-  }
 
-  std::string HeatExchangerFluidToFluid_Impl::heatExchangeModelType() const {
-    boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isHeatExchangeModelTypeDefaulted() const {
-    return isEmpty(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType);
-  }
-
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::heatExchangerUFactorTimesAreaValue() const {
-    return getDouble(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue,true);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isHeatExchangerUFactorTimesAreaValueAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    IddObjectType HeatExchangerFluidToFluid_Impl::iddObjectType() const {
+      return HeatExchangerFluidToFluid::iddObjectType();
     }
-    return result;
-  }
 
-  std::string HeatExchangerFluidToFluid_Impl::controlType() const {
-    boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::ControlType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isControlTypeDefaulted() const {
-    return isEmpty(OS_HeatExchanger_FluidToFluidFields::ControlType);
-  }
-
-  double HeatExchangerFluidToFluid_Impl::minimumTemperatureDifferencetoActivateHeatExchanger() const {
-    boost::optional<double> value = getDouble(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const {
-    return isEmpty(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger);
-  }
-
-  std::string HeatExchangerFluidToFluid_Impl::heatTransferMeteringEndUseType() const {
-    boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isHeatTransferMeteringEndUseTypeDefaulted() const {
-    return isEmpty(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType);
-  }
-
-  boost::optional<Node> HeatExchangerFluidToFluid_Impl::componentOverrideLoopSupplySideInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNode);
-  }
-
-  boost::optional<Node> HeatExchangerFluidToFluid_Impl::componentOverrideLoopDemandSideInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNode);
-  }
-
-  std::string HeatExchangerFluidToFluid_Impl::componentOverrideCoolingControlTemperatureMode() const {
-    boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isComponentOverrideCoolingControlTemperatureModeDefaulted() const {
-    return isEmpty(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode);
-  }
-
-  double HeatExchangerFluidToFluid_Impl::sizingFactor() const {
-    boost::optional<double> value = getDouble(OS_HeatExchanger_FluidToFluidFields::SizingFactor,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::isSizingFactorDefaulted() const {
-    return isEmpty(OS_HeatExchanger_FluidToFluidFields::SizingFactor);
-  }
-
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::operationMinimumTemperatureLimit() const {
-    return getDouble(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit,true);
-  }
-
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::operationMaximumTemperatureLimit() const {
-    return getDouble(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit,true);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName,
-                              "HeatExchangerFluidToFluid",
-                              "Availability",
-                              schedule);
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setLoopDemandSideDesignFlowRate(boost::optional<double> loopDemandSideDesignFlowRate) {
-    bool result(false);
-    if (loopDemandSideDesignFlowRate) {
-      result = setDouble(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate, loopDemandSideDesignFlowRate.get());
+    std::vector<ScheduleTypeKey> HeatExchangerFluidToFluid_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      // TODO: Check schedule display names.
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("HeatExchangerFluidToFluid", "Availability"));
+      }
+      return result;
     }
-    return result;
-  }
 
-  void HeatExchangerFluidToFluid_Impl::autosizeLoopDemandSideDesignFlowRate() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setLoopSupplySideDesignFlowRate(boost::optional<double> loopSupplySideDesignFlowRate) {
-    bool result(false);
-    if (loopSupplySideDesignFlowRate) {
-      result = setDouble(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate, loopSupplySideDesignFlowRate.get());
+    boost::optional<Schedule> HeatExchangerFluidToFluid_Impl::availabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName);
     }
-    return result;
-  }
 
-  void HeatExchangerFluidToFluid_Impl::autosizeLoopSupplySideDesignFlowRate() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setHeatExchangeModelType(std::string heatExchangeModelType) {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType, heatExchangeModelType);
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetHeatExchangeModelType() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setHeatExchangerUFactorTimesAreaValue(boost::optional<double> heatExchangerUFactorTimesAreaValue) {
-    bool result(false);
-    if (heatExchangerUFactorTimesAreaValue) {
-      result = setDouble(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue, heatExchangerUFactorTimesAreaValue.get());
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::loopDemandSideDesignFlowRate() const {
+      return getDouble(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate, true);
     }
-    return result;
-  }
 
-  void HeatExchangerFluidToFluid_Impl::autosizeHeatExchangerUFactorTimesAreaValue() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setControlType(std::string controlType) {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::ControlType, controlType);
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetControlType() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::ControlType, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger) {
-    bool result = setDouble(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger, minimumTemperatureDifferencetoActivateHeatExchanger);
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetMinimumTemperatureDifferencetoActivateHeatExchanger() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType) {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType, heatTransferMeteringEndUseType);
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetHeatTransferMeteringEndUseType() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setComponentOverrideLoopSupplySideInletNode(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNode, node.get().handle());
+    bool HeatExchangerFluidToFluid_Impl::isLoopDemandSideDesignFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    else {
-      resetComponentOverrideLoopSupplySideInletNode();
-      result = true;
+
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::loopSupplySideDesignFlowRate() const {
+      return getDouble(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate, true);
     }
-    return result;
-  }
 
-  void HeatExchangerFluidToFluid_Impl::resetComponentOverrideLoopSupplySideInletNode() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setComponentOverrideLoopDemandSideInletNode(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNode, node.get().handle());
+    bool HeatExchangerFluidToFluid_Impl::isLoopSupplySideDesignFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    else {
-      resetComponentOverrideLoopDemandSideInletNode();
-      result = true;
+
+    std::string HeatExchangerFluidToFluid_Impl::heatExchangeModelType() const {
+      boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  void HeatExchangerFluidToFluid_Impl::resetComponentOverrideLoopDemandSideInletNode() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNode, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode) {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode, componentOverrideCoolingControlTemperatureMode);
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetComponentOverrideCoolingControlTemperatureMode() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setSizingFactor(double sizingFactor) {
-    bool result = setDouble(OS_HeatExchanger_FluidToFluidFields::SizingFactor, sizingFactor);
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetSizingFactor() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::SizingFactor, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit) {
-    bool result(false);
-    if (operationMinimumTemperatureLimit) {
-      result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit, operationMinimumTemperatureLimit.get());
+    bool HeatExchangerFluidToFluid_Impl::isHeatExchangeModelTypeDefaulted() const {
+      return isEmpty(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType);
     }
-    else {
-      resetOperationMinimumTemperatureLimit();
-      result = true;
+
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::heatExchangerUFactorTimesAreaValue() const {
+      return getDouble(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue, true);
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void HeatExchangerFluidToFluid_Impl::resetOperationMinimumTemperatureLimit() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit) {
-    bool result(false);
-    if (operationMaximumTemperatureLimit) {
-      result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit, operationMaximumTemperatureLimit.get());
+    bool HeatExchangerFluidToFluid_Impl::isHeatExchangerUFactorTimesAreaValueAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    else {
-      resetOperationMaximumTemperatureLimit();
-      result = true;
+
+    std::string HeatExchangerFluidToFluid_Impl::controlType() const {
+      boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::ControlType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void HeatExchangerFluidToFluid_Impl::resetOperationMaximumTemperatureLimit() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit, "");
-    OS_ASSERT(result);
-  }
+    bool HeatExchangerFluidToFluid_Impl::isControlTypeDefaulted() const {
+      return isEmpty(OS_HeatExchanger_FluidToFluidFields::ControlType);
+    }
 
-  unsigned HeatExchangerFluidToFluid_Impl::supplyInletPort() const
-  {
-    return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideInletNode;
-  }
+    double HeatExchangerFluidToFluid_Impl::minimumTemperatureDifferencetoActivateHeatExchanger() const {
+      boost::optional<double> value = getDouble(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  unsigned HeatExchangerFluidToFluid_Impl::supplyOutletPort() const
-  {
-    return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideOutletNode;
-  }
+    bool HeatExchangerFluidToFluid_Impl::isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const {
+      return isEmpty(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger);
+    }
 
-  unsigned HeatExchangerFluidToFluid_Impl::demandInletPort() const
-  {
-    return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideInletNode;
-  }
+    std::string HeatExchangerFluidToFluid_Impl::heatTransferMeteringEndUseType() const {
+      boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  unsigned HeatExchangerFluidToFluid_Impl::demandOutletPort() const
-  {
-    return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNode;
-  }
+    bool HeatExchangerFluidToFluid_Impl::isHeatTransferMeteringEndUseTypeDefaulted() const {
+      return isEmpty(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType);
+    }
 
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopDemandSideDesignFlowRate() const {
-    return getAutosizedValue("Loop Demand Side Design Fluid Flow Rate", "m3/s");
-  }
+    boost::optional<Node> HeatExchangerFluidToFluid_Impl::componentOverrideLoopSupplySideInletNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNode);
+    }
 
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopSupplySideDesignFlowRate() const {
-    return getAutosizedValue("Loop Supply Side Design Fluid Flow Rate", "m3/s");
-  }
+    boost::optional<Node> HeatExchangerFluidToFluid_Impl::componentOverrideLoopDemandSideInletNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNode);
+    }
 
-  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedHeatExchangerUFactorTimesAreaValue() const {
-    return getAutosizedValue("Heat Exchanger U-Factor Times Area Value", "W/C");
-  }
+    std::string HeatExchangerFluidToFluid_Impl::componentOverrideCoolingControlTemperatureMode() const {
+      boost::optional<std::string> value = getString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  void HeatExchangerFluidToFluid_Impl::autosize() {
+    bool HeatExchangerFluidToFluid_Impl::isComponentOverrideCoolingControlTemperatureModeDefaulted() const {
+      return isEmpty(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode);
+    }
+
+    double HeatExchangerFluidToFluid_Impl::sizingFactor() const {
+      boost::optional<double> value = getDouble(OS_HeatExchanger_FluidToFluidFields::SizingFactor, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::isSizingFactorDefaulted() const {
+      return isEmpty(OS_HeatExchanger_FluidToFluidFields::SizingFactor);
+    }
+
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::operationMinimumTemperatureLimit() const {
+      return getDouble(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit, true);
+    }
+
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::operationMaximumTemperatureLimit() const {
+      return getDouble(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit, true);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName, "HeatExchangerFluidToFluid", "Availability", schedule);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetAvailabilitySchedule() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setLoopDemandSideDesignFlowRate(boost::optional<double> loopDemandSideDesignFlowRate) {
+      bool result(false);
+      if (loopDemandSideDesignFlowRate) {
+        result = setDouble(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate, loopDemandSideDesignFlowRate.get());
+      }
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::autosizeLoopDemandSideDesignFlowRate() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::LoopDemandSideDesignFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setLoopSupplySideDesignFlowRate(boost::optional<double> loopSupplySideDesignFlowRate) {
+      bool result(false);
+      if (loopSupplySideDesignFlowRate) {
+        result = setDouble(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate, loopSupplySideDesignFlowRate.get());
+      }
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::autosizeLoopSupplySideDesignFlowRate() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::LoopSupplySideDesignFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setHeatExchangeModelType(std::string heatExchangeModelType) {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType, heatExchangeModelType);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetHeatExchangeModelType() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setHeatExchangerUFactorTimesAreaValue(boost::optional<double> heatExchangerUFactorTimesAreaValue) {
+      bool result(false);
+      if (heatExchangerUFactorTimesAreaValue) {
+        result = setDouble(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue, heatExchangerUFactorTimesAreaValue.get());
+      }
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::autosizeHeatExchangerUFactorTimesAreaValue() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangerUFactorTimesAreaValue, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setControlType(std::string controlType) {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::ControlType, controlType);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetControlType() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::ControlType, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setMinimumTemperatureDifferencetoActivateHeatExchanger(
+      double minimumTemperatureDifferencetoActivateHeatExchanger) {
+      bool result = setDouble(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger,
+                              minimumTemperatureDifferencetoActivateHeatExchanger);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetMinimumTemperatureDifferencetoActivateHeatExchanger() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType) {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType, heatTransferMeteringEndUseType);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetHeatTransferMeteringEndUseType() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setComponentOverrideLoopSupplySideInletNode(const boost::optional<Node>& node) {
+      bool result(false);
+      if (node) {
+        result = setPointer(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNode, node.get().handle());
+      } else {
+        resetComponentOverrideLoopSupplySideInletNode();
+        result = true;
+      }
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetComponentOverrideLoopSupplySideInletNode() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNode, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setComponentOverrideLoopDemandSideInletNode(const boost::optional<Node>& node) {
+      bool result(false);
+      if (node) {
+        result = setPointer(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNode, node.get().handle());
+      } else {
+        resetComponentOverrideLoopDemandSideInletNode();
+        result = true;
+      }
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetComponentOverrideLoopDemandSideInletNode() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNode, "");
+      OS_ASSERT(result);
+    }
+
+    bool
+      HeatExchangerFluidToFluid_Impl::setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode) {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode,
+                              componentOverrideCoolingControlTemperatureMode);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetComponentOverrideCoolingControlTemperatureMode() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setSizingFactor(double sizingFactor) {
+      bool result = setDouble(OS_HeatExchanger_FluidToFluidFields::SizingFactor, sizingFactor);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetSizingFactor() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::SizingFactor, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit) {
+      bool result(false);
+      if (operationMinimumTemperatureLimit) {
+        result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit, operationMinimumTemperatureLimit.get());
+      } else {
+        resetOperationMinimumTemperatureLimit();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetOperationMinimumTemperatureLimit() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatExchangerFluidToFluid_Impl::setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit) {
+      bool result(false);
+      if (operationMaximumTemperatureLimit) {
+        result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit, operationMaximumTemperatureLimit.get());
+      } else {
+        resetOperationMaximumTemperatureLimit();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void HeatExchangerFluidToFluid_Impl::resetOperationMaximumTemperatureLimit() {
+      bool result = setString(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit, "");
+      OS_ASSERT(result);
+    }
+
+    unsigned HeatExchangerFluidToFluid_Impl::supplyInletPort() const {
+      return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideInletNode;
+    }
+
+    unsigned HeatExchangerFluidToFluid_Impl::supplyOutletPort() const {
+      return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideOutletNode;
+    }
+
+    unsigned HeatExchangerFluidToFluid_Impl::demandInletPort() const {
+      return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideInletNode;
+    }
+
+    unsigned HeatExchangerFluidToFluid_Impl::demandOutletPort() const {
+      return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNode;
+    }
+
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopDemandSideDesignFlowRate() const {
+      return getAutosizedValue("Loop Demand Side Design Fluid Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopSupplySideDesignFlowRate() const {
+      return getAutosizedValue("Loop Supply Side Design Fluid Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedHeatExchangerUFactorTimesAreaValue() const {
+      return getAutosizedValue("Heat Exchanger U-Factor Times Area Value", "W/C");
+    }
+
+    void HeatExchangerFluidToFluid_Impl::autosize() {
+      autosizeLoopDemandSideDesignFlowRate();
+      autosizeLoopSupplySideDesignFlowRate();
+      autosizeHeatExchangerUFactorTimesAreaValue();
+    }
+
+    void HeatExchangerFluidToFluid_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedLoopDemandSideDesignFlowRate();
+      if (val) {
+        setLoopDemandSideDesignFlowRate(val.get());
+      }
+
+      val = autosizedLoopSupplySideDesignFlowRate();
+      if (val) {
+        setLoopSupplySideDesignFlowRate(val.get());
+      }
+
+      val = autosizedHeatExchangerUFactorTimesAreaValue();
+      if (val) {
+        setHeatExchangerUFactorTimesAreaValue(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(const Model& model)
+    : WaterToWaterComponent(HeatExchangerFluidToFluid::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::HeatExchangerFluidToFluid_Impl>());
+
     autosizeLoopDemandSideDesignFlowRate();
     autosizeLoopSupplySideDesignFlowRate();
+    setHeatExchangeModelType("Ideal");
     autosizeHeatExchangerUFactorTimesAreaValue();
+    setControlType("UncontrolledOn");
+    setMinimumTemperatureDifferencetoActivateHeatExchanger(0.01);
+    setHeatTransferMeteringEndUseType("LoopToLoop");
+    setComponentOverrideCoolingControlTemperatureMode("Loop");
+    setSizingFactor(1.0);
+    setOperationMinimumTemperatureLimit(0.0);
+    setOperationMaximumTemperatureLimit(100.0);
   }
 
-  void HeatExchangerFluidToFluid_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedLoopDemandSideDesignFlowRate();
-    if (val) {
-      setLoopDemandSideDesignFlowRate(val.get());
-    }
-
-    val = autosizedLoopSupplySideDesignFlowRate();
-    if (val) {
-      setLoopSupplySideDesignFlowRate(val.get());
-    }
-
-    val = autosizedHeatExchangerUFactorTimesAreaValue();
-    if (val) {
-      setHeatExchangerUFactorTimesAreaValue(val.get());
-    }
-
+  IddObjectType HeatExchangerFluidToFluid::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid);
   }
 
-} // detail
+  std::vector<std::string> HeatExchangerFluidToFluid::heatExchangeModelTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType);
+  }
 
-HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(const Model& model)
-  : WaterToWaterComponent(HeatExchangerFluidToFluid::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::HeatExchangerFluidToFluid_Impl>());
+  std::vector<std::string> HeatExchangerFluidToFluid::controlTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_HeatExchanger_FluidToFluidFields::ControlType);
+  }
 
-  autosizeLoopDemandSideDesignFlowRate();
-  autosizeLoopSupplySideDesignFlowRate();
-  setHeatExchangeModelType("Ideal");
-  autosizeHeatExchangerUFactorTimesAreaValue();
-  setControlType("UncontrolledOn");
-  setMinimumTemperatureDifferencetoActivateHeatExchanger(0.01);
-  setHeatTransferMeteringEndUseType("LoopToLoop");
-  setComponentOverrideCoolingControlTemperatureMode("Loop");
-  setSizingFactor(1.0);
-  setOperationMinimumTemperatureLimit(0.0);
-  setOperationMaximumTemperatureLimit(100.0);
-}
+  std::vector<std::string> HeatExchangerFluidToFluid::heatTransferMeteringEndUseTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType);
+  }
 
-IddObjectType HeatExchangerFluidToFluid::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid);
-}
+  std::vector<std::string> HeatExchangerFluidToFluid::componentOverrideCoolingControlTemperatureModeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode);
+  }
 
-std::vector<std::string> HeatExchangerFluidToFluid::heatExchangeModelTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatExchanger_FluidToFluidFields::HeatExchangeModelType);
-}
+  boost::optional<Schedule> HeatExchangerFluidToFluid::availabilitySchedule() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->availabilitySchedule();
+  }
 
-std::vector<std::string> HeatExchangerFluidToFluid::controlTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatExchanger_FluidToFluidFields::ControlType);
-}
+  boost::optional<double> HeatExchangerFluidToFluid::loopDemandSideDesignFlowRate() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->loopDemandSideDesignFlowRate();
+  }
 
-std::vector<std::string> HeatExchangerFluidToFluid::heatTransferMeteringEndUseTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatExchanger_FluidToFluidFields::HeatTransferMeteringEndUseType);
-}
+  bool HeatExchangerFluidToFluid::isLoopDemandSideDesignFlowRateAutosized() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isLoopDemandSideDesignFlowRateAutosized();
+  }
 
-std::vector<std::string> HeatExchangerFluidToFluid::componentOverrideCoolingControlTemperatureModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_HeatExchanger_FluidToFluidFields::ComponentOverrideCoolingControlTemperatureMode);
-}
+  boost::optional<double> HeatExchangerFluidToFluid::loopSupplySideDesignFlowRate() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->loopSupplySideDesignFlowRate();
+  }
 
-boost::optional<Schedule> HeatExchangerFluidToFluid::availabilitySchedule() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->availabilitySchedule();
-}
+  bool HeatExchangerFluidToFluid::isLoopSupplySideDesignFlowRateAutosized() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isLoopSupplySideDesignFlowRateAutosized();
+  }
 
-boost::optional<double> HeatExchangerFluidToFluid::loopDemandSideDesignFlowRate() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->loopDemandSideDesignFlowRate();
-}
+  std::string HeatExchangerFluidToFluid::heatExchangeModelType() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->heatExchangeModelType();
+  }
 
-bool HeatExchangerFluidToFluid::isLoopDemandSideDesignFlowRateAutosized() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isLoopDemandSideDesignFlowRateAutosized();
-}
+  bool HeatExchangerFluidToFluid::isHeatExchangeModelTypeDefaulted() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isHeatExchangeModelTypeDefaulted();
+  }
 
-boost::optional<double> HeatExchangerFluidToFluid::loopSupplySideDesignFlowRate() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->loopSupplySideDesignFlowRate();
-}
+  boost::optional<double> HeatExchangerFluidToFluid::heatExchangerUFactorTimesAreaValue() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->heatExchangerUFactorTimesAreaValue();
+  }
 
-bool HeatExchangerFluidToFluid::isLoopSupplySideDesignFlowRateAutosized() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isLoopSupplySideDesignFlowRateAutosized();
-}
+  bool HeatExchangerFluidToFluid::isHeatExchangerUFactorTimesAreaValueAutosized() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isHeatExchangerUFactorTimesAreaValueAutosized();
+  }
 
-std::string HeatExchangerFluidToFluid::heatExchangeModelType() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->heatExchangeModelType();
-}
+  std::string HeatExchangerFluidToFluid::controlType() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->controlType();
+  }
 
-bool HeatExchangerFluidToFluid::isHeatExchangeModelTypeDefaulted() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isHeatExchangeModelTypeDefaulted();
-}
+  bool HeatExchangerFluidToFluid::isControlTypeDefaulted() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isControlTypeDefaulted();
+  }
 
-boost::optional<double> HeatExchangerFluidToFluid::heatExchangerUFactorTimesAreaValue() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->heatExchangerUFactorTimesAreaValue();
-}
+  double HeatExchangerFluidToFluid::minimumTemperatureDifferencetoActivateHeatExchanger() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->minimumTemperatureDifferencetoActivateHeatExchanger();
+  }
 
-bool HeatExchangerFluidToFluid::isHeatExchangerUFactorTimesAreaValueAutosized() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isHeatExchangerUFactorTimesAreaValueAutosized();
-}
+  bool HeatExchangerFluidToFluid::isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted();
+  }
 
-std::string HeatExchangerFluidToFluid::controlType() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->controlType();
-}
+  std::string HeatExchangerFluidToFluid::heatTransferMeteringEndUseType() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->heatTransferMeteringEndUseType();
+  }
 
-bool HeatExchangerFluidToFluid::isControlTypeDefaulted() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isControlTypeDefaulted();
-}
+  bool HeatExchangerFluidToFluid::isHeatTransferMeteringEndUseTypeDefaulted() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isHeatTransferMeteringEndUseTypeDefaulted();
+  }
 
-double HeatExchangerFluidToFluid::minimumTemperatureDifferencetoActivateHeatExchanger() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->minimumTemperatureDifferencetoActivateHeatExchanger();
-}
+  boost::optional<Node> HeatExchangerFluidToFluid::componentOverrideLoopSupplySideInletNode() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->componentOverrideLoopSupplySideInletNode();
+  }
 
-bool HeatExchangerFluidToFluid::isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted();
-}
+  boost::optional<Node> HeatExchangerFluidToFluid::componentOverrideLoopDemandSideInletNode() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->componentOverrideLoopDemandSideInletNode();
+  }
 
-std::string HeatExchangerFluidToFluid::heatTransferMeteringEndUseType() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->heatTransferMeteringEndUseType();
-}
+  std::string HeatExchangerFluidToFluid::componentOverrideCoolingControlTemperatureMode() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->componentOverrideCoolingControlTemperatureMode();
+  }
 
-bool HeatExchangerFluidToFluid::isHeatTransferMeteringEndUseTypeDefaulted() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isHeatTransferMeteringEndUseTypeDefaulted();
-}
+  bool HeatExchangerFluidToFluid::isComponentOverrideCoolingControlTemperatureModeDefaulted() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isComponentOverrideCoolingControlTemperatureModeDefaulted();
+  }
 
-boost::optional<Node> HeatExchangerFluidToFluid::componentOverrideLoopSupplySideInletNode() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->componentOverrideLoopSupplySideInletNode();
-}
+  double HeatExchangerFluidToFluid::sizingFactor() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->sizingFactor();
+  }
 
-boost::optional<Node> HeatExchangerFluidToFluid::componentOverrideLoopDemandSideInletNode() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->componentOverrideLoopDemandSideInletNode();
-}
+  bool HeatExchangerFluidToFluid::isSizingFactorDefaulted() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isSizingFactorDefaulted();
+  }
 
-std::string HeatExchangerFluidToFluid::componentOverrideCoolingControlTemperatureMode() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->componentOverrideCoolingControlTemperatureMode();
-}
+  boost::optional<double> HeatExchangerFluidToFluid::operationMinimumTemperatureLimit() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->operationMinimumTemperatureLimit();
+  }
 
-bool HeatExchangerFluidToFluid::isComponentOverrideCoolingControlTemperatureModeDefaulted() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isComponentOverrideCoolingControlTemperatureModeDefaulted();
-}
+  boost::optional<double> HeatExchangerFluidToFluid::operationMaximumTemperatureLimit() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->operationMaximumTemperatureLimit();
+  }
 
-double HeatExchangerFluidToFluid::sizingFactor() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->sizingFactor();
-}
+  bool HeatExchangerFluidToFluid::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-bool HeatExchangerFluidToFluid::isSizingFactorDefaulted() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isSizingFactorDefaulted();
-}
+  void HeatExchangerFluidToFluid::resetAvailabilitySchedule() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetAvailabilitySchedule();
+  }
 
-boost::optional<double> HeatExchangerFluidToFluid::operationMinimumTemperatureLimit() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->operationMinimumTemperatureLimit();
-}
+  bool HeatExchangerFluidToFluid::setLoopDemandSideDesignFlowRate(double loopDemandSideDesignFlowRate) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setLoopDemandSideDesignFlowRate(loopDemandSideDesignFlowRate);
+  }
 
-boost::optional<double> HeatExchangerFluidToFluid::operationMaximumTemperatureLimit() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->operationMaximumTemperatureLimit();
-}
+  void HeatExchangerFluidToFluid::autosizeLoopDemandSideDesignFlowRate() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeLoopDemandSideDesignFlowRate();
+  }
 
-bool HeatExchangerFluidToFluid::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setAvailabilitySchedule(schedule);
-}
+  bool HeatExchangerFluidToFluid::setLoopSupplySideDesignFlowRate(double loopSupplySideDesignFlowRate) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setLoopSupplySideDesignFlowRate(loopSupplySideDesignFlowRate);
+  }
 
-void HeatExchangerFluidToFluid::resetAvailabilitySchedule() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetAvailabilitySchedule();
-}
+  void HeatExchangerFluidToFluid::autosizeLoopSupplySideDesignFlowRate() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeLoopSupplySideDesignFlowRate();
+  }
 
-bool HeatExchangerFluidToFluid::setLoopDemandSideDesignFlowRate(double loopDemandSideDesignFlowRate) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setLoopDemandSideDesignFlowRate(loopDemandSideDesignFlowRate);
-}
+  bool HeatExchangerFluidToFluid::setHeatExchangeModelType(std::string heatExchangeModelType) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatExchangeModelType(heatExchangeModelType);
+  }
 
-void HeatExchangerFluidToFluid::autosizeLoopDemandSideDesignFlowRate() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeLoopDemandSideDesignFlowRate();
-}
+  void HeatExchangerFluidToFluid::resetHeatExchangeModelType() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetHeatExchangeModelType();
+  }
 
-bool HeatExchangerFluidToFluid::setLoopSupplySideDesignFlowRate(double loopSupplySideDesignFlowRate) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setLoopSupplySideDesignFlowRate(loopSupplySideDesignFlowRate);
-}
+  bool HeatExchangerFluidToFluid::setHeatExchangerUFactorTimesAreaValue(double heatExchangerUFactorTimesAreaValue) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatExchangerUFactorTimesAreaValue(heatExchangerUFactorTimesAreaValue);
+  }
 
-void HeatExchangerFluidToFluid::autosizeLoopSupplySideDesignFlowRate() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeLoopSupplySideDesignFlowRate();
-}
+  void HeatExchangerFluidToFluid::autosizeHeatExchangerUFactorTimesAreaValue() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeHeatExchangerUFactorTimesAreaValue();
+  }
 
-bool HeatExchangerFluidToFluid::setHeatExchangeModelType(std::string heatExchangeModelType) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatExchangeModelType(heatExchangeModelType);
-}
+  bool HeatExchangerFluidToFluid::setControlType(std::string controlType) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setControlType(controlType);
+  }
 
-void HeatExchangerFluidToFluid::resetHeatExchangeModelType() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetHeatExchangeModelType();
-}
+  void HeatExchangerFluidToFluid::resetControlType() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetControlType();
+  }
 
-bool HeatExchangerFluidToFluid::setHeatExchangerUFactorTimesAreaValue(double heatExchangerUFactorTimesAreaValue) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatExchangerUFactorTimesAreaValue(heatExchangerUFactorTimesAreaValue);
-}
+  bool HeatExchangerFluidToFluid::setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setMinimumTemperatureDifferencetoActivateHeatExchanger(
+      minimumTemperatureDifferencetoActivateHeatExchanger);
+  }
 
-void HeatExchangerFluidToFluid::autosizeHeatExchangerUFactorTimesAreaValue() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizeHeatExchangerUFactorTimesAreaValue();
-}
+  void HeatExchangerFluidToFluid::resetMinimumTemperatureDifferencetoActivateHeatExchanger() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetMinimumTemperatureDifferencetoActivateHeatExchanger();
+  }
 
-bool HeatExchangerFluidToFluid::setControlType(std::string controlType) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setControlType(controlType);
-}
+  bool HeatExchangerFluidToFluid::setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatTransferMeteringEndUseType(heatTransferMeteringEndUseType);
+  }
 
-void HeatExchangerFluidToFluid::resetControlType() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetControlType();
-}
+  void HeatExchangerFluidToFluid::resetHeatTransferMeteringEndUseType() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetHeatTransferMeteringEndUseType();
+  }
 
-bool HeatExchangerFluidToFluid::setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setMinimumTemperatureDifferencetoActivateHeatExchanger(minimumTemperatureDifferencetoActivateHeatExchanger);
-}
+  bool HeatExchangerFluidToFluid::setComponentOverrideLoopSupplySideInletNode(const Node& node) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setComponentOverrideLoopSupplySideInletNode(node);
+  }
 
-void HeatExchangerFluidToFluid::resetMinimumTemperatureDifferencetoActivateHeatExchanger() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetMinimumTemperatureDifferencetoActivateHeatExchanger();
-}
+  void HeatExchangerFluidToFluid::resetComponentOverrideLoopSupplySideInletNode() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetComponentOverrideLoopSupplySideInletNode();
+  }
 
-bool HeatExchangerFluidToFluid::setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatTransferMeteringEndUseType(heatTransferMeteringEndUseType);
-}
+  bool HeatExchangerFluidToFluid::setComponentOverrideLoopDemandSideInletNode(const Node& node) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setComponentOverrideLoopDemandSideInletNode(node);
+  }
 
-void HeatExchangerFluidToFluid::resetHeatTransferMeteringEndUseType() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetHeatTransferMeteringEndUseType();
-}
+  void HeatExchangerFluidToFluid::resetComponentOverrideLoopDemandSideInletNode() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetComponentOverrideLoopDemandSideInletNode();
+  }
 
-bool HeatExchangerFluidToFluid::setComponentOverrideLoopSupplySideInletNode(const Node& node) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setComponentOverrideLoopSupplySideInletNode(node);
-}
+  bool HeatExchangerFluidToFluid::setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setComponentOverrideCoolingControlTemperatureMode(
+      componentOverrideCoolingControlTemperatureMode);
+  }
 
-void HeatExchangerFluidToFluid::resetComponentOverrideLoopSupplySideInletNode() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetComponentOverrideLoopSupplySideInletNode();
-}
+  void HeatExchangerFluidToFluid::resetComponentOverrideCoolingControlTemperatureMode() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetComponentOverrideCoolingControlTemperatureMode();
+  }
 
-bool HeatExchangerFluidToFluid::setComponentOverrideLoopDemandSideInletNode(const Node& node) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setComponentOverrideLoopDemandSideInletNode(node);
-}
+  bool HeatExchangerFluidToFluid::setSizingFactor(double sizingFactor) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setSizingFactor(sizingFactor);
+  }
 
-void HeatExchangerFluidToFluid::resetComponentOverrideLoopDemandSideInletNode() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetComponentOverrideLoopDemandSideInletNode();
-}
+  void HeatExchangerFluidToFluid::resetSizingFactor() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetSizingFactor();
+  }
 
-bool HeatExchangerFluidToFluid::setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setComponentOverrideCoolingControlTemperatureMode(componentOverrideCoolingControlTemperatureMode);
-}
+  bool HeatExchangerFluidToFluid::setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMinimumTemperatureLimit(operationMinimumTemperatureLimit);
+  }
 
-void HeatExchangerFluidToFluid::resetComponentOverrideCoolingControlTemperatureMode() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetComponentOverrideCoolingControlTemperatureMode();
-}
+  void HeatExchangerFluidToFluid::resetOperationMinimumTemperatureLimit() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetOperationMinimumTemperatureLimit();
+  }
 
-bool HeatExchangerFluidToFluid::setSizingFactor(double sizingFactor) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setSizingFactor(sizingFactor);
-}
+  bool HeatExchangerFluidToFluid::setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit) {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMaximumTemperatureLimit(operationMaximumTemperatureLimit);
+  }
 
-void HeatExchangerFluidToFluid::resetSizingFactor() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetSizingFactor();
-}
+  void HeatExchangerFluidToFluid::resetOperationMaximumTemperatureLimit() {
+    getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetOperationMaximumTemperatureLimit();
+  }
 
-bool HeatExchangerFluidToFluid::setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMinimumTemperatureLimit(operationMinimumTemperatureLimit);
-}
-
-void HeatExchangerFluidToFluid::resetOperationMinimumTemperatureLimit() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetOperationMinimumTemperatureLimit();
-}
-
-bool HeatExchangerFluidToFluid::setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMaximumTemperatureLimit(operationMaximumTemperatureLimit);
-}
-
-void HeatExchangerFluidToFluid::resetOperationMaximumTemperatureLimit() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetOperationMaximumTemperatureLimit();
-}
-
-/// @cond
-HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(std::shared_ptr<detail::HeatExchangerFluidToFluid_Impl> impl)
-  : WaterToWaterComponent(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(std::shared_ptr<detail::HeatExchangerFluidToFluid_Impl> impl)
+    : WaterToWaterComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> HeatExchangerFluidToFluid::autosizedLoopDemandSideDesignFlowRate() const {
     return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedLoopDemandSideDesignFlowRate();
@@ -735,5 +712,5 @@ HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(std::shared_ptr<detail::Hea
     return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedHeatExchangerUFactorTimesAreaValue();
   }
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

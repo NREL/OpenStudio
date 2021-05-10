@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,115 +36,101 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** CurveFanPressureRise_Impl is a Curve_Impl that is the implementation class for CurveFanPressureRise.*/
-  class MODEL_API CurveFanPressureRise_Impl : public Curve_Impl {
+    /** CurveFanPressureRise_Impl is a Curve_Impl that is the implementation class for CurveFanPressureRise.*/
+    class MODEL_API CurveFanPressureRise_Impl : public Curve_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      CurveFanPressureRise_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      CurveFanPressureRise_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      CurveFanPressureRise_Impl(const CurveFanPressureRise_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~CurveFanPressureRise_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual int numVariables() const override;
 
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
-   public:
+      //@}
+      /** @name Getters */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      double coefficient1C1() const;
 
-    CurveFanPressureRise_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      double coefficient2C2() const;
 
-    CurveFanPressureRise_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      double coefficient3C3() const;
 
-    CurveFanPressureRise_Impl(const CurveFanPressureRise_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      double coefficient4C4() const;
 
-    virtual ~CurveFanPressureRise_Impl() {}
+      double minimumValueofQfan() const;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      double maximumValueofQfan() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      double minimumValueofPsm() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      double maximumValueofPsm() const;
 
-    virtual int numVariables() const override;
+      boost::optional<double> minimumCurveOutput() const;
 
-    virtual double evaluate(const std::vector<double>& x) const override;
+      boost::optional<double> maximumCurveOutput() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    double coefficient1C1() const;
+      bool setCoefficient1C1(double coefficient1C1);
 
-    double coefficient2C2() const;
+      bool setCoefficient2C2(double coefficient2C2);
 
-    double coefficient3C3() const;
+      bool setCoefficient3C3(double coefficient3C3);
 
-    double coefficient4C4() const;
+      bool setCoefficient4C4(double coefficient4C4);
 
-    double minimumValueofQfan() const;
+      bool setMinimumValueofQfan(double minimumValueofQfan);
 
-    double maximumValueofQfan() const;
+      bool setMaximumValueofQfan(double maximumValueofQfan);
 
-    double minimumValueofPsm() const;
+      bool setMinimumValueofPsm(double minimumValueofPsm);
 
-    double maximumValueofPsm() const;
+      bool setMaximumValueofPsm(double maximumValueofPsm);
 
-    boost::optional<double> minimumCurveOutput() const;
+      bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
-    boost::optional<double> maximumCurveOutput() const;
+      void resetMinimumCurveOutput();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
-    bool setCoefficient1C1(double coefficient1C1);
+      void resetMaximumCurveOutput();
 
-    bool setCoefficient2C2(double coefficient2C2);
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setCoefficient3C3(double coefficient3C3);
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CurveFanPressureRise");
+    };
 
-    bool setCoefficient4C4(double coefficient4C4);
+  }  // namespace detail
 
-    bool setMinimumValueofQfan(double minimumValueofQfan);
+}  // namespace model
+}  // namespace openstudio
 
-    bool setMaximumValueofQfan(double maximumValueofQfan);
-
-    bool setMinimumValueofPsm(double minimumValueofPsm);
-
-    bool setMaximumValueofPsm(double maximumValueofPsm);
-
-    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
-
-    void resetMinimumCurveOutput();
-
-    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
-
-    void resetMaximumCurveOutput();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CurveFanPressureRise");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEFANPRESSURERISE_IMPL_HPP
+#endif  // MODEL_CURVEFANPRESSURERISE_IMPL_HPP

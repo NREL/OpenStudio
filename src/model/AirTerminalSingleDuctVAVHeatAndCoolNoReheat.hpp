@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,85 +37,83 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl;
+    class AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctVAVHeatAndCoolNoReheat is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat'. */
-class MODEL_API AirTerminalSingleDuctVAVHeatAndCoolNoReheat : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirTerminalSingleDuctVAVHeatAndCoolNoReheat is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat'. */
+  class MODEL_API AirTerminalSingleDuctVAVHeatAndCoolNoReheat : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalSingleDuctVAVHeatAndCoolNoReheat(const Model& model);
+    explicit AirTerminalSingleDuctVAVHeatAndCoolNoReheat(const Model& model);
 
-  virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat() {}
+    virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<double> maximumAirFlowRate() const;
+    boost::optional<double> maximumAirFlowRate() const;
 
-  bool isMaximumAirFlowRateAutosized() const;
+    bool isMaximumAirFlowRateAutosized() const;
 
-  double zoneMinimumAirFlowFraction() const;
+    double zoneMinimumAirFlowFraction() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setMaximumAirFlowRate(double maximumAirFlowRate);
+    bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
-  void autosizeMaximumAirFlowRate();
+    void autosizeMaximumAirFlowRate();
 
-  bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
+    bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl ImplType;
 
+    explicit AirTerminalSingleDuctVAVHeatAndCoolNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl ImplType;
+    friend class detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
+  };
 
-  explicit AirTerminalSingleDuctVAVHeatAndCoolNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl> impl);
+  /** \relates AirTerminalSingleDuctVAVHeatAndCoolNoReheat*/
+  typedef boost::optional<AirTerminalSingleDuctVAVHeatAndCoolNoReheat> OptionalAirTerminalSingleDuctVAVHeatAndCoolNoReheat;
 
-  friend class detail::AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
-};
+  /** \relates AirTerminalSingleDuctVAVHeatAndCoolNoReheat*/
+  typedef std::vector<AirTerminalSingleDuctVAVHeatAndCoolNoReheat> AirTerminalSingleDuctVAVHeatAndCoolNoReheatVector;
 
-/** \relates AirTerminalSingleDuctVAVHeatAndCoolNoReheat*/
-typedef boost::optional<AirTerminalSingleDuctVAVHeatAndCoolNoReheat> OptionalAirTerminalSingleDuctVAVHeatAndCoolNoReheat;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates AirTerminalSingleDuctVAVHeatAndCoolNoReheat*/
-typedef std::vector<AirTerminalSingleDuctVAVHeatAndCoolNoReheat> AirTerminalSingleDuctVAVHeatAndCoolNoReheatVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTVAVHEATANDCOOLNOREHEAT_HPP
-
+#endif  // MODEL_AIRTERMINALSINGLEDUCTVAVHEATANDCOOLNOREHEAT_HPP

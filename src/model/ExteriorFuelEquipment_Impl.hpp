@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,112 +36,107 @@
 namespace openstudio {
 namespace model {
 
-class ExteriorFuelEquipmentDefinition;
-class Schedule;
-class Facility;
+  class ExteriorFuelEquipmentDefinition;
+  class Schedule;
+  class Facility;
 
-namespace detail {
+  namespace detail {
 
-  /** ExteriorFuelEquipment_Impl is a ExteriorLoadInstance_Impl that is the implementation class for ExteriorFuelEquipment.*/
-  class MODEL_API ExteriorFuelEquipment_Impl : public ExteriorLoadInstance_Impl {
+    /** ExteriorFuelEquipment_Impl is a ExteriorLoadInstance_Impl that is the implementation class for ExteriorFuelEquipment.*/
+    class MODEL_API ExteriorFuelEquipment_Impl : public ExteriorLoadInstance_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExteriorFuelEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ExteriorFuelEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExteriorFuelEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      ExteriorFuelEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ExteriorFuelEquipment_Impl(const ExteriorFuelEquipment_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      ExteriorFuelEquipment_Impl(const ExteriorFuelEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ExteriorFuelEquipment_Impl() {}
+      virtual ~ExteriorFuelEquipment_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual double multiplier() const override;
+      virtual double multiplier() const override;
 
-    virtual bool isMultiplierDefaulted() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-    virtual bool setDefinition(const ExteriorLoadDefinition& definition) override;
+      virtual bool setDefinition(const ExteriorLoadDefinition& definition) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    ExteriorFuelEquipmentDefinition exteriorFuelEquipmentDefinition() const;
+      ExteriorFuelEquipmentDefinition exteriorFuelEquipmentDefinition() const;
 
-    Schedule schedule() const;
+      Schedule schedule() const;
 
-    std::string fuelType() const;
+      std::string fuelType() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& exteriorFuelEquipmentDefinition);
+      bool setExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& exteriorFuelEquipmentDefinition);
 
-    bool setSchedule(Schedule& schedule);
+      bool setSchedule(Schedule& schedule);
 
-    void resetSchedule();
+      void resetSchedule();
 
-    bool setFuelType(std::string fuelType);
+      bool setFuelType(std::string fuelType);
 
-    bool setMultiplier(double multiplier);
+      bool setMultiplier(double multiplier);
 
-    void resetMultiplier();
+      void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    Facility facility() const;
+      Facility facility() const;
 
-    //@}
-   protected:
+      //@}
+     protected:
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-    // index of the definition name
-    virtual int definitionIndex() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.ExteriorFuelEquipment");
 
-   private:
-    REGISTER_LOGGER("openstudio.model.ExteriorFuelEquipment");
+      std::vector<std::string> fuelTypeValues() const;
 
-    std::vector<std::string> fuelTypeValues() const;
+      boost::optional<ModelObject> exteriorFuelEquipmentDefinitionAsModelObject() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
+      boost::optional<ModelObject> facilityAsModelObject() const;
 
-    boost::optional<ModelObject> exteriorFuelEquipmentDefinitionAsModelObject() const;
-    boost::optional<ModelObject> scheduleAsModelObject() const;
-    boost::optional<ModelObject> facilityAsModelObject() const;
+      bool setExteriorFuelEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setExteriorFuelEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_EXTERIORFUELEQUIPMENT_IMPL_HPP
-
+#endif  // MODEL_EXTERIORFUELEQUIPMENT_IMPL_HPP

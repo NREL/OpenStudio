@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,81 +37,82 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
-class Node;
+  class ThermalZone;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerSingleZoneCooling_Impl;
+    class SetpointManagerSingleZoneCooling_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerSingleZoneCooling is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Cooling'. */
-class MODEL_API SetpointManagerSingleZoneCooling : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerSingleZoneCooling is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Cooling'. */
+  class MODEL_API SetpointManagerSingleZoneCooling : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerSingleZoneCooling(const Model& model);
+    explicit SetpointManagerSingleZoneCooling(const Model& model);
 
-  virtual ~SetpointManagerSingleZoneCooling() {}
+    virtual ~SetpointManagerSingleZoneCooling() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  double minimumSupplyAirTemperature() const;
+    double minimumSupplyAirTemperature() const;
 
-  double maximumSupplyAirTemperature() const;
+    double maximumSupplyAirTemperature() const;
 
-  boost::optional<ThermalZone> controlZone() const;
+    boost::optional<ThermalZone> controlZone() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
+    bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
 
-  bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+    bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
-  bool setControlZone(const ThermalZone& thermalZone);
+    bool setControlZone(const ThermalZone& thermalZone);
 
-  void resetControlZone();
+    void resetControlZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerSingleZoneCooling_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerSingleZoneCooling_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneCooling(std::shared_ptr<detail::SetpointManagerSingleZoneCooling_Impl> impl);
+    explicit SetpointManagerSingleZoneCooling(std::shared_ptr<detail::SetpointManagerSingleZoneCooling_Impl> impl);
 
-  friend class detail::SetpointManagerSingleZoneCooling_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneCooling");
-};
+    friend class detail::SetpointManagerSingleZoneCooling_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneCooling");
+  };
 
-/** \relates SetpointManagerSingleZoneCooling*/
-typedef boost::optional<SetpointManagerSingleZoneCooling> OptionalSetpointManagerSingleZoneCooling;
+  /** \relates SetpointManagerSingleZoneCooling*/
+  typedef boost::optional<SetpointManagerSingleZoneCooling> OptionalSetpointManagerSingleZoneCooling;
 
-/** \relates SetpointManagerSingleZoneCooling*/
-typedef std::vector<SetpointManagerSingleZoneCooling> SetpointManagerSingleZoneCoolingVector;
+  /** \relates SetpointManagerSingleZoneCooling*/
+  typedef std::vector<SetpointManagerSingleZoneCooling> SetpointManagerSingleZoneCoolingVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP

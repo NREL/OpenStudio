@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,140 +36,137 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
-class CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
-class ModelObjectList;
+  class Curve;
+  class CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
+  class ModelObjectList;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl is a WaterToAirComponent_Impl that is the implementation class for CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.*/
-  class MODEL_API CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl : public WaterToAirComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl is a WaterToAirComponent_Impl that is the implementation class for CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.*/
+    class MODEL_API CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl : public WaterToAirComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model,
-                                                               bool keepHandle);
+      CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                               Model_Impl* model,
-                                                               bool keepHandle);
+      CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                 bool keepHandle);
 
-    CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl& other,
-                                                               Model_Impl* model,
-                                                               bool keepHandle);
+      CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl& other,
+                                                                 Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl() {}
+      virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned airInletPort() const override;
+      virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() const override;
+      virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() const override;
+      virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() const override;
+      virtual unsigned waterOutletPort() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    int nominalSpeedLevel() const;
+      int nominalSpeedLevel() const;
 
-    boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel() const;
+      boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel() const;
 
-    bool isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const;
+      bool isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const;
 
-    boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
+      boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-    bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
+      bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-    boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel() const;
+      boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel() const;
 
-    bool isRatedWaterFlowRateAtSelectedNominalSpeedLevelAutosized() const;
+      bool isRatedWaterFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-    Curve energyPartLoadFractionCurve() const;
+      Curve energyPartLoadFractionCurve() const;
 
-  boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const ;
+      boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+      boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const ;
+      boost::optional<double> autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setNominalSpeedLevel(int nominalSpeedLevel);
+      bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-    bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+      bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 
-    void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+      void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
 
-    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
+      bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
-    void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+      void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-    bool setRatedWaterFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel);
+      bool setRatedWaterFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel);
 
-    void autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+      void autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
 
-    bool setEnergyPartLoadFractionCurve(const Curve& curve);
+      bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
+      bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    void resetSpeedDataList();
+      void resetSpeedDataList();
 
-    boost::optional<ModelObjectList> speedDataList() const;
+      boost::optional<ModelObjectList> speedDataList() const;
 
-    std::vector<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
+      std::vector<CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
 
-    bool addSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+      bool addSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
 
-    void removeSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+      void removeSpeed(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
 
-    void removeAllSpeeds();
+      void removeAllSpeeds();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Curve> optionalEnergyPartLoadFractionCurve() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Curve> optionalEnergyPartLoadFractionCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_IMPL_HPP
+#endif  // MODEL_COILHEATINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_IMPL_HPP

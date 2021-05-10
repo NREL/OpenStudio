@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,7 +40,6 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -49,34 +48,33 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsulation( SurfaceControlMovableInsulation & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::SurfaceControl_MovableInsulation);
+  boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsulation(SurfaceControlMovableInsulation& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::SurfaceControl_MovableInsulation);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  std::string insulationType = modelObject.insulationType();
+    std::string insulationType = modelObject.insulationType();
 
-  idfObject.setString(SurfaceControl_MovableInsulationFields::InsulationType, insulationType);
+    idfObject.setString(SurfaceControl_MovableInsulationFields::InsulationType, insulationType);
 
-  Surface surface = modelObject.surface();
-  if (boost::optional<IdfObject> surf = translateAndMapModelObject(surface)) {
-    idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, surf->name().get());
+    Surface surface = modelObject.surface();
+    if (boost::optional<IdfObject> surf = translateAndMapModelObject(surface)) {
+      idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, surf->name().get());
+    }
+
+    Material material = modelObject.material();
+    if (boost::optional<IdfObject> mat = translateAndMapModelObject(material)) {
+      idfObject.setString(SurfaceControl_MovableInsulationFields::MaterialName, mat->name().get());
+    }
+
+    Schedule schedule = modelObject.schedule();
+    if (boost::optional<IdfObject> sch = translateAndMapModelObject(schedule)) {
+      idfObject.setString(SurfaceControl_MovableInsulationFields::ScheduleName, sch->name().get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  Material material = modelObject.material();
-  if (boost::optional<IdfObject> mat = translateAndMapModelObject(material)) {
-    idfObject.setString(SurfaceControl_MovableInsulationFields::MaterialName, mat->name().get());
-  }
+}  // namespace energyplus
 
-  Schedule schedule = modelObject.schedule();
-  if (boost::optional<IdfObject> sch = translateAndMapModelObject(schedule)) {
-    idfObject.setString(SurfaceControl_MovableInsulationFields::ScheduleName, sch->name().get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

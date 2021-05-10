@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,134 +36,129 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** ElectricLoadCenterInverterLookUpTable_Impl is a Inverter_Impl that is the implementation class for ElectricLoadCenterInverterLookUpTable.*/
-  class MODEL_API ElectricLoadCenterInverterLookUpTable_Impl : public Inverter_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ElectricLoadCenterInverterLookUpTable_Impl is a Inverter_Impl that is the implementation class for ElectricLoadCenterInverterLookUpTable.*/
+    class MODEL_API ElectricLoadCenterInverterLookUpTable_Impl : public Inverter_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ElectricLoadCenterInverterLookUpTable_Impl(const IdfObject& idfObject,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ElectricLoadCenterInverterLookUpTable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterInverterLookUpTable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ElectricLoadCenterInverterLookUpTable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterInverterLookUpTable_Impl(const ElectricLoadCenterInverterLookUpTable_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ElectricLoadCenterInverterLookUpTable_Impl(const ElectricLoadCenterInverterLookUpTable_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ElectricLoadCenterInverterLookUpTable_Impl() {}
+      virtual ~ElectricLoadCenterInverterLookUpTable_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    virtual boost::optional<ThermalZone> thermalZone() const override;
+      virtual boost::optional<ThermalZone> thermalZone() const override;
 
-    boost::optional<double> radiativeFraction() const;
+      boost::optional<double> radiativeFraction() const;
 
-    boost::optional<double> ratedMaximumContinuousOutputPower() const;
+      boost::optional<double> ratedMaximumContinuousOutputPower() const;
 
-    boost::optional<double> nightTareLossPower() const;
+      boost::optional<double> nightTareLossPower() const;
 
-    boost::optional<double> nominalVoltageInput() const;
+      boost::optional<double> nominalVoltageInput() const;
 
-    boost::optional<double> efficiencyAt10PowerAndNominalVoltage() const;
+      boost::optional<double> efficiencyAt10PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyAt20PowerAndNominalVoltage() const;
+      boost::optional<double> efficiencyAt20PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyAt30PowerAndNominalVoltage() const;
+      boost::optional<double> efficiencyAt30PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyAt50PowerAndNominalVoltage() const;
+      boost::optional<double> efficiencyAt50PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyAt75PowerAndNominalVoltage() const;
+      boost::optional<double> efficiencyAt75PowerAndNominalVoltage() const;
 
-    boost::optional<double> efficiencyAt100PowerAndNominalVoltage() const;
+      boost::optional<double> efficiencyAt100PowerAndNominalVoltage() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    virtual bool setThermalZone(const ThermalZone& thermalZone) override;
+      virtual bool setThermalZone(const ThermalZone& thermalZone) override;
 
-    virtual void resetThermalZone() override;
+      virtual void resetThermalZone() override;
 
-    bool setRadiativeFraction(boost::optional<double> radiativeFraction);
+      bool setRadiativeFraction(boost::optional<double> radiativeFraction);
 
-    void resetRadiativeFraction();
+      void resetRadiativeFraction();
 
-    bool setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower);
+      bool setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower);
 
-    void resetRatedMaximumContinuousOutputPower();
+      void resetRatedMaximumContinuousOutputPower();
 
-    bool setNightTareLossPower(boost::optional<double> nightTareLossPower);
+      bool setNightTareLossPower(boost::optional<double> nightTareLossPower);
 
-    void resetNightTareLossPower();
+      void resetNightTareLossPower();
 
-    bool setNominalVoltageInput(boost::optional<double> nominalVoltageInput);
+      bool setNominalVoltageInput(boost::optional<double> nominalVoltageInput);
 
-    void resetNominalVoltageInput();
+      void resetNominalVoltageInput();
 
-    bool setEfficiencyAt10PowerAndNominalVoltage(boost::optional<double> efficiencyAt10PowerAndNominalVoltage);
+      bool setEfficiencyAt10PowerAndNominalVoltage(boost::optional<double> efficiencyAt10PowerAndNominalVoltage);
 
-    void resetEfficiencyAt10PowerAndNominalVoltage();
+      void resetEfficiencyAt10PowerAndNominalVoltage();
 
-    bool setEfficiencyAt20PowerAndNominalVoltage(boost::optional<double> efficiencyAt20PowerAndNominalVoltage);
+      bool setEfficiencyAt20PowerAndNominalVoltage(boost::optional<double> efficiencyAt20PowerAndNominalVoltage);
 
-    void resetEfficiencyAt20PowerAndNominalVoltage();
+      void resetEfficiencyAt20PowerAndNominalVoltage();
 
-    bool setEfficiencyAt30PowerAndNominalVoltage(boost::optional<double> efficiencyAt30PowerAndNominalVoltage);
+      bool setEfficiencyAt30PowerAndNominalVoltage(boost::optional<double> efficiencyAt30PowerAndNominalVoltage);
 
-    void resetEfficiencyAt30PowerAndNominalVoltage();
+      void resetEfficiencyAt30PowerAndNominalVoltage();
 
-    bool setEfficiencyAt50PowerAndNominalVoltage(boost::optional<double> efficiencyAt50PowerAndNominalVoltage);
+      bool setEfficiencyAt50PowerAndNominalVoltage(boost::optional<double> efficiencyAt50PowerAndNominalVoltage);
 
-    void resetEfficiencyAt50PowerAndNominalVoltage();
+      void resetEfficiencyAt50PowerAndNominalVoltage();
 
-    bool setEfficiencyAt75PowerAndNominalVoltage(boost::optional<double> efficiencyAt75PowerAndNominalVoltage);
+      bool setEfficiencyAt75PowerAndNominalVoltage(boost::optional<double> efficiencyAt75PowerAndNominalVoltage);
 
-    void resetEfficiencyAt75PowerAndNominalVoltage();
+      void resetEfficiencyAt75PowerAndNominalVoltage();
 
-    bool setEfficiencyAt100PowerAndNominalVoltage(boost::optional<double> efficiencyAt100PowerAndNominalVoltage);
+      bool setEfficiencyAt100PowerAndNominalVoltage(boost::optional<double> efficiencyAt100PowerAndNominalVoltage);
 
-    void resetEfficiencyAt100PowerAndNominalVoltage();
+      void resetEfficiencyAt100PowerAndNominalVoltage();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterLookUpTable");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterLookUpTable");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_IMPL_HPP
+#endif  // MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_IMPL_HPP

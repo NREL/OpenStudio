@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,8 +36,7 @@
 
 using namespace openstudio;
 
-TEST_F(GeometryFixture, ThreeJS)
-{
+TEST_F(GeometryFixture, ThreeJS) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/threejs.json");
   ASSERT_TRUE(exists(p));
 
@@ -56,6 +55,7 @@ TEST_F(GeometryFixture, ThreeJS)
   ASSERT_TRUE(scene);
 
   std::string json = scene->toJSON();
+  EXPECT_FALSE(json.empty());
 
   scene = ThreeScene::load(toString(p));
   ASSERT_TRUE(scene);

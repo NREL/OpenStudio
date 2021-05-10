@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,22 +41,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_Remove)
-{
+TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_Remove) {
   Model model;
   RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
@@ -69,8 +67,7 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_Remove)
   EXPECT_EQ(0, refrigerationWalkInZoneBoundaries.size());
 }
 
-TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithDefaultData) {
   Model model;
   RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
@@ -83,8 +80,7 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithDefaultDat
   EXPECT_DOUBLE_EQ(2.0, testObjectClone.heightofStockingDoorsFacingZone());
 }
 
-TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithCustomData) {
   Model model;
   ThermalZone thermalZone(model);
   Schedule discreteSchedule = model.alwaysOnDiscreteSchedule();
@@ -107,12 +103,13 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneOneModelWithCustomData
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.heightofStockingDoorsFacingZone());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.stockingDoorUValueFacingZone());
   EXPECT_FALSE(testObjectClone.thermalZone());
-  EXPECT_EQ(testObjectClone.glassReachInDoorOpeningScheduleFacingZone().get().handle(), testObject.glassReachInDoorOpeningScheduleFacingZone().get().handle());
-  EXPECT_EQ(testObjectClone.stockingDoorOpeningScheduleFacingZone().get().handle(), testObject.stockingDoorOpeningScheduleFacingZone().get().handle());
+  EXPECT_EQ(testObjectClone.glassReachInDoorOpeningScheduleFacingZone().get().handle(),
+            testObject.glassReachInDoorOpeningScheduleFacingZone().get().handle());
+  EXPECT_EQ(testObjectClone.stockingDoorOpeningScheduleFacingZone().get().handle(),
+            testObject.stockingDoorOpeningScheduleFacingZone().get().handle());
 }
 
-TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneTwoModelsWithDefaultData) {
   Model model;
   RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
@@ -130,4 +127,3 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_CloneTwoModelsWithDefaultDa
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
-

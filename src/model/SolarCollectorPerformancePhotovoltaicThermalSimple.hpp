@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,95 +37,96 @@ namespace openstudio {
 
 namespace model {
 
-class SolarCollectorFlatPlatePhotovoltaicThermal;
-class Schedule;
+  class SolarCollectorFlatPlatePhotovoltaicThermal;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
-  class SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
+    class SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
+    class SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SolarCollectorPerformancePhotovoltaicThermalSimple is a ModelObject that wraps the OpenStudio IDD object 'OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple'. */
-class MODEL_API SolarCollectorPerformancePhotovoltaicThermalSimple : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SolarCollectorPerformancePhotovoltaicThermalSimple is a ModelObject that wraps the OpenStudio IDD object 'OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple'. */
+  class MODEL_API SolarCollectorPerformancePhotovoltaicThermalSimple : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~SolarCollectorPerformancePhotovoltaicThermalSimple() {}
+    virtual ~SolarCollectorPerformancePhotovoltaicThermalSimple() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> thermalConversionEfficiencyInputModeTypeValues();
+    static std::vector<std::string> thermalConversionEfficiencyInputModeTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double fractionOfSurfaceAreaWithActiveThermalCollector() const;
+    double fractionOfSurfaceAreaWithActiveThermalCollector() const;
 
-  std::string thermalConversionEfficiencyInputModeType() const;
+    std::string thermalConversionEfficiencyInputModeType() const;
 
-  boost::optional<double> thermalConversionEfficiency() const;
+    boost::optional<double> thermalConversionEfficiency() const;
 
-  boost::optional<Schedule> thermalConversionEfficiencySchedule() const;
+    boost::optional<Schedule> thermalConversionEfficiencySchedule() const;
 
-  double frontSurfaceEmittance() const;
+    double frontSurfaceEmittance() const;
 
-  bool isFrontSurfaceEmittanceDefaulted() const;
+    bool isFrontSurfaceEmittanceDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFractionOfSurfaceAreaWithActiveThermalCollector(double fractionofSurfaceAreawithActiveThermalCollector);
+    bool setFractionOfSurfaceAreaWithActiveThermalCollector(double fractionofSurfaceAreawithActiveThermalCollector);
 
-  bool setThermalConversionEfficiency(double fixedThermalConversionEfficiency);
+    bool setThermalConversionEfficiency(double valueforThermalConversionEfficiencyifFixed);
 
-  void resetThermalConversionEfficiency();
+    void resetThermalConversionEfficiency();
 
-  bool setThermalConversionEfficiencySchedule(Schedule& schedule);
+    bool setThermalConversionEfficiencySchedule(Schedule& schedule);
 
-  void resetThermalConversionEfficiencySchedule();
+    void resetThermalConversionEfficiencySchedule();
 
-  bool setFrontSurfaceEmittance(double frontSurfaceEmittance);
+    bool setFrontSurfaceEmittance(double frontSurfaceEmittance);
 
-  void resetFrontSurfaceEmittance();
+    void resetFrontSurfaceEmittance();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl ImplType;
 
-  explicit SolarCollectorPerformancePhotovoltaicThermalSimple(const Model& model);
+    explicit SolarCollectorPerformancePhotovoltaicThermalSimple(const Model& model);
 
-  explicit SolarCollectorPerformancePhotovoltaicThermalSimple(std::shared_ptr<detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl> impl);
+    explicit SolarCollectorPerformancePhotovoltaicThermalSimple(
+      std::shared_ptr<detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl> impl);
 
-  friend class detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
-  friend class detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
-  friend class SolarCollectorFlatPlatePhotovoltaicThermal;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SolarCollectorPerformancePhotovoltaicThermalSimple");
-};
+    friend class detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl;
+    friend class detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
+    friend class SolarCollectorFlatPlatePhotovoltaicThermal;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SolarCollectorPerformancePhotovoltaicThermalSimple");
+  };
 
-/** \relates SolarCollectorPerformancePhotovoltaicThermalSimple*/
-typedef boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple> OptionalSolarCollectorPerformancePhotovoltaicThermalSimple;
+  /** \relates SolarCollectorPerformancePhotovoltaicThermalSimple*/
+  typedef boost::optional<SolarCollectorPerformancePhotovoltaicThermalSimple> OptionalSolarCollectorPerformancePhotovoltaicThermalSimple;
 
-/** \relates SolarCollectorPerformancePhotovoltaicThermalSimple*/
-typedef std::vector<SolarCollectorPerformancePhotovoltaicThermalSimple> SolarCollectorPerformancePhotovoltaicThermalSimpleVector;
+  /** \relates SolarCollectorPerformancePhotovoltaicThermalSimple*/
+  typedef std::vector<SolarCollectorPerformancePhotovoltaicThermalSimple> SolarCollectorPerformancePhotovoltaicThermalSimpleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SOLARCOLLECTORPERFORMANCEPHOTOVOLTAICTHERMALSIMPLE_HPP
-
+#endif  // MODEL_SOLARCOLLECTORPERFORMANCEPHOTOVOLTAICTHERMALSIMPLE_HPP

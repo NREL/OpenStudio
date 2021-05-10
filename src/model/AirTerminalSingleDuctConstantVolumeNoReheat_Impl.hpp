@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,94 +35,91 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API AirTerminalSingleDuctConstantVolumeNoReheat_Impl : public StraightComponent_Impl {
+    class MODEL_API AirTerminalSingleDuctConstantVolumeNoReheat_Impl : public StraightComponent_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // constructor
-    AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // constructor
+      AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      // construct from workspace
+      AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // copy constructor
-    AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const AirTerminalSingleDuctConstantVolumeNoReheat_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      // copy constructor
+      AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const AirTerminalSingleDuctConstantVolumeNoReheat_Impl& other, Model_Impl* model,
+                                                       bool keepHandle);
 
-    // virtual destructor
-    virtual ~AirTerminalSingleDuctConstantVolumeNoReheat_Impl(){}
+      // virtual destructor
+      virtual ~AirTerminalSingleDuctConstantVolumeNoReheat_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool isRemovable() const override;
+      virtual bool isRemovable() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
+      //@}
 
-    /** Returns the Schedule referred to by the AvailabilityScheduleName field. **/
-    Schedule availabilitySchedule() const;
+      /** Returns the Schedule referred to by the AvailabilityScheduleName field. **/
+      Schedule availabilitySchedule() const;
 
-    /** Sets the Schedule referred to by the AvailabilityScheduleName field. **/
-    bool setAvailabilitySchedule(Schedule& schedule);
+      /** Sets the Schedule referred to by the AvailabilityScheduleName field. **/
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    boost::optional<double> maximumAirFlowRate() const;
+      boost::optional<double> maximumAirFlowRate() const;
 
-    bool isMaximumAirFlowRateAutosized() const;
+      bool isMaximumAirFlowRateAutosized() const;
 
-    bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
+      bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
 
-    void autosizeMaximumAirFlowRate();
+      void autosizeMaximumAirFlowRate();
 
-    boost::optional<double> autosizedMaximumAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-   private:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeNoReheat");
 
-    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeNoReheat");
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_IMPL_HPP
+#endif  // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_IMPL_HPP

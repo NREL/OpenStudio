@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,128 +36,127 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class LightsDefinition;
+  class Schedule;
+  class LightsDefinition;
 
-namespace detail {
+  namespace detail {
 
-  class Lights_Impl;
+    class Lights_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** Lights is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS:Lights'.
+  /** Lights is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS:Lights'.
  *  \sa LightsDefinition */
-class MODEL_API Lights : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Lights : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit Lights(const LightsDefinition& lightsDefinition);
+    explicit Lights(const LightsDefinition& lightsDefinition);
 
-  virtual ~Lights() {}
+    virtual ~Lights() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Gets the LightsDefinition object. */
-  LightsDefinition lightsDefinition() const;
+    /** Gets the LightsDefinition object. */
+    LightsDefinition lightsDefinition() const;
 
-  /** Returns the (fractional) lighting schedule.  If this object does not
+    /** Returns the (fractional) lighting schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  double fractionReplaceable() const;
+    double fractionReplaceable() const;
 
-  bool isFractionReplaceableDefaulted() const;
+    bool isFractionReplaceableDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the LightsDefinition object. */
-  bool setLightsDefinition(const LightsDefinition& definition);
+    /** Sets the LightsDefinition object. */
+    bool setLightsDefinition(const LightsDefinition& definition);
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setFractionReplaceable(double fractionReplaceable);
+    bool setFractionReplaceable(double fractionReplaceable);
 
-  void resetFractionReplaceable();
+    void resetFractionReplaceable();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the lightingLevel if possible based on the underlying data of
+    /** Returns the lightingLevel if possible based on the underlying data of
    *  lightsDefinition(). */
-  boost::optional<double> lightingLevel() const;
+    boost::optional<double> lightingLevel() const;
 
-  /** Returns the powerPerFloorArea if possible based on the underlying data of
+    /** Returns the powerPerFloorArea if possible based on the underlying data of
    *  lightsDefinition(). */
-  boost::optional<double> powerPerFloorArea() const;
+    boost::optional<double> powerPerFloorArea() const;
 
-  /** Returns the powerPerPerson if possible based on the underlying data of
+    /** Returns the powerPerPerson if possible based on the underlying data of
    *  lightsDefinition(). */
-  boost::optional<double> powerPerPerson() const;
+    boost::optional<double> powerPerPerson() const;
 
-  /** Returns the lighting level represented by this instance, assuming floorArea (m^2) and
+    /** Returns the lighting level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getLightingPower(double floorArea, double numPeople) const;
+    double getLightingPower(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Lights_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Lights_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit Lights(std::shared_ptr<detail::Lights_Impl> impl);
+    explicit Lights(std::shared_ptr<detail::Lights_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Lights");
+  };
 
-  REGISTER_LOGGER("openstudio.model.Lights");
-};
+  /** \relates Lights*/
+  typedef boost::optional<Lights> OptionalLights;
 
-/** \relates Lights*/
-typedef boost::optional<Lights> OptionalLights;
+  /** \relates Lights*/
+  typedef std::vector<Lights> LightsVector;
 
-/** \relates Lights*/
-typedef std::vector<Lights> LightsVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_LIGHTS_HPP
-
+#endif  // MODEL_LIGHTS_HPP

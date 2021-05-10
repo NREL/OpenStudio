@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,71 +36,67 @@
 namespace openstudio {
 namespace model {
 
-class RenderingColor;
-class Space;
-class LightingSimulationZone;
+  class RenderingColor;
+  class Space;
+  class LightingSimulationZone;
 
-namespace detail {
+  namespace detail {
 
-  /** LightingSimulationZone_Impl is a ModelObject_Impl that is the implementation class for LightingSimulationZone.*/
-  class MODEL_API LightingSimulationZone_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** LightingSimulationZone_Impl is a ModelObject_Impl that is the implementation class for LightingSimulationZone.*/
+    class MODEL_API LightingSimulationZone_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    LightingSimulationZone_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      LightingSimulationZone_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    LightingSimulationZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      LightingSimulationZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    LightingSimulationZone_Impl(const LightingSimulationZone_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      LightingSimulationZone_Impl(const LightingSimulationZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~LightingSimulationZone_Impl() {}
+      virtual ~LightingSimulationZone_Impl() {}
 
-    //@}
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      //@}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    /** @name Getters */
-    //@{
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
+      //@}
 
-    /// Returns the rendering color.
-    boost::optional<RenderingColor> renderingColor() const;
+      /// Returns the rendering color.
+      boost::optional<RenderingColor> renderingColor() const;
 
-    /// Sets the rendering color.
-    bool setRenderingColor(const RenderingColor& renderingColor);
+      /// Sets the rendering color.
+      bool setRenderingColor(const RenderingColor& renderingColor);
 
-    /// Resets the rendering color.
-    void resetRenderingColor();
+      /// Resets the rendering color.
+      void resetRenderingColor();
 
-    /// Returns all spaces in this lighting simulation zone.
-    std::vector<Space> spaces() const;
+      /// Returns all spaces in this lighting simulation zone.
+      std::vector<Space> spaces() const;
 
-    /// Adds a spaces to this lighting simulation zone.
-    bool addSpace(const Space& space);
+      /// Adds a spaces to this lighting simulation zone.
+      bool addSpace(const Space& space);
 
-    /// Resets spaces in this lighting simulation zone.
-    void resetSpaces();
+      /// Resets spaces in this lighting simulation zone.
+      void resetSpaces();
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.LightingSimulationZone");
-  };
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.LightingSimulationZone");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_LIGHTINGSIMULATIONZONE_IMPL_HPP
-
+#endif  // MODEL_LIGHTINGSIMULATIONZONE_IMPL_HPP

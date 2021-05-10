@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,60 +42,58 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserCascade( RefrigerationCondenserCascade & modelObject )
-{
-  OptionalModelObject temp;
-  OptionalString optS;
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserCascade(RefrigerationCondenserCascade& modelObject) {
+    OptionalModelObject temp;
+    OptionalString optS;
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  // Name
-  IdfObject cascade = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Condenser_Cascade, modelObject);
+    // Name
+    IdfObject cascade = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Condenser_Cascade, modelObject);
 
-  // Rated Condensing Temperature
-  d = modelObject.ratedCondensingTemperature();
-  if (d) {
-    cascade.setDouble(Refrigeration_Condenser_CascadeFields::RatedCondensingTemperature,d.get());
+    // Rated Condensing Temperature
+    d = modelObject.ratedCondensingTemperature();
+    if (d) {
+      cascade.setDouble(Refrigeration_Condenser_CascadeFields::RatedCondensingTemperature, d.get());
+    }
+
+    // Rated Approach Temperature Difference
+    d = modelObject.ratedApproachTemperatureDifference();
+    if (d) {
+      cascade.setDouble(Refrigeration_Condenser_CascadeFields::RatedApproachTemperatureDifference, d.get());
+    }
+
+    // Rated Effective Total Heat Rejection Rate
+    d = modelObject.ratedEffectiveTotalHeatRejectionRate();
+    if (d) {
+      cascade.setDouble(Refrigeration_Condenser_CascadeFields::RatedEffectiveTotalHeatRejectionRate, d.get());
+    }
+
+    // Condensing Temperature Control Type
+    s = modelObject.condensingTemperatureControlType();
+    if (s) {
+      cascade.setString(Refrigeration_Condenser_CascadeFields::CondensingTemperatureControlType, s.get());
+    }
+
+    // Condenser Refrigerant Operating Charge Inventory
+    d = modelObject.condenserRefrigerantOperatingChargeInventory();
+    if (d) {
+      cascade.setDouble(Refrigeration_Condenser_CascadeFields::CondenserRefrigerantOperatingChargeInventory, d.get());
+    }
+
+    // Condensate Receiver Refrigerant Inventory
+    d = modelObject.condensateReceiverRefrigerantInventory();
+    if (d) {
+      cascade.setDouble(Refrigeration_Condenser_CascadeFields::CondensateReceiverRefrigerantInventory, d.get());
+    }
+
+    // Condensate Piping Refrigerant Inventory
+    d = modelObject.condensatePipingRefrigerantInventory();
+    if (d) {
+      cascade.setDouble(Refrigeration_Condenser_CascadeFields::CondensatePipingRefrigerantInventory, d.get());
+    }
+
+    return cascade;
   }
-
-  // Rated Approach Temperature Difference
-  d = modelObject.ratedApproachTemperatureDifference();
-  if (d) {
-    cascade.setDouble(Refrigeration_Condenser_CascadeFields::RatedApproachTemperatureDifference,d.get());
-  }
-
-  // Rated Effective Total Heat Rejection Rate
-  d = modelObject.ratedEffectiveTotalHeatRejectionRate();
-  if (d) {
-    cascade.setDouble(Refrigeration_Condenser_CascadeFields::RatedEffectiveTotalHeatRejectionRate,d.get());
-  }
-
-  // Condensing Temperature Control Type
-  s = modelObject.condensingTemperatureControlType();
-  if (s) {
-    cascade.setString(Refrigeration_Condenser_CascadeFields::CondensingTemperatureControlType,s.get());
-  }
-
-  // Condenser Refrigerant Operating Charge Inventory
-  d = modelObject.condenserRefrigerantOperatingChargeInventory();
-  if (d) {
-    cascade.setDouble(Refrigeration_Condenser_CascadeFields::CondenserRefrigerantOperatingChargeInventory,d.get());
-  }
-
-  // Condensate Receiver Refrigerant Inventory
-  d = modelObject.condensateReceiverRefrigerantInventory();
-  if (d) {
-    cascade.setDouble(Refrigeration_Condenser_CascadeFields::CondensateReceiverRefrigerantInventory,d.get());
-  }
-
-  // Condensate Piping Refrigerant Inventory
-  d = modelObject.condensatePipingRefrigerantInventory();
-  if (d) {
-    cascade.setDouble(Refrigeration_Condenser_CascadeFields::CondensatePipingRefrigerantInventory,d.get());
-  }
-
-  return cascade;
-
-}
-}
-}
+}  // namespace energyplus
+}  // namespace openstudio
