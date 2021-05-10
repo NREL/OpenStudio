@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -143,7 +143,7 @@ ScaleConstant ScaleFactorySingleton::m_recoverFromFailedCreate() const {
 
 std::ostream& operator<<(std::ostream& os, const ScaleFactorySingleton& factory) {
   for (const auto& map : factory.m_exponentMap) {
-    os << map.second() << std::endl;  // output scale and go to next line
+    os << map.second() << '\n';  // output scale and go to next line
   }
 
   return os;

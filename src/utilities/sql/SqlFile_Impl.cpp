@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1903,9 +1903,9 @@ namespace detail {
 
       code = sqlite3_step(sqlStmtPtr);
       std::stringstream s2;
-      s2 << "SQL Query:" << std::endl;
+      s2 << "SQL Query:" << '\n';
       s2 << s.str();
-      s2 << "Return Code:" << std::endl;
+      s2 << "Return Code:" << '\n';
       s2 << code;
       LOG(Debug, s2.str());
       while (code == SQLITE_ROW) {
@@ -2198,9 +2198,9 @@ namespace detail {
 
       code = sqlite3_step(sqlStmtPtr);
       std::stringstream s2;
-      s2 << "SQL Query:" << std::endl;
+      s2 << "SQL Query:" << '\n';
       s2 << s.str();
-      s2 << "Return Code:" << std::endl;
+      s2 << "Return Code:" << '\n';
       s2 << code;
       LOG(Debug, s2.str());
 
@@ -2343,9 +2343,9 @@ namespace detail {
 
       code = sqlite3_step(sqlStmtPtr);
       std::stringstream s2;
-      s2 << "SQL Query:" << std::endl;
-      s2 << s.str() << std::endl;
-      s2 << "Return Code:" << std::endl;
+      s2 << "SQL Query:" << '\n';
+      s2 << s.str() << '\n';
+      s2 << "Return Code:" << '\n';
       s2 << code;
       LOG(Debug, s2.str());
       while (code == SQLITE_ROW) {
@@ -2664,12 +2664,12 @@ namespace detail {
         wquery = expanded[0];
       } else {
         if (expanded.size() == 0) {
-          LOG(Info, "Unable to return timeSeries based on query: " << std::endl
+          LOG(Info, "Unable to return timeSeries based on query: " << '\n'
                                                                    << query << ", because there are no matching timeSeries in SqlFile "
                                                                    << toString(path()) << ".");
         } else {
           OS_ASSERT(expanded.size() > 1);
-          LOG(Info, "Unable to return timeSeries based on query: " << std::endl
+          LOG(Info, "Unable to return timeSeries based on query: " << '\n'
                                                                    << query << ", because it expands to more than one (" << expanded.size()
                                                                    << ") query.");
         }

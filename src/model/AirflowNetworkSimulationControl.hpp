@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,8 +45,8 @@ namespace model {
  *
  *  AirflowNetworkSimulationControl defines what types of multizone airflow calculations are part of an EnergyPlus simulation.
  *  AirflowNetworkSimulationControl parents several other ModelObject types that configure simulation parameters for EnergyPlus.
- *  AirflowNetworkSimulationControl does not have a public constructor because it is a unique ModelObject.  
- *  To get the AirflowNetworkSimulationControl object for a Model or create one if it does not yet exist use model.getUniqueObject<AirflowNetworkSimulationControl>().  
+ *  AirflowNetworkSimulationControl does not have a public constructor because it is a unique ModelObject.
+ *  To get the AirflowNetworkSimulationControl object for a Model or create one if it does not yet exist use model.getUniqueObject<AirflowNetworkSimulationControl>().
  *  To get the AirflowNetworkSimulationControl object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<AirflowNetworkSimulationControl>().
  */
   class MODEL_API AirflowNetworkSimulationControl : public ParentObject
@@ -59,6 +59,8 @@ namespace model {
     //@{
     static IddObjectType iddObjectType();
 
+    static std::vector<std::string> solverValues();
+
     //@}
     /** @name Getters */
     //@{
@@ -66,12 +68,12 @@ namespace model {
     /** Determines the type of AirflowNetwork simulation that will be run.
    *
    *  NoMultizoneOrDistribution: Only perform Simple calculations (objects ZoneInfiltration:*,
-   *  ZoneVentilation:*, ZoneMixing, ZoneCrossMixing, ZoneRefrigerationDoorMixing, 
+   *  ZoneVentilation:*, ZoneMixing, ZoneCrossMixing, ZoneRefrigerationDoorMixing,
    *  ZoneAirBalance:OutdoorAir, ZoneEarthtube, ZoneThermalChimney, and ZoneCoolTower:Shower);
    *
    *  MultizoneWithoutDistribution: Use AirflowNetwork objects to simulate multizone
    *  Airflows driven by wind during simulation time, and objects of ZoneInfiltration:*,
-   *  ZoneVentilation:*, ZoneMixing, ZoneCrossMixing, ZoneRefrigerationDoorMixing, ZoneAirBalance:OutdoorAir, 
+   *  ZoneVentilation:*, ZoneMixing, ZoneCrossMixing, ZoneRefrigerationDoorMixing, ZoneAirBalance:OutdoorAir,
    *  ZoneEarthtube, ZoneThermalChimney, and ZoneCoolTower:Shower are ignored;
    *
    *  MultizoneWithDistributionOnlyDuringFanOperation: Perform distribution system
@@ -89,7 +91,7 @@ namespace model {
    *  Input: User must enter AirflowNetwork:MultiZone:WindPressureCoefficientArray,
    *  AirflowNetwork:MultiZone:ExternalNode, and AirflowNetwork:MultiZone:WindPressureCoefficientValues objects.
    *
-   *  SurfaceAverageCalculation: used only for rectangular buildings. AirflowNetwork:MultiZone:WindPressureCoefficientArray, 
+   *  SurfaceAverageCalculation: used only for rectangular buildings. AirflowNetwork:MultiZone:WindPressureCoefficientArray,
    *  AirflowNetwork:MultiZone:ExternalNode, and AirflowNetwork:MultiZone:WindPressureCoefficientValues objects are not used.
    */
     boost::optional<std::string> windPressureCoefficientType() const;
@@ -126,8 +128,8 @@ namespace model {
     /** Returns true if the initialization type is defaulted. */
     bool isInitializationTypeDefaulted() const;
 
-    /** This tolerance is defined as the absolute value of the sum of the mass flow rates divided by the sum of the absolute value 
-   *  of the mass Flow Rates. The mass flow rates described here refer to the mass Flow Rates at all Nodes in the AirflowNetwork 
+    /** This tolerance is defined as the absolute value of the sum of the mass flow rates divided by the sum of the absolute value
+   *  of the mass Flow Rates. The mass flow rates described here refer to the mass Flow Rates at all Nodes in the AirflowNetwork
    *  model. The solution converges when both this tolerance and the tolerance in the Absolute Airflow Convergence Tolerance
    *  field are satisfied.
    */
@@ -136,7 +138,7 @@ namespace model {
     bool isRelativeAirflowConvergenceToleranceDefaulted() const;
 
     /** This tolerance is defined as the absolute value of the sum of the mass flow rates. The mass flow rates described here refer
-   *  to the mass flow rates at all nodes in the AirflowNetwork model. The solution converges when both this tolerance and the 
+   *  to the mass flow rates at all nodes in the AirflowNetwork model. The solution converges when both this tolerance and the
    *  tolerance in the previous field (Relative Airflow Convergence Tolerance) are satisfied.
    */
     boost::optional<double> absoluteAirflowConvergenceTolerance() const;
@@ -167,6 +169,12 @@ namespace model {
     bool heightDependenceofExternalNodeTemperature() const;
     /** Returns true if the external nodes temperature computation type is defaulted. */
     bool isHeightDependenceofExternalNodeTemperatureDefaulted() const;
+
+    std::string solver() const;
+    bool isSolverDefaulted() const;
+
+    bool allowUnsupportedZoneEquipment() const;
+    bool isAllowUnsupportedZoneEquipmentDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -231,6 +239,12 @@ namespace model {
     bool setHeightDependenceofExternalNodeTemperature(bool tf);
     /** Resets the external nodes temperature computation type. */
     void resetHeightDependenceofExternalNodeTemperature();
+
+    bool setSolver(const std::string& solver);
+    void resetSolver();
+
+    bool setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment);
+    void resetAllowUnsupportedZoneEquipment();
 
     //@}
 

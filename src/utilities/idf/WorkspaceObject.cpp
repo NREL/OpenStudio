@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -183,6 +183,7 @@ namespace detail {
       }
 
       // pointer field, return name of pointed-to object
+      // TODO: what about when the object doesn't have a name field?
       OptionalWorkspaceObject oTarget = getTarget(index);
       if (!oTarget) {
         // implicitly or explicitly a null pointer
@@ -200,7 +201,12 @@ namespace detail {
         return std::string();
       } else {
         // return target's name
-        return oTarget->name();
+        if (auto s = oTarget->name()) {
+          return s.get();
+        } else {
+          // Fall back to handle if it doesn't have a name
+          return openstudio::toString(oTarget->handle());
+        }
       }
     }
 
@@ -359,7 +365,7 @@ namespace detail {
     if (checkValidity && (level > StrictnessLevel::None)) {
 
       // do not set if would violate field NullAndRequired
-      if ((level > StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
+      if ((level >= StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
         return boost::none;
       }
 
@@ -370,7 +376,7 @@ namespace detail {
       }
 
       // check collection NameConflict
-      if (!uniquelyIdentifiableByName()) {
+      if (!newName.empty() && iddObject().isRequiredField(*index) && !uniquelyIdentifiableByName()) {
         result = IdfObject_Impl::setName(workspace().nextName(*result, false));
         OS_ASSERT(result);
       }
@@ -431,7 +437,7 @@ namespace detail {
     }
 
     // regular field -- name or data
-    if ((index == 0) && (iddObject().hasNameField())) {
+    if ((iddObject().hasNameField()) && (index == iddObject().nameFieldIndex().get())) {
       return setName(value, checkValidity).has_value();
     }  // name
 
@@ -1250,6 +1256,10 @@ namespace detail {
     }
     WorkspaceObjectVector candidates = m_workspace->getObjectsByReference(iddObject().references());
     for (const WorkspaceObject& candidate : candidates) {
+      if ((candidate.iddObject().type() == openstudio::IddObjectType::OS_Connection)
+          || (candidate.iddObject().type() == openstudio::IddObjectType::OS_PortList)) {
+        continue;
+      }
       OptionalString candidateName = candidate.name();
       OS_ASSERT(candidateName);
       if ((istringEqual(*oName, *candidateName) && (!initialized() || (getObject<WorkspaceObject>() != candidate)))) {

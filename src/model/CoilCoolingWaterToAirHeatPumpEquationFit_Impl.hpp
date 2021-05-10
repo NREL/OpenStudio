@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,6 +35,9 @@
 
 namespace openstudio {
 namespace model {
+
+  class CurveQuadLinear;
+  class CurveQuintLinear;
 
   namespace detail {
 
@@ -108,37 +111,11 @@ namespace model {
 
       bool isRatedCoolingCoefficientofPerformanceDefaulted() const;
 
-      double totalCoolingCapacityCoefficient1() const;
+      CurveQuadLinear totalCoolingCapacityCurve() const;
 
-      double totalCoolingCapacityCoefficient2() const;
+      CurveQuintLinear sensibleCoolingCapacityCurve() const;
 
-      double totalCoolingCapacityCoefficient3() const;
-
-      double totalCoolingCapacityCoefficient4() const;
-
-      double totalCoolingCapacityCoefficient5() const;
-
-      double sensibleCoolingCapacityCoefficient1() const;
-
-      double sensibleCoolingCapacityCoefficient2() const;
-
-      double sensibleCoolingCapacityCoefficient3() const;
-
-      double sensibleCoolingCapacityCoefficient4() const;
-
-      double sensibleCoolingCapacityCoefficient5() const;
-
-      double sensibleCoolingCapacityCoefficient6() const;
-
-      double coolingPowerConsumptionCoefficient1() const;
-
-      double coolingPowerConsumptionCoefficient2() const;
-
-      double coolingPowerConsumptionCoefficient3() const;
-
-      double coolingPowerConsumptionCoefficient4() const;
-
-      double coolingPowerConsumptionCoefficient5() const;
+      CurveQuadLinear coolingPowerConsumptionCurve() const;
 
       double nominalTimeforCondensateRemovaltoBegin() const;
 
@@ -190,37 +167,11 @@ namespace model {
 
       bool setRatedCoolingCoefficientofPerformance(double ratedCoolingCoefficientofPerformance);
 
-      bool setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
+      bool setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve);
 
-      bool setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
+      bool setSensibleCoolingCapacityCurve(const CurveQuintLinear& sensibleCoolingCapacityCurve);
 
-      bool setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3);
-
-      bool setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
-
-      bool setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
-
-      bool setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
-
-      bool setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
-
-      bool setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3);
-
-      bool setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4);
-
-      bool setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
-
-      bool setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
-
-      bool setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
-
-      bool setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);
-
-      bool setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3);
-
-      bool setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
-
-      bool setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
+      bool setCoolingPowerConsumptionCurve(const CurveQuadLinear& coolingPowerConsumptionCurve);
 
       bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,11 @@
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../ModelExtensibleGroup.hpp"
+#include <utilities/idd/OS_PortList_FieldEnums.hxx>
+
+using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_AirTerminalSingleDuctConstantVolumeFourPipeInduction) {
@@ -112,23 +117,27 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_remove
 
   // KSB: I don't think it is the greatest idea to test these private methods,
   // but this area has resulted in a simulation error so it needs to be tested
-  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+  // (Note: JM 2021-03-02 These aren't private anymore)
+  EXPECT_EQ(0u, thermalZone.exhaustPortList().numExtensibleGroups());
+  EXPECT_EQ(0u, thermalZone.inletPortList().numExtensibleGroups());
 
   airLoop.addBranchForZone(thermalZone, testObject);
   plantLoop.addDemandBranchForComponent(heatingCoil);
   plantLoop.addDemandBranchForComponent(coolingCoil);
 
-  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+  ASSERT_EQ(1u, thermalZone.exhaustPortList().numExtensibleGroups());
+  EXPECT_TRUE(thermalZone.exhaustPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
+  ASSERT_EQ(1u, thermalZone.inletPortList().numExtensibleGroups());
+  EXPECT_TRUE(thermalZone.inletPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
 
   EXPECT_EQ((unsigned)10, plantLoop.demandComponents().size());
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
 
   testObject.remove();
 
-  EXPECT_FALSE(thermalZone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-  EXPECT_TRUE(thermalZone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+  EXPECT_EQ(0u, thermalZone.exhaustPortList().numExtensibleGroups());
+  ASSERT_EQ(1u, thermalZone.inletPortList().numExtensibleGroups());
+  EXPECT_TRUE(thermalZone.inletPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
 
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());

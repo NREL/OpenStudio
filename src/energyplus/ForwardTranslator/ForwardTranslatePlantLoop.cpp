@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,6 +56,8 @@
 #include "../../model/CentralHeatPumpSystem_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
+#include "../../model/ChillerElectricReformulatedEIR.hpp"
+#include "../../model/ChillerElectricReformulatedEIR_Impl.hpp"
 #include "../../model/ChillerAbsorption.hpp"
 #include "../../model/ChillerAbsorption_Impl.hpp"
 #include "../../model/ChillerAbsorptionIndirect.hpp"
@@ -90,6 +92,8 @@
 #include "../../model/CoilHeatingWaterBaseboard_Impl.hpp"
 #include "../../model/CoilHeatingWaterBaseboardRadiant.hpp"
 #include "../../model/CoilHeatingWaterBaseboardRadiant_Impl.hpp"
+#include "../../model/CoilCoolingWaterPanelRadiant.hpp"
+#include "../../model/CoilCoolingWaterPanelRadiant_Impl.hpp"
 #include "../../model/CoilCoolingCooledBeam.hpp"
 #include "../../model/CoilCoolingCooledBeam_Impl.hpp"
 #include "../../model/CoilCoolingFourPipeBeam.hpp"
@@ -184,7 +188,7 @@ namespace energyplus {
               }
             }
           }
-          //special case for ZoneHVAC:Baseeboard:RadiantConvective:Water.  In E+, this object appears on both the
+          //special case for ZoneHVAC:Baseboard:RadiantConvective:Water.  In E+, this object appears on both the
           //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
           //ZoneHVACBaseboardRadiantConvectiveWater and CoilHeatingWaterBaseboardRadiant.  The ZoneHVAC goes onto the zone and
           //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
@@ -196,6 +200,21 @@ namespace energyplus {
                 //Get the name and the idd object from the idf object version of this
                 objectName = idfContZnBBRad->name().get();
                 iddType = idfContZnBBRad->iddObject().name();
+              }
+            }
+          }
+          //special case for ZoneHVAC:CoolingPanel:RadiantConvective:Water.  In E+, this object appears on both the
+          //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
+          //ZoneHVACCoolingPanelRadiantConvectiveWater and CoilCoolingWaterPanelRadiant.  The ZoneHVAC goes onto the zone and
+          //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
+          //to put the name of the containing ZoneHVACCoolingPanelRadiantConvectiveWater onto the branch.
+          if (auto coilCPRad = modelObject.optionalCast<CoilCoolingWaterPanelRadiant>()) {
+            if (auto contZnCPRad = coilCPRad->containingZoneHVACComponent()) {
+              //translate and map containingZoneHVACBBRadConvWater
+              if (auto idfContZnCPRad = this->translateAndMapModelObject(*contZnCPRad)) {
+                //Get the name and the idd object from the idf object version of this
+                objectName = idfContZnCPRad->name().get();
+                iddType = idfContZnCPRad->iddObject().name();
               }
             }
           }
@@ -306,7 +325,7 @@ namespace energyplus {
           }
         } else if (auto waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>()) {
           // Special case for CentralHeatPump.
-          // Unlike other WaterToWaterComponent with a tertiary loop (ChillerAbsorption, ChillerAbsorptionIndirect, ChillerElectricEIR) which all have
+          // Unlike other WaterToWaterComponent with a tertiary loop (ChillerAbsorption, ChillerAbsorptionIndirect, ChillerElectricEIR, ChillerElectricReformulatedEIR) which all have
           // tertiary loop = demand side (so 2 demand side loops and one supply), CentralHeatPumpSystem has tertiary = supply (2 supply side and 1
           // demand side loops)
           if (auto central_hp = modelObject.optionalCast<CentralHeatPumpSystem>()) {

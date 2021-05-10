@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,10 @@
 #include "../FanConstantVolume.hpp"
 #include "../CoilHeatingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
@@ -112,6 +116,95 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_addToNode) {
   CoilHeatingElectric coilHeatingElectric(m, s);
 
   AirLoopHVACUnitaryHeatPumpAirToAir testObject(m, s, supplyFan, heatingCoil, coolingCoil, coilHeatingElectric);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_VariableSpeedCoils) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+
+  CoilCoolingDXVariableSpeed coolingCoil(m);
+  CoilHeatingDXVariableSpeed heatingCoil(m);
+
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObject(m, s, supplyFan, heatingCoil, coolingCoil, coilHeatingElectric);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_CoilSystemIntegratedHeatPumpAirSource) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+
+  CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
+  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m);
+  CoilCoolingDXVariableSpeed scdwhCoolingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(m);
+  CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil, dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil,
+                                                   scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
+
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObject(m, s, supplyFan, coilSystem, coilSystem, coilHeatingElectric);
 
   AirLoopHVAC airLoop(m);
 

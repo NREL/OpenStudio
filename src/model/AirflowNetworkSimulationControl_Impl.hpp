@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -102,6 +102,10 @@ namespace model {
       bool isBuildingAspectRatioDefaulted() const;
       bool heightDependenceofExternalNodeTemperature() const;
       bool isHeightDependenceofExternalNodeTemperatureDefaulted() const;
+      std::string solver() const;
+      bool isSolverDefaulted() const;
+      bool allowUnsupportedZoneEquipment() const;
+      bool isAllowUnsupportedZoneEquipmentDefaulted() const;
 
       //@}
       /** @name Setters */
@@ -131,6 +135,11 @@ namespace model {
       void resetBuildingAspectRatio();
       bool setHeightDependenceofExternalNodeTemperature(bool tf);
       void resetHeightDependenceofExternalNodeTemperature();
+      bool setSolver(const std::string& solver);
+      void resetSolver();
+      bool setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment);
+      void resetAllowUnsupportedZoneEquipment();
+
       //@}
 
      private:

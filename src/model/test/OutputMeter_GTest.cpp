@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -202,6 +202,11 @@ TEST_F(ModelFixture, MeterConstructor) {
   // check order of operations
   // this is a corner case of EnergyPlus, there is no 'Heating:NaturalGas:Facility', it is just 'Heating:NaturalGas'
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setFuelType(FuelType::Gas));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   EXPECT_TRUE(meter.setEndUseType(EndUseType::Heating));
@@ -212,6 +217,11 @@ TEST_F(ModelFixture, MeterConstructor) {
   EXPECT_EQ(EndUseType::Heating, meter.endUseType().get().value());
 
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   EXPECT_TRUE(meter.setFuelType(FuelType::Gas));
   EXPECT_TRUE(meter.setEndUseType(EndUseType::Heating));
@@ -222,6 +232,11 @@ TEST_F(ModelFixture, MeterConstructor) {
   EXPECT_EQ(EndUseType::Heating, meter.endUseType().get().value());
 
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setEndUseType(EndUseType::Heating));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   EXPECT_TRUE(meter.setFuelType(FuelType::Gas));
@@ -233,6 +248,11 @@ TEST_F(ModelFixture, MeterConstructor) {
 
   // make sure we don't mix up gasoline with gas
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setFuelType(FuelType::Gasoline));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   ASSERT_TRUE(meter.fuelType());
@@ -242,6 +262,11 @@ TEST_F(ModelFixture, MeterConstructor) {
 
   // make sure we can get FuelOil1
   meter = OutputMeter(model);
+  EXPECT_FALSE(meter.specificEndUse());
+  EXPECT_FALSE(meter.endUseType());
+  EXPECT_FALSE(meter.fuelType());
+  EXPECT_FALSE(meter.installLocationType());
+  EXPECT_FALSE(meter.specificInstallLocation());
   EXPECT_TRUE(meter.setFuelType(FuelType::FuelOil_1));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
   ASSERT_TRUE(meter.fuelType());
@@ -260,7 +285,7 @@ TEST_F(ModelFixture, MeterFromModel) {
   idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency, "monthly");
   idfObjects.back().setString(OS_Output_MeterFields::MeterFileOnly, "false");
 
-  LOG(Debug, "OutputMeter text: " << std::endl << idfObjects.back());
+  LOG(Debug, "OutputMeter text: " << '\n' << idfObjects.back());
 
   idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
   idfObjects.back().setString(OS_Output_MeterFields::Name, "NaturalGas:Building");

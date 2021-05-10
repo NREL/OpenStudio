@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,6 +35,8 @@
 
 namespace openstudio {
 namespace model {
+
+  class CurveQuadLinear;
 
   namespace detail {
 
@@ -98,25 +100,9 @@ namespace model {
 
       bool isRatedHeatingCoefficientofPerformanceDefaulted() const;
 
-      double heatingCapacityCoefficient1() const;
+      CurveQuadLinear heatingCapacityCurve() const;
 
-      double heatingCapacityCoefficient2() const;
-
-      double heatingCapacityCoefficient3() const;
-
-      double heatingCapacityCoefficient4() const;
-
-      double heatingCapacityCoefficient5() const;
-
-      double heatingPowerConsumptionCoefficient1() const;
-
-      double heatingPowerConsumptionCoefficient2() const;
-
-      double heatingPowerConsumptionCoefficient3() const;
-
-      double heatingPowerConsumptionCoefficient4() const;
-
-      double heatingPowerConsumptionCoefficient5() const;
+      CurveQuadLinear heatingPowerConsumptionCurve() const;
 
       boost::optional<double> autosizedRatedAirFlowRate() const;
 
@@ -160,25 +146,9 @@ namespace model {
 
       void resetRatedHeatingCoefficientofPerformance();
 
-      bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+      bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 
-      bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
-
-      bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
-
-      bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
-
-      bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
-
-      bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
-
-      bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
-
-      bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
-
-      bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
-
-      bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
+      bool setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve);
 
       //@}
       /** @name Other */

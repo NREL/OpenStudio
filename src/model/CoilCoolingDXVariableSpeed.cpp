@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,6 +51,8 @@
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -543,6 +545,19 @@ namespace model {
         }
       }
 
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.spaceCoolingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.scdwhCoolingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+        }
+      }
+
       return boost::none;
     }
 
@@ -581,6 +596,9 @@ namespace model {
       if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
         LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. "
                                               "Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+      } else if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+        LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemIntegratedHeatPumpAirSource. "
+                                              "Please call CoilSystemIntegratedHeatPumpAirSource::addToNode instead");
       } else {
 
         if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {

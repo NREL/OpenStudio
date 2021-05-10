@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,8 @@
 #include "../Surface_Impl.hpp"
 #include "../Construction.hpp"
 #include "../Construction_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
 #include "../StandardsInformationConstruction.hpp"
 #include "../StandardsInformationConstruction_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
@@ -124,4 +126,26 @@ TEST_F(ModelFixture, ModelObject_Clone_DifferentModel) {
   EXPECT_FALSE(anotherNewSurface.construction().get().standardsInformation() == newSurface.construction().get().standardsInformation());
   EXPECT_TRUE(anotherNewSurface.construction().get().cast<LayeredConstruction>().layers()
               == newSurface.construction().get().cast<LayeredConstruction>().layers());
+}
+
+TEST_F(ModelFixture, ModelObject_SetString) {
+  Model model;
+  Space space1(model);
+  Space space2(model);
+  unsigned nameIndex = 1;
+
+  EXPECT_TRUE(space1.setString(nameIndex, "Space 1"));
+  ASSERT_TRUE(space1.getString(nameIndex));
+  EXPECT_EQ("Space 1", space1.getString(nameIndex).get());
+
+  // Set string will return true but the string will not be "Space 1"
+  EXPECT_TRUE(space2.setString(nameIndex, "Space 1"));
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_NE("Space 1", space2.getString(nameIndex).get());
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
+
+  EXPECT_FALSE(space2.setString(nameIndex, ""));
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_NE("", space2.getString(nameIndex).get());
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
 }

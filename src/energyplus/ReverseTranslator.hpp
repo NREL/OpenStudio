@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -81,6 +81,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateAirLoopHVACOutdoorAirSystem(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateAirLoopHVACDedicatedOutdoorAirSystem(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeReheat(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeNoReheat(const WorkspaceObject& workspaceObject);
@@ -137,6 +139,10 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateCurveLinear(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateCurveQuadLinear(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateCurveQuintLinear(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateCurveQuadratic(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateCurveQuadraticLinear(const WorkspaceObject& workspaceObject);
@@ -160,6 +166,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateElectricLoadCenterStorageSimple(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateElectricLoadCenterStorageConverter(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateElectricLoadCenterStorageLiIonNMCBattery(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateEnergyManagementSystemActuator(const WorkspaceObject& workspaceObject);
 
@@ -195,6 +203,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateExteriorWaterEquipment(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateFanComponentModel(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateFanSystemModel(const WorkspaceObject& workspaceObject);
@@ -208,6 +218,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateGasEquipment(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateGeneratorMicroTurbine(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateGeneratorWindTurbine(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateGroundHeatExchangerVertical(const WorkspaceObject& workspaceObject);
 
@@ -260,6 +272,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translatePeople(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translatePerformancePrecisionTradeoffs(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translatePhotovoltaicPerformanceSandia(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject& workspaceObject);
 
@@ -362,6 +376,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateZoneInfiltrationDesignFlowRate(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateZoneInfiltrationEffectiveLeakageArea(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateZoneInfiltrationFlowCoefficient(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateZoneList(const WorkspaceObject& workspaceObject);
 

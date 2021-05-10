@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -304,24 +304,24 @@ namespace model {
       /** Returns the gas equipment power per person (W/person) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
       double gasEquipmentPowerPerPerson() const;
 
-      /** Returns the infiltration design flow rate (m^3/s) in this thermal zone. Ignores
-     *  SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+      /** Returns the infiltration design flow rate (m^3/s) in this thermal zone.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
       double infiltrationDesignFlowRate() const;
 
       /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
       double infiltrationDesignFlowPerSpaceFloorArea() const;
 
       /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
       double infiltrationDesignFlowPerExteriorSurfaceArea() const;
 
       /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
       double infiltrationDesignFlowPerExteriorWallArea() const;
 
       /** Returns the infiltration design air changes per hour (1/h) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
       double infiltrationDesignAirChangesPerHour() const;
 
       /// Returns the HVACTemplateZoneIdealLoadsAirSystem in this ThermalZone if present.

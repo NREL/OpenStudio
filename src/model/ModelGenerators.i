@@ -104,6 +104,7 @@ MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbineHeatRecovery);
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbine);
 MODELOBJECT_TEMPLATES(GeneratorPVWatts);
+MODELOBJECT_TEMPLATES(GeneratorWindTurbine);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterTransformer);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterLookUpTable);
@@ -111,8 +112,10 @@ MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterSimple);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterPVWatts);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterStorageSimple);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterStorageConverter);
+MODELOBJECT_TEMPLATES(ElectricLoadCenterStorageLiIonNMCBattery);
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceEquivalentOneDiode);
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceSimple);
+MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceSandia);
 
 SWIG_MODELOBJECT(PhotovoltaicPerformance, 0);
 SWIG_MODELOBJECT(Generator, 0);
@@ -133,6 +136,7 @@ SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);
 SWIG_MODELOBJECT(GeneratorMicroTurbineHeatRecovery, 1);
 SWIG_MODELOBJECT(GeneratorMicroTurbine, 1);
 SWIG_MODELOBJECT(GeneratorPVWatts, 1);
+SWIG_MODELOBJECT(GeneratorWindTurbine, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterTransformer, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterDistribution, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterLookUpTable, 1);
@@ -140,8 +144,10 @@ SWIG_MODELOBJECT(ElectricLoadCenterInverterSimple, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterPVWatts, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterStorageSimple, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterStorageConverter, 1);
+SWIG_MODELOBJECT(ElectricLoadCenterStorageLiIonNMCBattery, 1);
 SWIG_MODELOBJECT(PhotovoltaicPerformanceEquivalentOneDiode, 1);
 SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
+SWIG_MODELOBJECT(PhotovoltaicPerformanceSandia, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {

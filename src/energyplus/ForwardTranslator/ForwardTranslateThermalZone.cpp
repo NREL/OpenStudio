@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -131,6 +131,8 @@
 #include "../../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "../../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
+#include "../../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "../../model/GlareSensor.hpp"
 #include "../../model/GlareSensor_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
@@ -554,6 +556,13 @@ namespace energyplus {
       std::sort(spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end(), WorkspaceObjectNameLess());
       for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas) {
         translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
+      }
+
+      // translate SpaceInfiltration_FlowCoefficient
+      SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = spaces[0].spaceInfiltrationFlowCoefficients();
+      std::sort(spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end(), WorkspaceObjectNameLess());
+      for (SpaceInfiltrationFlowCoefficient& spaceInfiltrationFlowCoefficient : spaceInfiltrationFlowCoefficients) {
+        translateAndMapModelObject(spaceInfiltrationFlowCoefficient);
       }
     }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -94,6 +94,7 @@ namespace model {
   class AirTerminalSingleDuctVAVHeatAndCoolReheat;
   class AirLoopHVACZoneMixer;
   class AirLoopHVACOutdoorAirSystem;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
   class AirWallMaterial;
   class AvailabilityManagerAssignmentList;
   class AvailabilityManagerHybridVentilation;
@@ -117,6 +118,7 @@ namespace model {
   class ChillerAbsorption;
   class ChillerAbsorptionIndirect;
   class ChillerElectricEIR;
+  class ChillerElectricReformulatedEIR;
   class ChillerHeaterPerformanceElectricEIR;
   class CoilCoolingDX;
   class CoilCoolingDXCurveFitPerformance;
@@ -145,8 +147,10 @@ namespace model {
   class CoilPerformanceDXCooling;
   class CoilSystemCoolingDXHeatExchangerAssisted;
   class CoilSystemCoolingWaterHeatExchangerAssisted;
+  class CoilSystemIntegratedHeatPumpAirSource;
   class CoilWaterHeatingDesuperheater;
   class CoilWaterHeatingAirToWaterHeatPump;
+  class CoilWaterHeatingAirToWaterHeatPumpVariableSpeed;
   class CoilWaterHeatingAirToWaterHeatPumpWrapped;
   class Construction;
   class ConstructionAirBoundary;
@@ -171,6 +175,8 @@ namespace model {
   class CurveFanPressureRise;
   class CurveFunctionalPressureDrop;
   class CurveLinear;
+  class CurveQuadLinear;
+  class CurveQuintLinear;
   class CurveQuadratic;
   class CurveQuadraticLinear;
   class CurveQuartic;
@@ -194,6 +200,7 @@ namespace model {
   class ElectricLoadCenterInverterPVWatts;
   class ElectricLoadCenterStorageSimple;
   class ElectricLoadCenterStorageConverter;
+  class ElectricLoadCenterStorageLiIonNMCBattery;
   class ElectricLoadCenterTransformer;
   class EnergyManagementSystemActuator;
   class EnergyManagementSystemConstructionIndexVariable;
@@ -227,6 +234,7 @@ namespace model {
   class ExternalInterfaceFunctionalMockupUnitImportToVariable;
   class ExternalInterfaceSchedule;
   class ExternalInterfaceVariable;
+  class FanComponentModel;
   class FanConstantVolume;
   class FanOnOff;
   class FanSystemModel;
@@ -253,6 +261,7 @@ namespace model {
   class GeneratorFuelSupply;
   class GeneratorPhotovoltaic;
   class GeneratorPVWatts;
+  class GeneratorWindTurbine;
   class GroundHeatExchangerHorizontalTrench;
   class GroundHeatExchangerVertical;
   class HeaderedPumpsConstantSpeed;
@@ -264,6 +273,7 @@ namespace model {
   class HeatPumpWaterToWaterEquationFitHeating;
   class HotWaterEquipment;
   class HumidifierSteamElectric;
+  class HumidifierSteamGas;
   class IlluminanceMap;
   class InsideSurfaceConvectionAlgorithm;
   class InfraredTransparentMaterial;
@@ -296,6 +306,7 @@ namespace model {
   class PerformancePrecisionTradeoffs;
   class PhotovoltaicPerformanceEquivalentOneDiode;
   class PhotovoltaicPerformanceSimple;
+  class PhotovoltaicPerformanceSandia;
   class PipeAdiabatic;
   class PipeIndoor;
   class PipeOutdoor;
@@ -318,6 +329,7 @@ namespace model {
   class RefrigerationAirChiller;
   class RefrigerationCase;
   class RefrigerationCompressor;
+  class RefrigerationCompressorRack;
   class RefrigerationCondenserAirCooled;
   class RefrigerationCondenserCascade;
   class RefrigerationCondenserEvaporativeCooled;
@@ -398,6 +410,7 @@ namespace model {
   class Space;
   class SpaceInfiltrationDesignFlowRate;
   class SpaceInfiltrationEffectiveLeakageArea;
+  class SpaceInfiltrationFlowCoefficient;
   class SpaceVentilationDesignFlowRate;
   class SpaceType;
   class SteamEquipment;
@@ -437,6 +450,7 @@ namespace model {
   class ZoneHVACBaseboardConvectiveWater;
   class ZoneHVACBaseboardRadiantConvectiveElectric;
   class ZoneHVACBaseboardRadiantConvectiveWater;
+  class ZoneHVACCoolingPanelRadiantConvectiveWater;
   class ZoneHVACDehumidifierDX;
   class ZoneHVACEnergyRecoveryVentilator;
   class ZoneHVACEnergyRecoveryVentilatorController;
@@ -465,7 +479,7 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
-#define ENERGYPLUS_VERSION "9.4"
+#define ENERGYPLUS_VERSION "9.5"
 
   class ENERGYPLUS_API ForwardTranslator
   {
@@ -588,6 +602,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem(model::AirLoopHVACOutdoorAirSystem& modelObject);
 
+    boost::optional<IdfObject> translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject);
+
     boost::optional<IdfObject>
       translateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& modelObject);
 
@@ -685,6 +701,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricEIR& modelObject);
 
+    boost::optional<IdfObject> translateChillerElectricReformulatedEIR(model::ChillerElectricReformulatedEIR& modelObject);
+
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
@@ -757,9 +775,14 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilSystemCoolingWaterHeatExchangerAssisted(model::CoilSystemCoolingWaterHeatExchangerAssisted& modelObject);
 
+    boost::optional<IdfObject> translateCoilSystemIntegratedHeatPumpAirSource(model::CoilSystemIntegratedHeatPumpAirSource& modelObject);
+
     boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater(model::CoilWaterHeatingDesuperheater& modelObject);
 
     boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPump(model::CoilWaterHeatingAirToWaterHeatPump& modelObject);
+
+    boost::optional<IdfObject>
+      translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilWaterHeatingAirToWaterHeatPumpWrapped(model::CoilWaterHeatingAirToWaterHeatPumpWrapped& modelObject);
 
@@ -809,6 +832,10 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCurveLinear(model::CurveLinear& modelObject);
 
+    boost::optional<IdfObject> translateCurveQuadLinear(model::CurveQuadLinear& modelObject);
+
+    boost::optional<IdfObject> translateCurveQuintLinear(model::CurveQuintLinear& modelObject);
+
     boost::optional<IdfObject> translateCurveQuadratic(model::CurveQuadratic& modelObject);
 
     boost::optional<IdfObject> translateCurveQuadraticLinear(model::CurveQuadraticLinear& modelObject);
@@ -854,6 +881,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateElectricLoadCenterStorageSimple(model::ElectricLoadCenterStorageSimple& modelObject);
 
     boost::optional<IdfObject> translateElectricLoadCenterStorageConverter(model::ElectricLoadCenterStorageConverter& modelObject);
+
+    boost::optional<IdfObject> translateElectricLoadCenterStorageLiIonNMCBattery(model::ElectricLoadCenterStorageLiIonNMCBattery& modelObject);
 
     boost::optional<IdfObject> translateElectricLoadCenterTransformer(model::ElectricLoadCenterTransformer& modelObject);
 
@@ -927,6 +956,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateExternalInterfaceVariable(model::ExternalInterfaceVariable& modelObject);
 
+    boost::optional<IdfObject> translateFanComponentModel(model::FanComponentModel& modelObject);
+
     boost::optional<IdfObject> translateFanConstantVolume(model::FanConstantVolume& modelObject);
 
     boost::optional<IdfObject> translateFanOnOff(model::FanOnOff& modelObject);
@@ -975,6 +1006,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateGeneratorPVWatts(model::GeneratorPVWatts& modelObject);
 
+    boost::optional<IdfObject> translateGeneratorWindTurbine(model::GeneratorWindTurbine& modelObject);
+
     boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench(model::GroundHeatExchangerHorizontalTrench& modelObject);
 
     boost::optional<IdfObject> translateGroundHeatExchangerVertical(model::GroundHeatExchangerVertical& modelObject);
@@ -994,6 +1027,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitHeating(model::HeatPumpWaterToWaterEquationFitHeating& modelObject);
 
     boost::optional<IdfObject> translateHumidifierSteamElectric(model::HumidifierSteamElectric& modelObject);
+
+    boost::optional<IdfObject> translateHumidifierSteamGas(model::HumidifierSteamGas& modelObject);
 
     boost::optional<IdfObject> translateHotWaterEquipment(model::HotWaterEquipment& modelObject);
 
@@ -1062,6 +1097,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translatePhotovoltaicPerformanceSimple(model::PhotovoltaicPerformanceSimple& modelObject);
 
+    boost::optional<IdfObject> translatePhotovoltaicPerformanceSandia(model::PhotovoltaicPerformanceSandia& modelObject);
+
     boost::optional<IdfObject> translatePipeAdiabatic(model::PipeAdiabatic& modelObject);
 
     boost::optional<IdfObject> translatePipeIndoor(model::PipeIndoor& modelObject);
@@ -1111,6 +1148,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateRefrigerationCase(model::RefrigerationCase& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCompressor(model::RefrigerationCompressor& modelObject);
+
+    boost::optional<IdfObject> translateRefrigerationCompressorRack(model::RefrigerationCompressorRack& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCondenserAirCooled(model::RefrigerationCondenserAirCooled& modelObject);
 
@@ -1272,6 +1311,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateSpaceInfiltrationEffectiveLeakageArea(model::SpaceInfiltrationEffectiveLeakageArea& modelObject);
 
+    boost::optional<IdfObject> translateSpaceInfiltrationFlowCoefficient(model::SpaceInfiltrationFlowCoefficient& modelObject);
+
     boost::optional<IdfObject> translateSpaceType(model::SpaceType& modelObject);
 
     boost::optional<IdfObject> translateStandardGlazing(model::StandardGlazing& modelObject);
@@ -1352,6 +1393,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveElectric(model::ZoneHVACBaseboardRadiantConvectiveElectric& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveWater(model::ZoneHVACBaseboardRadiantConvectiveWater& modelObject);
+
+    boost::optional<IdfObject> translateZoneHVACCoolingPanelRadiantConvectiveWater(model::ZoneHVACCoolingPanelRadiantConvectiveWater& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACDehumidifierDX(model::ZoneHVACDehumidifierDX& modelObject);
 

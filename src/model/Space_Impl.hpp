@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,6 +69,7 @@ namespace model {
   class GlareSensor;
   class SpaceInfiltrationDesignFlowRate;
   class SpaceInfiltrationEffectiveLeakageArea;
+  class SpaceInfiltrationFlowCoefficient;
   class DesignSpecificationOutdoorAir;
   class Space;
 
@@ -291,6 +292,9 @@ namespace model {
       /// Returns all SpaceInfiltrationEffectiveLeakageArea objects in this space.
       std::vector<SpaceInfiltrationEffectiveLeakageArea> spaceInfiltrationEffectiveLeakageAreas() const;
 
+      /// Returns all SpaceInfiltrationFlowCoefficient objects in this space.
+      std::vector<SpaceInfiltrationFlowCoefficient> spaceInfiltrationFlowCoefficients() const;
+
       /// Returns DesignSpecificationOutdoorAir for this space, if not set directly on this space then
       /// the SpaceType's DesignSpecificationOutdoorAir will be returned.
       boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir() const;
@@ -394,27 +398,27 @@ namespace model {
       bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson, const boost::optional<GasEquipment>& templateGasEquipment);
 
       /** Returns the infiltration design flow rate (m^3/s) in the space. Ignores
-     *  SpaceInfiltrationEffectiveLeakageArea objects. */
+     *  SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
       /// Does not include space multiplier in calculation.
       double infiltrationDesignFlowRate() const;
 
       /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
       /// Does not include space multiplier in calculation.
       double infiltrationDesignFlowPerSpaceFloorArea() const;
 
       /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
       /// Does not include space multiplier in calculation.
       double infiltrationDesignFlowPerExteriorSurfaceArea() const;
 
       /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
       /// Does not include space multiplier in calculation.
       double infiltrationDesignFlowPerExteriorWallArea() const;
 
       /** Returns the infiltration design air changes per hour (1/h) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
       /// Does not include space multiplier in calculation.
       double infiltrationDesignAirChangesPerHour() const;
 
@@ -462,6 +466,8 @@ namespace model {
 
       bool isPlenum() const;
 
+      double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
+
      private:
       REGISTER_LOGGER("openstudio.model.Space");
 
@@ -487,6 +493,7 @@ namespace model {
       std::vector<ModelObject> illuminanceMapsAsModelObjects() const;
       std::vector<ModelObject> spaceInfiltrationDesignFlowRatesAsModelObjects() const;
       std::vector<ModelObject> spaceInfiltrationEffectiveLeakageAreasAsModelObjects() const;
+      std::vector<ModelObject> spaceInfiltrationFlowCoefficientsAsModelObjects() const;
       std::vector<ModelObject> spaceVentilationDesignFlowRatesAsModelObjects() const;
 
       bool setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject);

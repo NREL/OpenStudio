@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.1.0)
+project(OpenStudio VERSION 3.2.0)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -187,15 +187,15 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 4)
+set(ENERGYPLUS_VERSION_MINOR 5)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "998c4b761e")
+set(ENERGYPLUS_BUILD_SHA "de239b2e5f")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.4.0")
+set(ENERGYPLUS_RELEASE_NAME "v9.5.0")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -253,6 +253,8 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Build ctest testing
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
+
+option(BUILD_BENCHMARK "Build benchmarking targets" OFF)
 
 option(BUILD_RUBY_BINDINGS "Build Ruby bindings" ON)
 mark_as_advanced(BUILD_RUBY_BINDINGS)
@@ -542,8 +544,6 @@ elseif(UNIX)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 
-  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
-
   # -is outputs "Ubuntu" or "Fedora"
   execute_process(COMMAND ${LSB_RELEASE} -is
     OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
@@ -552,6 +552,9 @@ elseif(UNIX)
 
   # eg: `-Ubuntu18.04`
   set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+
+  message(STATUS "LSB_RELEASE_ID_SHORT=${LSB_RELEASE_ID_SHORT}, LSB_RELEASE_VERSION_SHORT=${LSB_RELEASE_VERSION_SHORT}")
+
 elseif(MSVC)
   # no-op
   set(ENERGYPLUS_SYSTEM_VERSION "")
@@ -559,24 +562,19 @@ endif()
 
 # EnergyPlus
 
-if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
-  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
-  message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-endif()
-
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH ba91a82e2fd6f3ea6998ea14869ccb63)
+    set(ENERGYPLUS_EXPECTED_HASH df5fa54b8260ecd0b0cf59e8e54454b9)
     set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH f355b78b137341836882d773e1ebdfc6)
+    if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
+      set(ENERGYPLUS_EXPECTED_HASH eb9767db7e1b28163816fd38a6ea33de)
     else() # 18.04
-      set(ENERGYPLUS_EXPECTED_HASH 009b2e6811ef4b3ae02cd500bbbdf056)
+      set(ENERGYPLUS_EXPECTED_HASH 4a0359505b6faa5bd6af583c7fb155b5)
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
@@ -600,10 +598,6 @@ if(UNIX)
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
 
-    # Remove the old extracted dir if exists
-    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
@@ -612,11 +606,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 8e126177317a1f72bde682b8f5f461c0)
+    set(ENERGYPLUS_EXPECTED_HASH 3bdcceaa51a7ddbbd6c24a8a8efe41e5)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 0ef542aab0852590994dd54c2debc566)
+    set(ENERGYPLUS_EXPECTED_HASH 40b9f5cb25313e72a155e723652abbd7)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -629,15 +623,29 @@ elseif(WIN32)
          SHOW_PROGRESS
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
-    # Remove the old extracted dir if exists
-    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
 
 endif()
+
+if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
+  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+  if(NOT "${OLD_ENERGYPLUS_EXTRACTED_DIR}" MATCHES ".*${ENERGYPLUS_PATH}.*")
+
+    message(STATUS "Removing old extracted dir = ${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    # Remove the old extracted dir
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+
+    # Unset variables so that FindEnergyPlus is called again
+    unset(ENERGYPLUS_FOUND CACHE)
+    unset(ENERGYPLUS_EXE CACHE)
+    unset(ENERGYPLUS_IDD CACHE)
+    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
+  endif()
+endif()
+
 
 # Allows placing the archive manually in the build dir too
 if (NOT EXISTS "${ENERGYPLUS_PATH}")
@@ -742,16 +750,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "12c0dd279e31b9a5a5744c4f5207a6d0")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f05343ac87c2e3e6fa37cf5515f6bf39")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "15e17dfe1980e2cc51cf469c60f1c9f3")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8fd4e9ac409f56541c6932e0cbf47c83")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0ac723d631f28ba11d55cdee0668659d")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d2d7591b60a5a3dab255d3bc9e413e43")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -853,7 +861,13 @@ endif()
 if(BUILD_PYTHON_BINDINGS)
   option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
 
-  find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  # find_package(Python) has the problem that on github actions in particular it'll pick up the most recent python (eg 3.9) from the tool cache
+  # even if you have used the setup-python action and set it to 3.8
+  if (PYTHON_VERSION)
+    find_package(Python ${PYTHON_VERSION} EXACT COMPONENTS Interpreter Development REQUIRED)
+  else()
+    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  endif()
 
   include_directories(SYSTEM ${Python_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
@@ -863,6 +877,16 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
 
   if(BUILD_PYTHON_PIP_PACKAGE)
+
+    set(PipRepositoryValues "testpypi;pypi" CACHE INTERNAL
+      "List of possible values for which repository to upload to")
+    set(PYTHON_PIP_REPOSITORY "testpypi" CACHE STRING "Which pip repository to use for upload")
+    set_property(CACHE PYTHON_PIP_REPOSITORY PROPERTY STRINGS ${PipRepositoryValues})
+
+    if(NOT PYTHON_PIP_REPOSITORY IN_LIST PipRepositoryValues)
+      message(FATAL_ERROR "PYTHON_PIP_REPOSITORY must be one of ${PipRepositoryValues}")
+    endif()
+
     set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
     file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
     set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
@@ -918,6 +942,7 @@ set(project_directories
   utilities
   model
   energyplus
+  epjson
   radiance
   gbxml
   airflow
@@ -1163,6 +1188,7 @@ if(APPLE)
   set(CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/)
 elseif(UNIX)
   # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
+  set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
   set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
@@ -1214,9 +1240,11 @@ if(WIN32)
   set(CPACK_BINARY_NSIS OFF CACHE BOOL "Enable to build NSIS packages")
 endif()
 
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+if (BUILD_CLI)
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+endif()
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1224,6 +1252,9 @@ file(GLOB ENERGYPLUS_LIB_FILES "${ENERGYPLUS_DIR}/libenergyplus*")
 file(GLOB EXPAND_OBJECTS "${ENERGYPLUS_DIR}/ExpandObjects*")
 
 install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+# Get epJSON schema too
+string(REPLACE ".idd" ".schema.epJSON" ENERGYPLUS_EPJSON_SCHEMA ${ENERGYPLUS_IDD})
+install(FILES "${ENERGYPLUS_EPJSON_SCHEMA}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
@@ -1233,10 +1264,12 @@ install(DIRECTORY "${ENERGYPLUS_DIR}/pyenergyplus" DESTINATION ./EnergyPlus/ COM
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.7m.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
+  foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+    install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
 elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
@@ -1254,13 +1287,17 @@ elseif(WIN32)
   foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)
     install(PROGRAMS "${msapi_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
-  install(PROGRAMS "${ENERGYPLUS_DIR}/python37.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_DIR}/pythonwrapper.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
+  # python37.dll
+  file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/python*.dll")
+  foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+    install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
+  #install(PROGRAMS "${ENERGYPLUS_DIR}/concrt140.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(UNIX)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
+    foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+      install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    endforeach()
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
@@ -1418,8 +1455,12 @@ if (MSVC)
     # The potential inefficiency goes away if we use LTO linking
     target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8) # only applies to 64 bit windows platforms
-      target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
-      target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+      if (BUILD_RUBY_BINDINGS)
+        target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+      endif()
+      if (BUILD_CLI)
+        target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+      endif()
     endif()
   endif()
 endif()

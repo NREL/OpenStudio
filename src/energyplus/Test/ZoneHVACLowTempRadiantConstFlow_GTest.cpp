@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -137,6 +137,8 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions) {
   //translate the model to EnergyPlus
   ForwardTranslator trans;
   Workspace workspace = trans.translateModel(model);
+
+  // TODO: this is wrong... it checks the model instead of the workspace (so it doesn't test the FT at all...)
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
   for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {

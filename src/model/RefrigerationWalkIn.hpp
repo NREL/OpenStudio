@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include "RefrigerationSystem.hpp"
+#include "RefrigerationSecondarySystem.hpp"
+#include "RefrigerationCompressorRack.hpp"
 #include "ThermalZone.hpp"
 
 namespace openstudio {
@@ -153,9 +155,6 @@ namespace model {
 
     boost::optional<openstudio::Time> defrost8StartTime() const;
 
-    // Returns the parent RefrigerationSystem if any
-    boost::optional<RefrigerationSystem> system() const;
-
     boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
 
     boost::optional<double> zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const;
@@ -175,6 +174,15 @@ namespace model {
     boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
 
     boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
+
+    // Returns the parent RefrigerationSystem if any
+    boost::optional<RefrigerationSystem> system() const;
+
+    // Returns the parent RefrigerationSecondarySystem if any
+    boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
+
+    // Returns the parent RefrigerationCompresorRack if any
+    boost::optional<RefrigerationCompressorRack> compressorRack() const;
 
     //@}
     /** @name Setters */
@@ -286,11 +294,6 @@ namespace model {
 
     void resetDefrost8StartTime();
 
-    bool addToSystem(RefrigerationSystem& system);
-
-    // Remove from parent system if any
-    void removeFromSystem();
-
     bool setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone);
 
     void resetZoneBoundaryThermalZone();
@@ -314,6 +317,21 @@ namespace model {
     bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
 
     void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
+
+    bool addToSystem(RefrigerationSystem& system);
+
+    bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
+
+    bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
+
+    // Remove from parent system if any
+    void removeFromSystem();
+
+    // Remove from parent secondary system if any
+    void removeFromSecondarySystem();
+
+    // Remove from parent compressor rack if any
+    void removeFromCompressorRack();
 
     //@}
     /** @name Other */

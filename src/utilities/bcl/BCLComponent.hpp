@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,6 +31,7 @@
 #define UTILITIES_BCL_BCLCOMPONENT_HPP
 
 #include "../core/Optional.hpp"
+#include "../core/Logger.hpp"
 #include "../core/Path.hpp"
 #include "../core/UUID.hpp"
 #include "../data/Attribute.hpp"
@@ -109,6 +110,8 @@ class UTILITIES_API BCLComponent
 
   //@}
  private:
+  REGISTER_LOGGER("openstudio.BCLComponent");
+
   openstudio::path m_directory;
   std::string m_name;
   std::string m_uid;

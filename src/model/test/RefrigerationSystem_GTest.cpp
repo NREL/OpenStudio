@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1544,35 +1544,6 @@ TEST_F(ModelFixture, RefrigerationSystem_AirChiller_AddMultipleTimes) {
 // Test for #3921
 TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser_Unicity) {
   Model model;
-
-  {
-    RefrigerationSystem system = RefrigerationSystem(model);
-    RefrigerationSystem system2 = RefrigerationSystem(model);
-
-    RefrigerationCondenserAirCooled condenser(model);
-    EXPECT_FALSE(condenser.system());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-
-    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
-    ASSERT_TRUE(system.refrigerationCondenser());
-    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
-    EXPECT_FALSE(system2.refrigerationCondenser());
-    ASSERT_TRUE(condenser.system());
-    EXPECT_EQ(system, condenser.system().get());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-
-    // Adding it to another one? It should remove it from the first
-    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
-    ASSERT_TRUE(system2.refrigerationCondenser());
-    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
-    EXPECT_FALSE(system.refrigerationCondenser());
-    ASSERT_TRUE(condenser.system());
-    EXPECT_EQ(system2, condenser.system().get());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-
-    system2.remove();
-    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-  }
 
   {
     RefrigerationSystem system = RefrigerationSystem(model);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,7 +77,7 @@ TEST_F(IddFixture, EpIddFile) {
     EXPECT_EQ("", logMessage.logMessage());
   }
 
-  EXPECT_EQ("9.4.0", loadedIddFile->version());
+  EXPECT_EQ("9.5.0", loadedIddFile->version());
   EXPECT_EQ(epIddFile.objects().size(), loadedIddFile->objects().size());
   if (epIddFile.objects().size() != loadedIddFile->objects().size()) {
     // get sets of IddObjectType
@@ -104,17 +104,17 @@ TEST_F(IddFixture, EpIddFile) {
     // cppcheck-suppress shadowVariable
     std::stringstream ss;
     for (const IddObjectType& iddType : diff) {
-      ss << "  " << iddType << std::endl;
+      ss << "  " << iddType << '\n';
     }
     diff.clear();
-    LOG(Debug, "The following object types are in epIddFile, but are not in loadedIddFile: " << std::endl << ss.str());
+    LOG(Debug, "The following object types are in epIddFile, but are not in loadedIddFile: " << '\n' << ss.str());
     ss.str("");
     std::set_difference(loadedIddObjectTypes.begin(), loadedIddObjectTypes.end(), epIddObjectTypes.begin(), epIddObjectTypes.end(),
                         std::inserter(diff, diff.begin()));
     for (const IddObjectType& iddType : diff) {
-      ss << "  " << iddType << std::endl;
+      ss << "  " << iddType << '\n';
     }
-    LOG(Debug, "The following object types are in loadedIddFile, but are not in epIddFile: " << std::endl << ss.str());
+    LOG(Debug, "The following object types are in loadedIddFile, but are not in epIddFile: " << '\n' << ss.str());
   }
 
   testIddFile(*loadedIddFile);
@@ -177,17 +177,17 @@ TEST_F(IddFixture, OSIddFile) {
     // cppcheck-suppress shadowVariable
     std::stringstream ss;
     for (const IddObjectType& iddType : diff) {
-      ss << "  " << iddType << std::endl;
+      ss << "  " << iddType << '\n';
     }
     diff.clear();
-    LOG(Debug, "The following object types are in osIddFile, but are not in loadedIddFile: " << std::endl << ss.str());
+    LOG(Debug, "The following object types are in osIddFile, but are not in loadedIddFile: " << '\n' << ss.str());
     ss.str("");
     std::set_difference(loadedIddObjectTypes.begin(), loadedIddObjectTypes.end(), osIddObjectTypes.begin(), osIddObjectTypes.end(),
                         std::inserter(diff, diff.begin()));
     for (const IddObjectType& iddType : diff) {
-      ss << "  " << iddType << std::endl;
+      ss << "  " << iddType << '\n';
     }
-    LOG(Debug, "The following object types are in loadedIddFile, but are not in osIddFile: " << std::endl << ss.str());
+    LOG(Debug, "The following object types are in loadedIddFile, but are not in osIddFile: " << '\n' << ss.str());
   }
 }
 
@@ -365,10 +365,10 @@ TEST_F(IddFixture, IddFile_EpGroups) {
     if (loc != itEnd) {
       LOG(Debug, "The group name '" << *it << "' is repeated in epIddFile.");
     }
-    ss << "  " << *it << std::endl;
+    ss << "  " << *it << '\n';
   }
   // log groups
   LOG(Info, "The current EnergyPlus IddFile contains the following " << groups.size()
-                                                                     << " object groups, including the first, unnamed group: " << std::endl
+                                                                     << " object groups, including the first, unnamed group: " << '\n'
                                                                      << ss.str());
 }

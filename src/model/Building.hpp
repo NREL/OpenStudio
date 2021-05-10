@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -291,23 +291,23 @@ namespace model {
     double gasEquipmentPowerPerPerson() const;
 
     /** Returns the infiltration design flow rate (m^3/s) of this building. Ignores
-   *  SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowRate() const;
 
     /** Returns the infiltration design flow per space floor area (m^3/m^2*s) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowPerSpaceFloorArea() const;
 
     /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowPerExteriorSurfaceArea() const;
 
     /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowPerExteriorWallArea() const;
 
     /** Returns the infiltration design air changes per hour (1/h) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignAirChangesPerHour() const;
 
     /// Returns the Transformation from the Building coordinate system to world coordinates.
@@ -316,6 +316,9 @@ namespace model {
     /// Returns a suggested pattern for skylights targeting a skylight to floor ratio with desired sizes.
     /// Pattern will be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
     std::vector<std::vector<Point3d>> generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const;
+
+    // Calculates the building perimeter
+    double exteriorPerimeter();
 
     //@}
    protected:

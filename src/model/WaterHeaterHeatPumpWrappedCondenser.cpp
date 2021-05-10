@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -493,22 +493,22 @@ namespace model {
     }
 
     ModelObject WaterHeaterHeatPumpWrappedCondenser_Impl::clone(Model model) const {
-      std::cout << "boom 1" << std::endl;
+      std::cout << "boom 1" << '\n';
       auto newWaterHeater = ZoneHVACComponent_Impl::clone(model).cast<WaterHeaterHeatPumpWrappedCondenser>();
 
-      std::cout << "boom 2" << std::endl;
+      std::cout << "boom 2" << '\n';
       {
         auto mo = tank().clone(model).cast<HVACComponent>();
         newWaterHeater.setTank(mo);
       }
 
-      std::cout << "boom 3" << std::endl;
+      std::cout << "boom 3" << '\n';
       {
         auto mo = dXCoil().clone(model).cast<ModelObject>();
         newWaterHeater.setDXCoil(mo);
       }
 
-      std::cout << "boom 4" << std::endl;
+      std::cout << "boom 4" << '\n';
       {
         auto mo = fan().clone(model).cast<HVACComponent>();
         newWaterHeater.setFan(mo);

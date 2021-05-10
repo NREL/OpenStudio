@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,6 +31,8 @@
 #include "RefrigerationCase_Impl.hpp"
 
 #include "RefrigerationSystem_Impl.hpp"
+#include "RefrigerationSecondarySystem_Impl.hpp"
+#include "RefrigerationCompressorRack_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -144,6 +146,8 @@ namespace model {
       std::vector<IdfObject> result;
 
       this->removeFromSystem();
+      this->removeFromSecondarySystem();
+      this->removeFromCompressorRack();
 
       if (boost::optional<RefrigerationDefrostCycleParameters> caseDefrostCycleParameters = this->optionalCaseDefrostCycleParameters()) {
         std::vector<IdfObject> removedDefrostCycleParameters = caseDefrostCycleParameters->remove();
@@ -622,6 +626,32 @@ namespace model {
         if (!refrigerationCases.empty()
             && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
           return refrigerationSystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationSecondarySystem> RefrigerationCase_Impl::secondarySystem() const {
+      std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
+      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
+      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+        RefrigerationCaseVector refrigerationCases = refrigerationSecondarySystem.cases();
+        if (!refrigerationCases.empty()
+            && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
+          return refrigerationSecondarySystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationCompressorRack> RefrigerationCase_Impl::compressorRack() const {
+      std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
+      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
+      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+        RefrigerationCaseVector refrigerationCases = refrigerationCompressorRack.cases();
+        if (!refrigerationCases.empty()
+            && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end()) {
+          return refrigerationCompressorRack;
         }
       }
       return boost::none;
@@ -1262,6 +1292,28 @@ namespace model {
       }
     }
 
+    bool RefrigerationCase_Impl::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+      return secondarySystem.addCase(this->getObject<RefrigerationCase>());
+    }
+
+    void RefrigerationCase_Impl::removeFromSecondarySystem() {
+      boost::optional<RefrigerationSecondarySystem> refrigerationSecondarySystem = secondarySystem();
+      if (refrigerationSecondarySystem) {
+        refrigerationSecondarySystem.get().removeCase(this->getObject<RefrigerationCase>());
+      }
+    }
+
+    bool RefrigerationCase_Impl::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+      return compressorRack.addCase(this->getObject<RefrigerationCase>());
+    }
+
+    void RefrigerationCase_Impl::removeFromCompressorRack() {
+      boost::optional<RefrigerationCompressorRack> refrigerationCompressorRack = compressorRack();
+      if (refrigerationCompressorRack) {
+        refrigerationCompressorRack.get().removeCase(this->getObject<RefrigerationCase>());
+      }
+    }
+
   }  // namespace detail
 
   RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule) : ParentObject(RefrigerationCase::iddObjectType(), model) {
@@ -1643,6 +1695,14 @@ namespace model {
 
   boost::optional<RefrigerationSystem> RefrigerationCase::system() const {
     return getImpl<detail::RefrigerationCase_Impl>()->system();
+  }
+
+  boost::optional<RefrigerationSecondarySystem> RefrigerationCase::secondarySystem() const {
+    return getImpl<detail::RefrigerationCase_Impl>()->secondarySystem();
+  }
+
+  boost::optional<RefrigerationCompressorRack> RefrigerationCase::compressorRack() const {
+    return getImpl<detail::RefrigerationCase_Impl>()->compressorRack();
   }
 
   bool RefrigerationCase::setAvailabilitySchedule(Schedule& schedule) {
@@ -2080,6 +2140,22 @@ namespace model {
 
   void RefrigerationCase::removeFromSystem() {
     getImpl<detail::RefrigerationCase_Impl>()->removeFromSystem();
+  }
+
+  bool RefrigerationCase::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+    return getImpl<detail::RefrigerationCase_Impl>()->addToSecondarySystem(secondarySystem);
+  }
+
+  void RefrigerationCase::removeFromSecondarySystem() {
+    getImpl<detail::RefrigerationCase_Impl>()->removeFromSecondarySystem();
+  }
+
+  bool RefrigerationCase::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+    return getImpl<detail::RefrigerationCase_Impl>()->addToCompressorRack(compressorRack);
+  }
+
+  void RefrigerationCase::removeFromCompressorRack() {
+    getImpl<detail::RefrigerationCase_Impl>()->removeFromCompressorRack();
   }
 
   /// @cond

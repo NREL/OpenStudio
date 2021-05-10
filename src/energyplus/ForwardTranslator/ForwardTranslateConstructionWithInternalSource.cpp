@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,7 +36,8 @@
 #include "../../model/Material.hpp"
 #include "../../model/Material_Impl.hpp"
 
-#include <utilities/idd/Construction_InternalSource_FieldEnums.hxx>
+#include <utilities/idd/Construction_FieldEnums.hxx>
+#include <utilities/idd/ConstructionProperty_InternalHeatSource_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -51,42 +52,59 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateConstructionWithInternalSource(model::ConstructionWithInternalSource& modelObject) {
 
-    IdfObject idfObject(openstudio::IddObjectType::Construction_InternalSource);
+    // New in E+ 9.5.0:  `Construction:InternalSource` used to be a standalone object listing it's layers.
+    // Now it's replaced with `ConstructionProperty:InternalHeatSource` which references a `Construction` object.
+    // I have made the choice to keep the OS SDK API intact and handle that in the ForwardTranslator.
 
-    m_idfObjects.push_back(idfObject);
-
-    //Name
-    idfObject.setString(Construction_InternalSourceFields::Name, modelObject.name().get());
-
-    //Source Present After Layer Number
-    idfObject.setInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber, modelObject.sourcePresentAfterLayerNumber());
-
-    //Temperature Calculation Requested After Layer Number
-    idfObject.setInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,
-                     modelObject.temperatureCalculationRequestedAfterLayerNumber());
-
-    // Dimensions for the CTF Calculation
-    idfObject.setInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation, modelObject.dimensionsForTheCTFCalculation());
-
-    // Tube Spacing
-    idfObject.setDouble(Construction_InternalSourceFields::TubeSpacing, modelObject.tubeSpacing());
-
-    // Two Dimensional Temperature Calculation Position
-    idfObject.setDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition,
-                        modelObject.twoDimensionalTemperatureCalculationPosition());
-
-    //Layers
+    //Layers: starting in E+ 9.5.0,
     MaterialVector layers = modelObject.layers();
 
-    unsigned fieldIndex = Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition + 1;
+    if (layers.empty()) {
+      LOG(Warn, modelObject.briefDescription() << " has no layers, it will not be translated.");
+      return boost::none;
+    }
+
+    IdfObject constructionObject(openstudio::IddObjectType::Construction);
+    m_idfObjects.push_back(constructionObject);
+    //Name
+    constructionObject.setString(ConstructionFields::Name, modelObject.name().get());
+
+    unsigned fieldIndex = 1;
     for (unsigned layerIndex = 0; layerIndex < layers.size(); ++layerIndex) {
       Material material = layers[layerIndex];
       translateAndMapModelObject(material);
-      idfObject.setString(fieldIndex, material.name().get());
-      fieldIndex++;
+      constructionObject.setString(fieldIndex++, material.name().get());
     }
 
-    return boost::optional<IdfObject>(idfObject);
+    // And we also do the ConstructionProperty:InternalHeatSource object
+    IdfObject propertyObject(openstudio::IddObjectType::ConstructionProperty_InternalHeatSource);
+    m_idfObjects.push_back(propertyObject);
+
+    propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::Name, modelObject.name().get() + " InternalHeatSource Property");
+
+    propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::ConstructionName, modelObject.name().get());
+
+    //Source Present After Layer Number
+    propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::ThermalSourcePresentAfterLayerNumber,
+                          modelObject.sourcePresentAfterLayerNumber());
+
+    //Temperature Calculation Requested After Layer Number
+    propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::TemperatureCalculationRequestedAfterLayerNumber,
+                          modelObject.temperatureCalculationRequestedAfterLayerNumber());
+
+    // Dimensions for the CTF Calculation
+    propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::DimensionsfortheCTFCalculation,
+                          modelObject.dimensionsForTheCTFCalculation());
+
+    // Tube Spacing
+    propertyObject.setDouble(ConstructionProperty_InternalHeatSourceFields::TubeSpacing, modelObject.tubeSpacing());
+
+    // Two Dimensional Temperature Calculation Position
+    propertyObject.setDouble(ConstructionProperty_InternalHeatSourceFields::TwoDimensionalTemperatureCalculationPosition,
+                             modelObject.twoDimensionalTemperatureCalculationPosition());
+
+    // What we return is the construction object, not the property object
+    return constructionObject;
   }
 
 }  // namespace energyplus

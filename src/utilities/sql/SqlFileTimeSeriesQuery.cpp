@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -171,53 +171,53 @@ void SqlFileTimeSeriesQuery::clearKeyValues() {
 // NON-MEMBER FUNCTIONS
 
 std::ostream& operator<<(std::ostream& os, const SqlFileTimeSeriesQuery& query) {
-  os << std::endl;
+  os << '\n';
   if (query.environment()) {
     EnvironmentIdentifier envId = query.environment().get();
     if (envId.type()) {
-      os << "Environment Period:  Of type '" << envId.type().get().valueDescription() << "'" << std::endl;
+      os << "Environment Period:  Of type '" << envId.type().get().valueDescription() << "'" << '\n';
     } else {
-      os << "Environment Period:  " << envId.name().get() << std::endl;
+      os << "Environment Period:  " << envId.name().get() << '\n';
     }
   } else {
-    os << "Environment Period:  Not Specified" << std::endl;
+    os << "Environment Period:  Not Specified" << '\n';
   }
   if (query.reportingFrequency()) {
-    os << "Reporting Frequency: " << query.reportingFrequency().get().valueDescription() << std::endl;
+    os << "Reporting Frequency: " << query.reportingFrequency().get().valueDescription() << '\n';
   } else {
-    os << "Reporting Frequency: Not Specified" << std::endl;
+    os << "Reporting Frequency: Not Specified" << '\n';
   }
   if (query.timeSeries()) {
     TimeSeriesIdentifier tsId = query.timeSeries().get();
     if (tsId.regex()) {
-      os << "Time Series:         Match regex '" << tsId.regex().get() << "'" << std::endl;
+      os << "Time Series:         Match regex '" << tsId.regex().get() << "'" << '\n';
     } else {
-      os << "Time Series:         " << tsId.name().get() << std::endl;
+      os << "Time Series:         " << tsId.name().get() << '\n';
     }
   } else {
-    os << "Time Series:         Not Specified" << std::endl;
+    os << "Time Series:         Not Specified" << '\n';
   }
   StringVector names;
   if (query.keyValues()) {
     KeyValueIdentifier kvId = query.keyValues().get();
     if (kvId.regex()) {
-      os << "Key Values:          Match regex '" << kvId.regex().get() << "'" << std::endl;
+      os << "Key Values:          Match regex '" << kvId.regex().get() << "'" << '\n';
     } else {
       names = kvId.names();
       if (names.size() == 1) {
-        os << "Key Value:           " << names[0] << std::endl;
+        os << "Key Value:           " << names[0] << '\n';
       } else {
         OS_ASSERT(names.size() > 1);
-        os << "Key Values:          " << names[0] << std::endl;
+        os << "Key Values:          " << names[0] << '\n';
         for (unsigned i = 1, n = names.size(); i < n; ++i) {
-          os << std::setw(21) << " " << names[i] << std::endl;
+          os << std::setw(21) << " " << names[i] << '\n';
         }
       }
     }
   } else {
-    os << "Key Value:           Not Specified" << std::endl;
+    os << "Key Value:           Not Specified" << '\n';
   }
-  os << std::endl;
+  os << '\n';
 
   return os;
 }

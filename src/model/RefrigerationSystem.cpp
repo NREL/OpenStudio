@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -430,11 +430,13 @@ namespace model {
         return false;
       }
 
+      // Enforce unicity
       if (boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system()) {
         LOG(Warn, refrigerationCase.briefDescription()
                     << " was removed from its existing RefrigerationSystem named '" << currentSystem->nameString() << "'.");
         currentSystem->removeCase(refrigerationCase);
       }
+
       boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
       return addTemplate<RefrigerationCase>(refrigerationCase, modelObjectList);
     }
@@ -458,11 +460,13 @@ namespace model {
         return false;
       }
 
+      // Enforce unicity
       if (boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system()) {
         LOG(Warn, refrigerationWalkin.briefDescription()
                     << " was removed from its existing RefrigerationSystem named '" << currentSystem->nameString() << "'.");
         currentSystem->removeWalkin(refrigerationWalkin);
       }
+
       boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
       return addTemplate<RefrigerationWalkIn>(refrigerationWalkin, modelObjectList);
     }
@@ -475,6 +479,42 @@ namespace model {
     void RefrigerationSystem_Impl::removeAllWalkins() {
       boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
       removeAllTemplate<RefrigerationWalkIn>(modelObjectList);
+    }
+
+    bool RefrigerationSystem_Impl::addAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+      // From 9.2 IO ref:
+      // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
+      // > Air chillers may not be included in any list that also includes cases or walk-ins.
+      if (boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList()) {
+        std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
+
+        for (const auto& elem : modelObjects) {
+          if (elem.optionalCast<RefrigerationWalkIn>() || elem.optionalCast<RefrigerationCase>()) {
+            LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
+            return false;
+          }
+        }
+      }
+
+      // Enforce unicity
+      if (boost::optional<RefrigerationSystem> currentSystem = refrigerationAirChiller.system()) {
+        LOG(Warn, refrigerationAirChiller.briefDescription()
+                    << " was removed from its existing RefrigerationSystem named '" << currentSystem->nameString() << "'.");
+        currentSystem->removeAirChiller(refrigerationAirChiller);
+      }
+
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      return addTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
+    }
+
+    void RefrigerationSystem_Impl::removeAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
+    }
+
+    void RefrigerationSystem_Impl::removeAllAirChillers() {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeAllTemplate<RefrigerationAirChiller>(modelObjectList);
     }
 
     bool RefrigerationSystem_Impl::addCompressor(const RefrigerationCompressor& refrigerationCompressor) {
@@ -557,43 +597,6 @@ namespace model {
     void RefrigerationSystem_Impl::removeAllCascadeCondenserLoads() {
       boost::optional<ModelObjectList> modelObjectList = refrigerationTransferLoadList();
       removeAllTemplate<RefrigerationCondenserCascade>(modelObjectList);
-    }
-
-    bool RefrigerationSystem_Impl::addAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
-
-      // From 9.2 IO ref:
-      // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
-      // > Air chillers may not be included in any list that also includes cases or walk-ins.
-      if (boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList()) {
-        std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
-
-        for (const auto& elem : modelObjects) {
-          if (elem.optionalCast<RefrigerationWalkIn>() || elem.optionalCast<RefrigerationCase>()) {
-            LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
-            return false;
-          }
-        }
-      }
-
-      // Enforce unicity
-      if (boost::optional<RefrigerationSystem> currentSystem = refrigerationAirChiller.system()) {
-        LOG(Warn, refrigerationAirChiller.briefDescription()
-                    << " was removed from its existing RefrigerationSystem named '" << currentSystem->nameString() << "'.");
-        currentSystem->removeAirChiller(refrigerationAirChiller);
-      }
-
-      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
-      return addTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
-    }
-
-    void RefrigerationSystem_Impl::removeAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
-      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
-      removeTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
-    }
-
-    void RefrigerationSystem_Impl::removeAllAirChillers() {
-      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
-      removeAllTemplate<RefrigerationAirChiller>(modelObjectList);
     }
 
     bool RefrigerationSystem_Impl::setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList) {

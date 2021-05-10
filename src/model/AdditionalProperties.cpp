@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -164,7 +164,7 @@ namespace model {
       if (strValue) {
         try {
           value = boost::lexical_cast<double>(*strValue);
-        } catch (boost::bad_lexical_cast) {
+        } catch (boost::bad_lexical_cast&) {
           LOG(Error, "Value: " + *strValue + ", not castable to type double.")
           value = boost::none;
         }
@@ -180,7 +180,7 @@ namespace model {
       if (strValue) {
         try {
           value = boost::lexical_cast<int>(*strValue);
-        } catch (boost::bad_lexical_cast) {
+        } catch (boost::bad_lexical_cast&) {
           LOG(Error, "Value: " + *strValue + ", not castable to type integer.")
           value = boost::none;
         }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -111,6 +111,30 @@ TEST_F(ModelFixture, CoilCoolingLowTempRadiantVarFlow_Getters_Setters) {
   value = testCoil.condensationControlDewpointOffset();
   EXPECT_EQ(*value, 1.0);
   EXPECT_TRUE(testCoil.isCondensationControlDewpointOffsetDefaulted());
+
+  EXPECT_EQ("CoolingDesignCapacity", testCoil.coolingDesignCapacityMethod());
+  EXPECT_TRUE(testCoil.setCoolingDesignCapacityMethod("CapacityPerFloorArea"));
+  EXPECT_EQ("CapacityPerFloorArea", testCoil.coolingDesignCapacityMethod());
+  EXPECT_FALSE(testCoil.setCoolingDesignCapacityMethod("BADENUM"));
+  EXPECT_EQ("CapacityPerFloorArea", testCoil.coolingDesignCapacityMethod());
+
+  EXPECT_TRUE(testCoil.isCoolingDesignCapacityAutosized());
+  EXPECT_TRUE(testCoil.setCoolingDesignCapacity(1000.05));
+  EXPECT_FALSE(testCoil.isCoolingDesignCapacityAutosized());
+  ASSERT_TRUE(testCoil.coolingDesignCapacity());
+  EXPECT_EQ(1000.05, testCoil.coolingDesignCapacity().get());
+  testCoil.autosizeCoolingDesignCapacity();
+  EXPECT_TRUE(testCoil.isCoolingDesignCapacityAutosized());
+
+  EXPECT_EQ(0, testCoil.coolingDesignCapacityPerFloorArea());
+  EXPECT_TRUE(testCoil.setCoolingDesignCapacityPerFloorArea(11.05));
+  EXPECT_EQ(11.05, testCoil.coolingDesignCapacityPerFloorArea());
+
+  EXPECT_EQ(1.0, testCoil.fractionofAutosizedCoolingDesignCapacity());
+  EXPECT_TRUE(testCoil.setFractionofAutosizedCoolingDesignCapacity(1.05));
+  EXPECT_EQ(1.05, testCoil.fractionofAutosizedCoolingDesignCapacity());
+  EXPECT_FALSE(testCoil.setFractionofAutosizedCoolingDesignCapacity(-0.05));
+  EXPECT_EQ(1.05, testCoil.fractionofAutosizedCoolingDesignCapacity());
 }
 
 TEST_F(ModelFixture, CoilCoolingLowTempRadiantVarFlow_addToNode) {

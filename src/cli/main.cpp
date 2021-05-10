@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -127,6 +127,7 @@ extern "C"
   void Init_etc(void);
   void Init_fcntl(void);
   void Init_fiber(void);
+  void Init_monitor(void);
   void Init_fiddle(void);
   void Init_generator(void);
   void Init_md5(void);
@@ -135,7 +136,6 @@ extern "C"
   void Init_objspace(void);
   void Init_parser(void);
   void Init_pathname(void);
-  void Init_prelude(void);
   void Init_psych(void);
   void Init_ripper(void);
   void Init_rmd160(void);
@@ -371,8 +371,6 @@ int main(int argc, char* argv[]) {
     Init_trans_utf_16_32();
     rb_provide("enc/trans/utf_16_32.o");
 
-    Init_prelude();
-
     Init_bigdecimal();
     rb_provide("bigdecimal");
     rb_provide("bigdecimal.so");
@@ -387,7 +385,9 @@ int main(int argc, char* argv[]) {
 
     Init_cparse();
     rb_provide("cparse");
+    rb_provide("racc/cparse");
     rb_provide("cparse.so");
+    rb_provide("racc/cparse.so");
 
     Init_date_core();
     rb_provide("date_core");
@@ -422,6 +422,10 @@ int main(int argc, char* argv[]) {
     rb_provide("digest/md5");
     rb_provide("md5.so");
     rb_provide("digest/md5.so");
+
+    Init_monitor();
+    rb_provide("monitor");
+    rb_provide("monitor.so");
 
     Init_nkf();
     rb_provide("nkf");
@@ -583,7 +587,7 @@ extern "C"
 {
   int rb_hasFile(const char* t_filename) {
     // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
-    std::string expandedName = std::string(":/ruby/2.5.0/") + std::string(t_filename) + ".rb";
+    std::string expandedName = std::string(":/ruby/2.7.0/") + std::string(t_filename) + ".rb";
     return embedded_files::hasFile(expandedName);
   }
 

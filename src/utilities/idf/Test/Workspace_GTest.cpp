@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -169,7 +169,7 @@ TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports_2
   if (report.numErrors() > 0) {
     LOG(Error, "ValidityCheckingAndReports_2 invalid at StrictnessLevel Final. The ValidityReport "
                "follows."
-                 << std::endl
+                 << '\n'
                  << report);
   }
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Final));
@@ -181,7 +181,7 @@ TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports_2
   if (report.numErrors() > 0) {
     LOG(Error, "ValidityCheckingAndReports_2 invalid at StrictnessLevel Draft. The ValidityReport "
                "follows."
-                 << std::endl
+                 << '\n'
                  << report);
   }
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
@@ -193,7 +193,7 @@ TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports_2
   if (report.numErrors() > 0) {
     LOG(Error, "ValidityCheckingAndReports_2 invalid at StrictnessLevel None. The ValidityReport "
                "follows."
-                 << std::endl
+                 << '\n'
                  << report);
   }
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
@@ -304,38 +304,38 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
 
   // Add Lights schedule to workspace.
   std::stringstream ss;
-  ss << "ScheduleTypeLimits, " << std::endl << "Any Number;              !- Name";
+  ss << "ScheduleTypeLimits, " << '\n' << "Any Number;              !- Name";
   IdfObject scheduleTypeLimits = IdfObject::load(ss.str(), *(IddFactory::instance().getObject(IddObjectType::ScheduleTypeLimits))).get();
   ss.str("");
-  ss << "Schedule:Compact, " << std::endl
-     << "LIT-SCHED-BldgAvg,       !- Name " << std::endl
-     << "Any Number,              !- Schedule Type Limits Name " << std::endl
-     << "Through: 12/31,          !- Field 1 " << std::endl
-     << "For: Weekdays SummerDesignDay, !- Field 2 " << std::endl
-     << "Until:  4:00,0.05,       !- Field 3 " << std::endl
-     << "Until:  5:00,0.1,        !- Field 5 " << std::endl
-     << "Until:  6:00,0.2,        !- Field 7 " << std::endl
-     << "Until:  7:00,0.4,        !- Field 9 " << std::endl
-     << "Until:  8:00,0.7,        !- Field 11 " << std::endl
-     << "Until:  9:00,0.8,        !- Field 13 " << std::endl
-     << "Until:  17:00,0.85,      !- Field 15 " << std::endl
-     << "Until:  18:00,0.8,       !- Field 17 " << std::endl
-     << "Until:  19:00,0.35,      !- Field 19 " << std::endl
-     << "Until: 24:00,0.1,        !- Field 21 " << std::endl
-     << "For: Saturday,           !- Field 23 " << std::endl
-     << "Until:  5:00,0.05,       !- Field 24 " << std::endl
-     << "Until:  6:00,0.1,        !- Field 26 " << std::endl
-     << "Until:  7:00,0.15,       !- Field 28 " << std::endl
-     << "Until:  9:00,0.21,       !- Field 30 " << std::endl
-     << "Until: 14:00,0.25,       !- Field 32 " << std::endl
-     << "Until: 17:00,0.2,        !- Field 34 " << std::endl
-     << "Until: 18:00,0.15,       !- Field 36 " << std::endl
-     << "Until: 24:00,0.1,        !- Field 38 " << std::endl
-     << "For: Sunday Holidays WinterDesignDay AllOtherDays, !- Field 40 " << std::endl
-     << "Until:  5:00,0.05,       !- Field 41 " << std::endl
-     << "Until:  7:00,0.1,        !- Field 43 " << std::endl
-     << "Until:  17:00,0.15,      !- Field 45 " << std::endl
-     << "Until:  20:00,0.1,       !- Field 47 " << std::endl
+  ss << "Schedule:Compact, " << '\n'
+     << "LIT-SCHED-BldgAvg,       !- Name " << '\n'
+     << "Any Number,              !- Schedule Type Limits Name " << '\n'
+     << "Through: 12/31,          !- Field 1 " << '\n'
+     << "For: Weekdays SummerDesignDay, !- Field 2 " << '\n'
+     << "Until:  4:00,0.05,       !- Field 3 " << '\n'
+     << "Until:  5:00,0.1,        !- Field 5 " << '\n'
+     << "Until:  6:00,0.2,        !- Field 7 " << '\n'
+     << "Until:  7:00,0.4,        !- Field 9 " << '\n'
+     << "Until:  8:00,0.7,        !- Field 11 " << '\n'
+     << "Until:  9:00,0.8,        !- Field 13 " << '\n'
+     << "Until:  17:00,0.85,      !- Field 15 " << '\n'
+     << "Until:  18:00,0.8,       !- Field 17 " << '\n'
+     << "Until:  19:00,0.35,      !- Field 19 " << '\n'
+     << "Until: 24:00,0.1,        !- Field 21 " << '\n'
+     << "For: Saturday,           !- Field 23 " << '\n'
+     << "Until:  5:00,0.05,       !- Field 24 " << '\n'
+     << "Until:  6:00,0.1,        !- Field 26 " << '\n'
+     << "Until:  7:00,0.15,       !- Field 28 " << '\n'
+     << "Until:  9:00,0.21,       !- Field 30 " << '\n'
+     << "Until: 14:00,0.25,       !- Field 32 " << '\n'
+     << "Until: 17:00,0.2,        !- Field 34 " << '\n'
+     << "Until: 18:00,0.15,       !- Field 36 " << '\n'
+     << "Until: 24:00,0.1,        !- Field 38 " << '\n'
+     << "For: Sunday Holidays WinterDesignDay AllOtherDays, !- Field 40 " << '\n'
+     << "Until:  5:00,0.05,       !- Field 41 " << '\n'
+     << "Until:  7:00,0.1,        !- Field 43 " << '\n'
+     << "Until:  17:00,0.15,      !- Field 45 " << '\n'
+     << "Until:  20:00,0.1,       !- Field 47 " << '\n'
      << "Until:  24:00,0.05;      !- Field 49";
   IdfObject schedule = IdfObject::load(ss.str(), *(IddFactory::instance().getObject(IddObjectType::Schedule_Compact))).get();
   ss.str("");
@@ -1014,7 +1014,7 @@ TEST_F(IdfFixture, HospitalBaseline) {
   // report on file
   LOG(Info, "Created Workspace for HospitalBaseline/in.idf in " << timingResult << " s.");
   if (report.numErrors() > 0) {
-    LOG(Info, "HospitalBaseline/in.idf is invalid at draft level. The ValidityReport follows." << std::endl << report);
+    LOG(Info, "HospitalBaseline/in.idf is invalid at draft level. The ValidityReport follows." << '\n' << report);
   } else {
     LOG(Info, "HospitalBaseline/in.idf is valid to draft level.");
   }

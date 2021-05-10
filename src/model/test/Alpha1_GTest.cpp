@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -314,7 +314,7 @@ TEST_F(ModelFixture, Alpha1)
   EXPECT_FALSE(runManager.workPending());
 
   // start simulation by queuing job
-  std::cout << "Starting simulation " << job.description() << std::endl;
+  std::cout << "Starting simulation " << job.description() << '\n';
   runManager.enqueue(job, true);
 
   // check run manager status
@@ -342,7 +342,7 @@ TEST_F(ModelFixture, Alpha1)
   }
 
   EXPECT_FALSE(runManager.workPending());
-  std::cout << "Simulation complete" << std::endl;
+  std::cout << "Simulation complete" << '\n';
 
   // get errorFile and set sqlFile
   errorFile = ErrorFile(job.allFiles().getLastByFilename("eplusout.err").fullPath);

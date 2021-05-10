@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,9 +57,7 @@ void logBeforeAndAfterPathInformation(const std::string& functionName, const pat
   printPathInformation(ssb, before);
   printPathInformation(ssa, after);
 
-  LOG_FREE(Debug, "CoreFixture",
-           "Before " << functionName << ": " << ssb.str() << std::endl
-                     << "After " << functionName << ": " << ssa.str() << std::endl);
+  LOG_FREE(Debug, "CoreFixture", "Before " << functionName << ": " << ssb.str() << '\n' << "After " << functionName << ": " << ssa.str() << '\n');
 }
 
 TEST_F(CoreFixture, Path_CompletePathToFile) {

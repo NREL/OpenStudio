@@ -1,0 +1,11 @@
+
+OS:Version,
+  {66e48ced-5af2-49cf-9c23-eb32a1f3ca1b}, !- Handle
+  3.1.0;                                  !- Version Identifier
+
+OS:ZoneAirMassFlowConservation,
+  {c98bd4b2-3efe-4943-8009-c1c81131043a}, !- Handle
+  Yes,                                    !- Adjust Zone Mixing For Zone Air Mass Flow Balance
+  AdjustInfiltrationFlow,                 !- Infiltration Balancing Method
+  AllZones;                               !- Infiltration Balancing Zones
+

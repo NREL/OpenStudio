@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,6 +47,7 @@ namespace model {
   class ControllerOutdoorAir;
   class Node;
   class AirflowNetworkDistributionNode;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
 
   /** AirLoopHVACOutdoorAirSystem is an HVACComponent that wraps the IDD object
  *  named "OS:AirLoopHVAC:OutdoorAirSystem"
@@ -150,17 +151,20 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    /** Returns the AirLoopHVACDedicatedOutdoorAirSystem, if it exists. */
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystem() const;
+
    protected:
-    friend class Model;
-
-    friend class openstudio::IdfObject;
-
     /// @cond
-
     typedef detail::AirLoopHVACOutdoorAirSystem_Impl ImplType;
 
     explicit AirLoopHVACOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl);
 
+    friend class detail::AirLoopHVACOutdoorAirSystem_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @cond
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");
 

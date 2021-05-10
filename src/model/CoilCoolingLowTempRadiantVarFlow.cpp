@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -280,9 +280,11 @@ namespace model {
       boost::optional<ZoneHVACLowTempRadiantVarFlow> parentCoil;
       auto zoneHVACs = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantVarFlow>();
       for (const auto& zoneHVAC : zoneHVACs) {
-        if (zoneHVAC.coolingCoil().handle() == this->handle()) {
-          result = zoneHVAC;
-          break;
+        if (auto cc = zoneHVAC.coolingCoil()) {
+          if (cc->handle() == this->handle()) {
+            result = zoneHVAC;
+            break;
+          }
         }
       }
 
@@ -293,6 +295,78 @@ namespace model {
       }
 
       return result;
+    }
+
+    std::string CoilCoolingLowTempRadiantVarFlow_Impl::coolingDesignCapacityMethod() const {
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod) {
+      bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, coolingDesignCapacityMethod);
+      return result;
+    }
+
+    boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::coolingDesignCapacity() const {
+      return getDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, true);
+    }
+
+    bool CoilCoolingLowTempRadiantVarFlow_Impl::isCoolingDesignCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingDesignCapacity(double coolingDesignCapacity) {
+      bool result(false);
+      if (coolingDesignCapacity) {
+        result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, coolingDesignCapacity);
+      }
+      return result;
+    }
+
+    void CoilCoolingLowTempRadiantVarFlow_Impl::autosizeCoolingDesignCapacity() {
+      bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    double CoilCoolingLowTempRadiantVarFlow_Impl::coolingDesignCapacityPerFloorArea() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingDesignCapacityPerFloorArea(double coolingDesignCapacityPerFloorArea) {
+      bool result =
+        setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, coolingDesignCapacityPerFloorArea);
+      return result;
+    }
+
+    double CoilCoolingLowTempRadiantVarFlow_Impl::fractionofAutosizedCoolingDesignCapacity() const {
+      boost::optional<double> value =
+        getDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilCoolingLowTempRadiantVarFlow_Impl::setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity) {
+      bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity,
+                              fractionofAutosizedCoolingDesignCapacity);
+      return result;
+    }
+
+    boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedCoolingDesignCapacity() const {
+      boost::optional<ZoneHVACLowTempRadiantVarFlow> zoneHVAC = parentZoneHVAC();
+      boost::optional<double> result;
+      if (!zoneHVAC) {
+        return result;
+      }
+
+      return zoneHVAC->getAutosizedValue("Design Size Cooling Design Capacity", "W");
     }
 
     boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedMaximumColdWaterFlow() const {
@@ -307,6 +381,7 @@ namespace model {
 
     void CoilCoolingLowTempRadiantVarFlow_Impl::autosize() {
       autosizeMaximumColdWaterFlow();
+      autosizeCoolingDesignCapacity();
     }
 
     void CoilCoolingLowTempRadiantVarFlow_Impl::applySizingValues() {
@@ -314,6 +389,10 @@ namespace model {
       val = autosizedMaximumColdWaterFlow();
       if (val) {
         setMaximumColdWaterFlow(val.get());
+      }
+      val = autosizedCoolingDesignCapacity();
+      if (val) {
+        setCoolingDesignCapacity(val.get());
       }
     }
 
@@ -325,6 +404,14 @@ namespace model {
 
     bool ok = setCoolingControlTemperatureSchedule(coolingControlTemperatureSchedule);
     OS_ASSERT(ok);
+
+    ok = setCoolingDesignCapacityMethod("CoolingDesignCapacity");
+    OS_ASSERT(ok);
+    autosizeCoolingDesignCapacity();
+    ok = setCoolingDesignCapacityPerFloorArea(0);
+    OS_ASSERT(ok);
+    ok = setFractionofAutosizedCoolingDesignCapacity(1.0);
+    OS_ASSERT(ok);
   }
 
   IddObjectType CoilCoolingLowTempRadiantVarFlow::iddObjectType() {
@@ -334,6 +421,11 @@ namespace model {
   std::vector<std::string> CoilCoolingLowTempRadiantVarFlow::condensationControlTypeValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CondensationControlType);
+  }
+
+  std::vector<std::string> CoilCoolingLowTempRadiantVarFlow::coolingDesignCapacityMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod);
   }
 
   boost::optional<Schedule> CoilCoolingLowTempRadiantVarFlow::coolingControlTemperatureSchedule() const {
@@ -420,11 +512,6 @@ namespace model {
     getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->resetCondensationControlDewpointOffset();
   }
 
-  /// @cond
-  CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantVarFlow_Impl> impl)
-    : StraightComponent(std::move(impl)) {}
-  /// @endcond
-
   boost::optional<double> CoilCoolingLowTempRadiantVarFlow::autosizedMaximumColdWaterFlow() const {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->autosizedMaximumColdWaterFlow();
   }
@@ -432,6 +519,56 @@ namespace model {
   boost::optional<ZoneHVACLowTempRadiantVarFlow> CoilCoolingLowTempRadiantVarFlow::parentZoneHVAC() const {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->parentZoneHVAC();
   }
+
+  std::string CoilCoolingLowTempRadiantVarFlow::coolingDesignCapacityMethod() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingDesignCapacityMethod();
+  }
+
+  bool CoilCoolingLowTempRadiantVarFlow::setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod) {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCoolingDesignCapacityMethod(coolingDesignCapacityMethod);
+  }
+
+  boost::optional<double> CoilCoolingLowTempRadiantVarFlow::coolingDesignCapacity() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingDesignCapacity();
+  }
+
+  bool CoilCoolingLowTempRadiantVarFlow::isCoolingDesignCapacityAutosized() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->isCoolingDesignCapacityAutosized();
+  }
+
+  bool CoilCoolingLowTempRadiantVarFlow::setCoolingDesignCapacity(double coolingDesignCapacity) {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCoolingDesignCapacity(coolingDesignCapacity);
+  }
+
+  void CoilCoolingLowTempRadiantVarFlow::autosizeCoolingDesignCapacity() {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->autosizeCoolingDesignCapacity();
+  }
+
+  boost::optional<double> CoilCoolingLowTempRadiantVarFlow::autosizedCoolingDesignCapacity() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->autosizedCoolingDesignCapacity();
+  }
+
+  double CoilCoolingLowTempRadiantVarFlow::coolingDesignCapacityPerFloorArea() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingDesignCapacityPerFloorArea();
+  }
+
+  bool CoilCoolingLowTempRadiantVarFlow::setCoolingDesignCapacityPerFloorArea(double coolingDesignCapacityPerFloorArea) {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCoolingDesignCapacityPerFloorArea(coolingDesignCapacityPerFloorArea);
+  }
+
+  double CoilCoolingLowTempRadiantVarFlow::fractionofAutosizedCoolingDesignCapacity() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->fractionofAutosizedCoolingDesignCapacity();
+  }
+
+  bool CoilCoolingLowTempRadiantVarFlow::setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity) {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setFractionofAutosizedCoolingDesignCapacity(
+      fractionofAutosizedCoolingDesignCapacity);
+  }
+
+  /// @cond
+  CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantVarFlow_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
 }  // namespace model
 }  // namespace openstudio

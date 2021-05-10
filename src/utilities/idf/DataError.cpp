@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -142,28 +142,28 @@ bool DataErrorLess::operator()(const DataError& left, const DataError& right) co
 std::ostream& operator<<(std::ostream& os, const DataError& error) {
 
   os << std::setw(11) << std::left << error.scope().valueName() << "level data error of type ";
-  os << std::setw(18) << std::left << error.type().valueName() << "." << std::endl;
+  os << std::setw(18) << std::left << error.type().valueName() << "." << '\n';
 
   if (error.scope() == Scope::Field) {
     OS_ASSERT(error.objectType());
     os << "Error is in an object of type '" << error.objectType()->valueDescription();
     os << "', named '" << error.objectName() << "', in field " << error.fieldIdentifier() << ".";
-    os << std::endl;
+    os << '\n';
   }
 
   if (error.scope() == Scope::Object) {
     OS_ASSERT(error.objectType());
     os << "Error pertains to an object of type '" << error.objectType()->valueDescription();
-    os << "', named '" << error.objectName() << "'." << std::endl;
+    os << "', named '" << error.objectName() << "'." << '\n';
   }
 
   if ((error.scope() == Scope::Collection) && (error.objectType())) {
     os << "Error pertains to objects of type '" << error.objectType()->valueDescription() << "'.";
-    os << std::endl;
+    os << '\n';
   }
 
   os << "Additional information about the error type: " << error.type().valueDescription() << ".";
-  os << std::endl;
+  os << '\n';
 
   return os;
 }

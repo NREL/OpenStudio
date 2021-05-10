@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,6 +47,8 @@
 #include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "Node.hpp"
@@ -457,6 +459,19 @@ namespace model {
         }
       }
 
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.spaceHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.shdwhHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+        }
+      }
+
       return boost::none;
     }
 
@@ -477,14 +492,21 @@ namespace model {
     }
 
     bool CoilHeatingDXVariableSpeed_Impl::addToNode(Node& node) {
-      if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
-        if (!airLoop->demandComponent(node.handle())) {
+      auto t_containingHVACComponent = containingHVACComponent();
+      if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+        LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemIntegratedHeatPumpAirSource. "
+                                              "Please call CoilSystemIntegratedHeatPumpAirSource::addToNode instead");
+      } else {
+
+        if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
+          if (!airLoop->demandComponent(node.handle())) {
+            return StraightComponent_Impl::addToNode(node);
+          }
+        }
+
+        if (auto oa = node.airLoopHVACOutdoorAirSystem()) {
           return StraightComponent_Impl::addToNode(node);
         }
-      }
-
-      if (auto oa = node.airLoopHVACOutdoorAirSystem()) {
-        return StraightComponent_Impl::addToNode(node);
       }
 
       return false;

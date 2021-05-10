@@ -112,6 +112,18 @@
   // these have both const and non const
   %ignore openstudio::WorkspaceObject::idfObject() const;
   %ignore openstudio::Workspace::order() const;
+
+  // Ignore the progressBar stuff, which is swig'ed later in UtilitiesPlot. I doubt it's useful, so do not bother with partial classes
+  %ignore openstudio::Workspace::connectProgressBar(openstudio::ProgressBar&);
+  %ignore openstudio::Workspace::disconnectProgressBar(openstudio::ProgressBar&);
+
+  // In all of these, progressBar is an optional argument, which translates to two overloads (one with the arg, one without) so we ignore that overload with the arg
+  %ignore openstudio::IdfFile::load(std::istream&, const IddFileType&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(std::istream&, const IddFile&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(const path&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(const path&, const IddFileType&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(const path&, const IddFile&, ProgressBar*);
+
 #endif
 
 #if defined(SWIGJAVA)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,7 @@ namespace model {
   class Schedule;
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class ThermalZone;
 
   namespace detail {
 
@@ -62,7 +63,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> supplyAirFanplacementValues();
+    static std::vector<std::string> supplyAirFanPlacementValues();
 
     Schedule terminalUnitAvailabilityschedule() const;
 
@@ -135,7 +136,12 @@ namespace model {
 
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-    HVACComponent supplyAirFan() const;
+    // Required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+    // Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
+    // TODO: not breaking API (yet), so leaving it as non optional
+    HVACComponent supplyAirFan() const;  // TODO: OS_DEPRECATED
+    // bool setSupplyAirFan(const HVACComponent& fan);
+    // void resetSupplyAirFan();
 
     boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
 
@@ -174,6 +180,15 @@ namespace model {
     // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
     double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
     bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+
+    // Supply Air Fan Placement
+    std::string supplyAirFanPlacement() const;
+    bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
+
+    // Controlling Zone or Thermostat Location
+    boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
+    bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
+    void resetControllingZoneorThermostatLocation();
 
     boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 

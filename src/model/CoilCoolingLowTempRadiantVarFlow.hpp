@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -66,6 +66,8 @@ namespace model {
 
     //unsigned outletPort() const;
 
+    static std::vector<std::string> coolingDesignCapacityMethodValues();
+
     static std::vector<std::string> condensationControlTypeValues();
 
     /** @name Getters */
@@ -90,6 +92,15 @@ namespace model {
     double condensationControlDewpointOffset() const;
 
     bool isCondensationControlDewpointOffsetDefaulted() const;
+
+    std::string coolingDesignCapacityMethod() const;
+
+    boost::optional<double> coolingDesignCapacity() const;
+    bool isCoolingDesignCapacityAutosized() const;
+
+    double coolingDesignCapacityPerFloorArea() const;
+
+    double fractionofAutosizedCoolingDesignCapacity() const;
 
     //@}
     /** @name Setters */
@@ -117,11 +128,22 @@ namespace model {
 
     void resetCondensationControlDewpointOffset();
 
+    bool setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod);
+
+    bool setCoolingDesignCapacity(double coolingDesignCapacity);
+    void autosizeCoolingDesignCapacity();
+
+    bool setCoolingDesignCapacityPerFloorArea(double coolingDesignCapacityPerFloorArea);
+
+    bool setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity);
+
     //@}
     /** @name Other */
     //@{
 
     boost::optional<double> autosizedMaximumColdWaterFlow() const;
+
+    boost::optional<double> autosizedCoolingDesignCapacity() const;
 
     //@}
    protected:

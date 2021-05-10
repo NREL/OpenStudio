@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -82,6 +82,8 @@
 #include "../../model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
@@ -152,6 +154,13 @@ namespace energyplus {
         auto airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>(supplyComponents);
         if (!airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.empty()) {
           fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.back();
+        }
+      }
+
+      if (!fanOrUnitary) {
+        auto zoneHVACTerminalUnitVariableRefrigerantFlow = subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlow>(supplyComponents);
+        if (!zoneHVACTerminalUnitVariableRefrigerantFlow.empty()) {
+          fanOrUnitary = zoneHVACTerminalUnitVariableRefrigerantFlow.back();
         }
       }
 

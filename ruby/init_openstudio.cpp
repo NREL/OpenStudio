@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,7 @@ extern "C" {
   void Init_openstudioutilitiescore(void);
   void Init_openstudioutilitiesplot(void);
   void Init_openstudioenergyplus(void);
+  void Init_openstudioepjson(void);
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
@@ -159,6 +160,9 @@ void init_openstudio_internal_extended()
   Init_openstudioenergyplus();
   rb_provide("openstudioenergyplus");
   rb_provide("openstudioenergyplus.so");
+  Init_openstudioepjson();
+  rb_provide("openstudioepjson");
+  rb_provide("openstudioepjson.so");
   Init_openstudioradiance();
   rb_provide("openstudioradiance");
   rb_provide("openstudioradiance.so");

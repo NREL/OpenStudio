@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,7 @@
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../WorkspaceExtensibleGroup.hpp"
 #include "../IdfFile.hpp"
@@ -234,7 +235,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   ASSERT_TRUE(light);
 
   // certain things we can't invalidate
-  EXPECT_TRUE(light->setString(LightsFields::Name, ""));
+  EXPECT_FALSE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
   EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));         // PointerType error
@@ -267,14 +268,14 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   Workspace scratch(StrictnessLevel::None, IddFileType::EnergyPlus);  // Strictness level None
 
   std::stringstream text;
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
+  text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
+       << "  MyRadiantSystem," << '\n'
+       << "  MyHVACSchedule," << '\n'
+       << "  MyCoreZone," << '\n'
+       << "  HeatingDesignCapacity," << '\n'
+       << "  Autosize," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'
        << "  Electricity;";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -288,11 +289,11 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
 
   // create schedule object to point to from non-extensible field
   text.str("");
-  text << "Schedule:Compact," << std::endl
-       << "  AlwaysOn," << std::endl
-       << "  ," << std::endl
-       << "  For: AllOtherDays," << std::endl
-       << "  Until: 24:00," << std::endl
+  text << "Schedule:Compact," << '\n'
+       << "  AlwaysOn," << '\n'
+       << "  ," << '\n'
+       << "  For: AllOtherDays," << '\n'
+       << "  Until: 24:00," << '\n'
        << "  1.0;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -323,14 +324,14 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   // SHOULD NOT BE VALID
   scratch = Workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);  // Non-null data must be valid
   text.str("");
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
+  text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
+       << "  MyRadiantSystem," << '\n'
+       << "  MyHVACSchedule," << '\n'
+       << "  MyCoreZone," << '\n'
+       << "  HeatingDesignCapacity," << '\n'
+       << "  Autosize," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'
        << "  Electricity;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -556,4 +557,54 @@ TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
   EXPECT_EQ(1u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(2u, object2.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, WorkspaceObject_setString) {
+
+  // Test for #4205 - setString on a WorkspaceObject should prevent duplicate names
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
+  WorkspaceObject space1 = ws.addObject(IdfObject(IddObjectType::OS_Space)).get();
+
+  WorkspaceObject space2 = ws.addObject(IdfObject(IddObjectType::OS_Space)).get();
+
+  unsigned nameIndex = 1;
+  EXPECT_TRUE(space1.setString(nameIndex, "Space 1"));
+  ASSERT_TRUE(space1.getString(nameIndex));
+  EXPECT_EQ("Space 1", space1.getString(nameIndex).get());
+
+  EXPECT_TRUE(space2.setString(nameIndex, "SpaceA"));
+  EXPECT_EQ("SpaceA", space2.getString(nameIndex).get());
+
+  EXPECT_TRUE(space2.setString(nameIndex, "Space 1"));  // Setting works, but it should modify it
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_NE("Space 1", space2.getString(nameIndex).get());
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
+
+  // That portion is not accepted either, even at Draft level
+  EXPECT_FALSE(space2.setString(nameIndex, ""));
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
+}
+
+TEST_F(IdfFixture, WorkspaceObject_setName_allObjects) {
+
+  std::vector<openstudio::IddObjectType> exclusions{openstudio::IddObjectType::OS_Output_Meter};
+
+  auto osIddFile = openstudio::IddFactory::instance().getIddFile(openstudio::IddFileType::OpenStudio);
+
+  for (const IddObject& iddObject : osIddFile.objects()) {
+    auto iddObjectType = iddObject.type();
+    if (std::find(exclusions.cbegin(), exclusions.cend(), iddObjectType) == exclusions.cend()) {
+      if (auto index_ = iddObject.nameFieldIndex()) {
+        Workspace w(StrictnessLevel::Draft, IddFileType::OpenStudio);
+        WorkspaceObjectVector objs;
+        for (auto i = 0; i < 2; ++i) {
+          WorkspaceObject obj = w.addObject(IdfObject(iddObjectType)).get();
+          EXPECT_TRUE(obj.setString(index_.get(), "object name"));
+          objs.emplace_back(obj);
+        }
+        EXPECT_NE(objs[0].nameString(), objs[1].nameString()) << "Name unicity isn't enforced for " << iddObject.name();
+      }
+    }
+  }
 }

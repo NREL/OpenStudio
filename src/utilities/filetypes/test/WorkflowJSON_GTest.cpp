@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -811,7 +811,7 @@ TEST(Filetypes, WorkflowStep_EscapeCharacters) {
   ASSERT_TRUE(temp->optionalCast<MeasureStep>());
   MeasureStep step2 = temp->cast<MeasureStep>();
 
-  std::cout << step.string() << std::endl;
+  std::cout << step.string() << '\n';
 
   EXPECT_EQ("\"My Measure\"", step2.measureDirName());
 
@@ -834,7 +834,7 @@ TEST(Filetypes, WorkflowStep_EscapeCharacters2) {
   ASSERT_TRUE(temp->optionalCast<MeasureStep>());
   MeasureStep step2 = temp->cast<MeasureStep>();
 
-  std::cout << step.string() << std::endl;
+  std::cout << step.string() << '\n';
 
   EXPECT_EQ("\"My Measure\"", step2.measureDirName());
 
@@ -863,7 +863,7 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters) {
   boost::optional<WorkflowStepResult> result2 = WorkflowStepResult::fromString(result.string());
   ASSERT_TRUE(result2);
 
-  std::cout << result.string() << std::endl;
+  std::cout << result.string() << '\n';
 
   ASSERT_TRUE(result2->initialCondition());
   EXPECT_EQ("\"Initial Condition\"", result2->stepInitialCondition().get());
@@ -900,7 +900,7 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters2) {
   boost::optional<WorkflowStepResult> result2 = WorkflowStepResult::fromString(result.string());
   ASSERT_TRUE(result2);
 
-  std::cout << result.string() << std::endl;
+  std::cout << result.string() << '\n';
 
   ASSERT_TRUE(result2->stepInitialCondition());
   EXPECT_EQ("\"Initial Condition\"", result2->stepInitialCondition().get());

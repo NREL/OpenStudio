@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,8 +31,6 @@
 #include "GeneratorMicroTurbine_Impl.hpp"
 #include "GeneratorMicroTurbineHeatRecovery.hpp"
 #include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
-#include "ElectricLoadCenterDistribution.hpp"
-#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 // Need model to check if curve is part of model when setting
 #include "Model.hpp"
@@ -790,10 +788,6 @@ namespace model {
     elecEffFPLR.setMinimumValueofx(0.03);
     elecEffFPLR.setMaximumValueofx(1.0);
     setElectricalEfficiencyFunctionofPartLoadRatioCurve(elecEffFPLR);
-
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   IddObjectType GeneratorMicroTurbine::iddObjectType() {

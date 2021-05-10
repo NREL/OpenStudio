@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -573,12 +573,12 @@ TEST_F(GeometryFixture, Transformation_Decompose) {
   EulerAngles angles = transformation.eulerAngles();
   Transformation test = Transformation::translation(origin) * Transformation::rotation(angles);
 
-  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << std::endl << test.matrix();
+  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << '\n' << test.matrix();
 
   transformation = rotation * translation;
   origin = transformation.translation();
   angles = transformation.eulerAngles();
   test = Transformation::translation(origin) * Transformation::rotation(angles);
 
-  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << std::endl << test.matrix();
+  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << '\n' << test.matrix();
 }

@@ -117,12 +117,16 @@ namespace embedded_files {
 
   const std::vector<std::string> &fileNames();
 
-  inline std::string allFileNamesAsString(){
-    std::string result;
-    for (const auto& fileName : fileNames()){
-      result += (fileName + ";");
-    }
-    return result;
+  inline const std::string &allFileNamesAsString(){
+    static const auto return_value = [](){
+      std::string result;
+      for (const auto& fileName : fileNames()){
+        result += (fileName + ";");
+      }
+      return result;
+    }();
+
+    return return_value;
   }
 
   inline std::string findFirstFileByName(const std::string &t_filename) {

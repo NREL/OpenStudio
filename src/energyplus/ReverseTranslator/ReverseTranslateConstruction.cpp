@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,6 +60,18 @@ namespace energyplus {
       return boost::none;
     }
 
+    // E+ 9.5.0: Check if the construction is referenced by a ConstructionProperty:InternalHeatSource
+    std::vector<WorkspaceObject> constructionProps = workspaceObject.getSources(IddObjectType::ConstructionProperty_InternalHeatSource);
+    if (constructionProps.size() > 0) {
+      LOG(Info, "Construction '" << workspaceObject.nameString() << "' will be translated to a ConstructionWithInternalSource'");
+      if (constructionProps.size() > 1) {
+        LOG(Warn, "Construction '" << workspaceObject.nameString() << "' is referenced by more than one ConstructionProperty:InternalHeatSource."
+                                   << "Check IDF file for validity. Only the first one will be used.");
+      }
+      return translateConstructionWithInternalSource(constructionProps[0]);
+    }
+
+    // Otherwise, business as usual
     Construction construction(m_model);
     OS_ASSERT(construction.numLayers() == 0u);
     OptionalString optS = workspaceObject.name();

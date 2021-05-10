@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -358,88 +358,6 @@ namespace energyplus {
       }
     }
 
-    // remove orphan Generator:MicroTurbine
-    for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()) {
-      if (!chp.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "GeneratorMicroTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        chp.remove();
-        continue;
-      }
-    }
-
-    // remove orphan photovoltaics
-    for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()) {
-      if (!pv.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        pv.remove();
-        continue;
-      }
-      if (!pv.surface()) {
-        LOG(Warn, "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any surface, it will not be translated.");
-        pv.remove();
-      }
-    }
-
-    // remove orphan Generator:PVWatts
-    for (auto& pv : model.getConcreteModelObjects<GeneratorPVWatts>()) {
-      if (!pv.electricLoadCenterDistribution()) {
-        LOG(Warn, "GeneratorPVWatts " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        pv.remove();
-        continue;
-      }
-    }
-
-    // remove orphan Generator:FuelCell
-    for (auto& fc : model.getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (!fc.electricLoadCenterDistribution()) {
-        //get the HX from the FC since that is the parent and remove it, thus removing the FC
-        LOG(Warn, "GeneratorFuelCell " << fc.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        fc.heatExchanger().remove();
-        //fc.remove();
-        continue;
-      }
-    }
-
-    // Remove orphan Storage
-    for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
-      if (!storage.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "Electrical Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        storage.remove();
-      }
-    }
-
-    // Remove orphan Converters
-    for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()) {
-      if (!converter.electricLoadCenterDistribution()) {
-        LOG(Warn, "Converter " << converter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        converter.remove();
-      }
-    }
-
-    // Remove empty electric load center distribution objects (e.g. with no generators)
-    // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
-    // add check for transformers
-    for (auto& elcd : model.getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
-      if ((elcd.generators().empty()) && (!elcd.transformer())) {
-        LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get()
-                                                    << " is not referenced by any generators or transformers, it will not be translated.");
-        if (auto inverter = elcd.inverter()) {
-          inverter->remove();
-        }
-        elcd.remove();
-      }
-    }
-
-    for (auto& inverter : model.getModelObjects<Inverter>()) {
-      if (!inverter.electricLoadCenterDistribution()) {
-        LOG(Warn, "Inverter " << inverter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        inverter.remove();
-      }
-    }
-
     // TODO: Is this still needed?
     // ensure shading controls only reference windows in a single zone and determine control sequence number
     // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
@@ -582,6 +500,13 @@ namespace energyplus {
       IdfObject idfObject(IddObjectType::OutdoorAir_Node);
       m_idfObjects.push_back(idfObject);
       idfObject.setName(node.name().get());
+    }
+
+    // get AirLoopHVACDedicatedOutdoorAirSystem in sorted order
+    std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doass = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+    std::sort(doass.begin(), doass.end(), WorkspaceObjectNameLess());
+    for (AirLoopHVACDedicatedOutdoorAirSystem doas : doass) {
+      translateAndMapModelObject(doas);
     }
 
     // get air loops in sorted order
@@ -798,6 +723,11 @@ namespace energyplus {
         retVal = translateAirLoopHVACOutdoorAirSystem(oaSystem);
         break;
       }
+      case openstudio::IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem: {
+        model::AirLoopHVACDedicatedOutdoorAirSystem doaSystem = modelObject.cast<AirLoopHVACDedicatedOutdoorAirSystem>();
+        retVal = translateAirLoopHVACDedicatedOutdoorAirSystem(doaSystem);
+        break;
+      }
       case openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir: {
         model::AirLoopHVACUnitaryHeatPumpAirToAir unitary = modelObject.cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
         retVal = translateAirLoopHVACUnitaryHeatPumpAirToAir(unitary);
@@ -929,6 +859,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         model::ChillerElectricEIR chiller = modelObject.cast<ChillerElectricEIR>();
         retVal = translateChillerElectricEIR(chiller);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
+        model::ChillerElectricReformulatedEIR chiller = modelObject.cast<ChillerElectricReformulatedEIR>();
+        retVal = translateChillerElectricReformulatedEIR(chiller);
         break;
       }
       case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR: {
@@ -1172,6 +1107,11 @@ namespace energyplus {
         retVal = translateCoilSystemCoolingDXHeatExchangerAssisted(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource: {
+        auto mo = modelObject.cast<CoilSystemIntegratedHeatPumpAirSource>();
+        retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
         model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
         retVal = translateCoilWaterHeatingDesuperheater(coil);
@@ -1180,6 +1120,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump: {
         auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPump>();
         retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed: {
+        auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
+        retVal = translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped: {
@@ -1324,6 +1269,16 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Curve_Linear: {
         model::CurveLinear curve = modelObject.cast<CurveLinear>();
         retVal = translateCurveLinear(curve);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Curve_QuadLinear: {
+        model::CurveQuadLinear curve = modelObject.cast<CurveQuadLinear>();
+        retVal = translateCurveQuadLinear(curve);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Curve_QuintLinear: {
+        model::CurveQuintLinear curve = modelObject.cast<CurveQuintLinear>();
+        retVal = translateCurveQuintLinear(curve);
         break;
       }
       case openstudio::IddObjectType::OS_Curve_Quadratic: {
@@ -1486,6 +1441,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Converter: {
         model::ElectricLoadCenterStorageConverter temp = modelObject.cast<ElectricLoadCenterStorageConverter>();
         retVal = translateElectricLoadCenterStorageConverter(temp);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        model::ElectricLoadCenterStorageLiIonNMCBattery temp = modelObject.cast<ElectricLoadCenterStorageLiIonNMCBattery>();
+        retVal = translateElectricLoadCenterStorageLiIonNMCBattery(temp);
         break;
       }
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer: {
@@ -1674,6 +1634,11 @@ namespace energyplus {
         // no-op
         return retVal;
       }
+      case openstudio::IddObjectType::OS_Fan_ComponentModel: {
+        model::FanComponentModel fan = modelObject.cast<FanComponentModel>();
+        retVal = translateFanComponentModel(fan);
+        break;
+      }
       case openstudio::IddObjectType::OS_Fan_ConstantVolume: {
         model::FanConstantVolume fan = modelObject.cast<FanConstantVolume>();
         retVal = translateFanConstantVolume(fan);
@@ -1802,6 +1767,11 @@ namespace energyplus {
         retVal = translateGeneratorPVWatts(temp);
         break;
       }
+      case openstudio::IddObjectType::OS_Generator_WindTurbine: {
+        model::GeneratorWindTurbine temp = modelObject.cast<GeneratorWindTurbine>();
+        retVal = translateGeneratorWindTurbine(temp);
+        break;
+      }
       case openstudio::IddObjectType::OS_Glare_Sensor: {
         // no-op
         break;
@@ -1863,6 +1833,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Humidifier_Steam_Electric: {
         model::HumidifierSteamElectric humidifierSteamElectric = modelObject.cast<HumidifierSteamElectric>();
         retVal = translateHumidifierSteamElectric(humidifierSteamElectric);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Humidifier_Steam_Gas: {
+        model::HumidifierSteamGas humidifierSteamGas = modelObject.cast<HumidifierSteamGas>();
+        retVal = translateHumidifierSteamGas(humidifierSteamGas);
         break;
       }
       case openstudio::IddObjectType::OS_WindowMaterial_Gas: {
@@ -2056,6 +2031,11 @@ namespace energyplus {
         retVal = translatePhotovoltaicPerformanceEquivalentOneDiode(temp);
         break;
       }
+      case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Sandia: {
+        PhotovoltaicPerformanceSandia temp = modelObject.cast<PhotovoltaicPerformanceSandia>();
+        retVal = translatePhotovoltaicPerformanceSandia(temp);
+        break;
+      }
       case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Simple: {
         PhotovoltaicPerformanceSimple temp = modelObject.cast<PhotovoltaicPerformanceSimple>();
         retVal = translatePhotovoltaicPerformanceSimple(temp);
@@ -2235,6 +2215,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Refrigeration_Compressor: {
         model::RefrigerationCompressor refrigerationCompressor = modelObject.cast<RefrigerationCompressor>();
         retVal = translateRefrigerationCompressor(refrigerationCompressor);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Refrigeration_CompressorRack: {
+        model::RefrigerationCompressorRack refrigerationCompressorRack = modelObject.cast<RefrigerationCompressorRack>();
+        retVal = translateRefrigerationCompressorRack(refrigerationCompressorRack);
         break;
       }
       case openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled: {
@@ -2533,6 +2518,11 @@ namespace energyplus {
         model::SpaceInfiltrationEffectiveLeakageArea spaceInfiltrationEffectiveLeakageArea =
           modelObject.cast<SpaceInfiltrationEffectiveLeakageArea>();
         retVal = translateSpaceInfiltrationEffectiveLeakageArea(spaceInfiltrationEffectiveLeakageArea);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SpaceInfiltration_FlowCoefficient: {
+        model::SpaceInfiltrationFlowCoefficient spaceInfiltrationFlowCoefficient = modelObject.cast<SpaceInfiltrationFlowCoefficient>();
+        retVal = translateSpaceInfiltrationFlowCoefficient(spaceInfiltrationFlowCoefficient);
         break;
       }
       case openstudio::IddObjectType::OS_SpaceType: {
@@ -2882,6 +2872,11 @@ namespace energyplus {
         retVal = translateZoneHVACBaseboardRadiantConvectiveWater(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_ZoneHVAC_CoolingPanel_RadiantConvective_Water: {
+        model::ZoneHVACCoolingPanelRadiantConvectiveWater mo = modelObject.cast<ZoneHVACCoolingPanelRadiantConvectiveWater>();
+        retVal = translateZoneHVACCoolingPanelRadiantConvectiveWater(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ZoneHVAC_Dehumidifier_DX: {
         model::ZoneHVACDehumidifierDX mo = modelObject.cast<ZoneHVACDehumidifierDX>();
         retVal = translateZoneHVACDehumidifierDX(mo);
@@ -3131,15 +3126,15 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_OtherEquipment);
     result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
     result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
+    result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
     result.push_back(IddObjectType::OS_Exterior_Lights);
     result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
     result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC);
-    result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
 
-    // Translated by AirLoopHVAC (and AirLoopHVAC:DedicatedOutdoorAirSystem but not wrapped)
-    // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem)
+    // Translated by AirLoopHVAC
+    // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass);
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
@@ -3152,6 +3147,7 @@ namespace energyplus {
     // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
     result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
     result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
+    result.push_back(IddObjectType::OS_Chiller_Electric_ReformulatedEIR);
 
     // Coil:Cooling:DX will be translated by the UnitarySystem it's in, and will in turn translate CurveFitPerformance, which will translate
     // OperatingMode, which will translate Speed
@@ -3190,6 +3186,8 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Curve_FanPressureRise);
     result.push_back(IddObjectType::OS_Curve_Functional_PressureDrop);
     result.push_back(IddObjectType::OS_Curve_Linear);
+    result.push_back(IddObjectType::OS_Curve_QuadLinear);
+    result.push_back(IddObjectType::OS_Curve_QuintLinear);
     result.push_back(IddObjectType::OS_Curve_Quadratic);
     result.push_back(IddObjectType::OS_Curve_QuadraticLinear);
     result.push_back(IddObjectType::OS_Curve_Quartic);
@@ -3205,9 +3203,10 @@ namespace energyplus {
     // Equipments should be responsible for translating their fans
     // result.push_back(IddObjectType::OS_Fan_Variable);
     // result.push_back(IddObjectType::OS_Fan_ConstantVolume);
-    // TODO: JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList
-    result.push_back(IddObjectType::OS_Fan_OnOff);
-    result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
+    // JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList. Fan_OnOff by its containing
+    // HVACComponent
+    // result.push_back(IddObjectType::OS_Fan_OnOff);
+    // result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
 
     result.push_back(IddObjectType::OS_Node);
     result.push_back(IddObjectType::OS_PlantLoop);
@@ -3220,12 +3219,17 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
     result.push_back(IddObjectType::OS_ZoneMixing);
 
+    result.push_back(IddObjectType::OS_Refrigeration_CompressorRack);
     result.push_back(IddObjectType::OS_Refrigeration_System);
     result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
-    result.push_back(IddObjectType::OS_Generator_MicroTurbine);
-    result.push_back(IddObjectType::OS_Generator_FuelCell);
+    // ElectricLoadCenterDistribution is responsible for translating its generators/inverters/storages
+    // result.push_back(IddObjectType::OS_Generator_MicroTurbine);
+    // result.push_back(IddObjectType::OS_Generator_FuelCell);
+    // result.push_back(IddObjectType::OS_Generator_Photovoltaic);
+    // result.push_back(IddObjectType::OS_Generator_PVWatts);
+    // result.push_back(IddObjectType::OS_Generator_WindTurbine);
     // Fuel Cell is responsible for translating these
     // result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
     // result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
@@ -3237,16 +3241,19 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
     // Fuel Cell (and MicroCHP when implemented) are responsible for translating this one
     // result.push_back(IddObjectType::OS_Generator_FuelSupply);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
 
-    result.push_back(IddObjectType::OS_Generator_Photovoltaic);
-    result.push_back(IddObjectType::OS_Generator_PVWatts);
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+    // Generator_Photovoltaic is responsible for translating these three
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
+
+    // Transformer can be standalone, see ASHRAE9012016_OfficeMedium_Denver.idf for example
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
     // put these down here so they have a chance to be translated with their "parent"

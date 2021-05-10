@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -58,6 +60,8 @@ namespace model {
     /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty vector.**/
     static std::vector<std::string> sourceZoneInfiltrationTreatmentValues();
 
+    static std::vector<std::string> adjustZoneMixingandReturnForAirMassFlowBalanceValues();
+
     static std::vector<std::string> infiltrationBalancingMethodValues();
 
     static std::vector<std::string> infiltrationBalancingZonesValues();
@@ -65,9 +69,12 @@ namespace model {
     /** @name Getters */
     //@{
 
-    bool adjustZoneMixingForZoneAirMassFlowBalance() const;
+    std::string adjustZoneMixingandReturnForAirMassFlowBalance() const;
+    // TODO: makes little sense
+    OS_DEPRECATED bool adjustZoneMixingForZoneAirMassFlowBalance() const;
 
-    bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
+    bool isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted() const;
+    OS_DEPRECATED bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
 
     /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty string.**/
     std::string sourceZoneInfiltrationTreatment() const;
@@ -87,9 +94,12 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+    bool setAdjustZoneMixingandReturnForAirMassFlowBalance(const std::string& adjustZoneMixingandReturnForAirMassFlowBalance);
+    // TODO: makes little sense too
+    OS_DEPRECATED bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
-    void resetAdjustZoneMixingForZoneAirMassFlowBalance();
+    void resetAdjustZoneMixingandReturnForAirMassFlowBalance();
+    OS_DEPRECATED void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
     /** This method is deprecated as of OpenStudio 1.9.3.  It will return false.**/
     bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);

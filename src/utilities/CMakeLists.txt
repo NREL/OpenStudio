@@ -142,6 +142,8 @@ set(geometry_src
   geometry/Transformation.cpp
   geometry/Vector3d.hpp
   geometry/Vector3d.cpp
+  geometry/Polygon3d.hpp
+  geometry/Polygon3d.cpp
   ../polypartition/polypartition.cpp
 )
 
@@ -433,6 +435,40 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests openstudio_model_resources)
   add_dependencies(${target_name}_tests openstudio_energyplus_resources)
 endif()
+
+if(BUILD_BENCHMARK)
+
+  set(core_benchmark_src
+    core/test/Checksum_Benchmark.cpp
+  )
+  set(${target_name}_benchmark_src
+    ${core_benchmark_src}
+    ${idf_benchmark_src}
+  )
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    if (${bench_name} STREQUAL Checksum_Benchmark)
+      target_link_libraries(${bench_name}
+        PUBLIC
+          CONAN_PKG::benchmark
+          CONAN_PKG::fmt
+          CONAN_PKG::boost
+      )
+    else()
+      target_link_libraries(${bench_name}
+        PUBLIC
+          CONAN_PKG::benchmark
+          openstudiolib
+          ${${target_name}_depends}
+      )
+    endif()
+  endforeach()
+
+endif()
+
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 

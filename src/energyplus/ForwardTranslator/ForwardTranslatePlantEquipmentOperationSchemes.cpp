@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,6 +45,8 @@
 
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
+#include "../../model/ChillerElectricReformulatedEIR.hpp"
+#include "../../model/ChillerElectricReformulatedEIR_Impl.hpp"
 #include "../../model/ChillerAbsorptionIndirect.hpp"
 #include "../../model/ChillerAbsorptionIndirect_Impl.hpp"
 #include "../../model/ChillerAbsorption.hpp"
@@ -71,6 +73,8 @@
 #include "../../model/PlantEquipmentOperationScheme_Impl.hpp"
 #include "../../model/EvaporativeFluidCoolerSingleSpeed.hpp"
 #include "../../model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp"
+#include "../../model/EvaporativeFluidCoolerTwoSpeed.hpp"
+#include "../../model/EvaporativeFluidCoolerTwoSpeed_Impl.hpp"
 #include "../../model/FluidCoolerSingleSpeed.hpp"
 #include "../../model/FluidCoolerSingleSpeed_Impl.hpp"
 #include "../../model/FluidCoolerTwoSpeed.hpp"
@@ -168,7 +172,6 @@ namespace energyplus {
         result = hr.heatRecoveryWaterMaximumFlowRate();
         break;
       }
-      // TODO: @kbenne is this needed?
       case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery: {
         auto mchpHR = component.cast<GeneratorMicroTurbineHeatRecovery>();
         result = mchpHR.maximumHeatRecoveryWaterFlowRate();
@@ -203,6 +206,11 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         auto chiller = component.cast<ChillerElectricEIR>();
+        result = chiller.referenceChilledWaterFlowRate();
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
+        auto chiller = component.cast<ChillerElectricReformulatedEIR>();
         result = chiller.referenceChilledWaterFlowRate();
         break;
       }
@@ -244,6 +252,11 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed: {
         auto mo = component.cast<EvaporativeFluidCoolerSingleSpeed>();
+        result = mo.designWaterFlowRate();
+        break;
+      }
+      case openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed: {
+        auto mo = component.cast<EvaporativeFluidCoolerTwoSpeed>();
         result = mo.designWaterFlowRate();
         break;
       }
@@ -459,6 +472,9 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         return ComponentType::COOLING;
       }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
+        return ComponentType::COOLING;
+      }
       case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect: {
         return ComponentType::COOLING;
       }
@@ -485,6 +501,9 @@ namespace energyplus {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed: {
+        return ComponentType::COOLING;
+      }
+      case openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed: {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_FluidCooler_SingleSpeed: {
@@ -560,7 +579,6 @@ namespace energyplus {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery: {
-        // TODO: @kbenne, address these comments
         // Maybe that should be both, in the case of an absorption chiller?
         // Also, should maybe check if it's in mode FollowThermal or FollowThermalLimitElectrical?
         // If not in these two modes, it doesn't care and just runs. Also, it's typically on the demand Side, and this method
@@ -668,7 +686,7 @@ namespace energyplus {
     std::vector<HVACComponent> result;
 
     for (const auto& comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents())) {
-      if (componentType(comp) == ComponentType::BOTH) {
+      if ((componentType(comp) == ComponentType::BOTH) && !(_isSetpointComponent(plantLoop, comp))) {
         result.push_back(operationSchemeComponent(comp));
       }
     }

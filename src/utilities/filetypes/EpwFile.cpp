@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -89,7 +89,7 @@ static double psatp(double T, double psat) {
   } else {
     fp = -C8 / T2 + C10 + 2 * T * C11 + 3 * T2 * C12 + C13 / T;
   }
-  //std::cout << "psatp: " << T - 273.15 << " " << fp << " " << fp*psat << std::endl;
+  //std::cout << "psatp: " << T - 273.15 << " " << fp << " " << fp*psat << '\n';
   return fp * psat;
 }
 
@@ -160,7 +160,7 @@ static boost::optional<double> solveForWetBulb(double drybulb, double p, double 
     double fp = W * Cp - A * Wsstarp - Ap * Wsstar + Bp;
     double delta = -f / fp;
     tstar += delta;
-    // std::cout << i << " " << tstar << " " << delta / (273.15 + tstar) << std::endl;
+    // std::cout << i << " " << tstar << " " << delta / (273.15 + tstar) << '\n';
     if (fabs(delta / (273.15 + tstar)) <= deltaLimit) {
       return boost::optional<double>(tstar);
     }
@@ -184,7 +184,7 @@ static boost::optional<double> solveForDewPoint(double drybulb, double pw, doubl
     double fp = psatp(tdew, pws);
     double delta = -f / fp;
     tdew += delta;
-    // std::cout << i << " " << tdew << " " << delta / (273.15 + tdew) << std::endl;
+    // std::cout << i << " " << tdew << " " << delta / (273.15 + tdew) << '\n';
     if (fabs(delta / (273.15 + tdew)) <= deltaLimit) {
       return boost::optional<double>(tdew);
     }
@@ -1564,9 +1564,9 @@ static int stringToInteger(const std::string& string, bool* ok) {
   *ok = true;
   try {
     value = std::stoi(string);
-  } catch (const std::invalid_argument) {
+  } catch (const std::invalid_argument&) {
     *ok = false;
-  } catch (const std::out_of_range) {
+  } catch (const std::out_of_range&) {
     *ok = false;
   }
   return value;
@@ -1577,9 +1577,9 @@ static double stringToDouble(const std::string& string, bool* ok) {
   *ok = true;
   try {
     value = std::stod(string);
-  } catch (const std::invalid_argument) {
+  } catch (const std::invalid_argument&) {
     *ok = false;
-  } catch (const std::out_of_range) {
+  } catch (const std::out_of_range&) {
     *ok = false;
   }
   return value;

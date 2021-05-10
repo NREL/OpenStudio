@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 #include "RefrigerationSystem.hpp"
+#include "RefrigerationSecondarySystem.hpp"
+#include "RefrigerationCompressorRack.hpp"
 
 namespace openstudio {
 
@@ -241,6 +243,12 @@ namespace model {
 
     // Returns the parent RefrigerationSystem if any
     boost::optional<RefrigerationSystem> system() const;
+
+    // Returns the parent RefrigerationSecondarySystem if any
+    boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
+
+    // Returns the parent RefrigerationCompresorRack if any
+    boost::optional<RefrigerationCompressorRack> compressorRack() const;
 
     //@}
     /** @name Setters */
@@ -468,8 +476,18 @@ namespace model {
 
     bool addToSystem(RefrigerationSystem& system);
 
+    bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
+
+    bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
+
     // Remove from parent system if any
     void removeFromSystem();
+
+    // Remove from parent secondary system if any
+    void removeFromSecondarySystem();
+
+    // Remove from parent compressor rack if any
+    void removeFromCompressorRack();
 
     //@}
     /** @name Other */

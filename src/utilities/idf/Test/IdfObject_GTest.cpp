@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,7 @@
 #include "../../units/OSOptionalQuantity.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -220,14 +221,14 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
 
   // TEXT OBJECT COMMENTS
   std::stringstream text;
-  text << "  Branch," << std::endl
-       << "    Central Chiller Branch," << std::endl
-       << "    0,                       !- Maximum Flow Rate {m3/s}" << std::endl
-       << "    ," << std::endl
-       << "    Chiller:Electric, ! i think we have an electric chiller" << std::endl
-       << "    Central Chiller," << std::endl
-       << "    Central Chiller Inlet Node," << std::endl
-       << "    Central Chiller Outlet Node," << std::endl
+  text << "  Branch," << '\n'
+       << "    Central Chiller Branch," << '\n'
+       << "    0,                       !- Maximum Flow Rate {m3/s}" << '\n'
+       << "    ," << '\n'
+       << "    Chiller:Electric, ! i think we have an electric chiller" << '\n'
+       << "    Central Chiller," << '\n'
+       << "    Central Chiller Inlet Node," << '\n'
+       << "    Central Chiller Outlet Node," << '\n'
        << "    Active;";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -260,15 +261,15 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
 TEST_F(IdfFixture, IdfObject_DefaultFieldComments) {
   // OBJECT WITH NO FIELD COMMENTS
   std::stringstream text;
-  text << "  Schedule:Day:Interval," << std::endl
-       << "    A Schedule," << std::endl
-       << "    Any Number," << std::endl
-       << "    ," << std::endl
-       << "    09:00," << std::endl
-       << "    0," << std::endl
-       << "    22:00," << std::endl
-       << "    1," << std::endl
-       << "    24:00," << std::endl
+  text << "  Schedule:Day:Interval," << '\n'
+       << "    A Schedule," << '\n'
+       << "    Any Number," << '\n'
+       << "    ," << '\n'
+       << "    09:00," << '\n'
+       << "    0," << '\n'
+       << "    22:00," << '\n'
+       << "    1," << '\n'
+       << "    24:00," << '\n'
        << "    0;";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -308,15 +309,15 @@ TEST_F(IdfFixture, IdfObject_DefaultFieldComments) {
 
   // OBJECT WITH SOME FIELD COMMENTS
   text.str("");
-  text << "  Schedule:Day:Interval," << std::endl
-       << "    A Schedule," << std::endl
-       << "    Any Number," << std::endl
-       << "    ," << std::endl
-       << "    09:00, ! opening time" << std::endl
-       << "    0," << std::endl
-       << "    22:00, ! closing time" << std::endl
-       << "    1," << std::endl
-       << "    24:00," << std::endl
+  text << "  Schedule:Day:Interval," << '\n'
+       << "    A Schedule," << '\n'
+       << "    Any Number," << '\n'
+       << "    ," << '\n'
+       << "    09:00, ! opening time" << '\n'
+       << "    0," << '\n'
+       << "    22:00, ! closing time" << '\n'
+       << "    1," << '\n'
+       << "    24:00," << '\n'
        << "    0;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -353,14 +354,7 @@ TEST_F(IdfFixture, IdfObject_DefaultFieldComments) {
 TEST_F(IdfFixture, IdfObject_NameGetterWithReturnDefaultOption) {
   // OBJECT WITH DEFAULT NAME
   std::stringstream text;
-  text << "Building," << std::endl
-       << "," << std::endl
-       << "," << std::endl
-       << "," << std::endl
-       << "," << std::endl
-       << "," << std::endl
-       << "," << std::endl
-       << ";";
+  text << "Building," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << ";";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -391,18 +385,18 @@ TEST_F(IdfFixture, IdfObject_IddObjectTypeInitialization) {
 TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
   // NON-EXTENSIBLE OBJECT
   std::stringstream text;
-  text << "Refrigeration:Condenser:AirCooled," << std::endl
-       << "  MyCondenser," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl  // default is 0.0
-       << "  ," << std::endl  // default is "Fixed"
-       << "  125.0;";         // default is 250.0
-                              // default is 0.2
-                              //
-                              // default is "General"
-                              // default is 0.0
-                              // default is 0.0
-                              // default is 0.0
+  text << "Refrigeration:Condenser:AirCooled," << '\n'
+       << "  MyCondenser," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'  // default is 0.0
+       << "  ," << '\n'  // default is "Fixed"
+       << "  125.0;";    // default is 250.0
+                         // default is 0.2
+                         //
+                         // default is "General"
+                         // default is 0.0
+                         // default is 0.0
+                         // default is 0.0
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -443,12 +437,12 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
 
   // EXTENSIBLE OBJECT
   text.str("");
-  text << "DaylightingDevice:Tubular," << std::endl
-       << "  MyTDD," << std::endl
-       << "  MyDome," << std::endl
-       << "  MyDiffuser," << std::endl
-       << "  MyConstruction," << std::endl
-       << "  1.0," << std::endl
+  text << "DaylightingDevice:Tubular," << '\n'
+       << "  MyTDD," << '\n'
+       << "  MyDome," << '\n'
+       << "  MyDiffuser," << '\n'
+       << "  MyConstruction," << '\n'
+       << "  1.0," << '\n'
        << "  2.0;";
   // \default 0.28
   // Transition Zone 1 Name
@@ -495,18 +489,18 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_DoubleFieldGetterWithReturnDefaultOption) {
   std::stringstream text;
-  text << "Refrigeration:Condenser:AirCooled," << std::endl
-       << "  MyCondenser," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl  // default is 0.0
-       << "  ," << std::endl  // default is "Fixed"
-       << "  125.0;";         // default is 250.0
-                              // default is 0.2
-                              //
-                              // default is "General"
-                              // default is 0.0
-                              // default is 0.0
-                              // default is 0.0
+  text << "Refrigeration:Condenser:AirCooled," << '\n'
+       << "  MyCondenser," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'  // default is 0.0
+       << "  ," << '\n'  // default is "Fixed"
+       << "  125.0;";    // default is 250.0
+                         // default is 0.2
+                         //
+                         // default is "General"
+                         // default is 0.0
+                         // default is 0.0
+                         // default is 0.0
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -524,7 +518,7 @@ TEST_F(IdfFixture, IdfObject_DoubleFieldGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_UnsignedFieldGetterWithReturnDefaultOption) {
   std::stringstream text;
-  text << "ZoneGroup," << std::endl << "  MyGroup," << std::endl << "  MyList;";
+  text << "ZoneGroup," << '\n' << "  MyGroup," << '\n' << "  MyList;";
   // default 1
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -547,15 +541,15 @@ TEST_F(IdfFixture, IdfObject_UnsignedFieldGetterWithReturnDefaultOption) {
 
 TEST_F(IdfFixture, IdfObject_IntFieldGetterWithReturnDefaultOption) {
   std::stringstream text;
-  text << "Building," << std::endl
-       << "  Building," << std::endl
-       << "  ," << std::endl  // default 0.0
-       << "  ," << std::endl  // default Suburbs
-       << "  ," << std::endl  // default 0.04
-       << "  ," << std::endl  // default 0.4
-       << "  ," << std::endl  // default FullExterior
-       << "  ," << std::endl  // default 25
-       << "  6;";             // default 25
+  text << "Building," << '\n'
+       << "  Building," << '\n'
+       << "  ," << '\n'  // default 0.0
+       << "  ," << '\n'  // default Suburbs
+       << "  ," << '\n'  // default 0.04
+       << "  ," << '\n'  // default 0.4
+       << "  ," << '\n'  // default FullExterior
+       << "  ," << '\n'  // default 25
+       << "  6;";        // default 25
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -580,16 +574,16 @@ TEST_F(IdfFixture, IdfObject_FieldSettingWithHiddenPushes) {
 
   // SHOULD NOT BE VALID
   text.str("");
-  text << "Lights," << std::endl
-       << "  MyLight," << std::endl
-       << "  MyZone," << std::endl
-       << "  MySchedule," << std::endl
-       << "  Watts/Person," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
-       << "  10.0," << std::endl
-       << "  0.2," << std::endl
-       << "  0.6," << std::endl
+  text << "Lights," << '\n'
+       << "  MyLight," << '\n'
+       << "  MyZone," << '\n'
+       << "  MySchedule," << '\n'
+       << "  Watts/Person," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'
+       << "  10.0," << '\n'
+       << "  0.2," << '\n'
+       << "  0.6," << '\n'
        << "  0.8;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -790,4 +784,68 @@ TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
   EXPECT_EQ(3u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(4u, object2.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, IdfObject_ExtensibleGroup_Failure_4268_WholeExtensibleFields) {
+
+  // Test for #4268 - a case that works
+  // This includes the two (empty) fields at the end, so that the extensible group is fully provided (it's whole)
+  std::string idf_text = R"(
+    ZoneHVAC:EquipmentList,
+      Zone1Equipment,                         !- Name
+      SequentialLoad,                         !- Load Distribution Scheme
+      ZoneHVAC:AirDistributionUnit,           !- Zone Equipment Object Type 1
+      Zone1DirectAir ADU,                     !- Zone Equipment Name 1
+      1,                                      !- Zone Equipment Cooling Sequence 1
+      1,                                      !- Zone Equipment Heating or No-Load Sequence 1
+      ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 1
+      ,                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 1
+      ZoneHVAC:WaterToAirHeatPump,            !- Zone Equipment Object Type 2
+      Zone1WTAHP,                             !- Zone Equipment Name 2
+      2,                                      !- Zone Equipment Cooling Sequence 2
+      2,                                      !- Zone Equipment Heating or No-Load Sequence 2
+      ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 2
+      ;                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 2
+  )";
+
+  IdfObject obj = IdfObject::load(idf_text).get();
+
+  unsigned nNonExtensible = obj.iddObject().numFields();
+  unsigned groupSize = obj.iddObject().properties().numExtensible;
+  EXPECT_EQ(nNonExtensible, obj.numNonextensibleFields());
+  EXPECT_EQ(nNonExtensible + groupSize * 2, obj.numFields());
+  ASSERT_NO_THROW(obj.numExtensibleGroups());
+  EXPECT_EQ(2, obj.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, IdfObject_ExtensibleGroup_Failure_4268_TruncatedExtensibleFields) {
+
+  // Test for #4268 - ASHRAE9012016_OutPatientHealthCare_Denver.idf OS_ASSERT issue
+  // Now we truncate the end of the extensible group. This is the case in many E+ example files
+  // (ASHRAE9012016_OutPatientHealthCare_Denver.idf for eg)
+
+  std::string idf_text = R"(
+    ZoneHVAC:EquipmentList,
+      Zone1Equipment,                         !- Name
+      SequentialLoad,                         !- Load Distribution Scheme
+      ZoneHVAC:AirDistributionUnit,           !- Zone Equipment Object Type 1
+      Zone1DirectAir ADU,                     !- Zone Equipment Name 1
+      1,                                      !- Zone Equipment Cooling Sequence 1
+      1,                                      !- Zone Equipment Heating or No-Load Sequence 1
+      ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 1
+      ,                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 1
+      ZoneHVAC:WaterToAirHeatPump,            !- Zone Equipment Object Type 2
+      Zone1WTAHP,                             !- Zone Equipment Name 2
+      2,                                      !- Zone Equipment Cooling Sequence 2
+      2;                                      !- Zone Equipment Heating or No-Load Sequence 2
+  )";
+
+  IdfObject obj = IdfObject::load(idf_text).get();
+
+  unsigned nNonExtensible = obj.iddObject().numFields();
+  unsigned groupSize = obj.iddObject().properties().numExtensible;
+  EXPECT_EQ(nNonExtensible, obj.numNonextensibleFields());
+  EXPECT_EQ(nNonExtensible + groupSize * 2, obj.numFields());
+  ASSERT_NO_THROW(obj.numExtensibleGroups());
+  EXPECT_EQ(2, obj.numExtensibleGroups());
 }

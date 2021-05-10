@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -314,6 +314,19 @@ TEST_F(ModelFixture, ScheduleFile) {
   //EXPECT_TRUE(externalfile.setColumnSeparator("Tab"));
   //EXPECT_EQ("Tab", externalfile.columnSeparator().get());
   //EXPECT_EQ("Comma", externalfile.columnSeparator().get());
+
+  // The API is kinda broken on this one, but preserving it...
+  EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
+  ASSERT_TRUE(schedule3.minutesperItem());
+  EXPECT_EQ("60", schedule3.minutesperItem().get());
+  EXPECT_TRUE(schedule3.setMinutesperItem(5));  // This is a valid choice
+  EXPECT_EQ("5", schedule3.minutesperItem().get());
+  EXPECT_FALSE(schedule3.setMinutesperItem(7));  // This is not a valid choice
+  EXPECT_EQ("5", schedule3.minutesperItem().get());
+  schedule3.resetMinutesperItem();
+  EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
+  ASSERT_TRUE(schedule3.minutesperItem());
+  EXPECT_EQ("60", schedule3.minutesperItem().get());
 
   // shouldn't create a new object
   boost::optional<ExternalFile> externalfile2 = ExternalFile::getExternalFile(model, openstudio::toString(p));

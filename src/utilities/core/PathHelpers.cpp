@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -338,23 +338,23 @@ path getLastLevelDirectoryName(const path& directory) {
 }
 
 std::ostream& printPathInformation(std::ostream& os, const path& p) {
-  os << "p.string() = " << toString(p.string()) << std::endl;
-  os << "p.native() = " << toString(p.native()) << std::endl;
+  os << "p.string() = " << toString(p.string()) << '\n';
+  os << "p.native() = " << toString(p.native()) << '\n';
 
-  os << "p.root_name() = " << toString(p.root_name()) << std::endl;
-  os << "p.root_directory() = " << toString(p.root_directory()) << std::endl;
+  os << "p.root_name() = " << toString(p.root_name()) << '\n';
+  os << "p.root_directory() = " << toString(p.root_directory()) << '\n';
 
-  os << "p.parent_path() = " << toString(p.parent_path()) << std::endl;
-  os << "p.filename() = " << toString(p.filename()) << std::endl;
+  os << "p.parent_path() = " << toString(p.parent_path()) << '\n';
+  os << "p.filename() = " << toString(p.filename()) << '\n';
 
-  os << "p.stem() = " << toString(p.stem()) << std::endl;
-  os << "p.extension() = " << toString(p.extension()) << std::endl;
+  os << "p.stem() = " << toString(p.stem()) << '\n';
+  os << "p.extension() = " << toString(p.extension()) << '\n';
 
-  os << "p.empty() = " << std::boolalpha << p.empty() << std::endl;
-  os << "p.is_complete() = " << p.is_complete() << std::endl;
+  os << "p.empty() = " << std::boolalpha << p.empty() << '\n';
+  os << "p.is_complete() = " << p.is_complete() << '\n';
 
-  os << "openstudio::filesystem::complete(p) = " << toString(openstudio::filesystem::complete(p)) << std::endl;
-  os << "openstudio::filesystem::system_complete(p) = " << toString(openstudio::filesystem::system_complete(p)) << std::endl;
+  os << "openstudio::filesystem::complete(p) = " << toString(openstudio::filesystem::complete(p)) << '\n';
+  os << "openstudio::filesystem::system_complete(p) = " << toString(openstudio::filesystem::system_complete(p)) << '\n';
 
   return os;
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,6 +69,7 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/geometry/Intersection.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
@@ -932,6 +933,30 @@ namespace model {
       return Transformation::rotation(Vector3d(0, 0, 1), -degToRad(this->northAxis()));
     }
 
+    double Building_Impl::exteriorPerimeter() {
+
+      Point3dVectorVector polygons;
+
+      for (const auto& space : model().getConcreteModelObjects<Space>()) {
+        Transformation spaceTransformation = space.transformation();
+        for (const auto& surface : space.surfaces()) {
+          if (surface.outsideBoundaryCondition() == "Ground" || surface.surfaceType() == "Floor") {
+            Point3dVector points = spaceTransformation * surface.vertices();
+            if (!points.empty() && points[0].z() == 0.0) {
+              polygons.push_back(points);
+            }
+          }
+        }
+      }
+
+      auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
+      if (result2.size() == 1) {
+        return result2[0].perimeter();
+      } else {
+        return 0.0;
+      }
+    }
+
     std::vector<std::vector<Point3d>> Building_Impl::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth,
                                                                              double desiredHeight) const {
       return openstudio::model::generateSkylightPattern(this->spaces(), 0.0, skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
@@ -1348,6 +1373,10 @@ namespace model {
 
   Transformation Building::transformation() const {
     return getImpl<detail::Building_Impl>()->transformation();
+  }
+
+  double Building::exteriorPerimeter() {
+    return getImpl<detail::Building_Impl>()->exteriorPerimeter();
   }
 
   std::vector<std::vector<Point3d>> Building::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth,

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -436,7 +436,7 @@ namespace model {
 
     // Pending https://github.com/NREL/EnergyPlus/issues/8066 the SQL won't have this field.
     boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedNominalEvaporativeCondenserPumpPower() {
-      return getAutosizedValue("Nominal Evaporative Condenser Pump Power", "W");
+      return getAutosizedValue("Design Size Nominal Evaporative Condenser Pump Power", "W");
     }
 
     void CoilCoolingDXCurveFitOperatingMode_Impl::autosize() {
@@ -688,11 +688,11 @@ namespace model {
   }
 
   void CoilCoolingDXCurveFitOperatingMode::autosize() {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosize();
+    return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->autosize();
   }
 
   void CoilCoolingDXCurveFitOperatingMode::applySizingValues() {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->applySizingValues();
+    return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->applySizingValues();
   }
 
   /// @cond

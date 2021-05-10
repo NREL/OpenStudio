@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -198,7 +198,7 @@ namespace model {
         } else {
           if (dynamic_pointer_cast<ModelObject_Impl>(originalObjectImplPtr)) {
             std::cout << "Please register copy constructors for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'."
-                      << std::endl;
+                      << '\n';
             LOG_AND_THROW("Trying to copy a ModelObject, but the copy constructors are not "
                           << "registered for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'.");
           }
@@ -2595,6 +2595,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
+    REGISTER_CONSTRUCTOR(AirLoopHVACDedicatedOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACSupplyPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
@@ -2641,6 +2642,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
+    REGISTER_CONSTRUCTOR(ChillerElectricReformulatedEIR);
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
@@ -2663,6 +2665,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
+    REGISTER_CONSTRUCTOR(CoilCoolingWaterPanelRadiant);
     REGISTER_CONSTRUCTOR(CoilHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeedStageData);
@@ -2686,7 +2689,10 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilPerformanceDXCooling);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
+    REGISTER_CONSTRUCTOR(CoilSystemIntegratedHeatPumpAirSource);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
@@ -2717,6 +2723,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CurveFanPressureRise);
     REGISTER_CONSTRUCTOR(CurveFunctionalPressureDrop);
     REGISTER_CONSTRUCTOR(CurveLinear);
+    REGISTER_CONSTRUCTOR(CurveQuadLinear);
+    REGISTER_CONSTRUCTOR(CurveQuintLinear);
     REGISTER_CONSTRUCTOR(CurveQuadratic);
     REGISTER_CONSTRUCTOR(CurveQuadraticLinear);
     REGISTER_CONSTRUCTOR(CurveQuartic);
@@ -2747,6 +2755,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterPVWatts);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageLiIonNMCBattery);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterTransformer);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemConstructionIndexVariable);
@@ -2785,6 +2794,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ExternalInterfaceSchedule);
     REGISTER_CONSTRUCTOR(ExternalInterfaceVariable);
     REGISTER_CONSTRUCTOR(Facility);
+    REGISTER_CONSTRUCTOR(FanComponentModel);
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanSystemModel);
@@ -2813,6 +2823,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbineHeatRecovery);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
     REGISTER_CONSTRUCTOR(GeneratorPVWatts);
+    REGISTER_CONSTRUCTOR(GeneratorWindTurbine);
     REGISTER_CONSTRUCTOR(GlareSensor);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerHorizontalTrench);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerVertical);
@@ -2826,6 +2837,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
     REGISTER_CONSTRUCTOR(HotWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(HumidifierSteamElectric);
+    REGISTER_CONSTRUCTOR(HumidifierSteamGas);
     REGISTER_CONSTRUCTOR(IlluminanceMap);
     REGISTER_CONSTRUCTOR(InfraredTransparentMaterial);
     REGISTER_CONSTRUCTOR(InsideSurfaceConvectionAlgorithm);
@@ -2868,6 +2880,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(PerformancePrecisionTradeoffs);
     REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceEquivalentOneDiode);
     REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSimple);
+    REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSandia);
     REGISTER_CONSTRUCTOR(PipeAdiabatic);
     REGISTER_CONSTRUCTOR(PipeIndoor);
     REGISTER_CONSTRUCTOR(PipeOutdoor);
@@ -2892,6 +2905,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
     REGISTER_CONSTRUCTOR(RefrigerationCase);
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
+    REGISTER_CONSTRUCTOR(RefrigerationCompressorRack);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
@@ -2974,6 +2988,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(Space);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationDesignFlowRate);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_CONSTRUCTOR(SpaceInfiltrationFlowCoefficient);
     REGISTER_CONSTRUCTOR(SpaceType);
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
@@ -3034,6 +3049,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
@@ -3049,8 +3067,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneMixing);
     REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
@@ -3095,6 +3111,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACDedicatedOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
@@ -3142,6 +3159,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(ChillerElectricReformulatedEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDX);
@@ -3163,6 +3181,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterPanelRadiant);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeedStageData);
@@ -3186,7 +3205,10 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilPerformanceDXCooling);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
+    REGISTER_COPYCONSTRUCTORS(CoilSystemIntegratedHeatPumpAirSource);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
@@ -3217,6 +3239,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CurveFanPressureRise);
     REGISTER_COPYCONSTRUCTORS(CurveFunctionalPressureDrop);
     REGISTER_COPYCONSTRUCTORS(CurveLinear);
+    REGISTER_COPYCONSTRUCTORS(CurveQuadLinear);
+    REGISTER_COPYCONSTRUCTORS(CurveQuintLinear);
     REGISTER_COPYCONSTRUCTORS(CurveQuadratic);
     REGISTER_COPYCONSTRUCTORS(CurveQuadraticLinear);
     REGISTER_COPYCONSTRUCTORS(CurveQuartic);
@@ -3247,6 +3271,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterPVWatts);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageLiIonNMCBattery);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterTransformer);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemConstructionIndexVariable);
@@ -3285,6 +3310,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceSchedule);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceVariable);
     REGISTER_COPYCONSTRUCTORS(Facility);
+    REGISTER_COPYCONSTRUCTORS(FanComponentModel);
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanSystemModel);
@@ -3313,6 +3339,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbineHeatRecovery);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
     REGISTER_COPYCONSTRUCTORS(GeneratorPVWatts);
+    REGISTER_COPYCONSTRUCTORS(GeneratorWindTurbine);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerHorizontalTrench);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerVertical);
@@ -3326,6 +3353,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(HumidifierSteamElectric);
+    REGISTER_COPYCONSTRUCTORS(HumidifierSteamGas);
     REGISTER_COPYCONSTRUCTORS(InfraredTransparentMaterial);
     REGISTER_COPYCONSTRUCTORS(InsideSurfaceConvectionAlgorithm);
     REGISTER_COPYCONSTRUCTORS(InteriorPartitionSurface);
@@ -3368,6 +3396,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(PerformancePrecisionTradeoffs);
     REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceEquivalentOneDiode);
     REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSimple);
+    REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSandia);
     REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);
     REGISTER_COPYCONSTRUCTORS(PipeIndoor);
     REGISTER_COPYCONSTRUCTORS(PipeOutdoor);
@@ -3392,6 +3421,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCase);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCompressorRack);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
@@ -3474,6 +3504,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(Space);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationDesignFlowRate);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationFlowCoefficient);
     REGISTER_COPYCONSTRUCTORS(SpaceType);
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);
@@ -3534,6 +3565,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACHighTemperatureRadiant);
@@ -3549,8 +3583,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitVentilator);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneMixing);
     REGISTER_COPYCONSTRUCTORS(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_COPYCONSTRUCTORS(ZoneVentilationDesignFlowRate);

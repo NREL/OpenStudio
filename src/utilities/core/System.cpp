@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -80,7 +80,7 @@ void System::msleep(int msecs) {
     // cppcheck-suppress variableScope
     bool didwork = false;
     remainingtime = msecs - (int)(boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
-    //      std::cout << "time " << msecs << " remainingtime " << remainingtime << std::endl;
+    //      std::cout << "time " << msecs << " remainingtime " << remainingtime << '\n';
 
     int timetosleep = 0;
 
@@ -141,13 +141,13 @@ unsigned System::numberOfProcessors() {
 
 void System::testExceptions1() {
   try {
-    std::cout << "testExceptions1: Test 1" << std::endl;
+    std::cout << "testExceptions1: Test 1" << '\n';
     throw std::exception();
   } catch (const std::exception&) {
   }
 
   try {
-    std::cout << "testExceptions1: Test 2" << std::endl;
+    std::cout << "testExceptions1: Test 2" << '\n';
     throw std::exception();
   } catch (...) {
   }
@@ -155,19 +155,19 @@ void System::testExceptions1() {
 
 void System::testExceptions2() {
   try {
-    std::cout << "testExceptions2: Test 1" << std::endl;
+    std::cout << "testExceptions2: Test 1" << '\n';
     throw std::runtime_error("test");
   } catch (const std::runtime_error&) {
   }
 
   try {
-    std::cout << "testExceptions2: Test 2" << std::endl;
+    std::cout << "testExceptions2: Test 2" << '\n';
     throw std::runtime_error("test");
   } catch (const std::exception&) {
   }
 
   try {
-    std::cout << "testExceptions2: Test 3" << std::endl;
+    std::cout << "testExceptions2: Test 3" << '\n';
     throw std::runtime_error("test");
   } catch (...) {
   }
@@ -213,21 +213,21 @@ void System::testExceptions5() {
   };
 
   try {
-    std::cout << "testExceptions5: Test 1" << std::endl;
+    std::cout << "testExceptions5: Test 1" << '\n';
     BreakUBlas::breakIt();
     assert(!"Exception Not Thrown");
   } catch (boost::numeric::ublas::internal_logic&) {
   }
 
   try {
-    std::cout << "testExceptions5: Test 2" << std::endl;
+    std::cout << "testExceptions5: Test 2" << '\n';
     BreakUBlas::breakIt();
     assert(!"Exception Not Thrown");
   } catch (std::logic_error&) {
   }
 
   try {
-    std::cout << "testExceptions5: Test 3" << std::endl;
+    std::cout << "testExceptions5: Test 3" << '\n';
     BreakUBlas::breakIt();
     assert(!"Exception Not Thrown");
   } catch (std::exception&) {
@@ -244,25 +244,25 @@ void System::testExceptions3() {
   };
 
   try {
-    std::cout << "testExceptions3: Test 1" << std::endl;
+    std::cout << "testExceptions3: Test 1" << '\n';
     throw MyException();
   } catch (const MyException&) {
   }
 
   try {
-    std::cout << "testExceptions3: Test 2" << std::endl;
+    std::cout << "testExceptions3: Test 2" << '\n';
     throw MyException();
   } catch (const std::runtime_error&) {
   }
 
   try {
-    std::cout << "testExceptions3: Test 3" << std::endl;
+    std::cout << "testExceptions3: Test 3" << '\n';
     throw MyException();
   } catch (const std::exception&) {
   }
 
   try {
-    std::cout << "testExceptions3: Test 4" << std::endl;
+    std::cout << "testExceptions3: Test 4" << '\n';
     throw MyException();
   } catch (...) {
   }
@@ -286,31 +286,31 @@ void System::testExceptions4() {
   };
 
   try {
-    std::cout << "testExceptions4: Test 1" << std::endl;
+    std::cout << "testExceptions4: Test 1" << '\n';
     throw MyException2();
   } catch (const MyException2&) {
   }
 
   try {
-    std::cout << "testExceptions4: Test 2" << std::endl;
+    std::cout << "testExceptions4: Test 2" << '\n';
     throw MyException2();
   } catch (const MyException&) {
   }
 
   try {
-    std::cout << "testExceptions4: Test 3" << std::endl;
+    std::cout << "testExceptions4: Test 3" << '\n';
     throw MyException2();
   } catch (const std::runtime_error&) {
   }
 
   try {
-    std::cout << "testExceptions4: Test 4" << std::endl;
+    std::cout << "testExceptions4: Test 4" << '\n';
     throw MyException2();
   } catch (const std::exception&) {
   }
 
   try {
-    std::cout << "testExceptions4: Test 5" << std::endl;
+    std::cout << "testExceptions4: Test 5" << '\n';
     throw MyException2();
   } catch (...) {
   }

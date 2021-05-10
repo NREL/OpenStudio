@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -65,7 +65,7 @@ TEST_F(UnitsFixture, ScaleFactory_RegisteredScales) {
   std::vector<Scale>::const_iterator scaleIter;
   std::vector<Scale>::const_iterator scaleEnd = scales.end();
   for (scaleIter = scales.begin(); scaleIter != scaleEnd; ++scaleIter) {
-    vectorOut << *scaleIter << std::endl;
+    vectorOut << *scaleIter << '\n';
   }
 
   factoryOut << ScaleFactory::instance();

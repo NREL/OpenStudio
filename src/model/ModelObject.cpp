@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -862,7 +862,7 @@ namespace model {
     model.getImpl<detail::Model_Impl>()->addObjects(impls, false);
     // object should be initialized and ready to go
     if (!getImpl<detail::ModelObject_Impl>()->initialized()) {
-      LOG_AND_THROW("ModelObject not initialized: " << std::endl << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
+      LOG_AND_THROW("ModelObject not initialized: " << '\n' << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
     }
   }
 

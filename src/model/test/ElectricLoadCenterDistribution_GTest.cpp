@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@
 #include "../ElectricLoadCenterInverterSimple.hpp"
 #include "../ElectricLoadCenterInverterLookUpTable.hpp"
 #include "../ElectricLoadCenterStorageSimple.hpp"
+#include "../ElectricLoadCenterStorageLiIonNMCBattery.hpp"
 #include "../ElectricLoadCenterTransformer.hpp"
 
 using namespace openstudio::model;
@@ -295,13 +296,23 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   elcd.resetInverter();
   ASSERT_FALSE(elcd.inverter());
 
-  // Test Storage
+  // Test Storage Simple
   ElectricLoadCenterStorageSimple battery(model);
   ASSERT_FALSE(elcd.electricalStorage());
   EXPECT_TRUE(battery.name());
   EXPECT_TRUE(elcd.setElectricalStorage(battery));
   ASSERT_TRUE(elcd.electricalStorage());
   EXPECT_EQ(battery.handle(), elcd.electricalStorage()->handle());
+  elcd.resetElectricalStorage();
+  ASSERT_FALSE(elcd.electricalStorage());
+
+  // Test Storage LiIonNMCBattery
+  ElectricLoadCenterStorageLiIonNMCBattery battery2(model, 139, 25, 342, 4.26);
+  ASSERT_FALSE(elcd.electricalStorage());
+  EXPECT_TRUE(battery2.name());
+  EXPECT_TRUE(elcd.setElectricalStorage(battery2));
+  ASSERT_TRUE(elcd.electricalStorage());
+  EXPECT_EQ(battery2.handle(), elcd.electricalStorage()->handle());
   elcd.resetElectricalStorage();
   ASSERT_FALSE(elcd.electricalStorage());
 

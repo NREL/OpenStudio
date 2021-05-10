@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,13 +42,6 @@
 
 namespace openstudio {
 namespace measure {
-
-  // Note JM 2018-11-28:
-  // typedef for the std::variant we will use for value, default value, and domain
-  // we add std::monostate to allow the variant to be empty basically
-  typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
-
-  MEASURE_API std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
 
   // clang-format off
 
@@ -418,6 +411,11 @@ OPENSTUDIO_ENUM( OSDomainType,
     friend struct std::pair<const std::string, OSArgument>;
     friend struct std::_Pair_base<std::string, OSArgument>;
 #endif
+
+    // Note JM 2018-11-28:
+    // typedef for the std::variant we will use for value, default value, and domain
+    // we add std::monostate to allow the variant to be empty basically
+    typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
 
     bool setStringInternal(OSArgumentVariant& variant, const std::string& value);
 

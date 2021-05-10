@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,7 @@ namespace model {
 
   class Node;
   class AirLoopHVACOutdoorAirSystem;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
   class AirLoopHVACZoneSplitter;
   class AirLoopHVACZoneMixer;
   class AirLoopHVACSupplyPlenum;
@@ -219,6 +220,12 @@ namespace model {
    * and this method will return a false optional.
    */
     boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+
+    /** Returns the AirLoopHVACDedicatedOutdoorAirSystem object associated with the air loop.
+   * A freshly constructed AirLoopHVAC object will not have a dedicated outdoor air system
+   * and this method will return a false optional.
+   */
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystem() const;
 
     /** Returns the fan in the mixed air stream (after outdoor air system) of the air system.
    *  If there is no outdoor air system or there are multiple fans in the mixed air stream,

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,12 +41,11 @@
 #include "PhotovoltaicPerformance_Impl.hpp"
 #include "PhotovoltaicPerformanceSimple.hpp"
 #include "PhotovoltaicPerformanceEquivalentOneDiode.hpp"
+#include "PhotovoltaicPerformanceSandia.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include "ElectricLoadCenterDistribution.hpp"
-#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -266,15 +265,22 @@ namespace model {
     return GeneratorPhotovoltaic(model, performance);
   }
 
+  GeneratorPhotovoltaic GeneratorPhotovoltaic::sandia(const Model& model) {
+    PhotovoltaicPerformanceSandia performance(model);
+    return GeneratorPhotovoltaic(model, performance);
+  }
+
+  GeneratorPhotovoltaic GeneratorPhotovoltaic::fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName) {
+    PhotovoltaicPerformanceSandia performance = PhotovoltaicPerformanceSandia::fromSandiaDatabase(model, sandiaModulePerformanceName);
+    return GeneratorPhotovoltaic(model, performance);
+  }
+
   GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance)
     : Generator(GeneratorPhotovoltaic::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::GeneratorPhotovoltaic_Impl>());
 
     bool ok = setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, performance.handle());
     OS_ASSERT(ok);
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   IddObjectType GeneratorPhotovoltaic::iddObjectType() {

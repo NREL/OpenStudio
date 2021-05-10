@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,5 +67,5 @@ TEST_F(IdfFixture, ValidityReport_WithCustomIdd) {
   EXPECT_EQ(workspace.objects().size(), workspace2.objects().size());
   EXPECT_TRUE(workspace2.isValid(StrictnessLevel::Draft));
   ValidityReport report = workspace2.validityReport(StrictnessLevel::Draft);
-  LOG(Debug, "Validity report for workspace2: " << std::endl << report);
+  LOG(Debug, "Validity report for workspace2: " << '\n' << report);
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -262,7 +262,7 @@ namespace model {
   HumidifierSteamElectric::HumidifierSteamElectric(const Model& model) : StraightComponent(HumidifierSteamElectric::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HumidifierSteamElectric_Impl>());
     autosizeRatedCapacity();
-    setRatedPower(104000);
+    setRatedPower(10200);  // JJR: per idf example in docs
     setString(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName, "");
   }
 

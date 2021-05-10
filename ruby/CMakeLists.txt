@@ -16,7 +16,7 @@ add_library( init_openstudio OBJECT
   init_openstudio.cpp
   RubyAPI.hpp
 )
-target_include_directories(init_openstudio PRIVATE ${RUBY_INCLUDE_DIRS})
+target_include_directories(init_openstudio SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
 
 if(MSVC)
   # TODO: JM 2019-01-04: @macumber it seems like all three targets use the same COMPILE_FLAGS,
@@ -39,7 +39,7 @@ add_library(
 )
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
-target_include_directories(openstudio_rb PRIVATE ${RUBY_INCLUDE_DIRS})
+target_include_directories(openstudio_rb SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
 
 # change output directory so the openstudio.pdb file does not conflict between this target and the CLI
 set_target_properties(openstudio_rb PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
@@ -94,6 +94,7 @@ else()
     openstudio_airflow
     openstudio_model
     openstudio_energyplus
+    openstudio_epjson
     openstudio_measure
     openstudio_osversion
     openstudio_sdd
@@ -134,38 +135,26 @@ file(GLOB RUBY_TEST_SRC "test/*.rb")
 
 set(_RUBY_POSSIBLE_EXECUTABLE_NAMES
   ruby
-  ruby2.5
-  ruby2.5.5
-  ruby2.5.1
-  ruby25
-  ruby255
-  ruby251)
+  ruby2.7
+  ruby2.7.2
+  ruby27
+  ruby272)
 
 # TODO: this isn't great but I haven't found a better way to locate the system ruby (and avoid the one in build/Ruby-install/)
 find_program(SYSTEM_RUBY_EXECUTABLE NAMES ${_RUBY_POSSIBLE_EXECUTABLE_NAMES}
   HINTS
-    "/usr/share/rvm/rubies/ruby-2.5.5/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.5.5/bin/"
-    "/usr/local/rvm/rubies/ruby-2.5.5/bin/ruby"
-    "C:/Ruby25-x64/bin/"
+    "/usr/local/rvm/rubies/ruby-2.7.2/bin/"
+    "/usr/local/rvm/rubies/ruby-2.7.2/bin/ruby"
+    "/usr/share/rvm/rubies/ruby-2.7.2/bin/"
+    "$ENV{HOME}/.rvm/rubies/ruby-2.7.2/bin/"
 
-    "/usr/share/rvm/rubies/ruby-2.5.4/bin/"
-    "/usr/share/rvm/rubies/ruby-2.5.3/bin/"
-    "/usr/share/rvm/rubies/ruby-2.5.2/bin/"
-    "/usr/share/rvm/rubies/ruby-2.5.1/bin/"
+    "C:/Ruby27-x64/bin/"
 
-    "$ENV{HOME}/.rvm/rubies/ruby-2.5.4/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.5.3/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.5.2/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.5.1/bin/"
+     "/usr/local/ruby272/bin/"
+     "/usr/local/ruby27/bin/"
+     "/usr/bin/"
+     "/usr/local/bin/"
 
-    "/usr/local/rvm/rubies/ruby-2.5.4/bin/ruby"
-    "/usr/local/rvm/rubies/ruby-2.5.3/bin/ruby"
-    "/usr/local/rvm/rubies/ruby-2.5.2/bin/ruby"
-    "/usr/local/rvm/rubies/ruby-2.5.1/bin/ruby"
-
-    "/usr/local/bin/"
-    "/usr/bin/"
 
   NO_DEFAULT_PATH)
 

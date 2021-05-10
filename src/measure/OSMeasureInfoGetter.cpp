@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -231,79 +231,79 @@ namespace measure {
 
   std::string infoExtractorRubyFunction() {
     std::stringstream ss;
-    ss << "def infoExtractor(bclMeasure, optionalModel, optionalWorkspace)" << std::endl;
-    ss << "  # GET THE USER SCRIPT" << std::endl;
-    ss << "  scriptPath = bclMeasure.primaryRubyScriptPath()" << std::endl;
-    ss << "  if scriptPath.empty?" << std::endl;
-    ss << "    raise \"Unable to locate primary Ruby script path for BCLMeasure '\" + " << std::endl;
-    ss << "        bclMeasure.name + \"' located at \" + bclMeasure.directory.to_s + \".\"" << std::endl;
-    ss << "  end" << std::endl << std::endl;
+    ss << "def infoExtractor(bclMeasure, optionalModel, optionalWorkspace)" << '\n';
+    ss << "  # GET THE USER SCRIPT" << '\n';
+    ss << "  scriptPath = bclMeasure.primaryRubyScriptPath()" << '\n';
+    ss << "  if scriptPath.empty?" << '\n';
+    ss << "    raise \"Unable to locate primary Ruby script path for BCLMeasure '\" + " << '\n';
+    ss << "        bclMeasure.name + \"' located at \" + bclMeasure.directory.to_s + \".\"" << '\n';
+    ss << "  end" << '\n' << '\n';
     // Check list of objects in memory before loading the script
-    ss << "  currentObjects = Hash.new" << std::endl;
-    ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) { |obj| currentObjects[obj] = true }" << std::endl << std::endl;
-    ss << "  ObjectSpace.garbage_collect" << std::endl;
+    ss << "  currentObjects = Hash.new" << '\n';
+    ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) { |obj| currentObjects[obj] = true }" << '\n' << '\n';
+    ss << "  ObjectSpace.garbage_collect" << '\n';
     // This line is REQUIRED or the ObjectSpace order will change when garbage collection runs automatically
     // If ~12 measures are added and garbage collection runs, the following loop to grab the first measure
     //   will get the wrong one and return incorrect arguments
-    ss << "  ObjectSpace.garbage_collect" << std::endl;
-    ss << "  load scriptPath.get.to_s # need load in case have seen this script before" << std::endl;
-    ss << std::endl;
-    ss << "  measure = nil" << std::endl;
-    ss << "  type = String.new" << std::endl;
-    ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|" << std::endl;
-    ss << "    if not currentObjects[obj]" << std::endl;
-    ss << "      if obj.is_a? OpenStudio::Measure::ModelMeasure" << std::endl;
-    ss << "        measure = obj" << std::endl;
-    ss << "        type = \"model\"" << std::endl;
-    ss << "      elsif obj.is_a? OpenStudio::Measure::EnergyPlusMeasure" << std::endl;
-    ss << "        measure = obj" << std::endl;
-    ss << "        type = \"energyplus\"" << std::endl;
-    ss << "      elsif obj.is_a? OpenStudio::Measure::ReportingMeasure" << std::endl;
-    ss << "        measure = obj" << std::endl;
-    ss << "        type = \"report\"" << std::endl;
-    ss << "      end" << std::endl;
-    ss << "    end" << std::endl;
-    ss << "  end" << std::endl;
-    ss << std::endl;
-    ss << "  if not measure" << std::endl;
-    ss << "    raise \"Unable to extract OpenStudio::Measure::OSMeasure object from \" + " << std::endl;
-    ss << "        scriptPath.get.to_s + \". The script should contain a class that derives \" + " << std::endl;
-    ss << "        \"from OpenStudio::Measure::OSMeasure and should close with a line stating \" + " << std::endl;
-    ss << "        \"the class name followed by .new.registerWithApplication.\"" << std::endl;
-    ss << "  end" << std::endl;
-    ss << std::endl;
+    ss << "  ObjectSpace.garbage_collect" << '\n';
+    ss << "  load scriptPath.get.to_s # need load in case have seen this script before" << '\n';
+    ss << '\n';
+    ss << "  measure = nil" << '\n';
+    ss << "  type = String.new" << '\n';
+    ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) do |obj|" << '\n';
+    ss << "    if not currentObjects[obj]" << '\n';
+    ss << "      if obj.is_a? OpenStudio::Measure::ModelMeasure" << '\n';
+    ss << "        measure = obj" << '\n';
+    ss << "        type = \"model\"" << '\n';
+    ss << "      elsif obj.is_a? OpenStudio::Measure::EnergyPlusMeasure" << '\n';
+    ss << "        measure = obj" << '\n';
+    ss << "        type = \"energyplus\"" << '\n';
+    ss << "      elsif obj.is_a? OpenStudio::Measure::ReportingMeasure" << '\n';
+    ss << "        measure = obj" << '\n';
+    ss << "        type = \"report\"" << '\n';
+    ss << "      end" << '\n';
+    ss << "    end" << '\n';
+    ss << "  end" << '\n';
+    ss << '\n';
+    ss << "  if not measure" << '\n';
+    ss << "    raise \"Unable to extract OpenStudio::Measure::OSMeasure object from \" + " << '\n';
+    ss << "        scriptPath.get.to_s + \". The script should contain a class that derives \" + " << '\n';
+    ss << "        \"from OpenStudio::Measure::OSMeasure and should close with a line stating \" + " << '\n';
+    ss << "        \"the class name followed by .new.registerWithApplication.\"" << '\n';
+    ss << "  end" << '\n';
+    ss << '\n';
     // The following lines may throw
-    ss << "  measureType = nil" << std::endl;
-    ss << "  className = measure.class.to_s" << std::endl;
-    ss << "  name = measure.name" << std::endl;
-    ss << "  name = className if name.empty?" << std::endl;
-    ss << "  description = measure.description" << std::endl;
-    ss << "  taxonomy = measure.taxonomy" << std::endl;
-    ss << "  modelerDescription = measure.modeler_description" << std::endl;
-    ss << "  args = OpenStudio::Measure::OSArgumentVector.new" << std::endl;
-    ss << "  outputs = OpenStudio::Measure::OSOutputVector.new" << std::endl;
-    ss << "  model = OpenStudio::Model::Model.new" << std::endl;
-    ss << "  workspace = OpenStudio::Workspace.new(\"Draft\".to_StrictnessLevel," << std::endl;
-    ss << "                                        \"EnergyPlus\".to_IddFileType)" << std::endl;
-    ss << "  model = optionalModel.get if not optionalModel.empty?" << std::endl;
-    ss << "  workspace = optionalWorkspace.get if not optionalWorkspace.empty?" << std::endl;
-    ss << "  if type == \"report\"" << std::endl;
-    ss << "    measureType = OpenStudio::MeasureType.new(\"ReportingMeasure\")" << std::endl;
-    ss << "    args = measure.arguments(model)" << std::endl;
-    ss << "    outputs = measure.outputs()" << std::endl;
-    ss << "  elsif type == \"model\"" << std::endl;
-    ss << "    measureType = OpenStudio::MeasureType.new(\"ModelMeasure\")" << std::endl;
-    ss << "    args = measure.arguments(model)" << std::endl;
-    ss << "    outputs = measure.outputs()" << std::endl;
-    ss << "  elsif type == \"energyplus\"" << std::endl;
-    ss << "    measureType = OpenStudio::MeasureType.new(\"EnergyPlusMeasure\")" << std::endl;
-    ss << "    args = measure.arguments(workspace)" << std::endl;
-    ss << "    outputs = measure.outputs()" << std::endl;
-    ss << "  end" << std::endl;
-    ss << std::endl;
+    ss << "  measureType = nil" << '\n';
+    ss << "  className = measure.class.to_s" << '\n';
+    ss << "  name = measure.name" << '\n';
+    ss << "  name = className if name.empty?" << '\n';
+    ss << "  description = measure.description" << '\n';
+    ss << "  taxonomy = measure.taxonomy" << '\n';
+    ss << "  modelerDescription = measure.modeler_description" << '\n';
+    ss << "  args = OpenStudio::Measure::OSArgumentVector.new" << '\n';
+    ss << "  outputs = OpenStudio::Measure::OSOutputVector.new" << '\n';
+    ss << "  model = OpenStudio::Model::Model.new" << '\n';
+    ss << "  workspace = OpenStudio::Workspace.new(\"Draft\".to_StrictnessLevel," << '\n';
+    ss << "                                        \"EnergyPlus\".to_IddFileType)" << '\n';
+    ss << "  model = optionalModel.get if not optionalModel.empty?" << '\n';
+    ss << "  workspace = optionalWorkspace.get if not optionalWorkspace.empty?" << '\n';
+    ss << "  if type == \"report\"" << '\n';
+    ss << "    measureType = OpenStudio::MeasureType.new(\"ReportingMeasure\")" << '\n';
+    ss << "    args = measure.arguments(model)" << '\n';
+    ss << "    outputs = measure.outputs()" << '\n';
+    ss << "  elsif type == \"model\"" << '\n';
+    ss << "    measureType = OpenStudio::MeasureType.new(\"ModelMeasure\")" << '\n';
+    ss << "    args = measure.arguments(model)" << '\n';
+    ss << "    outputs = measure.outputs()" << '\n';
+    ss << "  elsif type == \"energyplus\"" << '\n';
+    ss << "    measureType = OpenStudio::MeasureType.new(\"EnergyPlusMeasure\")" << '\n';
+    ss << "    args = measure.arguments(workspace)" << '\n';
+    ss << "    outputs = measure.outputs()" << '\n';
+    ss << "  end" << '\n';
+    ss << '\n';
     ss << "  return OpenStudio::Measure::OSMeasureInfo.new(measureType, className, name, description, taxonomy, modelerDescription, args, outputs)"
-       << std::endl;
-    ss << "end" << std::endl;
+       << '\n';
+    ss << "end" << '\n';
     return ss.str();
   }
 

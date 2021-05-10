@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -98,6 +98,7 @@
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
+#include <utilities/idd/Fan_ComponentModel_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
@@ -656,6 +657,9 @@ namespace energyplus {
       } else if (_fan->iddObject().type() == IddObjectType::Fan_SystemModel) {
         _fan->setString(Fan_SystemModelFields::AirInletNodeName, inletNodeName);
         _fan->setString(Fan_SystemModelFields::AirOutletNodeName, outletNodeName);
+      } else if (_fan->iddObject().type() == IddObjectType::Fan_ComponentModel) {
+        _fan->setString(Fan_ComponentModelFields::AirInletNodeName, inletNodeName);
+        _fan->setString(Fan_ComponentModelFields::AirOutletNodeName, outletNodeName);
       }
 
       fixSPMsForUnitarySystem(modelObject, inletNodeName, outletNodeName);

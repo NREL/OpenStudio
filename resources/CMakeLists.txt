@@ -13,6 +13,8 @@ set(utilities_resources_src
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/component.xml"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/files/USA_PA_Philadelphia_TMY2.epw"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/images/noimage_100px.png"
+  utilities/BCL/Components/323_wrongXMLType_float/component.xml
+  utilities/BCL/Components/323_wrongXMLType_int/component.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
@@ -88,6 +90,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-2-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-3-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-4-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/Zip/test1.zip
 )
 
@@ -110,6 +113,11 @@ set(ENERGYPLUS_OUTPUTS "")
 set(model_resources_src
   model/OpenStudio.idd
   model/schedulefile.csv
+
+  model/two_stories_pre_intersect.osm
+  model/floorplan_school.osm
+  model/7-7_Windows_Complete.osm
+  model/15023_Model12.osm
 )
 
 

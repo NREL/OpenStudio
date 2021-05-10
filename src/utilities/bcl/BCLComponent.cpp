@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -76,21 +76,32 @@ BCLComponent::BCLComponent(const openstudio::path& dir) : m_directory(dir) {
         std::string units = componentElement.child("units").text().as_string();
 
         if (datatype == "float") {
+          double castVal;
+          try {
+            castVal = boost::lexical_cast<double>(value);
+          } catch (const boost::bad_lexical_cast&) {
+            LOG_AND_THROW("Please double check your XML, you have an attribute named '" << name << "' with a datatype of '" << datatype
+                                                                                        << "' but the value isn't a double: '" << value << "'.");
+          }
           if (units.empty()) {
-            Attribute attr(name, boost::lexical_cast<double>(value));
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, castVal);
           } else {
-            Attribute attr(name, boost::lexical_cast<double>(value), units);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, castVal, units);
           }
         } else if (datatype == "int") {
-          if (units.empty()) {
-            Attribute attr(name, boost::lexical_cast<int>(value));
-            m_attributes.push_back(attr);
-          } else {
-            Attribute attr(name, boost::lexical_cast<int>(value), units);
-            m_attributes.push_back(attr);
+          int castVal;
+          try {
+            castVal = boost::lexical_cast<int>(value);
+          } catch (const boost::bad_lexical_cast&) {
+            LOG_AND_THROW("Please double check your XML, you have an attribute named '" << name << "' with a datatype of '" << datatype
+                                                                                        << "' but the value isn't an integer: '" << value << "'.");
           }
+          if (units.empty()) {
+            m_attributes.emplace_back(name, castVal);
+          } else {
+            m_attributes.emplace_back(name, castVal, units);
+          }
+
         } else if (datatype == "boolean") {
           bool temp;
           if (value == "true") {
@@ -99,20 +110,17 @@ BCLComponent::BCLComponent(const openstudio::path& dir) : m_directory(dir) {
             temp = false;
           }
           if (units.empty()) {
-            Attribute attr(name, temp);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, temp);
           } else {
-            Attribute attr(name, temp, units);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, temp, units);
           }
         } else {
           // Assume string
           if (units.empty()) {
-            Attribute attr(name, value);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, value);
           } else {
             Attribute attr(name, value, units);
-            m_attributes.push_back(attr);
+            m_attributes.emplace_back(name, value, units);
           }
         }
       } else {

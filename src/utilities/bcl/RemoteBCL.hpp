@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "BCL.hpp"
 #include "../core/Path.hpp"
+#include "../core/Deprecated.hpp"
 
 #if (defined(__GNUC__))
 #  pragma GCC diagnostic push
@@ -178,21 +179,28 @@ class UTILITIES_API RemoteBCL : public BCL
   /// Return the number of pages of results
   int numResultPages() const;
 
-  /// Wait number of milliseconds for download to complete
-  /// Returns the download if it completed in the allowable time
-  boost::optional<BCLComponent> waitForComponentDownload(int msec = 120000) const;
+  unsigned timeOutSeconds() const;
+  bool setTimeOutSeconds(unsigned timeOutSeconds);
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
-  boost::optional<BCLMeasure> waitForMeasureDownload(int msec = 120000) const;
+  boost::optional<BCLComponent> waitForComponentDownload() const;
+  OS_DEPRECATED boost::optional<BCLComponent> waitForComponentDownload(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
-  boost::optional<BCLMetaSearchResult> waitForMetaSearch(int msec = 120000) const;
+  boost::optional<BCLMeasure> waitForMeasureDownload() const;
+  OS_DEPRECATED boost::optional<BCLMeasure> waitForMeasureDownload(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
-  std::vector<BCLSearchResult> waitForSearch(int msec = 120000) const;
+  boost::optional<BCLMetaSearchResult> waitForMetaSearch() const;
+  OS_DEPRECATED boost::optional<BCLMetaSearchResult> waitForMetaSearch(int) const;
+
+  /// Wait number of milliseconds for download to complete
+  /// Returns the download if it completed in the allowable time
+  std::vector<BCLSearchResult> waitForSearch() const;
+  OS_DEPRECATED std::vector<BCLSearchResult> waitForSearch(int) const;
 
   //@}
   /** @name Non-blocking class members */
@@ -233,7 +241,7 @@ class UTILITIES_API RemoteBCL : public BCL
   /// Validate an OAuth key
   bool validateAuthKey(const std::string& authKey, const std::string& remoteUrl);
 
-  bool waitForLock(int msec) const;
+  bool waitForLock() const;
 
   boost::optional<RemoteQueryResponse> processReply(const std::string& reply);
 
@@ -250,7 +258,7 @@ class UTILITIES_API RemoteBCL : public BCL
   // members
 
   // A helper function to prepare a client, allowing us to change the http_client_config in one place only
-  static web::http::client::http_client getClient(const std::string& url);
+  static web::http::client::http_client getClient(const std::string& url, unsigned timeOutSeconds = 60);
 
   boost::optional<pplx::task<void>> m_httpResponse;
 
@@ -304,6 +312,8 @@ class UTILITIES_API RemoteBCL : public BCL
   std::vector<BCLSearchResult> m_componentsWithUpdates;
 
   std::vector<BCLSearchResult> m_measuresWithUpdates;
+
+  unsigned m_timeOutSeconds;
 };
 
 }  // namespace openstudio

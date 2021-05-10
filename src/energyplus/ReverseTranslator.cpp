@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -284,7 +284,11 @@ namespace energyplus {
         break;  // no-op
       }
       case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem: {
-        //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject );
+        //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem: {
+        //modelObject = translateAirLoopHVACDedicatedOutdoorAirSystem(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem_EquipmentList: {
@@ -381,7 +385,8 @@ namespace energyplus {
         modelObject = translateConstructionAirBoundary(workspaceObject);
         break;
       }
-      case openstudio::IddObjectType::Construction_InternalSource: {
+      // E+ 9.5: Now translated via Construction object itself
+      case openstudio::IddObjectType::ConstructionProperty_InternalHeatSource: {
         modelObject = translateConstructionWithInternalSource(workspaceObject);
         break;
       }
@@ -405,6 +410,10 @@ namespace energyplus {
         modelObject = translateCurveCubic(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Curve_ExponentialDecay: {
+        modelObject = translateCurveExponentialDecay(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Curve_DoubleExponentialDecay: {
         modelObject = translateCurveDoubleExponentialDecay(workspaceObject);
         break;
@@ -423,6 +432,14 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::Curve_Linear: {
         modelObject = translateCurveLinear(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Curve_QuadLinear: {
+        modelObject = translateCurveQuadLinear(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Curve_QuintLinear: {
+        modelObject = translateCurveQuintLinear(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Curve_Quadratic: {
@@ -487,6 +504,10 @@ namespace energyplus {
         modelObject = translateElectricLoadCenterStorageConverter(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        modelObject = translateElectricLoadCenterStorageLiIonNMCBattery(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::EnergyManagementSystem_Actuator: {
         modelObject = translateEnergyManagementSystemActuator(workspaceObject);
         break;
@@ -543,6 +564,10 @@ namespace energyplus {
         modelObject = translateEvaporativeFluidCoolerSingleSpeed(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Fan_ComponentModel: {
+        modelObject = translateFanComponentModel(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Fan_ConstantVolume: {
         //modelObject = translateFanConstantVolume(workspaceObject );
         break;
@@ -565,6 +590,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::Generator_MicroTurbine: {
         modelObject = translateGeneratorMicroTurbine(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Generator_WindTurbine: {
+        modelObject = translateGeneratorWindTurbine(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::GlobalGeometryRules: {
@@ -699,6 +728,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::PerformancePrecisionTradeoffs: {
         modelObject = translatePerformancePrecisionTradeoffs(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::PhotovoltaicPerformance_Sandia: {
+        modelObject = translatePhotovoltaicPerformanceSandia(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Refrigeration_Case: {
@@ -939,6 +972,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::ZoneInfiltration_EffectiveLeakageArea: {
         modelObject = translateZoneInfiltrationEffectiveLeakageArea(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient: {
+        modelObject = translateZoneInfiltrationFlowCoefficient(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::ZoneList: {

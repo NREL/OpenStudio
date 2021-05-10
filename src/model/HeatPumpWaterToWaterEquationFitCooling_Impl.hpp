@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
   class HeatPumpWaterToWaterEquationFitHeating;
+  class CurveQuadLinear;
 
   namespace detail {
 
@@ -99,25 +100,9 @@ namespace model {
 
       bool isRatedCoolingPowerConsumptionAutosized() const;
 
-      double coolingCapacityCoefficient1() const;
+      CurveQuadLinear coolingCapacityCurve() const;
 
-      double coolingCapacityCoefficient2() const;
-
-      double coolingCapacityCoefficient3() const;
-
-      double coolingCapacityCoefficient4() const;
-
-      double coolingCapacityCoefficient5() const;
-
-      double coolingCompressorPowerCoefficient1() const;
-
-      double coolingCompressorPowerCoefficient2() const;
-
-      double coolingCompressorPowerCoefficient3() const;
-
-      double coolingCompressorPowerCoefficient4() const;
-
-      double coolingCompressorPowerCoefficient5() const;
+      CurveQuadLinear coolingCompressorPowerCurve() const;
 
       double referenceCoefficientofPerformance() const;
 
@@ -153,25 +138,9 @@ namespace model {
 
       void autosizeRatedCoolingPowerConsumption();
 
-      bool setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1);
+      bool setCoolingCapacityCurve(const CurveQuadLinear& coolingCapacityCurve);
 
-      bool setCoolingCapacityCoefficient2(double coolingCapacityCoefficient2);
-
-      bool setCoolingCapacityCoefficient3(double coolingCapacityCoefficient3);
-
-      bool setCoolingCapacityCoefficient4(double coolingCapacityCoefficient4);
-
-      bool setCoolingCapacityCoefficient5(double coolingCapacityCoefficient5);
-
-      bool setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1);
-
-      bool setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2);
-
-      bool setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3);
-
-      bool setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4);
-
-      bool setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5);
+      bool setCoolingCompressorPowerCurve(const CurveQuadLinear& coolingCompressorPowerCurve);
 
       bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 

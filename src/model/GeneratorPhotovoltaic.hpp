@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,6 +59,14 @@ namespace model {
 
     /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceEquivalentOneDiode performance
     static GeneratorPhotovoltaic equivalentOneDiode(const Model& model);
+
+    /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSandia performance, using the default Ctor
+    static GeneratorPhotovoltaic sandia(const Model& model);
+
+    /// Factory method to creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSandia by looking up characteristics in the embedded
+    // Sandia database by its name. Please use the PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames() static method
+    // to look up the valid names as it will throw if it cannot find it
+    static GeneratorPhotovoltaic fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
     virtual ~GeneratorPhotovoltaic() {}
 

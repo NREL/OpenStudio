@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,7 +63,7 @@ using namespace openstudio::radiance;
 std::string printPaths(const std::vector<path>& paths) {
   std::stringstream result;
   for (auto path : paths) {
-    result << toString(path) << std::endl;
+    result << toString(path) << '\n';
   }
   return result.str();
 }
@@ -71,7 +71,7 @@ std::string printPaths(const std::vector<path>& paths) {
 std::string printLogMessages(const std::vector<LogMessage>& messages) {
   std::stringstream result;
   for (auto message : messages) {
-    result << message.logMessage() << std::endl;
+    result << message.logMessage() << '\n';
   }
   return result.str();
 }

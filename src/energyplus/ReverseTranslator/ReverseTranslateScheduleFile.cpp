@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,19 +86,13 @@ namespace energyplus {
 
     OptionalString os = workspaceObject.getString(Schedule_FileFields::InterpolatetoTimestep);
     if (os) {
-      std::string temp = *os;
-      boost::to_lower(temp);
-      if (temp == "yes") {
+      if (openstudio::istringEqual("Yes", os.get())) {
         scheduleFile.setInterpolatetoTimestep(true);
       }
     }
 
     if (OptionalInt oi = workspaceObject.getInt(Schedule_FileFields::MinutesperItem)) {
-      double result = 60.0 / (double)oi.get();
-      if (trunc(result) == result) {
-        scheduleFile.setMinutesperItem(std::to_string((int)result));
-      }
-      // Throw?
+      scheduleFile.setMinutesperItem(oi.get());
     }
 
     return scheduleFile;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -85,13 +85,13 @@ TEST_F(IdfFixture, WorkspaceObjectWatcher_DataFieldChanges) {
   WorkspaceObjectWatcher watcher(lights);
   EXPECT_FALSE(watcher.dirty());
 
-  EXPECT_TRUE(lights.setName(""));
+  EXPECT_TRUE(lights.setName("Lights"));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_TRUE(watcher.nameChanged());
   EXPECT_FALSE(watcher.relationshipChanged());
   watcher.clearState();
-  EXPECT_TRUE(lights.createName(false));
+  EXPECT_TRUE(lights.createName(true));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_TRUE(watcher.nameChanged());

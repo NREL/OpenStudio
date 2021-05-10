@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -164,7 +164,7 @@ namespace detail {
   void IddObject_Impl::insertHandleField() {
     if (!hasHandleField()) {
       std::stringstream fieldText;
-      fieldText << "  A1,  \\field Handle" << std::endl << "       \\type handle" << std::endl << "       \\required-field";
+      fieldText << "  A1,  \\field Handle" << '\n' << "       \\type handle" << '\n' << "       \\required-field";
       IddField handleField = IddField::load("Handle", fieldText.str(), m_name).get();
       auto it = m_fields.insert(m_fields.begin(), handleField);
       ++it;
@@ -298,7 +298,16 @@ namespace detail {
       std::string ref = name();
       result.push_back(ref + "UniqueNames");
       //}
+    } else {
+      std::string n = name();
+      if (n == "OS:PortList") {
+        result.push_back("ConnectionObject");
+        result.push_back("PortLists");
+      } else if (n == "OS:Connection") {
+        result.push_back("ConnectionNames");
+      }
     }
+
     return result;
   }
 
@@ -412,13 +421,13 @@ namespace detail {
   std::ostream& IddObject_Impl::print(std::ostream& os) const {
     if (m_fields.empty() && m_extensibleFields.empty()) {
 
-      os << m_name << ";" << std::endl;
+      os << m_name << ";" << '\n';
       m_properties.print(os);
-      os << std::endl;
+      os << '\n';
 
     } else {
 
-      os << m_name << "," << std::endl;
+      os << m_name << "," << '\n';
       m_properties.print(os);
 
       bool extensibleFields = !m_extensibleFields.empty();
@@ -433,7 +442,7 @@ namespace detail {
         it->print(os, (it == itend - 1));
       }
 
-      os << std::endl;
+      os << '\n';
     }
 
     return os;

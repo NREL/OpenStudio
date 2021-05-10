@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,6 +58,9 @@ namespace model {
     explicit ZoneHVACLowTempRadiantVarFlow(const Model& model, Schedule& availabilitySchedule, HVACComponent& heatingCoil,
                                            HVACComponent& coolingCoil);
 
+    // This constructor defaults the availabilitySchedule to alwaysOnDiscrete, and **does not set any heating nor cooling coil**
+    explicit ZoneHVACLowTempRadiantVarFlow(const Model& model);
+
     virtual ~ZoneHVACLowTempRadiantVarFlow() {}
 
     //@}
@@ -73,9 +76,9 @@ namespace model {
 
     Schedule availabilitySchedule() const;
 
-    HVACComponent heatingCoil() const;
+    boost::optional<HVACComponent> heatingCoil() const;
 
-    HVACComponent coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
     boost::optional<std::string> radiantSurfaceType() const;
 
@@ -132,8 +135,10 @@ namespace model {
     void resetFluidtoRadiantSurfaceHeatTransferModel();
 
     bool setHeatingCoil(HVACComponent& heatingCoil);
+    void resetHeatingCoil();
 
     bool setCoolingCoil(HVACComponent& coolingCoil);
+    void resetCoolingCoil();
 
     bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 

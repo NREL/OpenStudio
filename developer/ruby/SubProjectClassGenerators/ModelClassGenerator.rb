@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -1140,6 +1140,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "    return result;\n"
         else
           result << "    OS_ASSERT(result);\n"
+          result << "    return result;\n"
         end
 
         result << "  }\n\n"
@@ -1242,7 +1243,7 @@ class ModelClassGenerator < SubProjectClassGenerator
 
           # Get the autosized value from the sql file
           result << "  boost::optional <double> " << @className << "::" << field.autosizedName << "() {\n"
-          result << "    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->#{field.autosizedName}();\n"
+          result << "    return getImpl<detail::" << @className << "_Impl>()->#{field.autosizedName}();\n"
           result << "  }\n\n"
         end
 
@@ -1262,15 +1263,9 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         next if not field.getterReturnType
 
-        if field.setCanFail?
-          result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
-          result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
-          result << "}\n\n"
-        else
-          result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
-          result << "  getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
-          result << "}\n\n"
-        end
+        result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
+        result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
+        result << "}\n\n"
 
         if field.hasReset?
           result << "void " << @className << "::" << field.resetName << "() {\n"

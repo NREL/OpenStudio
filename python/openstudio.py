@@ -4,6 +4,7 @@ if __package__ or "." in __name__:
 
     from . import openstudioairflow as airflow
     from . import openstudioenergyplus as energyplus
+    from . import openstudioepjson as epjson
     from . import openstudiogbxml as gbxml
     from . import openstudioisomodel as isomodel
     from . import openstudiomeasure as measure
@@ -43,6 +44,7 @@ else:
 
     import openstudioairflow as airflow
     import openstudioenergyplus as energyplus
+    import openstudioepjson as epjson
     import openstudiogbxml as gbxml
     import openstudioisomodel as isomodel
     import openstudiomeasure as measure

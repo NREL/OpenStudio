@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -105,10 +105,7 @@ namespace energyplus {
     bool result = false;
     switch (left.value()) {
       case CoordinateSystem::Absolute:
-        result = (right == CoordinateSystem::Absolute || right == CoordinateSystem::World);
-        break;
-      case CoordinateSystem::World:
-        result = (right == CoordinateSystem::Absolute || right == CoordinateSystem::World);
+        result = (right == CoordinateSystem::Absolute);
         break;
       case CoordinateSystem::Relative:
         result = (right == CoordinateSystem::Relative);
@@ -237,34 +234,74 @@ namespace energyplus {
   GeometryTranslator::GlobalGeometryRules GeometryTranslator::globalGeometryRules() const {
     GlobalGeometryRules result;
 
+    // Start with defaults, then try to specialize
+    result.svp = StartingVertexPosition::UpperLeftCorner;
+    result.ved = VertexEntryDirection::Counterclockwise;
+    result.detailedSystem = CoordinateSystem::Relative;
+    result.daylightingSystem = CoordinateSystem::Relative;
+    result.rectangularSystem = CoordinateSystem::Relative;
+
     // get the GlobalGeometryRules
     WorkspaceObjectVector objects = m_workspace.getObjectsByType(IddObjectType::GlobalGeometryRules);
     if (objects.size() != 1) {
       LOG(Warn, "Could not find GlobalGeometryRules object, assuming defaults");
-      result.svp = StartingVertexPosition::UpperLeftCorner;
-      result.ved = VertexEntryDirection::Counterclockwise;
-      result.detailedSystem = CoordinateSystem::Relative;
-      result.daylightingSystem = CoordinateSystem::Relative;
-      result.rectangularSystem = CoordinateSystem::Relative;
       return result;
     }
+    // get current geometry rules
     WorkspaceObject globalGeometryRules = objects[0];
 
-    // get current geometry rules
-    try {
-      OptionalString strSvp = globalGeometryRules.getString(GlobalGeometryRulesFields::StartingVertexPosition, true);
-      OptionalString strVed = globalGeometryRules.getString(GlobalGeometryRulesFields::VertexEntryDirection, true);
-      OptionalString strDetailedSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::CoordinateSystem, true);
-      OptionalString strDaylightingSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, true);
-      OptionalString strRectangularSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, true);
+    // I don't really like this try/catch, but the alternative is to explicitly check the IDD Enums (choices), which is a bit less future proof.
+    // I'm going to use a try-catch per field instead of for the all block so it's less subject to failures
+    if (OptionalString strSvp = globalGeometryRules.getString(GlobalGeometryRulesFields::StartingVertexPosition, true)) {
+      try {
+        result.svp = StartingVertexPosition(strSvp.get());
+      } catch (...) {
+        LOG(Error, "Could not read required property 'Starting Vertex Position' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing required property 'Starting Vertex Position' for GlobalGeometryRules");
+    }
 
-      result.svp = StartingVertexPosition(*strSvp);
-      result.ved = VertexEntryDirection(*strVed);
-      result.detailedSystem = CoordinateSystem(*strDetailedSystem);
-      result.daylightingSystem = CoordinateSystem(*strDaylightingSystem);
-      result.rectangularSystem = CoordinateSystem(*strRectangularSystem);
-    } catch (...) {
-      LOG(Error, "Could not read GlobalGeometryRules object");
+    if (OptionalString strVed = globalGeometryRules.getString(GlobalGeometryRulesFields::VertexEntryDirection, true)) {
+      try {
+        result.ved = VertexEntryDirection(*strVed);
+      } catch (...) {
+        LOG(Error, "Could not read required property 'Vertex Entry Direction' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing required property 'Vertex Entry Direction' for GlobalGeometryRules");
+    }
+
+    if (OptionalString strDetailedSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::CoordinateSystem, true)) {
+      if (openstudio::istringEqual("Absolute", *strDetailedSystem) || openstudio::istringEqual("World", *strDetailedSystem)) {
+        result.detailedSystem = CoordinateSystem::Absolute;
+      } else {
+        result.detailedSystem = CoordinateSystem::Relative;
+      }
+    } else {
+      LOG(Error, "Missing required property 'Coordinate System' for GlobalGeometryRules");
+    }
+
+    // These two have defaults in IDD, so it shouldn't fail
+    if (OptionalString strDaylightingSystem =
+          globalGeometryRules.getString(GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, true)) {
+      try {
+        result.daylightingSystem = CoordinateSystem(*strDaylightingSystem);
+      } catch (...) {
+        LOG(Error, "Could not read property 'Daylighting Reference Point Coordinate System' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing property 'Daylighting Reference Point Coordinate System' for GlobalGeometryRules");
+    }
+
+    if (OptionalString strRectangularSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, true)) {
+      try {
+        result.rectangularSystem = CoordinateSystem(*strRectangularSystem);
+      } catch (...) {
+        LOG(Error, "Could not read property 'Rectangular Surface Coordinate System' for GlobalGeometryRules");
+      }
+    } else {
+      LOG(Error, "Missing property 'Rectangular Surface Coordinate System' for GlobalGeometryRules");
     }
 
     return result;
@@ -423,6 +460,7 @@ namespace energyplus {
 
       // get vertices
       Point3dVector vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
+      vertices = t * vertices;
 
       // fields which map directly
       std::vector<std::pair<unsigned, unsigned>> fieldMap;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
   boost::program_options::notify(vm);
 
   if (vm.count("help")) {
-    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;
-    std::cout << desc << std::endl;
+    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << '\n';
+    std::cout << desc << std::endl;  // endl will flush
     return 1;
   }
 
@@ -78,13 +78,13 @@ int main(int argc, char* argv[]) {
       return 0;
 
     } else {
-      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << std::endl;
+      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << std::endl;  // endl will flush
       return 1;
     }
 
   } else {
-    std::cout << "No input path given." << desc << std::endl;
-    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;
+    std::cout << "No input path given." << desc << '\n';
+    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;  // endl will flush
     return 1;
   }
 }

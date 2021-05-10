@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,7 +31,7 @@
 #define MODEL_COMPONENTDATA_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "ResourceObject.hpp"
 
 #include "../utilities/core/UUID.hpp"
 
@@ -47,7 +47,7 @@ namespace model {
  *  identifiers and timestamps) that link the Component back to the Building Component Library
  *  (BCL). It is used in \link Model Models \endlink to indicate which objects are associated
  *  with which Components. */
-  class MODEL_API ComponentData : public ModelObject
+  class MODEL_API ComponentData : public ResourceObject
   {
    public:
     /** @name Constructors and Destructors */

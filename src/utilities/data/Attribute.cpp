@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -538,7 +538,9 @@ namespace detail {
           if (thisAttributes.size() == otherAttributes.size()) {
             result = true;
             for (unsigned i = 0; i < thisAttributes.size(); ++i) {
-              result = result && (thisAttributes[i] == otherAttributes[i]);
+              if (!(result && (thisAttributes[i] == otherAttributes[i]))) {
+                result = false;
+              }
               if (!result) {
                 break;
               }
@@ -664,7 +666,7 @@ std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVa
   } else if (auto* p = std::get_if<std::vector<Attribute>>(&attributeVariant)) {
     // Will end up calling toXml
     for (const Attribute& attr : *p) {
-      os << attr << std::endl;
+      os << attr << '\n';
     }
   }
 

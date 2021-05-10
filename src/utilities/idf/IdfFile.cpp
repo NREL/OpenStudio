@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -449,9 +449,9 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(const path& p) {
 
 std::ostream& IdfFile::print(std::ostream& os) const {
   if (!m_header.empty()) {
-    os << m_header << std::endl;
+    os << m_header << '\n';
   }
-  os << std::endl;
+  os << '\n';
   for (const IdfObject& object : m_objects) {
     object.print(os);
   }
@@ -661,8 +661,8 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
       if (foundEndLine && (!versionOnly || isVersion)) {
         OptionalIdfObject object = IdfObject::load(text, *iddObject);
         if (!object) {
-          LOG(Error, "Unable to construct IdfObject from text: " << std::endl
-                                                                 << text << std::endl
+          LOG(Error, "Unable to construct IdfObject from text: " << '\n'
+                                                                 << text << '\n'
                                                                  << "Throwing this object out and parsing the remainder of the file.");
           continue;
         } else {

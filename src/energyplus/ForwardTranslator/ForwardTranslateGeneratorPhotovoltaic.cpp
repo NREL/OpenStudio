@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,7 +48,12 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
+
+    // We are going to check for required properties such as Surface before we register the object
+    // IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
+    IdfObject idfObject(openstudio::IddObjectType::Generator_Photovoltaic);
+    // Name
+    idfObject.setName(modelObject.nameString());
 
     PhotovoltaicPerformance performance = modelObject.photovoltaicPerformance();
     boost::optional<IdfObject> performanceIdf = translateAndMapModelObject(performance);
@@ -56,7 +61,9 @@ namespace energyplus {
       idfObject.setString(Generator_PhotovoltaicFields::PhotovoltaicPerformanceObjectType, performanceIdf->iddObject().name());
       idfObject.setString(Generator_PhotovoltaicFields::ModulePerformanceName, performanceIdf->name().get());
     } else {
-      LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name'")
+      LOG(Error,
+          "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name', it will not be translated.");
+      return boost::none;
     }
 
     boost::optional<PlanarSurface> surface = modelObject.surface();
@@ -69,8 +76,12 @@ namespace energyplus {
       }
     }
     if (!hasSurface) {
-      LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Surface Name'")
+      LOG(Error, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Surface Name', it will not be translated.");
+      return boost::none;
     }
+
+    // at this point, we can register the new object
+    m_idfObjects.push_back(idfObject);
 
     idfObject.setString(Generator_PhotovoltaicFields::HeatTransferIntegrationMode, modelObject.heatTransferIntegrationMode());
 

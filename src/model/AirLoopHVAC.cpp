@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,6 +45,8 @@
 #include "FanVariableVolume_Impl.hpp"
 #include "FanSystemModel.hpp"
 #include "FanSystemModel_Impl.hpp"
+#include "FanComponentModel.hpp"
+#include "FanComponentModel_Impl.hpp"
 #include "SizingSystem.hpp"
 #include "SizingSystem_Impl.hpp"
 #include "Node.hpp"
@@ -61,6 +63,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
@@ -106,7 +110,6 @@
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
-#include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
@@ -263,6 +266,19 @@ namespace model {
       }
 
       return result;
+    }
+
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVAC_Impl::airLoopHVACDedicatedOutdoorAirSystem() const {
+      std::vector<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystems =
+        getObject<ModelObject>().getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
+      if (airLoopHVACDedicatedOutdoorAirSystems.empty()) {
+        // no error
+      } else if (airLoopHVACDedicatedOutdoorAirSystems.size() == 1) {
+        return airLoopHVACDedicatedOutdoorAirSystems[0];
+      } else {
+        // error
+      }
+      return boost::none;
     }
 
     boost::optional<ThermalZone> AirLoopHVAC_Impl::zoneForLastBranch(Mixer& mixer) {
@@ -704,39 +720,99 @@ namespace model {
 
       airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->createTopology();
 
-      auto supplyComps = supplyComponents();
-      auto outletNodeClone = airLoopClone.supplyOutletNode();
-      std::vector<Node> supplyNodes;
+      struct HVACPath
+      {
+        HVACPath(const HVACComponent& t_originalStart, const HVACComponent& t_originalEnd, const HVACComponent& t_clonedStartOrEndOfPath,
+                 const Node& t_clonedAddNode, bool t_reverse)
+          : originalStart(t_originalStart),
+            originalEnd(t_originalEnd),
+            clonedStartOrEndOfPath(t_clonedStartOrEndOfPath),
+            clonedAddNode(t_clonedAddNode),
+            reverse(t_reverse){};
 
-      for (const auto& comp : supplyComps) {
-        if (comp.iddObjectType() == Node::iddObjectType()) {
-          supplyNodes.push_back(comp.cast<Node>());
-        } else {
-          auto compClone = comp.clone(model).cast<HVACComponent>();
-          compClone.addToNode(outletNodeClone);
-          // If the original component was also on a PlantLoop
-          if (boost::optional<HVACComponent> hvacComp = comp.optionalCast<HVACComponent>()) {
-            if (boost::optional<PlantLoop> pl = hvacComp->plantLoop()) {
-              // Connect the clone to the plantLoop too
-              pl->addDemandBranchForComponent(compClone);
+        HVACComponent originalStart;
+        HVACComponent originalEnd;
+        HVACComponent clonedStartOrEndOfPath;  // If reverse is false, it's the start, if reverse is true, it's the end
+        Node clonedAddNode;
+        bool reverse;
+      };
+
+      std::vector<HVACPath> pathsToHandle;
+
+      if (isDualDuct()) {
+        // Add the Splitter to make it a dual duct
+        auto supplyInletNodeClone = airLoopClone.supplyInletNode();
+        ConnectorSplitter supplySplitterClone(model);
+        supplySplitterClone.addToNode(supplyInletNodeClone);
+        airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->setSupplySplitter(supplySplitterClone);
+
+        auto supplyOutletNodeClones = airLoopClone.supplyOutletNodes();
+
+        auto supplySplitter = this->supplySplitter().get();
+        auto supplyInletNode = this->supplyInletNode();
+        auto supplyOutletNodes = this->supplyOutletNodes();
+
+        pathsToHandle.emplace_back(supplyInletNode, supplySplitter, supplySplitterClone, supplyInletNodeClone, true);
+        pathsToHandle.emplace_back(supplySplitter, supplyOutletNodes[0], supplySplitterClone, supplyOutletNodeClones[0], false);
+        pathsToHandle.emplace_back(supplySplitter, supplyOutletNodes[1], supplySplitterClone, supplyOutletNodeClones[1], false);
+
+      } else {
+
+        pathsToHandle.emplace_back(this->supplyInletNode(), this->supplyOutletNode(), airLoopClone.supplyInletNode(), airLoopClone.supplyOutletNode(),
+                                   false);
+      }
+
+      for (const auto& path : pathsToHandle) {
+
+        auto supplyComps = supplyComponents(path.originalStart, path.originalEnd);
+        if (path.reverse) {
+          std::reverse(supplyComps.begin(), supplyComps.end());
+        }
+        auto clonedAddNode = path.clonedAddNode;
+        std::vector<Node> supplyNodes;
+
+        for (const auto& comp : supplyComps) {
+          if (comp.iddObjectType() == Node::iddObjectType()) {
+            supplyNodes.push_back(comp.cast<Node>());
+            // Don't want to clone the splitter...
+          } else if (comp.iddObjectType() != ConnectorSplitter::iddObjectType()) {
+            auto compClone = comp.clone(model).cast<HVACComponent>();
+            compClone.addToNode(clonedAddNode);
+            // If the original component was also on a PlantLoop
+            if (boost::optional<HVACComponent> hvacComp = comp.optionalCast<HVACComponent>()) {
+              if (boost::optional<PlantLoop> pl = hvacComp->plantLoop()) {
+                // Connect the clone to the plantLoop too
+                pl->addDemandBranchForComponent(compClone);
+              }
             }
+          }
+        }
+
+        std::vector<ModelObject> supplyCompClones;
+
+        if (path.reverse) {
+          supplyCompClones = airLoopClone.supplyComponents(path.clonedAddNode, path.clonedStartOrEndOfPath);
+          std::reverse(supplyCompClones.begin(), supplyCompClones.end());
+        } else {
+          supplyCompClones = airLoopClone.supplyComponents(path.clonedStartOrEndOfPath, path.clonedAddNode);
+        }
+
+        auto supplyNodeClones = subsetCastVector<Node>(supplyCompClones);
+
+        OS_ASSERT(supplyNodes.size() == supplyNodeClones.size());
+        for (size_t i = 0; i < supplyNodes.size(); ++i) {
+          const auto node = supplyNodes[i];
+          auto cloneNode = supplyNodeClones[i];
+
+          auto spms = node.setpointManagers();
+          for (const auto& spm : spms) {
+            auto spmclone = spm.clone(model).cast<SetpointManager>();
+            spmclone.addToNode(cloneNode);
           }
         }
       }
 
-      auto supplyNodeClones = subsetCastVector<Node>(airLoopClone.supplyComponents());
-
-      OS_ASSERT(supplyNodes.size() == supplyNodeClones.size());
-      for (size_t i = 0; i < supplyNodes.size(); ++i) {
-        const auto node = supplyNodes[i];
-        auto cloneNode = supplyNodeClones[i];
-
-        auto spms = node.setpointManagers();
-        for (const auto& spm : spms) {
-          auto spmclone = spm.clone(model).cast<SetpointManager>();
-          spmclone.addToNode(cloneNode);
-        }
-      }
+      // Demand Side: same regardless of whether it's a Dual Duct or not
 
       auto terms = terminals();
       std::vector<IddObjectType> termtypes;
@@ -1327,6 +1403,11 @@ namespace model {
           auto systemModelFans = subsetCastVector<FanSystemModel>(comps);
           if (!systemModelFans.empty()) {
             result = systemModelFans.back();
+          } else {
+            auto componentModelFans = subsetCastVector<FanComponentModel>(comps);
+            if (!componentModelFans.empty()) {
+              result = componentModelFans.back();
+            }
           }
         }
       }
@@ -1961,6 +2042,10 @@ namespace model {
 
   OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC::airLoopHVACOutdoorAirSystem() const {
     return getImpl<detail::AirLoopHVAC_Impl>()->airLoopHVACOutdoorAirSystem();
+  }
+
+  boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVAC::airLoopHVACDedicatedOutdoorAirSystem() const {
+    return getImpl<detail::AirLoopHVAC_Impl>()->airLoopHVACDedicatedOutdoorAirSystem();
   }
 
   AirLoopHVACZoneMixer AirLoopHVAC::zoneMixer() const {

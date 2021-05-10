@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,7 @@ namespace model {
   class Schedule;
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class ThermalZone;
 
   namespace detail {
 
@@ -83,6 +84,8 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
+      virtual bool addToNode(Node& node) override;
+
       virtual ModelObject clone(Model model) const override;
 
       virtual std::vector<ModelObject> children() const override;
@@ -123,7 +126,7 @@ namespace model {
 
       Schedule supplyAirFanOperatingModeSchedule() const;
 
-      HVACComponent supplyAirFan() const;
+      boost::optional<HVACComponent> supplyAirFan() const;
 
       boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
 
@@ -149,6 +152,15 @@ namespace model {
       // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
       double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
       bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+
+      // Controlling Zone or Thermostat Location
+      boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
+      bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
+      void resetControllingZoneorThermostatLocation();
+
+      // Supply Air Fan Placement
+      std::string supplyAirFanPlacement() const;
+      bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
 
       boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
@@ -213,6 +225,7 @@ namespace model {
       //@{
 
       bool setSupplyAirFan(const HVACComponent& component);
+      void resetSupplyAirFan();
 
       bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& component);
 
@@ -225,7 +238,6 @@ namespace model {
 
       boost::optional<Schedule> optionalTerminalUnitAvailabilityschedule() const;
       boost::optional<Schedule> optionalSupplyAirFanOperatingModeSchedule() const;
-      boost::optional<HVACComponent> optionalSupplyAirFan() const;
 
       boost::optional<ModelObject> supplementalHeatingCoilAsModelObject() const;
       bool setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);

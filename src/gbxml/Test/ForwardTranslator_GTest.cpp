@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -184,7 +184,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
   ASSERT_TRUE(model2);
-  //std::cout << *model2 << std::endl;
+  //std::cout << *model2 << '\n';
   auto osurf = model2->getModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ocons = osurf->construction();
@@ -271,7 +271,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
   ASSERT_TRUE(model2);
-  //std::cout << *model2 << std::endl;
+  //std::cout << *model2 << '\n';
   auto osurf = model2->getModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ospace = model2->getModelObjectByName<Space>(space.nameString());

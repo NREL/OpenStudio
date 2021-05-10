@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,19 +71,19 @@ TEST_F(MeasureFixture, OSRunner_StdOut) {
 
   OSRunner runner(workflow);
 
-  std::cout << "Hi Output" << std::endl;
-  std::cerr << "Hi Error" << std::endl;
+  std::cout << "Hi Output" << '\n';
+  std::cerr << "Hi Error" << '\n';
 
   TestModelMeasure measure;
   runner.prepareForMeasureRun(measure);
 
-  std::cout << "Standard Output" << std::endl;
-  std::cerr << "Standard Error" << std::endl;
+  std::cout << "Standard Output" << '\n';
+  std::cerr << "Standard Error" << '\n';
 
   runner.incrementStep();
 
-  std::cout << "Bye Output" << std::endl;
-  std::cerr << "Bye Error" << std::endl;
+  std::cout << "Bye Output" << '\n';
+  std::cerr << "Bye Error" << '\n';
 
   ASSERT_TRUE(step.result());
   ASSERT_TRUE(step.result()->stdOut());

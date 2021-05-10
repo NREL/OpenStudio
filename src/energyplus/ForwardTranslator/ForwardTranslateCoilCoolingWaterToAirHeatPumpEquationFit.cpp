@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,12 +35,13 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
 #include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
-#include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
-#include "../../model/Curve.hpp"
-#include "../../model/Curve_Impl.hpp"
+#include "../../model/CurveQuadLinear.hpp"
+#include "../../model/CurveQuintLinear.hpp"
+
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 
+#include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -156,132 +157,28 @@ namespace energyplus {
       idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedCoolingCOP, *value);
     }
 
-    // N6,  Field Total Cooling Capacity Coefficient 1
-
-    value = modelObject.totalCoolingCapacityCoefficient1();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient1, *value);
+    // Total Cooling Capacity Curve Name
+    {
+      auto curve = modelObject.totalCoolingCapacityCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCurveName, _curve->nameString());
+      }
     }
 
-    // N7,  Field Total Cooling Capacity Coefficient 2
-
-    value = modelObject.totalCoolingCapacityCoefficient2();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient2, *value);
+    // Sensible Cooling Capacity Curve Name
+    {
+      auto curve = modelObject.sensibleCoolingCapacityCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName, _curve->nameString());
+      }
     }
 
-    // N8,  Field Total Cooling Capacity Coefficient 3
-
-    value = modelObject.totalCoolingCapacityCoefficient3();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient3, *value);
-    }
-
-    // N9,  Field Total Cooling Capacity Coefficient 4
-
-    value = modelObject.totalCoolingCapacityCoefficient4();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient4, *value);
-    }
-
-    // N10,  Field Total Cooling Capacity Coefficient 5
-
-    value = modelObject.totalCoolingCapacityCoefficient5();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient5, *value);
-    }
-
-    // N11,  Sensible Cooling Capacity Coefficient 1
-
-    value = modelObject.sensibleCoolingCapacityCoefficient1();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient1, *value);
-    }
-
-    // N12,  Sensible Cooling Capacity Coefficient 2
-
-    value = modelObject.sensibleCoolingCapacityCoefficient2();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient2, *value);
-    }
-
-    // N13,  Sensible Cooling Capacity Coefficient 3
-
-    value = modelObject.sensibleCoolingCapacityCoefficient3();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient3, *value);
-    }
-
-    // N14,  Sensible Cooling Capacity Coefficient 4
-
-    value = modelObject.sensibleCoolingCapacityCoefficient4();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient4, *value);
-    }
-
-    // N15,  Sensible Cooling Capacity Coefficient 5
-
-    value = modelObject.sensibleCoolingCapacityCoefficient5();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient5, *value);
-    }
-
-    // N16,  Sensible Cooling Capacity Coefficient 6
-
-    value = modelObject.sensibleCoolingCapacityCoefficient6();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient6, *value);
-    }
-
-    // N17,  Sensible Power Consumption Coefficient 1
-
-    value = modelObject.coolingPowerConsumptionCoefficient1();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient1, *value);
-    }
-
-    // N18,  Sensible Power Consumption Coefficient 2
-
-    value = modelObject.coolingPowerConsumptionCoefficient2();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient2, *value);
-    }
-
-    // N19,  Sensible Power Consumption Coefficient 3
-
-    value = modelObject.coolingPowerConsumptionCoefficient3();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient3, *value);
-    }
-
-    // N20,  Sensible Power Consumption Coefficient 4
-
-    value = modelObject.coolingPowerConsumptionCoefficient4();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient4, *value);
-    }
-
-    // N21,  Sensible Power Consumption Coefficient 5
-
-    value = modelObject.coolingPowerConsumptionCoefficient5();
-
-    if (value) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient5, *value);
+    // Cooling Power Consumption Curve Name
+    {
+      auto curve = modelObject.coolingPowerConsumptionCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName, _curve->nameString());
+      }
     }
 
     // N22, Field Nominal Time for Condensate Removal to Begin

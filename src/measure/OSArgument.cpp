@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -825,7 +825,7 @@ namespace measure {
         auto const double_val = std::stod(value, nullptr);
         variant = double_val;
         result = true;
-      } catch (std::exception e) {
+      } catch (std::exception&) {
         LOG(Debug, "Unable to convert value '" << value << "' to argument of type Double.");
       }
     } else if (m_type == OSArgumentType::Integer) {
@@ -833,7 +833,7 @@ namespace measure {
         auto const int_val = std::stoi(value, nullptr);
         variant = int_val;
         result = true;
-      } catch (std::exception e) {
+      } catch (std::exception&) {
         LOG(Debug, "Unable to convert value '" << value << "' to argument of type Integer.");
       }
     } else if (m_type == OSArgumentType::String) {
@@ -875,7 +875,7 @@ namespace measure {
     if (!displayName().empty()) {
       ss << " (" << displayName() << ")";
     }
-    ss << std::endl;
+    ss << '\n';
 
     // type and required
     ss << type().valueName() << ", ";
@@ -884,7 +884,7 @@ namespace measure {
     } else {
       ss << "Optional";
     }
-    ss << std::endl;
+    ss << '\n';
 
     // value
     ss << "Value: ";
@@ -894,17 +894,17 @@ namespace measure {
     if (hasDefaultValue()) {
       ss << "(" << printDefaultValue() << ")";
     }
-    ss << std::endl;
+    ss << '\n';
 
     if (m_type.value() == OSArgumentType::Choice) {
-      ss << "Choices:" << std::endl;
+      ss << "Choices:" << '\n';
       int dnn = m_choiceDisplayNames.size();
       for (int i = 0, n = m_choices.size(); i < n; ++i) {
         ss << "  " << m_choices[i];
         if ((i < dnn) && (!m_choiceDisplayNames[i].empty())) {
           ss << " (" << m_choiceDisplayNames[i] << ")";
         }
-        ss << std::endl;
+        ss << '\n';
       }
     }
 
@@ -912,11 +912,11 @@ namespace measure {
       ss << m_domainType.valueName() << " Domain: ";
       if (m_domainType == OSDomainType::Interval) {
         OS_ASSERT(m_domain.size() == 2u);
-        ss << "[" << printOSArgumentVariant(m_domain[0]) << ", " << printOSArgumentVariant(m_domain[1]) << "]" << std::endl;
+        ss << "[" << printOSArgumentVariant(m_domain[0]) << ", " << printOSArgumentVariant(m_domain[1]) << "]" << '\n';
       } else {
-        ss << std::endl;
+        ss << '\n';
         for (const OSArgumentVariant& value : m_domain) {
-          ss << "  " << printOSArgumentVariant(value) << std::endl;
+          ss << "  " << printOSArgumentVariant(value) << '\n';
         }
       }
     }
@@ -952,47 +952,42 @@ namespace measure {
     return result;
   }
 
-  // ostream operators for OSArgument and OSArgumentVariant
+  // ostream operators for OSArgument
   std::ostream& operator<<(std::ostream& os, const OSArgument& arg) {
     os << arg.print();
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg) {
+  std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint) const {
+    OS_ASSERT(toPrint.index() != 0);
+    std::stringstream ss;
+
     // We use std::visit, filtering out the case where it's monostate
     // Aside from monostate, every possible type is streamable
     //std::visit(
-    //[&os](const auto& val){
+    //[&ss](const auto& val){
     ////Needed to properly compare the types
     //using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
     //if constexpr (!std::is_same_v<T, std::monostate>) {
-    //os << val;
+    //ss << val;
     //}
     //},
     //arg);
 
     // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
     // So we don't use it here. Same with std::get, so we use get_if instead
-    if (auto* p = std::get_if<bool>(&arg)) {
-      os << std::boolalpha << *p;
-    } else if (auto* p = std::get_if<double>(&arg)) {
-      os << *p;
-    } else if (auto* p = std::get_if<int>(&arg)) {
-      os << *p;
-    } else if (auto* p = std::get_if<std::string>(&arg)) {
-      os << *p;
-    } else if (auto* p = std::get_if<openstudio::path>(&arg)) {
-      os << *p;
+    if (auto* p = std::get_if<bool>(&toPrint)) {
+      ss << std::boolalpha << *p;
+    } else if (auto* p = std::get_if<double>(&toPrint)) {
+      ss << *p;
+    } else if (auto* p = std::get_if<int>(&toPrint)) {
+      ss << *p;
+    } else if (auto* p = std::get_if<std::string>(&toPrint)) {
+      ss << *p;
+    } else if (auto* p = std::get_if<openstudio::path>(&toPrint)) {
+      ss << *p;
     }
 
-    return os;
-  }
-
-  std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint) const {
-    OS_ASSERT(toPrint.index() != 0);
-    // Call the overloaded ostream operator, and return str() of that
-    std::stringstream ss;
-    ss << toPrint;
     return ss.str();
   }
 

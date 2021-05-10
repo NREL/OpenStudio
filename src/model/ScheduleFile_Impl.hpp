@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,7 +38,6 @@ namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class ScheduleTypeLimits;
   class ExternalFile;
 
@@ -85,7 +84,7 @@ namespace model {
 
       int rowstoSkipatTop() const;
 
-      boost::optional<int> numberofHoursofData() const;
+      int numberofHoursofData() const;
 
       bool isNumberofHoursofDataDefaulted() const;
 
@@ -99,7 +98,7 @@ namespace model {
 
       bool isInterpolatetoTimestepDefaulted() const;
 
-      boost::optional<std::string> minutesperItem() const;
+      int minutesperItem() const;
 
       bool isMinutesperItemDefaulted() const;
 
@@ -127,7 +126,7 @@ namespace model {
 
       void resetInterpolatetoTimestep();
 
-      bool setMinutesperItem(const std::string& minutesperItem);
+      bool setMinutesperItem(int minutesperItem);
 
       void resetMinutesperItem();
 

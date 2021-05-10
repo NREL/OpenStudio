@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "../GeometryTranslator.hpp"
 #include "../ReverseTranslator.hpp"
+#include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/Model_Impl.hpp"
@@ -41,8 +42,13 @@
 #include "../../model/DaylightingControl.hpp"
 #include "../../model/IlluminanceMap.hpp"
 #include "../../model/Surface.hpp"
+#include "../../model/ShadingSurface.hpp"
+#include "../../model/ShadingSurface_Impl.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -456,8 +462,8 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
   }
   EXPECT_TRUE(compare);
   if (!compare) {
-    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", " << refObject.name().get() << ", " << refVerts << std::endl;
-    std::cout << "test = " << testObject.iddObject().type().valueName() << ", " << testObject.name().get() << ", " << testVerts << std::endl;
+    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", " << refObject.name().get() << ", " << refVerts << '\n';
+    std::cout << "test = " << testObject.iddObject().type().valueName() << ", " << testObject.name().get() << ", " << testVerts << '\n';
   }
 }
 
@@ -619,4 +625,460 @@ TEST_F(EnergyPlusFixture, GeometryTranslator_4ZoneWithShading_Simple_2) {
 
   ReverseTranslator reverseTranslator;
   EXPECT_NO_THROW(reverseTranslator.translateWorkspace(workspace));
+}
+
+Workspace makeShadingExampleWorkspace(CoordinateSystem coordinateSystem, double northAxis) {
+
+  // Test for #4111 - Bug importing Shading:Building and Shading:Site objects from IDF
+
+  // Test building, with 4 shading surfaces
+  //
+  //   y
+  //    ^
+  //    |
+  // 10 +  ┌───────────────────────────┐                              ┌───────────────────────────┐
+  //    |  │                           │                              │                           │
+  //    |  │   Shading:Site:Detailed   │                              │ Shading:Building:Detailed │
+  //    |  │                           │                              │                           │
+  //  5 +  └───────────────────────────╔══════════════════════════════╗───────────────────────────┘
+  //    |                              ║                              ║
+  //    |                              ║            Simple            ║
+  //    |                              ║           Building           ║
+  //    |                              ║                              ║
+  //  0 +  ┌───────────────────────────╚══════════════════════════════╝───────────────────────────┐
+  //    |  │                           │                              │                           │
+  //    |  │       Shading:Site        │                              │    Shading:Building       │
+  //    |  │                           │                              │                           │
+  // -5 +  └───────────────────────────┘                              └───────────────────────────┘
+  //    |
+  //    +--+---------------------------+------------------------------+---------------------------+-------> x
+  //      -10.                         0                              10                         20
+
+  std::string testBuilding = R"IDF(
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONE ===========
+
+Zone,
+  ZONE ONE,                !- Name
+  0,                       !- Direction of Relative North {deg}
+  0,                       !- X Origin {m}
+  0,                       !- Y Origin {m}
+  0;                       !- Z Origin {m}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
+
+BuildingSurface:Detailed,
+  SURFACE NORTH,           !- Name
+  Wall,                    !- Surface Type
+  Wall,                    !- Construction Name
+  ZONE ONE,                !- Zone Name
+  Outdoors,                !- Outside Boundary Condition
+  ,                        !- Outside Boundary Condition Object
+  SunExposed,              !- Sun Exposure
+  WindExposed,             !- Wind Exposure
+  0.50,                    !- View Factor to Ground
+  4,                       !- Number of Vertices
+  10.00,                   !- Vertex 1 X-coordinate {m}
+  5.00,                    !- Vertex 1 Y-coordinate {m}
+  2.70,                    !- Vertex 1 Z-coordinate {m}
+  10.00,                   !- Vertex 2 X-coordinate {m}
+  5.00,                    !- Vertex 2 Y-coordinate {m}
+  0,                       !- Vertex 2 Z-coordinate {m}
+  0,                       !- Vertex 3 X-coordinate {m}
+  5.00,                    !- Vertex 3 Y-coordinate {m}
+  0,                       !- Vertex 3 Z-coordinate {m}
+  0,                       !- Vertex 4 X-coordinate {m}
+  5.00,                    !- Vertex 4 Y-coordinate {m}
+  2.70;                    !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+  ZONE SURFACE EAST,       !- Name
+  Wall,                    !- Surface Type
+  Wall,                    !- Construction Name
+  ZONE ONE,                !- Zone Name
+  Outdoors,                !- Outside Boundary Condition
+  ,                        !- Outside Boundary Condition Object
+  SunExposed,              !- Sun Exposure
+  WindExposed,             !- Wind Exposure
+  0.50,                    !- View Factor to Ground
+  4,                       !- Number of Vertices
+  10.00,                   !- Vertex 1 X-coordinate {m}
+  0,                       !- Vertex 1 Y-coordinate {m}
+  2.70,                    !- Vertex 1 Z-coordinate {m}
+  10.00,                   !- Vertex 2 X-coordinate {m}
+  0,                       !- Vertex 2 Y-coordinate {m}
+  0,                       !- Vertex 2 Z-coordinate {m}
+  10.00,                   !- Vertex 3 X-coordinate {m}
+  5.00,                    !- Vertex 3 Y-coordinate {m}
+  0,                       !- Vertex 3 Z-coordinate {m}
+  10.00,                   !- Vertex 4 X-coordinate {m}
+  5.00,                    !- Vertex 4 Y-coordinate {m}
+  2.70;                    !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+  ZONE SURFACE SOUTH,      !- Name
+  Wall,                    !- Surface Type
+  Wall,                    !- Construction Name
+  ZONE ONE,                !- Zone Name
+  Outdoors,                !- Outside Boundary Condition
+  ,                        !- Outside Boundary Condition Object
+  SunExposed,              !- Sun Exposure
+  WindExposed,             !- Wind Exposure
+  0.50,                    !- View Factor to Ground
+  4,                       !- Number of Vertices
+  0,                       !- Vertex 1 X-coordinate {m}
+  0,                       !- Vertex 1 Y-coordinate {m}
+  2.70,                    !- Vertex 1 Z-coordinate {m}
+  0,                       !- Vertex 2 X-coordinate {m}
+  0,                       !- Vertex 2 Y-coordinate {m}
+  0,                       !- Vertex 2 Z-coordinate {m}
+  10.00,                    !- Vertex 3 X-coordinate {m}
+  0,                       !- Vertex 3 Y-coordinate {m}
+  0,                       !- Vertex 3 Z-coordinate {m}
+  10.00,                    !- Vertex 4 X-coordinate {m}
+  0,                       !- Vertex 4 Y-coordinate {m}
+  2.70;                    !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+  ZONE SURFACE WEST,       !- Name
+  Wall,                    !- Surface Type
+  Wall,                    !- Construction Name
+  ZONE ONE,                !- Zone Name
+  Outdoors,                !- Outside Boundary Condition
+  ,                        !- Outside Boundary Condition Object
+  SunExposed,              !- Sun Exposure
+  WindExposed,             !- Wind Exposure
+  0.50,                    !- View Factor to Ground
+  4,                       !- Number of Vertices
+  0,                       !- Vertex 1 X-coordinate {m}
+  5.00,                    !- Vertex 1 Y-coordinate {m}
+  2.70,                    !- Vertex 1 Z-coordinate {m}
+  0,                       !- Vertex 2 X-coordinate {m}
+  5.00,                    !- Vertex 2 Y-coordinate {m}
+  0,                       !- Vertex 2 Z-coordinate {m}
+  0,                       !- Vertex 3 X-coordinate {m}
+  0,                       !- Vertex 3 Y-coordinate {m}
+  0,                       !- Vertex 3 Z-coordinate {m}
+  0,                       !- Vertex 4 X-coordinate {m}
+  0,                       !- Vertex 4 Y-coordinate {m}
+  2.70;                    !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+  ZONE SURFACE FLOOR,      !- Name
+  Floor,                   !- Surface Type
+  Wall,                    !- Construction Name
+  ZONE ONE,                !- Zone Name
+  Ground,                  !- Outside Boundary Condition
+  ,                        !- Outside Boundary Condition Object
+  NoSun,                   !- Sun Exposure
+  NoWind,                  !- Wind Exposure
+  0,                       !- View Factor to Ground
+  4,                       !- Number of Vertices
+  0,                       !- Vertex 1 X-coordinate {m}
+  0,                       !- Vertex 1 Y-coordinate {m}
+  0,                       !- Vertex 1 Z-coordinate {m}
+  0,                       !- Vertex 2 X-coordinate {m}
+  5.00,                    !- Vertex 2 Y-coordinate {m}
+  0,                       !- Vertex 2 Z-coordinate {m}
+  10.00,                   !- Vertex 3 X-coordinate {m}
+  5.00,                    !- Vertex 3 Y-coordinate {m}
+  0,                       !- Vertex 3 Z-coordinate {m}
+  10.00,                   !- Vertex 4 X-coordinate {m}
+  0,                       !- Vertex 4 Y-coordinate {m}
+  0;                       !- Vertex 4 Z-coordinate {m}
+
+BuildingSurface:Detailed,
+  ZONE SURFACE ROOF,       !- Name
+  Roof,                    !- Surface Type
+  Wall,                    !- Construction Name
+  ZONE ONE,                !- Zone Name
+  Outdoors,                !- Outside Boundary Condition
+  ,                        !- Outside Boundary Condition Object
+  SunExposed,              !- Sun Exposure
+  WindExposed,             !- Wind Exposure
+  0,                       !- View Factor to Ground
+  4,                       !- Number of Vertices
+  0,                       !- Vertex 1 X-coordinate {m}
+  5.00,                    !- Vertex 1 Y-coordinate {m}
+  2.70,                    !- Vertex 1 Z-coordinate {m}
+  0,                       !- Vertex 2 X-coordinate {m}
+  0,                       !- Vertex 2 Y-coordinate {m}
+  2.70,                    !- Vertex 2 Z-coordinate {m}
+  10.00,                   !- Vertex 3 X-coordinate {m}
+  0,                       !- Vertex 3 Y-coordinate {m}
+  2.70,                    !- Vertex 3 Z-coordinate {m}
+  10.00,                   !- Vertex 4 X-coordinate {m}
+  5.00,                    !- Vertex 4 Y-coordinate {m}
+  2.70;                    !- Vertex 4 Z-coordinate {m}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SHADING:SITE ===========
+
+Shading:Site,
+  Shading Site,            !- Name
+  0,                       !- Azimuth Angle {deg}
+  0,                       !- Tilt Angle {deg}
+  0,                       !- Starting X Coordinate {m}
+  0,                       !- Starting Y Coordinate {m}
+  5,                       !- Starting Z Coordinate {m}
+  10,                      !- Length {m}
+  5;                       !- Height {m}
+
+Shading:Site:Detailed,
+  Shading Site Detailed,   !- Name
+  ,                        !- Transmittance Schedule Name
+  4,                       !- Number of Vertices
+  -10.0, 10.0, 5,            !- X,Y,Z ==> Vertex 1 {m}
+  -10.0,  5.0, 5,            !- X,Y,Z ==> Vertex 2 {m}
+    0.0,  5.0, 5,            !- X,Y,Z ==> Vertex 3 {m}
+    0.0, 10.0, 5;            !- X,Y,Z ==> Vertex 4 {m}
+
+
+!-   ===========  ALL OBJECTS IN CLASS: SHADING:BUILDING ===========
+
+Shading:Building,
+  Shading Building,        !- Name
+  0,                       !- Azimuth Angle {deg}
+  0,                       !- Tilt Angle {deg}
+  20,                      !- Starting X Coordinate {m}
+  0,                       !- Starting Y Coordinate {m}
+  5,                       !- Starting Z Coordinate {m}
+  10,                      !- Length {m}
+  5;                       !- Height {m}
+
+
+Shading:Building:Detailed,
+  Shading Building Detailed,  !- Detached Shading
+  ,                        !- Transmittance Schedule Name
+  4,                       !- Number of Vertices
+  10.0, 10.0, 5,            !- X,Y,Z ==> Vertex 1 {m}
+  10.0,  5.0, 5,            !- X,Y,Z ==> Vertex 2 {m}
+  20.0,  5.0, 5,            !- X,Y,Z ==> Vertex 3 {m}
+  20.0, 10.0, 5;            !- X,Y,Z ==> Vertex 4 {m}
+
+!-   ===========  ALL OBJECTS IN CLASS: CONSTRUCTION ===========
+
+Construction,
+  Wall,                    !- Name
+  Material 1;              !- Outside Layer
+
+Material,
+  Material 1,              !- Name
+  Rough,                   !- Roughness
+  0.00900,                 !- Thickness {m}
+  0.14000,                 !- Conductivity {W/m-K}
+  530.000,                 !- Density {kg/m3}
+  900.00,                  !- Specific Heat {J/kg-K}
+  0.900000,                !- Thermal Absorptance
+  0.600000,                !- Solar Absorptance
+  0.600000;                !- Visible Absorptance
+
+Output:Surfaces:Drawing,
+  DXF;                     !- Report Type
+    )IDF";
+
+  std::stringstream ss(testBuilding);
+  ss << "GlobalGeometryRules,\n"
+     << "  UpperLeftCorner,         !- Starting Vertex Position\n"
+     << "  CounterClockWise,        !- Vertex Entry Direction \n"
+     << "  " << coordinateSystem.valueName() << ", !- Coordinate System\n"
+     << "  " << coordinateSystem.valueName() << ", !- Daylighting Coordinate System\n"
+     << "  " << coordinateSystem.valueName() << "; !- Rectangular Surface Coordinate System\n"
+     << "\n"
+     << "Building,\n"
+     << "  Test building,           !- Name\n"
+     << "  " << northAxis << ",                      !- North Axis {deg}\n"
+     << "  Country,                 !- Terrain\n"
+     << "  0.04,                    !- Loads Convergence Tolerance Value {W}\n"
+     << "  0.4,                     !- Temperature Convergence Tolerance Value {deltaC}\n"
+     << "  FullInteriorAndExterior, !- Solar Distribution\n"
+     << "  ,                        !- Maximum Number of Warmup Days\n"
+     << "  6;                       !- Minimum Number of Warmup Days\n\n";
+
+  OptionalIdfFile oIdfFile = IdfFile::load(ss, IddFileType(IddFileType::EnergyPlus));
+  return Workspace(*oIdfFile);
+}
+
+enum class Quadrant
+{
+  LowerLeftCorner,
+  LowerRightCorner,
+  UpperRightCorner,
+  UpperLeftCorner
+};
+
+auto isSurfaceInQuadrant = [](const ShadingSurface& sc, Quadrant quadrant, const Transformation& expectedTransformation) {
+  std::vector<Point3d> points({
+    {-10.0, 0.0, 5.0},
+    {-10.0, -5.0, 5.0},
+    {0.0, -5.0, 5.0},
+    {0.0, 0.0, 5.0},
+  });
+
+  double xoffset = 0.0;
+  double yoffset = 0.0;
+  if (quadrant == Quadrant::LowerLeftCorner) {
+    // No-op
+  } else if (quadrant == Quadrant::UpperLeftCorner) {
+    xoffset = 0.0;
+    yoffset = 10.0;
+  } else if (quadrant == Quadrant::LowerRightCorner) {
+    xoffset = 20.0;
+    yoffset = 0.0;
+  } else if (quadrant == Quadrant::UpperRightCorner) {
+    xoffset = 20.0;
+    yoffset = 10.0;
+  }
+  Vector3d offset(xoffset, yoffset, 0);
+  Transformation t = openstudio::createTranslation(offset);
+  points = t * points;
+
+  points = expectedTransformation * points;
+
+  // We're dealing with a rectangle, so it's enough to check that the cendroid is in the right place...
+  pointEqual(openstudio::getCentroid(points).get(), sc.centroid());
+
+  // reorder
+  auto scVerts = openstudio::reorderULC(sc.vertices());
+  auto expectedVerts = openstudio::reorderULC(points);
+
+  // compare
+  bool compare = true;
+  for (size_t i = 0; i < 4u; ++i) {
+    compare = compare && (std::abs(scVerts[i].x() - expectedVerts[i].x()) < 0.01);
+    compare = compare && (std::abs(scVerts[i].y() - expectedVerts[i].y()) < 0.01);
+    compare = compare && (std::abs(scVerts[i].z() - expectedVerts[i].z()) < 0.01);
+  }
+  EXPECT_TRUE(compare) << "SC = " << sc.iddObject().type().valueName() << ", " << sc.name().get() << "\n"
+                       << "Actual   = " << scVerts << '\n'
+                       << "Expected = " << expectedVerts << '\n';
+};
+
+struct testResult
+{
+  std::string surfaceName;
+  Quadrant quadrant;
+  Transformation expectedTransformation = Transformation();  // Identity transformation
+};
+
+TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Asbolute_0deg) {
+
+  double northAxis = 0.0;
+  auto w = makeShadingExampleWorkspace(CoordinateSystem::Relative, northAxis);
+
+  ReverseTranslator rt;
+  Model m = rt.translateWorkspace(w);
+
+  Building building = m.getUniqueModelObject<Building>();
+  EXPECT_EQ(northAxis, building.northAxis());
+  Transformation buildingTransformation = building.transformation();
+
+  auto shadingSurfaces = m.getConcreteModelObjects<ShadingSurface>();
+  EXPECT_EQ(4u, shadingSurfaces.size());
+
+  std::vector<testResult> testResults({
+    {"Shading Site", Quadrant::LowerLeftCorner},
+    {"Shading Site Detailed", Quadrant::UpperLeftCorner},
+    {"Shading Building", Quadrant::LowerRightCorner},
+    {"Shading Building Detailed", Quadrant::UpperRightCorner},
+  });
+
+  for (const auto& testResult : testResults) {
+    auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
+    ASSERT_TRUE(optS);
+    isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
+  }
+}
+
+TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Relative_0deg) {
+
+  double northAxis = 0.0;
+  auto w = makeShadingExampleWorkspace(CoordinateSystem::Relative, northAxis);
+
+  ReverseTranslator rt;
+  Model m = rt.translateWorkspace(w);
+
+  Building building = m.getUniqueModelObject<Building>();
+  EXPECT_EQ(northAxis, building.northAxis());
+  Transformation buildingTransformation = building.transformation();
+
+  auto shadingSurfaces = m.getConcreteModelObjects<ShadingSurface>();
+  EXPECT_EQ(4u, shadingSurfaces.size());
+
+  std::vector<testResult> testResults({
+    {"Shading Site", Quadrant::LowerLeftCorner},
+    {"Shading Site Detailed", Quadrant::UpperLeftCorner},
+    {"Shading Building", Quadrant::LowerRightCorner},
+    {"Shading Building Detailed", Quadrant::UpperRightCorner},
+  });
+
+  for (const auto& testResult : testResults) {
+    auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
+    ASSERT_TRUE(optS);
+    isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
+  }
+}
+
+TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Absolute_45deg) {
+
+  double northAxis = 45.0;
+  auto w = makeShadingExampleWorkspace(CoordinateSystem::Absolute, northAxis);
+
+  ReverseTranslator rt;
+  Model m = rt.translateWorkspace(w);
+
+  Building building = m.getUniqueModelObject<Building>();
+  EXPECT_EQ(northAxis, building.northAxis());
+  Transformation buildingTransformationInverse = building.transformation().inverse();
+
+  auto shadingSurfaces = m.getConcreteModelObjects<ShadingSurface>();
+  EXPECT_EQ(4u, shadingSurfaces.size());
+
+  // TODO: Neither should rotate apparently according to the I/O ref?!
+  std::vector<testResult> testResults({
+    {"Shading Site", Quadrant::LowerLeftCorner, Transformation()},
+    {"Shading Site Detailed", Quadrant::UpperLeftCorner, Transformation()},
+    {"Shading Building Detailed", Quadrant::UpperRightCorner, buildingTransformationInverse},
+    {"Shading Building", Quadrant::LowerRightCorner, buildingTransformationInverse},
+  });
+
+  for (const auto& testResult : testResults) {
+    auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
+    ASSERT_TRUE(optS);
+    isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
+  }
+}
+
+TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Relative_45deg) {
+
+  double northAxis = 45.0;
+  auto w = makeShadingExampleWorkspace(CoordinateSystem::Relative, northAxis);
+
+  ReverseTranslator rt;
+  Model m = rt.translateWorkspace(w);
+
+  Building building = m.getUniqueModelObject<Building>();
+  EXPECT_EQ(northAxis, building.northAxis());
+  Transformation buildingTransformation = building.transformation();
+
+  auto shadingSurfaces = m.getConcreteModelObjects<ShadingSurface>();
+  EXPECT_EQ(4u, shadingSurfaces.size());
+
+  std::vector<testResult> testResults({
+    {"Shading Site", Quadrant::LowerLeftCorner, Transformation()},
+    {"Shading Site Detailed", Quadrant::UpperLeftCorner, Transformation()},
+    // These two should rotate, but that'll happen inside E+ after FT... so we should find the same vertices
+    {"Shading Building", Quadrant::LowerRightCorner, Transformation()},
+    {"Shading Building Detailed", Quadrant::UpperRightCorner, Transformation()},
+  });
+
+  for (const auto& testResult : testResults) {
+    auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
+    ASSERT_TRUE(optS);
+    isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
+  }
+
+  ForwardTranslator ft;
+  Workspace w2 = ft.translateModel(m);
 }
