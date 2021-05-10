@@ -61,6 +61,7 @@
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilHeatingDesuperheater.hpp"
 #include "../CoilCoolingDXTwoSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
 #include "../Curve.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveCubic.hpp"
@@ -563,4 +564,19 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType) {
   a.resetControlType();
   ASSERT_TRUE(a.isControlTypeDefaulted());
   ASSERT_EQ("Load", a.controlType());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ModelObjectLists) {
+
+  // Test for #4241 - ModelObjectLists used to store Speed Data for coils aren't removed when a parent of the coil is removed
+
+  Model m;
+  auto size = m.modelObjects().size();
+  EXPECT_EQ(0, size);
+  CoilCoolingDXVariableSpeed coil(m);
+  AirLoopHVACUnitarySystem unitarySystem(m);
+  unitarySystem.setCoolingCoil(coil);
+  EXPECT_EQ(size + 2, m.modelObjects().size());  // 2: CoilCoolingDXVariableSpeed, AirLoopHVACUnitarySystem
+  EXPECT_FALSE(unitarySystem.remove().empty());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ModelObjectList>().size());
 }
