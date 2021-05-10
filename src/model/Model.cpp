@@ -801,6 +801,11 @@ namespace detail {
         return candidate;
       }
     }
+
+    for (const WorkspaceObject& componentObject : component.objects()) {
+      /* componentObject.iddObject().name() */
+    }
+
     WorkspaceObjectVector resultingObjects = model().addObjects(component.objects());
     if (resultingObjects.empty()) { return boost::none; }
     OS_ASSERT(resultingObjects.size() == component.numObjects());
