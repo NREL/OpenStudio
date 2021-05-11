@@ -67,6 +67,8 @@
 #include "../CurveCubic.hpp"
 #include "../CurveExponent.hpp"
 #include "../CurveBiquadratic.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -572,11 +574,12 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ModelObjectLists) {
 
   Model m;
   auto size = m.modelObjects().size();
-  EXPECT_EQ(0, size);
   CoilCoolingDXVariableSpeed coil(m);
   AirLoopHVACUnitarySystem unitarySystem(m);
   unitarySystem.setCoolingCoil(coil);
-  EXPECT_EQ(size + 2, m.modelObjects().size());  // 2: CoilCoolingDXVariableSpeed, AirLoopHVACUnitarySystem
+  EXPECT_EQ(size + 4, m.modelObjects().size());
   EXPECT_FALSE(unitarySystem.remove().empty());
-  EXPECT_EQ(0, m.getConcreteModelObjects<ModelObjectList>().size());
+  std::vector<ModelObjectList> modelObjectLists = m.getModelObjects<ModelObjectList>();
+  EXPECT_EQ(0, modelObjectLists.size());
+  EXPECT_EQ(size, m.modelObjects().size());
 }
