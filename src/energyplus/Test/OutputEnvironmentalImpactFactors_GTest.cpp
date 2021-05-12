@@ -37,6 +37,8 @@
 #include "../../model/OutputEnvironmentalImpactFactors.hpp"
 #include "../../model/OutputEnvironmentalImpactFactors_Impl.hpp"
 
+#include "../../model/FuelFactors.hpp"
+
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
@@ -58,13 +60,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputEnvironmentalImpactFactors) {
   OutputEnvironmentalImpactFactors o(m);
   EXPECT_TRUE(o.setReportingFrequency("Hourly"));
 
+  // I also made it required to actually have at least one FuelFactor
   Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_EnvironmentalImpactFactors);
-  ASSERT_EQ(1u, idfObjs.size());
+  {
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_EnvironmentalImpactFactors);
+    EXPECT_EQ(0u, idfObjs.size());
+  }
 
-  WorkspaceObject idf_o(idfObjs[0]);
-  EXPECT_EQ("Hourly", idf_o.getString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency).get());
+  FuelFactors fuelFactors(m);
+  {
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_EnvironmentalImpactFactors);
+    ASSERT_EQ(1u, idfObjs.size());
+
+    WorkspaceObject idf_o(idfObjs[0]);
+    EXPECT_EQ("Hourly", idf_o.getString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency).get());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputEnvironmentalImpactFactors) {

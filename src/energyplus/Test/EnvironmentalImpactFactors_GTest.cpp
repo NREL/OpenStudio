@@ -38,6 +38,7 @@
 #include "../../model/EnvironmentalImpactFactors_Impl.hpp"
 
 #include "../../model/OutputEnvironmentalImpactFactors.hpp"
+#include "../../model/FuelFactors.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -77,6 +78,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_EnvironmentalImpactFactors) {
 
   // Create one
   OutputEnvironmentalImpactFactors o(m);
+  // It also needs at least one FuelFactor to be translated
+  FuelFactors fuelFactors(m);
 
   {
     Workspace w = ft.translateModel(m);
