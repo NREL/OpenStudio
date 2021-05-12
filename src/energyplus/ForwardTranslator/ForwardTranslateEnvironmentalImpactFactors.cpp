@@ -33,7 +33,6 @@
 #include "../../model/EnvironmentalImpactFactors.hpp"
 
 #include <utilities/idd/EnvironmentalImpactFactors_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -43,44 +42,33 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateEnvironmentalImpactFactors(model::EnvironmentalImpactFactors& modelObject) {
-    boost::optional<IdfObject> result;
 
-    // Instantiate an IdfObject of the class to store the values,
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::EnvironmentalImpactFactors, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::EnvironmentalImpactFactors );
-    // m_idfObjects.push_back(idfObject);
+    // It doesn't have a name
+    IdfObject idfObject(openstudio::IddObjectType::EnvironmentalImpactFactors);
+    m_idfObjects.push_back(idfObject);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // District Heating Efficiency
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency, modelObject.districtHeatingEfficiency());
 
-    // District Heating Efficiency: Optional Double
-    double districtHeatingEfficiency = modelObject.districtHeatingEfficiency();
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency, districtHeatingEfficiency);
+    // District Cooling COP
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP, modelObject.districtCoolingCOP());
 
-    // District Cooling COP: Optional Double
-    double districtCoolingCOP = modelObject.districtCoolingCOP();
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP, districtCoolingCOP);
+    // Steam Conversion Efficiency
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency, modelObject.steamConversionEfficiency());
 
-    // Steam Conversion Efficiency: Optional Double
-    double steamConversionEfficiency = modelObject.steamConversionEfficiency();
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency, steamConversionEfficiency);
+    // Total Carbon Equivalent Emission Factor From N2O
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O,
+                        modelObject.totalCarbonEquivalentEmissionFactorFromN2O());
 
-    // Total Carbon Equivalent Emission Factor From N2O: Optional Double
-    double totalCarbonEquivalentEmissionFactorFromN2O = modelObject.totalCarbonEquivalentEmissionFactorFromN2O();
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O, totalCarbonEquivalentEmissionFactorFromN2O);
+    // Total Carbon Equivalent Emission Factor From CH4
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4,
+                        modelObject.totalCarbonEquivalentEmissionFactorFromCH4());
 
-    // Total Carbon Equivalent Emission Factor From CH4: Optional Double
-    double totalCarbonEquivalentEmissionFactorFromCH4 = modelObject.totalCarbonEquivalentEmissionFactorFromCH4();
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4, totalCarbonEquivalentEmissionFactorFromCH4);
+    // Total Carbon Equivalent Emission Factor From CO2
+    idfObject.setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2,
+                        modelObject.totalCarbonEquivalentEmissionFactorFromCO2());
 
-    // Total Carbon Equivalent Emission Factor From CO2: Optional Double
-    double totalCarbonEquivalentEmissionFactorFromCO2 = modelObject.totalCarbonEquivalentEmissionFactorFromCO2();
-    idfObject.setDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2, totalCarbonEquivalentEmissionFactorFromCO2);
-
-    result = IdfObject;
-    return result;
+    return idfObject;
   }  // End of translate function
 
 }  // end namespace energyplus

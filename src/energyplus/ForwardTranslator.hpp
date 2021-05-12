@@ -298,6 +298,9 @@ namespace model {
   class OutputDebuggingData;
   class OutputDiagnostics;
   class OutputJSON;
+  class OutputEnvironmentalImpactFactors;
+  class EnvironmentalImpactFactors;
+  class FuelFactors;
   class OutputMeter;
   class OutputVariable;
   class OutputEnergyManagementSystem;
@@ -1080,6 +1083,12 @@ namespace energyplus {
     boost::optional<IdfObject> translateOutputDiagnostics(model::OutputDiagnostics& modelObject);
 
     boost::optional<IdfObject> translateOutputJSON(model::OutputJSON& modelObject);
+
+    boost::optional<IdfObject> translateOutputEnvironmentalImpactFactors(model::OutputEnvironmentalImpactFactors& modelObject);
+
+    boost::optional<IdfObject> translateEnvironmentalImpactFactors(model::EnvironmentalImpactFactors& modelObject);
+
+    boost::optional<IdfObject> translateFuelFactors(model::FuelFactors& modelObject);
 
     boost::optional<IdfObject> translateOutputMeter(model::OutputMeter& modelObject);
 

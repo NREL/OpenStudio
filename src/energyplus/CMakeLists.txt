@@ -247,6 +247,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputDiagnostics.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
+  ForwardTranslator/ForwardTranslateOutputEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateFuelFactors.cpp
   ForwardTranslator/ForwardTranslateOutputTableSummaryReports.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp

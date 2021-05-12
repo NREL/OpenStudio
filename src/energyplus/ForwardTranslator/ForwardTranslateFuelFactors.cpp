@@ -32,12 +32,9 @@
 
 #include "../../model/FuelFactors.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/FuelFactors_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -47,39 +44,22 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateFuelFactors(model::FuelFactors& modelObject) {
-    boost::optional<IdfObject> result;
     boost::optional<WorkspaceObject> _wo;
     boost::optional<ModelObject> _mo;
 
-    // Instantiate an IdfObject of the class to store the values,
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::FuelFactors, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::FuelFactors );
-    // m_idfObjects.push_back(idfObject);
+    // If it doesn't have a name
+    IdfObject idfObject(openstudio::IddObjectType::FuelFactors);
+    m_idfObjects.push_back(idfObject);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // Existing Fuel Resource Name
+    idfObject.setString(FuelFactorsFields::ExistingFuelResourceName, modelObject.existingFuelResourceName());
 
-    // Existing Fuel Resource Name: boost::optional<std::string>
-    if (boost::optional<std::string> _existingFuelResourceName = modelObject.existingFuelResourceName()) {
-      idfObject.setString(FuelFactorsFields::ExistingFuelResourceName, _existingFuelResourceName.get());
-    }
+    // Units of Measure: never used in E+
 
-    // Units of Measure: boost::optional<std::string>
-    if (boost::optional<std::string> _unitsofMeasure = modelObject.unitsofMeasure()) {
-      idfObject.setString(FuelFactorsFields::UnitsofMeasure, _unitsofMeasure.get());
-    }
+    // Energy per Unit Factor: never used in E+
 
-    // Energy per Unit Factor: boost::optional<double>
-    if (boost::optional<double> _energyperUnitFactor = modelObject.energyperUnitFactor()) {
-      idfObject.setDouble(FuelFactorsFields::EnergyperUnitFactor, _energyperUnitFactor.get());
-    }
-
-    // Source Energy Factor: boost::optional<double>
-    if (boost::optional<double> _sourceEnergyFactor = modelObject.sourceEnergyFactor()) {
-      idfObject.setDouble(FuelFactorsFields::SourceEnergyFactor, _sourceEnergyFactor.get());
-    }
+    // Source Energy Factor
+    idfObject.setDouble(FuelFactorsFields::SourceEnergyFactor, modelObject.sourceEnergyFactor());
 
     // Source Energy Schedule Name: Optional Object
     if (boost::optional<Schedule> _sourceEnergySchedule = modelObject.sourceEnergySchedule()) {
@@ -88,10 +68,8 @@ namespace energyplus {
       }
     }
 
-    // CO2 Emission Factor: boost::optional<double>
-    if (boost::optional<double> _cO2EmissionFactor = modelObject.cO2EmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::CO2EmissionFactor, _cO2EmissionFactor.get());
-    }
+    // CO2 Emission Factor
+    idfObject.setDouble(FuelFactorsFields::CO2EmissionFactor, modelObject.cO2EmissionFactor());
 
     // CO2 Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _cO2EmissionFactorSchedule = modelObject.cO2EmissionFactorSchedule()) {
@@ -100,10 +78,8 @@ namespace energyplus {
       }
     }
 
-    // CO Emission Factor: boost::optional<double>
-    if (boost::optional<double> _cOEmissionFactor = modelObject.cOEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::COEmissionFactor, _cOEmissionFactor.get());
-    }
+    // CO Emission Factor
+    idfObject.setDouble(FuelFactorsFields::COEmissionFactor, modelObject.cOEmissionFactor());
 
     // CO Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _cOEmissionFactorSchedule = modelObject.cOEmissionFactorSchedule()) {
@@ -112,10 +88,8 @@ namespace energyplus {
       }
     }
 
-    // CH4 Emission Factor: boost::optional<double>
-    if (boost::optional<double> _cH4EmissionFactor = modelObject.cH4EmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::CH4EmissionFactor, _cH4EmissionFactor.get());
-    }
+    // CH4 Emission Factor
+    idfObject.setDouble(FuelFactorsFields::CH4EmissionFactor, modelObject.cH4EmissionFactor());
 
     // CH4 Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _cH4EmissionFactorSchedule = modelObject.cH4EmissionFactorSchedule()) {
@@ -124,10 +98,8 @@ namespace energyplus {
       }
     }
 
-    // NOx Emission Factor: boost::optional<double>
-    if (boost::optional<double> _nOxEmissionFactor = modelObject.nOxEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::NOxEmissionFactor, _nOxEmissionFactor.get());
-    }
+    // NOx Emission Factor
+    idfObject.setDouble(FuelFactorsFields::NOxEmissionFactor, modelObject.nOxEmissionFactor());
 
     // NOx Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _nOxEmissionFactorSchedule = modelObject.nOxEmissionFactorSchedule()) {
@@ -136,10 +108,8 @@ namespace energyplus {
       }
     }
 
-    // N2O Emission Factor: boost::optional<double>
-    if (boost::optional<double> _n2OEmissionFactor = modelObject.n2OEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::N2OEmissionFactor, _n2OEmissionFactor.get());
-    }
+    // N2O Emission Factor
+    idfObject.setDouble(FuelFactorsFields::N2OEmissionFactor, modelObject.n2OEmissionFactor());
 
     // N2O Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _n2OEmissionFactorSchedule = modelObject.n2OEmissionFactorSchedule()) {
@@ -148,10 +118,8 @@ namespace energyplus {
       }
     }
 
-    // SO2 Emission Factor: boost::optional<double>
-    if (boost::optional<double> _sO2EmissionFactor = modelObject.sO2EmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::SO2EmissionFactor, _sO2EmissionFactor.get());
-    }
+    // SO2 Emission Factor
+    idfObject.setDouble(FuelFactorsFields::SO2EmissionFactor, modelObject.sO2EmissionFactor());
 
     // SO2 Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _sO2EmissionFactorSchedule = modelObject.sO2EmissionFactorSchedule()) {
@@ -160,10 +128,8 @@ namespace energyplus {
       }
     }
 
-    // PM Emission Factor: boost::optional<double>
-    if (boost::optional<double> _pMEmissionFactor = modelObject.pMEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::PMEmissionFactor, _pMEmissionFactor.get());
-    }
+    // PM Emission Factor
+    idfObject.setDouble(FuelFactorsFields::PMEmissionFactor, modelObject.pMEmissionFactor());
 
     // PM Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _pMEmissionFactorSchedule = modelObject.pMEmissionFactorSchedule()) {
@@ -172,10 +138,8 @@ namespace energyplus {
       }
     }
 
-    // PM10 Emission Factor: boost::optional<double>
-    if (boost::optional<double> _pM10EmissionFactor = modelObject.pM10EmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::PM10EmissionFactor, _pM10EmissionFactor.get());
-    }
+    // PM10 Emission Factor
+    idfObject.setDouble(FuelFactorsFields::PM10EmissionFactor, modelObject.pM10EmissionFactor());
 
     // PM10 Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _pM10EmissionFactorSchedule = modelObject.pM10EmissionFactorSchedule()) {
@@ -184,10 +148,8 @@ namespace energyplus {
       }
     }
 
-    // PM2.5 Emission Factor: boost::optional<double>
-    if (boost::optional<double> _pM25EmissionFactor = modelObject.pM25EmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::PM25EmissionFactor, _pM25EmissionFactor.get());
-    }
+    // PM2.5 Emission Factor
+    idfObject.setDouble(FuelFactorsFields::PM25EmissionFactor, modelObject.pM25EmissionFactor());
 
     // PM2.5 Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _pM25EmissionFactorSchedule = modelObject.pM25EmissionFactorSchedule()) {
@@ -196,10 +158,8 @@ namespace energyplus {
       }
     }
 
-    // NH3 Emission Factor: boost::optional<double>
-    if (boost::optional<double> _nH3EmissionFactor = modelObject.nH3EmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::NH3EmissionFactor, _nH3EmissionFactor.get());
-    }
+    // NH3 Emission Factor
+    idfObject.setDouble(FuelFactorsFields::NH3EmissionFactor, modelObject.nH3EmissionFactor());
 
     // NH3 Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _nH3EmissionFactorSchedule = modelObject.nH3EmissionFactorSchedule()) {
@@ -208,10 +168,8 @@ namespace energyplus {
       }
     }
 
-    // NMVOC Emission Factor: boost::optional<double>
-    if (boost::optional<double> _nMVOCEmissionFactor = modelObject.nMVOCEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::NMVOCEmissionFactor, _nMVOCEmissionFactor.get());
-    }
+    // NMVOC Emission Factor
+    idfObject.setDouble(FuelFactorsFields::NMVOCEmissionFactor, modelObject.nMVOCEmissionFactor());
 
     // NMVOC Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _nMVOCEmissionFactorSchedule = modelObject.nMVOCEmissionFactorSchedule()) {
@@ -220,10 +178,8 @@ namespace energyplus {
       }
     }
 
-    // Hg Emission Factor: boost::optional<double>
-    if (boost::optional<double> _hgEmissionFactor = modelObject.hgEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::HgEmissionFactor, _hgEmissionFactor.get());
-    }
+    // Hg Emission Factor
+    idfObject.setDouble(FuelFactorsFields::HgEmissionFactor, modelObject.hgEmissionFactor());
 
     // Hg Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _hgEmissionFactorSchedule = modelObject.hgEmissionFactorSchedule()) {
@@ -232,10 +188,8 @@ namespace energyplus {
       }
     }
 
-    // Pb Emission Factor: boost::optional<double>
-    if (boost::optional<double> _pbEmissionFactor = modelObject.pbEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::PbEmissionFactor, _pbEmissionFactor.get());
-    }
+    // Pb Emission Factor
+    idfObject.setDouble(FuelFactorsFields::PbEmissionFactor, modelObject.pbEmissionFactor());
 
     // Pb Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _pbEmissionFactorSchedule = modelObject.pbEmissionFactorSchedule()) {
@@ -244,10 +198,8 @@ namespace energyplus {
       }
     }
 
-    // Water Emission Factor: boost::optional<double>
-    if (boost::optional<double> _waterEmissionFactor = modelObject.waterEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::WaterEmissionFactor, _waterEmissionFactor.get());
-    }
+    // Water Emission Factor
+    idfObject.setDouble(FuelFactorsFields::WaterEmissionFactor, modelObject.waterEmissionFactor());
 
     // Water Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _waterEmissionFactorSchedule = modelObject.waterEmissionFactorSchedule()) {
@@ -256,10 +208,8 @@ namespace energyplus {
       }
     }
 
-    // Nuclear High Level Emission Factor: boost::optional<double>
-    if (boost::optional<double> _nuclearHighLevelEmissionFactor = modelObject.nuclearHighLevelEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::NuclearHighLevelEmissionFactor, _nuclearHighLevelEmissionFactor.get());
-    }
+    // Nuclear High Level Emission Factor
+    idfObject.setDouble(FuelFactorsFields::NuclearHighLevelEmissionFactor, modelObject.nuclearHighLevelEmissionFactor());
 
     // Nuclear High Level Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _nuclearHighLevelEmissionFactorSchedule = modelObject.nuclearHighLevelEmissionFactorSchedule()) {
@@ -268,10 +218,8 @@ namespace energyplus {
       }
     }
 
-    // Nuclear Low Level Emission Factor: boost::optional<double>
-    if (boost::optional<double> _nuclearLowLevelEmissionFactor = modelObject.nuclearLowLevelEmissionFactor()) {
-      idfObject.setDouble(FuelFactorsFields::NuclearLowLevelEmissionFactor, _nuclearLowLevelEmissionFactor.get());
-    }
+    // Nuclear Low Level Emission Factor
+    idfObject.setDouble(FuelFactorsFields::NuclearLowLevelEmissionFactor, modelObject.nuclearLowLevelEmissionFactor());
 
     // Nuclear Low Level Emission Factor Schedule Name: Optional Object
     if (boost::optional<Schedule> _nuclearLowLevelEmissionFactorSchedule = modelObject.nuclearLowLevelEmissionFactorSchedule()) {
@@ -280,8 +228,7 @@ namespace energyplus {
       }
     }
 
-    result = IdfObject;
-    return result;
+    return idfObject;
   }  // End of translate function
 
 }  // end namespace energyplus
