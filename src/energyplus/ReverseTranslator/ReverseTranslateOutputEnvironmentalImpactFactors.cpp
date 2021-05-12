@@ -40,27 +40,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateOutputEnvironmentalImpactFactors( const WorkspaceObject & workspaceObject )
-{
-  boost::optional<ModelObject> result;
+  boost::optional<ModelObject> ReverseTranslator::translateOutputEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject) {
+    boost::optional<ModelObject> result;
 
-  // Instantiate an object of the class to store the values,
-  // but we don't return it until we know it's ok
-  // TODO: check constructor, it might need other objects
-  openstudio::model::OutputEnvironmentalImpactFactors modelObject( m_model );
+    // Instantiate an object of the class to store the values,
+    // but we don't return it until we know it's ok
+    // TODO: check constructor, it might need other objects
+    openstudio::model::OutputEnvironmentalImpactFactors modelObject(m_model);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // TODO: Note JM 2018-10-17
+    // You are responsible for implementing any additional logic based on choice fields, etc.
+    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
-  // Reporting Frequency: Optional String
-  if (boost::optional<std::string> _reportingFrequency = workspaceObject.getString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency)) {
-    modelObject.setReportingFrequency(_reportingFrequency.get());
-  }
+    // Reporting Frequency: Optional String
+    if (boost::optional<std::string> _reportingFrequency = workspaceObject.getString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency)) {
+      modelObject.setReportingFrequency(_reportingFrequency.get());
+    }
 
-  result = modelObject;
-  return result;
-} // End of translate function
+    result = modelObject;
+    return result;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

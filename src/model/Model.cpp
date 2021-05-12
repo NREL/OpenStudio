@@ -2871,6 +2871,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(OutputDiagnostics);
     REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
     REGISTER_CONSTRUCTOR(OutputJSON);
+    REGISTER_CONSTRUCTOR(OutputEnvironmentalImpactFactors);
+    REGISTER_CONSTRUCTOR(EnvironmentalImpactFactors);
+    REGISTER_CONSTRUCTOR(FuelFactors);
     REGISTER_CONSTRUCTOR(OutputMeter);
     REGISTER_CONSTRUCTOR(OutputVariable);
     REGISTER_CONSTRUCTOR(OutputTableSummaryReports);
@@ -3387,6 +3390,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(OutputDiagnostics);
     REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
     REGISTER_COPYCONSTRUCTORS(OutputJSON);
+    REGISTER_COPYCONSTRUCTORS(OutputEnvironmentalImpactFactors);
+    REGISTER_COPYCONSTRUCTORS(EnvironmentalImpactFactors);
+    REGISTER_COPYCONSTRUCTORS(FuelFactors);
     REGISTER_COPYCONSTRUCTORS(OutputMeter);
     REGISTER_COPYCONSTRUCTORS(OutputVariable);
     REGISTER_COPYCONSTRUCTORS(OutputTableSummaryReports);

@@ -40,52 +40,54 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateEnvironmentalImpactFactors( const WorkspaceObject & workspaceObject )
-{
-  boost::optional<ModelObject> result;
+  boost::optional<ModelObject> ReverseTranslator::translateEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject) {
+    boost::optional<ModelObject> result;
 
-  // Instantiate an object of the class to store the values,
-  // but we don't return it until we know it's ok
-  // TODO: check constructor, it might need other objects
-  openstudio::model::EnvironmentalImpactFactors modelObject( m_model );
+    // Instantiate an object of the class to store the values,
+    // but we don't return it until we know it's ok
+    // TODO: check constructor, it might need other objects
+    openstudio::model::EnvironmentalImpactFactors modelObject(m_model);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // TODO: Note JM 2018-10-17
+    // You are responsible for implementing any additional logic based on choice fields, etc.
+    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
-  // District Heating Efficiency: Optional Double
-  if (boost::optional<double> _districtHeatingEfficiency = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency)) {
-    modelObject.setDistrictHeatingEfficiency(_districtHeatingEfficiency.get());
-  }
+    // District Heating Efficiency: Optional Double
+    if (boost::optional<double> _districtHeatingEfficiency = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency)) {
+      modelObject.setDistrictHeatingEfficiency(_districtHeatingEfficiency.get());
+    }
 
-  // District Cooling COP: Optional Double
-  if (boost::optional<double> _districtCoolingCOP = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP)) {
-    modelObject.setDistrictCoolingCOP(_districtCoolingCOP.get());
-  }
+    // District Cooling COP: Optional Double
+    if (boost::optional<double> _districtCoolingCOP = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictCoolingCOP)) {
+      modelObject.setDistrictCoolingCOP(_districtCoolingCOP.get());
+    }
 
-  // Steam Conversion Efficiency: Optional Double
-  if (boost::optional<double> _steamConversionEfficiency = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency)) {
-    modelObject.setSteamConversionEfficiency(_steamConversionEfficiency.get());
-  }
+    // Steam Conversion Efficiency: Optional Double
+    if (boost::optional<double> _steamConversionEfficiency = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency)) {
+      modelObject.setSteamConversionEfficiency(_steamConversionEfficiency.get());
+    }
 
-  // Total Carbon Equivalent Emission Factor From N2O: Optional Double
-  if (boost::optional<double> _totalCarbonEquivalentEmissionFactorFromN2O = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O)) {
-    modelObject.setTotalCarbonEquivalentEmissionFactorFromN2O(_totalCarbonEquivalentEmissionFactorFromN2O.get());
-  }
+    // Total Carbon Equivalent Emission Factor From N2O: Optional Double
+    if (boost::optional<double> _totalCarbonEquivalentEmissionFactorFromN2O =
+          workspaceObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromN2O)) {
+      modelObject.setTotalCarbonEquivalentEmissionFactorFromN2O(_totalCarbonEquivalentEmissionFactorFromN2O.get());
+    }
 
-  // Total Carbon Equivalent Emission Factor From CH4: Optional Double
-  if (boost::optional<double> _totalCarbonEquivalentEmissionFactorFromCH4 = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4)) {
-    modelObject.setTotalCarbonEquivalentEmissionFactorFromCH4(_totalCarbonEquivalentEmissionFactorFromCH4.get());
-  }
+    // Total Carbon Equivalent Emission Factor From CH4: Optional Double
+    if (boost::optional<double> _totalCarbonEquivalentEmissionFactorFromCH4 =
+          workspaceObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCH4)) {
+      modelObject.setTotalCarbonEquivalentEmissionFactorFromCH4(_totalCarbonEquivalentEmissionFactorFromCH4.get());
+    }
 
-  // Total Carbon Equivalent Emission Factor From CO2: Optional Double
-  if (boost::optional<double> _totalCarbonEquivalentEmissionFactorFromCO2 = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2)) {
-    modelObject.setTotalCarbonEquivalentEmissionFactorFromCO2(_totalCarbonEquivalentEmissionFactorFromCO2.get());
-  }
+    // Total Carbon Equivalent Emission Factor From CO2: Optional Double
+    if (boost::optional<double> _totalCarbonEquivalentEmissionFactorFromCO2 =
+          workspaceObject.getDouble(EnvironmentalImpactFactorsFields::TotalCarbonEquivalentEmissionFactorFromCO2)) {
+      modelObject.setTotalCarbonEquivalentEmissionFactorFromCO2(_totalCarbonEquivalentEmissionFactorFromCO2.get());
+    }
 
-  result = modelObject;
-  return result;
-} // End of translate function
+    result = modelObject;
+    return result;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

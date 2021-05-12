@@ -42,28 +42,27 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputEnvironmentalImpactFactors( model::OutputEnvironmentalImpactFactors& modelObject )
-{
-  boost::optional<IdfObject> result;
+  boost::optional<IdfObject> ForwardTranslator::translateOutputEnvironmentalImpactFactors(model::OutputEnvironmentalImpactFactors& modelObject) {
+    boost::optional<IdfObject> result;
 
-  // Instantiate an IdfObject of the class to store the values,
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_EnvironmentalImpactFactors, modelObject);
-  // If it doesn't have a name, or if you aren't sure you are going to want to return it
-  // IdfObject idfObject( openstudio::IddObjectType::Output_EnvironmentalImpactFactors );
-  // m_idfObjects.push_back(idfObject);
+    // Instantiate an IdfObject of the class to store the values,
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_EnvironmentalImpactFactors, modelObject);
+    // If it doesn't have a name, or if you aren't sure you are going to want to return it
+    // IdfObject idfObject( openstudio::IddObjectType::Output_EnvironmentalImpactFactors );
+    // m_idfObjects.push_back(idfObject);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // TODO: Note JM 2018-10-17
+    // You are responsible for implementing any additional logic based on choice fields, etc.
+    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
-  // Reporting Frequency: boost::optional<std::string>
-  if (boost::optional<std::string> _reportingFrequency = modelObject.reportingFrequency()) {
-    idfObject.setString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency, _reportingFrequency.get());
-  }
+    // Reporting Frequency: boost::optional<std::string>
+    if (boost::optional<std::string> _reportingFrequency = modelObject.reportingFrequency()) {
+      idfObject.setString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency, _reportingFrequency.get());
+    }
 
-  result = IdfObject;
-  return result;
-} // End of translate function
+    result = IdfObject;
+    return result;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

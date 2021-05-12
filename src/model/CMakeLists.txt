@@ -1016,6 +1016,15 @@ set(${target_name}_src
   OutputJSON.hpp
   OutputJSON_Impl.hpp
   OutputJSON.cpp
+  OutputEnvironmentalImpactFactors.hpp
+  OutputEnvironmentalImpactFactors_Impl.hpp
+  OutputEnvironmentalImpactFactors.cpp
+  EnvironmentalImpactFactors.hpp
+  EnvironmentalImpactFactors_Impl.hpp
+  EnvironmentalImpactFactors.cpp
+  FuelFactors.hpp
+  FuelFactors_Impl.hpp
+  FuelFactors.cpp
   OutputDiagnostics.hpp
   OutputDiagnostics_Impl.hpp
   OutputDiagnostics.cpp
@@ -2024,6 +2033,19 @@ set(${target_name}_test_src
   test/OutputControlReportingTolerances_GTest.cpp
   test/OutputDebuggingData_GTest.cpp
   test/OutputJSON_GTest.cpp
+  test/OutputEnvironmentalImpactFactors_GTest.cpp
+  test/EnvironmentalImpactFactors_GTest.cpp
+  test/FuelFactors_GTest.cpp
+  OutputEnvironmentalImpactFactors.hpp
+  OutputEnvironmentalImpactFactors_Impl.hpp
+  OutputEnvironmentalImpactFactors.cpp
+  EnvironmentalImpactFactors.hpp
+  EnvironmentalImpactFactors_Impl.hpp
+  EnvironmentalImpactFactors.cpp
+  FuelFactors.hpp
+  FuelFactors_Impl.hpp
+  FuelFactors.cpp
+
   test/OutputDiagnostics_GTest.cpp
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
