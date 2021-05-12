@@ -30,17 +30,13 @@
 #include "ModelFixture.hpp"
 
 #include "../OutputEnvironmentalImpactFactors.hpp"
-#include "../OutputEnvironmentalImpactFactors_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, OutputEnvironmentalImpactFactors_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
   OutputEnvironmentalImpactFactors outputEnvironmentalImpactFactors(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // OutputEnvironmentalImpactFactors outputEnvironmentalImpactFactors = m.getUniqueModelObject<OutputEnvironmentalImpactFactors>();
 
   // Reporting Frequency: Required String
   EXPECT_TRUE(outputEnvironmentalImpactFactors.setReportingFrequency("Timestep"));
@@ -48,3 +44,4 @@ TEST_F(ModelFixture, OutputEnvironmentalImpactFactors_GettersSetters) {
   // Bad Value
   EXPECT_FALSE(outputEnvironmentalImpactFactors.setReportingFrequency("BADENUM"));
   EXPECT_EQ("Timestep", outputEnvironmentalImpactFactors.reportingFrequency());
+}

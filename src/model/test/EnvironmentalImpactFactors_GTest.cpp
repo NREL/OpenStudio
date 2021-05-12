@@ -37,10 +37,9 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, EnvironmentalImpactFactors_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
-  EnvironmentalImpactFactors environmentalImpactFactors(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // EnvironmentalImpactFactors environmentalImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
+
+  // This is a unique ModelObject
+  EnvironmentalImpactFactors environmentalImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
 
   // District Heating Efficiency: Required Double
   EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingEfficiency(0.1));
@@ -74,3 +73,4 @@ TEST_F(ModelFixture, EnvironmentalImpactFactors_GettersSetters) {
   // Total Carbon Equivalent Emission Factor From CO2: Required Double
   EXPECT_TRUE(environmentalImpactFactors.setTotalCarbonEquivalentEmissionFactorFromCO2(3));
   EXPECT_EQ(3, environmentalImpactFactors.totalCarbonEquivalentEmissionFactorFromCO2());
+}
