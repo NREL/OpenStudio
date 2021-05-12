@@ -33396,25 +33396,25 @@ OS:EnvironmentalImpactFactors,
   N1, \field District Heating Efficiency
       \note District heating efficiency used when converted to natural gas
       \minimum> 0.0
-      \default 0.3
+      \required-field
   N2, \field District Cooling COP
       \note District cooling COP used when converted to electricity
       \units W/W
       \minimum> 0.0
-      \default 3.0
+      \required-field
   N3, \field Steam Conversion Efficiency
       \note Steam conversion efficiency used to convert steam usage to natural gas
       \minimum> 0.0
-      \default 0.25
+      \required-field
   N4, \field Total Carbon Equivalent Emission Factor From N2O
       \units kg/kg
-      \default 80.7272
+      \required-field
   N5, \field Total Carbon Equivalent Emission Factor From CH4
       \units kg/kg
-      \default 6.2727
+      \required-field
   N6; \field Total Carbon Equivalent Emission Factor From CO2
       \units kg/kg
-      \default 0.2727
+      \required-field
 
 OS:FuelFactors,
      \memo Provides Fuel Factors for Emissions as well as Source=>Site conversions.
