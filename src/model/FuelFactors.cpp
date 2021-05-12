@@ -30,39 +30,6 @@
 #include "FuelFactors.hpp"
 #include "FuelFactors_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -106,7 +73,6 @@ namespace model {
     }
 
     std::vector<ScheduleTypeKey> FuelFactors_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -607,44 +573,26 @@ namespace model {
   FuelFactors::FuelFactors(const Model& model) : ModelObject(FuelFactors::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::FuelFactors_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    bool ok = true;
-    // ok = setExistingFuelResourceName();
-    OS_ASSERT(ok);
-    // ok = setSourceEnergyFactor();
-    OS_ASSERT(ok);
-    // ok = setCO2EmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setCOEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setCH4EmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setNOxEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setN1OEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setSO2EmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setPMEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setPM10EmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setPM25EmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setNH3EmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setNMVOCEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setHgEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setPbEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setWaterEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setNuclearHighLevelEmissionFactor();
-    OS_ASSERT(ok);
-    // ok = setNuclearLowLevelEmissionFactor();
-    OS_ASSERT(ok);
+    // From ElectricityUSAEnvironmentalImpactFactors.idf,
+    // United States 1999 national average electricity emissions factors based on eGRID, 1605, AirData
+    setExistingFuelResourceName("Electricity");
+    setSourceEnergyFactor(2.253);
+    setCO2EmissionFactor(168.33317);
+    setCOEmissionFactor(4.20616E-02);
+    setCH4EmissionFactor(1.39858E-03);
+    setNOxEmissionFactor(4.10753E-01);
+    setN1OEmissionFactor(2.41916E-03);
+    setSO2EmissionFactor(8.65731E-01);
+    setPMEmissionFactor(2.95827E-02);
+    setPM10EmissionFactor(1.80450E-02);
+    setPM25EmissionFactor(1.15377E-02);
+    setNH3EmissionFactor(1.10837E-03);
+    setNMVOCEmissionFactor(3.72332E-03);
+    setHgEmissionFactor(3.36414E-06);
+    setPbEmissionFactor(0.0);
+    setWaterEmissionFactor(2.10074);
+    setNuclearHighLevelEmissionFactor(0.0);
+    setNuclearLowLevelEmissionFactor(0.0);
   }
 
   IddObjectType FuelFactors::iddObjectType() {

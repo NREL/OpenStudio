@@ -36,23 +36,6 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
-  class Schedule;
   class Schedule;
 
   namespace detail {
@@ -90,87 +73,70 @@ namespace model {
 
       double sourceEnergyFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> sourceEnergySchedule() const;
 
       double cO2EmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> cO2EmissionFactorSchedule() const;
 
       double cOEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> cOEmissionFactorSchedule() const;
 
       double cH4EmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> cH4EmissionFactorSchedule() const;
 
       double nOxEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> nOxEmissionFactorSchedule() const;
 
       double n1OEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> n1OEmissionFactorSchedule() const;
 
       double sO2EmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> sO2EmissionFactorSchedule() const;
 
       double pMEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> pMEmissionFactorSchedule() const;
 
       double pM10EmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> pM10EmissionFactorSchedule() const;
 
       double pM25EmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> pM25EmissionFactorSchedule() const;
 
       double nH3EmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> nH3EmissionFactorSchedule() const;
 
       double nMVOCEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> nMVOCEmissionFactorSchedule() const;
 
       double hgEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> hgEmissionFactorSchedule() const;
 
       double pbEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> pbEmissionFactorSchedule() const;
 
       double waterEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> waterEmissionFactorSchedule() const;
 
       double nuclearHighLevelEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> nuclearHighLevelEmissionFactorSchedule() const;
 
       double nuclearLowLevelEmissionFactor() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> nuclearLowLevelEmissionFactorSchedule() const;
 
       //@}
@@ -181,138 +147,87 @@ namespace model {
 
       bool setSourceEnergyFactor(double sourceEnergyFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setSourceEnergySchedule(Schedule& schedule);
-
       void resetSourceEnergySchedule();
 
       bool setCO2EmissionFactor(double cO2EmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setCO2EmissionFactorSchedule(Schedule& schedule);
-
       void resetCO2EmissionFactorSchedule();
 
       bool setCOEmissionFactor(double cOEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setCOEmissionFactorSchedule(Schedule& schedule);
-
       void resetCOEmissionFactorSchedule();
 
       bool setCH4EmissionFactor(double cH4EmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setCH4EmissionFactorSchedule(Schedule& schedule);
-
       void resetCH4EmissionFactorSchedule();
 
       bool setNOxEmissionFactor(double nOxEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setNOxEmissionFactorSchedule(Schedule& schedule);
-
       void resetNOxEmissionFactorSchedule();
 
       bool setN1OEmissionFactor(double n1OEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setN1OEmissionFactorSchedule(Schedule& schedule);
-
       void resetN1OEmissionFactorSchedule();
 
       bool setSO2EmissionFactor(double sO2EmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setSO2EmissionFactorSchedule(Schedule& schedule);
-
       void resetSO2EmissionFactorSchedule();
 
       bool setPMEmissionFactor(double pMEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setPMEmissionFactorSchedule(Schedule& schedule);
-
       void resetPMEmissionFactorSchedule();
 
       bool setPM10EmissionFactor(double pM10EmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setPM10EmissionFactorSchedule(Schedule& schedule);
-
       void resetPM10EmissionFactorSchedule();
 
       bool setPM25EmissionFactor(double pM25EmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setPM25EmissionFactorSchedule(Schedule& schedule);
-
       void resetPM25EmissionFactorSchedule();
 
       bool setNH3EmissionFactor(double nH3EmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setNH3EmissionFactorSchedule(Schedule& schedule);
-
       void resetNH3EmissionFactorSchedule();
 
       bool setNMVOCEmissionFactor(double nMVOCEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setNMVOCEmissionFactorSchedule(Schedule& schedule);
-
       void resetNMVOCEmissionFactorSchedule();
 
       bool setHgEmissionFactor(double hgEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setHgEmissionFactorSchedule(Schedule& schedule);
-
       void resetHgEmissionFactorSchedule();
 
       bool setPbEmissionFactor(double pbEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setPbEmissionFactorSchedule(Schedule& schedule);
-
       void resetPbEmissionFactorSchedule();
 
       bool setWaterEmissionFactor(double waterEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setWaterEmissionFactorSchedule(Schedule& schedule);
-
       void resetWaterEmissionFactorSchedule();
 
       bool setNuclearHighLevelEmissionFactor(double nuclearHighLevelEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setNuclearHighLevelEmissionFactorSchedule(Schedule& schedule);
-
       void resetNuclearHighLevelEmissionFactorSchedule();
 
       bool setNuclearLowLevelEmissionFactor(double nuclearLowLevelEmissionFactor);
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setNuclearLowLevelEmissionFactorSchedule(Schedule& schedule);
-
       void resetNuclearLowLevelEmissionFactorSchedule();
 
       //@}

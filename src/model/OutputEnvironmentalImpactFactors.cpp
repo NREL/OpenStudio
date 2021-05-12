@@ -84,10 +84,7 @@ namespace model {
     : ModelObject(OutputEnvironmentalImpactFactors::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::OutputEnvironmentalImpactFactors_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    bool ok = true;
-    // ok = setReportingFrequency();
-    OS_ASSERT(ok);
+    setReportingFrequency("Monthly");
   }
 
   IddObjectType OutputEnvironmentalImpactFactors::iddObjectType() {

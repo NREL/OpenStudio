@@ -141,6 +141,18 @@ namespace model {
 
   }  // namespace detail
 
+  EnvironmentalImpactFactors::EnvironmentalImpactFactors(Model& model) : ModelObject(EnvironmentalImpactFactors::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::EnvironmentalImpactFactors_Impl>());
+
+    // Defaults from E+ IDD, captured at v9.5.0
+    setDistrictHeatingEfficiency(0.3);
+    setDistrictCoolingCOP(3.0);
+    setSteamConversionEfficiency(0.25);
+    setTotalCarbonEquivalentEmissionFactorFromN2O(80.7272);
+    setTotalCarbonEquivalentEmissionFactorFromCH4(6.2727);
+    setTotalCarbonEquivalentEmissionFactorFromCO2(0.2727);
+  }
+
   IddObjectType EnvironmentalImpactFactors::iddObjectType() {
     return IddObjectType(IddObjectType::OS_EnvironmentalImpactFactors);
   }
@@ -198,8 +210,6 @@ namespace model {
 
   /// @cond
   EnvironmentalImpactFactors::EnvironmentalImpactFactors(std::shared_ptr<detail::EnvironmentalImpactFactors_Impl> impl) : ModelObject(impl) {}
-  EnvironmentalImpactFactors::EnvironmentalImpactFactors(Model& model) : ModelObject(EnvironmentalImpactFactors::iddObjectType(), model) {}
-
   /// @endcond
 
 }  // namespace model
