@@ -33,6 +33,7 @@
 #include "../../model/OutputEnvironmentalImpactFactors.hpp"
 
 #include "../../model/EnvironmentalImpactFactors.hpp"
+#include "../../model/EnvironmentalImpactFactors_Impl.hpp"
 #include "../../model/FuelFactors.hpp"
 #include "../../model/FuelFactors_Impl.hpp"
 
