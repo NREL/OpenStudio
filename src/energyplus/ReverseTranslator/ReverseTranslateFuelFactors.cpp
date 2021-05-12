@@ -31,7 +31,6 @@
 
 #include "../../model/FuelFactors.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
@@ -45,33 +44,31 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateFuelFactors(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
     boost::optional<WorkspaceObject> _wo;
     boost::optional<ModelObject> _mo;
 
-    // Instantiate an object of the class to store the values,
-    // but we don't return it until we know it's ok
-    // TODO: check constructor, it might need other objects
-    openstudio::model::FuelFactors modelObject(m_model);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
     // Existing Fuel Resource Name: Optional String
+    std::string resourceName;
     if (boost::optional<std::string> _existingFuelResourceName = workspaceObject.getString(FuelFactorsFields::ExistingFuelResourceName)) {
-      modelObject.setExistingFuelResourceName(_existingFuelResourceName.get());
+      resourceName = _existingFuelResourceName.get();
+    } else {
+      return boost::none;
     }
+
+    openstudio::model::FuelFactors modelObject(m_model);
+    modelObject.setExistingFuelResourceName(resourceName);
+
+    // These two are unused in E+ source code, so not present in openstudio
 
     // Units of Measure: Optional String
-    if (boost::optional<std::string> _unitsofMeasure = workspaceObject.getString(FuelFactorsFields::UnitsofMeasure)) {
-      modelObject.setUnitsofMeasure(_unitsofMeasure.get());
-    }
+    //if (boost::optional<std::string> _unitsofMeasure = workspaceObject.getString(FuelFactorsFields::UnitsofMeasure)) {
+    //modelObject.setUnitsofMeasure(_unitsofMeasure.get());
+    //}
 
     // Energy per Unit Factor: Optional Double
-    if (boost::optional<double> _energyperUnitFactor = workspaceObject.getDouble(FuelFactorsFields::EnergyperUnitFactor)) {
-      modelObject.setEnergyperUnitFactor(_energyperUnitFactor.get());
-    }
+    //if (boost::optional<double> _energyperUnitFactor = workspaceObject.getDouble(FuelFactorsFields::EnergyperUnitFactor)) {
+    //modelObject.setEnergyperUnitFactor(_energyperUnitFactor.get());
+    //}
 
     // Source Energy Factor: Optional Double
     if (boost::optional<double> _sourceEnergyFactor = workspaceObject.getDouble(FuelFactorsFields::SourceEnergyFactor)) {
@@ -81,7 +78,6 @@ namespace energyplus {
     // Source Energy Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::SourceEnergyScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _sourceEnergySchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setSourceEnergySchedule(_sourceEnergySchedule.get());
         } else {
@@ -97,7 +93,6 @@ namespace energyplus {
     // CO2 Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::CO2EmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _cO2EmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setCO2EmissionFactorSchedule(_cO2EmissionFactorSchedule.get());
         } else {
@@ -113,7 +108,6 @@ namespace energyplus {
     // CO Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::COEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _cOEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setCOEmissionFactorSchedule(_cOEmissionFactorSchedule.get());
         } else {
@@ -129,7 +123,6 @@ namespace energyplus {
     // CH4 Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::CH4EmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _cH4EmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setCH4EmissionFactorSchedule(_cH4EmissionFactorSchedule.get());
         } else {
@@ -145,7 +138,6 @@ namespace energyplus {
     // NOx Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::NOxEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _nOxEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setNOxEmissionFactorSchedule(_nOxEmissionFactorSchedule.get());
         } else {
@@ -161,7 +153,6 @@ namespace energyplus {
     // N2O Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::N2OEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _n2OEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setN2OEmissionFactorSchedule(_n2OEmissionFactorSchedule.get());
         } else {
@@ -177,7 +168,6 @@ namespace energyplus {
     // SO2 Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::SO2EmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _sO2EmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setSO2EmissionFactorSchedule(_sO2EmissionFactorSchedule.get());
         } else {
@@ -193,7 +183,6 @@ namespace energyplus {
     // PM Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::PMEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _pMEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setPMEmissionFactorSchedule(_pMEmissionFactorSchedule.get());
         } else {
@@ -209,7 +198,6 @@ namespace energyplus {
     // PM10 Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::PM10EmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _pM10EmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setPM10EmissionFactorSchedule(_pM10EmissionFactorSchedule.get());
         } else {
@@ -225,7 +213,6 @@ namespace energyplus {
     // PM2.5 Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::PM25EmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _pM25EmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setPM25EmissionFactorSchedule(_pM25EmissionFactorSchedule.get());
         } else {
@@ -241,7 +228,6 @@ namespace energyplus {
     // NH3 Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::NH3EmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _nH3EmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setNH3EmissionFactorSchedule(_nH3EmissionFactorSchedule.get());
         } else {
@@ -257,7 +243,6 @@ namespace energyplus {
     // NMVOC Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::NMVOCEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _nMVOCEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setNMVOCEmissionFactorSchedule(_nMVOCEmissionFactorSchedule.get());
         } else {
@@ -273,7 +258,6 @@ namespace energyplus {
     // Hg Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::HgEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _hgEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setHgEmissionFactorSchedule(_hgEmissionFactorSchedule.get());
         } else {
@@ -289,7 +273,6 @@ namespace energyplus {
     // Pb Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::PbEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _pbEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setPbEmissionFactorSchedule(_pbEmissionFactorSchedule.get());
         } else {
@@ -305,7 +288,6 @@ namespace energyplus {
     // Water Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::WaterEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _waterEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setWaterEmissionFactorSchedule(_waterEmissionFactorSchedule.get());
         } else {
@@ -321,7 +303,6 @@ namespace energyplus {
     // Nuclear High Level Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::NuclearHighLevelEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _nuclearHighLevelEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setNuclearHighLevelEmissionFactorSchedule(_nuclearHighLevelEmissionFactorSchedule.get());
         } else {
@@ -337,7 +318,6 @@ namespace energyplus {
     // Nuclear Low Level Emission Factor Schedule Name: Optional Object
     if ((_wo = workspaceObject.getTarget(FuelFactorsFields::NuclearLowLevelEmissionFactorScheduleName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
         if (boost::optional<Schedule> _nuclearLowLevelEmissionFactorSchedule = _mo->optionalCast<Schedule>()) {
           modelObject.setNuclearLowLevelEmissionFactorSchedule(_nuclearLowLevelEmissionFactorSchedule.get());
         } else {
@@ -345,8 +325,8 @@ namespace energyplus {
         }
       }
     }
-    result = modelObject;
-    return result;
+
+    return modelObject;
   }  // End of translate function
 
 }  // end namespace energyplus

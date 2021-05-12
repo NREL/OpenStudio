@@ -30,6 +30,7 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/EnvironmentalImpactFactors.hpp"
+#include "../../model/EnvironmentalImpactFactors_Impl.hpp"
 
 #include <utilities/idd/EnvironmentalImpactFactors_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -41,16 +42,8 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
 
-    // Instantiate an object of the class to store the values,
-    // but we don't return it until we know it's ok
-    // TODO: check constructor, it might need other objects
-    openstudio::model::EnvironmentalImpactFactors modelObject(m_model);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    auto modelObject = m_model.getUniqueModelObject<EnvironmentalImpactFactors>();
 
     // District Heating Efficiency: Optional Double
     if (boost::optional<double> _districtHeatingEfficiency = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency)) {
@@ -85,8 +78,7 @@ namespace energyplus {
       modelObject.setTotalCarbonEquivalentEmissionFactorFromCO2(_totalCarbonEquivalentEmissionFactorFromCO2.get());
     }
 
-    result = modelObject;
-    return result;
+    return modelObject;
   }  // End of translate function
 
 }  // end namespace energyplus

@@ -41,24 +41,15 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateOutputEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
-
-    // Instantiate an object of the class to store the values,
-    // but we don't return it until we know it's ok
-    // TODO: check constructor, it might need other objects
-    openstudio::model::OutputEnvironmentalImpactFactors modelObject(m_model);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
     // Reporting Frequency: Optional String
     if (boost::optional<std::string> _reportingFrequency = workspaceObject.getString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency)) {
+      openstudio::model::OutputEnvironmentalImpactFactors modelObject(m_model);
       modelObject.setReportingFrequency(_reportingFrequency.get());
+      return modelObject;
     }
 
-    result = modelObject;
-    return result;
+    return boost::none;
   }  // End of translate function
 
 }  // end namespace energyplus
