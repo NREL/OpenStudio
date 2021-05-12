@@ -114,18 +114,18 @@ TEST_F(ModelFixture, FuelFactors_GettersSetters) {
   ASSERT_TRUE(fuelFactors.nOxEmissionFactorSchedule());
   EXPECT_EQ(sch5, fuelFactors.nOxEmissionFactorSchedule().get());
 
-  // N1O Emission Factor: Required Double
-  EXPECT_TRUE(fuelFactors.setN1OEmissionFactor(0.1));
-  EXPECT_EQ(0.1, fuelFactors.n1OEmissionFactor());
+  // N2O Emission Factor: Required Double
+  EXPECT_TRUE(fuelFactors.setN2OEmissionFactor(0.1));
+  EXPECT_EQ(0.1, fuelFactors.n2OEmissionFactor());
   // Bad Value
-  EXPECT_FALSE(fuelFactors.setN1OEmissionFactor(-10.0));
-  EXPECT_EQ(0.1, fuelFactors.n1OEmissionFactor());
+  EXPECT_FALSE(fuelFactors.setN2OEmissionFactor(-10.0));
+  EXPECT_EQ(0.1, fuelFactors.n2OEmissionFactor());
 
-  // N1O Emission Factor Schedule Name: Optional Object
+  // N2O Emission Factor Schedule Name: Optional Object
   ScheduleConstant sch6(m);
-  EXPECT_TRUE(fuelFactors.setN1OEmissionFactorSchedule(sch6));
-  ASSERT_TRUE(fuelFactors.n1OEmissionFactorSchedule());
-  EXPECT_EQ(sch6, fuelFactors.n1OEmissionFactorSchedule().get());
+  EXPECT_TRUE(fuelFactors.setN2OEmissionFactorSchedule(sch6));
+  ASSERT_TRUE(fuelFactors.n2OEmissionFactorSchedule());
+  EXPECT_EQ(sch6, fuelFactors.n2OEmissionFactorSchedule().get());
 
   // SO2 Emission Factor: Required Double
   EXPECT_TRUE(fuelFactors.setSO2EmissionFactor(0.1));

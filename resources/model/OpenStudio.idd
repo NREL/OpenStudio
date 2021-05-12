@@ -33476,12 +33476,12 @@ OS:FuelFactors,
   A7,  \field NOx Emission Factor Schedule Name
        \type object-list
        \object-list ScheduleNames
-  N6,  \field N1O Emission Factor
+  N6,  \field N2O Emission Factor
        \units g/MJ
        \type real
        \minimum 0
        \required-field
-  A8,  \field N1O Emission Factor Schedule Name
+  A8,  \field N2O Emission Factor Schedule Name
        \type object-list
        \object-list ScheduleNames
   N7,  \field SO2 Emission Factor

@@ -91,8 +91,8 @@ namespace model {
       if (std::find(b, e, OS_FuelFactorsFields::NOxEmissionFactorScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FuelFactors", "NOx Emission Factor"));
       }
-      if (std::find(b, e, OS_FuelFactorsFields::N1OEmissionFactorScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("FuelFactors", "N1O Emission Factor"));
+      if (std::find(b, e, OS_FuelFactorsFields::N2OEmissionFactorScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("FuelFactors", "N2O Emission Factor"));
       }
       if (std::find(b, e, OS_FuelFactorsFields::SO2EmissionFactorScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FuelFactors", "SO2 Emission Factor"));
@@ -186,14 +186,14 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_FuelFactorsFields::NOxEmissionFactorScheduleName);
     }
 
-    double FuelFactors_Impl::n1OEmissionFactor() const {
-      boost::optional<double> value = getDouble(OS_FuelFactorsFields::N1OEmissionFactor, true);
+    double FuelFactors_Impl::n2OEmissionFactor() const {
+      boost::optional<double> value = getDouble(OS_FuelFactorsFields::N2OEmissionFactor, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    boost::optional<Schedule> FuelFactors_Impl::n1OEmissionFactorSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_FuelFactorsFields::N1OEmissionFactorScheduleName);
+    boost::optional<Schedule> FuelFactors_Impl::n2OEmissionFactorSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_FuelFactorsFields::N2OEmissionFactorScheduleName);
     }
 
     double FuelFactors_Impl::sO2EmissionFactor() const {
@@ -386,18 +386,18 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool FuelFactors_Impl::setN1OEmissionFactor(double n1OEmissionFactor) {
-      bool result = setDouble(OS_FuelFactorsFields::N1OEmissionFactor, n1OEmissionFactor);
+    bool FuelFactors_Impl::setN2OEmissionFactor(double n2OEmissionFactor) {
+      bool result = setDouble(OS_FuelFactorsFields::N2OEmissionFactor, n2OEmissionFactor);
       return result;
     }
 
-    bool FuelFactors_Impl::setN1OEmissionFactorSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_FuelFactorsFields::N1OEmissionFactorScheduleName, "FuelFactors", "N1O Emission Factor", schedule);
+    bool FuelFactors_Impl::setN2OEmissionFactorSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_FuelFactorsFields::N2OEmissionFactorScheduleName, "FuelFactors", "N2O Emission Factor", schedule);
       return result;
     }
 
-    void FuelFactors_Impl::resetN1OEmissionFactorSchedule() {
-      bool result = setString(OS_FuelFactorsFields::N1OEmissionFactorScheduleName, "");
+    void FuelFactors_Impl::resetN2OEmissionFactorSchedule() {
+      bool result = setString(OS_FuelFactorsFields::N2OEmissionFactorScheduleName, "");
       OS_ASSERT(result);
     }
 
@@ -581,7 +581,7 @@ namespace model {
     setCOEmissionFactor(4.20616E-02);
     setCH4EmissionFactor(1.39858E-03);
     setNOxEmissionFactor(4.10753E-01);
-    setN1OEmissionFactor(2.41916E-03);
+    setN2OEmissionFactor(2.41916E-03);
     setSO2EmissionFactor(8.65731E-01);
     setPMEmissionFactor(2.95827E-02);
     setPM10EmissionFactor(1.80450E-02);
@@ -647,12 +647,12 @@ namespace model {
     return getImpl<detail::FuelFactors_Impl>()->nOxEmissionFactorSchedule();
   }
 
-  double FuelFactors::n1OEmissionFactor() const {
-    return getImpl<detail::FuelFactors_Impl>()->n1OEmissionFactor();
+  double FuelFactors::n2OEmissionFactor() const {
+    return getImpl<detail::FuelFactors_Impl>()->n2OEmissionFactor();
   }
 
-  boost::optional<Schedule> FuelFactors::n1OEmissionFactorSchedule() const {
-    return getImpl<detail::FuelFactors_Impl>()->n1OEmissionFactorSchedule();
+  boost::optional<Schedule> FuelFactors::n2OEmissionFactorSchedule() const {
+    return getImpl<detail::FuelFactors_Impl>()->n2OEmissionFactorSchedule();
   }
 
   double FuelFactors::sO2EmissionFactor() const {
@@ -807,16 +807,16 @@ namespace model {
     getImpl<detail::FuelFactors_Impl>()->resetNOxEmissionFactorSchedule();
   }
 
-  bool FuelFactors::setN1OEmissionFactor(double n1OEmissionFactor) {
-    return getImpl<detail::FuelFactors_Impl>()->setN1OEmissionFactor(n1OEmissionFactor);
+  bool FuelFactors::setN2OEmissionFactor(double n2OEmissionFactor) {
+    return getImpl<detail::FuelFactors_Impl>()->setN2OEmissionFactor(n2OEmissionFactor);
   }
 
-  bool FuelFactors::setN1OEmissionFactorSchedule(Schedule& schedule) {
-    return getImpl<detail::FuelFactors_Impl>()->setN1OEmissionFactorSchedule(schedule);
+  bool FuelFactors::setN2OEmissionFactorSchedule(Schedule& schedule) {
+    return getImpl<detail::FuelFactors_Impl>()->setN2OEmissionFactorSchedule(schedule);
   }
 
-  void FuelFactors::resetN1OEmissionFactorSchedule() {
-    getImpl<detail::FuelFactors_Impl>()->resetN1OEmissionFactorSchedule();
+  void FuelFactors::resetN2OEmissionFactorSchedule() {
+    getImpl<detail::FuelFactors_Impl>()->resetN2OEmissionFactorSchedule();
   }
 
   bool FuelFactors::setSO2EmissionFactor(double sO2EmissionFactor) {

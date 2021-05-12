@@ -91,9 +91,9 @@ namespace model {
 
       boost::optional<Schedule> nOxEmissionFactorSchedule() const;
 
-      double n1OEmissionFactor() const;
+      double n2OEmissionFactor() const;
 
-      boost::optional<Schedule> n1OEmissionFactorSchedule() const;
+      boost::optional<Schedule> n2OEmissionFactorSchedule() const;
 
       double sO2EmissionFactor() const;
 
@@ -170,10 +170,10 @@ namespace model {
       bool setNOxEmissionFactorSchedule(Schedule& schedule);
       void resetNOxEmissionFactorSchedule();
 
-      bool setN1OEmissionFactor(double n1OEmissionFactor);
+      bool setN2OEmissionFactor(double n2OEmissionFactor);
 
-      bool setN1OEmissionFactorSchedule(Schedule& schedule);
-      void resetN1OEmissionFactorSchedule();
+      bool setN2OEmissionFactorSchedule(Schedule& schedule);
+      void resetN2OEmissionFactorSchedule();
 
       bool setSO2EmissionFactor(double sO2EmissionFactor);
 

@@ -287,7 +287,7 @@ namespace model {
       {"FuelFactors", "CO Emission Factor", "cOEmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
       {"FuelFactors", "CH4 Emission Factor", "cH4EmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
       {"FuelFactors", "NOx Emission Factor", "nOxEmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
-      {"FuelFactors", "N1O Emission Factor", "n1OEmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
+      {"FuelFactors", "N2O Emission Factor", "n2OEmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
       {"FuelFactors", "SO2 Emission Factor", "sO2EmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
       {"FuelFactors", "PM Emission Factor", "pMEmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
       {"FuelFactors", "PM10 Emission Factor", "pM10EmissionFactorSchedule", true, "", 0.0, OptionalDouble()},
