@@ -61,15 +61,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputEnvironmentalImpactFactors) {
   EXPECT_TRUE(o.setReportingFrequency("Hourly"));
 
   // I also made it required to actually have at least one FuelFactor
-  Workspace w = ft.translateModel(m);
-
   {
+    Workspace w = ft.translateModel(m);
     WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_EnvironmentalImpactFactors);
     EXPECT_EQ(0u, idfObjs.size());
   }
 
   FuelFactors fuelFactors(m);
   {
+    Workspace w = ft.translateModel(m);
     WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_EnvironmentalImpactFactors);
     ASSERT_EQ(1u, idfObjs.size());
 

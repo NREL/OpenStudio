@@ -279,16 +279,16 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FuelFactors) {
     EXPECT_EQ(3.36414e-06, fuelFactors.hgEmissionFactor());
     ASSERT_TRUE(fuelFactors.hgEmissionFactorSchedule());
     EXPECT_EQ("Schedule 13", fuelFactors.hgEmissionFactorSchedule()->nameString());
-    EXPECT_EQ(0.0, fuelFactors.pbEmissionFactor());
+    EXPECT_EQ(1.0, fuelFactors.pbEmissionFactor());
     ASSERT_TRUE(fuelFactors.pbEmissionFactorSchedule());
     EXPECT_EQ("Schedule 14", fuelFactors.pbEmissionFactorSchedule()->nameString());
     EXPECT_EQ(2.10074, fuelFactors.waterEmissionFactor());
     ASSERT_TRUE(fuelFactors.waterEmissionFactorSchedule());
     EXPECT_EQ("Schedule 15", fuelFactors.waterEmissionFactorSchedule()->nameString());
-    EXPECT_EQ(0.0, fuelFactors.nuclearHighLevelEmissionFactor());
+    EXPECT_EQ(2.0, fuelFactors.nuclearHighLevelEmissionFactor());
     ASSERT_TRUE(fuelFactors.nuclearHighLevelEmissionFactorSchedule());
     EXPECT_EQ("Schedule 16", fuelFactors.nuclearHighLevelEmissionFactorSchedule()->nameString());
-    EXPECT_EQ(0.0, fuelFactors.nuclearLowLevelEmissionFactor());
+    EXPECT_EQ(3.0, fuelFactors.nuclearLowLevelEmissionFactor());
     ASSERT_TRUE(fuelFactors.nuclearLowLevelEmissionFactorSchedule());
     EXPECT_EQ("Schedule 17", fuelFactors.nuclearLowLevelEmissionFactorSchedule()->nameString());
   }
