@@ -50,19 +50,32 @@ class NthDayOfWeekInMonth;
 namespace model {
 
   class Building;
+  class FoundationKivaSettings;
+  class OutputControlFiles;
+  class OutputTableSummaryReports;
+  class PerformancePrecisionTradeoffs;
   class LifeCycleCostParameters;
   class RunPeriod;
   class YearDescription;
+  class Site;
+  class SiteWaterMainsTemperature;
+  class SiteGroundTemperatureBuildingSurface;
+  class SiteGroundTemperatureDeep;
+  class Facility;
   class WeatherFile;
+  class Version;
+  class SimulationControl;
+  class InsideSurfaceConvectionAlgorithm;
+  class OutsideSurfaceConvectionAlgorithm;
+  class HeatBalanceAlgorithm;
+  class ZoneAirHeatBalanceAlgorithm;
+  class ConvergenceLimits;
+  class ShadowCalculation;
   class Component;
   class ComponentData;
   class Schedule;
   class Node;
   class SpaceType;
-  class FoundationKivaSettings;
-  class OutputControlFiles;
-  class OutputTableSummaryReports;
-  class PerformancePrecisionTradeoffs;
 
   namespace detail {
     class Model_Impl;
@@ -146,6 +159,62 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
     boost::optional<YearDescription> yearDescription() const;
 
+    /** Get the Site object if there is one, this implementation uses a cached reference to the Site
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<Site>(). */
+    boost::optional<Site> site() const;
+
+    /** Get the SiteWaterMainsTemperature object if there is one, this implementation uses a cached reference to the SiteWaterMainsTemperature
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteWaterMainsTemperature>(). */
+    boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const;
+
+    /** Get the SiteGroundTemperatureBuildingSurface object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureBuildingSurface
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>(). */
+    boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface() const;
+
+    /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureDeep>(). */
+    boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+
+    /** Get the Facility object if there is one, this implementation uses a cached reference to the Facility
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<Facility>(). */
+    boost::optional<Facility> facility() const;
+
+    /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
+    boost::optional<WeatherFile> weatherFile() const;
+
+    /** Get the Version object if there is one, this implementation uses a cached reference to the Version
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<Version>(). */
+    boost::optional<Version> version() const;
+
+    /** Get the SimulationControl object if there is one, this implementation uses a cached reference to the SimulationControl
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SimulationControl>(). */
+    boost::optional<SimulationControl> simulationControl() const;
+
+    /** Get the InsideSurfaceConvectionAlgorithm object if there is one, this implementation uses a cached reference to the InsideSurfaceConvectionAlgorithm
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<InsideSurfaceConvectionAlgorithm>(). */
+    boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm() const;
+
+    /** Get the OutsideSurfaceConvectionAlgorithm object if there is one, this implementation uses a cached reference to the OutsideSurfaceConvectionAlgorithm
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutsideSurfaceConvectionAlgorithm>(). */
+    boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm() const;
+
+    /** Get the HeatBalanceAlgorithm object if there is one, this implementation uses a cached reference to the HeatBalanceAlgorithm
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<HeatBalanceAlgorithm>(). */
+    boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm() const;
+
+    /** Get the ZoneAirHeatBalanceAlgorithm object if there is one, this implementation uses a cached reference to the ZoneAirHeatBalanceAlgorithm
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>(). */
+    boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm() const;
+
+    /** Get the ConvergenceLimits object if there is one, this implementation uses a cached reference to the ConvergenceLimits
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ConvergenceLimits>(). */
+    boost::optional<ConvergenceLimits> convergenceLimits() const;
+
+    /** Get the ShadowCalculation object if there is one, this implementation uses a cached reference to the ShadowCalculation
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ShadowCalculation>(). */
+    boost::optional<ShadowCalculation> shadowCalculation() const;
+
     /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
     // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
     boost::optional<int> calendarYear() const;
@@ -164,10 +233,6 @@ namespace model {
     openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
     openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
     openstudio::Date makeDate(unsigned dayOfYear);
-
-    /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
-   *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
-    boost::optional<WeatherFile> weatherFile() const;
 
     /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
