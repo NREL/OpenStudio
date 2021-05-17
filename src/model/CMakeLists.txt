@@ -2036,16 +2036,6 @@ set(${target_name}_test_src
   test/OutputEnvironmentalImpactFactors_GTest.cpp
   test/EnvironmentalImpactFactors_GTest.cpp
   test/FuelFactors_GTest.cpp
-  OutputEnvironmentalImpactFactors.hpp
-  OutputEnvironmentalImpactFactors_Impl.hpp
-  OutputEnvironmentalImpactFactors.cpp
-  EnvironmentalImpactFactors.hpp
-  EnvironmentalImpactFactors_Impl.hpp
-  EnvironmentalImpactFactors.cpp
-  FuelFactors.hpp
-  FuelFactors_Impl.hpp
-  FuelFactors.cpp
-
   test/OutputDiagnostics_GTest.cpp
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
