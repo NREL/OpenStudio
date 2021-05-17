@@ -318,7 +318,7 @@ namespace model {
     std::vector<std::vector<Point3d>> generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const;
 
     // Calculates the building perimeter
-    double exteriorPerimeter();
+    double exteriorPerimeter() const;
 
     //@}
    protected:
