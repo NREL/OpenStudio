@@ -595,10 +595,10 @@ namespace model {
   MODEL_API OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>();
 
   template <>
-  MODEL_API LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
+  MODEL_API PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
 
   template <>
-  MODEL_API PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
+  MODEL_API LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
 
   template <>
   MODEL_API RunPeriod Model::getUniqueModelObject<RunPeriod>();
@@ -607,7 +607,46 @@ namespace model {
   MODEL_API YearDescription Model::getUniqueModelObject<YearDescription>();
 
   template <>
+  MODEL_API Site Model::getUniqueModelObject<Site>();
+
+  template <>
+  MODEL_API SiteWaterMainsTemperature Model::getUniqueModelObject<SiteWaterMainsTemperature>();
+
+  template <>
+  MODEL_API SiteGroundTemperatureBuildingSurface Model::getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+
+  template <>
+  MODEL_API SiteGroundTemperatureDeep Model::getUniqueModelObject<SiteGroundTemperatureDeep>();
+
+  template <>
+  MODEL_API Facility Model::getUniqueModelObject<Facility>();
+
+  template <>
   MODEL_API WeatherFile Model::getUniqueModelObject<WeatherFile>();
+
+  template <>
+  MODEL_API Version Model::getUniqueModelObject<Version>();
+
+  template <>
+  MODEL_API SimulationControl Model::getUniqueModelObject<SimulationControl>();
+
+  template <>
+  MODEL_API InsideSurfaceConvectionAlgorithm Model::getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
+
+  template <>
+  MODEL_API OutsideSurfaceConvectionAlgorithm Model::getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+
+  template <>
+  MODEL_API HeatBalanceAlgorithm Model::getUniqueModelObject<HeatBalanceAlgorithm>();
+
+  template <>
+  MODEL_API ZoneAirHeatBalanceAlgorithm Model::getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+
+  template <>
+  MODEL_API ConvergenceLimits Model::getUniqueModelObject<ConvergenceLimits>();
+
+  template <>
+  MODEL_API ShadowCalculation Model::getUniqueModelObject<ShadowCalculation>();
 
 }  // namespace model
 }  // namespace openstudio

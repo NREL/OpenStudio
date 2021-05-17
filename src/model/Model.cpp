@@ -377,7 +377,7 @@ namespace model {
         m_cachedSiteWaterMainsTemperature = result;
         result->getImpl<SiteWaterMainsTemperature_Impl>()
           .get()
-          ->Site_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteWaterMainsTemperature>(
+          ->SiteWaterMainsTemperature_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteWaterMainsTemperature>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -960,37 +960,38 @@ namespace model {
         }
       }
 
-      model = model();
-      /*       boost::optional<Building> building = model.building();
-      boost::optional<FoundationKivaSettings> foundationKivaSettings = model.foundationKivaSettings();
-      boost::optional<OutputControlFiles> outputControlFiles = model.outputControlFiles();
-      boost::optional<OutputTableSummaryReports> outputTableSummaryReports = model.outputTableSummaryReports();
-      boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs = model.performancePrecisionTradeoffs();
-      boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
-      boost::optional<RunPeriod> runPeriod = model.runPeriod();
-      boost::optional<YearDescription> yearDescription = model.yearDescription();
-      boost::optional<Site> site = model.site(); */
-      boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature = model.siteWaterMainsTemperature();
-      /*       boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface = model.siteGroundTemperatureBuildingSurface();
-      boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep = model.siteGroundTemperatureDeep();
-      boost::optional<Facility> facility = model.facility();
-      boost::optional<WeatherFile> weatherFile = model.weatherFile();
-      boost::optional<Version> version = model.version();
-      boost::optional<SimulationControl> simulationControl = model.simulationControl();
-      boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm = model.insideSurfaceConvectionAlgorithm();
-      boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm = model.outsideSurfaceConvectionAlgorithm();
-      boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm = model.heatBalanceAlgorithm();
-      boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm = model.zoneAirHeatBalanceAlgorithm();
-      boost::optional<ConvergenceLimits> convergenceLimits = model.convergenceLimits();
-      boost::optional<ShadowCalculation> shadowCalculation = model.shadowCalculation(); */
+      boost::optional<Building> building = model().building();
+      boost::optional<FoundationKivaSettings> foundationKivaSettings = model().foundationKivaSettings();
+      boost::optional<OutputControlFiles> outputControlFiles = model().outputControlFiles();
+      boost::optional<OutputTableSummaryReports> outputTableSummaryReports = model().outputTableSummaryReports();
+      boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs = model().performancePrecisionTradeoffs();
+      boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model().lifeCycleCostParameters();
+      boost::optional<RunPeriod> runPeriod = model().runPeriod();
+      boost::optional<YearDescription> yearDescription = model().yearDescription();
+      boost::optional<Site> site = model().site();
+      boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature = model().siteWaterMainsTemperature();
+      boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface = model().siteGroundTemperatureBuildingSurface();
+      boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep = model().siteGroundTemperatureDeep();
+      boost::optional<Facility> facility = model().facility();
+      boost::optional<WeatherFile> weatherFile = model().weatherFile();
+      boost::optional<Version> version = model().version();
+      boost::optional<SimulationControl> simulationControl = model().simulationControl();
+      boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm = model().insideSurfaceConvectionAlgorithm();
+      boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm = model().outsideSurfaceConvectionAlgorithm();
+      boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm = model().heatBalanceAlgorithm();
+      boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm = model().zoneAirHeatBalanceAlgorithm();
+      boost::optional<ConvergenceLimits> convergenceLimits = model().convergenceLimits();
+      boost::optional<ShadowCalculation> shadowCalculation = model().shadowCalculation();
 
       for (const WorkspaceObject& componentObject : component.objects()) {
-        if (componentObject.iddObject().type() == IddObjectType::Site_WaterMainsTemperature && siteWaterMainsTemperature) {
+        if (componentObject.iddObject().type() == IddObjectType::Building && building) {
+          LOG(Error, "Building");
+        } else if (componentObject.iddObject().type() == IddObjectType::Site_WaterMainsTemperature && siteWaterMainsTemperature) {
           siteWaterMainsTemperature.get().remove();
         }
       }
 
-      WorkspaceObjectVector resultingObjects = model.addObjects(component.objects());
+      WorkspaceObjectVector resultingObjects = model().addObjects(component.objects());
       if (resultingObjects.empty()) {
         return boost::none;
       }

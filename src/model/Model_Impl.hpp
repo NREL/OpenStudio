@@ -368,11 +368,24 @@ namespace model {
       mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
       mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
       mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
-      mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
       mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
+      mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
       mutable boost::optional<RunPeriod> m_cachedRunPeriod;
       mutable boost::optional<YearDescription> m_cachedYearDescription;
+      mutable boost::optional<Site> m_cachedSite;
+      mutable boost::optional<SiteWaterMainsTemperature> m_cachedSiteWaterMainsTemperature;
+      mutable boost::optional<SiteGroundTemperatureBuildingSurface> m_cachedSiteGroundTemperatureBuildingSurface;
+      mutable boost::optional<SiteGroundTemperatureDeep> m_cachedSiteGroundTemperatureDeep;
+      mutable boost::optional<Facility> m_cachedFacility;
       mutable boost::optional<WeatherFile> m_cachedWeatherFile;
+      mutable boost::optional<Version> m_cachedVersion;
+      mutable boost::optional<SimulationControl> m_cachedSimulationControl;
+      mutable boost::optional<InsideSurfaceConvectionAlgorithm> m_cachedInsideSurfaceConvectionAlgorithm;
+      mutable boost::optional<OutsideSurfaceConvectionAlgorithm> m_cachedOutsideSurfaceConvectionAlgorithm;
+      mutable boost::optional<HeatBalanceAlgorithm> m_cachedHeatBalanceAlgorithm;
+      mutable boost::optional<ZoneAirHeatBalanceAlgorithm> m_cachedZoneAirHeatBalanceAlgorithm;
+      mutable boost::optional<ConvergenceLimits> m_cachedConvergenceLimits;
+      mutable boost::optional<ShadowCalculation> m_cachedShadowCalculation;
 
       // private slots:
       void clearCachedData();
@@ -380,11 +393,24 @@ namespace model {
       void clearCachedFoundationKivaSettings(const Handle& handle);
       void clearCachedOutputControlFiles(const Handle& handle);
       void clearCachedOutputTableSummaryReports(const Handle& handle);
-      void clearCachedLifeCycleCostParameters(const Handle& handle);
       void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
+      void clearCachedLifeCycleCostParameters(const Handle& handle);
       void clearCachedRunPeriod(const Handle& handle);
       void clearCachedYearDescription(const Handle& handle);
+      void clearCachedSite(const Handle& handle);
+      void clearCachedSiteWaterMainsTemperature(const Handle& handle);
+      void clearCachedSiteGroundTemperatureBuildingSurface(const Handle& handle);
+      void clearCachedSiteGroundTemperatureDeep(const Handle& handle);
+      void clearCachedFacility(const Handle& handle);
       void clearCachedWeatherFile(const Handle& handle);
+      void clearCachedVersion(const Handle& handle);
+      void clearCachedSimulationControl(const Handle& handle);
+      void clearCachedInsideSurfaceConvectionAlgorithm(const Handle& handle);
+      void clearCachedOutsideSurfaceConvectionAlgorithm(const Handle& handle);
+      void clearCachedHeatBalanceAlgorithm(const Handle& handle);
+      void clearCachedZoneAirHeatBalanceAlgorithm(const Handle& handle);
+      void clearCachedConvergenceLimits(const Handle& handle);
+      void clearCachedShadowCalculation(const Handle& handle);
 
       typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
         Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>
