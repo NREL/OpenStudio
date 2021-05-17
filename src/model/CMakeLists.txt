@@ -1556,6 +1556,9 @@ set(${target_name}_src
   WaterHeaterHeatPump.hpp
   WaterHeaterHeatPump_Impl.hpp
   WaterHeaterHeatPump.cpp
+  WaterHeaterSizing.hpp
+  WaterHeaterSizing_Impl.hpp
+  WaterHeaterSizing.cpp
   WaterHeaterStratified.hpp
   WaterHeaterStratified_Impl.hpp
   WaterHeaterStratified.cpp
