@@ -69,6 +69,9 @@
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/units/QuantityConverter.hpp"
 
+#include <algorithm>
+#include <numeric>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -1256,4 +1259,63 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
   EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_4222) {
+
+  // Test for #4222
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_mcve_4222.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  openstudio::path outpath = resourcesPath() / toPath("model/floorplan_mcve_4222.osm");
+  model->save(outpath, true);
+
+  EXPECT_EQ(0, rt.errors().size());  // Currently 4...
+  EXPECT_EQ(0, rt.warnings().size());
+
+  for (const auto& error : rt.errors()) {
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  // The issue is that the space1 is missing a huge section of its roof, so check that.
+  EXPECT_EQ(6, model->getConcreteModelObjects<Space>().size());
+
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1-1");
+  ASSERT_TRUE(space1);
+  auto surfaces = space1->surfaces();
+
+  unsigned nFloorSurfaces = 0;
+  unsigned nRoofSurfaces = 0;
+  double floorArea = 0.0;
+  double roofArea = 0.0;
+
+  for (const auto& surface : space1->surfaces()) {
+    if (openstudio::istringEqual("Floor", surface.surfaceType())) {
+      ++nFloorSurfaces;
+      floorArea += surface.grossArea();
+    } else if (openstudio::istringEqual("RoofCeiling", surface.surfaceType())) {
+      ++nRoofSurfaces;
+      roofArea += surface.grossArea();
+    }
+  }
+
+  EXPECT_EQ(1u, nFloorSurfaces);
+  EXPECT_EQ(3u, nRoofSurfaces);
+
+  EXPECT_DOUBLE_EQ(space1->floorArea(), floorArea);
+  EXPECT_DOUBLE_EQ(floorArea, roofArea);
 }
