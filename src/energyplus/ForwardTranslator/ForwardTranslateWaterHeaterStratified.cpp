@@ -38,6 +38,7 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/PlantLoop.hpp"
+#include "../../model/WaterHeaterSizing.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/core/Optional.hpp"
@@ -67,6 +68,13 @@ namespace energyplus {
     // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::WaterHeater_Stratified, modelObject);
 
+    // Trigger translation of the WaterHeater:Sizing object, if any
+    bool hasWaterHeaterSizing = false;
+    if (auto siz_ = modelObject.waterHeaterSizing()) {
+      hasWaterHeaterSizing = true;
+      translateAndMapModelObject(siz_.get());
+    }
+
     // End-Use Subcategory
     s = modelObject.endUseSubcategory();
     if (s) {
@@ -76,6 +84,9 @@ namespace energyplus {
     // Tank Volume
     if (modelObject.isTankVolumeAutosized()) {
       idfObject.setString(WaterHeater_StratifiedFields::TankVolume, "Autosize");
+      if (!hasWaterHeaterSizing) {
+        LOG(Error, modelObject.briefDescription() << " has its Tank Volume autosized but it does not have a WaterHeaterSizing object attached");
+      }
     } else {
       value = modelObject.tankVolume();
 
@@ -137,6 +148,9 @@ namespace energyplus {
     // Heater 1 Capacity
     if (modelObject.isHeater1CapacityAutosized()) {
       idfObject.setString(WaterHeater_StratifiedFields::Heater1Capacity, "Autosize");
+      if (!hasWaterHeaterSizing) {
+        LOG(Error, modelObject.briefDescription() << " has its Heater1 Capacity autosized but it does not have a WaterHeaterSizing object attached");
+      }
     } else {
       value = modelObject.heater1Capacity();
 

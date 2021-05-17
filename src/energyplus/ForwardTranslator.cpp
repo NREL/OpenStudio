@@ -1893,6 +1893,11 @@ namespace energyplus {
         retVal = translateWaterHeaterHeatPumpWrappedCondenser(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_WaterHeater_Sizing: {
+        model::WaterHeaterSizing waterHeaterSizing = modelObject.cast<WaterHeaterSizing>();
+        retVal = translateWaterHeaterSizing(waterHeaterSizing);
+        break;
+      }
       case openstudio::IddObjectType::OS_WaterHeater_Stratified: {
         model::WaterHeaterStratified waterHeaterStratified = modelObject.cast<WaterHeaterStratified>();
         retVal = translateWaterHeaterStratified(waterHeaterStratified);
