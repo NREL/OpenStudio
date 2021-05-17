@@ -43,12 +43,16 @@
 #include "CurveCubic_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
+#include "WaterHeaterSizing.hpp"
+#include "WaterHeaterSizing_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Mixed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 
@@ -1179,6 +1183,20 @@ namespace model {
       return true;
     }
 
+    boost::optional<WaterHeaterSizing> WaterHeaterMixed_Impl::waterHeaterSizing() const {
+      boost::optional<WaterHeaterSizing> waterHeaterSizing_;
+
+      auto sizingObjects = getObject<WaterHeaterMixed>().getModelObjectSources<WaterHeaterSizing>();
+      auto predicate = [thisHandle = this->handle()](const auto& siz) { return siz.waterHeater().handle() == thisHandle; };
+
+      auto it = std::find_if(sizingObjects.cbegin(), sizingObjects.cend(), predicate);
+      if (it != sizingObjects.cend()) {
+        waterHeaterSizing_ = *it;
+      }
+
+      return waterHeaterSizing_;
+    }
+
   }  // namespace detail
 
   WaterHeaterMixed::WaterHeaterMixed(const Model& model) : WaterToWaterComponent(WaterHeaterMixed::iddObjectType(), model) {
@@ -1785,6 +1803,10 @@ namespace model {
 
   boost::optional<double> WaterHeaterMixed::autosizedSourceSideDesignFlowRate() const {
     return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
+
+  boost::optional<WaterHeaterSizing> WaterHeaterMixed::waterHeaterSizing() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->waterHeaterSizing();
   }
 
 }  // namespace model

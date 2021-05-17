@@ -38,6 +38,7 @@ namespace model {
 
   class Schedule;
   class ThermalZone;
+  class WaterHeaterSizing;
 
   namespace detail {
 
@@ -398,6 +399,8 @@ namespace model {
       //@{
 
       boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+      boost::optional<WaterHeaterSizing> waterHeaterSizing() const;
 
       //@}
      protected:

@@ -44,10 +44,15 @@
 #include "ScheduleRuleset.hpp"
 #include "ScheduleRuleset_Impl.hpp"
 #include "Model.hpp"
+#include "WaterHeaterSizing.hpp"
+#include "WaterHeaterSizing_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Stratified_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -1154,6 +1159,20 @@ namespace model {
       }
     }
 
+    boost::optional<WaterHeaterSizing> WaterHeaterStratified_Impl::waterHeaterSizing() const {
+      boost::optional<WaterHeaterSizing> waterHeaterSizing_;
+
+      auto sizingObjects = getObject<WaterHeaterStratified>().getModelObjectSources<WaterHeaterSizing>();
+      auto predicate = [thisHandle = this->handle()](const auto& siz) { return siz.waterHeater().handle() == thisHandle; };
+
+      auto it = std::find_if(sizingObjects.begin(), sizingObjects.end(), predicate);
+      if (it != sizingObjects.end()) {
+        waterHeaterSizing_ = *it;
+      }
+
+      return waterHeaterSizing_;
+    }
+
   }  // namespace detail
 
   WaterHeaterStratified::WaterHeaterStratified(const Model& model) : WaterToWaterComponent(WaterHeaterStratified::iddObjectType(), model) {
@@ -1890,6 +1909,10 @@ namespace model {
 
   boost::optional<double> WaterHeaterStratified::autosizedSourceSideDesignFlowRate() const {
     return getImpl<detail::WaterHeaterStratified_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
+
+  boost::optional<WaterHeaterSizing> WaterHeaterStratified::waterHeaterSizing() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->waterHeaterSizing();
   }
 
 }  // namespace model
