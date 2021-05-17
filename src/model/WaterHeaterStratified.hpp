@@ -395,7 +395,7 @@ namespace model {
 
     boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
-    boost::optional<WaterHeaterSizing> waterHeaterSizing() const;
+    WaterHeaterSizing waterHeaterSizing() const;
 
     //@}
    protected:

@@ -61,7 +61,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_WaterHeaterSizing) {
   PlantLoop p(m);
   EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
 
-  WaterHeaterSizing waterHeaterSizing(wh);
+  WaterHeaterSizing waterHeaterSizing = wh.waterHeaterSizing();
 
   // PeakDraw
   waterHeaterSizing.setDesignMode("PeakDraw");

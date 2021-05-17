@@ -75,6 +75,10 @@ namespace model {
 
       virtual unsigned demandOutletPort() const override;
 
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual ModelObject clone(Model model) const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -400,7 +404,7 @@ namespace model {
 
       boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-      boost::optional<WaterHeaterSizing> waterHeaterSizing() const;
+      WaterHeaterSizing waterHeaterSizing() const;
 
       //@}
      protected:

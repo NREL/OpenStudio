@@ -69,10 +69,12 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::WaterHeater_Stratified, modelObject);
 
     // Trigger translation of the WaterHeater:Sizing object, if any
-    bool hasWaterHeaterSizing = false;
-    if (auto siz_ = modelObject.waterHeaterSizing()) {
-      hasWaterHeaterSizing = true;
-      translateAndMapModelObject(siz_.get());
+    bool hasWaterHeaterSizing = true;
+    try {
+      auto siz = modelObject.waterHeaterSizing();
+      translateAndMapModelObject(siz);
+    } catch (...) {
+      hasWaterHeaterSizing = false;
     }
 
     // End-Use Subcategory

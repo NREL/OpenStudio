@@ -83,6 +83,10 @@ namespace model {
 
       boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual ModelObject clone(Model model) const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -364,7 +368,7 @@ namespace model {
       /** @name Other */
       //@{
 
-      boost::optional<WaterHeaterSizing> waterHeaterSizing() const;
+      WaterHeaterSizing waterHeaterSizing() const;
 
       //@}
      protected:

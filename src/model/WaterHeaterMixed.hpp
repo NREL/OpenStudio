@@ -362,7 +362,7 @@ namespace model {
     /** @name Other */
     //@{
 
-    boost::optional<WaterHeaterSizing> waterHeaterSizing() const;
+    WaterHeaterSizing waterHeaterSizing() const;
 
     //@}
    protected:

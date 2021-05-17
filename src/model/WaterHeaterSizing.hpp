@@ -38,6 +38,8 @@ namespace openstudio {
 namespace model {
 
   class WaterToWaterComponent;
+  class WaterHeaterMixed;
+  class WaterHeaterStratified;
 
   namespace detail {
 
@@ -51,8 +53,6 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-
-    explicit WaterHeaterSizing(const WaterToWaterComponent& waterHeater);
 
     virtual ~WaterHeaterSizing() {}
 
@@ -100,8 +100,6 @@ namespace model {
     //@}
     /** @name Setters */
     //@{
-
-    bool setWaterHeater(const WaterToWaterComponent& waterHeater);
 
     bool setDesignMode(const std::string& designMode);
 
@@ -170,6 +168,13 @@ namespace model {
     //@}
    protected:
     /// @cond
+
+    friend class WaterHeaterMixed;
+    friend class WaterHeaterStratified;
+
+    explicit WaterHeaterSizing(const WaterToWaterComponent& waterHeater);
+    bool setWaterHeater(const WaterToWaterComponent& waterHeater);
+
     typedef detail::WaterHeaterSizing_Impl ImplType;
 
     explicit WaterHeaterSizing(std::shared_ptr<detail::WaterHeaterSizing_Impl> impl);

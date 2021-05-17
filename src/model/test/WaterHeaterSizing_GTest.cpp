@@ -30,10 +30,13 @@
 #include "ModelFixture.hpp"
 
 #include "../WaterHeaterSizing.hpp"
+#include "../WaterHeaterSizing_Impl.hpp"
 
 #include "../Model.hpp"
 #include "../WaterHeaterMixed.hpp"
+#include "../WaterHeaterMixed_Impl.hpp"
 #include "../WaterHeaterStratified.hpp"
+#include "../WaterHeaterStratified_Impl.hpp"
 #include "../WaterToWaterComponent.hpp"
 
 #include "../ChillerElectricEIR.hpp"
@@ -41,54 +44,11 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, WaterHeaterSizing_Ctor) {
-
-  Model m;
-
-  {
-    WaterHeaterMixed wh(m);
-    EXPECT_NO_THROW(WaterHeaterSizing{wh});
-  }
-  {
-    WaterHeaterStratified wh(m);
-    EXPECT_NO_THROW(WaterHeaterSizing{wh});
-  }
-  {
-    ChillerElectricEIR chiller(m);
-    EXPECT_ANY_THROW(WaterHeaterSizing{chiller});
-  }
-}
-
-TEST_F(ModelFixture, WaterHeaterSizing_Convenience_Mixed) {
-
-  Model m;
-  WaterHeaterMixed wh(m);
-  WaterHeaterSizing waterHeaterSizing(wh);
-  EXPECT_EQ(wh, waterHeaterSizing.waterHeater());
-  ASSERT_TRUE(wh.waterHeaterSizing());
-  EXPECT_EQ(waterHeaterSizing, wh.waterHeaterSizing().get());
-}
-
-TEST_F(ModelFixture, WaterHeaterSizing_Convenience_Stratified) {
-
-  Model m;
-  WaterHeaterStratified wh(m);
-  WaterHeaterSizing waterHeaterSizing(wh);
-  EXPECT_EQ(wh, waterHeaterSizing.waterHeater());
-  ASSERT_TRUE(wh.waterHeaterSizing());
-  EXPECT_EQ(waterHeaterSizing, wh.waterHeaterSizing().get());
-}
-
 TEST_F(ModelFixture, WaterHeaterSizing_GettersSetters) {
   Model m;
 
   WaterHeaterMixed wh(m);
-  WaterHeaterSizing waterHeaterSizing(wh);
-  EXPECT_EQ(wh, waterHeaterSizing.waterHeater());
-
-  WaterHeaterStratified wh2(m);
-  EXPECT_TRUE(waterHeaterSizing.setWaterHeater(wh2));
-  EXPECT_EQ(wh2, waterHeaterSizing.waterHeater());
+  WaterHeaterSizing waterHeaterSizing = wh.waterHeaterSizing();
 
   // Design Mode: Optional String
   EXPECT_TRUE(waterHeaterSizing.setDesignMode("PeakDraw"));
@@ -216,4 +176,40 @@ TEST_F(ModelFixture, WaterHeaterSizing_GettersSetters) {
   EXPECT_FALSE(waterHeaterSizing.setHeightAspectRatio(-10.0));
   ASSERT_TRUE(waterHeaterSizing.heightAspectRatio());
   EXPECT_EQ(0.1, waterHeaterSizing.heightAspectRatio().get());
+}
+
+TEST_F(ModelFixture, WaterHeaterSizing_Mixed) {
+
+  Model m;
+  WaterHeaterMixed wh(m);
+  WaterHeaterSizing waterHeaterSizing = wh.waterHeaterSizing();
+  EXPECT_EQ(wh, waterHeaterSizing.waterHeater());
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<WaterHeaterSizing>().size());
+  auto whClone = wh.clone(m).cast<WaterHeaterMixed>();
+  EXPECT_EQ(2, m.getConcreteModelObjects<WaterHeaterSizing>().size());
+  EXPECT_NE(wh.waterHeaterSizing(), whClone.waterHeaterSizing());
+
+  whClone.remove();
+  EXPECT_EQ(1, m.getConcreteModelObjects<WaterHeaterSizing>().size());
+  waterHeaterSizing = wh.waterHeaterSizing();
+  EXPECT_EQ(wh, waterHeaterSizing.waterHeater());
+}
+
+TEST_F(ModelFixture, WaterHeaterSizing_Stratified) {
+
+  Model m;
+  WaterHeaterStratified wh(m);
+  WaterHeaterSizing waterHeaterSizing = wh.waterHeaterSizing();
+  EXPECT_EQ(wh, waterHeaterSizing.waterHeater());
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<WaterHeaterSizing>().size());
+  auto whClone = wh.clone(m).cast<WaterHeaterStratified>();
+  EXPECT_EQ(2, m.getConcreteModelObjects<WaterHeaterSizing>().size());
+  EXPECT_NE(wh.waterHeaterSizing(), whClone.waterHeaterSizing());
+
+  whClone.remove();
+  EXPECT_EQ(1, m.getConcreteModelObjects<WaterHeaterSizing>().size());
+  waterHeaterSizing = wh.waterHeaterSizing();
+  EXPECT_EQ(wh, waterHeaterSizing.waterHeater());
 }
