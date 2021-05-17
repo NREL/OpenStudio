@@ -2158,6 +2158,7 @@ set(${target_name}_test_src
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
   test/WaterHeaterHeatPumpWrappedCondenser_GTest.cpp
+  test/WaterHeaterSizing_GTest.cpp
   test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
