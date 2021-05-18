@@ -2,13 +2,14 @@ Pull request overview
 ---------------------
 
  - Fixes #ISSUENUMBERHERE (IF THIS IS A DEFECT)
- - DESCRIBE PURPOSE OF THIS PULL REQUEST
 
-Please read [OpenStudio Pull Requests](https://github.com/NREL/OpenStudio/wiki/OpenStudio-Pull-Requests) to better understand the OpenStudio Pull Request protocol.
+<!--- DESCRIBE PURPOSE OF THIS PULL REQUEST -->
+
+<!--- Please read [OpenStudio Pull Requests](https://github.com/NREL/OpenStudio/wiki/OpenStudio-Pull-Requests) to better understand the OpenStudio Pull Request protocol. -->
 
 ### Pull Request Author
 
-Add to this list or remove from it as applicable.  This is a simple templated set of guidelines.
+<!--- Add to this list or remove from it as applicable.  This is a simple templated set of guidelines. -->
 
  - [ ] Model API Changes / Additions
  - [ ] Any new or modified fields have been implemented in the EnergyPlus ForwardTranslator (and ReverseTranslator as appropriate)
@@ -16,7 +17,6 @@ Add to this list or remove from it as applicable.  This is a simple templated se
  - [ ] EnergyPlus ForwardTranslator Tests (in `src/energyplus/Test`)
  - [ ] If a new object or method, added a test in NREL/OpenStudio-resources: Add Link
  - [ ] If needed, added VersionTranslation rules for the objects (`src/osversion/VersionTranslator.cpp`)
- - [ ] Checked behavior in OpenStudioApplication, adjusted policies as needed (`src/openstudio_lib/library/OpenStudioPolicy.xml`)
  - [ ] Verified that C# bindings built fine on Windows, partial classes used as needed, etc.
  - [ ] All new and existing tests passes
  - [ ] If methods have been deprecated, update rest of code to use the new methods
