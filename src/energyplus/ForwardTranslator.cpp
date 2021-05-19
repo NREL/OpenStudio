@@ -1806,6 +1806,11 @@ namespace energyplus {
         retVal = translateHeatExchangerAirToAirSensibleAndLatent(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_HeatExchanger_Desiccant_BalancedFlow: {
+        model::HeatExchangerAirToAirSensibleAndLatent mo = modelObject.cast<HeatExchangerDesiccantBalancedFlow>();
+        retVal = translateHeatExchangerDesiccantBalancedFlow(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid: {
         model::HeatExchangerFluidToFluid mo = modelObject.cast<HeatExchangerFluidToFluid>();
         retVal = translateHeatExchangerFluidToFluid(mo);
