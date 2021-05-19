@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,67 +27,45 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
-#define MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
+#include <gtest/gtest.h>
+#include "ModelFixture.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 
-#include "ModelAPI.hpp"
-#include "AirToAirComponent.hpp"
 
-namespace openstudio {
+using namespace openstudio;
+using namespace openstudio::model;
 
-namespace model {
+TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_Ctor) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  class Schedule;
-  class AirflowNetworkEquivalentDuct;
+  ASSERT_EXIT(
+    {
+      Model m;
+      HeatExchangerDesiccantBalancedFlow hx(m);
 
-  namespace detail {
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
+}
 
-    class HeatExchangerDesiccantBalancedFlow_Impl;
+TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_GettersSetters) {
+  Model m;
+  HeatExchangerDesiccantBalancedFlow hx(m);
 
-  }  // namespace detail
 
-  /** HeatExchangerDesiccantBalancedFlow is a AirToAirComponent that wraps the OpenStudio IDD object 'OS:HeatExchanger:AirToAir:SensibleAndLatent'. */
-  class MODEL_API HeatExchangerDesiccantBalancedFlow : public AirToAirComponent
-  {
+}
 
-   public:
-    explicit HeatExchangerDesiccantBalancedFlow(const Model& model);
+TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_addToNode) {
+  Model model;
+  HeatExchangerDesiccantBalancedFlow heatExchangerDesiccantBalancedFlow(model);
 
-    virtual ~HeatExchangerDesiccantBalancedFlow() {}
 
-    static IddObjectType iddObjectType();
+}
 
-    Schedule availabilitySchedule() const;
+TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlowt_remove) {
+  Model model;
+  HeatExchangerDesiccantBalancedFlow heatExchangerDesiccantBalancedFlow(model);
 
-    bool setAvailabilitySchedule(Schedule& schedule);
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
-
-   protected:
-    /// @cond
-    typedef detail::HeatExchangerDesiccantBalancedFlow_Impl ImplType;
-
-    explicit HeatExchangerDesiccantBalancedFlow(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlow_Impl> impl);
-
-    friend class detail::HeatExchangerDesiccantBalancedFlow_Impl;
-    friend class Model;
-    friend class IdfObject;
-    friend class openstudio::detail::IdfObject_Impl;
-
-    /// @endcond
-
-   private:
-    REGISTER_LOGGER("openstudio.model.HeatExchangerDesiccantBalancedFlow");
-  };
-
-  /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef boost::optional<HeatExchangerDesiccantBalancedFlow> OptionalHeatExchangerDesiccantBalancedFlow;
-
-  /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef std::vector<HeatExchangerDesiccantBalancedFlow> HeatExchangerDesiccantBalancedFlowVector;
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
+}
