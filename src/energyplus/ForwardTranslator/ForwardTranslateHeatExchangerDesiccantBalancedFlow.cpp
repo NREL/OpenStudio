@@ -60,8 +60,6 @@ namespace energyplus {
       idfObject.setName(*s);
     }
 
-
-
     return idfObject;
   }
 

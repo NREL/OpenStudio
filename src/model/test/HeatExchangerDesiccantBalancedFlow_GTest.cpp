@@ -32,7 +32,6 @@
 #include "../HeatExchangerDesiccantBalancedFlow.hpp"
 #include "../HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 
-
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -52,20 +51,14 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_Ctor) {
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_GettersSetters) {
   Model m;
   HeatExchangerDesiccantBalancedFlow hx(m);
-
-
 }
 
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_addToNode) {
   Model model;
   HeatExchangerDesiccantBalancedFlow heatExchangerDesiccantBalancedFlow(model);
-
-
 }
 
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlowt_remove) {
   Model model;
   HeatExchangerDesiccantBalancedFlow heatExchangerDesiccantBalancedFlow(model);
-
-
 }
