@@ -22111,42 +22111,42 @@ OS:HeatExchanger:Desiccant:BalancedFlow,
       \memo process and regeneration air streams. The air flow rate and face velocity
       \memo are assumed to be the same on both the process and regeneration sides of the
       \memo heat exchanger.
-      \min-fields 9
+      \min-fields 8
   A1, \field Handle
       \type handle
       \required-field
   A2, \field Name
       \required-field
       \type alpha
-      \reference HXAirToAirNames
-      \reference HXDesiccantBalanced      
+      \reference HXDesiccantBalanced
+      \reference HXAirToAirNames   
       \reference AFNHeatExchangerNames
       \reference ConnectionObject
   A3, \field Availability Schedule
       \required-field
       \type object-list
       \object-list ScheduleNames
-  A4, \field Regeneration Air Inlet Node Name
+  A4, \field Regeneration Air Inlet Node
       \type object-list
       \object-list ConnectionNames
-  A5, \field Regeneration Air Outlet Node Name
+  A5, \field Regeneration Air Outlet Node
       \type object-list
       \object-list ConnectionNames
-  A6, \field Process Air Inlet Node Name
+  A6, \field Process Air Inlet Node
       \type object-list
       \object-list ConnectionNames
-  A7, \field Process Air Outlet Node Name
+  A7, \field Process Air Outlet Node
       \type object-list
       \object-list ConnectionNames
-  A9, \field Heat Exchanger Performance
+  A8, \field Heat Exchanger Performance
       \required-field
       \type object-list
       \object-list DesiccantHXPerfData
-  A10;\field Economizer Lockout
+  A9; \field Economizer Lockout
       \type choice
       \key Yes
       \key No
-      \default No
+      \required-field
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
 
