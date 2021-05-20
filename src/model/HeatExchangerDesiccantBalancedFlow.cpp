@@ -179,19 +179,19 @@ namespace model {
     }
 
     unsigned HeatExchangerDesiccantBalancedFlow_Impl::primaryAirInletPort() const {
-      return OS_HeatExchanger_Desiccant_BalancedFlowFields::SupplyAirInletNode;
+      return OS_HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNode;
     }
 
     unsigned HeatExchangerDesiccantBalancedFlow_Impl::primaryAirOutletPort() const {
-      return OS_HeatExchanger_Desiccant_BalancedFlowFields::SupplyAirOutletNode;
+      return OS_HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNode;
     }
 
     unsigned HeatExchangerDesiccantBalancedFlow_Impl::secondaryAirInletPort() const {
-      return OS_HeatExchanger_Desiccant_BalancedFlowFields::ExhaustAirInletNode;
+      return OS_HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNode;
     }
 
     unsigned HeatExchangerDesiccantBalancedFlow_Impl::secondaryAirOutletPort() const {
-      return OS_HeatExchanger_Desiccant_BalancedFlowFields::ExhaustAirOutletNode;
+      return OS_HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNode;
     }
 
     AirflowNetworkEquivalentDuct HeatExchangerDesiccantBalancedFlow_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter) {
@@ -218,22 +218,6 @@ namespace model {
         return myAFN[0];
       }
       return boost::none;
-    }
-
-    boost::optional<double> HeatExchangerDesiccantBalancedFlow_Impl::autosizedNominalSupplyAirFlowRate() const {
-      return getAutosizedValue("Design Size Nominal Supply Air Flow Rate", "m3/s");
-    }
-
-    void HeatExchangerDesiccantBalancedFlow_Impl::autosize() {
-      autosizeNominalSupplyAirFlowRate();
-    }
-
-    void HeatExchangerDesiccantBalancedFlow_Impl::applySizingValues() {
-      boost::optional<double> val;
-      val = autosizedNominalSupplyAirFlowRate();
-      if (val) {
-        setNominalSupplyAirFlowRate(val.get());
-      }
     }
 
   }  // namespace detail

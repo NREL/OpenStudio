@@ -77,10 +77,6 @@ namespace model {
      */
       virtual bool addToNode(Node& node) override;
 
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
       virtual unsigned primaryAirInletPort() const override;
 
       virtual unsigned primaryAirOutletPort() const override;
