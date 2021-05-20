@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,77 +27,79 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
-#define MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
+#ifndef MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOWPERFORMANCEDATATYPE1_HPP
+#define MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOWPERFORMANCEDATATYPE1_HPP
 
-#include "ModelAPI.hpp"
-#include "AirToAirComponent.hpp"
+#include <model/ModelAPI.hpp>
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-  class Schedule;
-  class AirflowNetworkEquivalentDuct;
-  class HeatExchangerDesiccantBalancedFlowPerformanceDataType1;
+  class HeatExchangerDesiccantBalancedFlow;
 
   namespace detail {
 
-    class HeatExchangerDesiccantBalancedFlow_Impl;
+    class HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl;
 
   }  // namespace detail
 
-  /** HeatExchangerDesiccantBalancedFlow is a AirToAirComponent that wraps the OpenStudio IDD object 'OS:HeatExchanger:AirToAir:SensibleAndLatent'. */
-  class MODEL_API HeatExchangerDesiccantBalancedFlow : public AirToAirComponent
+  /** HeatExchangerDesiccantBalancedFlowPerformanceDataType1 is a ResourceObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:CurveFit:Performance'. */
+  class MODEL_API HeatExchangerDesiccantBalancedFlowPerformanceDataType1 : public ResourceObject
   {
-
    public:
-    explicit HeatExchangerDesiccantBalancedFlow(const Model& model,
-                                                const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
+    /** @name Constructors and Destructors */
+    //@{
 
-    virtual ~HeatExchangerDesiccantBalancedFlow() {}
+    explicit HeatExchangerDesiccantBalancedFlowPerformanceDataType1(const Model& model);
+
+    virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1() {}
+
+    //@}
 
     static IddObjectType iddObjectType();
 
-    Schedule availabilitySchedule() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
 
-    HeatExchangerDesiccantBalancedFlowPerformanceDataType1 heatExchangerPerformance() const;
+    /** @name Getters */
+    //@{
 
-    bool setHeatExchangerPerformance(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
+    std::vector<HeatExchangerDesiccantBalancedFlow> heatExchangerDesiccantBalancedFlows() const;
 
-    bool economizerLockout() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-    bool setEconomizerLockout(bool economizerLockout);
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
    protected:
     /// @cond
-    typedef detail::HeatExchangerDesiccantBalancedFlow_Impl ImplType;
+    typedef detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl ImplType;
 
-    explicit HeatExchangerDesiccantBalancedFlow(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlow_Impl> impl);
+    explicit HeatExchangerDesiccantBalancedFlowPerformanceDataType1(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl> impl);
 
-    friend class detail::HeatExchangerDesiccantBalancedFlow_Impl;
+    friend class detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
-
     /// @endcond
-
    private:
-    REGISTER_LOGGER("openstudio.model.HeatExchangerDesiccantBalancedFlow");
+    REGISTER_LOGGER("openstudio.model.HeatExchangerDesiccantBalancedFlowPerformanceDataType1");
   };
 
-  /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef boost::optional<HeatExchangerDesiccantBalancedFlow> OptionalHeatExchangerDesiccantBalancedFlow;
+  /** \relates HeatExchangerDesiccantBalancedFlowPerformanceDataType1*/
+  typedef boost::optional<HeatExchangerDesiccantBalancedFlowPerformanceDataType1> OptionalHeatExchangerDesiccantBalancedFlowPerformanceDataType1;
 
-  /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef std::vector<HeatExchangerDesiccantBalancedFlow> HeatExchangerDesiccantBalancedFlowVector;
+  /** \relates HeatExchangerDesiccantBalancedFlowPerformanceDataType1*/
+  typedef std::vector<HeatExchangerDesiccantBalancedFlowPerformanceDataType1> HeatExchangerDesiccantBalancedFlowPerformanceDataType1Vector;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
+#endif  // MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOWPERFORMANCEDATATYPE1_HPP

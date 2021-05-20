@@ -2832,6 +2832,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(HeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitHeating);
@@ -3349,6 +3350,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitHeating);

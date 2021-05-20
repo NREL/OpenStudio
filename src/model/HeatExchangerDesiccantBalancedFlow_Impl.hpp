@@ -38,6 +38,7 @@ namespace model {
 
   class Schedule;
   class Connection;
+  class HeatExchangerDesiccantBalancedFlowPerformanceDataType1;
 
   namespace detail {
 
@@ -91,11 +92,19 @@ namespace model {
 
       Schedule availabilitySchedule() const;
 
+      HeatExchangerDesiccantBalancedFlowPerformanceDataType1 heatExchangerPerformance() const;
+
+      bool economizerLockout() const;
+
       //@}
       /** @name Setters */
       //@{
 
       bool setAvailabilitySchedule(Schedule& schedule);
+
+      bool setHeatExchangerPerformance(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
+
+      bool setEconomizerLockout(bool economizerLockout);
 
       //@}
       /** @name Other */
@@ -115,6 +124,7 @@ namespace model {
       // There are other ways for the public versions of these getters to fail--perhaps all required
       // objects should be returned as boost::optionals
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<HeatExchangerDesiccantBalancedFlowPerformanceDataType1> optionalHeatExchangerPerformance() const;
 
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 

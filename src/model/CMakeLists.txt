@@ -885,6 +885,9 @@ set(${target_name}_src
   HeatExchangerDesiccantBalancedFlow.hpp
   HeatExchangerDesiccantBalancedFlow_Impl.hpp
   HeatExchangerDesiccantBalancedFlow.cpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.cpp
   HeatExchangerFluidToFluid.hpp
   HeatExchangerFluidToFluid_Impl.hpp
   HeatExchangerFluidToFluid.cpp
@@ -1990,6 +1993,7 @@ set(${target_name}_test_src
   test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
+  test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp

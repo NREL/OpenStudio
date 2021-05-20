@@ -70,7 +70,25 @@ namespace model {
       : AirToAirComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatExchangerDesiccantBalancedFlow_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{};
+      static const std::vector<std::string> result{"Heat Exchanger Sensible Heating Rate",
+                                                   "Heat Exchanger Sensible Heating Energy",
+                                                   "Heat Exchanger Latent Gain Rate",
+                                                   "Heat Exchanger Latent Gain Energy",
+                                                   "Heat Exchanger Total Heating Rate",
+                                                   "Heat Exchanger Total Heating Energy",
+                                                   "Heat Exchanger Sensible Cooling Rate",
+                                                   "Heat Exchanger Sensible Cooling Energy",
+                                                   "Heat Exchanger Latent Cooling Rate",
+                                                   "Heat Exchanger Latent Cooling Energy",
+                                                   "Heat Exchanger Total Cooling Rate",
+                                                   "Heat Exchanger Total Cooling Energy",
+                                                   "Heat Exchanger Electricity Rate",
+                                                   "Heat Exchanger Electricity Energy",
+                                                   "Heat Exchanger Sensible Effectiveness",
+                                                   "Heat Exchanger Latent Effectiveness",
+                                                   "Heat Exchanger Supply Air Bypass Mass Flow Rate",
+                                                   "Heat Exchanger Exhaust Air Bypass Mass Flow Rate",
+                                                   "Heat Exchanger Defrost Time Fraction"};
       return result;
     }
 
@@ -94,14 +112,6 @@ namespace model {
         result.push_back(ScheduleTypeKey("HeatExchangerDesiccantBalancedFlow", "Availability"));
       }
       return result;
-    }
-
-    Schedule HeatExchangerDesiccantBalancedFlow_Impl::availabilitySchedule() const {
-      boost::optional<Schedule> value = optionalAvailabilitySchedule();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
-      }
-      return value.get();
     }
 
     boost::optional<HVACComponent> HeatExchangerDesiccantBalancedFlow_Impl::containingHVACComponent() const {
@@ -152,10 +162,47 @@ namespace model {
       return success;
     }
 
+    Schedule HeatExchangerDesiccantBalancedFlow_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+      }
+      return value.get();
+    }
+
+    boost::optional<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>
+      HeatExchangerDesiccantBalancedFlow_Impl::optionalHeatExchangerPerformance() const {
+      return getObject<ModelObject>().getModelObjectTarget<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>(
+        OS_HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformance);
+    }
+
+    CoilCoolingDXCurveFitPerformance CoilCoolingDX_Impl::heatExchangerPerformance() const {
+      boost::optional<CoilCoolingDXCurveFitPerformance> value = optionalHeatExchangerPerformance();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Heat Exchanger Performance attached.");
+      }
+      return value.get();
+    }
+
+    bool HeatExchangerDesiccantBalancedFlow_Impl::economizerLockout() const {
+      boost::optional<std::string> value = getString(OS_HeatExchanger_Desiccant_BalancedFlowFields::EconomizerLockout, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
     bool HeatExchangerDesiccantBalancedFlow_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_HeatExchanger_Desiccant_BalancedFlowFields::AvailabilitySchedule, "HeatExchangerDesiccantBalancedFlow",
                                 "Availability", schedule);
       return result;
+    }
+
+    bool HeatExchangerDesiccantBalancedFlow_Impl::setHeatExchangerPerformance(const HeatExchangerPerformance) {
+      bool result = setPointer(OS_HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformance, HeatExchangerPerformance.handle());
+      return result;
+    }
+
+    bool HeatExchangerDesiccantBalancedFlow_Impl::setEconomizerLockout(bool economizerLockout) {
+      return setBooleanFieldValue(OS_HeatExchanger_Desiccant_BalancedFlowFields::EconomizerLockout, economizerLockout);
     }
 
     boost::optional<Schedule> HeatExchangerDesiccantBalancedFlow_Impl::optionalAvailabilitySchedule() const {
@@ -222,12 +269,22 @@ namespace model {
 
   }  // namespace detail
 
-  HeatExchangerDesiccantBalancedFlow::HeatExchangerDesiccantBalancedFlow(const Model& model)
+  HeatExchangerDesiccantBalancedFlow::HeatExchangerDesiccantBalancedFlow(
+    const Model& model, const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance)
     : AirToAirComponent(HeatExchangerDesiccantBalancedFlow::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>());
 
     Schedule schedule = model.alwaysOnDiscreteSchedule();
     setAvailabilitySchedule(schedule);
+
+    ok = setHeatExchangerPerformance(heatExchangerPerformance);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s heatExchangerDesiccantBalancedFlowPerformanceDataType1 to "
+                                     << heatExchangerPerformance.briefDescription() << ".");
+    }
+
+    setEconomizerLockout(false);
   }
 
   IddObjectType HeatExchangerDesiccantBalancedFlow::iddObjectType() {
@@ -238,8 +295,25 @@ namespace model {
     return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->availabilitySchedule();
   }
 
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1 HeatExchangerDesiccantBalancedFlow::heatExchangerPerformance() const {
+    return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->heatExchangerPerformance();
+  }
+
+  bool HeatExchangerDesiccantBalancedFlow::economizerLockout() const {
+    return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->economizerLockout();
+  }
+
   bool HeatExchangerDesiccantBalancedFlow::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->setAvailabilitySchedule(schedule);
+  }
+
+  bool HeatExchangerDesiccantBalancedFlow::setHeatExchangerPerformancePerformance(
+    const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance) {
+    return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->setHeatExchangerPerformance(heatExchangerPerformance);
+  }
+
+  bool HeatExchangerDesiccantBalancedFlow::setEconomizerLockout(bool economizerLockout) {
+    return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->setEconomizerLockout(economizerLockout);
   }
 
   AirflowNetworkEquivalentDuct HeatExchangerDesiccantBalancedFlow::getAirflowNetworkEquivalentDuct(double length, double diameter) {
