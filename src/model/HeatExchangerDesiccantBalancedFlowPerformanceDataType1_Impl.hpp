@@ -49,9 +49,11 @@ namespace model {
 
       HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                  bool keepHandle);
 
-      HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl& other, Model_Impl* model, bool keepHandle);
+      HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl& other,
+                                                                  Model_Impl* model, bool keepHandle);
 
       virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl() {}
 
@@ -81,8 +83,6 @@ namespace model {
       //@}
       /** @name Setters */
       //@{
-
-
 
       //@}
       /** @name Other */

@@ -46,19 +46,20 @@ namespace model {
 
   namespace detail {
 
-    HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(
+      const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : ResourceObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == HeatExchangerDesiccantBalancedFlowPerformanceDataType1::iddObjectType());
     }
 
-    HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                 Model_Impl* model, bool keepHandle)
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
       : ResourceObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == HeatExchangerDesiccantBalancedFlowPerformanceDataType1::iddObjectType());
     }
 
-    HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl& other,
-                                                                                 Model_Impl* model, bool keepHandle)
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(
+      const HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl& other, Model_Impl* model, bool keepHandle)
       : ResourceObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::outputVariableNames() const {
@@ -81,8 +82,6 @@ namespace model {
     std::vector<ModelObject> HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::children() const {
       std::vector<ModelObject> result;
 
-
-
       return result;
     }
 
@@ -94,7 +93,8 @@ namespace model {
       return ResourceObject_Impl::remove();
     }
 
-    std::vector<HeatExchangerDesiccantBalancedFlow> HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::heatExchangerDesiccantBalancedFlows() const {
+    std::vector<HeatExchangerDesiccantBalancedFlow>
+      HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::heatExchangerDesiccantBalancedFlows() const {
       return getObject<ModelObject>().getModelObjectSources<HeatExchangerDesiccantBalancedFlow>(HeatExchangerDesiccantBalancedFlow::iddObjectType());
     }
 
@@ -103,20 +103,20 @@ namespace model {
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1::HeatExchangerDesiccantBalancedFlowPerformanceDataType1(const Model& model)
     : ResourceObject(HeatExchangerDesiccantBalancedFlowPerformanceDataType1::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>());
-
-
   }
 
   IddObjectType HeatExchangerDesiccantBalancedFlowPerformanceDataType1::iddObjectType() {
     return IddObjectType(IddObjectType::OS_HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1);
   }
 
-  std::vector<HeatExchangerDesiccantBalancedFlow> HeatExchangerDesiccantBalancedFlowPerformanceDataType1::heatExchangerDesiccantBalancedFlows() const {
+  std::vector<HeatExchangerDesiccantBalancedFlow>
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1::heatExchangerDesiccantBalancedFlows() const {
     return getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>()->heatExchangerDesiccantBalancedFlows();
   }
 
   /// @cond
-  HeatExchangerDesiccantBalancedFlowPerformanceDataType1::HeatExchangerDesiccantBalancedFlowPerformanceDataType1(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl> impl)
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1::HeatExchangerDesiccantBalancedFlowPerformanceDataType1(
+    std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl> impl)
     : ResourceObject(impl) {}
   /// @endcond
 

@@ -42,7 +42,8 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(
+    model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
@@ -52,8 +53,6 @@ namespace energyplus {
 
     // Name
     idfObject.setString(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::Name, modelObject.name().get());
-
-
 
     return boost::optional<IdfObject>(idfObject);
   }  // End of translate function

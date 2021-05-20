@@ -60,8 +60,6 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-
-
     /** @name Getters */
     //@{
 
@@ -70,8 +68,6 @@ namespace model {
     //@}
     /** @name Setters */
     //@{
-
-
 
     //@}
     /** @name Other */
@@ -82,7 +78,8 @@ namespace model {
     /// @cond
     typedef detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl ImplType;
 
-    explicit HeatExchangerDesiccantBalancedFlowPerformanceDataType1(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl> impl);
+    explicit HeatExchangerDesiccantBalancedFlowPerformanceDataType1(
+      std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl> impl);
 
     friend class detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl;
     friend class Model;

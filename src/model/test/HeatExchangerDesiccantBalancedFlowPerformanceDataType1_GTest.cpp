@@ -59,25 +59,17 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Heat
 
   // create a model to use
   Model model;
-
-
 }
 
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GettersSetters) {
   // create a model to use
   Model model;
-
-
 }
 
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlowPerformanceDataType1_heatExchangerDesiccantBalancedFlows) {
   Model model;
-
-
 }
 
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlowPerformanceDataType1_clone) {
   Model model;
-
-
 }
