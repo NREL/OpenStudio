@@ -29,14 +29,11 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/HeatExchangerDesiccantBalancedFlow.hpp"
-#include "../../model/HeatExchangerDesiccantBalancedFlow_Impl.hpp"
-#include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../utilities/idf/Workspace.hpp"
-#include "../../utilities/core/Logger.hpp"
-#include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
+
+#include "../../model/HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp"
+
+#include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1_FieldEnums.hxx>
+// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -45,28 +42,21 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerDesiccantBalancedFlow(HeatExchangerDesiccantBalancedFlow& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
-    // HeatExchangerPerformance, is required, so start by that
-    HeatExchangerDesiccantBalancedFlowPerformanceDataType1 performance = modelObject.heatExchangerPerformance();
-    if (boost::optional<IdfObject> _performance = translateAndMapModelObject(performance)) {
-      s = _performance->name().get();
-    } else {
-      LOG(Warn, modelObject.briefDescription() << " cannot be translated as its performance object cannot be translated: "
-                                               << performance.briefDescription() << ".");
-      return boost::none;
-    }
+    IdfObject idfObject(openstudio::IddObjectType::HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1);
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatExchanger_Desiccant_BalancedFlow, modelObject);
+    m_idfObjects.push_back(idfObject);
 
-    // HeatExchangerPerformance
-    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformance, s.get());
+    // Name
+    idfObject.setString(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::Name, modelObject.name().get());
+
+
 
     return boost::optional<IdfObject>(idfObject);
-  }
+  }  // End of translate function
 
-}  // namespace energyplus
-
-}  // namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

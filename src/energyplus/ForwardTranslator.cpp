@@ -1811,6 +1811,11 @@ namespace energyplus {
         retVal = translateHeatExchangerDesiccantBalancedFlow(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1: {
+        model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1 mo = modelObject.cast<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>();
+        retVal = translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid: {
         model::HeatExchangerFluidToFluid mo = modelObject.cast<HeatExchangerFluidToFluid>();
         retVal = translateHeatExchangerFluidToFluid(mo);

@@ -215,6 +215,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerAirToAirSensibleAndLatent.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerDesiccantBalancedFlow.cpp
+  ForwardTranslator/ForwardTranslateHeatExchangerDesiccantBalancedFlowPerformanceDataType1.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitCooling.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitHeating.cpp
