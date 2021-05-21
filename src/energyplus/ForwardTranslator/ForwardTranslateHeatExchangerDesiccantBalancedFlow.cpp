@@ -56,9 +56,8 @@ namespace energyplus {
 
     // HeatExchangerPerformance, is required, so start by that
     HeatExchangerDesiccantBalancedFlowPerformanceDataType1 performance = modelObject.heatExchangerPerformance();
-    if (boost::optional<IdfObject> _performance = translateAndMapModelObject(performance)) {
-      s = _performance->name().get();
-    } else {
+    boost::optional<IdfObject> _performance = translateAndMapModelObject(performance);
+    if (!_performance) {
       LOG(Warn, modelObject.briefDescription() << " cannot be translated as its performance object cannot be translated: "
                                                << performance.briefDescription() << ".");
       return boost::none;
@@ -108,10 +107,10 @@ namespace energyplus {
     }
 
     // HeatExchangerPerformanceObjectType
-    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceObjectType, performance.iddObject().name());
+    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceObjectType, _performance->iddObject().name());
 
     // HeatExchangerPerformanceName`
-    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceName, s.get());
+    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceName, _performance->name().get());
 
     // EconomizerLockout
     if (modelObject.economizerLockout()) {
