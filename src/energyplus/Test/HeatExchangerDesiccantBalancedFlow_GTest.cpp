@@ -47,7 +47,6 @@
 #include "../../model/HVACTemplates.hpp"
 
 #include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
-#include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -63,8 +62,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatExchangerDesiccantBalancedFlow) 
 
   Node oaNode = oaSystem.outboardOANode().get();
 
-  HeatExchangerDesiccantBalancedFlowPerformanceDataType1 p(m);
-  HeatExchangerDesiccantBalancedFlow hx(m, p);
+  HeatExchangerDesiccantBalancedFlow hx(m);
   EXPECT_TRUE(hx.addToNode(oaNode));
 
   ForwardTranslator ft;

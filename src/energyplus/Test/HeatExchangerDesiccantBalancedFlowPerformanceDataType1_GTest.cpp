@@ -46,7 +46,6 @@
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/HVACTemplates.hpp"
 
-#include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
