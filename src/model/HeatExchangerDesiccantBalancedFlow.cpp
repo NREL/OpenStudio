@@ -101,6 +101,10 @@ namespace model {
 
     std::vector<ModelObject> HeatExchangerDesiccantBalancedFlow_Impl::children() const {
       std::vector<ModelObject> result;
+
+      // This is a ResourceObject, so it shouldn't really be a child except for OS App / IG
+      result.push_back(heatExchangerPerformance());
+
       std::vector<AirflowNetworkEquivalentDuct> myAFNItems =
         getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
       result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());

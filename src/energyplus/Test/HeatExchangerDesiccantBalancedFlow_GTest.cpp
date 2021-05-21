@@ -62,7 +62,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatExchangerDesiccantBalancedFlow) 
   AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
 
   Node oaNode = oaSystem.outboardOANode().get();
-  Node reliefNode = oaSystem.outboardReliefNode().get();
 
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1 p(m);
   HeatExchangerDesiccantBalancedFlow hx(m, p);
@@ -84,7 +83,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatExchangerDesiccantBalancedFlow) 
   EXPECT_NE("", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName).get());
   EXPECT_NE("", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName).get());
   EXPECT_NE("", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName).get());
-  EXPECT_EQ("HeatExchanger:Desiccant:BalancedFlow:PerformanceDataType1", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceObjectType, false).get());
+  EXPECT_EQ("HeatExchanger:Desiccant:BalancedFlow:PerformanceDataType1",
+            idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceObjectType, false).get());
   boost::optional<WorkspaceObject> woPerformance(idfHX.getTarget(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceName));
   EXPECT_TRUE(woPerformance);
   if (woPerformance) {
