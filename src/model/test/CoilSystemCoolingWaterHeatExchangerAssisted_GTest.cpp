@@ -35,6 +35,8 @@
 #include "../CoilCoolingWater_Impl.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -73,6 +75,47 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
 
   CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
   HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_FALSE(cc.addToNode(n));
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_FALSE(hx.addToNode(n));
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_TRUE(coilSystem.addToNode(n));
+  EXPECT_EQ(3u, a.supplyComponents().size());
+
+  {
+    auto containingHVACComponent = cc.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
+
+  {
+    auto containingHVACComponent = hx.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
+
+  // BUT, we need to be able to connect the water side of the Coil...
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(cc));
+}
+
+// This test ensures that only the parent CoilSystem can call addToNode, the individual CoilCoolingWater and HX cannot
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode2) {
+
+  Model m;
+  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+
+  AirLoopHVAC a(m);
+  Node n = a.supplyOutletNode();
+
+  CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
+  HeatExchangerDesiccantBalancedFlow hx(m);
+  coilSystem.setHeatExchanger(hx);
 
   EXPECT_EQ(2u, a.supplyComponents().size());
 
