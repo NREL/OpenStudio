@@ -56,22 +56,28 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_HeatExchangerDesiccantBa
   ASSERT_EXIT(
     {
       Model m;
+      HeatExchangerDesiccantBalancedFlow hx(m);
       HeatExchangerDesiccantBalancedFlowPerformanceDataType1 p(m);
-      HeatExchangerDesiccantBalancedFlow hx(m, p);
+      HeatExchangerDesiccantBalancedFlow hx2(m, p);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
 
   Model m;
+  HeatExchangerDesiccantBalancedFlow hx(m);
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1 p(m);
-  HeatExchangerDesiccantBalancedFlow hx(m, p);
+  HeatExchangerDesiccantBalancedFlow hx2(m, p);
 
   auto alwaysOn = m.alwaysOnDiscreteSchedule();
 
   EXPECT_EQ(alwaysOn, hx.availabilitySchedule());
   ASSERT_TRUE(hx.heatExchangerPerformance().optionalCast<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>());
   EXPECT_FALSE(hx.economizerLockout());
+
+  EXPECT_EQ(alwaysOn, hx2.availabilitySchedule());
+  ASSERT_TRUE(hx2.heatExchangerPerformance().optionalCast<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>());
+  EXPECT_FALSE(hx2.economizerLockout());
 }
 
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_GettersSetters) {
