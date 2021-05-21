@@ -52,6 +52,8 @@ namespace model {
   {
 
    public:
+    explicit HeatExchangerDesiccantBalancedFlow(const Model& model);
+
     explicit HeatExchangerDesiccantBalancedFlow(const Model& model,
                                                 const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
 

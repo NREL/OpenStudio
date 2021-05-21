@@ -264,6 +264,24 @@ namespace model {
 
   }  // namespace detail
 
+  HeatExchangerDesiccantBalancedFlow::HeatExchangerDesiccantBalancedFlow(const Model& model)
+    : AirToAirComponent(HeatExchangerDesiccantBalancedFlow::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>());
+
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
+    setAvailabilitySchedule(schedule);
+
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1 heatExchangerPerformance(model);
+    bool ok = setHeatExchangerPerformance(heatExchangerPerformance);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s heatExchangerDesiccantBalancedFlowPerformanceDataType1 to "
+                                     << heatExchangerPerformance.briefDescription() << ".");
+    }
+
+    setEconomizerLockout(false);
+  }
+
   HeatExchangerDesiccantBalancedFlow::HeatExchangerDesiccantBalancedFlow(
     const Model& model, const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance)
     : AirToAirComponent(HeatExchangerDesiccantBalancedFlow::iddObjectType(), model) {
