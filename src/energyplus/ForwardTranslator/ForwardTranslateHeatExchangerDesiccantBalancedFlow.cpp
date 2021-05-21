@@ -52,6 +52,7 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerDesiccantBalancedFlow(HeatExchangerDesiccantBalancedFlow& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
+    OptionalModelObject temp;
 
     // HeatExchangerPerformance, is required, so start by that
     HeatExchangerDesiccantBalancedFlowPerformanceDataType1 performance = modelObject.heatExchangerPerformance();
@@ -65,8 +66,59 @@ namespace energyplus {
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatExchanger_Desiccant_BalancedFlow, modelObject);
 
-    // HeatExchangerPerformance
+    // AvailabilityScheduleName
+    Schedule sched = modelObject.availabilitySchedule();
+    translateAndMapModelObject(sched);
+    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::AvailabilityScheduleName, sched.name().get());
+
+    // RegenerationAirInletNodeName
+    temp = modelObject.primaryAirInletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, *s);
+      }
+    }
+
+    // RegenerationAirOutletNodeName
+    temp = modelObject.primaryAirOutletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName, *s);
+      }
+    }
+
+    // ProcessAirInletNodeName
+    temp = modelObject.secondaryAirInletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName, *s);
+      }
+    }
+
+    // ProcessAirOutletNodeName
+    temp = modelObject.secondaryAirOutletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, *s);
+      }
+    }
+
+    // HeatExchangerPerformanceObjectType
+    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceObjectType, performance.iddObject().name());
+
+    // HeatExchangerPerformanceName`
     idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceName, s.get());
+
+    // EconomizerLockout
+    if (modelObject.economizerLockout()) {
+      idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::EconomizerLockout, "Yes");
+    } else {
+      idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::EconomizerLockout, "No");
+    }
 
     return boost::optional<IdfObject>(idfObject);
   }
