@@ -847,11 +847,11 @@ namespace model {
     }
 
     boost::optional<double> HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::autosizedNominalAirFlowRate() {
-      return getAutosizedValue("TODO", "TODO");
+      return getAutosizedValue("Design Size Nominal Air Flow Rate", "m3/s");
     }
 
     boost::optional<double> HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::autosizedNominalAirFaceVelocity() {
-      return getAutosizedValue("TODO", "TODO");
+      return getAutosizedValue("Design Size Nominal Air Face Velocity", "m/s");
     }
 
     void HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::autosize() {

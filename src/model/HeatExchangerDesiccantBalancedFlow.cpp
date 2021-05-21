@@ -73,25 +73,12 @@ namespace model {
       : AirToAirComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatExchangerDesiccantBalancedFlow_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Heat Exchanger Sensible Heating Rate",
-                                                   "Heat Exchanger Sensible Heating Energy",
-                                                   "Heat Exchanger Latent Gain Rate",
-                                                   "Heat Exchanger Latent Gain Energy",
-                                                   "Heat Exchanger Total Heating Rate",
-                                                   "Heat Exchanger Total Heating Energy",
-                                                   "Heat Exchanger Sensible Cooling Rate",
-                                                   "Heat Exchanger Sensible Cooling Energy",
-                                                   "Heat Exchanger Latent Cooling Rate",
-                                                   "Heat Exchanger Latent Cooling Energy",
-                                                   "Heat Exchanger Total Cooling Rate",
-                                                   "Heat Exchanger Total Cooling Energy",
-                                                   "Heat Exchanger Electricity Rate",
-                                                   "Heat Exchanger Electricity Energy",
-                                                   "Heat Exchanger Sensible Effectiveness",
-                                                   "Heat Exchanger Latent Effectiveness",
-                                                   "Heat Exchanger Supply Air Bypass Mass Flow Rate",
-                                                   "Heat Exchanger Exhaust Air Bypass Mass Flow Rate",
-                                                   "Heat Exchanger Defrost Time Fraction"};
+      static const std::vector<std::string> result{
+        "Heat Exchanger Sensible Heating Rate", "Heat Exchanger Sensible Heating Energy", "Heat Exchanger Latent Gain Rate",
+        "Heat Exchanger Latent Gain Energy",    "Heat Exchanger Total Heating Rate",      "Heat Exchanger Total Heating Energy",
+        "Heat Exchanger Sensible Cooling Rate", "Heat Exchanger Sensible Cooling Energy", "Heat Exchanger Latent Cooling Rate",
+        "Heat Exchanger Latent Cooling Energy", "Heat Exchanger Total Cooling Rate",      "Heat Exchanger Total Cooling Energy",
+        "Heat Exchanger Electricity Rate",      "Heat Exchanger Electricity Energy"};
       return result;
     }
 
