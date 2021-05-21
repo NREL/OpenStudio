@@ -159,9 +159,9 @@ namespace model {
 
     double maximumRegenerationAirVelocityforHumidityRatioEquation() const;
 
-    double minimumRegenerationOutletAirTemperatureforHumidityRatioEquation() const;
+    double minimumRegenerationOutletAirHumidityRatioforHumidityRatioEquation() const;
 
-    double maximumRegenerationOutletAirTemperatureforHumidityRatioEquation() const;
+    double maximumRegenerationOutletAirHumidityRatioforHumidityRatioEquation() const;
 
     double minimumRegenerationInletAirRelativeHumidityforHumidityRatioEquation() const;
 
@@ -271,9 +271,11 @@ namespace model {
 
     bool setMaximumRegenerationAirVelocityforHumidityRatioEquation(double maximumRegenerationAirVelocityforHumidityRatioEquation);
 
-    bool setMinimumRegenerationOutletAirTemperatureforHumidityRatioEquation(double minimumRegenerationOutletAirTemperatureforHumidityRatioEquation);
+    bool
+      setMinimumRegenerationOutletAirHumidityRatioforHumidityRatioEquation(double minimumRegenerationOutletAirHumidityRatioforHumidityRatioEquation);
 
-    bool setMaximumRegenerationOutletAirTemperatureforHumidityRatioEquation(double maximumRegenerationOutletAirTemperatureforHumidityRatioEquation);
+    bool
+      setMaximumRegenerationOutletAirHumidityRatioforHumidityRatioEquation(double maximumRegenerationOutletAirHumidityRatioforHumidityRatioEquation);
 
     bool setMinimumRegenerationInletAirRelativeHumidityforHumidityRatioEquation(
       double minimumRegenerationInletAirRelativeHumidityforHumidityRatioEquation);

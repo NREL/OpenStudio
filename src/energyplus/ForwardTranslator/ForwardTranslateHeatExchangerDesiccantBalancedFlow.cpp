@@ -29,14 +29,18 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
+
 #include "../../model/HeatExchangerDesiccantBalancedFlow.hpp"
-#include "../../model/HeatExchangerDesiccantBalancedFlow_Impl.hpp"
+
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../utilities/idf/Workspace.hpp"
-#include "../../utilities/core/Logger.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp"
+#include "../../model/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl.hpp"
+
 #include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
+// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -62,7 +66,7 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatExchanger_Desiccant_BalancedFlow, modelObject);
 
     // HeatExchangerPerformance
-    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformance, s.get());
+    idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceName, s.get());
 
     return boost::optional<IdfObject>(idfObject);
   }

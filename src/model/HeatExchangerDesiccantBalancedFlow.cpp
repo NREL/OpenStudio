@@ -29,6 +29,7 @@
 
 #include "HeatExchangerDesiccantBalancedFlow.hpp"
 #include "HeatExchangerDesiccantBalancedFlow_Impl.hpp"
+
 #include "CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
@@ -41,8 +42,10 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
+#include "HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp"
+#include "HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -176,8 +179,8 @@ namespace model {
         OS_HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformance);
     }
 
-    CoilCoolingDXCurveFitPerformance CoilCoolingDX_Impl::heatExchangerPerformance() const {
-      boost::optional<CoilCoolingDXCurveFitPerformance> value = optionalHeatExchangerPerformance();
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1 HeatExchangerDesiccantBalancedFlow_Impl::heatExchangerPerformance() const {
+      boost::optional<HeatExchangerDesiccantBalancedFlowPerformanceDataType1> value = optionalHeatExchangerPerformance();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have a Heat Exchanger Performance attached.");
       }
@@ -196,8 +199,9 @@ namespace model {
       return result;
     }
 
-    bool HeatExchangerDesiccantBalancedFlow_Impl::setHeatExchangerPerformance(const HeatExchangerPerformance) {
-      bool result = setPointer(OS_HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformance, HeatExchangerPerformance.handle());
+    bool HeatExchangerDesiccantBalancedFlow_Impl::setHeatExchangerPerformance(
+      const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance) {
+      bool result = setPointer(OS_HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformance, heatExchangerPerformance.handle());
       return result;
     }
 
@@ -277,7 +281,7 @@ namespace model {
     Schedule schedule = model.alwaysOnDiscreteSchedule();
     setAvailabilitySchedule(schedule);
 
-    ok = setHeatExchangerPerformance(heatExchangerPerformance);
+    bool ok = setHeatExchangerPerformance(heatExchangerPerformance);
     if (!ok) {
       remove();
       LOG_AND_THROW("Unable to set " << briefDescription() << "'s heatExchangerDesiccantBalancedFlowPerformanceDataType1 to "
@@ -307,7 +311,7 @@ namespace model {
     return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool HeatExchangerDesiccantBalancedFlow::setHeatExchangerPerformancePerformance(
+  bool HeatExchangerDesiccantBalancedFlow::setHeatExchangerPerformance(
     const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance) {
     return getImpl<detail::HeatExchangerDesiccantBalancedFlow_Impl>()->setHeatExchangerPerformance(heatExchangerPerformance);
   }
