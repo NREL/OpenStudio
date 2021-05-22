@@ -45,6 +45,8 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "HeatExchangerDesiccantBalancedFlow.hpp"
+#include "HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
@@ -246,6 +248,23 @@ namespace model {
 
     HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
     heatExchanger.setSupplyAirOutletTemperatureControl(false);
+    setHeatExchanger(heatExchanger);
+  }
+
+  CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger)
+    : StraightComponent(CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl>());
+
+    CoilCoolingWater coolingCoil(model);
+    setCoolingCoil(coolingCoil);
+
+    if (heatExchanger.optionalCast<HeatExchangerAirToAirSensibleAndLatent>()) {
+      // no-op
+    } else if (heatExchanger.optionalCast<HeatExchangerDesiccantBalancedFlow>()) {
+      // no-op
+    } else {
+      LOG_AND_THROW("AirToAirComponent type '" << heatExchanger.briefDescription() << "' not currently supported as a heat exchanger type for CoilSystemCoolingWaterHeatExchangerAssisted.");
+    }
     setHeatExchanger(heatExchanger);
   }
 

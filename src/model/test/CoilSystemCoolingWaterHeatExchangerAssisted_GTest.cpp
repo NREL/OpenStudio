@@ -108,14 +108,13 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
 TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode2) {
 
   Model m;
-  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+  HeatExchangerDesiccantBalancedFlow hx(m);
+  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m, hx);
 
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
 
   CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
-  HeatExchangerDesiccantBalancedFlow hx(m);
-  coilSystem.setHeatExchanger(hx);
 
   EXPECT_EQ(2u, a.supplyComponents().size());
 

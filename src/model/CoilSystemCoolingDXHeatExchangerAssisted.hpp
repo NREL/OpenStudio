@@ -53,6 +53,8 @@ namespace model {
 
     explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model);
 
+    explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger);
+
     virtual ~CoilSystemCoolingDXHeatExchangerAssisted() {}
 
     //@}
