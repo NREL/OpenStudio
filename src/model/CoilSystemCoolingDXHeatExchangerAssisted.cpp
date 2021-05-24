@@ -266,7 +266,8 @@ namespace model {
     } else if (heatExchanger.optionalCast<HeatExchangerDesiccantBalancedFlow>()) {
       // no-op
     } else {
-      LOG_AND_THROW("AirToAirComponent type '" << heatExchanger.briefDescription() << "' not currently supported as a heat exchanger type for CoilSystemCoolingDXHeatExchangerAssisted.");
+      LOG_AND_THROW("AirToAirComponent type '" << heatExchanger.briefDescription()
+                                               << "' not currently supported as a heat exchanger type for CoilSystemCoolingDXHeatExchangerAssisted.");
     }
     setHeatExchanger(heatExchanger);
   }
