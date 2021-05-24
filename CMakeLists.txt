@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.2.0)
+project(OpenStudio VERSION 3.2.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -750,16 +750,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210415-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b16a52980bd45a5c0dd73c83edf7f6cc")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f05343ac87c2e3e6fa37cf5515f6bf39")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210415-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2e54e68dad9a8ade55926cb43190cf0f")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8fd4e9ac409f56541c6932e0cbf47c83")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210415-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7306bf403d91cb0464c0a1e6ca4661be")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d2d7591b60a5a3dab255d3bc9e413e43")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")

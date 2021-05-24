@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,10 +46,12 @@
 
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctInletSideMixer.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/SetpointManagerScheduled.hpp"
@@ -688,4 +690,40 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       }
     }
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigerantFlow_AirLoopHVAC_DemandSide) {
+
+  Model m;
+
+  AirLoopHVAC a(m);
+  Node supplyOutletNode = a.supplyOutletNode();
+
+  FanSystemModel loopFan(m);
+  supplyOutletNode = a.supplyOutletNode();
+  EXPECT_TRUE(loopFan.addToNode(supplyOutletNode));
+
+  ThermalZone z(m);
+  AirTerminalSingleDuctInletSideMixer atu(m);
+  EXPECT_TRUE(a.addBranchForZone(z, atu));
+
+  FanOnOff vrfFan(m);
+  CoilCoolingDXVariableRefrigerantFlow cc(m);
+  CoilHeatingDXVariableRefrigerantFlow hc(m);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, vrfFan);
+  Node atuOutletNode = atu.outletModelObject()->cast<model::Node>();
+  EXPECT_TRUE(vrf.addToNode(atuOutletNode));
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  // When the VRF is on the demand side,
+  // then its fan should be translated into the resulting idf
+  // As previous tests show, if the VRF is a supply component then the fan
+  // should not be translated
+  std::vector<WorkspaceObject> idf_onoff_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+  EXPECT_EQ(1u, idf_onoff_fans.size());
+
+  std::vector<WorkspaceObject> idf_system_fans = w.getObjectsByType(IddObjectType::Fan_SystemModel);
+  EXPECT_EQ(1u, idf_system_fans.size());
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,7 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ParentObject_Impl.hpp"
 
-#include "../utilities/data/Attribute.hpp"
 #include "../utilities/data/CalibrationResult.hpp"
 #include "../utilities/data/EndUses.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -242,10 +241,8 @@ namespace model {
       boost::optional<double> hoursCoolingSetpointNotMet() const;
 
       boost::optional<EndUses> endUses() const;
-      boost::optional<Attribute> endUsesAttribute() const;
 
       boost::optional<CalibrationResult> calibrationResult() const;
-      boost::optional<Attribute> calibrationResultAttribute() const;
 
       //@}
      protected:

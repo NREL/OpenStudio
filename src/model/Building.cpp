@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -933,7 +933,7 @@ namespace model {
       return Transformation::rotation(Vector3d(0, 0, 1), -degToRad(this->northAxis()));
     }
 
-    double Building_Impl::exteriorPerimeter() {
+    double Building_Impl::exteriorPerimeter() const {
 
       Point3dVectorVector polygons;
 
@@ -1375,7 +1375,7 @@ namespace model {
     return getImpl<detail::Building_Impl>()->transformation();
   }
 
-  double Building::exteriorPerimeter() {
+  double Building::exteriorPerimeter() const {
     return getImpl<detail::Building_Impl>()->exteriorPerimeter();
   }
 

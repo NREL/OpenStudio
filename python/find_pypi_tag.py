@@ -37,8 +37,9 @@ def parse_cmake_version_info():
     m = re.search(r'set\(PROJECT_VERSION_PRERELEASE \"(.*?)\"\)', content)
     pre_release = ''
     if m:
-        pre_release = m.groups()[0]
-        v += f".{pre_release}"
+        pre_release = m.groups()[0].strip()
+        if pre_release:
+            v += f".{pre_release}"
 
     return version.Version(v)
 
