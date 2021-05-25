@@ -54,6 +54,8 @@
 #include "../../model/CoilCoolingWater_Impl.hpp"
 #include "../../model/CoilCoolingDXTwoSpeed.hpp"
 #include "../../model/CoilCoolingDXTwoSpeed_Impl.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
@@ -304,6 +306,98 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 
   EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter", idfSplitter.getString(AirLoopHVAC_SplitterFields::Name, false).get());
   EXPECT_EQ(coil.outletModelObject().get().nameString(), idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
+  EXPECT_EQ(1u, idfSplitter.numExtensibleGroups());
+  WorkspaceExtensibleGroup w_egSplitter = idfSplitter.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  EXPECT_EQ(idfContrlOA.getString(Controller_OutdoorAirFields::ActuatorNodeName, false).get(),
+            w_egSplitter.getString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, false).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem_HeatExchangerAirToAirSensibleAndLatent) {
+
+  // Test for #4293 - Heat exchanger added to AirLoopHVAC:DOAS gets a bad Exhaust Air Inlet Node
+  Model m;
+
+  AirLoopHVAC airLoop(m);
+  airLoop.setName("Air Loop 1");
+
+  ControllerOutdoorAir controller1(m);
+  AirLoopHVACOutdoorAirSystem oaSystem1(m, controller1);
+  oaSystem1.setName("Outdoor Air System 1");
+  Node supplyOutlet = airLoop.supplyOutletNode();
+  oaSystem1.addToNode(supplyOutlet);
+
+  ControllerOutdoorAir controller2(m);
+  AirLoopHVACOutdoorAirSystem oaSystem2(m, controller2);
+  oaSystem2.setName("Outdoor Air System 2");
+  HeatExchangerAirToAirSensibleAndLatent hx(m);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem2);
+  doaSystem.setName("Dedicated Outdoor Air System 1");
+  doaSystem.addAirLoop(airLoop);
+  EXPECT_EQ(2u, oaSystem2.components().size());
+  EXPECT_TRUE(hx.addToNode(oaSystem2.outboardOANode().get()));
+  EXPECT_EQ(6u, oaSystem2.components().size());  // FIXME: is 6 correct?
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfContrlLists(w.getObjectsByType(IddObjectType::AirLoopHVAC_ControllerList));
+  ASSERT_EQ(1u, idfContrlLists.size());  // FIXME: is 1 correct?
+
+  WorkspaceObjectVector idfContrlOAs(w.getObjectsByType(IddObjectType::Controller_OutdoorAir));
+  ASSERT_EQ(1u, idfContrlOAs.size());
+  WorkspaceObject idfContrlOA(idfContrlOAs[0]);
+
+  WorkspaceObjectVector idfHXs(w.getObjectsByType(IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent));
+  ASSERT_EQ(1u, idfHXs.size());
+
+  WorkspaceObjectVector idfContrlWCs(w.getObjectsByType(IddObjectType::Controller_WaterCoil));
+  ASSERT_EQ(0u, idfContrlWCs.size());
+
+  WorkspaceObjectVector idfOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem));
+  ASSERT_EQ(2u, idfOASs.size());
+
+  WorkspaceObjectVector idfOAMixers(w.getObjectsByType(IddObjectType::OutdoorAir_Mixer));
+  ASSERT_EQ(1u, idfOAMixers.size());
+
+  WorkspaceObjectVector idfAirLoops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
+  ASSERT_EQ(1u, idfAirLoops.size());
+
+  WorkspaceObjectVector idfDOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem));
+  ASSERT_EQ(1u, idfDOASs.size());
+  WorkspaceObject idfDOAS(idfDOASs[0]);
+
+  EXPECT_EQ("Outdoor Air System 2", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, false).get());
+  EXPECT_EQ("Always On Discrete", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, false).get());
+  EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer",
+            idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, false).get());
+  EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter",
+            idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, false).get());
+  EXPECT_EQ(4.5, idfDOAS.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignTemperature, false).get());
+  EXPECT_EQ(0.004, idfDOAS.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio, false).get());
+  EXPECT_EQ(17.5, idfDOAS.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignTemperature, false).get());
+  EXPECT_EQ(0.012, idfDOAS.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignHumidityRatio, false).get());
+  EXPECT_EQ(1, idfDOAS.getInt(AirLoopHVAC_DedicatedOutdoorAirSystemFields::NumberofAirLoopHVAC, false).get());
+  EXPECT_EQ(1u, idfDOAS.numExtensibleGroups());
+  WorkspaceExtensibleGroup w_eg = idfDOAS.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  EXPECT_EQ("Air Loop 1", w_eg.getString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, false).get());
+
+  WorkspaceObjectVector idfMixers(w.getObjectsByType(IddObjectType::AirLoopHVAC_Mixer));
+  ASSERT_EQ(1u, idfMixers.size());
+  WorkspaceObject idfMixer(idfMixers[0]);
+
+  EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer", idfMixer.getString(AirLoopHVAC_MixerFields::Name, false).get());
+  EXPECT_EQ(hx.secondaryAirInletModelObject().get().nameString(), idfMixer.getString(AirLoopHVAC_MixerFields::OutletNodeName, false).get());
+  EXPECT_EQ(1u, idfMixer.numExtensibleGroups());
+  WorkspaceExtensibleGroup w_egMixer = idfMixer.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  EXPECT_EQ(idfContrlOA.getString(Controller_OutdoorAirFields::ReliefAirOutletNodeName, false).get(),
+            w_egMixer.getString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, false).get());
+
+  WorkspaceObjectVector idfSplitters(w.getObjectsByType(IddObjectType::AirLoopHVAC_Splitter));
+  ASSERT_EQ(1u, idfSplitters.size());
+  WorkspaceObject idfSplitter(idfSplitters[0]);
+
+  EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter", idfSplitter.getString(AirLoopHVAC_SplitterFields::Name, false).get());
+  EXPECT_EQ(hx.primaryAirOutletModelObject().get().nameString(), idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
   EXPECT_EQ(1u, idfSplitter.numExtensibleGroups());
   WorkspaceExtensibleGroup w_egSplitter = idfSplitter.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   EXPECT_EQ(idfContrlOA.getString(Controller_OutdoorAirFields::ActuatorNodeName, false).get(),
