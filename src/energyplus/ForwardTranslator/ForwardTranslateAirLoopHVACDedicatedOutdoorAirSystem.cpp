@@ -30,12 +30,15 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/AirToAirComponent.hpp"
+#include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/AirLoopHVACDedicatedOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVACZoneMixer.hpp"
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
 
@@ -79,7 +82,25 @@ namespace energyplus {
     idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, mixerName);
     IdfObject idfMixer(openstudio::IddObjectType::AirLoopHVAC_Mixer);
     idfMixer.setString(AirLoopHVAC_MixerFields::Name, mixerName);
-    idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, idfMixer.name().get() + " Outlet");
+
+    std::string outletNodeName;
+    boost::optional<AirToAirComponent> component;
+
+    if (boost::optional<Node> outboardOANode = oaSystem.outboardOANode()) {
+      if (boost::optional<ModelObject> outletModelObject = outboardOANode->outletModelObject()) {
+        if (component = outletModelObject->optionalCast<AirToAirComponent>()) {
+          if (boost::optional<ModelObject> secondaryAirInletModelObject = component->secondaryAirInletModelObject()) {
+            outletNodeName = secondaryAirInletModelObject->name().get();
+          }
+        }
+      }
+    }
+
+    if (!component) {
+      outletNodeName = idfMixer.name().get() + " Outlet";
+    }
+
+    idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, outletNodeName);
 
     // AirLoopHVAC:Splitter Name
     std::string splitterName(modelObject.nameString() + " Splitter");
