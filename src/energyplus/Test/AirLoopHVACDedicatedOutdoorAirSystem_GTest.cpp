@@ -218,7 +218,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem_StraightComponent) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem_CoilCoolingDXTwoSpeed) {
 
   // Test for #4290 - Add a StraightComponent to an AirLoopHVAC:OutdoorAirSystem attached to AirLoopHVAC:DedicatedOutdoorAirSystem
   Model m;
@@ -247,7 +247,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   Workspace w = ft.translateModel(m);
 
   WorkspaceObjectVector idfContrlLists(w.getObjectsByType(IddObjectType::AirLoopHVAC_ControllerList));
-  ASSERT_EQ(2u, idfContrlLists.size());
+  ASSERT_EQ(1u, idfContrlLists.size());
 
   WorkspaceObjectVector idfContrlOAs(w.getObjectsByType(IddObjectType::Controller_OutdoorAir));
   ASSERT_EQ(1u, idfContrlOAs.size());
