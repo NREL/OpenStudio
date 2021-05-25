@@ -45,6 +45,8 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -694,6 +696,8 @@ namespace model {
         if (!airLoop->demandComponent(node.handle())) {
           return StraightComponent_Impl::addToNode(node);
         }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        return StraightComponent_Impl::addToNode(node);
       }
 
       return false;
