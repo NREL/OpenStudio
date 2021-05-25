@@ -247,7 +247,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   Workspace w = ft.translateModel(m);
 
   WorkspaceObjectVector idfContrlLists(w.getObjectsByType(IddObjectType::AirLoopHVAC_ControllerList));
-  ASSERT_EQ(1u, idfContrlLists.size());
+  ASSERT_EQ(1u, idfContrlLists.size());  // FIXME: is 1 correct?
 
   WorkspaceObjectVector idfContrlOAs(w.getObjectsByType(IddObjectType::Controller_OutdoorAir));
   ASSERT_EQ(1u, idfContrlOAs.size());
