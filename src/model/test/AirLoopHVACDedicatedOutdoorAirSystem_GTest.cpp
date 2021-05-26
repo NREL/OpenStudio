@@ -61,6 +61,7 @@
 #include "../FanVariableVolume.hpp"
 #include "../HumidifierSteamElectric.hpp"
 #include "../HumidifierSteamGas.hpp"
+#include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -276,124 +277,130 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SupportedComponents) {
   ControllerOutdoorAir controller(m);
   AirLoopHVACOutdoorAirSystem oas(m, controller);
   AirLoopHVACDedicatedOutdoorAirSystem doas(oas);
-  
+
   // CoilCoolingDXSingleSpeed
   {
     CoilCoolingDXSingleSpeed coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilCoolingDXTwoSpeed
   {
     CoilCoolingDXTwoSpeed coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilCoolingDXTwoStageWithHumidityControlMode
   {
     CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilCoolingDXVariableSpeed
   {
     CoilCoolingDXVariableSpeed coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilCoolingWater
   {
     CoilCoolingWater coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilHeatingDXSingleSpeed
   {
     CoilHeatingDXSingleSpeed coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilHeatingDXVariableSpeed
   {
     CoilHeatingDXVariableSpeed coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilHeatingElectric
   {
     CoilHeatingElectric coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilHeatingGas
   {
     CoilHeatingGas coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilHeatingWater
   {
     CoilHeatingWater coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilSystemCoolingDXHeatExchangerAssisted
   {
     CoilSystemCoolingDXHeatExchangerAssisted coil(m);
     EXPECT_FALSE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilSystemCoolingWaterHeatExchangerAssisted
   {
     CoilSystemCoolingWaterHeatExchangerAssisted coil(m);
     EXPECT_TRUE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // CoilSystemIntegratedHeatPumpAirSource
   {
     CoilSystemIntegratedHeatPumpAirSource coil(m);
     EXPECT_FALSE(coil.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // FanComponentModel
   {
     FanComponentModel fan(m);
     EXPECT_TRUE(fan.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // FanConstantVolume
   {
     FanConstantVolume fan(m);
     EXPECT_TRUE(fan.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // FanOnOff
   {
     FanOnOff fan(m);
     EXPECT_FALSE(fan.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // FanSystemModel
   {
     FanSystemModel fan(m);
     EXPECT_TRUE(fan.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // FanVariableVolume
   {
     FanVariableVolume fan(m);
     EXPECT_TRUE(fan.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // HumidifierSteamElectric
   {
     HumidifierSteamElectric hum(m);
     EXPECT_TRUE(hum.addToNode(oas.outboardOANode().get()));
   }
-  
+
   // HumidifierSteamGas
   {
     HumidifierSteamGas hum(m);
     EXPECT_TRUE(hum.addToNode(oas.outboardOANode().get()));
+  }
+
+  // HeatExchangerAirToAirSensibleAndLatent
+  {
+    HeatExchangerAirToAirSensibleAndLatent hx(m);
+    EXPECT_TRUE(hx.addToNode(oas.outboardOANode().get()));
   }
 }
