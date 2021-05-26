@@ -242,8 +242,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   doaSystem.setName("Dedicated Outdoor Air System 1");
   doaSystem.addAirLoop(airLoop);
   EXPECT_EQ(2u, oaSystem2.components().size());
+  EXPECT_EQ(1u, oaSystem2.oaComponents().size());
+  EXPECT_EQ(1u, oaSystem2.reliefComponents().size());
   EXPECT_TRUE(coil.addToNode(oaSystem2.outboardOANode().get()));
   EXPECT_EQ(4u, oaSystem2.components().size());
+  EXPECT_EQ(3u, oaSystem2.oaComponents().size());
+  EXPECT_EQ(1u, oaSystem2.reliefComponents().size());
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -334,8 +338,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   doaSystem.setName("Dedicated Outdoor Air System 1");
   doaSystem.addAirLoop(airLoop);
   EXPECT_EQ(2u, oaSystem2.components().size());
+  EXPECT_EQ(1u, oaSystem2.oaComponents().size());
+  EXPECT_EQ(1u, oaSystem2.reliefComponents().size());
   EXPECT_TRUE(hx.addToNode(oaSystem2.outboardOANode().get()));
   EXPECT_EQ(6u, oaSystem2.components().size());  // FIXME: is 6 correct?
+  EXPECT_EQ(3u, oaSystem2.oaComponents().size());
+  EXPECT_EQ(3u, oaSystem2.reliefComponents().size());
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);

@@ -30,8 +30,6 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/AirToAirComponent.hpp"
-#include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/AirLoopHVACDedicatedOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
@@ -41,6 +39,8 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVACZoneMixer.hpp"
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 
 #include <utilities/idd/AirLoopHVAC_DedicatedOutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_Mixer_FieldEnums.hxx>
@@ -83,24 +83,21 @@ namespace energyplus {
     IdfObject idfMixer(openstudio::IddObjectType::AirLoopHVAC_Mixer);
     idfMixer.setString(AirLoopHVAC_MixerFields::Name, mixerName);
 
-    std::string outletNodeName;
-    boost::optional<AirToAirComponent> component;
+    boost::optional<std::string> outletNodeName;
 
-    if (boost::optional<Node> outboardOANode = oaSystem.outboardOANode()) {
-      if (boost::optional<ModelObject> outletModelObject = outboardOANode->outletModelObject()) {
-        if (component = outletModelObject->optionalCast<AirToAirComponent>()) {
-          if (boost::optional<ModelObject> secondaryAirInletModelObject = component->secondaryAirInletModelObject()) {
-            outletNodeName = secondaryAirInletModelObject->name().get();
-          }
+    for (auto oaComponent : oaSystem.oaComponents()) {
+      if (boost::optional<HeatExchangerAirToAirSensibleAndLatent> hx = oaComponent.optionalCast<HeatExchangerAirToAirSensibleAndLatent>()) {
+        if (boost::optional<ModelObject> secondaryAirInletModelObject = hx->secondaryAirInletModelObject()) {
+          outletNodeName = secondaryAirInletModelObject->name();
         }
       }
     }
 
-    if (!component) {
+    if (!outletNodeName) {
       outletNodeName = idfMixer.name().get() + " Outlet";
     }
 
-    idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, outletNodeName);
+    idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, outletNodeName.get());
 
     // AirLoopHVAC:Splitter Name
     std::string splitterName(modelObject.nameString() + " Splitter");
