@@ -72,14 +72,16 @@ namespace model {
       virtual int renderingColorIndex() const override;
 
       /// Returns fFactor.
-      virtual double fFactor() const;
-      virtual bool setFFactor(double fFactor);
+      double fFactor() const;
+      bool setFFactor(double fFactor);
+
       /// Returns area.
-      virtual double area() const;
-      virtual bool setArea(double area);
+      double area() const;
+      bool setArea(double area);
+
       /// Returns perimeterExposed.
-      virtual double perimeterExposed() const;
-      virtual bool setPerimeterExposed(double perimeterExposed);
+      double perimeterExposed() const;
+      bool setPerimeterExposed(double perimeterExposed);
 
       //@}
 
