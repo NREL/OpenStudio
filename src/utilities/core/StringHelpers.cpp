@@ -31,6 +31,8 @@
 #include "StringHelpers.hpp"
 #include "../math/FloatCompare.hpp"
 
+#include <boost/algorithm/string/replace.hpp>
+
 #include <iomanip>
 
 namespace openstudio {
@@ -378,19 +380,7 @@ std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std
 }
 
 std::string replace(std::string input, const std::string& before, const std::string& after) {
-  std::size_t loc = 0;
-
-  while (true) {
-    loc = input.find(before, loc);
-
-    if (loc == std::string::npos) {
-      break;
-    }
-
-    input.replace(loc, before.size(), after);
-    loc += after.size();
-  }
-
+  boost::replace_all(input, before, after);
   return input;
 }
 
