@@ -434,9 +434,6 @@ if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)
   add_dependencies(${target_name}_tests openstudio_model_resources)
   add_dependencies(${target_name}_tests openstudio_energyplus_resources)
-
-  # This one I expect to actually timeout since I was testing an infinite loop, and I do not feel like waiting 660s = 11minutes
-  set_tests_properties(String.replace PROPERTIES TIMEOUT 10)
 endif()
 
 if(BUILD_BENCHMARK)

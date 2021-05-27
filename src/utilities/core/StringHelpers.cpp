@@ -388,6 +388,7 @@ std::string replace(std::string input, const std::string& before, const std::str
     }
 
     input.replace(loc, before.size(), after);
+    loc += after.size();
   }
 
   return input;
