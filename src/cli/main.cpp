@@ -150,8 +150,8 @@ extern "C"
   void Init_zlib(void);
 
   void Init_openssl(void);
-
   void Init_nonblock(void);
+  void Init_ruby_description(void);
 
 #ifndef _WIN32
   void Init_console(void);
@@ -435,6 +435,8 @@ int main(int argc, char* argv[]) {
     rb_provide("nonblock");
     rb_provide("nonblock.so");
 
+    Init_ruby_description();
+
     Init_objspace();
     rb_provide("objspace");
     rb_provide("objspace.so");
@@ -514,6 +516,8 @@ int main(int argc, char* argv[]) {
     Init_nonblock();
     rb_provide("io/nonblock");
     rb_provide("io/nonblock.so");
+
+    
 
 #ifndef _WIN32
 
