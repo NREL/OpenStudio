@@ -39,6 +39,7 @@ namespace model {
 
   class Schedule;
   class ThermalZone;
+  class WaterHeaterSizing;
 
   namespace detail {
 
@@ -393,6 +394,8 @@ namespace model {
     boost::optional<double> autosizedUseSideDesignFlowRate() const;
 
     boost::optional<double> autosizedSourceSideDesignFlowRate() const;
+
+    WaterHeaterSizing waterHeaterSizing() const;
 
     //@}
    protected:

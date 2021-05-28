@@ -44,10 +44,15 @@
 #include "ScheduleRuleset.hpp"
 #include "ScheduleRuleset_Impl.hpp"
 #include "Model.hpp"
+#include "WaterHeaterSizing.hpp"
+#include "WaterHeaterSizing_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Stratified_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -140,6 +145,18 @@ namespace model {
 
     IddObjectType WaterHeaterStratified_Impl::iddObjectType() const {
       return WaterHeaterStratified::iddObjectType();
+    }
+
+    std::vector<ModelObject> WaterHeaterStratified_Impl::children() const {
+      return std::vector<ModelObject>{waterHeaterSizing()};
+    }
+
+    ModelObject WaterHeaterStratified_Impl::clone(Model model) const {
+      auto whClone = WaterToWaterComponent_Impl::clone(model).cast<WaterHeaterStratified>();
+
+      auto sizingClone = waterHeaterSizing().clone(model).cast<WaterHeaterSizing>();
+      sizingClone.getImpl<WaterHeaterSizing_Impl>()->setWaterHeater(whClone);
+      return whClone;
     }
 
     std::vector<ScheduleTypeKey> WaterHeaterStratified_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
@@ -1154,6 +1171,27 @@ namespace model {
       }
     }
 
+    WaterHeaterSizing WaterHeaterStratified_Impl::waterHeaterSizing() const {
+      boost::optional<WaterHeaterSizing> waterHeaterSizing_;
+
+      auto sizingObjects = getObject<WaterHeaterStratified>().getModelObjectSources<WaterHeaterSizing>();
+      auto predicate = [thisHandle = this->handle()](const auto& siz) {
+        try {
+          return siz.waterHeater().handle() == thisHandle;
+        } catch (...) {
+          LOG(Debug, siz.briefDescription() << " is not attached to a WaterHeater object.");
+          return false;
+        }
+      };
+
+      auto it = std::find_if(sizingObjects.cbegin(), sizingObjects.cend(), predicate);
+      if (it != sizingObjects.cend()) {
+        return *it;
+      } else {
+        LOG_AND_THROW(briefDescription() << " missing WaterHeater:Sizing object.");
+      }
+    }
+
   }  // namespace detail
 
   WaterHeaterStratified::WaterHeaterStratified(const Model& model) : WaterToWaterComponent(WaterHeaterStratified::iddObjectType(), model) {
@@ -1235,6 +1273,8 @@ namespace model {
     setNode12AdditionalLossCoefficient(0);
 
     setSourceSideFlowControlMode("IndirectHeatPrimarySetpoint");
+
+    WaterHeaterSizing waterHeaterSizing(*this);
   }
 
   IddObjectType WaterHeaterStratified::iddObjectType() {
@@ -1890,6 +1930,10 @@ namespace model {
 
   boost::optional<double> WaterHeaterStratified::autosizedSourceSideDesignFlowRate() const {
     return getImpl<detail::WaterHeaterStratified_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
+
+  WaterHeaterSizing WaterHeaterStratified::waterHeaterSizing() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->waterHeaterSizing();
   }
 
 }  // namespace model

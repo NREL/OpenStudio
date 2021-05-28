@@ -438,6 +438,7 @@ namespace model {
   class WaterHeaterMixed;
   class WaterHeaterHeatPump;
   class WaterHeaterHeatPumpWrappedCondenser;
+  class WaterHeaterSizing;
   class WaterHeaterStratified;
   class WaterUseConnections;
   class WaterUseEquipment;
@@ -1372,6 +1373,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateWaterHeaterHeatPump(model::WaterHeaterHeatPump& modelObject);
 
     boost::optional<IdfObject> translateWaterHeaterHeatPumpWrappedCondenser(model::WaterHeaterHeatPumpWrappedCondenser& modelObject);
+
+    boost::optional<IdfObject> translateWaterHeaterSizing(model::WaterHeaterSizing& modelObject);
 
     boost::optional<IdfObject> translateWaterHeaterStratified(model::WaterHeaterStratified& modelObject);
 

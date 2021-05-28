@@ -1565,6 +1565,9 @@ set(${target_name}_src
   WaterHeaterHeatPump.hpp
   WaterHeaterHeatPump_Impl.hpp
   WaterHeaterHeatPump.cpp
+  WaterHeaterSizing.hpp
+  WaterHeaterSizing_Impl.hpp
+  WaterHeaterSizing.cpp
   WaterHeaterStratified.hpp
   WaterHeaterStratified_Impl.hpp
   WaterHeaterStratified.cpp
@@ -2167,6 +2170,7 @@ set(${target_name}_test_src
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
   test/WaterHeaterHeatPumpWrappedCondenser_GTest.cpp
+  test/WaterHeaterSizing_GTest.cpp
   test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
