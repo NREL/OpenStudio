@@ -80,8 +80,6 @@ namespace model {
       /** @name Getters */
       //@{
 
-      boost::optional<double> maximumFlowRate() const;
-
       boost::optional<int> numberofBoreHoles() const;
 
       boost::optional<double> boreHoleLength() const;
@@ -116,10 +114,6 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
-
-      void resetMaximumFlowRate();
-
       bool setNumberofBoreHoles(boost::optional<int> numberofBoreHoles);
 
       void resetNumberofBoreHoles();
@@ -144,9 +138,7 @@ namespace model {
 
       void resetGroundTemperature();
 
-      bool setDesignFlowRate(boost::optional<double> designFlowRate);
-
-      void resetDesignFlowRate();
+      bool setDesignFlowRate(double designFlowRate);
 
       bool setGroutThermalConductivity(boost::optional<double> groutThermalConductivity);
 
