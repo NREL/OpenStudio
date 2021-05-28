@@ -55,6 +55,11 @@
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACUnitVentilator_Impl.hpp"
 
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
+
 #include <utilities/idd/OS_CoilSystem_Cooling_Water_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../utilities/core/Assert.hpp"
@@ -232,6 +237,10 @@ namespace model {
               controller.setAction("Reverse");
             }
           }
+        }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        if (oas->airLoopHVACDedicatedOutdoorAirSystem()) {
+          return StraightComponent_Impl::addToNode(node);
         }
       }
 

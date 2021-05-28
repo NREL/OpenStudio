@@ -55,6 +55,10 @@
 #include "Node_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -803,6 +807,10 @@ namespace model {
           } else {
             return StraightComponent_Impl::addToNode(node);
           }
+        }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        if (oas->airLoopHVACDedicatedOutdoorAirSystem()) {
+          return StraightComponent_Impl::addToNode(node);
         }
       }
 
