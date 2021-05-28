@@ -250,19 +250,7 @@ namespace model {
       return result.get();
     }
     bool CoilCoolingDXTwoSpeed_Impl::setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveBiquadratic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
 
     // A6 , \field Total Cooling Capacity Function of Flow Fraction Curve Name
@@ -273,21 +261,7 @@ namespace model {
       return result.get();
     }
     bool CoilCoolingDXTwoSpeed_Impl::setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle());
     }
 
     // A7 , \field Energy Input Ratio Function of Temperature Curve Name
@@ -298,19 +272,7 @@ namespace model {
       return result.get();
     }
     bool CoilCoolingDXTwoSpeed_Impl::setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveBiquadratic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     }
 
     // A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
@@ -321,21 +283,7 @@ namespace model {
       return result.get();
     }
     bool CoilCoolingDXTwoSpeed_Impl::setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle());
     }
 
     // A9 , \field Part Load Fraction Correlation Curve Name
@@ -346,20 +294,7 @@ namespace model {
       return result.get();
     }
     bool CoilCoolingDXTwoSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-      bool accepted = false;
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle());
     }
 
     // N5 , \field Rated Low Speed Total Cooling Capacity
@@ -423,19 +358,7 @@ namespace model {
       return result.get();
     }
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveBiquadratic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedTotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedTotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
 
     // A11, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
@@ -446,19 +369,7 @@ namespace model {
       return result.get();
     }
     bool CoilCoolingDXTwoSpeed_Impl::setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveBiquadratic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     }
 
     // A12, \field Condenser Air Inlet Node Name
