@@ -33208,6 +33208,211 @@ OS:Meter:CustomDecrement,
         \begin-extensible
    A6;  \field Output Variable or Meter Name
 
+OS:Output:EnvironmentalImpactFactors,
+   \memo This is used to Automatically report the facility meters and turn on the Environmental Impact Report calculations
+   \memo for all of the Environmental Factors.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 ; \field Reporting Frequency
+       \type choice
+       \required-field
+       \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
+       \note RunPeriod and Environment are the same. Detailed is not a valid choice.
+       \key Timestep
+       \key Hourly
+       \key Daily
+       \key Monthly
+       \key RunPeriod
+       \key Environment
+       \key Annual
+
+OS:EnvironmentalImpactFactors,
+   \memo Used to help convert district and ideal energy use to a fuel type and provide total carbon equivalent with coefficients
+   \memo Also used in Source=>Site conversions.
+   \unique-object
+  A1, \field Handle
+      \type handle
+      \required-field
+  N1, \field District Heating Efficiency
+      \note District heating efficiency used when converted to natural gas
+      \minimum> 0.0
+      \required-field
+  N2, \field District Cooling COP
+      \note District cooling COP used when converted to electricity
+      \units W/W
+      \minimum> 0.0
+      \required-field
+  N3, \field Steam Conversion Efficiency
+      \note Steam conversion efficiency used to convert steam usage to natural gas
+      \minimum> 0.0
+      \required-field
+  N4, \field Total Carbon Equivalent Emission Factor From N2O
+      \units kg/kg
+      \required-field
+  N5, \field Total Carbon Equivalent Emission Factor From CH4
+      \units kg/kg
+      \required-field
+  N6; \field Total Carbon Equivalent Emission Factor From CO2
+      \units kg/kg
+      \required-field
+
+OS:FuelFactors,
+     \memo Provides Fuel Factors for Emissions as well as Source=>Site conversions.
+     \memo OtherFuel1, OtherFuel2 provide options for users who want to create and use
+     \memo fuels that may not be mainstream (biomass, wood, pellets).
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Existing Fuel Resource Name
+       \required-field
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key FuelOilNo1
+       \key FuelOilNo2
+       \key Coal
+       \key Gasoline
+       \key Propane
+       \key Diesel
+       \key OtherFuel1
+       \key OtherFuel2
+  N1,  \field Source Energy Factor
+       \units J/J
+       \type real
+       \minimum 0
+       \required-field
+  A3,  \field Source Energy Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N2,  \field CO2 Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A4,  \field CO2 Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N3,  \field CO Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A5,  \field CO Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N4,  \field CH4 Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A6,  \field CH4 Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N5,  \field NOx Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A7,  \field NOx Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N6,  \field N2O Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A8,  \field N2O Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N7,  \field SO2 Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A9,  \field SO2 Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N8,  \field PM Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A10, \field PM Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N9,  \field PM10 Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A11, \field PM10 Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N10, \field PM2.5 Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A12, \field PM2.5 Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N11, \field NH3 Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A13, \field NH3 Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N12, \field NMVOC Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A14, \field NMVOC Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N13, \field Hg Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A15, \field Hg Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N14, \field Pb Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A16, \field Pb Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N15, \field Water Emission Factor
+       \units L/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A17, \field Water Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N16, \field Nuclear High Level Emission Factor
+       \units g/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A18, \field Nuclear High Level Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  N17, \field Nuclear Low Level Emission Factor
+       \units m3/MJ
+       \type real
+       \minimum 0
+       \required-field
+  A19; \field Nuclear Low Level Emission Factor Schedule Name
+       \type object-list
+       \object-list ScheduleNames
 
 OS:Output:Diagnostics,
        \memo Special keys to produce certain warning messages or effect certain simulation characteristics.
