@@ -373,6 +373,12 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
           return sc.addShadingZoneGroup(thermalZones);
         }
 
+        // Reimplemented from ModelResources.i
+        std::vector<openstudio::model::HeatExchangerDesiccantBalancedFlow> getHeatExchangerDesiccantBalancedFlows(
+            const openstudio::model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& hxData)
+        {
+          return hxData.heatExchangerDesiccantBalancedFlows();
+        }
       }
     }
   }
@@ -435,6 +441,12 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
       }
       public bool addShadingZoneGroup(ThermalZoneVector thermalZones) {
         return OpenStudio.OpenStudioModelHVAC.addShadingZoneGroup(this, thermalZones);
+      }
+    }
+
+    public partial class HeatExchangerDesiccantBalancedFlowPerformanceDataType1 : ModelObject {
+      public HeatExchangerDesiccantBalancedFlowVector heatExchangerDesiccantBalancedFlows() {
+        return OpenStudio.OpenStudioModelHVAC.getHeatExchangerDesiccantBalancedFlows(this);
       }
     }
 
