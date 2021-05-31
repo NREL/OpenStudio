@@ -41,7 +41,7 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
-
+#include "../../model/WaterHeaterSizing.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/core/Optional.hpp"
 
@@ -69,21 +69,25 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject(IddObjectType::WaterHeater_Mixed);
-
-    m_idfObjects.push_back(idfObject);
-
     // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::WaterHeater_Mixed, modelObject);
 
-    s = modelObject.name();
-    if (s) {
-      idfObject.setName(*s);
+    // Trigger translation of the WaterHeater:Sizing object, if any
+    bool hasWaterHeaterSizing = true;
+    try {
+      auto siz = modelObject.waterHeaterSizing();
+      translateAndMapModelObject(siz);
+    } catch (...) {
+      hasWaterHeaterSizing = false;
     }
 
     // TankVolume
 
     if (modelObject.isTankVolumeAutosized()) {
       idfObject.setString(WaterHeater_MixedFields::TankVolume, "Autosize");
+      if (!hasWaterHeaterSizing) {
+        LOG(Error, modelObject.briefDescription() << " has its Tank Volume autosized but it does not have a WaterHeaterSizing object attached");
+      }
     } else {
       value = modelObject.tankVolume();
 
@@ -126,6 +130,10 @@ namespace energyplus {
 
     if (modelObject.isHeaterMaximumCapacityAutosized()) {
       idfObject.setString(WaterHeater_MixedFields::HeaterMaximumCapacity, "Autosize");
+      if (!hasWaterHeaterSizing) {
+        LOG(Error,
+            modelObject.briefDescription() << " has its Heater Maximum Capacity autosized but it does not have a WaterHeaterSizing object attached");
+      }
     } else {
       value = modelObject.heaterMaximumCapacity();
 

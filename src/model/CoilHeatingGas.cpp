@@ -461,13 +461,7 @@ namespace model {
     }
 
     bool CoilHeatingGas_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (curve.optionalCast<CurveQuadratic>() || curve.optionalCast<CurveCubic>()) {
-        accepted = setPointer(OS_Coil_Heating_GasFields::PartLoadFractionCorrelationCurveName, curve.handle());
-      }
-
-      return accepted;
+      return setPointer(OS_Coil_Heating_GasFields::PartLoadFractionCorrelationCurveName, curve.handle());
     }
 
     void CoilHeatingGas_Impl::resetPartLoadFractionCorrelationCurve() {

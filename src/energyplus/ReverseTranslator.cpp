@@ -681,6 +681,18 @@ namespace energyplus {
         modelObject = translateOutputJSON(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Output_EnvironmentalImpactFactors: {
+        modelObject = translateOutputEnvironmentalImpactFactors(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::EnvironmentalImpactFactors: {
+        modelObject = translateEnvironmentalImpactFactors(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::FuelFactors: {
+        modelObject = translateFuelFactors(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Output_IlluminanceMap: {
         modelObject = translateOutputIlluminanceMap(workspaceObject);
         break;

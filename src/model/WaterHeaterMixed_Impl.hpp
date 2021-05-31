@@ -40,6 +40,7 @@ namespace model {
   class Schedule;
   class CurveCubic;
   class ThermalZone;
+  class WaterHeaterSizing;
 
   namespace detail {
 
@@ -81,6 +82,10 @@ namespace model {
       virtual void applySizingValues() override;
 
       boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual ModelObject clone(Model model) const override;
 
       //@}
       /** @name Getters */
@@ -358,6 +363,12 @@ namespace model {
       void resetIndirectAlternateSetpointTemperatureSchedule();
 
       bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+      //@}
+      /** @name Other */
+      //@{
+
+      WaterHeaterSizing waterHeaterSizing() const;
 
       //@}
      protected:

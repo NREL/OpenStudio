@@ -1903,6 +1903,11 @@ namespace energyplus {
         retVal = translateWaterHeaterHeatPumpWrappedCondenser(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_WaterHeater_Sizing: {
+        model::WaterHeaterSizing waterHeaterSizing = modelObject.cast<WaterHeaterSizing>();
+        retVal = translateWaterHeaterSizing(waterHeaterSizing);
+        break;
+      }
       case openstudio::IddObjectType::OS_WaterHeater_Stratified: {
         model::WaterHeaterStratified waterHeaterStratified = modelObject.cast<WaterHeaterStratified>();
         retVal = translateWaterHeaterStratified(waterHeaterStratified);
@@ -2148,6 +2153,21 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Output_JSON: {
         auto mo = modelObject.cast<OutputJSON>();
         retVal = translateOutputJSON(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
+        auto mo = modelObject.cast<OutputEnvironmentalImpactFactors>();
+        retVal = translateOutputEnvironmentalImpactFactors(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_EnvironmentalImpactFactors: {
+        auto mo = modelObject.cast<EnvironmentalImpactFactors>();
+        retVal = translateEnvironmentalImpactFactors(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_FuelFactors: {
+        auto mo = modelObject.cast<FuelFactors>();
+        retVal = translateFuelFactors(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Output_Meter: {
@@ -3071,6 +3091,12 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Output_DebuggingData);
     result.push_back(IddObjectType::OS_Output_Diagnostics);
     result.push_back(IddObjectType::OS_Output_JSON);
+
+    // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
+    result.push_back(IddObjectType::OS_Output_EnvironmentalImpactFactors);
+    // result.push_back(IddObjectType::OS_EnvironmentalImpactFactors);
+    // result.push_back(IddObjectType::OS_FuelFactors);
+
     result.push_back(IddObjectType::OS_Output_Table_SummaryReports);
     result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
