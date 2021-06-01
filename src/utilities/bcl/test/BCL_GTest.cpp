@@ -462,3 +462,15 @@ TEST_F(BCLFixture, 4014_Crash) {
   // Try again, should not segfault
   success = remoteBCL.downloadComponent(uid);
 }
+
+
+TEST_F(BCLFixture, RemoteBCL_EncodingURI) {
+
+  // Test for #4336
+  RemoteBCL remoteBCL;
+
+  // get all constructions, via empty first arg and tid
+  ASSERT_NO_THROW(remoteBCL.searchComponentLibrary("ashrae 4A", 127));
+  std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("ashrae 4A", 127);
+  ASSERT_GT(responses.size(), 0u);
+}
