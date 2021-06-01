@@ -1132,7 +1132,7 @@ namespace model {
     //  }
     //}
 
-    bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent hvacComponent) {
+    bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent& hvacComponent) {
       Model _model = this->model();
 
       if (hvacComponent.model() != _model) {
@@ -2136,7 +2136,7 @@ namespace model {
     return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
   }
 
-  bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent component) {
+  bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent& component) {
     return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForHVACComponent(component);
   }
 

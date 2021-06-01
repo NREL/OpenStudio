@@ -188,7 +188,7 @@ namespace model {
 
       bool moveBranchForZone(ThermalZone& thermalZone, Mixer& newMixer);
 
-      bool addBranchForHVACComponent(HVACComponent airTerminal);
+      bool addBranchForHVACComponent(HVACComponent& airTerminal);
 
       SizingSystem sizingSystem() const;
 
