@@ -1769,3 +1769,30 @@ TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_SingleDuct_terminalForLastBran
   EXPECT_EQ(1u, a.components(startComp, mixer, openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat).size());
   EXPECT_EQ(1u, a.components(startComp, mixer, openstudio::IddObjectType::OS_ThermalZone).size());
 }
+
+TEST_F(ModelFixture, AirLoopHVAC_Enforce_Correct_ATU_Type_SingleDuct) {
+  // Test for #4340 - If I make a SingleDuct AirLoopHVAC, then I shouldn't accept a Dual duct ATU
+  Model m;
+
+  AirLoopHVAC a(m);
+  ThermalZone z(m);
+  AirTerminalDualDuctConstantVolume atu(m);
+
+  ASSERT_FALSE(a.isDualDuct());
+
+  EXPECT_FALSE(a.addBranchForHVACComponent(atu));
+}
+
+TEST_F(ModelFixture, AirLoopHVAC_Enforce_Correct_ATU_Type_DualDuct) {
+  // Test for #4340 - If I make a DualDuct AirLoopHVAC, then I shouldn't accept a Single duct ATU
+  Model m;
+
+  AirLoopHVAC a(m, true);
+  ThermalZone z(m);
+  ScheduleCompact scheduleCompact(m);
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m, scheduleCompact);
+
+  ASSERT_TRUE(a.isDualDuct());
+
+  EXPECT_FALSE(a.addBranchForHVACComponent(atu));
+}
