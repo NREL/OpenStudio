@@ -425,3 +425,12 @@ TEST(String, ASCIITrimString) {
   openstudio::ascii_trim(test);
   EXPECT_EQ("hello world", test);
 }
+
+TEST(String, replace) {
+  std::string input = "def CreateBaselineBuilding blablabla CreateBaselineBuilding";
+  std::string before = "CreateBaselineBuilding";
+  std::string after = "CreateBaselineBuildingCopy";
+
+  std::string replaced = openstudio::replace(input, before, after);
+  EXPECT_EQ("def CreateBaselineBuildingCopy blablabla CreateBaselineBuildingCopy", replaced);
+}
