@@ -115,6 +115,9 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include <array>
+#include <algorithm>
+
 namespace openstudio {
 
 namespace model {
@@ -294,6 +297,15 @@ namespace model {
     }
 
     boost::optional<HVACComponent> AirLoopHVAC_Impl::terminalForLastBranch(Mixer& mixer) {
+
+      // can't constexpr std::array here since IddObjectType is not litteral...
+      const std::array<openstudio::IddObjectType, 5> invalidHVACCompTypes{
+        openstudio::IddObjectType::OS_Node,
+        // Mixers
+        openstudio::IddObjectType::OS_AirLoopHVAC_ReturnPlenum, openstudio::IddObjectType::OS_AirLoopHVAC_ZoneMixer,
+        // Splitters
+        openstudio::IddObjectType::OS_AirLoopHVAC_SupplyPlenum, openstudio::IddObjectType::OS_AirLoopHVAC_ZoneSplitter};
+
       auto mixerInletNode = mixer.lastInletModelObject()->optionalCast<Node>();
       if (mixerInletNode) {
         auto upstreamComp = mixerInletNode->inletModelObject();
@@ -321,7 +333,8 @@ namespace model {
               }
             }
           }
-        } else if (!upstreamComp->optionalCast<Splitter>() && !upstreamComp->optionalCast<Mixer>() && !upstreamComp->optionalCast<Node>()) {
+        } else if (std::find(invalidHVACCompTypes.cbegin(), invalidHVACCompTypes.cend(), upstreamComp->iddObjectType())
+                   == invalidHVACCompTypes.cend()) {
           if (auto hvacComponent = upstreamComp->optionalCast<HVACComponent>()) {
             return hvacComponent;
           }
