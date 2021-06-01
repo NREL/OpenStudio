@@ -60,7 +60,8 @@ TEST_F(ModelFixture, AirTerminalDualDuctVAV) {
     Model m;
     AirTerminalDualDuctVAV terminal(m);
 
-    AirLoopHVAC airLoopHVAC(m);
+    AirLoopHVAC airLoopHVAC(m, true);
+    ASSERT_TRUE(airLoopHVAC.isDualDuct());
     {
       auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
       EXPECT_EQ(1u, t_zoneSplitters.size());
@@ -80,7 +81,8 @@ TEST_F(ModelFixture, AirTerminalDualDuctVAV) {
     Model m;
     AirTerminalDualDuctVAV terminal(m);
 
-    AirLoopHVAC airLoopHVAC(m);
+    AirLoopHVAC airLoopHVAC(m, true);
+    ASSERT_TRUE(airLoopHVAC.isDualDuct());
     {
       auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
       EXPECT_EQ(1u, t_zoneSplitters.size());
