@@ -463,7 +463,6 @@ TEST_F(BCLFixture, 4014_Crash) {
   success = remoteBCL.downloadComponent(uid);
 }
 
-
 TEST_F(BCLFixture, RemoteBCL_EncodingURI) {
 
   // Test for #4336
