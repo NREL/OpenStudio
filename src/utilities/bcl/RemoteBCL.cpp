@@ -639,8 +639,9 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/metasearch/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
+  // web::uri::encode_data_string will Encodes a string by converting all characters
+  // except for RFC 3986 unreserved characters to their hexadecimal representation. (eg: '+' => %2B, ' ' => %20)
+  auto query = searchTerm.empty() ? "*" : web::uri::encode_data_string(searchTerm);
   builder.append_path(to_string_t(query + ".xml"));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
@@ -685,8 +686,7 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/metasearch/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
+  auto query = searchTerm.empty() ? "*" : web::uri::encode_data_string(searchTerm);
   builder.append_path(to_string_t(query + ".xml"));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
@@ -731,8 +731,7 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/search/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
+  auto query = searchTerm.empty() ? "*" : web::uri::encode_data_string(searchTerm);
   builder.append_path(to_string_t(query + ".xml"));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
@@ -774,8 +773,7 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
   auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/search/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
+  auto query = searchTerm.empty() ? "*" : web::uri::encode_data_string(searchTerm);
   builder.append_path(to_string_t(query + ".xml"));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
