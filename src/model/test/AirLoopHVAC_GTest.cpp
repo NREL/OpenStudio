@@ -69,6 +69,7 @@
 #include "../AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeReheat.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
+#include "../AirTerminalDualDuctConstantVolume.hpp"
 
 #include "../ThermalZone.hpp"
 #include "../ScheduleCompact.hpp"
@@ -1708,4 +1709,31 @@ TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone_WithComponents) {
       EXPECT_EQ(3u, comps.size());
     }
   }
+}
+
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_DualDuct_terminalForLastBranch) {
+
+  // Test for #4338
+  Model m;
+
+  AirLoopHVAC a(m);
+  ThermalZone z(m);
+  AirTerminalDualDuctConstantVolume atu(m);
+
+  EXPECT_TRUE(a.addBranchForHVACComponent(atu));
+  auto splitter = a.demandSplitter();
+  auto mixer = a.demandMixer();
+  ASSERT_EQ(1u, splitter.outletModelObjects().size());
+  // (Splitter) -> Node -> ATU -> Node -> Mixer
+  EXPECT_EQ(4u, a.components(splitter.outletModelObjects()[0].cast<HVACComponent>(), mixer).size());
+
+  EXPECT_TRUE(a.addBranchForZone(z));
+  EXPECT_EQ(1u, splitter.outletModelObjects().size());
+  ASSERT_GE(splitter.outletModelObjects().size(), 1u);
+  auto startComp = splitter.outletModelObjects()[0].cast<HVACComponent>();
+  // (Splitter) -> Node -> ATU -> Node -> Zone -> Node -> Mixer
+  EXPECT_EQ(6u, a.components(startComp, mixer).size());
+  EXPECT_EQ(3u, a.components(startComp, mixer, openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(1u, a.components(startComp, mixer, openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume).size());
+  EXPECT_EQ(1u, a.components(startComp, mixer, openstudio::IddObjectType::OS_ThermalZone).size());
 }
