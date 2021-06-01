@@ -1716,9 +1716,11 @@ TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_DualDuct_terminalForLastBranch
   // Test for #4338
   Model m;
 
-  AirLoopHVAC a(m);
+  AirLoopHVAC a(m, true);
   ThermalZone z(m);
   AirTerminalDualDuctConstantVolume atu(m);
+
+  ASSERT_TRUE(a.isDualDuct());
 
   EXPECT_TRUE(a.addBranchForHVACComponent(atu));
   auto splitter = a.demandSplitter();
