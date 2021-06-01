@@ -344,6 +344,21 @@ namespace model {
       return boost::none;
     }
 
+    bool AirLoopHVAC_Impl::isTerminalTypeValid(const HVACComponent& airTerminal) {
+
+      bool loopIsDualDuct = isDualDuct();
+      // Dual duct terminals are derived from Mixer
+      bool terminalIsDualDuct = airTerminal.optionalCast<Mixer>().has_value();
+
+      // NOT XOR
+      bool result = !(loopIsDualDuct ^ terminalIsDualDuct);
+      if (!result) {
+        LOG(Warn, "Cannot assign " << airTerminal.nameString() << " to " << briefDescription() << " since it is of incorrect type, loop is "
+                                   << (loopIsDualDuct ? "dual duct." : "single duct."));
+      }
+      return result;
+    }
+
     bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone& thermalZone, AirLoopHVAC& airLoopHVAC, Splitter& splitter, Mixer& mixer,
                                                 bool removeCurrentZones, OptionalHVACComponent& optAirTerminal) {
       Model _model = thermalZone.model();
@@ -365,6 +380,10 @@ namespace model {
       }
 
       if (!airLoopHVAC.demandComponent(mixer.handle())) {
+        return false;
+      }
+
+      if (optAirTerminal && !airLoopHVAC.getImpl<detail::AirLoopHVAC_Impl>()->isTerminalTypeValid(optAirTerminal.get())) {
         return false;
       }
 
@@ -1149,6 +1168,10 @@ namespace model {
       Model _model = this->model();
 
       if (hvacComponent.model() != _model) {
+        return false;
+      }
+
+      if (!isTerminalTypeValid(hvacComponent)) {
         return false;
       }
 

@@ -31,6 +31,7 @@
 #define MODEL_AIRLOOPHVAC_IMPL_HPP
 
 #include "Loop_Impl.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 namespace model {
@@ -164,6 +165,9 @@ namespace model {
       boost::optional<HVACComponent> returnFan() const;
 
       boost::optional<HVACComponent> reliefFan() const;
+
+      // Helper to enforce that an ATU type (Single or Dual Duct) matches the AirLoopHVAC Type
+      bool isTerminalTypeValid(const HVACComponent& airTerminal);
 
       bool multiAddBranchForZone(ThermalZone& thermalZone);
 
