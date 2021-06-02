@@ -70,10 +70,6 @@ namespace model {
       // If this object is still used by at least one HeatExchangerDesiccantBalancedFlow, refuse to remove to avoid putting the HeatExchangerDesiccantBalancedFlow(s) in a broken state
       virtual std::vector<IdfObject> remove() override;
 
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
       //@}
       /** @name Getters */
       //@{
@@ -185,6 +181,10 @@ namespace model {
       double minimumProcessInletAirRelativeHumidityforHumidityRatioEquation() const;
 
       double maximumProcessInletAirRelativeHumidityforHumidityRatioEquation() const;
+
+      void autosize();
+
+      void applySizingValues();
 
       //@}
       /** @name Setters */

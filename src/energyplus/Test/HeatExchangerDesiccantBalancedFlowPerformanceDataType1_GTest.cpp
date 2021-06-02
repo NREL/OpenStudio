@@ -44,7 +44,6 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
-#include "../../model/HVACTemplates.hpp"
 
 #include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -56,13 +55,65 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_HeatExchangerDesiccantBalancedFlowPerformanceDataType1) {
   Model m;
 
-  AirLoopHVAC loop = addSystemType3(m).cast<AirLoopHVAC>();
+  AirLoopHVAC loop(m);
+  Node supplyOutletNode = loop.supplyOutletNode();
 
-  AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem oaSystem(m, controllerOutdoorAir);
+  oaSystem.addToNode(supplyOutletNode);
 
   Node oaNode = oaSystem.outboardOANode().get();
 
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1 p(m);
+  EXPECT_TRUE(p.setNominalElectricPower(3.0));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient1(0.001));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient2(0.002));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient3(0.003));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient4(0.004));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient5(0.005));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient6(0.006));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient7(0.007));
+  EXPECT_TRUE(p.setTemperatureEquationCoefficient8(0.008));
+  EXPECT_TRUE(p.setMinimumRegenerationInletAirHumidityRatioforTemperatureEquation(0.009));
+  EXPECT_TRUE(p.setMaximumRegenerationInletAirHumidityRatioforTemperatureEquation(0.0001));
+  EXPECT_TRUE(p.setMinimumRegenerationInletAirTemperatureforTemperatureEquation(0.0002));
+  EXPECT_TRUE(p.setMaximumRegenerationInletAirTemperatureforTemperatureEquation(0.0003));
+  EXPECT_TRUE(p.setMinimumProcessInletAirHumidityRatioforTemperatureEquation(0.0004));
+  EXPECT_TRUE(p.setMaximumProcessInletAirHumidityRatioforTemperatureEquation(0.0005));
+  EXPECT_TRUE(p.setMinimumProcessInletAirTemperatureforTemperatureEquation(0.0006));
+  EXPECT_TRUE(p.setMaximumProcessInletAirTemperatureforTemperatureEquation(0.0007));
+  EXPECT_TRUE(p.setMinimumRegenerationAirVelocityforTemperatureEquation(0.0008));
+  EXPECT_TRUE(p.setMaximumRegenerationAirVelocityforTemperatureEquation(0.0009));
+  EXPECT_TRUE(p.setMinimumRegenerationOutletAirTemperatureforTemperatureEquation(0.0001));
+  EXPECT_TRUE(p.setMaximumRegenerationOutletAirTemperatureforTemperatureEquation(0.0002));
+  EXPECT_TRUE(p.setMinimumRegenerationInletAirRelativeHumidityforTemperatureEquation(0.0003));
+  EXPECT_TRUE(p.setMaximumRegenerationInletAirRelativeHumidityforTemperatureEquation(0.0004));
+  EXPECT_TRUE(p.setMinimumProcessInletAirRelativeHumidityforTemperatureEquation(0.0005));
+  EXPECT_TRUE(p.setMaximumProcessInletAirRelativeHumidityforTemperatureEquation(0.0006));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient1(0.0007));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient2(0.0008));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient3(0.0009));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient4(0.001));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient5(0.002));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient6(0.003));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient7(0.004));
+  EXPECT_TRUE(p.setHumidityRatioEquationCoefficient8(0.005));
+  EXPECT_TRUE(p.setMinimumRegenerationInletAirHumidityRatioforHumidityRatioEquation(0.006));
+  EXPECT_TRUE(p.setMaximumRegenerationInletAirHumidityRatioforHumidityRatioEquation(0.007));
+  EXPECT_TRUE(p.setMinimumRegenerationInletAirTemperatureforHumidityRatioEquation(0.008));
+  EXPECT_TRUE(p.setMaximumRegenerationInletAirTemperatureforHumidityRatioEquation(0.009));
+  EXPECT_TRUE(p.setMinimumProcessInletAirHumidityRatioforHumidityRatioEquation(0.01));
+  EXPECT_TRUE(p.setMaximumProcessInletAirHumidityRatioforHumidityRatioEquation(0.02));
+  EXPECT_TRUE(p.setMinimumProcessInletAirTemperatureforHumidityRatioEquation(0.03));
+  EXPECT_TRUE(p.setMaximumProcessInletAirTemperatureforHumidityRatioEquation(0.04));
+  EXPECT_TRUE(p.setMinimumRegenerationAirVelocityforHumidityRatioEquation(0.05));
+  EXPECT_TRUE(p.setMaximumRegenerationAirVelocityforHumidityRatioEquation(0.06));
+  EXPECT_TRUE(p.setMinimumRegenerationOutletAirHumidityRatioforHumidityRatioEquation(0.07));
+  EXPECT_TRUE(p.setMaximumRegenerationOutletAirHumidityRatioforHumidityRatioEquation(0.08));
+  EXPECT_TRUE(p.setMinimumRegenerationInletAirRelativeHumidityforHumidityRatioEquation(0.09));
+  EXPECT_TRUE(p.setMaximumRegenerationInletAirRelativeHumidityforHumidityRatioEquation(0.01));
+  EXPECT_TRUE(p.setMinimumProcessInletAirRelativeHumidityforHumidityRatioEquation(0.02));
+  EXPECT_TRUE(p.setMaximumProcessInletAirRelativeHumidityforHumidityRatioEquation(0.03));
   HeatExchangerDesiccantBalancedFlow hx(m, p);
   EXPECT_TRUE(hx.addToNode(oaNode));
 
@@ -75,203 +126,187 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatExchangerDesiccantBalancedFlowPe
 
   EXPECT_EQ("Autosize", idfHXP.getString(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::NominalAirFlowRate, false).get());
   EXPECT_EQ("Autosize", idfHXP.getString(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::NominalAirFaceVelocity, false).get());
-  EXPECT_EQ(0.0, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::NominalElectricPower, false).get());
-  EXPECT_EQ(-7.18302E+00,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient1, false).get());
-  EXPECT_EQ(-1.84967E+02,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient2, false).get());
-  EXPECT_EQ(1.00051E+00,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient3, false).get());
-  EXPECT_EQ(1.16033E+04,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient4, false).get());
-  EXPECT_EQ(-5.07550E+01,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient5, false).get());
-  EXPECT_EQ(-1.68467E-02,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient6, false).get());
-  EXPECT_EQ(5.82213E+01,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient7, false).get());
-  EXPECT_EQ(5.98863E-01,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient8, false).get());
+  EXPECT_EQ(3.0, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::NominalElectricPower, false).get());
+  EXPECT_EQ(0.001, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient1, false).get());
+  EXPECT_EQ(0.002, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient2, false).get());
+  EXPECT_EQ(0.003, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient3, false).get());
+  EXPECT_EQ(0.004, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient4, false).get());
+  EXPECT_EQ(0.005, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient5, false).get());
+  EXPECT_EQ(0.006, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient6, false).get());
+  EXPECT_EQ(0.007, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient7, false).get());
+  EXPECT_EQ(0.008, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::TemperatureEquationCoefficient8, false).get());
   EXPECT_EQ(
-    0.007143,
-    idfHXP
-      .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirHumidityRatioforTemperatureEquation,
-                 false)
-      .get());
+    0.009, idfHXP
+             .getDouble(
+               HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirHumidityRatioforTemperatureEquation, false)
+             .get());
   EXPECT_EQ(
-    0.024286,
+    0.0001,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationInletAirHumidityRatioforTemperatureEquation,
                  false)
       .get());
   EXPECT_EQ(
-    17.83333,
+    0.0002,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirTemperatureforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    48.88889,
+    0.0003,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationInletAirTemperatureforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    0.005000,
+    0.0004,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumProcessInletAirHumidityRatioforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    0.015714,
+    0.0005,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumProcessInletAirHumidityRatioforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    4.583333,
+    0.0006,
     idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumProcessInletAirTemperatureforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    21.83333,
+    0.0007,
     idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumProcessInletAirTemperatureforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    2.286,
+    0.0008,
     idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationAirVelocityforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    4.826,
+    0.0009,
     idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationAirVelocityforTemperatureEquation, false)
       .get());
-  EXPECT_EQ(16.66667,
+  EXPECT_EQ(0.0001,
             idfHXP
               .getDouble(
                 HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationOutletAirTemperatureforTemperatureEquation, false)
               .get());
-  EXPECT_EQ(46.11111,
+  EXPECT_EQ(0.0002,
             idfHXP
               .getDouble(
                 HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationOutletAirTemperatureforTemperatureEquation, false)
               .get());
   EXPECT_EQ(
-    10.0,
+    0.0003,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirRelativeHumidityforTemperatureEquation,
                  false)
       .get());
   EXPECT_EQ(
-    100.0,
+    0.0004,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationInletAirRelativeHumidityforTemperatureEquation,
                  false)
       .get());
   EXPECT_EQ(
-    80.0,
+    0.0005,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumProcessInletAirRelativeHumidityforTemperatureEquation, false)
       .get());
   EXPECT_EQ(
-    100.0,
+    0.0006,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumProcessInletAirRelativeHumidityforTemperatureEquation, false)
       .get());
-  EXPECT_EQ(3.13878E-03,
+  EXPECT_EQ(0.0007,
             idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient1, false).get());
-  EXPECT_EQ(1.09689E+00,
+  EXPECT_EQ(0.0008,
             idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient2, false).get());
-  EXPECT_EQ(-2.63341E-05,
+  EXPECT_EQ(0.0009,
             idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient3, false).get());
-  EXPECT_EQ(-6.33885E+00,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient4, false).get());
-  EXPECT_EQ(9.38196E-03,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient5, false).get());
-  EXPECT_EQ(5.21186E-05,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient6, false).get());
-  EXPECT_EQ(6.70354E-02,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient7, false).get());
-  EXPECT_EQ(-1.60823E-04,
-            idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient8, false).get());
+  EXPECT_EQ(0.001, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient4, false).get());
+  EXPECT_EQ(0.002, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient5, false).get());
+  EXPECT_EQ(0.003, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient6, false).get());
+  EXPECT_EQ(0.004, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient7, false).get());
+  EXPECT_EQ(0.005, idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::HumidityRatioEquationCoefficient8, false).get());
   EXPECT_EQ(
-    0.007143,
+    0.006,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirHumidityRatioforHumidityRatioEquation,
                  false)
       .get());
   EXPECT_EQ(
-    0.024286,
+    0.007,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationInletAirHumidityRatioforHumidityRatioEquation,
                  false)
       .get());
   EXPECT_EQ(
-    17.83333,
-    idfHXP
-      .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirTemperatureforHumidityRatioEquation,
-                 false)
-      .get());
+    0.008, idfHXP
+             .getDouble(
+               HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirTemperatureforHumidityRatioEquation, false)
+             .get());
   EXPECT_EQ(
-    48.88889,
-    idfHXP
-      .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationInletAirTemperatureforHumidityRatioEquation,
-                 false)
-      .get());
+    0.009, idfHXP
+             .getDouble(
+               HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationInletAirTemperatureforHumidityRatioEquation, false)
+             .get());
   EXPECT_EQ(
-    0.005000,
+    0.01,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumProcessInletAirHumidityRatioforHumidityRatioEquation, false)
       .get());
   EXPECT_EQ(
-    0.015714,
+    0.02,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumProcessInletAirHumidityRatioforHumidityRatioEquation, false)
       .get());
   EXPECT_EQ(
-    4.583333,
+    0.03,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumProcessInletAirTemperatureforHumidityRatioEquation, false)
       .get());
   EXPECT_EQ(
-    21.83333,
+    0.04,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumProcessInletAirTemperatureforHumidityRatioEquation, false)
       .get());
   EXPECT_EQ(
-    2.286,
+    0.05,
     idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationAirVelocityforHumidityRatioEquation, false)
       .get());
   EXPECT_EQ(
-    4.826,
+    0.06,
     idfHXP.getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationAirVelocityforHumidityRatioEquation, false)
       .get());
   EXPECT_EQ(
-    0.007811,
+    0.07,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationOutletAirHumidityRatioforHumidityRatioEquation,
                  false)
       .get());
   EXPECT_EQ(
-    0.026707,
+    0.08,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationOutletAirHumidityRatioforHumidityRatioEquation,
                  false)
       .get());
   EXPECT_EQ(
-    10.0,
+    0.09,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumRegenerationInletAirRelativeHumidityforHumidityRatioEquation,
                  false)
       .get());
   EXPECT_EQ(
-    100.0,
+    0.01,
     idfHXP
       .getDouble(HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumRegenerationInletAirRelativeHumidityforHumidityRatioEquation,
                  false)
       .get());
   EXPECT_EQ(
-    80.0, idfHXP
+    0.02, idfHXP
             .getDouble(
               HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MinimumProcessInletAirRelativeHumidityforHumidityRatioEquation, false)
             .get());
   EXPECT_EQ(
-    100.0, idfHXP
-             .getDouble(
-               HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumProcessInletAirRelativeHumidityforHumidityRatioEquation, false)
-             .get());
+    0.03, idfHXP
+            .getDouble(
+              HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1Fields::MaximumProcessInletAirRelativeHumidityforHumidityRatioEquation, false)
+            .get());
 }

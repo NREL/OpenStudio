@@ -45,7 +45,6 @@
 #include "../AirLoopHVAC_Impl.hpp"
 #include "../AirLoopHVACOutdoorAirSystem.hpp"
 #include "../AirLoopHVACOutdoorAirSystem_Impl.hpp"
-#include "../HVACTemplates.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -73,10 +72,12 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_HeatExchangerDesiccantBa
 
   EXPECT_EQ(alwaysOn, hx.availabilitySchedule());
   EXPECT_EQ(p, hx.heatExchangerPerformance());
+  EXPECT_NE(p.handle(), hx.heatExchangerPerformance().handle());
   EXPECT_FALSE(hx.economizerLockout());
 
   EXPECT_EQ(alwaysOn, hx2.availabilitySchedule());
-  ASSERT_TRUE(hx2.heatExchangerPerformance().optionalCast<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>());
+  EXPECT_EQ(p, hx2.heatExchangerPerformance());
+  EXPECT_EQ(p.handle(), hx2.heatExchangerPerformance().handle());
   EXPECT_FALSE(hx2.economizerLockout());
 }
 
@@ -85,24 +86,18 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_GettersSetters) {
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1 p(m);
   HeatExchangerDesiccantBalancedFlow hx(m, p);
 
-  Schedule schedule = hx.availabilitySchedule();
-  boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
-  ASSERT_TRUE(scheduleConstant);
-  EXPECT_EQ((*scheduleConstant).value(), 1.0);
-  ASSERT_TRUE(scheduleConstant);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+
+  EXPECT_EQ(alwaysOn, hx.availabilitySchedule());
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1 performanceObject = hx.heatExchangerPerformance();
   EXPECT_EQ(performanceObject.name().get(), p.name().get());
 
   ScheduleConstant scheduleConstant2(m);
-  scheduleConstant2.setValue(0.5);
   hx.setAvailabilitySchedule(scheduleConstant2);
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1 p2(m);
   hx.setHeatExchangerPerformance(p2);
 
-  Schedule schedule2 = hx.availabilitySchedule();
-  boost::optional<ScheduleConstant> scheduleConstant3 = schedule2.optionalCast<ScheduleConstant>();
-  ASSERT_TRUE(scheduleConstant3);
-  EXPECT_EQ((*scheduleConstant3).value(), 0.5);
+  EXPECT_EQ(scheduleConstant2, hx.availabilitySchedule());
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1 performanceObject2 = hx.heatExchangerPerformance();
   EXPECT_EQ(p2.name().get(), performanceObject2.name().get());
 }
@@ -110,9 +105,12 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_GettersSetters) {
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_addToNode) {
   Model m;
 
-  AirLoopHVAC loop = addSystemType3(m).cast<AirLoopHVAC>();
+  AirLoopHVAC loop(m);
+  Node supplyOutletNode = loop.supplyOutletNode();
 
-  AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem oaSystem(m, controllerOutdoorAir);
+  oaSystem.addToNode(supplyOutletNode);
 
   Node oaNode = oaSystem.outboardOANode().get();
   Node reliefNode = oaSystem.outboardReliefNode().get();
@@ -137,9 +135,12 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_addToNode) {
 TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_remove) {
   Model m;
 
-  AirLoopHVAC loop = addSystemType3(m).cast<AirLoopHVAC>();
+  AirLoopHVAC loop(m);
+  Node supplyOutletNode = loop.supplyOutletNode();
 
-  AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem oaSystem(m, controllerOutdoorAir);
+  oaSystem.addToNode(supplyOutletNode);
 
   Node oaNode = oaSystem.outboardOANode().get();
   Node reliefNode = oaSystem.outboardReliefNode().get();
