@@ -517,8 +517,6 @@ int main(int argc, char* argv[]) {
     rb_provide("io/nonblock");
     rb_provide("io/nonblock.so");
 
-    
-
 #ifndef _WIN32
 
     // DLM: we have Init_console on Windows but crashes when try to init it, fails to load openssl
