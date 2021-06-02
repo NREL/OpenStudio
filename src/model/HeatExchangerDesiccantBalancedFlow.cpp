@@ -273,11 +273,7 @@ namespace model {
 
     HeatExchangerDesiccantBalancedFlowPerformanceDataType1 heatExchangerPerformance(model);
     bool ok = setHeatExchangerPerformance(heatExchangerPerformance);
-    if (!ok) {
-      remove();
-      LOG_AND_THROW("Unable to set " << briefDescription() << "'s heatExchangerDesiccantBalancedFlowPerformanceDataType1 to "
-                                     << heatExchangerPerformance.briefDescription() << ".");
-    }
+    OS_ASSERT(ok);
 
     setEconomizerLockout(false);
   }

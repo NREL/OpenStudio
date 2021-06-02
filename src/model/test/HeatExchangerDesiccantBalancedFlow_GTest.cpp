@@ -72,7 +72,7 @@ TEST_F(ModelFixture, HeatExchangerDesiccantBalancedFlow_HeatExchangerDesiccantBa
   auto alwaysOn = m.alwaysOnDiscreteSchedule();
 
   EXPECT_EQ(alwaysOn, hx.availabilitySchedule());
-  ASSERT_TRUE(hx.heatExchangerPerformance().optionalCast<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>());
+  EXPECT_EQ(p, hx.heatExchangerPerformance());
   EXPECT_FALSE(hx.economizerLockout());
 
   EXPECT_EQ(alwaysOn, hx2.availabilitySchedule());

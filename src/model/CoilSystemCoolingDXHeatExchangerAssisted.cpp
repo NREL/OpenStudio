@@ -258,17 +258,14 @@ namespace model {
     : StraightComponent(CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>());
 
+    bool ok = setHeatExchanger(heatExchanger);
+    if (!ok) {
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heat Exchanger " << heatExchanger.briefDescription() << ".");
+    }
+
     CoilCoolingDXSingleSpeed coolingCoil(model);
     setCoolingCoil(coolingCoil);
 
-    if (heatExchanger.optionalCast<HeatExchangerAirToAirSensibleAndLatent>()) {
-      // no-op
-    } else if (heatExchanger.optionalCast<HeatExchangerDesiccantBalancedFlow>()) {
-      // no-op
-    } else {
-      LOG_AND_THROW("AirToAirComponent type '" << heatExchanger.briefDescription()
-                                               << "' not currently supported as a heat exchanger type for CoilSystemCoolingDXHeatExchangerAssisted.");
-    }
     setHeatExchanger(heatExchanger);
   }
 

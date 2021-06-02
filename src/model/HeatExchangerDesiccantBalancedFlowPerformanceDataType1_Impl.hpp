@@ -67,10 +67,12 @@ namespace model {
 
       virtual ModelObject clone(Model model) const override;
 
-      virtual std::vector<ModelObject> children() const override;
-
       // If this object is still used by at least one HeatExchangerDesiccantBalancedFlow, refuse to remove to avoid putting the HeatExchangerDesiccantBalancedFlow(s) in a broken state
       virtual std::vector<IdfObject> remove() override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
 
       //@}
       /** @name Getters */
@@ -309,10 +311,6 @@ namespace model {
       boost::optional<double> autosizedNominalAirFlowRate();
 
       boost::optional<double> autosizedNominalAirFaceVelocity();
-
-      void autosize();
-
-      void applySizingValues();
 
       //@}
      protected:

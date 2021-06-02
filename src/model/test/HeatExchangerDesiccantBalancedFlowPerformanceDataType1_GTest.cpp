@@ -37,8 +37,6 @@
 #include "../HeatExchangerDesiccantBalancedFlow.hpp"
 #include "../HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 
-#include <algorithm>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

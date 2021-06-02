@@ -64,8 +64,6 @@ namespace model {
 
     const std::vector<std::string>& HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()) {
-      }
       return result;
     }
 
@@ -77,12 +75,6 @@ namespace model {
       // clone the operating modes is already handle in ModelObject_Impl::clone since they are ResourceObjects
       // We don't do ParentObject_Impl::clone since it'll also CLONE the children...
       return ModelObject_Impl::clone(model);
-    }
-
-    std::vector<ModelObject> HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      return result;
     }
 
     std::vector<IdfObject> HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl::remove() {
@@ -1477,14 +1469,6 @@ namespace model {
 
   boost::optional<double> HeatExchangerDesiccantBalancedFlowPerformanceDataType1::autosizedNominalAirFaceVelocity() {
     return getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>()->autosizedNominalAirFaceVelocity();
-  }
-
-  void HeatExchangerDesiccantBalancedFlowPerformanceDataType1::autosize() {
-    return getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>()->autosize();
-  }
-
-  void HeatExchangerDesiccantBalancedFlowPerformanceDataType1::applySizingValues() {
-    return getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>()->applySizingValues();
   }
 
   /// @cond
