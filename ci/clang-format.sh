@@ -25,10 +25,10 @@ fi
 PR_BRANCH_NAME=$1
 TARGET_BRANCH_NAME=$2
 
-# If pointing at HEAD, then also include uncommited changes
+# If pointing at HEAD, then also include uncommited changes, but only the cached (=staged for next commit) so we can use it as a precommit script
 if [ $PR_BRANCH_NAME == "HEAD" ]
 then
-  PR_BRANCH_NAME=
+  PR_BRANCH_NAME="--cached "
 fi
 
 # first find if any files changed
