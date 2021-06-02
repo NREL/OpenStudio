@@ -100,14 +100,21 @@
 namespace openstudio {
 namespace model {
 
+  FanSystemModelSpeed::FanSystemModelSpeed(double t_flowFraction) : m_flowFraction(t_flowFraction), m_electricPowerFraction(boost::none) {
+
+    if ((m_flowFraction < 0) || (m_flowFraction > 1)) {
+      LOG_AND_THROW("Unable to create FanSystemModelSpeed, Flow Fraction (" << m_flowFraction << ") is outside the range [0, 1]");
+    }
+  }
+
   FanSystemModelSpeed::FanSystemModelSpeed(double t_flowFraction, double t_electricPowerFraction)
     : m_flowFraction(t_flowFraction), m_electricPowerFraction(t_electricPowerFraction) {
 
     if ((m_flowFraction < 0) || (m_flowFraction > 1)) {
       LOG_AND_THROW("Unable to create FanSystemModelSpeed, Flow Fraction (" << m_flowFraction << ") is outside the range [0, 1]");
     }
-    if ((m_electricPowerFraction < 0) || (m_electricPowerFraction > 1)) {
-      LOG_AND_THROW("Unable to create FanSystemModelSpeed, Electric Power Fraction (" << m_electricPowerFraction << ") is outside the range [0, 1]");
+    if ((t_electricPowerFraction < 0) || (t_electricPowerFraction > 1)) {
+      LOG_AND_THROW("Unable to create FanSystemModelSpeed, Electric Power Fraction (" << t_electricPowerFraction << ") is outside the range [0, 1]");
     }
   }
 
@@ -115,7 +122,7 @@ namespace model {
     return m_flowFraction;
   }
 
-  double FanSystemModelSpeed::electricPowerFraction() const {
+  boost::optional<double> FanSystemModelSpeed::electricPowerFraction() const {
     return m_electricPowerFraction;
   }
 
@@ -124,7 +131,11 @@ namespace model {
   }
 
   std::ostream& operator<<(std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed) {
-    out << "[" << speed.flowFraction() << ", " << speed.electricPowerFraction() << "]";
+    if (auto efp_ = speed.electricPowerFraction()) {
+      out << "[" << speed.flowFraction() << ", " << efp_.get() << "]";
+    } else {
+      out << "[" << speed.flowFraction() << ", None]";
+    }
     return out;
   }
 
@@ -684,12 +695,14 @@ namespace model {
       return result;
     }
 
-    bool FanSystemModel_Impl::addSpeedPrivate(double flowFraction, double electricPowerFraction) {
+    bool FanSystemModel_Impl::addSpeedPrivate(double flowFraction, boost::optional<double> electricPowerFraction) {
       bool result;
       // Push an extensible group
       WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool temp = eg.setDouble(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction, flowFraction);
-      bool ok = eg.setDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, electricPowerFraction);
+      bool ok = electricPowerFraction.is_initialized()
+                  ? eg.setDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, electricPowerFraction.get())
+                  : true;
       if (temp && ok) {
         result = true;
       } else {
@@ -705,6 +718,10 @@ namespace model {
       std::vector<FanSystemModelSpeed> s = speeds();
       s.push_back(speed);
       return setSpeeds(s);
+    }
+
+    bool FanSystemModel_Impl::addSpeed(double flowFraction) {
+      return addSpeed(FanSystemModelSpeed(flowFraction));
     }
 
     // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
@@ -736,7 +753,7 @@ namespace model {
       // Ok, now we clear
       this->clearExtensibleGroups();
 
-      std::vector<std::pair<double, double>> speedVecPair;
+      std::vector<std::pair<double, boost::optional<double>>> speedVecPair;
       for (const FanSystemModelSpeed& sp : speeds) {
         speedVecPair.push_back(std::make_pair(sp.flowFraction(), sp.electricPowerFraction()));
       }
@@ -1049,6 +1066,10 @@ namespace model {
   }
 
   // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+  bool FanSystemModel::addSpeed(double flowFraction) {
+    return getImpl<detail::FanSystemModel_Impl>()->addSpeed(flowFraction);
+  }
+
   bool FanSystemModel::addSpeed(double flowFraction, double electricPowerFraction) {
     return getImpl<detail::FanSystemModel_Impl>()->addSpeed(flowFraction, electricPowerFraction);
   }

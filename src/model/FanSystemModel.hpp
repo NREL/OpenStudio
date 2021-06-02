@@ -52,18 +52,18 @@ namespace model {
   class MODEL_API FanSystemModelSpeed
   {
    public:
-    /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
+    FanSystemModelSpeed(double flowFraction);
+
     FanSystemModelSpeed(double flowFraction, double electricPowerFraction);
 
     double flowFraction() const;
-    double electricPowerFraction() const;
+    boost::optional<double> electricPowerFraction() const;
 
-    // this operator is to support sorting of TableMultiVariableLookupPoint in the order required by EnergyPlus Table:Lookup object
     bool operator<(const FanSystemModelSpeed& other) const;
 
    private:
     double m_flowFraction;
-    double m_electricPowerFraction;
+    boost::optional<double> m_electricPowerFraction;
     REGISTER_LOGGER("openstudio.model.FanSystemModelSpeed");
   };
 
@@ -147,7 +147,11 @@ namespace model {
     /** If a speed group is already present (= the flowFraction already exists) (cf `speedIndex()`), it will Warn and override the electricPowerFraction value */
     bool addSpeed(const FanSystemModelSpeed& speed);
 
+    // This one leaves the electricPowerFraction blank, so the electricPowerFunctionofFlowFractionCurve is used.
+    bool addSpeed(double flowFraction);
+
     // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+    // This one specifies both
     bool addSpeed(double flowFraction, double electricPowerFraction);
 
     bool removeSpeed(unsigned speedIndex);
