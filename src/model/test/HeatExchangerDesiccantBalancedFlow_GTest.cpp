@@ -45,6 +45,8 @@
 #include "../AirLoopHVAC_Impl.hpp"
 #include "../AirLoopHVACOutdoorAirSystem.hpp"
 #include "../AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../ControllerOutdoorAir_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
