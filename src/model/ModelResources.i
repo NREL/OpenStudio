@@ -35,6 +35,10 @@
 
   // CoilCoolingDX is defined in StraightComponent.i
   %ignore openstudio::model::CoilCoolingDXCurveFitPerformance::coilCoolingDXs;
+
+  // HeatExchangerDesiccantBalancedFlow is done later in ModelHVAC.i
+  %ignore openstudio::model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1::heatExchangerDesiccantBalancedFlows;
+
   // TODO: why?
   // ignore schedule type
   // %ignore openstudio::model::ScheduleType;
@@ -65,6 +69,8 @@ class ShadingControl;
 class SubSurface;
 %feature("valuewrapper") CoilCoolingDX;
 class CoilCoolingDX;
+%feature("valuewrapper") HeatExchangerDesiccantBalancedFlow;
+class HeatExchangerDesiccantBalancedFlow;
 
 }
 }

@@ -40,6 +40,7 @@ namespace model {
   class Schedule;
   class CurveCubic;
   class ThermalZone;
+  class WaterHeaterSizing;
 
   namespace detail {
 
@@ -356,6 +357,12 @@ namespace model {
     void resetIndirectAlternateSetpointTemperatureSchedule();
 
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+    //@}
+    /** @name Other */
+    //@{
+
+    WaterHeaterSizing waterHeaterSizing() const;
 
     //@}
    protected:

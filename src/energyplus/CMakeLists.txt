@@ -249,6 +249,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputDiagnostics.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
+  ForwardTranslator/ForwardTranslateOutputEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateFuelFactors.cpp
   ForwardTranslator/ForwardTranslateOutputTableSummaryReports.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
@@ -383,6 +386,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPumpWrappedCondenser.cpp
+  ForwardTranslator/ForwardTranslateWaterHeaterSizing.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterStratified.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
@@ -513,6 +517,9 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
   ReverseTranslator/ReverseTranslateOutputJSON.cpp
+  ReverseTranslator/ReverseTranslateOutputEnvironmentalImpactFactors.cpp
+  ReverseTranslator/ReverseTranslateEnvironmentalImpactFactors.cpp
+  ReverseTranslator/ReverseTranslateFuelFactors.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp
   ReverseTranslator/ReverseTranslateOutputMeterCumulative.cpp
@@ -676,6 +683,9 @@ set(${target_name}_test_src
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
+  Test/OutputEnvironmentalImpactFactors_GTest.cpp
+  Test/EnvironmentalImpactFactors_GTest.cpp
+  Test/FuelFactors_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
   Test/PhotovoltaicPerformanceSandia_GTest.cpp
@@ -709,6 +719,7 @@ set(${target_name}_test_src
   Test/ThermostatSetpointDualSetpoint_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/WaterHeaterMixed_GTest.cpp
+  Test/WaterHeaterSizing_GTest.cpp
   Test/WaterHeaterStratified_GTest.cpp
   Test/WaterUseConnections_GTest.cpp
   Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp

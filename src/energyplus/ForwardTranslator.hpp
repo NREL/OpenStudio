@@ -300,6 +300,9 @@ namespace model {
   class OutputDebuggingData;
   class OutputDiagnostics;
   class OutputJSON;
+  class OutputEnvironmentalImpactFactors;
+  class EnvironmentalImpactFactors;
+  class FuelFactors;
   class OutputMeter;
   class OutputVariable;
   class OutputEnergyManagementSystem;
@@ -437,6 +440,7 @@ namespace model {
   class WaterHeaterMixed;
   class WaterHeaterHeatPump;
   class WaterHeaterHeatPumpWrappedCondenser;
+  class WaterHeaterSizing;
   class WaterHeaterStratified;
   class WaterUseConnections;
   class WaterUseEquipment;
@@ -1088,6 +1092,12 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateOutputJSON(model::OutputJSON& modelObject);
 
+    boost::optional<IdfObject> translateOutputEnvironmentalImpactFactors(model::OutputEnvironmentalImpactFactors& modelObject);
+
+    boost::optional<IdfObject> translateEnvironmentalImpactFactors(model::EnvironmentalImpactFactors& modelObject);
+
+    boost::optional<IdfObject> translateFuelFactors(model::FuelFactors& modelObject);
+
     boost::optional<IdfObject> translateOutputMeter(model::OutputMeter& modelObject);
 
     boost::optional<IdfObject> translateOutputVariable(model::OutputVariable& modelObject);
@@ -1370,6 +1380,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateWaterHeaterHeatPump(model::WaterHeaterHeatPump& modelObject);
 
     boost::optional<IdfObject> translateWaterHeaterHeatPumpWrappedCondenser(model::WaterHeaterHeatPumpWrappedCondenser& modelObject);
+
+    boost::optional<IdfObject> translateWaterHeaterSizing(model::WaterHeaterSizing& modelObject);
 
     boost::optional<IdfObject> translateWaterHeaterStratified(model::WaterHeaterStratified& modelObject);
 
