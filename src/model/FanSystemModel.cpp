@@ -661,8 +661,12 @@ namespace model {
       for (const auto& group : extensibleGroups()) {
         boost::optional<double> _flowFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction);
         boost::optional<double> _electricPowerFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction);
-        if (_flowFraction.has_value() && _electricPowerFraction.has_value()) {
-          result.push_back(FanSystemModelSpeed(_flowFraction.get(), _electricPowerFraction.get()));
+        if (_flowFraction.has_value()) {
+          if (_electricPowerFraction.has_value()) {
+            result.push_back(FanSystemModelSpeed(_flowFraction.get(), _electricPowerFraction.get()));
+          } else {
+            result.push_back(FanSystemModelSpeed(_flowFraction.get()));
+          }
         } else {
           // Shouldn't happen
           OS_ASSERT(false);
@@ -685,8 +689,12 @@ namespace model {
       IdfExtensibleGroup group = getExtensibleGroup(speedIndex);
       boost::optional<double> _flowFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction);
       boost::optional<double> _electricPowerFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction);
-      if (_flowFraction.has_value() && _electricPowerFraction.has_value()) {
-        result = FanSystemModelSpeed(_flowFraction.get(), _electricPowerFraction.get());
+      if (_flowFraction.has_value()) {
+        if (_electricPowerFraction.has_value()) {
+          result = FanSystemModelSpeed(_flowFraction.get(), _electricPowerFraction.get());
+        } else {
+          result = FanSystemModelSpeed(_flowFraction.get());
+        }
       } else {
         // Shouldn't happen
         OS_ASSERT(false);
@@ -761,6 +769,20 @@ namespace model {
       bool result = true;
       for (const auto& speed : speedVecPair) {
         result &= addSpeedPrivate(speed.first, speed.second);
+      }
+
+      if (!electricPowerFunctionofFlowFractionCurve()) {
+
+        // We do it with extensibleGroups() (rather than speeds()) and isEmpty to avoid overhead
+        // of manipulating actual model objects and speed up the routine
+        auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+        auto hasBlankEPF = [](const WorkspaceExtensibleGroup& eg) {
+          return eg.isEmpty(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction);
+        };
+        if (std::any_of(egs.begin(), egs.end(), hasBlankEPF)) {
+          LOG(Warn, "For" << briefDescription() << ", you have speeds with blank ElectricPowerFraction "
+                          << "but you did not assign an Electric Power Function of Flow Fraction Curve.");
+        }
       }
 
       return result;
