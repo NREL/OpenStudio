@@ -73,37 +73,25 @@ namespace energyplus {
     // RegenerationAirInletNodeName
     temp = modelObject.primaryAirInletModelObject();
     if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, *s);
-      }
+      idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, temp->nameString());
     }
 
     // RegenerationAirOutletNodeName
     temp = modelObject.primaryAirOutletModelObject();
     if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName, *s);
-      }
+      idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName, temp->nameString());
     }
 
     // ProcessAirInletNodeName
     temp = modelObject.secondaryAirInletModelObject();
     if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName, *s);
-      }
+      idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName, temp->nameString());
     }
 
     // ProcessAirOutletNodeName
     temp = modelObject.secondaryAirOutletModelObject();
     if (temp) {
-      s = temp->name();
-      if (s) {
-        idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, *s);
-      }
+      idfObject.setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, temp->nameString());
     }
 
     // HeatExchangerPerformanceObjectType

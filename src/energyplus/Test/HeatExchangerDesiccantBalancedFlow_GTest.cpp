@@ -77,10 +77,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatExchangerDesiccantBalancedFlow) 
   if (woAvailabilitySchedule) {
     EXPECT_EQ(woAvailabilitySchedule->iddObject().type(), IddObjectType::Schedule_Constant);
   }
-  EXPECT_NE("", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName).get());
-  EXPECT_NE("", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName).get());
-  EXPECT_NE("", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName).get());
-  EXPECT_NE("", idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName).get());
+  EXPECT_EQ(hx.primaryAirInletModelObject()->nameString(), idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName).get());
+  EXPECT_EQ(hx.primaryAirOutletModelObject()->nameString(), idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName).get());
+  EXPECT_EQ(hx.secondaryAirInletModelObject()->nameString(), idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName).get());
+  EXPECT_EQ(hx.secondaryAirOutletModelObject()->nameString(), idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName).get());
   EXPECT_EQ("HeatExchanger:Desiccant:BalancedFlow:PerformanceDataType1",
             idfHX.getString(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceObjectType, false).get());
   boost::optional<WorkspaceObject> woPerformance(idfHX.getTarget(HeatExchanger_Desiccant_BalancedFlowFields::HeatExchangerPerformanceName));
