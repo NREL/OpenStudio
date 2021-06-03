@@ -295,6 +295,10 @@ namespace model {
 
     boost::optional<double> autosizedNominalAirFaceVelocity();
 
+    void autosize();
+
+    void applySizingValues();
+
     //@}
    protected:
     /// @cond

@@ -1471,6 +1471,14 @@ namespace model {
     return getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>()->autosizedNominalAirFaceVelocity();
   }
 
+  void HeatExchangerDesiccantBalancedFlowPerformanceDataType1::autosize() {
+    return getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>()->autosize();
+  }
+
+  void HeatExchangerDesiccantBalancedFlowPerformanceDataType1::applySizingValues() {
+    return getImpl<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl>()->applySizingValues();
+  }
+
   /// @cond
   HeatExchangerDesiccantBalancedFlowPerformanceDataType1::HeatExchangerDesiccantBalancedFlowPerformanceDataType1(
     std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl> impl)
