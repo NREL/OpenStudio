@@ -182,10 +182,6 @@ namespace model {
 
       double maximumProcessInletAirRelativeHumidityforHumidityRatioEquation() const;
 
-      void autosize();
-
-      void applySizingValues();
-
       //@}
       /** @name Setters */
       //@{
@@ -311,6 +307,10 @@ namespace model {
       boost::optional<double> autosizedNominalAirFlowRate();
 
       boost::optional<double> autosizedNominalAirFaceVelocity();
+
+      void autosize();
+
+      void applySizingValues();
 
       //@}
      protected:

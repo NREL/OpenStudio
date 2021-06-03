@@ -992,6 +992,10 @@ namespace model {
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
           modelObj->autosize();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
+          modelObj->autosize();
         }
       }
       return;
@@ -1022,6 +1026,10 @@ namespace model {
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) {  // CoilHeatingDXMultiSpeedStageData
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
+          modelObj->applySizingValues();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
           modelObj->applySizingValues();
         }
       }
