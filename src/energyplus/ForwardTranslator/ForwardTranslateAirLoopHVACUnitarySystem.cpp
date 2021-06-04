@@ -720,7 +720,7 @@ namespace energyplus {
           _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, outletNodeName);
         } else if (_hx->iddObject().type() == IddObjectType::HeatExchanger_Desiccant_BalancedFlow) {
           _hx->setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, inletNodeName);
-          _hx->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName, outletNodeName);
+          _hx->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, outletNodeName);
         } else {
           LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
         }

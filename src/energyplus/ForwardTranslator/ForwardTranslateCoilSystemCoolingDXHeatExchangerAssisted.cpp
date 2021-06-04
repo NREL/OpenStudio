@@ -96,8 +96,8 @@ namespace energyplus {
         } else if (idf->iddObject().type() == IddObjectType::HeatExchanger_Desiccant_BalancedFlow) {
           idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, hxSupplyAirInletNodeName);
           idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName, hxSupplyAirOutletNodeName);
-          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName, hxExhaustAirOutletNodeName);
-          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, hxExhaustAirInletNodeName);
+          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, hxExhaustAirOutletNodeName);
+          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName, hxExhaustAirInletNodeName);
         } else {
           // Shouldn't happen
           LOG(Fatal, modelObject.briefDescription()
