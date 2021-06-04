@@ -104,44 +104,13 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
   EXPECT_TRUE(p.addDemandBranchForComponent(cc));
 }
 
-// This test ensures that only the parent CoilSystem can call addToNode, the individual CoilCoolingWater and HX cannot
-TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode2) {
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_correctHXs) {
 
   Model m;
-  HeatExchangerDesiccantBalancedFlow hx(m);
-  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m, hx);
-
-  AirLoopHVAC a(m);
-  Node n = a.supplyOutletNode();
-
-  CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
-
-  EXPECT_EQ(2u, a.supplyComponents().size());
-
-  EXPECT_FALSE(cc.addToNode(n));
-  EXPECT_EQ(2u, a.supplyComponents().size());
-
-  EXPECT_FALSE(hx.addToNode(n));
-  EXPECT_EQ(2u, a.supplyComponents().size());
-
-  EXPECT_TRUE(coilSystem.addToNode(n));
-  EXPECT_EQ(3u, a.supplyComponents().size());
-
-  {
-    auto containingHVACComponent = cc.containingHVACComponent();
-    ASSERT_TRUE(containingHVACComponent);
-    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
-  }
-
-  {
-    auto containingHVACComponent = hx.containingHVACComponent();
-    ASSERT_TRUE(containingHVACComponent);
-    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
-  }
-
-  // BUT, we need to be able to connect the water side of the Coil...
-  PlantLoop p(m);
-  EXPECT_TRUE(p.addDemandBranchForComponent(cc));
+  HeatExchangerAirToAirSensibleAndLatent hxAirToAir(m);
+  EXPECT_NO_THROW(CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m, hxAirToAir));
+  HeatExchangerDesiccantBalancedFlow hxDesiccant(m);
+  EXPECT_ANY_THROW(CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m, hxDesiccant));
 }
 
 TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
