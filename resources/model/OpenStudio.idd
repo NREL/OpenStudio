@@ -10392,6 +10392,7 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
    A13, \field Cooling Coil
         \type object-list
         \object-list CoolingCoilsDXMultiModeOrSingleSpeed
+        \object-list CoolingCoilsDXVariableSpeed
         \required-field
    A14, \field Heating Coil
         \type object-list
