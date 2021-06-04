@@ -214,6 +214,9 @@ namespace energyplus {
       if (boost::optional<CoilCoolingDXSingleSpeed> dxCoil = coolingCoil->optionalCast<CoilCoolingDXSingleSpeed>()) {
         _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
+      } else if (boost::optional<CoilCoolingDXVariableSpeed> dxCoil = coolingCoil->optionalCast<CoilCoolingDXVariableSpeed>()) {
+        _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(dxCoil.get());
+        m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
       } else {
         _coolingCoil = translateAndMapModelObject(coolingCoil.get());
       }
