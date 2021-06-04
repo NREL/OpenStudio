@@ -35,6 +35,8 @@
 #include "../CoilCoolingWater_Impl.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -100,6 +102,15 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
   // BUT, we need to be able to connect the water side of the Coil...
   PlantLoop p(m);
   EXPECT_TRUE(p.addDemandBranchForComponent(cc));
+}
+
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_correctHXs) {
+
+  Model m;
+  HeatExchangerAirToAirSensibleAndLatent hxAirToAir(m);
+  EXPECT_NO_THROW(CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m, hxAirToAir));
+  HeatExchangerDesiccantBalancedFlow hxDesiccant(m);
+  EXPECT_ANY_THROW(CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m, hxDesiccant));
 }
 
 TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {

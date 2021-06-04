@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,82 +27,79 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILSYSTEMCOOLINGDXHEATEXCHANGERASSISTED_HPP
-#define MODEL_COILSYSTEMCOOLINGDXHEATEXCHANGERASSISTED_HPP
+#ifndef MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
+#define MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP
 
 #include "ModelAPI.hpp"
-#include "StraightComponent.hpp"
+#include "AirToAirComponent.hpp"
 
 namespace openstudio {
+
 namespace model {
 
-  class AirToAirComponent;
+  class Schedule;
+  class AirflowNetworkEquivalentDuct;
+  class HeatExchangerDesiccantBalancedFlowPerformanceDataType1;
 
   namespace detail {
 
-    class CoilSystemCoolingDXHeatExchangerAssisted_Impl;
+    class HeatExchangerDesiccantBalancedFlow_Impl;
 
   }  // namespace detail
 
-  /** CoilSystemCoolingDXHeatExchangerAssisted is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:Cooling:DX:HeatExchangerAssisted'. */
-  class MODEL_API CoilSystemCoolingDXHeatExchangerAssisted : public StraightComponent
+  /** HeatExchangerDesiccantBalancedFlow is a AirToAirComponent that wraps the OpenStudio IDD object 'OS:HeatExchanger:AirToAir:SensibleAndLatent'. */
+  class MODEL_API HeatExchangerDesiccantBalancedFlow : public AirToAirComponent
   {
+
    public:
-    /** @name Constructors and Destructors */
-    //@{
+    explicit HeatExchangerDesiccantBalancedFlow(const Model& model);
 
-    explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model);
+    explicit HeatExchangerDesiccantBalancedFlow(const Model& model,
+                                                const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
 
-    explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger);
-
-    virtual ~CoilSystemCoolingDXHeatExchangerAssisted() {}
-
-    //@}
+    virtual ~HeatExchangerDesiccantBalancedFlow() {}
 
     static IddObjectType iddObjectType();
 
-    /** @name Getters */
-    //@{
+    Schedule availabilitySchedule() const;
 
-    AirToAirComponent heatExchanger() const;
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-    StraightComponent coolingCoil() const;
+    HeatExchangerDesiccantBalancedFlowPerformanceDataType1 heatExchangerPerformance() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+    bool setHeatExchangerPerformance(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
 
-    bool setHeatExchanger(const AirToAirComponent& heatExchanger);
+    bool economizerLockout() const;
 
-    bool setCoolingCoil(const StraightComponent& coolingCoil);
+    bool setEconomizerLockout(bool economizerLockout);
 
-    //@}
-    /** @name Other */
-    //@{
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-    //@}
    protected:
     /// @cond
-    typedef detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl ImplType;
+    typedef detail::HeatExchangerDesiccantBalancedFlow_Impl ImplType;
 
-    explicit CoilSystemCoolingDXHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl> impl);
+    explicit HeatExchangerDesiccantBalancedFlow(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlow_Impl> impl);
 
-    friend class detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl;
+    friend class detail::HeatExchangerDesiccantBalancedFlow_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
+
     /// @endcond
+
    private:
-    REGISTER_LOGGER("openstudio.model.CoilSystemCoolingDXHeatExchangerAssisted");
+    REGISTER_LOGGER("openstudio.model.HeatExchangerDesiccantBalancedFlow");
   };
 
-  /** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
-  typedef boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> OptionalCoilSystemCoolingDXHeatExchangerAssisted;
+  /** \relates HeatExchangerDesiccantBalancedFlow*/
+  typedef boost::optional<HeatExchangerDesiccantBalancedFlow> OptionalHeatExchangerDesiccantBalancedFlow;
 
-  /** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
-  typedef std::vector<CoilSystemCoolingDXHeatExchangerAssisted> CoilSystemCoolingDXHeatExchangerAssistedVector;
+  /** \relates HeatExchangerDesiccantBalancedFlow*/
+  typedef std::vector<HeatExchangerDesiccantBalancedFlow> HeatExchangerDesiccantBalancedFlowVector;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_COILSYSTEMCOOLINGDXHEATEXCHANGERASSISTED_HPP
+#endif  // MODEL_HEATEXCHANGERDESICCANTBALANCEDFLOW_HPP

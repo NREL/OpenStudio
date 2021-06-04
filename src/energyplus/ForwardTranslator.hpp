@@ -268,6 +268,8 @@ namespace model {
   class HeaderedPumpsVariableSpeed;
   class HeatBalanceAlgorithm;
   class HeatExchangerAirToAirSensibleAndLatent;
+  class HeatExchangerDesiccantBalancedFlow;
+  class HeatExchangerDesiccantBalancedFlowPerformanceDataType1;
   class HeatExchangerFluidToFluid;
   class HeatPumpWaterToWaterEquationFitCooling;
   class HeatPumpWaterToWaterEquationFitHeating;
@@ -1023,6 +1025,11 @@ namespace energyplus {
     boost::optional<IdfObject> translateHeatBalanceAlgorithm(model::HeatBalanceAlgorithm& modelObject);
 
     boost::optional<IdfObject> translateHeatExchangerAirToAirSensibleAndLatent(model::HeatExchangerAirToAirSensibleAndLatent& modelObject);
+
+    boost::optional<IdfObject> translateHeatExchangerDesiccantBalancedFlow(model::HeatExchangerDesiccantBalancedFlow& modelObject);
+
+    boost::optional<IdfObject>
+      translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& modelObject);
 
     boost::optional<IdfObject> translateHeatExchangerFluidToFluid(model::HeatExchangerFluidToFluid& modelObject);
 
