@@ -1,6 +1,6 @@
 # OpenStudio Version 3.2.0
 
-_Release Notes - <strong style='color: red;'>TDB</strong>/2021_
+_Release Notes - 05/04/2021_
 
 These release notes describe version 3.2.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
@@ -32,17 +32,17 @@ __**OpenStudio SDK 3.2.0**__
 
 # Installation Notes
 
-OpenStudio SDK 3.2.0 is supported on 64-bit Windows 7 – 10, OS X 10.14 – 10.15, and Ubuntu 18.04. <strong style='color: red;'>TODO: update to 20.04?</strong>
+OpenStudio SDK 3.2.0 is supported on 64-bit Windows 7 – 10, OS X 10.14 – 10.15, and Ubuntu 18.04, 20.04
 
 OpenStudio SDK 3.2.0 supports [EnergyPlus Release 9.5](https://github.com/NREL/EnergyPlus/releases/tag/v9.5.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.2.0.
 
 OpenStudio SDK 3.2.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK 3.2.0.
 
 OpenStudio SDK 3.2.0 now uses **Ruby 2.7.2** as the supported version (2.5.5 previously in the 3.x series, and 2.2.4 for 2.x series).
-<strong style='color: red;'>TODO:</strong> Probably include a dedicated section?
 
 
-As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-Version-Compatibility-Matrix)** for more information.
+
+As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-SDK-Version-Compatibility-Matrix)** for more information.
 
 
 ## Installation Steps
@@ -51,23 +51,35 @@ As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://g
 - Setup a Building Component Library (BCL) account to access online building components and measures. View instructions on how to setup your account and configure the key in OpenStudio.
 - The OpenStudio Application SketchUp Plug-in requires SketchUp 2019 (not available for Linux). The OpenStudio Application SketchUp Plug-in does not support older versions of SketchUp. SketchUp must be installed before OpenStudio Application to automatically activate the plugin. If you install SketchUp after OpenStudio Application, simply rerun the OpenStudio Application installer.
 
-For help with common installation problems please visit, http://nrel.github.io/OpenStudio-user-documentation/help/troubleshooting/.
+For help with common installation problems please visit, http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/.
 
 # OpenStudio SDK: Changelog
 
 The 3.2.0 is a major release. This update includes several new features, performance improvements, and bug fixes.
-You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2020-10-16..2021-04-15+).
-<strong style='color: red;'>TODO: update link</strong>
+You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2020-10-16..2021-05-04+).
+
+
+## Update to Ruby 2.7.2
+
+OpenStudio SDK now comes with Ruby 2.7.2 ([#4207](https://github.com/NREL/OpenStudio/pull/4207)) which provides many improvements over the previous version, v2.5.5, such as pattern matching, REPL improvement, compaction GC, separation of positional and keyword arguments, and security related improvements. 
+
+To see the full list of Ruby updates and improvements, please refer to the official [ruby release notes](https://www.ruby-lang.org/en/downloads/releases/). 
+
+## Python Bindings 
+
+New for OpenStudio SDK is support for Python bindings ( [#4122](https://github.com/NREL/OpenStudio/pull/4122)). OpenStudio users can now use the popular Python Programming language across supported platforms to interface with OpenStudio SDK. Users can install the bindings using the Python package tool called pip. To install, users will need to have Python3 installed along with pip and simply run the following command in a terminal window. 
+
+`pip install openstudio==3.2.0` 
+
+ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for further instructions on how to install. Users can also visit the test channel at https://test.pypi.org/project/openstudio/ to install development bindings. 
+
 
 ## New Features, Major Fixes and API-breaking changes
 
 A number of new features and API-breaking changes have been implemented in OpenStudio SDK 3.2.0:
 
-* [#4207](https://github.com/NREL/OpenStudio/pull/4207) - Update to ruby 2.7.2
 * [#4271](https://github.com/NREL/OpenStudio/pull/4271) - Update to EnergyPlus v9.5.0
     * Most of the actual changes were done in [#4212](https://github.com/NREL/OpenStudio/pull/4212) - Update to V9.5.0-IOFreeze
-* [#4122](https://github.com/NREL/OpenStudio/pull/4122) - Improvements to Python bindings, and produce a PyPi package, see [openstudio on PyPi](https://test.pypi.org/project/openstudio/)
-    * <strong style='color: red;'>TODO:</strong> Python: write a better write up. maybe its own section?
 
 * **New objects**:
     * [#4155](https://github.com/NREL/OpenStudio/pull/4155) - Wrap `Humidifier:Stream:Gas` in OS SDK
@@ -88,7 +100,7 @@ A number of new features and API-breaking changes have been implemented in OpenS
 
 * [#4180](https://github.com/NREL/OpenStudio/pull/4180) - Fixes [#4175](https://github.com/NREL/OpenStudio/issues/4175), issues with ft for ElectricLoadCenter:Distribution
     * `ElectricLoadCenterDistribution` objects are now possible with no generators / transformers
-    * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts
+    * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts`
 
 * [#4153](https://github.com/NREL/OpenStudio/pull/4153) - Fix #3532 #4152 - Make heating/cooling coils optional for ZoneHVACLowTempVariableFlow and add missing fields to coils
     * This is an API breaking change, the coils are now optional so the getters have been modified to account for this.
@@ -99,7 +111,6 @@ A number of new features and API-breaking changes have been implemented in OpenS
     + boost::optional<HVACComponent> coolingCoil() const;
     ```
 
-**PENDING Merge**:
 
 * [#4221](https://github.com/NREL/OpenStudio/pull/4221) - Geometry improvements including fixing intersection issues
 
@@ -112,13 +123,8 @@ A number of new features and API-breaking changes have been implemented in OpenS
 * [#4188](https://github.com/NREL/OpenStudio/pull/4188) - Fix #4187 - speed up `IdfFile::save` (and derived, such as `Model::save`) and general serialization to string by using '\n' instead of `std::endl`
 * [#4239](https://github.com/NREL/OpenStudio/pull/4239) -Fix #4226 - add int argument for ScheduleFile.setMinutesperItem method
 
-
-**PENDING Merge**:
-
 * [#4061](https://github.com/NREL/OpenStudio/pull/4061) - Fix Cloning a DualDuct AirLoopHVAC breaks the existing loop
 * [#4081](https://github.com/NREL/OpenStudio/pull/4081) - #4077 Remove name field from common HVAC data objects that are not visible to user
-
-* [#4270](https://github.com/NREL/OpenStudio/pull/4270) - #4260 - Add ability to turn off ScheduleTypeLimits enforcement when already assigned
 
 
 ## Minor Bug Fixes
@@ -130,25 +136,32 @@ A number of new features and API-breaking changes have been implemented in OpenS
 * [#4211](https://github.com/NREL/OpenStudio/pull/4211) - Fix #4205 - WorkspaceObject::setString allows setting invalid names for ModelObjects 
 * [#4218](https://github.com/NREL/OpenStudio/pull/4218) - Fix #4217 - Do not make an PlantEqOperationUncontrolled for a Component that is already on a PlantEquipmentOperationComponentSetpoint
 * [#4245](https://github.com/NREL/OpenStudio/pull/4245) - Fix #4166 - Merging FloorSpaceJS can delete unique model Objects such as Facility, Building, Site (and children)
-
-
-**PENDING Merge**:
-
 * [#4235](https://github.com/NREL/OpenStudio/pull/4235) - Fix #4111 - Shading:Building is improperly mapped when "World" coordinates are used for Rectangular Surfaces
 * [#4256](https://github.com/NREL/OpenStudio/pull/4256) - Fix #4254 - Set ComponentType::COOLING for EvaporativeFluidCoolerTwoSpeed
-
 * [#4243](https://github.com/NREL/OpenStudio/pull/4243) - Fix #4240 (and more): add missing \ip-units gal/min via a script
 
-### OpenStudio Standards vX.Y.Z
+### OpenStudio Standards v0.2.13
 
-<strong style='color: red;'>TODO</strong>
+* Fixed a bug related to the implementation of DCV requirements which now impacts many more buildings
+* Zone HVAC equipment now defaults to the zone occupancy schedule if it provides ventilation, otherwise it cycles
+* Added the ability to export standards .json data to a separate repository https://github.com/NREL/BuildingStandardsData
+* Refactored PSZ systems to use the unitary system object for all PSZ types
+* Clarified the distinction between and added support for fluid coolers and closed cooling towers
+* Added standards 90.1-2016 and 90.1-2016 methods and data
+* Included several updates to ComStock versions of standards for commercial stock modeling
 
-### OpenStudio Server vX.Y.Z
 
+### OpenStudio Server v3.2.0
 
-<strong style='color: red;'>TODO</strong>
+* Update to OpenStudio SDK v3.2.0 and EnergyPlus 9.5
+* [#615](https://github.com/NREL/OpenStudio-server/pull/615) Include optional UrbanOpt 
+to run UrbanOpt workflows
+* [$625](https://github.com/NREL/OpenStudio-server/pull/625) Update rails to 6.1.3.1 and ruby to use 2.7.2 along with other core dependency gems.  
+* [#617](https://github.com/NREL/OpenStudio-server/pull/617) Move CI from Travis to GitHub actions
+* [#613](https://github.com/NREL/OpenStudio-server/pull/613) Update mongo to 4.4.2 and redis 6.0.9 and allow for optional authetication of mongo and redis. 
 
 
 ## Issue Statistics Since Previous Release
 
-<strong style='color: red;'>TODO</strong>
+184 Closed Issues  
+86  New issues
