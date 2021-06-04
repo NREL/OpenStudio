@@ -45,8 +45,6 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
-#include "HeatExchangerDesiccantBalancedFlow.hpp"
-#include "HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"

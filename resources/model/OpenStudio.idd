@@ -16404,7 +16404,7 @@ OS:CoilSystem:Cooling:Water:HeatExchangerAssisted,
   A5 , \field Heat Exchanger
        \required-field
        \type object-list
-       \object-list ConnectionObject
+       \object-list HXAirToAirSensibleAndLatentNames
   A6 ; \field Cooling Coil
        \required-field
        \type object-list
@@ -22004,7 +22004,7 @@ OS:HeatExchanger:Desiccant:BalancedFlow,
       \required-field
       \type alpha
       \reference HXDesiccantBalanced
-      \reference HXAirToAirNames   
+      \reference HXAirToAirNames
       \reference AFNHeatExchangerNames
       \reference ConnectionObject
   A3, \field Availability Schedule
