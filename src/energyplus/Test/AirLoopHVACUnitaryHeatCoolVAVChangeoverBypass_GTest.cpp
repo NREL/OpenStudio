@@ -215,3 +215,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
       << "Did not expect to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ReturnPlenum extensible fields";
   }
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_CoilCoolingDXVariableSpeed) {
+
+  // Test for #4330 - AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass does not accept a Coil:Cooling:DX:VariableSpeed
+  // TODO
+}
