@@ -444,7 +444,7 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
       }
     }
 
-    public partial class HeatExchangerDesiccantBalancedFlowPerformanceDataType1 : ModelObject {
+    public partial class HeatExchangerDesiccantBalancedFlowPerformanceDataType1 : ResourceObject {
       public HeatExchangerDesiccantBalancedFlowVector heatExchangerDesiccantBalancedFlows() {
         return OpenStudio.OpenStudioModelHVAC.getHeatExchangerDesiccantBalancedFlows(this);
       }
