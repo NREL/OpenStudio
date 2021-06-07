@@ -49,6 +49,8 @@
 #include "../../model/CoilHeatingElectric_Impl.hpp"
 #include "../../model/CoilHeatingWater.hpp"
 #include "../../model/CoilHeatingWater_Impl.hpp"
+#include "../../model/AirToAirComponent.hpp"
+#include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
@@ -65,6 +67,8 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
@@ -212,11 +216,18 @@ namespace energyplus {
     // Heating Coil Object Type
     // Heating Coil Name
     boost::optional<IdfObject> _heatingCoil;
-    if (boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil()) {
-      if ((heatingCoil->optionalCast<CoilHeatingDXSingleSpeed>()) || (heatingCoil->optionalCast<CoilHeatingDXVariableSpeed>())
-          || (heatingCoil->optionalCast<CoilHeatingGas>()) || (heatingCoil->optionalCast<CoilHeatingElectric>())
-          || (heatingCoil->optionalCast<CoilHeatingWater>())) {
+    boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil();
+    if (heatingCoil) {
+      if (boost::optional<CoilHeatingDXSingleSpeed> dxCoil = heatingCoil->optionalCast<CoilHeatingDXSingleSpeed>()) {
+        _heatingCoil = translateCoilHeatingDXSingleSpeedWithoutUnitary(dxCoil.get());
+        m_map.insert(std::make_pair(heatingCoil->handle(), _heatingCoil.get()));
+      } else if (boost::optional<CoilHeatingDXVariableSpeed> dxCoil = heatingCoil->optionalCast<CoilHeatingDXVariableSpeed>()) {
+        _heatingCoil = translateCoilHeatingDXVariableSpeedWithoutUnitary(dxCoil.get());
+        m_map.insert(std::make_pair(heatingCoil->handle(), _heatingCoil.get()));
+      } else if ((heatingCoil->optionalCast<CoilHeatingGas>()) || (heatingCoil->optionalCast<CoilHeatingElectric>())
+                 || (heatingCoil->optionalCast<CoilHeatingWater>())) {
         _heatingCoil = translateAndMapModelObject(heatingCoil.get());
+        m_map.insert(std::make_pair(heatingCoil->handle(), _heatingCoil.get()));
       } else {
         LOG(Fatal, modelObject.briefDescription() << " appears to have a heating coil that shouldn't have been accepted: "
                                                   << heatingCoil->briefDescription());
@@ -232,7 +243,8 @@ namespace energyplus {
     // Cooling Coil Object Type
     // Cooling Coil Name
     boost::optional<IdfObject> _coolingCoil;
-    if (boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil()) {
+    boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil();
+    if (coolingCoil) {
       if (boost::optional<CoilCoolingDXSingleSpeed> dxCoil = coolingCoil->optionalCast<CoilCoolingDXSingleSpeed>()) {
         _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
@@ -242,7 +254,6 @@ namespace energyplus {
       } else if (boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> dxCoil =
                    coolingCoil->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
         _coolingCoil = translateAndMapModelObject(dxCoil.get());
-        m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
       } else if (boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> dxCoil =
                    coolingCoil->optionalCast<CoilCoolingDXTwoStageWithHumidityControlMode>()) {
         _coolingCoil = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(dxCoil.get());
@@ -333,16 +344,20 @@ namespace energyplus {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolOutletNodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted) {
-        boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> dxCoil = _coolingCoil->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>();
-        auto coolingCoil = dxCoil->coolingCoil();
-        if (auto idf = translateAndMapModelObject(coolingCoil)) {
-          if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
-            idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, coolInletNodeName);
-            idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, coolOutletNodeName);
-          } else if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
-            idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolInletNodeName);
-            idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolOutletNodeName);
-          }
+        OS_ASSERT(coolingCoil);
+        auto coilSystem = coolingCoil->optionalCast<model::CoilSystemCoolingDXHeatExchangerAssisted>();
+        OS_ASSERT(coilSystem);
+        auto hx = coilSystem->heatExchanger();
+        auto _hx = translateAndMapModelObject(hx);
+        OS_ASSERT(_hx);
+        if (_hx->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent) {
+          _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName, coolInletNodeName);
+          _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, coolOutletNodeName);
+        } else if (_hx->iddObject().type() == IddObjectType::HeatExchanger_Desiccant_BalancedFlow) {
+          _hx->setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, coolInletNodeName);
+          _hx->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, coolOutletNodeName);
+        } else {
+          LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
         }
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode) {
         _coolingCoil->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName, coolInletNodeName);
