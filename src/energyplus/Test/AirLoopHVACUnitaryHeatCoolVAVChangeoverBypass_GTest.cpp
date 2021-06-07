@@ -231,13 +231,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
 
   Model m;
   FanConstantVolume fan(m);
-  
+
   // CoilHeatingDXSingleSpeed, CoilCoolingDXSingleSpeed
   {
     CoilHeatingDXSingleSpeed heatingCoil(m);
     CoilCoolingDXSingleSpeed coolingCoil(m);
     AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
-    
+
     // TODO
   }
 
@@ -246,16 +246,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
     CoilHeatingDXVariableSpeed heatingCoil(m);
     CoilCoolingDXVariableSpeed coolingCoil(m);
     AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
-    
+
     // TODO
   }
-  
+
   // CoilHeatingGas, CoilSystemCoolingDXHeatExchangerAssisted
   {
     CoilHeatingGas heatingCoil(m);
     CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
     AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
-    
+
     // TODO
   }
 
@@ -264,7 +264,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
     CoilHeatingElectric heatingCoil(m);
     CoilCoolingDXTwoStageWithHumidityControlMode coolingCoil(m);
     AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
-    
+
     // TODO
   }
 
@@ -273,7 +273,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
     CoilHeatingWater heatingCoil(m);
     CoilCoolingDXSingleSpeed coolingCoil(m);
     AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
-    
+
     // TODO
   }
 }
