@@ -10397,6 +10397,8 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
    A14, \field Heating Coil
         \type object-list
         \object-list HeatingCoilName
+        \object-list HeatingCoilsDXSingleSpeed
+        \object-list HeatingCoilsDXVariableSpeed
         \required-field
    A15, \field Priority Control Mode
         \type choice
