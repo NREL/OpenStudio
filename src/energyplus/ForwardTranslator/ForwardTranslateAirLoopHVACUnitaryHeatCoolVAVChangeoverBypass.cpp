@@ -213,10 +213,13 @@ namespace energyplus {
     // Heating Coil Name
     boost::optional<IdfObject> _heatingCoil;
     if (boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil()) {
-      if ((heatingCoil->optionalCast<CoilHeatingDXSingleSpeed>()) || (heatingCoil->optionalCast<CoilHeatingDXVariableSpeed>()) || (heatingCoil->optionalCast<CoilHeatingGas>()) || (heatingCoil->optionalCast<CoilHeatingElectric>()) || (heatingCoil->optionalCast<CoilHeatingWater>())) {
+      if ((heatingCoil->optionalCast<CoilHeatingDXSingleSpeed>()) || (heatingCoil->optionalCast<CoilHeatingDXVariableSpeed>())
+          || (heatingCoil->optionalCast<CoilHeatingGas>()) || (heatingCoil->optionalCast<CoilHeatingElectric>())
+          || (heatingCoil->optionalCast<CoilHeatingWater>())) {
         _heatingCoil = translateAndMapModelObject(heatingCoil.get());
       } else {
-        LOG(Fatal, modelObject.briefDescription() << " appears to have a heating coil that shouldn't have been accepted: " << heatingCoil->briefDescription());
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a heating coil that shouldn't have been accepted: "
+                                                  << heatingCoil->briefDescription());
         OS_ASSERT(false);
       }
 
@@ -236,14 +239,17 @@ namespace energyplus {
       } else if (boost::optional<CoilCoolingDXVariableSpeed> dxCoil = coolingCoil->optionalCast<CoilCoolingDXVariableSpeed>()) {
         _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
-      } else if (boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> dxCoil = coolingCoil->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+      } else if (boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> dxCoil =
+                   coolingCoil->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
         _coolingCoil = translateAndMapModelObject(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
-      } else if (boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> dxCoil = coolingCoil->optionalCast<CoilCoolingDXTwoStageWithHumidityControlMode>()) {
+      } else if (boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> dxCoil =
+                   coolingCoil->optionalCast<CoilCoolingDXTwoStageWithHumidityControlMode>()) {
         _coolingCoil = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
       } else {
-        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: " << coolingCoil->briefDescription());
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: "
+                                                  << coolingCoil->briefDescription());
         OS_ASSERT(false);
       }
 
