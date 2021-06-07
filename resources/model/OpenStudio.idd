@@ -1669,8 +1669,19 @@ OS:WeatherFile,
   A7, \field Url
        \retaincase
        \type url
-  A8; \field Checksum
+  A8, \field Checksum
        \type alpha
+  A9, \field Start Date Actual Year
+      \type integer
+  A10; \field Start Day of Week
+       \type choice
+       \key Sunday
+       \key Monday
+       \key Tuesday
+       \key Wednesday
+       \key Thursday
+       \key Friday
+       \key Saturday
 
 OS:WeatherProperty:SkyTemperature,
        \memo This object is used to override internal sky temperature calculations.
