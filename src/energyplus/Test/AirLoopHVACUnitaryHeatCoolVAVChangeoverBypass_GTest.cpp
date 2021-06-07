@@ -35,8 +35,15 @@
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingGas.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/CoilHeatingWater.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Node.hpp"
@@ -216,9 +223,57 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
   }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_CoilCoolingDXVariableSpeed) {
-
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_CoilTypes) {
   // Test for #4330 - AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass does not accept a Coil:Cooling:DX:VariableSpeed
   // Test for #4329 - Air nodes not set for Coil:Cooling:DX:TwoStageWithHumidityControlMode on AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass
-  // TODO
+
+  ForwardTranslator ft;
+
+  Model m;
+  FanConstantVolume fan(m);
+  
+  // CoilHeatingDXSingleSpeed, CoilCoolingDXSingleSpeed
+  {
+    CoilHeatingDXSingleSpeed heatingCoil(m);
+    CoilCoolingDXSingleSpeed coolingCoil(m);
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+    
+    // TODO
+  }
+
+  // CoilHeatingDXVariableSpeed, CoilCoolingDXVariableSpeed
+  {
+    CoilHeatingDXVariableSpeed heatingCoil(m);
+    CoilCoolingDXVariableSpeed coolingCoil(m);
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+    
+    // TODO
+  }
+  
+  // CoilHeatingGas, CoilSystemCoolingDXHeatExchangerAssisted
+  {
+    CoilHeatingGas heatingCoil(m);
+    CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+    
+    // TODO
+  }
+
+  // CoilHeatingElectric, CoilCoolingDXTwoStageWithHumidityControlMode
+  {
+    CoilHeatingElectric heatingCoil(m);
+    CoilCoolingDXTwoStageWithHumidityControlMode coolingCoil(m);
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+    
+    // TODO
+  }
+
+  // CoilHeatingWater, CoilCoolingDXSingleSpeed
+  {
+    CoilHeatingWater heatingCoil(m);
+    CoilCoolingDXSingleSpeed coolingCoil(m);
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+    
+    // TODO
+  }
 }
