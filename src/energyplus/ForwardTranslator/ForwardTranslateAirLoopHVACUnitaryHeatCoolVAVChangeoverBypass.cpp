@@ -33,6 +33,22 @@
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+#include "../../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../../model/CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilHeatingGas.hpp"
+#include "../../model/CoilHeatingGas_Impl.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/CoilHeatingElectric_Impl.hpp"
+#include "../../model/CoilHeatingWater.hpp"
+#include "../../model/CoilHeatingWater_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
@@ -42,15 +58,13 @@
 #include "../../model/Mixer.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
@@ -199,7 +213,12 @@ namespace energyplus {
     // Heating Coil Name
     boost::optional<IdfObject> _heatingCoil;
     if (boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil()) {
-      _heatingCoil = translateAndMapModelObject(heatingCoil.get());
+      if ((heatingCoil->optionalCast<CoilHeatingDXSingleSpeed>()) || (heatingCoil->optionalCast<CoilHeatingDXVariableSpeed>()) || (heatingCoil->optionalCast<CoilHeatingGas>()) || (heatingCoil->optionalCast<CoilHeatingElectric>()) || (heatingCoil->optionalCast<CoilHeatingWater>())) {
+        _heatingCoil = translateAndMapModelObject(heatingCoil.get());
+      } else {
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a heating coil that shouldn't have been accepted: " << heatingCoil->briefDescription());
+        OS_ASSERT(false);
+      }
 
       if (_heatingCoil && _heatingCoil->name()) {
         unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::HeatingCoilObjectType, _heatingCoil->iddObject().name());
@@ -217,8 +236,15 @@ namespace energyplus {
       } else if (boost::optional<CoilCoolingDXVariableSpeed> dxCoil = coolingCoil->optionalCast<CoilCoolingDXVariableSpeed>()) {
         _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
+      } else if (boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> dxCoil = coolingCoil->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+        _coolingCoil = translateAndMapModelObject(dxCoil.get());
+        m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
+      } else if (boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> dxCoil = coolingCoil->optionalCast<CoilCoolingDXTwoStageWithHumidityControlMode>()) {
+        _coolingCoil = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(dxCoil.get());
+        m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
       } else {
-        _coolingCoil = translateAndMapModelObject(coolingCoil.get());
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: " << coolingCoil->briefDescription());
+        OS_ASSERT(false);
       }
 
       if (_coolingCoil && _coolingCoil->name()) {
@@ -297,35 +323,41 @@ namespace energyplus {
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, coolInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, coolOutletNodeName);
-      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoSpeed) {
-        _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirInletNodeName, coolInletNodeName);
-        _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirOutletNodeName, coolOutletNodeName);
-      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_Water) {
-        _coolingCoil->setString(Coil_Cooling_WaterFields::AirInletNodeName, coolInletNodeName);
-        _coolingCoil->setString(Coil_Cooling_WaterFields::AirOutletNodeName, coolOutletNodeName);
-      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit) {
-        _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName, coolInletNodeName);
-        _coolingCoil->setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName, coolOutletNodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolInletNodeName);
+        _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolOutletNodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted) {
+        boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> dxCoil = _coolingCoil->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>();
+        auto coolingCoil = dxCoil->coolingCoil();
+        if (auto idf = translateAndMapModelObject(coolingCoil)) {
+          if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
+            idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, coolInletNodeName);
+            idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, coolOutletNodeName);
+          } else if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
+            idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolInletNodeName);
+            idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolOutletNodeName);
+          }
+        }
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode) {
+        _coolingCoil->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName, coolInletNodeName);
+        _coolingCoil->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName, coolOutletNodeName);
       }
 
       if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_SingleSpeed) {
         _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName, heatInletNodeName);
         _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName, heatOutletNodeName);
-      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric) {
-        _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, heatInletNodeName);
-        _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, heatOutletNodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed) {
+        _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, heatInletNodeName);
+        _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, heatOutletNodeName);
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
         _heatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, heatInletNodeName);
         _heatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, heatOutletNodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric) {
+        _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, heatInletNodeName);
+        _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, heatOutletNodeName);
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water) {
         _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, heatInletNodeName);
         _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, heatOutletNodeName);
-      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Desuperheater) {
-        _heatingCoil->setString(Coil_Heating_DesuperheaterFields::AirInletNodeName, heatInletNodeName);
-        _heatingCoil->setString(Coil_Heating_DesuperheaterFields::AirOutletNodeName, heatOutletNodeName);
-      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit) {
-        _heatingCoil->setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName, heatInletNodeName);
-        _heatingCoil->setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName, heatOutletNodeName);
       }
 
       IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
