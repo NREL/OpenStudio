@@ -219,5 +219,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_CoilCoolingDXVariableSpeed) {
 
   // Test for #4330 - AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass does not accept a Coil:Cooling:DX:VariableSpeed
+  // Test for #4329 - Air nodes not set for Coil:Cooling:DX:TwoStageWithHumidityControlMode on AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass
   // TODO
 }

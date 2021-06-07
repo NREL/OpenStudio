@@ -67,9 +67,3 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXTwoStageWithHumidityCon
   ASSERT_TRUE(_d);
   EXPECT_DOUBLE_EQ(-7.5, _d.get());
 }
-
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_CoilCoolingDXTwoStageWithHumidityControlMode) {
-
-  // Test for #4329 - Air nodes not set for Coil:Cooling:DX:TwoStageWithHumidityControlMode on AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass
-  // TODO
-}
