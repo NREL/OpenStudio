@@ -236,7 +236,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_NewFields_Control_OA) {
   EXPECT_FALSE(atu.controlForOutdoorAir());
 
   EXPECT_TRUE(atu.setPerPersonVentilationRateMode("DesignOccupancy"));
-  EXPECT_EQ("CurrentOccupancy", atu.perPersonVentilationRateMode());
-  EXPECT_TRUE(atu.setPerPersonVentilationRateMode("BADENUM"));
-  EXPECT_EQ("CurrentOccupancy", atu.perPersonVentilationRateMode());
+  EXPECT_EQ("DesignOccupancy", atu.perPersonVentilationRateMode());
+  EXPECT_FALSE(atu.setPerPersonVentilationRateMode("BADENUM"));
+  EXPECT_EQ("DesignOccupancy", atu.perPersonVentilationRateMode());
 }
