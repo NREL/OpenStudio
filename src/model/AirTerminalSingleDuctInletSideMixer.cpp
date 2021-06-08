@@ -239,7 +239,7 @@ namespace model {
 
   std::vector<std::string> AirTerminalSingleDuctInletSideMixer::perPersonVentilationRateModeValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_AirTerminal_SingleDuct_InletSideMixer::PerPersonVentilationRateMode);
+                          OS_AirTerminal_SingleDuct_InletSideMixerFields::PerPersonVentilationRateMode);
   }
 
   unsigned AirTerminalSingleDuctInletSideMixer::secondaryAirInletPort() const {

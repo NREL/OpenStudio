@@ -43,6 +43,7 @@
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/PortList.hpp"
 
 #include "../../model/ThermalZone.hpp"
