@@ -58,13 +58,24 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    static std::vector<std::string> perPersonVentilationRateModeValues();
     /** @name Getters */
     //@{
+
+    /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    * with the terminal's zone on export to EnergyPlus idf format.
+    * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
+    bool controlForOutdoorAir() const;
+
+    std::string perPersonVentilationRateMode() const;
 
     //@}
     /** @name Setters */
     //@{
 
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
+
+    bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
     //@}
     /** @name Other */
     //@{
