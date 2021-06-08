@@ -143,7 +143,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::update_3_0_1_to_3_1_0;
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
-    m_updateMethods[VersionString("3.2.2")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.2.2")] = &VersionTranslator::update_3_2_1_to_3_2_2;
+    //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -6668,6 +6669,50 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_2_0_to_3_2_1
+
+  std::string VersionTranslator::update_3_2_1_to_3_2_2(const IdfFile& idf_3_2_1, const IddFileAndFactoryWrapper& idd_3_2_2) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_2_1.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_2_2.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_2_1.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:AirTerminal:SingleDuct:InletSideMixer") {
+
+        // Fields that have been added from 3.2.1 to 3.2.2:
+        // ------------------------------------------------
+        // * Control For Outdoor Air * 5
+        // * Per Person Ventilation Rate Mode * 6
+
+        auto iddObject = idd_3_2_2.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Set new fields per IDD default, same as Model Ctor, since it was made required-field
+        newObject.setString(5, "Yes");
+        newObject.setString(6, "CurrentOccupancy");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_2_1_to_3_2_2
 
 }  // namespace osversion
 }  // namespace openstudio
