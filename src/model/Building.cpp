@@ -237,7 +237,7 @@ namespace model {
 
         // This is crude, but since:
         // 1. Surfaces all are in the name group, so name unicity is enforced
-        // 2. We are cloning the entire building, removing anything that was their prior: names aren't modified
+        // 2. We are cloning the entire building, removing anything that was there prior: names aren't modified
         // As a result, we do that on name... the alternative is to avoid calling Space::clone, clone surfaces first,
         // reimplement a version of Space::clone, etc. Too much trouble
         std::map<std::string, std::string> surfaceToAdjacentMap;
