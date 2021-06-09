@@ -47,6 +47,8 @@
 #include "../../utilities/time/Date.hpp"
 #include "../../utilities/time/Time.hpp"
 
+#include <algorithm>
+
 using namespace openstudio::model;
 using namespace openstudio;
 
@@ -883,6 +885,45 @@ TEST_F(ModelFixture, ScheduleRuleset_resetSpecialDays) {
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
   EXPECT_EQ(4u, model.getConcreteModelObjects<ScheduleDay>().size());
+}
+
+TEST_F(ModelFixture, ScheduleRuleset_getActiveRuleIndices) {
+  // Test for #2708
+  Model m;
+
+  ScheduleRuleset sch_ruleset(m);
+  ScheduleRule saturdayRule(sch_ruleset);
+  saturdayRule.setApplySaturday(true);
+
+  ScheduleRule fridayRule(sch_ruleset);
+  fridayRule.setApplyFriday(true);
+
+  model::YearDescription yd = m.getUniqueModelObject<model::YearDescription>();
+  openstudio::Date jan1WithYear(openstudio::MonthOfYear::Jan, 1, yd.assumedYear());
+  openstudio::Date jan7WithYear(openstudio::MonthOfYear::Jan, 7, yd.assumedYear());
+
+  openstudio::Date jan1WithoutYear(openstudio::MonthOfYear::Jan, 1);
+  openstudio::Date jan7WithoutYear(openstudio::MonthOfYear::Jan, 7);
+
+  auto checkWeCanGetActiveRules = [&sch_ruleset](const auto& startDate, const auto& endDate) -> bool {
+    std::vector<int> rulesIndexes = sch_ruleset.getActiveRuleIndices(startDate, endDate);
+    return std::find_if(rulesIndexes.begin(), rulesIndexes.end(), [](int i) { return i >= 0; }) != rulesIndexes.end();
+  };
+
+  EXPECT_TRUE(checkWeCanGetActiveRules(jan1WithYear, jan7WithYear)) << "Failed when YearDescription is defaulted and passing years";
+  EXPECT_TRUE(checkWeCanGetActiveRules(jan1WithoutYear, jan7WithoutYear))<< "Failed when YearDescription is defaulted and not passing years";
+
+  yd.setCalendarYear(2006);
+  // This we expect to fail
+  EXPECT_FALSE(checkWeCanGetActiveRules(jan1WithYear, jan7WithYear)) << "Failed when YearDescription is 2006 and passing years";
+  // This we expect to work
+  EXPECT_TRUE(checkWeCanGetActiveRules(jan1WithoutYear, jan7WithoutYear))<< "Failed when YearDescription is 2006 and not passing years";
+
+  // Just make sure this also works
+  EXPECT_TRUE(checkWeCanGetActiveRules(yd.makeDate(openstudio::MonthOfYear::Jan, 1), yd.makeDate(openstudio::MonthOfYear::Jan, 1)))
+      << "Failed when YearDescription is 2006 and passing 2006";
+
+
 }
 
 /*
