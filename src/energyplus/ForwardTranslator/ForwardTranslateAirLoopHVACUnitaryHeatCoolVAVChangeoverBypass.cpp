@@ -219,6 +219,7 @@ namespace energyplus {
     boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil();
     if (heatingCoil) {
       if (boost::optional<CoilHeatingDXSingleSpeed> dxCoil = heatingCoil->optionalCast<CoilHeatingDXSingleSpeed>()) {
+        // Not calling `translateAndMapModelObject` but directly the without unitary function, so need to insert into m_map
         _heatingCoil = translateCoilHeatingDXSingleSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(heatingCoil->handle(), _heatingCoil.get()));
       } else if (boost::optional<CoilHeatingDXVariableSpeed> dxCoil = heatingCoil->optionalCast<CoilHeatingDXVariableSpeed>()) {
@@ -226,8 +227,8 @@ namespace energyplus {
         m_map.insert(std::make_pair(heatingCoil->handle(), _heatingCoil.get()));
       } else if ((heatingCoil->optionalCast<CoilHeatingGas>()) || (heatingCoil->optionalCast<CoilHeatingElectric>())
                  || (heatingCoil->optionalCast<CoilHeatingWater>())) {
+        // translateAndMapModelObject already inserts into m_map
         _heatingCoil = translateAndMapModelObject(heatingCoil.get());
-        m_map.insert(std::make_pair(heatingCoil->handle(), _heatingCoil.get()));
       } else {
         LOG(Fatal, modelObject.briefDescription() << " appears to have a heating coil that shouldn't have been accepted: "
                                                   << heatingCoil->briefDescription());
