@@ -252,7 +252,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
     std::string fanOutlet;
   };
 
-  auto getObjects = [](const Workspace& w) -> std::tuple<WorkspaceObject, WorkspaceObject, WorkspaceObject, WorkspaceObject, WorkspaceObject> {
+  auto getObjects = [](const Workspace& w) -> std::tuple<WorkspaceObject, WorkspaceObject, WorkspaceObject, WorkspaceObject> {
     WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass));
     EXPECT_EQ(1u, idf_unitarys.size());
     WorkspaceObject idf_unitary(idf_unitarys[0]);
@@ -265,7 +265,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
 
     auto idf_fan_ = idf_unitary.getTarget(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::SupplyAirFanName);
 
-    return {idf_unitary, idf_oamixer_.get(), idf_coolingCoil_.get(), idf_heatingCoil_.get(), idf_fan_.get()};
+    return {idf_oamixer_.get(), idf_coolingCoil_.get(), idf_heatingCoil_.get(), idf_fan_.get()};
   };
 
   auto validateNodeMatch = [](const NodeNames& n, const std::string& testName = "", bool drawThrough = true) {
@@ -309,7 +309,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
       EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
 
       auto getNodeNames = [&getObjects](const auto& w) {
-        auto [idf_unitary, idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
 
         EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_DX_SingleSpeed);
         EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_SingleSpeed);
@@ -354,7 +354,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
       EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
 
       auto getNodeNames = [&getObjects](const auto& w) {
-        auto [idf_unitary, idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
 
         EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_VariableSpeed);
         EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_DX_VariableSpeed);
@@ -399,7 +399,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
       EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode).size());
 
       auto getNodeNames = [&getObjects](const auto& w) {
-        auto [idf_unitary, idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
 
         EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode);
         EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_Electric);
@@ -444,7 +444,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
       EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
 
       auto getNodeNames = [&getObjects](const auto& w) {
-        auto [idf_unitary, idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
 
         EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_SingleSpeed);
         EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_Water);
@@ -491,7 +491,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
       EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
 
       auto getNodeNames = [&getObjects](const auto& w) {
-        auto [idf_unitary, idf_oamixer, idf_coilSystem, idf_heatingCoil, idf_fan] = getObjects(w);
+        auto [idf_oamixer, idf_coilSystem, idf_heatingCoil, idf_fan] = getObjects(w);
 
         EXPECT_EQ(idf_coilSystem.iddObject().type(), IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted);
 
