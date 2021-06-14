@@ -35,8 +35,15 @@
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingGas.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/CoilHeatingWater.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Node.hpp"
@@ -53,6 +60,18 @@
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
+#include <utilities/idd/CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
+#include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
+#include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -213,5 +232,303 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeo
 
     EXPECT_TRUE(checkIfFoundInExtensibleGroups(idf_returnplenum, _plenumNodeName.get(), AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName))
       << "Did not expect to find Plenum Node Name='" << _plenumNodeName.get() << "' in the AirLoopHVAC:ReturnPlenum extensible fields";
+  }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_CoilTypes) {
+  // Test for #4330 - AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass does not accept a Coil:Cooling:DX:VariableSpeed
+  // Test for #4329 - Air nodes not set for Coil:Cooling:DX:TwoStageWithHumidityControlMode on AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass
+
+  ForwardTranslator ft;
+
+  struct NodeNames
+  {
+    std::string oaMixerOutlet;
+    std::string coolingCoilInlet;
+    std::string coolingCoilOutlet;
+    std::string heatingCoilInlet;
+    std::string heatingCoilOutlet;
+    std::string fanInlet;
+    std::string fanOutlet;
+  };
+
+  auto getObjects = [](const Workspace& w) -> std::tuple<WorkspaceObject, WorkspaceObject, WorkspaceObject, WorkspaceObject> {
+    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass));
+    EXPECT_EQ(1u, idf_unitarys.size());
+    WorkspaceObject idf_unitary(idf_unitarys[0]);
+
+    auto idf_heatingCoil_ = idf_unitary.getTarget(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::HeatingCoilName);
+
+    auto idf_coolingCoil_ = idf_unitary.getTarget(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::CoolingCoilName);
+
+    auto idf_oamixer_ = idf_unitary.getTarget(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::OutdoorAirMixerName);
+
+    auto idf_fan_ = idf_unitary.getTarget(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::SupplyAirFanName);
+
+    return {idf_oamixer_.get(), idf_coolingCoil_.get(), idf_heatingCoil_.get(), idf_fan_.get()};
+  };
+
+  auto validateNodeMatch = [](const NodeNames& n, const std::string& testName = "", bool drawThrough = true) {
+    EXPECT_FALSE(n.oaMixerOutlet.empty());
+    EXPECT_FALSE(n.coolingCoilInlet.empty());
+    EXPECT_FALSE(n.coolingCoilOutlet.empty());
+    EXPECT_FALSE(n.heatingCoilInlet.empty());
+    EXPECT_FALSE(n.heatingCoilOutlet.empty());
+    EXPECT_FALSE(n.fanInlet.empty());
+    if (drawThrough) {
+      EXPECT_EQ(n.oaMixerOutlet, n.coolingCoilInlet) << testName << " [" << drawThrough << "]: OA Mixer Outlet doesn't match Cooling Coil Inlet";
+      EXPECT_EQ(n.coolingCoilOutlet, n.heatingCoilInlet) << testName << " [" << drawThrough << "]: Cooling Outlet doesn't match Heating Coil Inlet";
+      EXPECT_EQ(n.heatingCoilOutlet, n.fanInlet) << testName << " [" << drawThrough << "]: Heating Outlet doesn't match Fan Inlet";
+    } else {
+      EXPECT_EQ(n.oaMixerOutlet, n.fanInlet) << testName << " [" << drawThrough << "]: OA Mixer Outlet doesn't match Fan Inlet";
+      EXPECT_EQ(n.fanOutlet, n.coolingCoilInlet) << testName << " [" << drawThrough << "]: Fan Outlet doesn't match Cooling Coil Inlet";
+      EXPECT_EQ(n.coolingCoilOutlet, n.heatingCoilInlet) << testName << " [" << drawThrough << "]: Cooling Outlet doesn't match Heating Coil Inlet";
+    }
+  };
+
+  {
+    constexpr auto test_name = "CoilHeatingDXSingleSpeed, CoilCoolingDXSingleSpeed";
+    for (bool drawThrough : {true, false}) {
+      Model m;
+      CoilHeatingDXSingleSpeed heatingCoil(m);
+      CoilCoolingDXSingleSpeed coolingCoil(m);
+      FanConstantVolume fan(m);
+      AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+      unitary.setName("UnitarySystem");
+      EXPECT_TRUE(unitary.setSupplyAirFanPlacement(drawThrough ? "DrawThrough" : "BlowThrough"));
+
+      AirLoopHVAC a(m);
+      Node supplyOutletNode = a.supplyOutletNode();
+      unitary.addToNode(supplyOutletNode);
+
+      Workspace w = ft.translateModel(m);
+
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_SingleSpeed).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
+
+      auto getNodeNames = [&getObjects](const auto& w) {
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+
+        EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_DX_SingleSpeed);
+        EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_SingleSpeed);
+
+        NodeNames n;
+        n.oaMixerOutlet = idf_oamixer.getString(OutdoorAir_MixerFields::MixedAirNodeName).get();
+        n.coolingCoilInlet = idf_coolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName).get();
+        n.coolingCoilOutlet = idf_coolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName).get();
+        n.heatingCoilInlet = idf_heatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName).get();
+        n.heatingCoilOutlet = idf_heatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName).get();
+        n.fanInlet = idf_fan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get();
+        n.fanOutlet = idf_fan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get();
+
+        return n;
+      };
+
+      validateNodeMatch(getNodeNames(w), test_name, drawThrough);
+    }
+  }
+
+  {
+    constexpr auto test_name = "CoilHeatingDXVariableSpeed, CoilCoolingDXVariableSpeed";
+    for (bool drawThrough : {true, false}) {
+      ForwardTranslator ft;
+      Model m;
+      CoilHeatingDXVariableSpeed heatingCoil(m);
+      CoilCoolingDXVariableSpeed coolingCoil(m);
+      FanConstantVolume fan(m);
+      AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+      unitary.setName("UnitarySystem");
+      EXPECT_TRUE(unitary.setSupplyAirFanPlacement(drawThrough ? "DrawThrough" : "BlowThrough"));
+
+      AirLoopHVAC a(m);
+      Node supplyOutletNode = a.supplyOutletNode();
+      unitary.addToNode(supplyOutletNode);
+
+      Workspace w = ft.translateModel(m);
+
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
+
+      auto getNodeNames = [&getObjects](const auto& w) {
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+
+        EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_VariableSpeed);
+        EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_DX_VariableSpeed);
+
+        NodeNames n;
+        n.oaMixerOutlet = idf_oamixer.getString(OutdoorAir_MixerFields::MixedAirNodeName).get();
+        n.coolingCoilInlet = idf_coolingCoil.getString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName).get();
+        n.coolingCoilOutlet = idf_coolingCoil.getString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName).get();
+        n.heatingCoilInlet = idf_heatingCoil.getString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName).get();
+        n.heatingCoilOutlet = idf_heatingCoil.getString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName).get();
+        n.fanInlet = idf_fan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get();
+        n.fanOutlet = idf_fan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get();
+
+        return n;
+      };
+
+      validateNodeMatch(getNodeNames(w), test_name, drawThrough);
+    }
+  }
+
+  {
+    constexpr auto test_name = "CoilHeatingElectric, CoilCoolingDXTwoStageWithHumidityControlMode";
+    for (bool drawThrough : {true, false}) {
+      ForwardTranslator ft;
+      Model m;
+      CoilHeatingElectric heatingCoil(m);
+      CoilCoolingDXTwoStageWithHumidityControlMode coolingCoil(m);
+      FanConstantVolume fan(m);
+      AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+      unitary.setName("UnitarySystem");
+      EXPECT_TRUE(unitary.setSupplyAirFanPlacement(drawThrough ? "DrawThrough" : "BlowThrough"));
+
+      AirLoopHVAC a(m);
+      Node supplyOutletNode = a.supplyOutletNode();
+      unitary.addToNode(supplyOutletNode);
+
+      Workspace w = ft.translateModel(m);
+
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_Electric).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode).size());
+
+      auto getNodeNames = [&getObjects](const auto& w) {
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+
+        EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode);
+        EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_Electric);
+
+        NodeNames n;
+        n.oaMixerOutlet = idf_oamixer.getString(OutdoorAir_MixerFields::MixedAirNodeName).get();
+        n.coolingCoilInlet = idf_coolingCoil.getString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName).get();
+        n.coolingCoilOutlet = idf_coolingCoil.getString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName).get();
+        n.heatingCoilInlet = idf_heatingCoil.getString(Coil_Heating_ElectricFields::AirInletNodeName).get();
+        n.heatingCoilOutlet = idf_heatingCoil.getString(Coil_Heating_ElectricFields::AirOutletNodeName).get();
+        n.fanInlet = idf_fan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get();
+        n.fanOutlet = idf_fan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get();
+
+        return n;
+      };
+
+      validateNodeMatch(getNodeNames(w), test_name, drawThrough);
+    }
+  }
+
+  {
+    constexpr auto test_name = "CoilHeatingWater, CoilCoolingDXSingleSpeed";
+    for (bool drawThrough : {true, false}) {
+      ForwardTranslator ft;
+      Model m;
+      CoilHeatingWater heatingCoil(m);
+      CoilCoolingDXSingleSpeed coolingCoil(m);
+      FanConstantVolume fan(m);
+      AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+      unitary.setName("UnitarySystem");
+      EXPECT_TRUE(unitary.setSupplyAirFanPlacement(drawThrough ? "DrawThrough" : "BlowThrough"));
+
+      AirLoopHVAC a(m);
+      Node supplyOutletNode = a.supplyOutletNode();
+      unitary.addToNode(supplyOutletNode);
+
+      Workspace w = ft.translateModel(m);
+
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_Water).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
+
+      auto getNodeNames = [&getObjects](const auto& w) {
+        auto [idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan] = getObjects(w);
+
+        EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_SingleSpeed);
+        EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_Water);
+
+        NodeNames n;
+        n.oaMixerOutlet = idf_oamixer.getString(OutdoorAir_MixerFields::MixedAirNodeName).get();
+        n.coolingCoilInlet = idf_coolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName).get();
+        n.coolingCoilOutlet = idf_coolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName).get();
+        n.heatingCoilInlet = idf_heatingCoil.getString(Coil_Heating_WaterFields::AirInletNodeName).get();
+        n.heatingCoilOutlet = idf_heatingCoil.getString(Coil_Heating_WaterFields::AirOutletNodeName).get();
+        n.fanInlet = idf_fan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get();
+        n.fanOutlet = idf_fan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get();
+
+        return n;
+      };
+
+      validateNodeMatch(getNodeNames(w), test_name, drawThrough);
+    }
+  }
+
+  {
+    constexpr auto test_name = "CoilHeatingGas, CoilSystemCoolingDXHeatExchangerAssisted";
+    for (bool drawThrough : {true, false}) {
+      ForwardTranslator ft;
+      Model m;
+      CoilHeatingGas heatingCoil(m);
+      CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
+      FanConstantVolume fan(m);
+      AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, fan, coolingCoil, heatingCoil);
+      unitary.setName("UnitarySystem");
+      EXPECT_TRUE(unitary.setSupplyAirFanPlacement(drawThrough ? "DrawThrough" : "BlowThrough"));
+
+      AirLoopHVAC a(m);
+      Node supplyOutletNode = a.supplyOutletNode();
+      unitary.addToNode(supplyOutletNode);
+
+      Workspace w = ft.translateModel(m);
+
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_Fuel).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent).size());
+      EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
+
+      auto getNodeNames = [&getObjects](const auto& w) {
+        auto [idf_oamixer, idf_coilSystem, idf_heatingCoil, idf_fan] = getObjects(w);
+
+        EXPECT_EQ(idf_coilSystem.iddObject().type(), IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted);
+
+        // this is fun, we have a CoilSystem that wraps a HX and a Cooling Coil... We'll do some manual node check here
+        auto idf_coolingCoil = idf_coilSystem.getTarget(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoilName).get();
+        EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_DX_SingleSpeed);
+        EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_Fuel);
+
+        auto idf_HX = idf_coilSystem.getTarget(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::HeatExchangerName).get();
+        EXPECT_EQ(idf_HX.iddObject().type(), IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent);
+
+        // Connected to the branch / other components
+        std::string hxSupplyInlet = idf_HX.getString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName).get();
+        std::string hxExhaustOutlet = idf_HX.getString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName).get();
+
+        // To/From Cooling coil
+        std::string hxSupplyOutlet = idf_HX.getString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNodeName).get();
+        std::string hxExhaustInlet = idf_HX.getString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirInletNodeName).get();
+        std::string coolingCoilInlet = idf_coolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName).get();
+        std::string coolingCoilOutlet = idf_coolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName).get();
+        EXPECT_EQ(hxSupplyOutlet, coolingCoilInlet);
+        EXPECT_EQ(hxExhaustInlet, coolingCoilOutlet);
+
+        NodeNames n;
+        n.oaMixerOutlet = idf_oamixer.getString(OutdoorAir_MixerFields::MixedAirNodeName).get();
+        // This are atually the HX Suppy Inlet / Exhaust Outlet
+        n.coolingCoilInlet = hxSupplyInlet;
+        n.coolingCoilOutlet = hxExhaustOutlet;
+        n.heatingCoilInlet = idf_heatingCoil.getString(Coil_Heating_FuelFields::AirInletNodeName).get();
+        n.heatingCoilOutlet = idf_heatingCoil.getString(Coil_Heating_FuelFields::AirOutletNodeName).get();
+        n.fanInlet = idf_fan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get();
+        n.fanOutlet = idf_fan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get();
+
+        return n;
+      };
+
+      validateNodeMatch(getNodeNames(w), test_name, drawThrough);
+    }
   }
 }

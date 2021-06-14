@@ -226,12 +226,10 @@ namespace model {
     /// Returns the total floor area in square meters.
     /// Includes only spaces marked as included in floor area.
     /// Includes space multipliers in calculation.
-    /// Attribute name: floorArea
     double floorArea() const;
 
     /// Returns the conditioned floor area in square meters.  Currently requires EnergyPlus
     /// simulation output to calculate.
-    /// Attribute name: conditionedFloorArea
     boost::optional<double> conditionedFloorArea() const;
 
     // ETH@20140115 - Should take a bool as to whether to include spaces marked as
@@ -318,7 +316,7 @@ namespace model {
     std::vector<std::vector<Point3d>> generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const;
 
     // Calculates the building perimeter
-    double exteriorPerimeter();
+    double exteriorPerimeter() const;
 
     //@}
    protected:

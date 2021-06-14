@@ -53,6 +53,11 @@
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACUnitVentilator_Impl.hpp"
 
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
+
 #include <utilities/idd/OS_CoilSystem_Cooling_Water_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../utilities/core/Assert.hpp"
@@ -231,6 +236,10 @@ namespace model {
             }
           }
         }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        if (oas->airLoopHVACDedicatedOutdoorAirSystem()) {
+          return StraightComponent_Impl::addToNode(node);
+        }
       }
 
       return result;
@@ -246,6 +255,21 @@ namespace model {
 
     HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
     heatExchanger.setSupplyAirOutletTemperatureControl(false);
+    setHeatExchanger(heatExchanger);
+  }
+
+  CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger)
+    : StraightComponent(CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl>());
+
+    bool ok = setHeatExchanger(heatExchanger);
+    if (!ok) {
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heat Exchanger " << heatExchanger.briefDescription() << ".");
+    }
+
+    CoilCoolingWater coolingCoil(model);
+    setCoolingCoil(coolingCoil);
+
     setHeatExchanger(heatExchanger);
   }
 

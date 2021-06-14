@@ -38,6 +38,7 @@ namespace model {
 
   class Schedule;
   class ThermalZone;
+  class WaterHeaterSizing;
 
   namespace detail {
 
@@ -73,6 +74,10 @@ namespace model {
       virtual unsigned demandInletPort() const override;
 
       virtual unsigned demandOutletPort() const override;
+
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual ModelObject clone(Model model) const override;
 
       //@}
       /** @name Getters */
@@ -398,6 +403,8 @@ namespace model {
       //@{
 
       boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+      WaterHeaterSizing waterHeaterSizing() const;
 
       //@}
      protected:

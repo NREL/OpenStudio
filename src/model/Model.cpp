@@ -1306,6 +1306,10 @@ namespace model {
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
           modelObj->autosize();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
+          modelObj->autosize();
         }
       }
       return;
@@ -1336,6 +1340,10 @@ namespace model {
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) {  // CoilHeatingDXMultiSpeedStageData
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
+          modelObj->applySizingValues();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
           modelObj->applySizingValues();
         }
       }
@@ -3314,6 +3322,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(HeaderedPumpsVariableSpeed);
     REGISTER_CONSTRUCTOR(HeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(HeatExchangerAirToAirSensibleAndLatent);
+    REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitHeating);
@@ -3354,6 +3364,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(OutputDiagnostics);
     REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
     REGISTER_CONSTRUCTOR(OutputJSON);
+    REGISTER_CONSTRUCTOR(OutputEnvironmentalImpactFactors);
+    REGISTER_CONSTRUCTOR(EnvironmentalImpactFactors);
+    REGISTER_CONSTRUCTOR(FuelFactors);
     REGISTER_CONSTRUCTOR(OutputMeter);
     REGISTER_CONSTRUCTOR(OutputVariable);
     REGISTER_CONSTRUCTOR(OutputTableSummaryReports);
@@ -3512,6 +3525,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
     REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
     REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpWrappedCondenser);
+    REGISTER_CONSTRUCTOR(WaterHeaterSizing);
     REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
     REGISTER_CONSTRUCTOR(WaterUseEquipment);
@@ -3830,6 +3844,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HeaderedPumpsVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(HeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerAirToAirSensibleAndLatent);
+    REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitHeating);
@@ -3870,6 +3886,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(OutputDiagnostics);
     REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
     REGISTER_COPYCONSTRUCTORS(OutputJSON);
+    REGISTER_COPYCONSTRUCTORS(OutputEnvironmentalImpactFactors);
+    REGISTER_COPYCONSTRUCTORS(EnvironmentalImpactFactors);
+    REGISTER_COPYCONSTRUCTORS(FuelFactors);
     REGISTER_COPYCONSTRUCTORS(OutputMeter);
     REGISTER_COPYCONSTRUCTORS(OutputVariable);
     REGISTER_COPYCONSTRUCTORS(OutputTableSummaryReports);
@@ -4028,6 +4047,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpWrappedCondenser);
+    REGISTER_COPYCONSTRUCTORS(WaterHeaterSizing);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
     REGISTER_COPYCONSTRUCTORS(WaterUseEquipment);

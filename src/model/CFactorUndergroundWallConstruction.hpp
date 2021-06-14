@@ -53,12 +53,11 @@ namespace model {
 
     virtual ~CFactorUndergroundWallConstruction() {}
 
-    /** Attribute Name: 'cFactor' */
-    virtual double cFactor() const;
-    virtual bool setCFactor(double cFactor);
-    /** Attribute Name: 'height' */
-    virtual double height() const;
-    virtual bool setHeight(double height);
+    double cFactor() const;
+    bool setCFactor(double cFactor);
+
+    double height() const;
+    bool setHeight(double height);
 
     //@}
     /** @name Static Methods */

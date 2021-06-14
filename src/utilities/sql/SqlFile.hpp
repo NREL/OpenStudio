@@ -152,12 +152,10 @@ class UTILITIES_API SqlFile
   boost::optional<double> annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const;
 
   /// Returns the annual total cost for all fuel types in dollars. Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: annualTotalUtilityCost
   boost::optional<double> annualTotalUtilityCost() const;
 
   /// Returns the total energy cost over the analysis period in dollars according to the discounting convention.
   /// Requires EnergyPlus simulation output and LifeCycleCost_Parameters input object to calculate.
-  /// Attribute name: economicsEnergyCost
   boost::optional<double> economicsEnergyCost() const;
 
   OptionalDouble getElecOrGasUse(bool t_getGas = true) const;
@@ -178,452 +176,362 @@ class UTILITIES_API SqlFile
 
   /// Returns the electric energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityHeating
   boost::optional<double> electricityHeating() const;
 
   /// Returns the electric energy used for cooling in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityCooling
   boost::optional<double> electricityCooling() const;
 
   /// Returns the electric energy used for interior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityInteriorLighting
   boost::optional<double> electricityInteriorLighting() const;
 
   /// Returns the electric energy used for exterior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityExteriorLighting
   boost::optional<double> electricityExteriorLighting() const;
 
   /// Returns the electric energy used for interior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityInteriorEquipment
   boost::optional<double> electricityInteriorEquipment() const;
 
   /// Returns the electric energy used for exterior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityExteriorEquipment
   boost::optional<double> electricityExteriorEquipment() const;
 
   /// Returns the electric energy used for fans in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityFans
   boost::optional<double> electricityFans() const;
 
   /// Returns the electric energy used for pumps in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityPumps
   boost::optional<double> electricityPumps() const;
 
   /// Returns the electric energy used for heat rejection in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityHeatRejection
   boost::optional<double> electricityHeatRejection() const;
 
   /// Returns the electric energy used for humidification in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityHumidification
   boost::optional<double> electricityHumidification() const;
 
   /// Returns the electric energy used for heat recovery in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityHeatRecovery
   boost::optional<double> electricityHeatRecovery() const;
 
   /// Returns the electric energy used for water systems in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityWaterSystems
   boost::optional<double> electricityWaterSystems() const;
 
   /// Returns the electric energy used for refrigeration in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityRefrigeration
   boost::optional<double> electricityRefrigeration() const;
 
   /// Returns the electric energy used for generators in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityGenerators
   boost::optional<double> electricityGenerators() const;
 
   /// Returns the electric energy used for all uses in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: electricityTotalEndUses
   boost::optional<double> electricityTotalEndUses() const;
 
   /// Returns the natural gas energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasHeating
   boost::optional<double> naturalGasHeating() const;
 
   /// Returns the natural gas energy used for cooling in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasCooling
   boost::optional<double> naturalGasCooling() const;
 
   /// Returns the natural gas energy used for interior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasInteriorLighting
   boost::optional<double> naturalGasInteriorLighting() const;
 
   /// Returns the natural gas energy used for exterior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasExteriorLighting
   boost::optional<double> naturalGasExteriorLighting() const;
 
   /// Returns the natural gas energy used for interior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasInteriorEquipment
   boost::optional<double> naturalGasInteriorEquipment() const;
 
   /// Returns the natural gas energy used for exterior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasInteriorEquipment
   boost::optional<double> naturalGasExteriorEquipment() const;
 
   /// Returns the natural gas energy used for fans in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasFans
   boost::optional<double> naturalGasFans() const;
 
   /// Returns the natural gas energy used for pumps in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasPumps
   boost::optional<double> naturalGasPumps() const;
 
   /// Returns the natural gas energy used for heat rejection in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasHeatRejection
   boost::optional<double> naturalGasHeatRejection() const;
 
   /// Returns the natural gas energy used for humidification in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasHumidification
   boost::optional<double> naturalGasHumidification() const;
 
   /// Returns the natural gas energy used for heat recovery in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasHeatRecovery
   boost::optional<double> naturalGasHeatRecovery() const;
 
   /// Returns the natural gas energy used for water systems in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasWaterSystems
   boost::optional<double> naturalGasWaterSystems() const;
 
   /// Returns the natural gas energy used for refrigeration in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasRefrigeration
   boost::optional<double> naturalGasRefrigeration() const;
 
   /// Returns the natural gas energy used for generators in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasGenerators
   boost::optional<double> naturalGasGenerators() const;
 
   /// Returns the natural gas energy used for all end uses in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: naturalGasGenerators
   boost::optional<double> naturalGasTotalEndUses() const;
 
   /// Returns the energy used for heating from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelHeating
   boost::optional<double> otherFuelHeating() const;
 
   /// Returns the energy used for cooling from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelCooling
   boost::optional<double> otherFuelCooling() const;
 
   /// Returns the energy used for interior lighting from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelInteriorLighting
   boost::optional<double> otherFuelInteriorLighting() const;
 
   /// Returns the energy used for exterior lighting from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelExteriorLighting
   boost::optional<double> otherFuelExteriorLighting() const;
 
   /// Returns the energy used for interior equipment from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelInteriorEquipment
   boost::optional<double> otherFuelInteriorEquipment() const;
 
   /// Returns the energy used for exterior equipment from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelExteriorEquipment
   boost::optional<double> otherFuelExteriorEquipment() const;
 
   /// Returns the energy used for fans from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelFans
   boost::optional<double> otherFuelFans() const;
 
   /// Returns the energy used for pumps from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelPumps
   boost::optional<double> otherFuelPumps() const;
 
   /// Returns the energy used for heat rejection from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelHeatRejection
   boost::optional<double> otherFuelHeatRejection() const;
 
   /// Returns the energy used for humidification from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelHumidification
   boost::optional<double> otherFuelHumidification() const;
 
   /// Returns the energy used for heat recovery from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelHeatRecovery
   boost::optional<double> otherFuelHeatRecovery() const;
 
   /// Returns the energy used for water systems from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelWaterSystems
   boost::optional<double> otherFuelWaterSystems() const;
 
   /// Returns the energy used for refrigeration from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelRefrigeration
   boost::optional<double> otherFuelRefrigeration() const;
 
   /// Returns the energy used for generators from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelGenerators
   boost::optional<double> otherFuelGenerators() const;
 
   /// Returns the energy used for all end uses from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: otherFuelTotalEndUses
   boost::optional<double> otherFuelTotalEndUses() const;
 
   /// Returns the district cooling energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingHeating
   boost::optional<double> districtCoolingHeating() const;
 
   /// Returns the district cooling energy used for cooling in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingCooling
   boost::optional<double> districtCoolingCooling() const;
 
   /// Returns the district cooling energy used for interior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingInteriorLighting
   boost::optional<double> districtCoolingInteriorLighting() const;
 
   /// Returns the district cooling energy used for exterior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingExteriorLighting
   boost::optional<double> districtCoolingExteriorLighting() const;
 
   /// Returns the district cooling energy used for interior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingInteriorEquipment
   boost::optional<double> districtCoolingInteriorEquipment() const;
 
   /// Returns the district cooling energy used for exterior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingExteriorEquipment
   boost::optional<double> districtCoolingExteriorEquipment() const;
 
   /// Returns the district cooling energy used for fans in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingFans
   boost::optional<double> districtCoolingFans() const;
 
   /// Returns the district cooling energy used for pumps in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingPumps
   boost::optional<double> districtCoolingPumps() const;
 
   /// Returns the district cooling energy used for heat rejection in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingHeatRejection
   boost::optional<double> districtCoolingHeatRejection() const;
 
   /// Returns the district cooling energy used for humidification in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingHumidification
   boost::optional<double> districtCoolingHumidification() const;
 
   /// Returns the district cooling energy used for heat recovery in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingHeatRecovery
   boost::optional<double> districtCoolingHeatRecovery() const;
 
   /// Returns the district cooling energy used for water systems in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingWaterSystems
   boost::optional<double> districtCoolingWaterSystems() const;
 
   /// Returns the district cooling energy used for refrigeration in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingRefrigeration
   boost::optional<double> districtCoolingRefrigeration() const;
 
   /// Returns the district cooling energy used for generators in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingRefrigeration
   boost::optional<double> districtCoolingGenerators() const;
 
   /// Returns the district cooling energy used for all end uses in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtCoolingRefrigeration
   boost::optional<double> districtCoolingTotalEndUses() const;
 
   /// Returns the district heating energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingHeating
   boost::optional<double> districtHeatingHeating() const;
 
   /// Returns the district heating energy used for cooling in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingCooling
   boost::optional<double> districtHeatingCooling() const;
 
   /// Returns the district heating energy used for interior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingInteriorLighting
   boost::optional<double> districtHeatingInteriorLighting() const;
 
   /// Returns the district heating energy used for exterior lighting in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingExteriorLighting
   boost::optional<double> districtHeatingExteriorLighting() const;
 
   /// Returns the district heating energy used for interior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingInteriorEquipment
   boost::optional<double> districtHeatingInteriorEquipment() const;
 
   /// Returns the district heating energy used for exterior equipment in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingExteriorEquipment
   boost::optional<double> districtHeatingExteriorEquipment() const;
 
   /// Returns the district heating energy used for fans in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingFans
   boost::optional<double> districtHeatingFans() const;
 
   /// Returns the district heating energy used for pumps in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingPumps
   boost::optional<double> districtHeatingPumps() const;
 
   /// Returns the district heating energy used for heat rejection in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingHeatRejection
   boost::optional<double> districtHeatingHeatRejection() const;
 
   /// Returns the district heating energy used for humidification in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingHumidification
   boost::optional<double> districtHeatingHumidification() const;
 
   /// Returns the district heating energy used for heat recovery in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingHeatRecovery
   boost::optional<double> districtHeatingHeatRecovery() const;
 
   /// Returns the district heating energy used for water systems in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingWaterSystems
   boost::optional<double> districtHeatingWaterSystems() const;
 
   /// Returns the district heating energy used for refrigeration in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingRefrigeration
   boost::optional<double> districtHeatingRefrigeration() const;
 
   /// Returns the district heating energy used for generators in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingGenerators
   boost::optional<double> districtHeatingGenerators() const;
 
   /// Returns the district heating energy used for all end uses in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: districtHeatingTotalEndUses
   boost::optional<double> districtHeatingTotalEndUses() const;
 
   /// Returns the water used for heating in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterHeating
   boost::optional<double> waterHeating() const;
 
   /// Returns the water used for cooling in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterCooling
   boost::optional<double> waterCooling() const;
 
   /// Returns the water used for interior lighting in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterInteriorLighting
   boost::optional<double> waterInteriorLighting() const;
 
   /// Returns the water used for exterior lighting in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterExteriorLighting
   boost::optional<double> waterExteriorLighting() const;
 
   /// Returns the water used for interior equipment in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterInteriorEquipment
   boost::optional<double> waterInteriorEquipment() const;
 
   /// Returns the water used for exterior equipment in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterExteriorEquipment
   boost::optional<double> waterExteriorEquipment() const;
 
   /// Returns the water used for fans in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterFans
   boost::optional<double> waterFans() const;
 
   /// Returns the water used for pumps in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterPumps
   boost::optional<double> waterPumps() const;
 
   /// Returns the water used for heat rejection in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterHeatRejection
   boost::optional<double> waterHeatRejection() const;
 
   /// Returns the water used for humidification in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterHumidification
   boost::optional<double> waterHumidification() const;
 
   /// Returns the water used for heat recovery in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterHeatRecovery
   boost::optional<double> waterHeatRecovery() const;
 
   /// Returns the water used for water systems in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterWaterSystems
   boost::optional<double> waterWaterSystems() const;
 
   /// Returns the water used for refrigeration in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterRefrigeration
   boost::optional<double> waterRefrigeration() const;
 
   /// Returns the water used for generators in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterGenerators
   boost::optional<double> waterGenerators() const;
 
   /// Returns the water used for all uses in cubic meters.
   /// Requires EnergyPlus simulation output to calculate.
-  /// Attribute name: waterTotalEndUses
   boost::optional<double> waterTotalEndUses() const;
 
   /// Returns the total number of hours the heating setpoint is not met.

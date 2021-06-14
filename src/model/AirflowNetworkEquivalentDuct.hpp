@@ -44,11 +44,11 @@ namespace model {
   // AFNCoilNames
   // AFNHeatExchangerNames
   //   HeatExchanger:AirToAir:FlatPlate
-  //   HeatExchanger:Desiccant:BalancedFlow
 
   namespace detail {
 
     class HeatExchangerAirToAirSensibleAndLatent_Impl;
+    class HeatExchangerDesiccantBalancedFlow_Impl;
     class CoilHeatingDXMultiSpeed_Impl;
     class CoilHeatingWater_Impl;
     class CoilHeatingDesuperheater_Impl;
@@ -127,6 +127,7 @@ namespace model {
     friend class detail::CoilHeatingWater_Impl;
     friend class detail::CoilHeatingDXMultiSpeed_Impl;
     friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
+    friend class detail::HeatExchangerDesiccantBalancedFlow_Impl;
 
     friend class detail::AirflowNetworkEquivalentDuct_Impl;
     friend class Model;

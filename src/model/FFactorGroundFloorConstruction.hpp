@@ -53,15 +53,14 @@ namespace model {
 
     virtual ~FFactorGroundFloorConstruction() {}
 
-    /** Attribute Name: 'fFactor' */
-    virtual double fFactor() const;
-    virtual bool setFFactor(double fFactor);
-    /** Attribute Name: 'area' */
-    virtual double area() const;
-    virtual bool setArea(double area);
-    /** Attribute Name: 'perimeterExposed' */
-    virtual double perimeterExposed() const;
-    virtual bool setPerimeterExposed(double perimeterExposed);
+    double fFactor() const;
+    bool setFFactor(double fFactor);
+
+    double area() const;
+    bool setArea(double area);
+
+    double perimeterExposed() const;
+    bool setPerimeterExposed(double perimeterExposed);
 
     //@}
     /** @name Static Methods */
