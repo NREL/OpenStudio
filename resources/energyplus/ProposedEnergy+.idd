@@ -60894,6 +60894,7 @@ PythonPlugin:Instance,
    A1, \field Name
        \required-field
        \type alpha
+       \reference ProgramNames
        \note This is the name used to represent this plugin in traditional EMS fields
    A2, \field Run During Warmup Days
        \note required-field disabled as it has a default
