@@ -37385,6 +37385,7 @@ AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
         \required-field
         \type object-list
         \object-list HeatingCoilName
+        \object-list HeatingCoilsDXSingleSpeed
         \object-list HeatingCoilsDXVariableSpeed
         \note Enter the name of the heating coil used in this unitary system.
    A18, \field Priority Control Mode

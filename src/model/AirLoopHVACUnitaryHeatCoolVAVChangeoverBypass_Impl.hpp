@@ -187,7 +187,7 @@ namespace model {
 
       void resetSupplyAirFanOperatingModeSchedule();
 
-      bool setCoolingCoil(const HVACComponent& coolingCoilsDXMultiModeOrSingleSpeed);
+      bool setCoolingCoil(const HVACComponent& coolingCoilName);
 
       bool setHeatingCoil(const HVACComponent& heatingCoilName);
 
