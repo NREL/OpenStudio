@@ -98,6 +98,18 @@ namespace model {
     /// Returns true if the holiday schedule is defaulted; false if it is explicitly set.
     bool isHolidayScheduleDefaulted() const;
 
+    /// Returns the custom day 1 schedule, which may be the same ScheduleDay as defaultDaySchedule().
+    ScheduleDay customDay1Schedule() const;
+
+    /// Returns true if the custom day 1 schedule is defaulted; false if it is explicitly set.
+    bool isCustomDay1ScheduleDefaulted() const;
+
+    /// Returns the custom day 2 schedule, which may be the same ScheduleDay as defaultDaySchedule().
+    ScheduleDay customDay2Schedule() const;
+
+    /// Returns true if the custom day 2 schedule is defaulted; false if it is explicitly set.
+    bool isCustomDay2ScheduleDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -127,6 +139,22 @@ namespace model {
 
     /// Resets the holiday schedule. Calls remove on any existing non-default holiday schedule.
     void resetHolidaySchedule();
+
+    /// Sets the custom day 1 schedule if ScheduleTypeLimits are compatible. Calls remove
+    /// on any existing non-default custom day 1 schedule. Clones schedule and parents the
+    /// clone, but does not call remove on the original schedule.
+    bool setCustomDay1Schedule(const ScheduleDay& schedule);
+
+    /// Resets the custom day 1 schedule. Calls remove on any existing non-default custom day 1 schedule.
+    void resetCustomDay1Schedule();
+
+    /// Sets the custom day 2 schedule if ScheduleTypeLimits are compatible. Calls remove
+    /// on any existing non-default custom day 2 schedule. Clones schedule and parents the
+    /// clone, but does not call remove on the original schedule.
+    bool setCustomDay2Schedule(const ScheduleDay& schedule);
+
+    /// Resets the custom day 2 schedule. Calls remove on any existing non-default custom day 2 schedule.
+    void resetCustomDay2Schedule();
 
     //@}
     /** @name Other */
