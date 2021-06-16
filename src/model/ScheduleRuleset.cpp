@@ -321,8 +321,7 @@ namespace model {
     }
 
     ScheduleDay ScheduleRuleset_Impl::customDay1Schedule() const {
-      OptionalScheduleDay result =
-        getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::CustomDay1ScheduleName);
+      OptionalScheduleDay result = getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::CustomDay1ScheduleName);
       if (result) {
         return *result;
       }
@@ -334,8 +333,7 @@ namespace model {
     }
 
     ScheduleDay ScheduleRuleset_Impl::customDay2Schedule() const {
-      OptionalScheduleDay result =
-        getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::CustomDay2ScheduleName);
+      OptionalScheduleDay result = getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::CustomDay2ScheduleName);
       if (result) {
         return *result;
       }
