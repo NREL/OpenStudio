@@ -29,7 +29,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   # Add NREL remote and place it first in line, since we vendored dependencies to NREL's repo, they will be picked first
   conan_add_remote(NAME nrel INDEX 0
-    URL https://api.bintray.com/conan/commercialbuilding/nrel)
+    URL https://conan.commercialbuildings.dev/artifactory/api/conan/openstudio
+  )
 
   conan_add_remote(NAME bincrafters
     URL https://api.bintray.com/conan/bincrafters/public-conan)
@@ -66,16 +67,16 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   endif()
 
   if(BUILD_RUBY_BINDINGS)
-    set(CONAN_RUBY "openstudio_ruby/2.5.5@nrel/testing")
+    set(CONAN_RUBY "openstudio_ruby/2.5.5@nrel/stable#29449dcdcc813fb3f4730365902afc3c")
   endif()
 
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
+    ${CONAN_RUBY}
     "openssl/1.1.0l#7f3fa5cfcfba31fffa344c71a9795176" # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    "openstudio_ruby/2.5.5@nrel/stable#29449dcdcc813fb3f4730365902afc3c"    # TODO: Temp #@nrel/stable
     "boost/1.73.0#4129a76c9b83c300fc103e36d1908792"
     "pugixml/1.10#64b3ebc897bb9d9854c8a2443bf112a8"
     "jsoncpp/1.9.3#073a6d3cb40911d7c8027bddb6ae7dbf"
