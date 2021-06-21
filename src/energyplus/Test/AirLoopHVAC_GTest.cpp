@@ -55,6 +55,11 @@
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerMechanicalVentilation.hpp"
 #include "../../model/DesignDay.hpp"
+#include "../../model/SetpointManagerSingleZoneHumidityMinimum.hpp"
+#include "../../model/SetpointManagerScheduled.hpp"
+#include "../../model/HumidifierSteamElectric.hpp"
+#include "../../model/ScheduleConstant.hpp"
+
 #include "../../utilities/geometry/Point3d.hpp"
 
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
@@ -63,11 +68,15 @@
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_SeriesPIU_Reheat_FieldEnums.hxx>
 #include <utilities/idd/Controller_MechanicalVentilation_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_Scheduled_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_SingleZone_Humidity_Minimum_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include "../../utilities/core/Logger.hpp"
+#include "utilities/core/Compare.hpp"
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -358,4 +367,131 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_designReturnAirFlowFract
   ASSERT_EQ(1u, idfObjs.size());
   WorkspaceObject idf_loop(idfObjs[0]);
   EXPECT_EQ(0.5, idf_loop.getDouble(AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_Automatic_SPMs) {
+
+  Model m;
+
+  // Makes an AirLoopHVAC with:
+  //       o   o
+  //       |   |
+  // ---- OA SYS ----o---HC----o----Fan----o-----Humidifier------
+  // |                                                          |
+  // o                                                          o < SPM:Scheduled, and SPM:SingleZone:HumidityMinimum
+  AirLoopHVAC a(m);
+
+  ThermalZone z(m);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m, alwaysOn);
+  a.addBranchForZone(z, atu);
+
+  Node supplyOutletNode = a.supplyOutletNode();
+
+  ControllerOutdoorAir oaController(m);
+  AirLoopHVACOutdoorAirSystem oaSystem(m, oaController);
+  oaSystem.addToNode(supplyOutletNode);
+
+  CoilHeatingElectric hc(m);
+  hc.addToNode(supplyOutletNode);
+  hc.setName("Heating Coil");
+
+  FanVariableVolume fan(m);
+  fan.setName("AirLoopHVAC Supply Fan");
+  EXPECT_TRUE(fan.addToNode(supplyOutletNode));
+
+  HumidifierSteamElectric humidifier(m);
+  humidifier.setName("Humidifier");
+  EXPECT_TRUE(humidifier.addToNode(supplyOutletNode));
+
+  ScheduleConstant sch(m);
+  sch.setName("SPM schedule");
+  sch.setValue(15);
+  SetpointManagerScheduled spm_scheduled(m, sch);
+  spm_scheduled.setName("SPM Scheduled");
+  EXPECT_TRUE(spm_scheduled.addToNode(supplyOutletNode));
+
+  SetpointManagerSingleZoneHumidityMinimum spm_hum_min(m);
+  spm_hum_min.setName("SPM SZ Min Hum");
+  EXPECT_TRUE(spm_hum_min.addToNode(supplyOutletNode));
+  // This should be done automatically in addToNode since the zone was hooked already
+  EXPECT_TRUE(spm_hum_min.setControlZone(z));
+
+  a.supplyInletNode().setName("Supply Inlet Node");
+  a.mixedAirNode()->setName("Mixed Air Node");
+  hc.outletModelObject()->setName("Coil to Fan Node");
+  fan.outletModelObject()->setName("Fan to Humidifier Node");
+  supplyOutletNode.setName("Supply Outlet Node");
+
+  z.zoneAirNode().setName("Zone Air Node");
+
+  // Add new AVMs
+
+  // Not for this case
+
+  // ForwardTranslate
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  // What I expect in terms of SPMs
+  //
+  //       o   o     SPM:MixedAir      SPM Scheduled (cloned)
+  //       |   |     v         v           v
+  // ---- OA SYS ----o---HC----o----Fan----o-----Humidifier------
+  // |                                                          |
+  // o                                                          o < SPM:Scheduled, and SPM:SingleZone:HumidityMinimum
+
+  {
+    auto idf_spm_scheduleds = w.getObjectsByType(IddObjectType::SetpointManager_Scheduled);
+    ASSERT_EQ(2u, idf_spm_scheduleds.size());
+    bool foundSupplyOutlet = false;
+    bool foundFanToHumidifierNode = false;
+
+    for (auto spm : idf_spm_scheduleds) {
+
+      EXPECT_EQ("Temperature", spm.getString(SetpointManager_ScheduledFields::ControlVariable).get());
+      EXPECT_EQ("SPM schedule", spm.getString(SetpointManager_ScheduledFields::ScheduleName).get());
+
+      auto spm_node = spm.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName).get();
+      if (openstudio::istringEqual("Supply Outlet Node", spm_node)) {
+        foundSupplyOutlet = true;
+        EXPECT_EQ("SPM Scheduled", spm.nameString());
+      } else if (openstudio::istringEqual("Fan to Humidifier Node", spm_node)) {
+        foundFanToHumidifierNode = true;
+        EXPECT_NE(std::string::npos, spm.nameString().find("OS Default SPM"));
+      }
+    }
+    EXPECT_TRUE(foundSupplyOutlet);
+    EXPECT_TRUE(foundFanToHumidifierNode);
+  }
+  {
+    auto idf_spm_mixed_airs = w.getObjectsByType(IddObjectType::SetpointManager_MixedAir);
+    ASSERT_EQ(2u, idf_spm_mixed_airs.size());
+    bool foundMixedAirNode = false;
+    bool foundCoilToFanNode = false;
+    for (auto spm : idf_spm_mixed_airs) {
+      EXPECT_NE(std::string::npos, spm.nameString().find("OS Default SPM"));
+      EXPECT_EQ("Temperature", spm.getString(SetpointManager_MixedAirFields::ControlVariable).get());
+      EXPECT_EQ("Supply Outlet Node", spm.getString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName).get());
+      EXPECT_EQ("Coil to Fan Node", spm.getString(SetpointManager_MixedAirFields::FanInletNodeName).get());
+      EXPECT_EQ("Fan to Humidifier Node", spm.getString(SetpointManager_MixedAirFields::FanOutletNodeName).get());
+
+      auto spm_node = spm.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get();
+      if (openstudio::istringEqual("Mixed Air Node", spm_node)) {
+        foundMixedAirNode = true;
+      } else if (openstudio::istringEqual("Coil to Fan Node", spm_node)) {
+        foundCoilToFanNode = true;
+      }
+    }
+    EXPECT_TRUE(foundMixedAirNode);
+    EXPECT_TRUE(foundCoilToFanNode);
+  }
+  {
+    auto idf_spm_hum_mins = w.getObjectsByType(IddObjectType::SetpointManager_SingleZone_Humidity_Minimum);
+    ASSERT_EQ(1u, idf_spm_hum_mins.size());
+    EXPECT_EQ("SPM SZ Min Hum", idf_spm_hum_mins[0].nameString());
+    EXPECT_EQ("Supply Outlet Node",
+              idf_spm_hum_mins[0].getString(SetpointManager_SingleZone_Humidity_MinimumFields::SetpointNodeorNodeListName).get());
+    EXPECT_EQ("Zone Air Node", idf_spm_hum_mins[0].getString(SetpointManager_SingleZone_Humidity_MinimumFields::ControlZoneAirNodeName).get());
+  }
 }
