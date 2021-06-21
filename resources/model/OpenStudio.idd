@@ -4549,7 +4549,13 @@ OS:Schedule:Ruleset,
   A6, \field Winter Design Day Schedule Name
        \type object-list
        \object-list DayScheduleNames
-  A7; \field Holiday Schedule Name
+  A7, \field Holiday Schedule Name
+       \type object-list
+       \object-list DayScheduleNames
+  A8, \field Custom Day 1 Schedule Name
+       \type object-list
+       \object-list DayScheduleNames
+  A9; \field Custom Day 2 Schedule Name
        \type object-list
        \object-list DayScheduleNames
 
