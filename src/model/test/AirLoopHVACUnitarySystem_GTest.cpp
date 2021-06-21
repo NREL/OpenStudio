@@ -61,11 +61,14 @@
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilHeatingDesuperheater.hpp"
 #include "../CoilCoolingDXTwoSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
 #include "../Curve.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveCubic.hpp"
 #include "../CurveExponent.hpp"
 #include "../CurveBiquadratic.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -563,4 +566,20 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType) {
   a.resetControlType();
   ASSERT_TRUE(a.isControlTypeDefaulted());
   ASSERT_EQ("Load", a.controlType());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ModelObjectLists) {
+
+  // Test for #4241 - ModelObjectLists used to store Speed Data for coils aren't removed when a parent of the coil is removed
+
+  Model m;
+  auto size = m.modelObjects().size();
+  CoilCoolingDXVariableSpeed coil(m);
+  AirLoopHVACUnitarySystem unitarySystem(m);
+  unitarySystem.setCoolingCoil(coil);
+  EXPECT_EQ(size + 4, m.modelObjects().size());
+  EXPECT_FALSE(unitarySystem.remove().empty());
+  std::vector<ModelObjectList> modelObjectLists = m.getModelObjects<ModelObjectList>();
+  EXPECT_EQ(0, modelObjectLists.size());
+  EXPECT_EQ(size, m.modelObjects().size());
 }
