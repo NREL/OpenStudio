@@ -125,7 +125,10 @@ namespace model {
     }
 
     ModelObject AirLoopHVACUnitarySystem_Impl::clone(Model model) const {
+      // Mimic what StraightComponent_Impl::clone would do (we inherit ZoneHVACComponent here...)
       AirLoopHVACUnitarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
+      modelObjectClone.setString(modelObjectClone.inletPort(), "");
+      modelObjectClone.setString(modelObjectClone.outletPort(), "");
 
       if (boost::optional<HVACComponent> supplyFan = this->supplyFan()) {
         modelObjectClone.setSupplyFan(supplyFan->clone(model).cast<HVACComponent>());

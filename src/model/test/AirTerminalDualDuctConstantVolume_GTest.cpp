@@ -97,7 +97,8 @@ TEST_F(ModelFixture, AirTerminalDualDuctConstantVolume_AddToAirLoopHVAC) {
     Model m;
     AirTerminalDualDuctConstantVolume atu(m);
 
-    AirLoopHVAC a(m);
+    AirLoopHVAC a(m, true);
+    ASSERT_TRUE(a.isDualDuct());
     {
       auto t_zoneSplitters = a.zoneSplitters();
       EXPECT_EQ(1u, t_zoneSplitters.size());
@@ -127,7 +128,8 @@ TEST_F(ModelFixture, AirTerminalDualDuctConstantVolume_AddToAirLoopHVAC) {
     Model m;
     AirTerminalDualDuctConstantVolume atu(m);
 
-    AirLoopHVAC a(m);
+    AirLoopHVAC a(m, true);
+    ASSERT_TRUE(a.isDualDuct());
     {
       auto t_zoneSplitters = a.zoneSplitters();
       EXPECT_EQ(1u, t_zoneSplitters.size());

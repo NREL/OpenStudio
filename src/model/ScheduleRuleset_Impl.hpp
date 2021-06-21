@@ -108,6 +108,18 @@ namespace model {
       /// Returns true if the holiday schedule is defaulted.
       bool isHolidayScheduleDefaulted() const;
 
+      /// Returns the custom day 1 schedule.
+      ScheduleDay customDay1Schedule() const;
+
+      /// Returns true if the custom day 1 schedule is defaulted.
+      bool isCustomDay1ScheduleDefaulted() const;
+
+      /// Returns the custom day 2 schedule.
+      ScheduleDay customDay2Schedule() const;
+
+      /// Returns true if the custom day 2 schedule is defaulted.
+      bool isCustomDay2ScheduleDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -129,6 +141,18 @@ namespace model {
 
       /// Resets the holiday schedule.
       void resetHolidaySchedule();
+
+      /// Sets the custom day 1 schedule.
+      bool setCustomDay1Schedule(const ScheduleDay& schedule);
+
+      /// Resets the custom day 1 schedule.
+      void resetCustomDay1Schedule();
+
+      /// Sets the custom day 2 schedule.
+      bool setCustomDay2Schedule(const ScheduleDay& schedule);
+
+      /// Resets the custom day 2 schedule.
+      void resetCustomDay2Schedule();
 
       //@}
       /** @name Other */

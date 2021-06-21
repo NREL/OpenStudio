@@ -92,6 +92,18 @@ namespace model {
         OS_ASSERT(test);
       }
 
+      if (!isCustomDay1ScheduleDefaulted()) {
+        ModelObject newCustomDay1Schedule = customDay1Schedule().clone(model);
+        test = newScheduleRuleset.setPointer(OS_Schedule_RulesetFields::CustomDay1ScheduleName, newCustomDay1Schedule.handle());
+        OS_ASSERT(test);
+      }
+
+      if (!isCustomDay2ScheduleDefaulted()) {
+        ModelObject newCustomDay2Schedule = customDay2Schedule().clone(model);
+        test = newScheduleRuleset.setPointer(OS_Schedule_RulesetFields::CustomDay2ScheduleName, newCustomDay2Schedule.handle());
+        OS_ASSERT(test);
+      }
+
       for (ScheduleRule scheduleRule : scheduleRules()) {
         ModelObject newScheduleRule = scheduleRule.clone(model);
         test = newScheduleRule.setParent(newScheduleRuleset);
@@ -113,6 +125,12 @@ namespace model {
       }
       if (!isHolidayScheduleDefaulted()) {
         daySchedules.push_back(holidaySchedule());
+      }
+      if (!isCustomDay1ScheduleDefaulted()) {
+        daySchedules.push_back(customDay1Schedule());
+      }
+      if (!isCustomDay2ScheduleDefaulted()) {
+        daySchedules.push_back(customDay2Schedule());
       }
       auto it = result.begin();
       while (it != result.end()) {
@@ -145,6 +163,14 @@ namespace model {
 
       if (!this->isHolidayScheduleDefaulted()) {
         result.push_back(this->holidaySchedule());
+      }
+
+      if (!this->isCustomDay1ScheduleDefaulted()) {
+        result.push_back(this->customDay1Schedule());
+      }
+
+      if (!this->isCustomDay2ScheduleDefaulted()) {
+        result.push_back(this->customDay2Schedule());
       }
 
       for (ScheduleRule scheduleRule : this->scheduleRules()) {
@@ -194,6 +220,14 @@ namespace model {
           result = holidaySchedule().setScheduleTypeLimits(scheduleTypeLimits);
           OS_ASSERT(result);
         }
+        if (!isCustomDay1ScheduleDefaulted()) {
+          result = customDay1Schedule().setScheduleTypeLimits(scheduleTypeLimits);
+          OS_ASSERT(result);
+        }
+        if (!isCustomDay2ScheduleDefaulted()) {
+          result = customDay2Schedule().setScheduleTypeLimits(scheduleTypeLimits);
+          OS_ASSERT(result);
+        }
         ScheduleRuleVector rules = scheduleRules();
         for (const ScheduleRule& rule : rules) {
           result = rule.daySchedule().setScheduleTypeLimits(scheduleTypeLimits);
@@ -220,6 +254,14 @@ namespace model {
         }
         if (!isHolidayScheduleDefaulted()) {
           result = holidaySchedule().resetScheduleTypeLimits();
+          OS_ASSERT(result);
+        }
+        if (!isCustomDay1ScheduleDefaulted()) {
+          result = customDay1Schedule().resetScheduleTypeLimits();
+          OS_ASSERT(result);
+        }
+        if (!isCustomDay2ScheduleDefaulted()) {
+          result = customDay2Schedule().resetScheduleTypeLimits();
           OS_ASSERT(result);
         }
         ScheduleRuleVector rules = scheduleRules();
@@ -276,6 +318,30 @@ namespace model {
 
     bool ScheduleRuleset_Impl::isHolidayScheduleDefaulted() const {
       return this->isEmpty(OS_Schedule_RulesetFields::HolidayScheduleName);
+    }
+
+    ScheduleDay ScheduleRuleset_Impl::customDay1Schedule() const {
+      OptionalScheduleDay result = getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::CustomDay1ScheduleName);
+      if (result) {
+        return *result;
+      }
+      return this->defaultDaySchedule();
+    }
+
+    bool ScheduleRuleset_Impl::isCustomDay1ScheduleDefaulted() const {
+      return this->isEmpty(OS_Schedule_RulesetFields::CustomDay1ScheduleName);
+    }
+
+    ScheduleDay ScheduleRuleset_Impl::customDay2Schedule() const {
+      OptionalScheduleDay result = getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::CustomDay2ScheduleName);
+      if (result) {
+        return *result;
+      }
+      return this->defaultDaySchedule();
+    }
+
+    bool ScheduleRuleset_Impl::isCustomDay2ScheduleDefaulted() const {
+      return this->isEmpty(OS_Schedule_RulesetFields::CustomDay2ScheduleName);
     }
 
     bool ScheduleRuleset_Impl::setSummerDesignDaySchedule(const ScheduleDay& schedule) {
@@ -395,6 +461,86 @@ namespace model {
       OS_ASSERT(test);
       if (existingHolidaySchedule) {
         existingHolidaySchedule->remove();
+      }
+    }
+
+    bool ScheduleRuleset_Impl::setCustomDay1Schedule(const ScheduleDay& schedule) {
+      if (OptionalScheduleTypeLimits candidateLimits = schedule.scheduleTypeLimits()) {
+        if (OptionalScheduleTypeLimits parentLimits = scheduleTypeLimits()) {
+          if (!isCompatible(*parentLimits, *candidateLimits)) {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+
+      boost::optional<ScheduleDay> existingCustomD1Schedule;
+      if (!this->isCustomDay1ScheduleDefaulted()) {
+        existingCustomD1Schedule = this->customDay1Schedule();
+      }
+      ModelObject clone = schedule.clone();
+      bool result = setPointer(OS_Schedule_RulesetFields::CustomDay1ScheduleName, clone.handle());
+      OS_ASSERT(result);
+      if (OptionalScheduleTypeLimits limits = scheduleTypeLimits()) {
+        result = customDay1Schedule().setScheduleTypeLimits(*limits);
+        OS_ASSERT(result);
+      }
+      if (existingCustomD1Schedule) {
+        existingCustomD1Schedule->remove();
+      }
+      return result;
+    }
+
+    void ScheduleRuleset_Impl::resetCustomDay1Schedule() {
+      boost::optional<ScheduleDay> existingCustomD1Schedule;
+      if (!this->isCustomDay1ScheduleDefaulted()) {
+        existingCustomD1Schedule = this->customDay1Schedule();
+      }
+      bool test = this->setString(OS_Schedule_RulesetFields::CustomDay1ScheduleName, "");
+      OS_ASSERT(test);
+      if (existingCustomD1Schedule) {
+        existingCustomD1Schedule->remove();
+      }
+    }
+
+    bool ScheduleRuleset_Impl::setCustomDay2Schedule(const ScheduleDay& schedule) {
+      if (OptionalScheduleTypeLimits candidateLimits = schedule.scheduleTypeLimits()) {
+        if (OptionalScheduleTypeLimits parentLimits = scheduleTypeLimits()) {
+          if (!isCompatible(*parentLimits, *candidateLimits)) {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+
+      boost::optional<ScheduleDay> existingCustomD2Schedule;
+      if (!this->isCustomDay2ScheduleDefaulted()) {
+        ScheduleDay existingCustomD2Schedule = this->customDay2Schedule();
+      }
+      ModelObject clone = schedule.clone();
+      bool result = setPointer(OS_Schedule_RulesetFields::CustomDay2ScheduleName, clone.handle());
+      OS_ASSERT(result);
+      if (OptionalScheduleTypeLimits limits = scheduleTypeLimits()) {
+        result = customDay2Schedule().setScheduleTypeLimits(*limits);
+        OS_ASSERT(result);
+      }
+      if (existingCustomD2Schedule) {
+        existingCustomD2Schedule->remove();
+      }
+      return result;
+    }
+
+    void ScheduleRuleset_Impl::resetCustomDay2Schedule() {
+      boost::optional<ScheduleDay> existingCustomD2Schedule;
+      if (!this->isCustomDay2ScheduleDefaulted()) {
+        existingCustomD2Schedule = this->customDay2Schedule();
+      }
+      bool test = this->setString(OS_Schedule_RulesetFields::CustomDay2ScheduleName, "");
+      OS_ASSERT(test);
+      if (existingCustomD2Schedule) {
+        existingCustomD2Schedule->remove();
       }
     }
 
@@ -601,6 +747,22 @@ namespace model {
     return getImpl<detail::ScheduleRuleset_Impl>()->isHolidayScheduleDefaulted();
   }
 
+  ScheduleDay ScheduleRuleset::customDay1Schedule() const {
+    return getImpl<detail::ScheduleRuleset_Impl>()->customDay1Schedule();
+  }
+
+  bool ScheduleRuleset::isCustomDay1ScheduleDefaulted() const {
+    return getImpl<detail::ScheduleRuleset_Impl>()->isCustomDay1ScheduleDefaulted();
+  }
+
+  ScheduleDay ScheduleRuleset::customDay2Schedule() const {
+    return getImpl<detail::ScheduleRuleset_Impl>()->customDay2Schedule();
+  }
+
+  bool ScheduleRuleset::isCustomDay2ScheduleDefaulted() const {
+    return getImpl<detail::ScheduleRuleset_Impl>()->isCustomDay2ScheduleDefaulted();
+  }
+
   bool ScheduleRuleset::setSummerDesignDaySchedule(const ScheduleDay& schedule) {
     return getImpl<detail::ScheduleRuleset_Impl>()->setSummerDesignDaySchedule(schedule);
   }
@@ -623,6 +785,22 @@ namespace model {
 
   void ScheduleRuleset::resetHolidaySchedule() {
     return getImpl<detail::ScheduleRuleset_Impl>()->resetHolidaySchedule();
+  }
+
+  bool ScheduleRuleset::setCustomDay1Schedule(const ScheduleDay& schedule) {
+    return getImpl<detail::ScheduleRuleset_Impl>()->setCustomDay1Schedule(schedule);
+  }
+
+  void ScheduleRuleset::resetCustomDay1Schedule() {
+    return getImpl<detail::ScheduleRuleset_Impl>()->resetCustomDay1Schedule();
+  }
+
+  bool ScheduleRuleset::setCustomDay2Schedule(const ScheduleDay& schedule) {
+    return getImpl<detail::ScheduleRuleset_Impl>()->setCustomDay2Schedule(schedule);
+  }
+
+  void ScheduleRuleset::resetCustomDay2Schedule() {
+    return getImpl<detail::ScheduleRuleset_Impl>()->resetCustomDay2Schedule();
   }
 
   std::vector<ScheduleRule> ScheduleRuleset::scheduleRules() const {

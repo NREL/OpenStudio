@@ -43,8 +43,11 @@
 #include "Mixer_Impl.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
-#include <utilities/idd/OS_AirTerminal_SingleDuct_InletSideMixer_FieldEnums.hxx>
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_AirTerminal_SingleDuct_InletSideMixer_FieldEnums.hxx>
+
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -198,15 +201,45 @@ namespace model {
       return result;
     }
 
+    bool AirTerminalSingleDuctInletSideMixer_Impl::controlForOutdoorAir() const {
+      return getBooleanFieldValue(OS_AirTerminal_SingleDuct_InletSideMixerFields::ControlForOutdoorAir);
+    }
+
+    bool AirTerminalSingleDuctInletSideMixer_Impl::setControlForOutdoorAir(bool controlForOutdoorAir) {
+      return setBooleanFieldValue(OS_AirTerminal_SingleDuct_InletSideMixerFields::ControlForOutdoorAir, controlForOutdoorAir);
+    }
+
+    std::string AirTerminalSingleDuctInletSideMixer_Impl::perPersonVentilationRateMode() const {
+      boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_InletSideMixerFields::PerPersonVentilationRateMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirTerminalSingleDuctInletSideMixer_Impl::setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode) {
+      bool result = setString(OS_AirTerminal_SingleDuct_InletSideMixerFields::PerPersonVentilationRateMode, perPersonVentilationRateMode);
+      return result;
+    }
+
   }  // namespace detail
 
   AirTerminalSingleDuctInletSideMixer::AirTerminalSingleDuctInletSideMixer(const Model& model)
     : StraightComponent(AirTerminalSingleDuctInletSideMixer::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirTerminalSingleDuctInletSideMixer_Impl>());
+
+    // This is a very OA-centric object, so enabled by default
+    setControlForOutdoorAir(true);
+
+    // E+ IDD default
+    setPerPersonVentilationRateMode("CurrentOccupancy");
   }
 
   IddObjectType AirTerminalSingleDuctInletSideMixer::iddObjectType() {
     return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer);
+  }
+
+  std::vector<std::string> AirTerminalSingleDuctInletSideMixer::perPersonVentilationRateModeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_AirTerminal_SingleDuct_InletSideMixerFields::PerPersonVentilationRateMode);
   }
 
   unsigned AirTerminalSingleDuctInletSideMixer::secondaryAirInletPort() const {
@@ -215,6 +248,24 @@ namespace model {
 
   boost::optional<Node> AirTerminalSingleDuctInletSideMixer::secondaryAirInletNode() const {
     return getImpl<detail::AirTerminalSingleDuctInletSideMixer_Impl>()->secondaryAirInletNode();
+  }
+
+  // Instead of Design Specification Outdoor Air Object Name
+  bool AirTerminalSingleDuctInletSideMixer::controlForOutdoorAir() const {
+    return getImpl<detail::AirTerminalSingleDuctInletSideMixer_Impl>()->controlForOutdoorAir();
+  }
+
+  bool AirTerminalSingleDuctInletSideMixer::setControlForOutdoorAir(bool controlForOutdoorAir) {
+    return getImpl<detail::AirTerminalSingleDuctInletSideMixer_Impl>()->setControlForOutdoorAir(controlForOutdoorAir);
+  }
+
+  // Per Person Ventilation Rate Mode
+  std::string AirTerminalSingleDuctInletSideMixer::perPersonVentilationRateMode() const {
+    return getImpl<detail::AirTerminalSingleDuctInletSideMixer_Impl>()->perPersonVentilationRateMode();
+  }
+
+  bool AirTerminalSingleDuctInletSideMixer::setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode) {
+    return getImpl<detail::AirTerminalSingleDuctInletSideMixer_Impl>()->setPerPersonVentilationRateMode(perPersonVentilationRateMode);
   }
 
   /// @cond

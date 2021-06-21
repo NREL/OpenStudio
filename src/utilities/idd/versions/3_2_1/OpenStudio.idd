@@ -1,4 +1,4 @@
-!IDD_Version 3.2.2
+!IDD_Version 3.2.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.2.2
+       \default 3.2.1
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -1669,19 +1669,8 @@ OS:WeatherFile,
   A7, \field Url
        \retaincase
        \type url
-  A8, \field Checksum
+  A8; \field Checksum
        \type alpha
-  A9, \field Start Date Actual Year
-      \type integer
-  A10; \field Start Day of Week
-       \type choice
-       \key Sunday
-       \key Monday
-       \key Tuesday
-       \key Wednesday
-       \key Thursday
-       \key Friday
-       \key Saturday
 
 OS:WeatherProperty:SkyTemperature,
        \memo This object is used to override internal sky temperature calculations.
@@ -4549,13 +4538,7 @@ OS:Schedule:Ruleset,
   A6, \field Winter Design Day Schedule Name
        \type object-list
        \object-list DayScheduleNames
-  A7, \field Holiday Schedule Name
-       \type object-list
-       \object-list DayScheduleNames
-  A8, \field Custom Day 1 Schedule Name
-       \type object-list
-       \object-list DayScheduleNames
-  A9; \field Custom Day 2 Schedule Name
+  A7; \field Holiday Schedule Name
        \type object-list
        \object-list DayScheduleNames
 
@@ -10409,13 +10392,10 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
    A13, \field Cooling Coil
         \type object-list
         \object-list CoolingCoilsDXMultiModeOrSingleSpeed
-        \object-list CoolingCoilsDXVariableSpeed
         \required-field
    A14, \field Heating Coil
         \type object-list
         \object-list HeatingCoilName
-        \object-list HeatingCoilsDXSingleSpeed
-        \object-list HeatingCoilsDXVariableSpeed
         \required-field
    A15, \field Priority Control Mode
         \type choice
@@ -11044,24 +11024,10 @@ OS:AirTerminal:SingleDuct:InletSideMixer,
        \required-field
        \type object-list
        \object-list ConnectionNames
-   A5, \field Terminal Unit Secondary Air Inlet
+   A5; \field Terminal Unit Secondary Air Inlet
        \required-field
        \type object-list
        \object-list ConnectionNames
-   A6, \field Control For Outdoor Air
-       \note This field replaces the E+ field Design Specification Outdoor Air Object Name
-       \note Refer to OpenStudio API for details
-       \type choice
-       \key Yes
-       \key No
-       \required-field
-   A7; \field Per Person Ventilation Rate Mode
-       \type choice
-       \key CurrentOccupancy
-       \key DesignOccupancy
-       \required-field
-       \note CurrentOccupancy models demand controlled ventilation using the current number of people
-       \note DesignOccupancy uses the total Number of People in the zone and is constant
 
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \min-fields 5
@@ -16438,7 +16404,7 @@ OS:CoilSystem:Cooling:Water:HeatExchangerAssisted,
   A5 , \field Heat Exchanger
        \required-field
        \type object-list
-       \object-list HXAirToAirSensibleAndLatentNames
+       \object-list ConnectionObject
   A6 ; \field Cooling Coil
        \required-field
        \type object-list
@@ -21894,8 +21860,8 @@ OS:Fan:ZoneExhaust,
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \min-fields 24
   A1, \field Handle
-      \type handle
-      \required-field
+       \type handle
+       \required-field
   A2, \field Name
       \required-field
       \type alpha
@@ -22024,315 +21990,11 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
 
-OS:HeatExchanger:Desiccant:BalancedFlow,
-      \memo This object models a balanced desiccant heat exchanger.
-      \memo The heat exchanger transfers both sensible and latent energy between the
-      \memo process and regeneration air streams. The air flow rate and face velocity
-      \memo are assumed to be the same on both the process and regeneration sides of the
-      \memo heat exchanger.
-      \min-fields 8
-  A1, \field Handle
-      \type handle
-      \required-field
-  A2, \field Name
-      \required-field
-      \type alpha
-      \reference HXDesiccantBalanced
-      \reference HXAirToAirNames
-      \reference AFNHeatExchangerNames
-      \reference ConnectionObject
-  A3, \field Availability Schedule
-      \required-field
-      \type object-list
-      \object-list ScheduleNames
-  A4, \field Regeneration Air Inlet Node
-      \type object-list
-      \object-list ConnectionNames
-  A5, \field Regeneration Air Outlet Node
-      \type object-list
-      \object-list ConnectionNames
-  A6, \field Process Air Inlet Node
-      \type object-list
-      \object-list ConnectionNames
-  A7, \field Process Air Outlet Node
-      \type object-list
-      \object-list ConnectionNames
-  A8, \field Heat Exchanger Performance
-      \required-field
-      \type object-list
-      \object-list DesiccantHXPerfData
-  A9; \field Economizer Lockout
-      \type choice
-      \key Yes
-      \key No
-      \required-field
-      \note Yes means that the heat exchanger will be locked out (off)
-      \note when the economizer is operating or high humidity control is active
-
-OS:HeatExchanger:Desiccant:BalancedFlow:PerformanceDataType1,
-       \memo RTO = B1 + B2*RWI + B3*RTI + B4*(RWI/RTI) + B5*PWI + B6*PTI + B7*(PWI/PTI)
-       \memo       + B8*RFV
-       \memo RWO = C1 + C2*RWI + C3*RTI + C4*(RWI/RTI) + C5*PWI + C6*PTI + C7*(PWI/PTI)
-       \memo       + C8*RFV
-       \memo where,
-       \memo RTO = Dry-bulb temperature of the regeneration outlet air (C)
-       \memo RWO = Humidity ratio of the regeneration outlet air (kgWater/kgDryAir)
-       \memo RWI = Humidity ratio of the regeneration inlet air (kgWater/kgDryAir)
-       \memo RTI = Dry-bulb temperature of the regeneration inlet air (C)
-       \memo PWI = Humidity ratio of the process inlet air (kgWater/kgDryAir)
-       \memo PTI = Dry-bulb temperature of the process inlet air (C)
-       \memo RFV = Regeneration Face Velocity (m/s)
-       \min-fields 53
-  A1 , \field Handle
-       \type handle
-       \required-field
-  A2 , \field Name
-       \required-field
-       \type alpha
-       \reference DesiccantHXPerfData
-  N1,  \field Nominal Air Flow Rate
-       \note Air flow rate at nominal conditions (assumed to be the same for both sides
-       \note of the heat exchanger).
-       \type real
-       \units m3/s
-       \minimum> 0.0
-       \autosizable
-  N2 , \field Nominal Air Face Velocity
-       \required-field
-       \type real
-       \units m/s
-       \minimum> 0.0
-       \maximum 6.0
-       \autosizable
-  N3 , \field Nominal Electric Power
-       \note Parasitic electric power (e.g., desiccant wheel motor)
-       \type real
-       \units W
-       \ip-units W
-       \minimum 0.0
-       \required-field
-  N4 , \field Temperature Equation Coefficient 1
-       \required-field
-       \type real
-  N5 , \field Temperature Equation Coefficient 2
-       \required-field
-       \type real
-  N6 , \field Temperature Equation Coefficient 3
-       \required-field
-       \type real
-  N7 , \field Temperature Equation Coefficient 4
-       \required-field
-       \type real
-  N8 , \field Temperature Equation Coefficient 5
-       \required-field
-       \type real
-  N9 , \field Temperature Equation Coefficient 6
-       \required-field
-       \type real
-  N10, \field Temperature Equation Coefficient 7
-       \required-field
-       \type real
-  N11, \field Temperature Equation Coefficient 8
-       \required-field
-       \type real
-  N12, \field Minimum Regeneration Inlet Air Humidity Ratio for Temperature Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N13, \field Maximum Regeneration Inlet Air Humidity Ratio for Temperature Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N14, \field Minimum Regeneration Inlet Air Temperature for Temperature Equation
-       \required-field
-       \type real
-       \units C
-  N15, \field Maximum Regeneration Inlet Air Temperature for Temperature Equation
-       \required-field
-       \type real
-       \units C
-  N16, \field Minimum Process Inlet Air Humidity Ratio for Temperature Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N17, \field Maximum Process Inlet Air Humidity Ratio for Temperature Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N18, \field Minimum Process Inlet Air Temperature for Temperature Equation
-       \required-field
-       \type real
-       \units C
-  N19, \field Maximum Process Inlet Air Temperature for Temperature Equation
-       \required-field
-       \type real
-       \units C
-  N20, \field Minimum Regeneration Air Velocity for Temperature Equation
-       \required-field
-       \type real
-       \units m/s
-       \minimum> 0.0
-  N21, \field Maximum Regeneration Air Velocity for Temperature Equation
-       \required-field
-       \type real
-       \units m/s
-       \minimum> 0.0
-  N22, \field Minimum Regeneration Outlet Air Temperature for Temperature Equation
-       \required-field
-       \type real
-       \units C
-  N23, \field Maximum Regeneration Outlet Air Temperature for Temperature Equation
-       \required-field
-       \type real
-       \units C
-  N24, \field Minimum Regeneration Inlet Air Relative Humidity for Temperature Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-  N25, \field Maximum Regeneration Inlet Air Relative Humidity for Temperature Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-  N26, \field Minimum Process Inlet Air Relative Humidity for Temperature Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-  N27, \field Maximum Process Inlet Air Relative Humidity for Temperature Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-  N28, \field Humidity Ratio Equation Coefficient 1
-       \required-field
-       \type real
-  N29, \field Humidity Ratio Equation Coefficient 2
-       \required-field
-       \type real
-  N30, \field Humidity Ratio Equation Coefficient 3
-       \required-field
-       \type real
-  N31, \field Humidity Ratio Equation Coefficient 4
-       \required-field
-       \type real
-  N32, \field Humidity Ratio Equation Coefficient 5
-       \required-field
-       \type real
-  N33, \field Humidity Ratio Equation Coefficient 6
-       \required-field
-       \type real
-  N34, \field Humidity Ratio Equation Coefficient 7
-       \required-field
-       \type real
-  N35, \field Humidity Ratio Equation Coefficient 8
-       \required-field
-       \type real
-  N36, \field Minimum Regeneration Inlet Air Humidity Ratio for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N37, \field Maximum Regeneration Inlet Air Humidity Ratio for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N38, \field Minimum Regeneration Inlet Air Temperature for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units C
-  N39, \field Maximum Regeneration Inlet Air Temperature for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units C
-  N40, \field Minimum Process Inlet Air Humidity Ratio for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N41, \field Maximum Process Inlet Air Humidity Ratio for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N42, \field Minimum Process Inlet Air Temperature for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units C
-  N43, \field Maximum Process Inlet Air Temperature for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units C
-  N44, \field Minimum Regeneration Air Velocity for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units m/s
-       \minimum> 0.0
-  N45, \field Maximum Regeneration Air Velocity for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units m/s
-       \minimum> 0.0
-  N46, \field Minimum Regeneration Outlet Air Humidity Ratio for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N47, \field Maximum Regeneration Outlet Air Humidity Ratio for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units kgWater/kgDryAir
-       \minimum 0.0
-       \maximum 1.0
-  N48, \field Minimum Regeneration Inlet Air Relative Humidity for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-  N49, \field Maximum Regeneration Inlet Air Relative Humidity for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-  N50, \field Minimum Process Inlet Air Relative Humidity for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-  N51; \field Maximum Process Inlet Air Relative Humidity for Humidity Ratio Equation
-       \required-field
-       \type real
-       \units percent
-       \minimum 0.0
-       \maximum 100.0
-
 OS:HeatExchanger:FluidToFluid,
         \min-fields 15
-   A1 , \field Handle
-        \type handle
-        \required-field
+   A1, \field Handle
+       \type handle
+       \required-field
    A2 , \field Name
         \required-field
         \reference ConnectionObject

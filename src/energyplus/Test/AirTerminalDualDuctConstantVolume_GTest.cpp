@@ -70,7 +70,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctConstantVolume) {
   ScheduleConstant sch(m);
   EXPECT_TRUE(atu.setAvailabilitySchedule(sch));
 
-  AirLoopHVAC a(m);
+  AirLoopHVAC a(m, true);
+  ASSERT_TRUE(a.isDualDuct());
   a.addBranchForZone(z, atu);
 
   ForwardTranslator ft;

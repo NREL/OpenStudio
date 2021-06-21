@@ -66,6 +66,10 @@
 #include "../CurveCubic.hpp"
 #include "../CurveExponent.hpp"
 #include "../CurveBiquadratic.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -563,4 +567,53 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType) {
   a.resetControlType();
   ASSERT_TRUE(a.isControlTypeDefaulted());
   ASSERT_EQ("Load", a.controlType());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_clone_Nodes) {
+
+  // Test for #4335 - when cloning a UnitarySystem, the clone should have its inlet/outlet nodes cleared out
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+  AirLoopHVAC a(m);
+
+  Node supplyOutletNode = a.supplyOutletNode();
+  EXPECT_TRUE(unitary.addToNode(supplyOutletNode));
+
+  auto unitaryClone = unitary.clone(m).cast<AirLoopHVACUnitarySystem>();
+
+  EXPECT_TRUE(unitary.inletNode());
+  EXPECT_TRUE(unitary.outletNode());
+  EXPECT_FALSE(unitaryClone.inletNode());
+  EXPECT_FALSE(unitaryClone.outletNode());
+  EXPECT_FALSE(unitaryClone.getString(unitaryClone.inletPort(), true, true));
+  EXPECT_FALSE(unitaryClone.getString(unitaryClone.outletPort(), true, true));
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_cloneAirLoopHVAC_Nodes) {
+
+  // Test for #4335 -  when cloning an AirLoopHVAC with a unitary sys, the original one should still be connected
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+  AirLoopHVAC a(m);
+
+  Node supplyOutletNode = a.supplyOutletNode();
+  EXPECT_TRUE(unitary.addToNode(supplyOutletNode));
+
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
+
+  auto unitarys = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+  ASSERT_EQ(2, unitarys.size());
+  auto unitaryClone = (unitarys[0] == unitary) ? unitarys[1] : unitarys[0];
+
+  EXPECT_TRUE(unitaryClone.inletNode());
+  EXPECT_TRUE(unitaryClone.outletNode());
+  EXPECT_TRUE(unitary.inletNode());
+  EXPECT_TRUE(unitary.outletNode());
+  EXPECT_NE(unitary.inletNode(), unitaryClone.inletNode());
+  EXPECT_NE(unitary.outletNode(), unitaryClone.outletNode());
+
+  ASSERT_EQ(1u, aClone.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(unitaryClone, aClone.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);
+  ASSERT_EQ(1u, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(unitary, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);
 }
