@@ -54,6 +54,8 @@
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleRuleset_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 #include "../SetpointManagerSingleZoneReheat.hpp"
 #include "../SizingZone.hpp"
 #include "../SizingZone_Impl.hpp"
@@ -795,4 +797,21 @@ TEST_F(ModelFixture, ThermalZone_AddToNode_NotInSeries) {
   connectingNode = mixer.lastInletModelObject()->cast<Node>();
   EXPECT_FALSE(z2.multiAddToNode(connectingNode));
   EXPECT_EQ(13u, a.demandComponents().size());
+}
+
+TEST_F(ModelFixture, ThermalZone_DaylightingControlsAvailabilitySchedule) {
+  Model m;
+  ThermalZone z(m);
+
+  EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
+
+  ScheduleConstant schedule(m);
+  schedule.setValue(0.5);
+
+  EXPECT_TRUE(z.setDaylightingControlsAvailabilitySchedule(schedule));
+  ASSERT_TRUE(z.daylightingControlsAvailabilitySchedule());
+  EXPECT_EQ(schedule, z.daylightingControlsAvailabilitySchedule.get());
+
+  z.resetDaylightingControlsAvailabilitySchedule();
+  EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
 }

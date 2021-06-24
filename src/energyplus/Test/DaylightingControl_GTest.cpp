@@ -124,3 +124,39 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
   EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(),
             idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySchedule) {
+  // Test for #4364 - Availability Schedule for DaylightingControl
+  Model model;
+
+  ThermalZone thermalZone(model);
+  Space space(model);
+  space.setThermalZone(thermalZone);
+  DaylightingControl daylightingControl(model);
+  daylightingControl.setSpace(space);
+
+  {
+    ForwardTranslator forwardTranslator;
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_d(idfObjs[0]);
+
+    EXPECT_EQ("", idf_d.getString(Daylighting_ControlsFields::AvailabilityScheduleName).get());
+  }
+
+  {
+    auto schedule = model.alwaysOffDiscreteSchedule();
+    thermalZone.setDaylightingControlsAvailabilitySchedule(schedule);
+
+    ForwardTranslator forwardTranslator;
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_d(idfObjs[0]);
+
+    EXPECT_EQ(schedule.nameString(), idf_d.getString(Daylighting_ControlsFields::AvailabilityScheduleName).get());
+  }
+}
