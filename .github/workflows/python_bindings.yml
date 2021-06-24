@@ -190,9 +190,8 @@ jobs:
         set -x
         cmake --build . --target package -j 2
 
+    # We always upload to testpypi
     - name: Upload python bindings to testpypi
-      # TODO: for now, not filtering on tags
-      # if: contains(github.ref, 'refs/tags')
       env:
         TWINE_USERNAME: __token__
         TWINE_REPOSITORY: testpypi
@@ -276,12 +275,14 @@ jobs:
           print(m)
 
     - name: Download the specific wheel
+      # if: contains(github.ref, 'refs/tags')
       uses: actions/download-artifact@v2
       with:
         path: ./wheel
         name: openstudio-${{ matrix.name }}
 
     - name: Extract the tar.gz, then upload
+      # if: contains(github.ref, 'refs/tags')
       working-directory: ./wheel
       env:
         TWINE_USERNAME: __token__
@@ -292,7 +293,7 @@ jobs:
       run: |
         tar -xzvf "openstudio-${{ matrix.name }}.tar.gz";
         ls -R
-        # python -m twine upload --skip-existing dist/*
+        python -m twine upload --skip-existing dist/*
 
   upload_python_bindings_to_pypi:
     # if: contains(github.ref, 'refs/tags')
@@ -340,4 +341,4 @@ jobs:
         done;
 
         ls -R
-        # python -m twine upload --skip-existing --repository pypi dist/*
+        python -m twine upload --skip-existing --repository pypi dist/*
