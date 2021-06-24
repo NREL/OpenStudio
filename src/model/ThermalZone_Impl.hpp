@@ -237,6 +237,12 @@ namespace model {
 
       void checkDaylightingControlsAndIlluminanceMaps();
 
+      boost::optional<Schedule> daylightingControlsAvailabilitySchedule() const;
+
+      bool setDaylightingControlsAvailabilitySchedule(Schedule& schedule);
+
+      void resetDaylightingControlsAvailabilitySchedule();
+
       /// Returns the rendering color.
       boost::optional<RenderingColor> renderingColor() const;
 
