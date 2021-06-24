@@ -214,10 +214,9 @@ jobs:
 
     - name: Upload .whl to artifact
       uses: actions/upload-artifact@v2
-      working-directory: ./build/Products/python_package/
       with:
         name: openstudio-${{ matrix.name }}  # something like openstudio-Windows_py37
-        path: openstudio-${{ matrix.name }}.tar.gz
+        path: ./build/Products/python_package/openstudio-${{ matrix.name }}.tar.gz
 
   test_python_bindings:
     needs: python_bindings
