@@ -334,7 +334,15 @@ namespace energyplus {
         daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
         m_idfObjects.push_back(daylightingControlObject);
 
+        // Zone Name
         daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.nameString());
+
+        // Availability Schedule Name
+        if (boost::optional<Schedule> sched = modelObject.daylightingControlsAvailabilitySchedule()) {
+          if ((idfo = translateAndMapModelObject(sched.get()))) {
+            daylightingControlObject.setString(Daylighting_ControlsFields::AvailabilityScheduleName, idfo->name().get());
+          }
+        }
 
         // Primary Control
         IdfObject primaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
