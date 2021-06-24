@@ -17,7 +17,7 @@ env:
 
 jobs:
   python_bindings:
-    name: ${{ matrix.name }}
+    name: Build ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.allow_failure }}
     strategy:
@@ -227,7 +227,7 @@ jobs:
 
   test_python_bindings:
     needs: python_bindings
-    name: ${{ matrix.name }}
+    name: Test ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.allow_failure }}
     strategy:
