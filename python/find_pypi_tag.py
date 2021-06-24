@@ -73,7 +73,13 @@ if __name__ == '__main__':
             else:
                 new_v += f"{pre_iden}{pre_v + 1}"
         else:
-            new_v += ".post1"
+            post_v = max_v.post
+            if not post_v:
+                post_v = 0
+            if args.current:
+                new_v += f"post{post_v}"
+            else:
+                new_v += f"post{post_v + 1}"
     else:
         new_v = str(current_v)
 
