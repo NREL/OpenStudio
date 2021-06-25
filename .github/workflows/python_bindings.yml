@@ -102,6 +102,13 @@ jobs:
           echo "$MSVC_DIR\VC\Auxiliary\Build" >> $GITHUB_PATH
         fi;
 
+        if [[ "$GITHUB_REF" == *"refs/tags"* ]]; then
+          PYTHON_PIP_REPOSITORY=pypi
+        else
+          PYTHON_PIP_REPOSITORY=testpypi
+        fi;
+        echo "PYTHON_PIP_REPOSITORY=$PYTHON_PIP_REPOSITORY" >> $GITHUB_ENV
+
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
 
@@ -166,7 +173,7 @@ jobs:
         echo "Using vcvarsall to initialize the development environment"
         call vcvarsall.bat x64
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_VERSION=${{ matrix.python-version }} -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} ../
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_PIP_REPOSITORY=${{ env.PYTHON_PIP_REPOSITORY }} -DPYTHON_VERSION=${{ matrix.python-version }} -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} ../
         ninja
         ninja python_package
 
@@ -178,7 +185,7 @@ jobs:
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
         cmake -DCMAKE_BUILD_TYPE=Release \
-              -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_VERSION=${{ matrix.python-version }} \
+              -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_PIP_REPOSITORY=${{ env.PYTHON_PIP_REPOSITORY }} -DPYTHON_VERSION=${{ matrix.python-version }} \
               -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
 
