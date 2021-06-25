@@ -3,6 +3,7 @@ import re
 import requests
 from packaging import version
 import argparse
+from typing import List
 
 REPO_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 
@@ -45,7 +46,7 @@ def parse_cmake_version_info():
 
 
 def compute_appropriate_version(current_v: version.Version,
-                                releases: list[version.Version],
+                                releases: List[version.Version],
                                 current: bool = False):
     """
     Args:
