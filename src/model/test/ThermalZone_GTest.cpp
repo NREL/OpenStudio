@@ -805,12 +805,11 @@ TEST_F(ModelFixture, ThermalZone_DaylightingControlsAvailabilitySchedule) {
 
   EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
 
-  ScheduleConstant schedule(m);
-  schedule.setValue(0.5);
+  auto schedule = m.alwaysOffDiscreteSchedule();
 
   EXPECT_TRUE(z.setDaylightingControlsAvailabilitySchedule(schedule));
   ASSERT_TRUE(z.daylightingControlsAvailabilitySchedule());
-  EXPECT_EQ(schedule, z.daylightingControlsAvailabilitySchedule.get());
+  EXPECT_EQ(schedule, z.daylightingControlsAvailabilitySchedule().get());
 
   z.resetDaylightingControlsAvailabilitySchedule();
   EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());

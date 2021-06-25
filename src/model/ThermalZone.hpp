@@ -51,6 +51,7 @@ namespace model {
   class ZoneMixing;
   class AirflowNetworkZone;
   class ZonePropertyUserViewFactorsBySurfaceName;
+  class Schedule;
 
   namespace detail {
 

@@ -111,6 +111,8 @@
 #include "AirflowNetworkZone_Impl.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -454,6 +456,16 @@ namespace model {
       return edges;
     }
 
+    std::vector<ScheduleTypeKey> ThermalZone_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ThermalZone", "Daylighting Controls Availability"));
+      }
+      return result;
+    }
+
     int ThermalZone_Impl::multiplier() const {
       boost::optional<int> value = getInt(OS_ThermalZoneFields::Multiplier, true);
       OS_ASSERT(value);
@@ -784,7 +796,8 @@ namespace model {
     }
 
     bool ThermalZone_Impl::setDaylightingControlsAvailabilitySchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName, "ThermalZone", "Availability", schedule);
+      bool result =
+        setSchedule(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName, "ThermalZone", "Daylighting Controls Availability", schedule);
       return result;
     }
 

@@ -40,6 +40,8 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -134,12 +136,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
   space.setThermalZone(thermalZone);
   DaylightingControl daylightingControl(model);
   daylightingControl.setSpace(space);
+  EXPECT_TRUE(thermalZone.setPrimaryDaylightingControl(daylightingControl));
 
   {
     ForwardTranslator forwardTranslator;
     Workspace workspace = forwardTranslator.translateModel(model);
 
-    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+    WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::Daylighting_Controls);
     ASSERT_EQ(1u, idfObjs.size());
     WorkspaceObject idf_d(idfObjs[0]);
 
@@ -153,7 +156,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
     ForwardTranslator forwardTranslator;
     Workspace workspace = forwardTranslator.translateModel(model);
 
-    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+    WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::Daylighting_Controls);
     ASSERT_EQ(1u, idfObjs.size());
     WorkspaceObject idf_d(idfObjs[0]);
 

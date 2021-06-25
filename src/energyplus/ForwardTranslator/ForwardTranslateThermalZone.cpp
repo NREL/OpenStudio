@@ -339,7 +339,7 @@ namespace energyplus {
 
         // Availability Schedule Name
         if (boost::optional<Schedule> sched = modelObject.daylightingControlsAvailabilitySchedule()) {
-          if ((idfo = translateAndMapModelObject(sched.get()))) {
+          if (boost::optional<IdfObject> idfo = translateAndMapModelObject(sched.get())) {
             daylightingControlObject.setString(Daylighting_ControlsFields::AvailabilityScheduleName, idfo->name().get());
           }
         }
