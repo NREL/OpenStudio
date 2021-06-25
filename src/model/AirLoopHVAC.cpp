@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -114,6 +114,9 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include <array>
+#include <algorithm>
 
 namespace openstudio {
 
@@ -294,6 +297,15 @@ namespace model {
     }
 
     boost::optional<HVACComponent> AirLoopHVAC_Impl::terminalForLastBranch(Mixer& mixer) {
+
+      // can't constexpr std::array here since IddObjectType is not litteral...
+      const std::array<openstudio::IddObjectType, 5> invalidHVACCompTypes{
+        openstudio::IddObjectType::OS_Node,
+        // Mixers
+        openstudio::IddObjectType::OS_AirLoopHVAC_ReturnPlenum, openstudio::IddObjectType::OS_AirLoopHVAC_ZoneMixer,
+        // Splitters
+        openstudio::IddObjectType::OS_AirLoopHVAC_SupplyPlenum, openstudio::IddObjectType::OS_AirLoopHVAC_ZoneSplitter};
+
       auto mixerInletNode = mixer.lastInletModelObject()->optionalCast<Node>();
       if (mixerInletNode) {
         auto upstreamComp = mixerInletNode->inletModelObject();
@@ -321,7 +333,8 @@ namespace model {
               }
             }
           }
-        } else if (!upstreamComp->optionalCast<Splitter>() && !upstreamComp->optionalCast<Mixer>() && !upstreamComp->optionalCast<Node>()) {
+        } else if (std::find(invalidHVACCompTypes.cbegin(), invalidHVACCompTypes.cend(), upstreamComp->iddObjectType())
+                   == invalidHVACCompTypes.cend()) {
           if (auto hvacComponent = upstreamComp->optionalCast<HVACComponent>()) {
             return hvacComponent;
           }
@@ -329,6 +342,21 @@ namespace model {
       }
 
       return boost::none;
+    }
+
+    bool AirLoopHVAC_Impl::isTerminalTypeValid(const HVACComponent& airTerminal) {
+
+      bool loopIsDualDuct = isDualDuct();
+      // Dual duct terminals are derived from Mixer
+      bool terminalIsDualDuct = airTerminal.optionalCast<Mixer>().has_value();
+
+      // NOT XOR
+      bool result = !(loopIsDualDuct ^ terminalIsDualDuct);
+      if (!result) {
+        LOG(Warn, "Cannot assign " << airTerminal.nameString() << " to " << briefDescription() << " since it is of incorrect type, loop is "
+                                   << (loopIsDualDuct ? "dual duct." : "single duct."));
+      }
+      return result;
     }
 
     bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone& thermalZone, AirLoopHVAC& airLoopHVAC, Splitter& splitter, Mixer& mixer,
@@ -352,6 +380,10 @@ namespace model {
       }
 
       if (!airLoopHVAC.demandComponent(mixer.handle())) {
+        return false;
+      }
+
+      if (optAirTerminal && !airLoopHVAC.getImpl<detail::AirLoopHVAC_Impl>()->isTerminalTypeValid(optAirTerminal.get())) {
         return false;
       }
 
@@ -1132,10 +1164,14 @@ namespace model {
     //  }
     //}
 
-    bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent hvacComponent) {
+    bool AirLoopHVAC_Impl::addBranchForHVACComponent(HVACComponent& hvacComponent) {
       Model _model = this->model();
 
       if (hvacComponent.model() != _model) {
+        return false;
+      }
+
+      if (!isTerminalTypeValid(hvacComponent)) {
         return false;
       }
 
@@ -2136,7 +2172,7 @@ namespace model {
     return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
   }
 
-  bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent component) {
+  bool AirLoopHVAC::addBranchForHVACComponent(HVACComponent& component) {
     return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForHVACComponent(component);
   }
 

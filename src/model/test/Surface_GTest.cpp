@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -2073,6 +2073,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap) {
   points.push_back(Point3d(7, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
 
+  double areaTol = 0.01 * 0.01;
   for (const Surface& surface : space1.surfaces()) {
     if (surface.handle() != surface1.handle()) {
       points.clear();
@@ -2081,7 +2082,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap) {
       points.push_back(Point3d(7, 10, 0));
       points.push_back(Point3d(0, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
-      EXPECT_DOUBLE_EQ(surface1Area, surface1.grossArea() + surface.grossArea());
+      EXPECT_NEAR(surface1Area, surface1.grossArea() + surface.grossArea(), areaTol);
       break;
     }
   }
@@ -2105,7 +2106,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap) {
       points.push_back(Point3d(10, 10, 0));
       points.push_back(Point3d(7, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
-      EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea() + surface.grossArea());
+      EXPECT_NEAR(surface2Area, surface2.grossArea() + surface.grossArea(), areaTol);
       break;
     }
   }
@@ -2159,6 +2160,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
   points.push_back(Point3d(7, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
 
+  double areaTol = 0.01 * 0.01;
   for (const Surface& surface : space1.surfaces()) {
     if (surface.handle() != surface1.handle()) {
       points.clear();
@@ -2167,7 +2169,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
       points.push_back(Point3d(7, 10, 0));
       points.push_back(Point3d(0, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
-      EXPECT_DOUBLE_EQ(surface1Area, surface1.grossArea() + surface.grossArea());
+      EXPECT_NEAR(surface1Area, surface1.grossArea() + surface.grossArea(), areaTol);
       break;
     }
   }
@@ -2189,7 +2191,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
       points.push_back(Point3d(10, 10, 0));
       points.push_back(Point3d(7, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
-      EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea() + surface.grossArea());
+      EXPECT_NEAR(surface2Area, surface2.grossArea() + surface.grossArea(), areaTol);
       break;
     }
   }

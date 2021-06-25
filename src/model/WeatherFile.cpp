@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/time/Date.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/String.hpp"
@@ -375,6 +376,19 @@ namespace model {
       return types;
     }
 
+    boost::optional<int> WeatherFile_Impl::startDateActualYear() const {
+      boost::optional<int> result = getInt(OS_WeatherFileFields::StartDateActualYear, true);
+      return result;
+    }
+
+    boost::optional<DayOfWeek> WeatherFile_Impl::startDayOfWeek() const {
+      boost::optional<std::string> result = getString(OS_WeatherFileFields::StartDayofWeek, false, true);
+      if (!result) {
+        return boost::none;
+      }
+      return openstudio::DayOfWeek{*result};
+    }
+
   }  // namespace detail
 
   IddObjectType WeatherFile::iddObjectType() {
@@ -395,6 +409,12 @@ namespace model {
     weatherFile.setDouble(OS_WeatherFileFields::Elevation, epwFile.elevation());
     weatherFile.setString(OS_WeatherFileFields::Url, toString(epwFile.path()));
     weatherFile.setString(OS_WeatherFileFields::Checksum, epwFile.checksum());
+    if (auto s_ = epwFile.startDateActualYear()) {
+      weatherFile.setInt(OS_WeatherFileFields::StartDateActualYear, s_.get());
+    }
+
+    weatherFile.setString(OS_WeatherFileFields::StartDayofWeek, epwFile.startDayOfWeek().valueName());
+
     return weatherFile;
   }
 
@@ -533,6 +553,14 @@ void WeatherFile::resetChecksum() {
 
   boost::optional<std::string> WeatherFile::environmentName() const {
     return getImpl<detail::WeatherFile_Impl>()->environmentName();
+  }
+
+  boost::optional<int> WeatherFile::startDateActualYear() const {
+    return getImpl<detail::WeatherFile_Impl>()->startDateActualYear();
+  }
+
+  boost::optional<DayOfWeek> WeatherFile::startDayOfWeek() const {
+    return getImpl<detail::WeatherFile_Impl>()->startDayOfWeek();
   }
 
   /// @cond

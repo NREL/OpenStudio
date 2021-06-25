@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -125,7 +125,10 @@ namespace model {
     }
 
     ModelObject AirLoopHVACUnitarySystem_Impl::clone(Model model) const {
+      // Mimic what StraightComponent_Impl::clone would do (we inherit ZoneHVACComponent here...)
       AirLoopHVACUnitarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
+      modelObjectClone.setString(modelObjectClone.inletPort(), "");
+      modelObjectClone.setString(modelObjectClone.outletPort(), "");
 
       if (boost::optional<HVACComponent> supplyFan = this->supplyFan()) {
         modelObjectClone.setSupplyFan(supplyFan->clone(model).cast<HVACComponent>());

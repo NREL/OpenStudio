@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -269,6 +269,8 @@ namespace model {
   class HeaderedPumpsVariableSpeed;
   class HeatBalanceAlgorithm;
   class HeatExchangerAirToAirSensibleAndLatent;
+  class HeatExchangerDesiccantBalancedFlow;
+  class HeatExchangerDesiccantBalancedFlowPerformanceDataType1;
   class HeatExchangerFluidToFluid;
   class HeatPumpWaterToWaterEquationFitCooling;
   class HeatPumpWaterToWaterEquationFitHeating;
@@ -299,6 +301,9 @@ namespace model {
   class OutputDebuggingData;
   class OutputDiagnostics;
   class OutputJSON;
+  class OutputEnvironmentalImpactFactors;
+  class EnvironmentalImpactFactors;
+  class FuelFactors;
   class OutputMeter;
   class OutputVariable;
   class OutputEnergyManagementSystem;
@@ -439,6 +444,7 @@ namespace model {
   class WaterHeaterMixed;
   class WaterHeaterHeatPump;
   class WaterHeaterHeatPumpWrappedCondenser;
+  class WaterHeaterSizing;
   class WaterHeaterStratified;
   class WaterUseConnections;
   class WaterUseEquipment;
@@ -1026,6 +1032,11 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateHeatExchangerAirToAirSensibleAndLatent(model::HeatExchangerAirToAirSensibleAndLatent& modelObject);
 
+    boost::optional<IdfObject> translateHeatExchangerDesiccantBalancedFlow(model::HeatExchangerDesiccantBalancedFlow& modelObject);
+
+    boost::optional<IdfObject>
+      translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& modelObject);
+
     boost::optional<IdfObject> translateHeatExchangerFluidToFluid(model::HeatExchangerFluidToFluid& modelObject);
 
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitCooling(model::HeatPumpWaterToWaterEquationFitCooling& modelObject);
@@ -1086,6 +1097,12 @@ namespace energyplus {
     boost::optional<IdfObject> translateOutputDiagnostics(model::OutputDiagnostics& modelObject);
 
     boost::optional<IdfObject> translateOutputJSON(model::OutputJSON& modelObject);
+
+    boost::optional<IdfObject> translateOutputEnvironmentalImpactFactors(model::OutputEnvironmentalImpactFactors& modelObject);
+
+    boost::optional<IdfObject> translateEnvironmentalImpactFactors(model::EnvironmentalImpactFactors& modelObject);
+
+    boost::optional<IdfObject> translateFuelFactors(model::FuelFactors& modelObject);
 
     boost::optional<IdfObject> translateOutputMeter(model::OutputMeter& modelObject);
 
@@ -1375,6 +1392,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateWaterHeaterHeatPump(model::WaterHeaterHeatPump& modelObject);
 
     boost::optional<IdfObject> translateWaterHeaterHeatPumpWrappedCondenser(model::WaterHeaterHeatPumpWrappedCondenser& modelObject);
+
+    boost::optional<IdfObject> translateWaterHeaterSizing(model::WaterHeaterSizing& modelObject);
 
     boost::optional<IdfObject> translateWaterHeaterStratified(model::WaterHeaterStratified& modelObject);
 

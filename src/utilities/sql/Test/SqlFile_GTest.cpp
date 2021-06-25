@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,7 @@
 #include "../../time/Date.hpp"
 #include "../../time/Calendar.hpp"
 #include "../../core/Optional.hpp"
+#include "../../core/StringStreamLogSink.hpp"
 #include "../../data/DataEnums.hpp"
 #include "../../data/TimeSeries.hpp"
 #include "../../filetypes/EpwFile.hpp"
@@ -46,6 +47,7 @@
 #include <utilities/idd/Exterior_FuelEquipment_FieldEnums.hxx>
 #include <utilities/idd/Exterior_WaterEquipment_FieldEnums.hxx>
 
+#include <algorithm>
 #include <iostream>
 #include <boost/regex.hpp>
 #include <resources.hxx>
@@ -773,4 +775,29 @@ TEST_F(SqlFileFixture, EndUseFuelTypes_test) {
     }
     //}
   }
+}
+
+TEST_F(SqlFileFixture, 4298_YearField) {
+  // Test for #4298 - Issue just an Info message if there is no 'Year' field in the SQL
+  // but you have zero timeseries a reporting frequency lower than 'Runperiod'
+
+  StringStreamLogSink sink;
+  sink.setLogLevel(LogLevel::Info);
+
+  // This one does not have any timeseries output
+  openstudio::path path = resourcesPath() / toPath("energyplus/AllFuelTypes/eplusout.sql");
+  sqlFile = openstudio::SqlFile(path);
+  ASSERT_TRUE(sqlFile.connectionOpen());
+
+  auto messages = sink.logMessages();
+  auto numInfos = std::count_if(messages.begin(), messages.end(), [](const LogMessage& message) { return message.logLevel() == LogLevel::Info; });
+  ASSERT_EQ(1, numInfos);
+  auto it = std::find_if(messages.begin(), messages.end(), [](const LogMessage& message) { return message.logLevel() == LogLevel::Info; });
+  ASSERT_NE(it, messages.end());
+  EXPECT_EQ("Your SQLFile does not contain the 'Year' field since you did not request any outputs at a frequency lower than Run Period",
+            it->logMessage());
+
+  auto reportingFreqs = sqlFile.execAndReturnVectorOfString("SELECT ReportingFrequency FROM ReportDataDictionary");
+  ASSERT_TRUE(reportingFreqs);
+  EXPECT_EQ(0, reportingFreqs->size());
 }

@@ -177,7 +177,8 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
     renderer = ERB.new(html_in)
     html_out = renderer.result(binding)
 
-    # write html file
+    # write html file: any file named 'report*.*' in the current working directory
+    # will be copied to the ./reports/ folder as 'reports/<measure_class_name>_<filename>.html'
     html_out_path = './report.html'
     File.open(html_out_path, 'w') do |file|
       file << html_out

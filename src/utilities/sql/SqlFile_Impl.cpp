@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -515,7 +515,13 @@ namespace detail {
       // Check if zero
       boost::optional<int> maxYear = execAndReturnFirstInt("SELECT MAX(Year) FROM Time");
       if (!maxYear.is_initialized() || maxYear.get() <= 0) {
-        LOG(Warn, "Using EnergyPlusVersion version " << version.str() << " which should have 'Year' field, but it's always zero");
+        auto nOtherThanRunPeriod =
+          execAndReturnFirstInt("SELECT COUNT(ReportingFrequency) FROM ReportDataDictionary WHERE ReportingFrequency NOT LIKE '%Run Period%'");
+        if (nOtherThanRunPeriod > 0) {
+          LOG(Warn, "Using EnergyPlusVersion version " << version.str() << " which should have 'Year' field, but it's always zero");
+        } else {
+          LOG(Info, "Your SQLFile does not contain the 'Year' field since you did not request any outputs at a frequency lower than Run Period");
+        }
         m_hasYear = false;
       }
     }

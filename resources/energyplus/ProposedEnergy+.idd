@@ -37773,6 +37773,7 @@ AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
         \required-field
         \type object-list
         \object-list HeatingCoilName
+        \object-list HeatingCoilsDXSingleSpeed
         \object-list HeatingCoilsDXVariableSpeed
         \note Enter the name of the heating coil used in this unitary system.
    A18, \field Priority Control Mode
@@ -61671,6 +61672,7 @@ PythonPlugin:Instance,
    A1, \field Name
        \required-field
        \type alpha
+       \reference ProgramNames
        \note This is the name used to represent this plugin in traditional EMS fields
    A2, \field Run During Warmup Days
        \note required-field disabled as it has a default

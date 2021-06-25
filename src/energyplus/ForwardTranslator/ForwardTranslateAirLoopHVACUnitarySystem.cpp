@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -98,6 +98,7 @@
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
 #include <utilities/idd/Fan_ComponentModel_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -717,6 +718,9 @@ namespace energyplus {
         if (_hx->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent) {
           _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName, inletNodeName);
           _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, outletNodeName);
+        } else if (_hx->iddObject().type() == IddObjectType::HeatExchanger_Desiccant_BalancedFlow) {
+          _hx->setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, inletNodeName);
+          _hx->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, outletNodeName);
         } else {
           LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
         }
@@ -730,6 +734,7 @@ namespace energyplus {
         if (_hx->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent) {
           _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName, inletNodeName);
           _hx->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, outletNodeName);
+          // Note: HeatExchangerDesiccantBalancedFlow is not accepted at this time
         } else {
           LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
         }

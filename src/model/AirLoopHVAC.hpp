@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -267,7 +267,7 @@ namespace model {
    *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,
    *  can be an air terminal, AirLoopHVACSupplyPlenum, or airLoopHVACReturnPlenum.
    **/
-    bool addBranchForHVACComponent(HVACComponent hvacComponent);
+    bool addBranchForHVACComponent(HVACComponent& hvacComponent);
 
     /** Removes the Zone identified by zoneLabel from the air loop and returns true
    * upon successful removal.

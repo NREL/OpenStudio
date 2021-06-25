@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -379,8 +379,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setCoolingCoil(const HVACComponent& coolingCoilsDXMultiModeOrSingleSpeed) {
-      bool result = setPointer(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::CoolingCoil, coolingCoilsDXMultiModeOrSingleSpeed.handle());
+    bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setCoolingCoil(const HVACComponent& coolingCoilName) {
+      bool result = setPointer(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::CoolingCoil, coolingCoilName.handle());
       return result;
     }
 
@@ -905,8 +905,8 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->resetSupplyAirFanOperatingModeSchedule();
   }
 
-  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setCoolingCoil(const HVACComponent& coolingCoilsDXMultiModeOrSingleSpeed) {
-    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setCoolingCoil(coolingCoilsDXMultiModeOrSingleSpeed);
+  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setCoolingCoil(const HVACComponent& coolingCoilName) {
+    return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setCoolingCoil(coolingCoilName);
   }
 
   bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setHeatingCoil(const HVACComponent& heatingCoilName) {

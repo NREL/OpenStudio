@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,14 +72,16 @@ namespace model {
       virtual int renderingColorIndex() const override;
 
       /// Returns fFactor.
-      virtual double fFactor() const;
-      virtual bool setFFactor(double fFactor);
+      double fFactor() const;
+      bool setFFactor(double fFactor);
+
       /// Returns area.
-      virtual double area() const;
-      virtual bool setArea(double area);
+      double area() const;
+      bool setArea(double area);
+
       /// Returns perimeterExposed.
-      virtual double perimeterExposed() const;
-      virtual bool setPerimeterExposed(double perimeterExposed);
+      double perimeterExposed() const;
+      bool setPerimeterExposed(double perimeterExposed);
 
       //@}
 

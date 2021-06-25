@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,8 @@
 
 #include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow.hpp"
+#include "../HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -81,6 +83,48 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_addToNode) {
 
   CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
   HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  EXPECT_FALSE(cc.addToNode(n));
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  EXPECT_FALSE(hx.addToNode(n));
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  /**
+   * Note JM 2019-03-13: At this point in time
+   * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
+   * cf https://github.com/NREL/EnergyPlus/issues/7222
+   * This method returns false and does nothing as a result
+   */
+  EXPECT_FALSE(coilSystem.addToNode(n));
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  {
+    auto containingHVACComponent = cc.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
+
+  {
+    auto containingHVACComponent = hx.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
+}
+
+// This test ensures that only the parent CoilSystem can call addToNode, the individual CoilCoolingDXSingleSpeed and HX cannot
+TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_addToNode2) {
+
+  Model m;
+  HeatExchangerDesiccantBalancedFlow hx(m);
+  CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m, hx);
+
+  AirLoopHVAC a(m);
+  Node n = a.supplyOutletNode();
+
+  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
 
   EXPECT_EQ(2, a.supplyComponents().size());
 

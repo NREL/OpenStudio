@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -561,6 +561,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
   ScheduleDay holidaySchedule = scheduleRuleset.holidaySchedule();
   holidaySchedule.setName("Holiday Schedule");
 
+  scheduleRuleset.setCustomDay1Schedule(defaultDaySchedule);
+  ScheduleDay customDay1Schedule = scheduleRuleset.customDay1Schedule();
+  customDay1Schedule.setName("Custom Day 1 Schedule");
+
+  scheduleRuleset.setCustomDay2Schedule(defaultDaySchedule);
+  ScheduleDay customDay2Schedule = scheduleRuleset.customDay2Schedule();
+  customDay2Schedule.setName("Custom Day 2 Schedule");
+
   // annual weekday rule
   ScheduleRule weekdayRule(scheduleRuleset);
   weekdayRule.setName("All Year Weekdays Rule");
@@ -613,7 +621,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
   EXPECT_EQ(holidaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::HolidaySchedule_DayName).get());
   EXPECT_EQ(summerDesignDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SummerDesignDaySchedule_DayName).get());
   EXPECT_EQ(winterDesignDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WinterDesignDaySchedule_DayName).get());
-  // Not Exposed yet
-  EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay1Schedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay2Schedule_DayName).get());
+  EXPECT_EQ(customDay1Schedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay1Schedule_DayName).get());
+  EXPECT_EQ(customDay2Schedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay2Schedule_DayName).get());
 }
