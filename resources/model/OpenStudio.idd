@@ -16715,8 +16715,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \maximum< 100.0
   A21; \field Temperature Deviation Curve
        \type object-list
-       \object-list LinearCurves
-       \object-list QuadraticCubicCurves
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*Fraction + c*Fraction**2
        \note cubic curve = a + b*Fraction + c*Fraction**2 + d*Fraction**3
        \note Fraction = tank ice fraction
@@ -18581,8 +18580,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
    A7,  \field Part Load Fraction Correlation Curve Name
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Table:Lookup object can also be used
         \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
         \note Quadratic curve = a + b(PLR) + c(PLR)^2.
