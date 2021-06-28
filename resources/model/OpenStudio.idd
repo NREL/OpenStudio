@@ -18654,8 +18654,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
    A3,  \field Total Cooling Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
         \note Table:Lookup object can also be used
         \note curve = a + b*ewt + c*ewt**2 + d*db + e*db**2 + f*db*ewt
         \note db = condenser entering dry-bulb temperature (C)
@@ -18663,8 +18662,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
    A4,  \field Total Cooling Capacity Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Table:Lookup object can also be used
         \note quadratic curve = a + b*ffw + c*ffw**2
         \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
@@ -18672,8 +18670,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
    A5,  \field Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BiquadraticCurves
-        \object-list BiVariateTables
+        \object-list BivariateFunctions
         \note Table:Lookup object can also be used
         \note curve = a + b*ewt + c*ewt**2 + d*db + e*db**2 + f*db*ewt
         \note db = condenser entering dry-bulb temperature (C)
@@ -18681,8 +18678,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
    A6;  \field Energy Input Ratio Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list QuadraticCubicCurves
-        \object-list UniVariateTables
+        \object-list UnivariateFunctions
         \note Table:Lookup object can also be used
         \note quadratic curve = a + b*ffw + c*ffw**2
         \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
