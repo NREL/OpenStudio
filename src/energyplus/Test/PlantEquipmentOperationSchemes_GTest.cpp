@@ -64,6 +64,8 @@
 #include "../../model/HeatExchangerFluidToFluid.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
+#include "../../model/HeatPumpPlantLoopEIRCooling.hpp"
+#include "../../model/HeatPumpPlantLoopEIRHeating.hpp"
 #include "../../model/PlantComponentTemperatureSource.hpp"
 #include "../../model/PlantComponentUserDefined.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
@@ -666,6 +668,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_compo
 
   {
     HeatPumpWaterToWaterEquationFitCooling obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpPlantLoopEIRHeating obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpPlantLoopEIRCooling obj(m);
     EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
   }
 
