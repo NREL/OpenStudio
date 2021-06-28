@@ -56,7 +56,7 @@ namespace model {
     //@{
 
     explicit HeatPumpPlantLoopEIRHeating(const Model& model, const CurveQuadLinear& heatingCapacityCurve,
-                                                    const CurveQuadLinear& heatingCompressorPowerCurve);
+                                         const CurveQuadLinear& heatingCompressorPowerCurve);
 
     explicit HeatPumpPlantLoopEIRHeating(const Model& model);
 

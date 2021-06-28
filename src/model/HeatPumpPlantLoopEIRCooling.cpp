@@ -45,20 +45,19 @@ namespace model {
 
   namespace detail {
 
-    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const IdfObject& idfObject, Model_Impl* model,
-                                                                                             bool keepHandle)
+    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : WaterToWaterComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == HeatPumpPlantLoopEIRCooling::iddObjectType());
     }
 
-    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                             Model_Impl* model, bool keepHandle)
+    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
       : WaterToWaterComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == HeatPumpPlantLoopEIRCooling::iddObjectType());
     }
 
-    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const HeatPumpPlantLoopEIRCooling_Impl& other,
-                                                                                             Model_Impl* model, bool keepHandle)
+    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const HeatPumpPlantLoopEIRCooling_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
       : WaterToWaterComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatPumpPlantLoopEIRCooling_Impl::outputVariableNames() const {
@@ -207,8 +206,7 @@ namespace model {
     }
 
     bool HeatPumpPlantLoopEIRCooling_Impl::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
-      bool result =
-        setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCoefficientofPerformance, referenceCoefficientofPerformance);
+      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCoefficientofPerformance, referenceCoefficientofPerformance);
       OS_ASSERT(result);
       return result;
     }
@@ -235,8 +233,7 @@ namespace model {
     }
 
     bool HeatPumpPlantLoopEIRCooling_Impl::setCoolingCompressorPowerCurve(const CurveQuadLinear& coolingCompressorPowerCurve) {
-      bool result =
-        setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::CoolingCompressorPowerCurveName, coolingCompressorPowerCurve.handle());
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::CoolingCompressorPowerCurveName, coolingCompressorPowerCurve.handle());
       return result;
     }
 
@@ -309,7 +306,7 @@ namespace model {
   }  // namespace detail
 
   HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(const Model& model, const CurveQuadLinear& coolingCapacityCurve,
-                                                                                 const CurveQuadLinear& coolingCompressorPowerCurve)
+                                                           const CurveQuadLinear& coolingCompressorPowerCurve)
     : WaterToWaterComponent(HeatPumpPlantLoopEIRCooling::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>());
 
@@ -504,8 +501,7 @@ namespace model {
   }
 
   /// @cond
-  HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(
-    std::shared_ptr<detail::HeatPumpPlantLoopEIRCooling_Impl> impl)
+  HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(std::shared_ptr<detail::HeatPumpPlantLoopEIRCooling_Impl> impl)
     : WaterToWaterComponent(std::move(impl)) {}
 
   // DEPRECATED
@@ -516,8 +512,7 @@ namespace model {
   }
 
   bool HeatPumpPlantLoopEIRCooling::setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCapacityCurve().setCoefficient1Constant(double) instead.")
+    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCapacityCurve().setCoefficient1Constant(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient1Constant(coolingCapacityCoefficient1);
   }
@@ -577,9 +572,7 @@ namespace model {
   }
 
   bool HeatPumpPlantLoopEIRCooling::setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1) {
-    LOG(
-      Warn,
-      "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient1Constant(double) instead.")
+    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient1Constant(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient1Constant(coolingCompressorPowerCoefficient1);
   }
@@ -591,8 +584,7 @@ namespace model {
   }
 
   bool HeatPumpPlantLoopEIRCooling::setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient2w(double) instead.")
+    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient2w(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient2w(coolingCompressorPowerCoefficient2);
   }
@@ -604,8 +596,7 @@ namespace model {
   }
 
   bool HeatPumpPlantLoopEIRCooling::setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient3x(double) instead.")
+    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient3x(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient3x(coolingCompressorPowerCoefficient3);
   }
@@ -617,8 +608,7 @@ namespace model {
   }
 
   bool HeatPumpPlantLoopEIRCooling::setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient4y(double) instead.")
+    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient4y(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient4y(coolingCompressorPowerCoefficient4);
   }
@@ -630,8 +620,7 @@ namespace model {
   }
 
   bool HeatPumpPlantLoopEIRCooling::setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5) {
-    LOG(Warn,
-        "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient5z(double) instead.")
+    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRCooling::coolingCompressorPowerCurve().setCoefficient5z(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient5z(coolingCompressorPowerCoefficient5);
   }
