@@ -12666,6 +12666,204 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
         \object-list WWHPHeatingNames
         \note This optional field is used to coordinate sizing calculations between heating and cooling modes.
 
+OS:HeatPump:PlantLoop:EIR:Heating,
+       \memo An EIR formulated water to water heat pump model, heating operation
+       \min-fields 16
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \type alpha
+       \reference PLHPHeatingNames
+       \required-field
+       \reference ConnectionObject
+   A3, \field Load Side Inlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A4, \field Load Side Outlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A5, \field Condenser Type
+       \type choice
+       \note required-field disabled as it has a default
+       \key WaterSource
+       \key AirSource
+       \required-field
+   A6, \field Source Side Inlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A7, \field Source Side Outlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A8, \field Companion Heat Pump Name
+       \note This field allows the user to specify a companion cooling
+       \note object for this heating object. The companion is used in
+       \note sizing the heat pump as well as to allow checks for unexpected
+       \note simultaneous operation of the two objects.
+       \type object-list
+       \object-list PLHPCoolingNames
+   N1, \field Load Side Reference Flow Rate
+       \note This component is currently a constant-flow device, meaning it will always
+       \note try to request the full design flow from the central plant manager.
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N2, \field Source Side Reference Flow Rate
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N3, \field Reference Capacity
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \units W
+       \autosizable
+       \required-field
+   N4, \field Reference Coefficient of Performance
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \required-field
+       \units W/W
+   N5, \field Sizing Factor
+       \note Multiplies the autosized capacity and flow rates
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \required-field
+   A9, \field Capacity Modifier Function of Temperature Curve Name
+       \note Heating capacity modifier as a function of CW supply temp and entering condenser temp
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) hot water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A10,\field Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of temperature
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) hot water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A11;\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of Part Load Ratio (PLR)
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+       \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
+       \note PLR = part load ratio (hot load/steady state capacity)
+
+OS:HeatPump:PlantLoop:EIR:Cooling,
+       \memo An EIR formulated water to water heat pump model, cooling operation.
+       \min-fields 16
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \type alpha
+       \reference PLHPCoolingNames
+       \required-field
+       \reference ConnectionObject
+   A3, \field Load Side Inlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A4, \field Load Side Outlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A5, \field Condenser Type
+       \note required-field disabled as it has a default
+       \type choice
+       \key WaterSource
+       \key AirSource
+       \default WaterSource
+   A6, \field Source Side Inlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A7, \field Source Side Outlet Node Name
+       \required-field
+       \object-list ConnectionNames
+   A8, \field Companion Heat Pump Name
+       \note This field allows the user to specify a companion heating
+       \note object for this cooling object. The companion is used in
+       \note sizing the heat pump as well as to allow checks for unexpected
+       \note simultaneous operation of the two objects.
+       \type object-list
+       \object-list PLHPHeatingNames
+   N1, \field Load Side Reference Flow Rate
+       \note This component is currently a constant-flow device, meaning it will always
+       \note try to request the full design flow from the central plant manager.
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N2, \field Source Side Reference Flow Rate
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N3, \field Reference Capacity
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \units W
+       \autosizable
+       \required-field
+   N4, \field Reference Coefficient of Performance
+       \note required-field disabled as it has a default
+       \type real
+       \minimum> 0.0
+       \required-field
+       \units W/W
+   N5, \field Sizing Factor
+       \note required-field disabled as it has a default
+       \note Multiplies the autosized capacity and flow rates
+       \type real
+       \minimum> 0.0
+       \required-field
+   A9, \field Capacity Modifier Function of Temperature Curve Name
+       \note Cooling capacity modifier as a function of CW supply temp and entering condenser temp
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A10,\field Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of temperature
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A11;\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of Part Load Ratio (PLR)
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list UniVariateFunctions
+       \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
+       \note PLR = part load ratio (cooling load/steady state capacity)
+
 OS:Chiller:Electric:EIR,
        \memo This chiller model is the empirical model from the DOE-2 building Energy
        \memo simulation program. Chiller performance at off-reference conditions is modeled
