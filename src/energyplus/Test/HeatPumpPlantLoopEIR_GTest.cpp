@@ -69,7 +69,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR) {
   EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(wwhp_htg));
   EXPECT_TRUE(plant_loop_wwhp_htg.addSupplyBranchForComponent(wwhp_htg));
 
-  // #3837: These two reference each other, and we want to avoid a recusion problem (each FT function calling each other)
+  // #3837: These two reference each other, and we want to avoid a recursion problem (each FT function calling each other)
   EXPECT_TRUE(wwhp_clg.setCompanionHeatingHeatPump(wwhp_htg));
   EXPECT_TRUE(wwhp_htg.setCompanionCoolingHeatPump(wwhp_clg));
 
@@ -83,7 +83,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR) {
     EXPECT_EQ(1u, idf_ccs.size());
     WorkspaceObject idf_cc(idf_ccs[0]);
     // Companion
-    EXPECT_EQ(wwhp_htg.nameString(), idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatingHeatPumpName).get());
+    EXPECT_EQ(wwhp_htg.nameString(), idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName).get());
   }
 
   {
@@ -91,6 +91,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR) {
     EXPECT_EQ(1u, idf_hcs.size());
     WorkspaceObject idf_hc(idf_hcs[0]);
     // Companion
-    EXPECT_EQ(wwhp_clg.nameString(), idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::CompanionCoolingHeatPumpName).get());
+    EXPECT_EQ(wwhp_clg.nameString(), idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName).get());
   }
 }

@@ -37,7 +37,8 @@ namespace openstudio {
 namespace model {
 
   class HeatPumpPlantLoopEIRCooling;
-  class CurveQuadLinear;
+  class CurveBiquadratic;
+  class CurveQuadratic;
 
   namespace detail {
 
@@ -80,77 +81,69 @@ namespace model {
       /** @name Getters */
       //@{
 
-      boost::optional<double> referenceLoadSideFlowRate() const;
+      std::string condenserType() const;
 
-      double ratedLoadSideFlowRate() const;
+      boost::optional<HeatPumpPlantLoopEIRCooling> companionCoolingHeatPump() const;
+
+      boost::optional<double> referenceLoadSideFlowRate() const;
 
       bool isReferenceLoadSideFlowRateAutosized() const;
 
       boost::optional<double> referenceSourceSideFlowRate() const;
 
-      double ratedSourceSideFlowRate() const;
-
       bool isReferenceSourceSideFlowRateAutosized() const;
 
-      boost::optional<double> ratedHeatingCapacity() const;
+      boost::optional<double> referenceCapacity() const;
 
-      bool isRatedHeatingCapacityAutosized() const;
-
-      boost::optional<double> ratedHeatingPowerConsumption() const;
-
-      bool isRatedHeatingPowerConsumptionAutosized() const;
-
-      CurveQuadLinear heatingCapacityCurve() const;
-
-      CurveQuadLinear heatingCompressorPowerCurve() const;
+      bool isReferenceCapacityAutosized() const;
 
       double referenceCoefficientofPerformance() const;
 
       double sizingFactor() const;
 
-      boost::optional<HeatPumpPlantLoopEIRCooling> companionCoolingHeatPump() const;
+      CurveBiquadratic capacityModifierFunctionofTemperatureCurve() const;
+
+      CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
+
+      CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
 
       boost::optional<double> autosizedReferenceLoadSideFlowRate() const;
 
       boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
 
-      boost::optional<double> autosizedRatedHeatingCapacity() const;
-
-      boost::optional<double> autosizedRatedHeatingPowerConsumption() const;
+      boost::optional<double> autosizedReferenceCapacity() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+      bool setCondenserType(std::string condenserType);
 
-      bool setRatedLoadSideFlowRate(double ratedLoadSideFlowRate);
+      bool setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP);
+
+      bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
 
       void autosizeReferenceLoadSideFlowRate();
 
       bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
 
-      bool setRatedSourceSideFlowRate(double ratedLoadSideFlowRate);
-
       void autosizeReferenceSourceSideFlowRate();
 
-      bool setRatedHeatingCapacity(double ratedHeatingCapacity);
+      bool setReferenceCapacity(double referenceCapacity);
 
-      void autosizeRatedHeatingCapacity();
-
-      bool setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption);
-
-      void autosizeRatedHeatingPowerConsumption();
-
-      bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
-
-      bool setHeatingCompressorPowerCurve(const CurveQuadLinear& heatingCompressorPowerCurve);
+      void autosizeReferenceCapacity();
 
       bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 
       bool setSizingFactor(double sizingFactor);
 
-      bool setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP);
+      bool setCapacityModifierFunctionofTemperatureCurve(const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve);
+
+      bool setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+        const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+
+      bool setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+        const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 
       //@}
       /** @name Other */

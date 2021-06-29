@@ -30,8 +30,10 @@
 #include "HeatPumpPlantLoopEIRHeating.hpp"
 #include "HeatPumpPlantLoopEIRHeating_Impl.hpp"
 #include "Model.hpp"
-#include "CurveQuadLinear.hpp"
-#include "CurveQuadLinear_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_HeatPump_PlantLoop_EIR_Heating_FieldEnums.hxx>
@@ -61,194 +63,23 @@ namespace model {
       : WaterToWaterComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatPumpPlantLoopEIRHeating_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Water to Water Heat Pump Electricity Energy",
-                                                   "Water to Water Heat Pump Load Side Heat Transfer Energy",
-                                                   "Water to Water Heat Pump Source Side Heat Transfer Energy",
-                                                   "Water to Water Heat Pump Electricity Rate",
-                                                   "Water to Water Heat Pump Load Side Heat Transfer Rate",
-                                                   "Water to Water Heat Pump Source Side Heat Transfer Rate",
-                                                   "Water to Water Heat Pump Load Side Outlet Temperature",
-                                                   "Water to Water Heat Pump Load Side Inlet Temperature",
-                                                   "Water to Water Heat Pump Source Side Outlet Temperature",
-                                                   "Water to Water Heat Pump Source Side Inlet Temperature",
-                                                   "Water to Water Heat Pump Load Side Mass Flow Rate",
-                                                   "Water to Water Heat Pump Source Side Mass Flow Rate"};
+      static const std::vector<std::string> result{"Heat Pump Electricity Energy",
+                                                   "Heat Pump Load Side Heat Transfer Energy",
+                                                   "Heat Pump Source Side Heat Transfer Energy",
+                                                   "Heat Pump Electricity Rate",
+                                                   "Heat Pump Load Side Heat Transfer Rate",
+                                                   "Heat Pump Source Side Heat Transfer Rate",
+                                                   "Heat Pump Load Side Outlet Temperature",
+                                                   "Heat Pump Load Side Inlet Temperature",
+                                                   "Heat Pump Source Side Outlet Temperature",
+                                                   "Heat Pump Source Side Inlet Temperature",
+                                                   "Heat Pump Load Side Mass Flow Rate",
+                                                   "Heat Pump Source Side Mass Flow Rate"};
       return result;
     }
 
     IddObjectType HeatPumpPlantLoopEIRHeating_Impl::iddObjectType() const {
       return HeatPumpPlantLoopEIRHeating::iddObjectType();
-    }
-
-    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::referenceLoadSideFlowRate() const {
-      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, true);
-    }
-
-    double HeatPumpPlantLoopEIRHeating_Impl::ratedLoadSideFlowRate() const {
-      if (auto value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, true)) {
-        return value.get();
-      } else {
-        return -999.0;
-      }
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::isReferenceLoadSideFlowRateAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "Autosize");
-      }
-      return result;
-    }
-
-    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::referenceSourceSideFlowRate() const {
-      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, true);
-    }
-
-    double HeatPumpPlantLoopEIRHeating_Impl::ratedSourceSideFlowRate() const {
-      if (auto value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, true)) {
-        return value.get();
-      } else {
-        return -999.0;
-      }
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::isReferenceSourceSideFlowRateAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "Autosize");
-      }
-      return result;
-    }
-
-    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::ratedHeatingCapacity() const {
-      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingCapacity, true);
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::isRatedHeatingCapacityAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingCapacity, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "Autosize");
-      }
-      return result;
-    }
-
-    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::ratedHeatingPowerConsumption() const {
-      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingPowerConsumption, true);
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::isRatedHeatingPowerConsumptionAutosized() const {
-      bool result = false;
-      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingPowerConsumption, true);
-      if (value) {
-        result = openstudio::istringEqual(value.get(), "Autosize");
-      }
-      return result;
-    }
-
-    double HeatPumpPlantLoopEIRHeating_Impl::referenceCoefficientofPerformance() const {
-      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCoefficientofPerformance, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double HeatPumpPlantLoopEIRHeating_Impl::sizingFactor() const {
-      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::SizingFactor, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    boost::optional<HeatPumpPlantLoopEIRCooling> HeatPumpPlantLoopEIRHeating_Impl::companionCoolingHeatPump() const {
-      return getObject<ModelObject>().getModelObjectTarget<HeatPumpPlantLoopEIRCooling>(
-        OS_HeatPump_PlantLoop_EIR_HeatingFields::CompanionCoolingHeatPumpName);
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, referenceLoadSideFlowRate);
-      return result;
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setRatedLoadSideFlowRate(double ratedLoadSideFlowRate) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, ratedLoadSideFlowRate);
-      return result;
-    }
-
-    void HeatPumpPlantLoopEIRHeating_Impl::autosizeReferenceLoadSideFlowRate() {
-      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, "Autosize");
-      OS_ASSERT(result);
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, referenceSourceSideFlowRate);
-      return result;
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setRatedSourceSideFlowRate(double ratedSourceSideFlowRate) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, ratedSourceSideFlowRate);
-      return result;
-    }
-
-    void HeatPumpPlantLoopEIRHeating_Impl::autosizeReferenceSourceSideFlowRate() {
-      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, "Autosize");
-      OS_ASSERT(result);
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setRatedHeatingCapacity(double ratedHeatingCapacity) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingCapacity, ratedHeatingCapacity);
-      return result;
-    }
-
-    void HeatPumpPlantLoopEIRHeating_Impl::autosizeRatedHeatingCapacity() {
-      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingCapacity, "Autosize");
-      OS_ASSERT(result);
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingPowerConsumption, ratedHeatingPowerConsumption);
-      return result;
-    }
-
-    void HeatPumpPlantLoopEIRHeating_Impl::autosizeRatedHeatingPowerConsumption() {
-      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingPowerConsumption, "Autosize");
-      OS_ASSERT(result);
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCoefficientofPerformance, referenceCoefficientofPerformance);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setSizingFactor(double sizingFactor) {
-      bool result = setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::SizingFactor, sizingFactor);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP) {
-      return this->setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::CompanionCoolingHeatPumpName, companionHP.handle());
-    }
-
-    CurveQuadLinear HeatPumpPlantLoopEIRHeating_Impl::heatingCapacityCurve() const {
-      WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingCapacityCurveName).get();
-      return wo.cast<CurveQuadLinear>();
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve) {
-      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingCapacityCurveName, heatingCapacityCurve.handle());
-      return result;
-    }
-
-    CurveQuadLinear HeatPumpPlantLoopEIRHeating_Impl::heatingCompressorPowerCurve() const {
-      WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingCompressorPowerCurveName).get();
-      return wo.cast<CurveQuadLinear>();
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setHeatingCompressorPowerCurve(const CurveQuadLinear& heatingCompressorPowerCurve) {
-      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatingCompressorPowerCurveName, heatingCompressorPowerCurve.handle());
-      return result;
     }
 
     unsigned HeatPumpPlantLoopEIRHeating_Impl::supplyInletPort() const {
@@ -267,6 +98,148 @@ namespace model {
       return OS_HeatPump_PlantLoop_EIR_HeatingFields::LoadSideOutletNodeName;
     }
 
+    std::string HeatPumpPlantLoopEIRHeating_Impl::condenserType() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<HeatPumpPlantLoopEIRCooling> HeatPumpPlantLoopEIRHeating_Impl::companionCoolingHeatPump() const {
+      return getObject<ModelObject>().getModelObjectTarget<HeatPumpPlantLoopEIRCooling>(
+        OS_HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName);
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::referenceLoadSideFlowRate() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, true);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::isReferenceLoadSideFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::referenceSourceSideFlowRate() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, true);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::isReferenceSourceSideFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::referenceCapacity() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, true);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::isReferenceCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    double HeatPumpPlantLoopEIRHeating_Impl::referenceCoefficientofPerformance() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCoefficientofPerformance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double HeatPumpPlantLoopEIRHeating_Impl::sizingFactor() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::SizingFactor, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    CurveBiquadratic HeatPumpPlantLoopEIRHeating_Impl::capacityModifierFunctionofTemperatureCurve() const {
+      WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::CapacityModifierFunctionofTemperatureCurveName).get();
+      return wo.optionalCast<CurveBiquadratic>().get();
+    }
+
+    CurveBiquadratic HeatPumpPlantLoopEIRHeating_Impl::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+      WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName).get();
+      return wo.optionalCast<CurveBiquadratic>().get();
+    }
+
+    CurveQuadratic HeatPumpPlantLoopEIRHeating_Impl::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
+      WorkspaceObject wo =
+        getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName).get();
+      return wo.optionalCast<CurveQuadratic>().get();
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setCondenserType(std::string condenserType) {
+      return setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, condenserType);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP) {
+      return this->setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName, companionHP.handle());
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, referenceLoadSideFlowRate);
+    }
+
+    void HeatPumpPlantLoopEIRHeating_Impl::autosizeReferenceLoadSideFlowRate() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, referenceSourceSideFlowRate);
+    }
+
+    void HeatPumpPlantLoopEIRHeating_Impl::autosizeReferenceSourceSideFlowRate() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setReferenceCapacity(double referenceCapacity) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, referenceCapacity);
+    }
+
+    void HeatPumpPlantLoopEIRHeating_Impl::autosizeReferenceCapacity() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCoefficientofPerformance, referenceCoefficientofPerformance);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setSizingFactor(double sizingFactor) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::SizingFactor, sizingFactor);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setCapacityModifierFunctionofTemperatureCurve(
+      const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::CapacityModifierFunctionofTemperatureCurveName,
+                               capacityModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                               electricInputtoOutputRatioModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+      const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName,
+                               electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.handle());
+      return result;
+    }
+
     boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedReferenceLoadSideFlowRate() const {
       return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
     }
@@ -275,19 +248,14 @@ namespace model {
       return getAutosizedValue("Design Size Source Side Volume Flow Rate", "m3/s");
     }
 
-    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedRatedHeatingCapacity() const {
+    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedReferenceCapacity() const {
       return getAutosizedValue("Design Size Nominal Capacity", "W");
-    }
-
-    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedRatedHeatingPowerConsumption() const {
-      return getAutosizedValue("Design Size Heating Power Consumption", "W");
     }
 
     void HeatPumpPlantLoopEIRHeating_Impl::autosize() {
       autosizeReferenceLoadSideFlowRate();
       autosizeReferenceSourceSideFlowRate();
-      autosizeRatedHeatingCapacity();
-      autosizeRatedHeatingPowerConsumption();
+      autosizeReferenceCapacity();
     }
 
     void HeatPumpPlantLoopEIRHeating_Impl::applySizingValues() {
@@ -302,39 +270,36 @@ namespace model {
         setReferenceSourceSideFlowRate(val.get());
       }
 
-      val = autosizedRatedHeatingCapacity();
+      val = autosizedReferenceCapacity();
       if (val) {
-        setRatedHeatingCapacity(val.get());
-      }
-
-      val = autosizedRatedHeatingPowerConsumption();
-      if (val) {
-        setRatedHeatingPowerConsumption(val.get());
+        setReferenceCapacity(val.get());
       }
     }
 
   }  // namespace detail
 
-  HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(const Model& model, const CurveQuadLinear& heatingCapacityCurve,
-                                                           const CurveQuadLinear& heatingCompressorPowerCurve)
+  HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(const Model& model, const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve,
+                                                           const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve,
+                                                           const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve)
     : WaterToWaterComponent(HeatPumpPlantLoopEIRHeating::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>());
 
     autosizeReferenceLoadSideFlowRate();
     autosizeReferenceSourceSideFlowRate();
-    autosizeRatedHeatingCapacity();
-    autosizeRatedHeatingPowerConsumption();
+    autosizeReferenceCapacity();
 
-    bool ok = setHeatingCapacityCurve(heatingCapacityCurve);
+    bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
     OS_ASSERT(ok);
 
-    ok = setHeatingCompressorPowerCurve(heatingCompressorPowerCurve);
+    ok = setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
     OS_ASSERT(ok);
 
+    ok = setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+    OS_ASSERT(ok);
+
+    setCondenserType("WaterSource");
     setReferenceCoefficientofPerformance(7.5);
     setSizingFactor(1.0);
-    // Trick to make IG not do weird things
-    setString(22, "");
   }
 
   HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(const Model& model)
@@ -343,43 +308,42 @@ namespace model {
 
     autosizeReferenceLoadSideFlowRate();
     autosizeReferenceSourceSideFlowRate();
-    autosizeRatedHeatingCapacity();
-    autosizeRatedHeatingPowerConsumption();
+    autosizeReferenceCapacity();
 
-    CurveQuadLinear heatingCapacityCurve(model);
-    heatingCapacityCurve.setCoefficient1Constant(-3.33491153);
-    heatingCapacityCurve.setCoefficient2w(-0.51451946);
-    heatingCapacityCurve.setCoefficient3x(4.51592706);
-    heatingCapacityCurve.setCoefficient4y(0.01797107);
-    heatingCapacityCurve.setCoefficient5z(0.155797661);
-    bool ok = setHeatingCapacityCurve(heatingCapacityCurve);
+    CurveBiquadratic capacityModifierFunctionofTemperatureCurve(model);
+    // TODO
+    bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
     OS_ASSERT(ok);
 
-    CurveQuadLinear heatingCompressorPowerCurve(model);
-    heatingCompressorPowerCurve.setCoefficient1Constant(-8.93121751);
-    heatingCompressorPowerCurve.setCoefficient2w(8.57035762);
-    heatingCompressorPowerCurve.setCoefficient3x(1.29660976);
-    heatingCompressorPowerCurve.setCoefficient4y(-0.21629222);
-    heatingCompressorPowerCurve.setCoefficient5z(0.033862378);
-    ok = setHeatingCompressorPowerCurve(heatingCapacityCurve);
+    CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve(model);
+    // TODO
+    ok = setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
     OS_ASSERT(ok);
 
+    CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(model);
+    // TODO
+    ok = setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+    OS_ASSERT(ok);
+
+    setCondenserType("WaterSource");
     setReferenceCoefficientofPerformance(7.5);
     setSizingFactor(1.0);
-    // Trick to make IG not do weird things
-    setString(22, "");
   }
 
   IddObjectType HeatPumpPlantLoopEIRHeating::iddObjectType() {
     return IddObjectType(IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating);
   }
 
-  boost::optional<double> HeatPumpPlantLoopEIRHeating::referenceLoadSideFlowRate() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->referenceLoadSideFlowRate();
+  std::string HeatPumpPlantLoopEIRHeating::condenserType() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->condenserType();
   }
 
-  double HeatPumpPlantLoopEIRHeating::ratedLoadSideFlowRate() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->ratedLoadSideFlowRate();
+  boost::optional<HeatPumpPlantLoopEIRCooling> HeatPumpPlantLoopEIRHeating::companionCoolingHeatPump() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->companionCoolingHeatPump();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRHeating::referenceLoadSideFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->referenceLoadSideFlowRate();
   }
 
   bool HeatPumpPlantLoopEIRHeating::isReferenceLoadSideFlowRateAutosized() const {
@@ -390,28 +354,16 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->referenceSourceSideFlowRate();
   }
 
-  double HeatPumpPlantLoopEIRHeating::ratedSourceSideFlowRate() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->ratedSourceSideFlowRate();
-  }
-
   bool HeatPumpPlantLoopEIRHeating::isReferenceSourceSideFlowRateAutosized() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->isReferenceSourceSideFlowRateAutosized();
   }
 
-  boost::optional<double> HeatPumpPlantLoopEIRHeating::ratedHeatingCapacity() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->ratedHeatingCapacity();
+  boost::optional<double> HeatPumpPlantLoopEIRHeating::referenceCapacity() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->referenceCapacity();
   }
 
-  bool HeatPumpPlantLoopEIRHeating::isRatedHeatingCapacityAutosized() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->isRatedHeatingCapacityAutosized();
-  }
-
-  boost::optional<double> HeatPumpPlantLoopEIRHeating::ratedHeatingPowerConsumption() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->ratedHeatingPowerConsumption();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::isRatedHeatingPowerConsumptionAutosized() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->isRatedHeatingPowerConsumptionAutosized();
+  bool HeatPumpPlantLoopEIRHeating::isReferenceCapacityAutosized() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->isReferenceCapacityAutosized();
   }
 
   double HeatPumpPlantLoopEIRHeating::referenceCoefficientofPerformance() const {
@@ -422,12 +374,24 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->sizingFactor();
   }
 
-  boost::optional<HeatPumpPlantLoopEIRCooling> HeatPumpPlantLoopEIRHeating::companionCoolingHeatPump() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->companionCoolingHeatPump();
+  CurveBiquadratic HeatPumpPlantLoopEIRHeating::capacityModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->capacityModifierFunctionofTemperatureCurve();
   }
 
-  bool HeatPumpPlantLoopEIRHeating::setRatedLoadSideFlowRate(double ratedLoadSideFlowRate) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setRatedLoadSideFlowRate(ratedLoadSideFlowRate);
+  CurveBiquadratic HeatPumpPlantLoopEIRHeating::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->electricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  }
+
+  CurveQuadratic HeatPumpPlantLoopEIRHeating::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::setCondenserType(std::string condenserType) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setCondenserType(condenserType);
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setCompanionCoolingHeatPump(companionHP);
   }
 
   bool HeatPumpPlantLoopEIRHeating::setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate) {
@@ -435,11 +399,7 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::autosizeReferenceLoadSideFlowRate() {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeReferenceLoadSideFlowRate();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setRatedSourceSideFlowRate(double ratedSourceSideFlowRate) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setRatedSourceSideFlowRate(ratedSourceSideFlowRate);
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeReferenceLoadSideFlowRate();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate) {
@@ -447,23 +407,15 @@ namespace model {
   }
 
   void HeatPumpPlantLoopEIRHeating::autosizeReferenceSourceSideFlowRate() {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeReferenceSourceSideFlowRate();
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeReferenceSourceSideFlowRate();
   }
 
-  bool HeatPumpPlantLoopEIRHeating::setRatedHeatingCapacity(double ratedHeatingCapacity) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setRatedHeatingCapacity(ratedHeatingCapacity);
+  bool HeatPumpPlantLoopEIRHeating::setReferenceCapacity(double referenceCapacity) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setReferenceCapacity(referenceCapacity);
   }
 
-  void HeatPumpPlantLoopEIRHeating::autosizeRatedHeatingCapacity() {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeRatedHeatingCapacity();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setRatedHeatingPowerConsumption(double ratedHeatingPowerConsumption) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setRatedHeatingPowerConsumption(ratedHeatingPowerConsumption);
-  }
-
-  void HeatPumpPlantLoopEIRHeating::autosizeRatedHeatingPowerConsumption() {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeRatedHeatingPowerConsumption();
+  void HeatPumpPlantLoopEIRHeating::autosizeReferenceCapacity() {
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeReferenceCapacity();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
@@ -474,8 +426,22 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setSizingFactor(sizingFactor);
   }
 
-  bool HeatPumpPlantLoopEIRHeating::setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setCompanionCoolingHeatPump(companionHP);
+  bool
+    HeatPumpPlantLoopEIRHeating::setCapacityModifierFunctionofTemperatureCurve(const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setCapacityModifierFunctionofTemperatureCurve(
+      capacityModifierFunctionofTemperatureCurve);
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+    const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+    const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+      electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedReferenceLoadSideFlowRate() const {
@@ -486,153 +452,8 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedReferenceSourceSideFlowRate();
   }
 
-  boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedRatedHeatingCapacity() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedRatedHeatingCapacity();
-  }
-
-  boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedRatedHeatingPowerConsumption() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedRatedHeatingPowerConsumption();
-  }
-
-  CurveQuadLinear HeatPumpPlantLoopEIRHeating::heatingCapacityCurve() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatingCapacityCurve(heatingCapacityCurve);
-  }
-
-  CurveQuadLinear HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve() const {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCompressorPowerCurve(const CurveQuadLinear& heatingCompressorPowerCurve) {
-    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatingCompressorPowerCurve(heatingCompressorPowerCurve);
-  }
-
-  /// @cond
-  HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(std::shared_ptr<detail::HeatPumpPlantLoopEIRHeating_Impl> impl)
-    : WaterToWaterComponent(std::move(impl)) {}
-
-  // DEPRECATED
-  double HeatPumpPlantLoopEIRHeating::heatingCapacityCoefficient1() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().coefficient1Constant() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.coefficient1Constant();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().setCoefficient1Constant(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient1Constant(heatingCapacityCoefficient1);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCapacityCoefficient2() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().coefficient2w() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.coefficient2w();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().setCoefficient2w(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient2w(heatingCapacityCoefficient2);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCapacityCoefficient3() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().coefficient3x() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.coefficient3x();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().setCoefficient3x(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient3x(heatingCapacityCoefficient3);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCapacityCoefficient4() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().coefficient4y() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.coefficient4y();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().setCoefficient4y(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient4y(heatingCapacityCoefficient4);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCapacityCoefficient5() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().coefficient5z() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.coefficient5z();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCapacityCurve().setCoefficient5z(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient5z(heatingCapacityCoefficient5);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCoefficient1() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().coefficient1Constant() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.coefficient1Constant();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().setCoefficient1Constant(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.setCoefficient1Constant(heatingCompressorPowerCoefficient1);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCoefficient2() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().coefficient2w() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.coefficient2w();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().setCoefficient2w(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.setCoefficient2w(heatingCompressorPowerCoefficient2);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCoefficient3() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().coefficient3x() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.coefficient3x();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().setCoefficient3x(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.setCoefficient3x(heatingCompressorPowerCoefficient3);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCoefficient4() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().coefficient4y() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.coefficient4y();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().setCoefficient4y(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.setCoefficient4y(heatingCompressorPowerCoefficient4);
-  }
-
-  double HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCoefficient5() const {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().coefficient5z() instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.coefficient5z();
-  }
-
-  bool HeatPumpPlantLoopEIRHeating::setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpPlantLoopEIRHeating::heatingCompressorPowerCurve().setCoefficient5z(double) instead.")
-    CurveQuadLinear curve = getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatingCompressorPowerCurve();
-    return curve.setCoefficient5z(heatingCompressorPowerCoefficient5);
+  boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedReferenceCapacity() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedReferenceCapacity();
   }
 
   /// @endcond

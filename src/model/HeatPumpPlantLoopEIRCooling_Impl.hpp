@@ -37,7 +37,8 @@ namespace openstudio {
 namespace model {
 
   class HeatPumpPlantLoopEIRHeating;
-  class CurveQuadLinear;
+  class CurveBiquadratic;
+  class CurveQuadratic;
 
   namespace detail {
 
@@ -80,47 +81,45 @@ namespace model {
       /** @name Getters */
       //@{
 
-      boost::optional<double> referenceLoadSideFlowRate() const;
+      std::string condenserType() const;
 
-      double ratedLoadSideFlowRate() const;
+      boost::optional<HeatPumpPlantLoopEIRHeating> companionHeatingHeatPump() const;
+
+      boost::optional<double> referenceLoadSideFlowRate() const;
 
       bool isReferenceLoadSideFlowRateAutosized() const;
 
       boost::optional<double> referenceSourceSideFlowRate() const;
 
-      double ratedSourceSideFlowRate() const;
-
       bool isReferenceSourceSideFlowRateAutosized() const;
 
-      boost::optional<double> ratedCoolingCapacity() const;
+      boost::optional<double> referenceCapacity() const;
 
-      bool isRatedCoolingCapacityAutosized() const;
-
-      boost::optional<double> ratedCoolingPowerConsumption() const;
-
-      bool isRatedCoolingPowerConsumptionAutosized() const;
-
-      CurveQuadLinear coolingCapacityCurve() const;
-
-      CurveQuadLinear coolingCompressorPowerCurve() const;
+      bool isReferenceCapacityAutosized() const;
 
       double referenceCoefficientofPerformance() const;
 
       double sizingFactor() const;
 
-      boost::optional<HeatPumpWaterToWaterEquationFitHeating> companionHeatingHeatPump() const;
+      CurveBiquadratic capacityModifierFunctionofTemperatureCurve() const;
+
+      CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
+
+      CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
 
       boost::optional<double> autosizedReferenceLoadSideFlowRate() const;
 
       boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
 
-      boost::optional<double> autosizedRatedCoolingCapacity() const;
-
-      boost::optional<double> autosizedRatedCoolingPowerConsumption() const;
+      boost::optional<double> autosizedReferenceCapacity() const;
 
       //@}
       /** @name Setters */
       //@{
+
+      bool setCondenserType(std::string condenserType);
+
+      bool setCompanionHeatingHeatPump(const HeatPumpPlantLoopEIRHeating& companionHP);
 
       bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
 
@@ -130,23 +129,21 @@ namespace model {
 
       void autosizeReferenceSourceSideFlowRate();
 
-      bool setRatedCoolingCapacity(double ratedCoolingCapacity);
+      bool setReferenceCapacity(double referenceCapacity);
 
-      void autosizeRatedCoolingCapacity();
-
-      bool setRatedCoolingPowerConsumption(double ratedCoolingPowerConsumption);
-
-      void autosizeRatedCoolingPowerConsumption();
-
-      bool setCoolingCapacityCurve(const CurveQuadLinear& coolingCapacityCurve);
-
-      bool setCoolingCompressorPowerCurve(const CurveQuadLinear& coolingCompressorPowerCurve);
+      void autosizeReferenceCapacity();
 
       bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 
       bool setSizingFactor(double sizingFactor);
 
-      bool setCompanionHeatingHeatPump(const HeatPumpWaterToWaterEquationFitHeating& companionHP);
+      bool setCapacityModifierFunctionofTemperatureCurve(const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve);
+
+      bool setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+        const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+
+      bool setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+        const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 
       //@}
       /** @name Other */

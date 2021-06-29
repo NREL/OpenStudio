@@ -327,12 +327,12 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Cooling: {
         auto mo = component.cast<HeatPumpPlantLoopEIRCooling>();
-        result = mo.ratedLoadSideFlowRate();
+        result = mo.referenceLoadSideFlowRate();
         break;
       }
       case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating: {
         auto mo = component.cast<HeatPumpPlantLoopEIRHeating>();
-        result = mo.ratedLoadSideFlowRate();
+        result = mo.referenceLoadSideFlowRate();
         break;
       }
       default: {

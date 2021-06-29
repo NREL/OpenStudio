@@ -32,7 +32,7 @@
 #include "ModelFixture.hpp"
 
 #include "../HeatPumpPlantLoopEIRHeating.hpp"
-#include "../HeatPumpWPlantLoopEIRHeating_Impl.hpp"
+#include "../HeatPumpPlantLoopEIRHeating_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

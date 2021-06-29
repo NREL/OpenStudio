@@ -37,7 +37,8 @@
 #include "../../model/HeatPumpPlantLoopEIRCooling_Impl.hpp"
 #include "../../model/HeatPumpPlantLoopEIRHeating.hpp"
 #include "../../model/HeatPumpPlantLoopEIRHeating_Impl.hpp"
-#include "../../model/CurveQuadLinear.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveQuadratic.hpp"
 
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
@@ -69,6 +70,11 @@ namespace energyplus {
       idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideInletNodeName, value->name().get());
     }
 
+    {
+      auto value = modelObject.condenserType();
+      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, value);
+    }
+
     if (auto value = modelObject.demandOutletModelObject()) {
       idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, value->name().get());
     }
@@ -77,44 +83,30 @@ namespace energyplus {
       idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, value->name().get());
     }
 
+    boost::optional<HeatPumpPlantLoopEIRCooling> companion = modelObject.companionCoolingHeatPump();
+    if (companion) {
+      boost::optional<IdfObject> _companion = translateAndMapModelObject(companion.get());
+      if (_companion) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName, _companion->name().get());
+      }
+    }
+
     if (modelObject.isReferenceLoadSideFlowRateAutosized()) {
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, "Autosize");
+      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, "Autosize");
     } else if ((optvalue = modelObject.referenceLoadSideFlowRate())) {
-      idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceLoadSideFlowRate, optvalue.get());
+      idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, optvalue.get());
     }
 
     if (modelObject.isReferenceSourceSideFlowRateAutosized()) {
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, "Autosize");
+      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, "Autosize");
     } else if ((optvalue = modelObject.referenceSourceSideFlowRate())) {
-      idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceSourceSideFlowRate, optvalue.get());
+      idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, optvalue.get());
     }
 
-    if (modelObject.isRatedHeatingCapacityAutosized()) {
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingCapacity, "Autosize");
-    } else if ((optvalue = modelObject.ratedHeatingCapacity())) {
-      idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingCapacity, optvalue.get());
-    }
-
-    if (modelObject.isRatedHeatingPowerConsumptionAutosized()) {
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingPowerConsumption, "Autosize");
-    } else if ((optvalue = modelObject.ratedHeatingPowerConsumption())) {
-      idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceHeatingPowerConsumption, optvalue.get());
-    }
-
-    // Heating Capacity Curve Name
-    {
-      auto curve = modelObject.heatingCapacityCurve();
-      if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatingCapacityCurveName, _curve->nameString());
-      }
-    }
-
-    // Heating Compressor Power Curve Name
-    {
-      auto curve = modelObject.heatingCompressorPowerCurve();
-      if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatingCompressorPowerCurveName, _curve->nameString());
-      }
+    if (modelObject.isReferenceCapacityAutosized()) {
+      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, "Autosize");
+    } else if ((optvalue = modelObject.referenceCapacity())) {
+      idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, optvalue.get());
     }
 
     {
@@ -127,12 +119,26 @@ namespace energyplus {
       idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::SizingFactor, value);
     }
 
-    boost::optional<HeatPumpWaterToWaterEquationFitCooling> companion = modelObject.companionCoolingHeatPump();
+    {
+      auto curve = modelObject.capacityModifierFunctionofTemperatureCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::CapacityModifierFunctionofTemperatureCurveName, _curve->nameString());
+      }
+    }
 
-    if (companion) {
-      boost::optional<IdfObject> _companion = translateAndMapModelObject(companion.get());
-      if (_companion) {
-        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::CompanionCoolingHeatPumpName, _companion->name().get());
+    {
+      auto curve = modelObject.electricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                            _curve->nameString());
+      }
+    }
+
+    {
+      auto curve = modelObject.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName,
+                            _curve->nameString());
       }
     }
 
