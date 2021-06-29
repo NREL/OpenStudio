@@ -456,6 +456,9 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedReferenceCapacity();
   }
 
+  /// @cond
+  HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(std::shared_ptr<detail::HeatPumpPlantLoopEIRHeating_Impl> impl)
+    : WaterToWaterComponent(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model
