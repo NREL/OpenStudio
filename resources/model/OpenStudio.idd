@@ -12787,7 +12787,7 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \type choice
        \key WaterSource
        \key AirSource
-       \default WaterSource
+       \required-field
    A6, \field Source Side Inlet Node Name
        \required-field
        \object-list ConnectionNames
@@ -12860,7 +12860,7 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \note EIR = 1/COP
        \required-field
        \type object-list
-       \object-list UniVariateFunctions
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
        \note PLR = part load ratio (cooling load/steady state capacity)
 
