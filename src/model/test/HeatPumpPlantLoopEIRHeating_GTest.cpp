@@ -57,7 +57,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
 
   Model m;
   HeatPumpPlantLoopEIRHeating hp(m);
-  
+
   EXPECT_EQ("WaterSource", hp.condenserType());
   EXPECT_FALSE(hp.companionCoolingHeatPump());
   EXPECT_FALSE(hp.referenceLoadSideFlowRate());
@@ -70,9 +70,11 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
   EXPECT_EQ(1.0, hp.sizingFactor());
   boost::optional<CurveBiquadratic> capacityModifierFunctionofTemperatureCurve hp.capacityModifierFunctionofTemperatureCurve();
   EXPECT_TRUE(capacityModifierFunctionofTemperatureCurve);
-  boost::optional<CurveBiquadratic> electricInputtoOutputRatioModifierFunctionofTemperatureCurve hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  boost::optional<CurveBiquadratic> electricInputtoOutputRatioModifierFunctionofTemperatureCurve
+    hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve();
   EXPECT_TRUE(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
-  boost::optional<CurveQuadratic> electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
+  boost::optional<CurveQuadratic> electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve
+    hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   EXPECT_TRUE(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 }
 
@@ -94,7 +96,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
   EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve));
-  
+
   EXPECT_EQ("AirSource", hp.condenserType());
   ASSERT_TRUE(hp.companionCoolingHeatPump());
   EXPECT_EQ(companionHP.handle(), hp.companionCoolingHeatPump().get().handle());
@@ -112,11 +114,11 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_TRUE(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
   EXPECT_TRUE(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
   EXPECT_TRUE(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
-  
+
   hp.autosizeReferenceLoadSideFlowRate();
   hp.autosizeReferenceSourceSideFlowRate();
   hp.autosizeReferenceCapacity();
-  
+
   EXPECT_TRUE(hp.isReferenceLoadSideFlowAutosized());
   EXPECT_TRUE(hp.isReferenceSourceSideFlowRateAutosized());
   EXPECT_TRUE(hp.isReferenceCapacityAutosized());
@@ -137,14 +139,14 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
   CurveBiquadratic curve2(m);
   CurveQuadratic curve3(m);
   HeatPumpPlantLoopEIRHeating hp(m, curve1, curve2, curve3);
-  
+
   {
     HeatPumpPlantLoopEIRHeating hpClone = hp.clone(m).cast<HeatPumpPlantLoopEIRHeating>();
     EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
   }
-  
+
   {
     Model m2;
     HeatPumpPlantLoopEIRHeating hpClone2 = hp.clone(m2).cast<HeatPumpPlantLoopEIRHeating>();
