@@ -592,6 +592,12 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling: {
         return ComponentType::COOLING;
       }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating: {
+        return ComponentType::HEATING;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Cooling: {
+        return ComponentType::COOLING;
+      }
       case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery: {
         // Maybe that should be both, in the case of an absorption chiller?
         // Also, should maybe check if it's in mode FollowThermal or FollowThermalLimitElectrical?
