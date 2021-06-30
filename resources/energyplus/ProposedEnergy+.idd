@@ -43271,7 +43271,8 @@ HeatPump:PlantLoop:EIR:Cooling,
         \note object for this cooling object. The companion is used in
         \note sizing the heat pump as well as to allow checks for unexpected
         \note simultaneous operation of the two objects.
-        \reference PLHPHeatingNames
+        \type object-list
+        \object-list PLHPHeatingNames
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
@@ -43370,8 +43371,7 @@ HeatPump:PlantLoop:EIR:Heating,
         \note sizing the heat pump as well as to allow checks for unexpected
         \note simultaneous operation of the two objects.
         \type object-list
-        \object-list WWHPCoolingNames
-        \reference PLHPCoolingNames
+        \object-list PLHPCoolingNames
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
