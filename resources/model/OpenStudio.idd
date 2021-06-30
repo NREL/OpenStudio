@@ -12678,9 +12678,11 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \required-field
        \reference ConnectionObject
    A3, \field Load Side Inlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A4, \field Load Side Outlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A5, \field Condenser Type
@@ -12690,9 +12692,11 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \key AirSource
        \required-field
    A6, \field Source Side Inlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A7, \field Source Side Outlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A8, \field Companion Heat Pump Name
@@ -12777,9 +12781,11 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \required-field
        \reference ConnectionObject
    A3, \field Load Side Inlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A4, \field Load Side Outlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A5, \field Condenser Type
@@ -12789,9 +12795,11 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \key AirSource
        \required-field
    A6, \field Source Side Inlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A7, \field Source Side Outlet Node Name
+       \type object-list
        \required-field
        \object-list ConnectionNames
    A8, \field Companion Heat Pump Name
