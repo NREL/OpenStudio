@@ -60,8 +60,6 @@ echo x86\test.exe
 x86\test.exe
 
 
-
-
-
-
-
+echo Deleting nuget package to local source
+echo nuget delete %NUGET_NAME% %NUGET_VERSION% -Source %NUGET_SOURCE_DIR% -NonInteractive
+nuget delete %NUGET_NAME% %NUGET_VERSION% -Source %NUGET_SOURCE_DIR% -NonInteractive
