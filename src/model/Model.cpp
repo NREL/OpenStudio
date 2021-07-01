@@ -992,6 +992,10 @@ namespace model {
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
           modelObj->autosize();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
+          modelObj->autosize();
         }
       }
       return;
@@ -1022,6 +1026,10 @@ namespace model {
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) {  // CoilHeatingDXMultiSpeedStageData
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
+          modelObj->applySizingValues();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
           modelObj->applySizingValues();
         }
       }
@@ -2831,6 +2839,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(HeaderedPumpsVariableSpeed);
     REGISTER_CONSTRUCTOR(HeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(HeatExchangerAirToAirSensibleAndLatent);
+    REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitHeating);
@@ -3351,6 +3361,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HeaderedPumpsVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(HeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerAirToAirSensibleAndLatent);
+    REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitHeating);

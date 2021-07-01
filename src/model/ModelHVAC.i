@@ -40,6 +40,8 @@
   %ignore openstudio::model::ControllerOutdoorAir::airflowNetworkOutdoorAirflow;
   %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct;
   %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::HeatExchangerDesiccantBalancedFlow::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::HeatExchangerDesiccantBalancedFlow::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::Node::getAirflowNetworkDistributionNode;
   %ignore openstudio::model::Node::airflowNetworkDistributionNode;
   %ignore openstudio::model::ThermalZone::getAirflowNetworkZone;
@@ -183,6 +185,7 @@ MODELOBJECT_TEMPLATES(WaterHeaterSizing);
 MODELOBJECT_TEMPLATES(WaterUseEquipmentDefinition);
 MODELOBJECT_TEMPLATES(WaterUseEquipment);
 MODELOBJECT_TEMPLATES(HeatExchangerAirToAirSensibleAndLatent);
+MODELOBJECT_TEMPLATES(HeatExchangerDesiccantBalancedFlow);
 MODELOBJECT_TEMPLATES(HeatExchangerFluidToFluid);
 MODELOBJECT_TEMPLATES(HeatPumpWaterToWaterEquationFitCooling);
 MODELOBJECT_TEMPLATES(HeatPumpWaterToWaterEquationFitHeating);
@@ -299,6 +302,7 @@ SWIG_MODELOBJECT(WaterHeaterSizing, 1);
 SWIG_MODELOBJECT(WaterUseEquipmentDefinition, 1);
 SWIG_MODELOBJECT(WaterUseEquipment, 1);
 SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent, 1);
+SWIG_MODELOBJECT(HeatExchangerDesiccantBalancedFlow, 1);
 SWIG_MODELOBJECT(HeatExchangerFluidToFluid,1);
 SWIG_MODELOBJECT(HeatPumpWaterToWaterEquationFitCooling,1);
 SWIG_MODELOBJECT(HeatPumpWaterToWaterEquationFitHeating,1);
@@ -369,6 +373,12 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
           return sc.addShadingZoneGroup(thermalZones);
         }
 
+        // Reimplemented from ModelResources.i
+        std::vector<openstudio::model::HeatExchangerDesiccantBalancedFlow> getHeatExchangerDesiccantBalancedFlows(
+            const openstudio::model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& hxData)
+        {
+          return hxData.heatExchangerDesiccantBalancedFlows();
+        }
       }
     }
   }
@@ -431,6 +441,12 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
       }
       public bool addShadingZoneGroup(ThermalZoneVector thermalZones) {
         return OpenStudio.OpenStudioModelHVAC.addShadingZoneGroup(this, thermalZones);
+      }
+    }
+
+    public partial class HeatExchangerDesiccantBalancedFlowPerformanceDataType1 : ResourceObject {
+      public HeatExchangerDesiccantBalancedFlowVector heatExchangerDesiccantBalancedFlows() {
+        return OpenStudio.OpenStudioModelHVAC.getHeatExchangerDesiccantBalancedFlows(this);
       }
     }
 

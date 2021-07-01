@@ -258,6 +258,21 @@ namespace model {
     setHeatExchanger(heatExchanger);
   }
 
+  CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger)
+    : StraightComponent(CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl>());
+
+    bool ok = setHeatExchanger(heatExchanger);
+    if (!ok) {
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heat Exchanger " << heatExchanger.briefDescription() << ".");
+    }
+
+    CoilCoolingWater coolingCoil(model);
+    setCoolingCoil(coolingCoil);
+
+    setHeatExchanger(heatExchanger);
+  }
+
   IddObjectType CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType() {
     return IddObjectType(IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted);
   }

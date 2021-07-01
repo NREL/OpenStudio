@@ -409,7 +409,6 @@ namespace model {
 
     bool AirTerminalSingleDuctVAVNoReheat_Impl::setControlForOutdoorAir(bool controlForOutdoorAir) {
       return setBooleanFieldValue(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ControlForOutdoorAir, controlForOutdoorAir);
-      ;
     }
 
     boost::optional<double> AirTerminalSingleDuctVAVNoReheat_Impl::autosizedMaximumAirFlowRate() const {

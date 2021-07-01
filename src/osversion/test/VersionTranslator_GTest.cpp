@@ -1701,3 +1701,21 @@ TEST_F(OSVersionFixture, update_3_2_0_to_3_2_1_WaterHeaterSizing) {
   EXPECT_TRUE(foundMixed);
   EXPECT_TRUE(foundStratified);
 }
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_AirTerminalSingleDuctInletSideMixer) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> atus = model->getObjectsByType("OS:AirTerminal:SingleDuct:InletSideMixer");
+  ASSERT_EQ(1u, atus.size());
+  auto atu = atus[0];
+
+  // Two new fields
+  EXPECT_EQ("Yes", atu.getString(5).get());
+  EXPECT_EQ("CurrentOccupancy", atu.getString(6).get());
+}

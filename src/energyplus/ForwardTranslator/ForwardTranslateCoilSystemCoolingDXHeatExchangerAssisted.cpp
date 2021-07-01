@@ -40,6 +40,7 @@
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -92,6 +93,16 @@ namespace energyplus {
           idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNodeName, hxSupplyAirOutletNodeName);
           idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, hxExhaustAirOutletNodeName);
           idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirInletNodeName, hxExhaustAirInletNodeName);
+        } else if (idf->iddObject().type() == IddObjectType::HeatExchanger_Desiccant_BalancedFlow) {
+          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirInletNodeName, hxSupplyAirInletNodeName);
+          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::RegenerationAirOutletNodeName, hxSupplyAirOutletNodeName);
+          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirOutletNodeName, hxExhaustAirOutletNodeName);
+          idf->setString(HeatExchanger_Desiccant_BalancedFlowFields::ProcessAirInletNodeName, hxExhaustAirInletNodeName);
+        } else {
+          // Shouldn't happen
+          LOG(Fatal, modelObject.briefDescription()
+                       << " appears to have a heat exchanger that shouldn't have been accepted: " << hx.briefDescription());
+          OS_ASSERT(false);
         }
       }
     }

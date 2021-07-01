@@ -139,6 +139,8 @@ namespace energyplus {
       ScheduleDay winterDesignDaySchedule = modelObject.winterDesignDaySchedule();
       // ScheduleRuleset is the one carrying the Holiday Schedule
       ScheduleDay holidaySchedule = modelObject.holidaySchedule();
+      ScheduleDay customDay1Schedule = modelObject.customDay1Schedule();
+      ScheduleDay customDay2Schedule = modelObject.customDay2Schedule();
 
       // initialize day of week schedules
       ScheduleDay sundaySchedule = defaultDaySchedule;
@@ -148,10 +150,6 @@ namespace energyplus {
       ScheduleDay thursdaySchedule = defaultDaySchedule;
       ScheduleDay fridaySchedule = defaultDaySchedule;
       ScheduleDay saturdaySchedule = defaultDaySchedule;
-
-      // these are not yet exposed
-      ScheduleDay customDay1Schedule = defaultDaySchedule;
-      ScheduleDay customDay2Schedule = defaultDaySchedule;
 
       // loop over entire year
       model::YearDescription yd = modelObject.model().getUniqueModelObject<model::YearDescription>();
@@ -236,7 +234,6 @@ namespace energyplus {
           weekSchedule->holidaySchedule = holidaySchedule.name().get();
           weekSchedule->summerDesignDaySchedule = summerDesignDaySchedule.name().get();
           weekSchedule->winterDesignDaySchedule = winterDesignDaySchedule.name().get();
-          // Not exposed yet
           weekSchedule->customDay1Schedule = customDay1Schedule.name().get();
           weekSchedule->customDay2Schedule = customDay2Schedule.name().get();
 
