@@ -310,18 +310,44 @@ namespace model {
     autosizeReferenceSourceSideFlowRate();
     autosizeReferenceCapacity();
 
-    CurveBiquadratic capacityModifierFunctionofTemperatureCurve(model);
-    // TODO
+    CurveBiquadratic capacityModifierFunctionofTemperatureCurve(model);  // PlantLoopHeatPump_EIR_WaterSource.idf
+    capacityModifierFunctionofTemperatureCurve.setCoefficient1Constant(1);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient2x(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient4y(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+    capacityModifierFunctionofTemperatureCurve.setMinimumValueofx(5);
+    capacityModifierFunctionofTemperatureCurve.setMaximumValueofx(10);
+    capacityModifierFunctionofTemperatureCurve.setMinimumValueofy(24);
+    capacityModifierFunctionofTemperatureCurve.setMaximumValueofy(35);
+    capacityModifierFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+    capacityModifierFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
     bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
     OS_ASSERT(ok);
 
-    CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve(model);
-    // TODO
+    CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve(model);  // PlantLoopHeatPump_EIR_WaterSource.idf
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient1Constant(1);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient2x(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient4y(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMinimumValueofx(5);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMaximumValueofx(10);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMinimumValueofy(24);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMaximumValueofy(35);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
     ok = setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
     OS_ASSERT(ok);
 
-    CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(model);
-    // TODO
+    CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(model);  // PlantLoopHeatPump_EIR_WaterSource.idf
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setCoefficient1Constant(1);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setCoefficient2x(0);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setCoefficient3xPOW2(0);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setMinimumValueofx(0);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setMaximumValueofx(1);
     ok = setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
     OS_ASSERT(ok);
 
