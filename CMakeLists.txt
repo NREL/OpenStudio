@@ -191,11 +191,11 @@ set(ENERGYPLUS_VERSION_MINOR 5)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "5441b3c085") # FIXME: 00eebd7320 for windows, 5441b3c085 for linux/max
+set(ENERGYPLUS_BUILD_SHA "00eebd7320") # FIXME: 00eebd7320 for windows, 5441b3c085 for linux/max
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "CustomBuild_HVACFlexMeasures_V01_Try4") # FIXME: CustomBuild_HVACFlexMeasures_V01_Try3 for windows, CustomBuild_HVACFlexMeasures_V01_Try4 for linux/mac
+set(ENERGYPLUS_RELEASE_NAME "CustomBuild_HVACFlexMeasures_V01_Try3") # FIXME: CustomBuild_HVACFlexMeasures_V01_Try3 for windows, CustomBuild_HVACFlexMeasures_V01_Try4 for linux/mac
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
