@@ -60,6 +60,7 @@ namespace model {
     class CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
     class CoilHeatingDXSingleSpeed_Impl;
     class CoilCoolingDXSingleSpeed_Impl;
+    class CoilLiquidDesiccantSimple_Impl;
     class AirTerminalSingleDuctConstantVolumeReheat_Impl;
     class AirTerminalSingleDuctVAVReheat_Impl;
     class AirflowNetworkEquivalentDuct_Impl;
@@ -126,6 +127,7 @@ namespace model {
     friend class detail::CoilHeatingDesuperheater_Impl;
     friend class detail::CoilHeatingWater_Impl;
     friend class detail::CoilHeatingDXMultiSpeed_Impl;
+    friend class detail::CoilLiquidDesiccantSimple_Impl;
     friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
     friend class detail::HeatExchangerDesiccantBalancedFlow_Impl;
 

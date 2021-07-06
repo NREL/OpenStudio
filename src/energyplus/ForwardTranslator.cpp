@@ -1097,6 +1097,11 @@ namespace energyplus {
         // no-op
         return retVal;
       }
+      case openstudio::IddObjectType::OS_Coil_LiquidDesiccant_Simple: {
+        model::CoilLiquidDesiccantSimple coil = modelObject.cast<CoilLiquidDesiccantSimple>();
+        retVal = translateCoilLiquidDesiccantSimple(coil);
+        break;
+      }
       case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling: {
         auto mo = modelObject.cast<CoilPerformanceDXCooling>();
         retVal = translateCoilPerformanceDXCooling(mo);
@@ -3220,6 +3225,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Coil_Heating_Gas);
     result.push_back(IddObjectType::OS_Coil_Heating_Water);
     result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
+    result.push_back(IddObjectType::OS_Coil_LiquidDesiccant_Simple);
     result.push_back(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
 
     // TODO: should coil/tank/recovery unit have methods to get ThermalStorage:xxx:Pair?
