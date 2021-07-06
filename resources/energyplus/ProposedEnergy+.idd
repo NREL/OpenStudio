@@ -43332,7 +43332,7 @@ HeatPump:PlantLoop:EIR:Cooling,
         \note EIR = 1/COP
         \required-field
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
         \note PLR = part load ratio (cooling load/steady state capacity)
 
@@ -43422,7 +43422,7 @@ HeatPump:PlantLoop:EIR:Heating,
         \note EIR = 1/COP
         \required-field
         \type object-list
-        \object-list BiVariateFunctions
+        \object-list BivariateFunctions
         \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
         \note CWS = supply (leaving) hot water temperature(C)
         \note ECT = entering condenser fluid temperature(C)
