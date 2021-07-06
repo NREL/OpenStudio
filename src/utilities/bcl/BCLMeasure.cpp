@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -172,10 +172,10 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   std::string measureString;
   if (!measureTemplate.empty()) {
     measureString = ::openstudio::embedded_files::getFileAsString(measureTemplate);
-    measureString = openstudio::replace(measureString, templateClassName, className);
-    measureString = openstudio::replace(measureString, templateName, name);
-    measureString = openstudio::replace(measureString, templateModelerDescription, modelerDescription);  // put first as this includes description tag
-    measureString = openstudio::replace(measureString, templateDescription, description);
+    boost::replace_all(measureString, templateClassName, className);
+    boost::replace_all(measureString, templateName, name);
+    boost::replace_all(measureString, templateModelerDescription, modelerDescription);  // put first as this includes description tag
+    boost::replace_all(measureString, templateDescription, description);
   }
 
   std::string licenseString;
@@ -875,7 +875,7 @@ bool BCLMeasure::updateMeasureTests(const std::string& oldClassName, const std::
         if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName) {
           // DLM: might also want to check that oldClassName is greater than 3 characters long?
           // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?
-          fileString = openstudio::replace(fileString, oldClassName, newClassName);
+          boost::replace_all(fileString, oldClassName, newClassName);
         }
         file.close();
 

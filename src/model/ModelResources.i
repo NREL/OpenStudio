@@ -35,6 +35,10 @@
 
   // CoilCoolingDX is defined in StraightComponent.i
   %ignore openstudio::model::CoilCoolingDXCurveFitPerformance::coilCoolingDXs;
+
+  // HeatExchangerDesiccantBalancedFlow is done later in ModelHVAC.i
+  %ignore openstudio::model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1::heatExchangerDesiccantBalancedFlows;
+
   // TODO: why?
   // ignore schedule type
   // %ignore openstudio::model::ScheduleType;
@@ -65,6 +69,8 @@ class ShadingControl;
 class SubSurface;
 %feature("valuewrapper") CoilCoolingDX;
 class CoilCoolingDX;
+%feature("valuewrapper") HeatExchangerDesiccantBalancedFlow;
+class HeatExchangerDesiccantBalancedFlow;
 
 }
 }
@@ -174,6 +180,8 @@ MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitPerformance);
 MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitOperatingMode);
 MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitSpeed);
 
+MODELOBJECT_TEMPLATES(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
+
 SWIG_MODELOBJECT(ScheduleInterval, 0);
 SWIG_MODELOBJECT(ScheduleFile, 1);
 SWIG_MODELOBJECT(ExternalFile, 1);
@@ -263,6 +271,8 @@ SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 SWIG_MODELOBJECT(CoilCoolingDXCurveFitPerformance, 1);
 SWIG_MODELOBJECT(CoilCoolingDXCurveFitOperatingMode, 1);
 SWIG_MODELOBJECT(CoilCoolingDXCurveFitSpeed, 1);
+
+SWIG_MODELOBJECT(HeatExchangerDesiccantBalancedFlowPerformanceDataType1, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
 

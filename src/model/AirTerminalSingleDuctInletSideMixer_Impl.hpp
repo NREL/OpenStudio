@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,23 +61,32 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
+      virtual bool addToNode(Node& node) override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual bool isRemovable() const override;
+
       //@}
       /** @name Getters */
       //@{
 
+      bool controlForOutdoorAir() const;
+
+      std::string perPersonVentilationRateMode() const;
+
       //@}
       /** @name Setters */
       //@{
+      //
+
+      bool setControlForOutdoorAir(bool controlForOutdoorAir);
+
+      bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
 
       //@}
       /** @name Other */
       //@{
-
-      virtual unsigned inletPort() const override;
-      virtual unsigned outletPort() const override;
-      bool addToNode(Node& node) override;
-      std::vector<openstudio::IdfObject> remove() override;
-      bool isRemovable() const override;
 
       unsigned secondaryAirInletPort() const;
       boost::optional<Node> secondaryAirInletNode() const;

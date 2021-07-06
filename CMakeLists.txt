@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.2.0)
+project(OpenStudio VERSION 3.2.2)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -191,11 +191,11 @@ set(ENERGYPLUS_VERSION_MINOR 5)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "4c0e198844")
+set(ENERGYPLUS_BUILD_SHA "00eebd7320") # FIXME: 00eebd7320 for windows, 5441b3c085 for linux/mac
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "flexmeasures-3")
+set(ENERGYPLUS_RELEASE_NAME "CustomBuild_HVACFlexMeasures_V01_Try3") # FIXME: CustomBuild_HVACFlexMeasures_V01_Try3 for windows, CustomBuild_HVACFlexMeasures_V01_Try4 for linux/mac
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -564,7 +564,7 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 021969a2aaa4bae1471558a7670372c2)
+    set(ENERGYPLUS_EXPECTED_HASH f3e5be55cc8b309b01a206cea4155950)
     set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
@@ -572,9 +572,9 @@ if(UNIX)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH a43e6182619d51918005e2ede92a08fc)
+      set(ENERGYPLUS_EXPECTED_HASH 1549506cf5c381f6c7e3be6aea4680ce)
     else() # 18.04
-      set(ENERGYPLUS_EXPECTED_HASH 3830021409d0756468fedbda64628b16)
+      set(ENERGYPLUS_EXPECTED_HASH 71ed843d130ffbfa415d9060676b6fd5)
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
@@ -584,7 +584,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    message(STATUS "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
+    message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
 
     if(EXISTS "/etc/redhat-release")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
@@ -592,7 +592,7 @@ if(UNIX)
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     else()
-      file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
            INACTIVITY_TIMEOUT 300 # 5-min timeout
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
@@ -606,11 +606,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 7e4f95dfdda3dfe6ca92c5aee42bc965)
+    set(ENERGYPLUS_EXPECTED_HASH ec80d1ecda5b61e061d1092ad014c21a)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 8054b040f9167213fcd0d1cb487557f8)
+    set(ENERGYPLUS_EXPECTED_HASH 712e74d9f763aaa9de7b41f33e86f95f)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -618,7 +618,7 @@ elseif(WIN32)
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
 
-    file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
+    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
          INACTIVITY_TIMEOUT 300 # 5 minute timeout
          SHOW_PROGRESS
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
@@ -750,16 +750,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210216-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "9f5c1d508324088a88c62f4daf5ae336")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210602-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0621666a08a612b9cd704804fd451c72")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210216-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "02273eb2a14679919de836f0c3fa77c8")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210602-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c9048b2d159d7a5a151312b5fabca520")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210217-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "62fb83a5371361e623ef5761cf679575")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210602-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "52adf17bdc3af17ef64ef950d7176c8a")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -1149,7 +1149,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_1_0_20201014.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_2_0.20210504.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
@@ -1264,11 +1264,12 @@ install(DIRECTORY "${ENERGYPLUS_DIR}/pyenergyplus" DESTINATION ./EnergyPlus/ COM
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.7m.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus) # TODO: Next E+ installer we use will have ssc static, so remove ssc.dylib/so/dll
+  file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
+  foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+    install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
 elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
@@ -1286,17 +1287,17 @@ elseif(WIN32)
   foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)
     install(PROGRAMS "${msapi_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
-  install(PROGRAMS "${ENERGYPLUS_DIR}/python37.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_DIR}/pythonwrapper.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  # python37.dll
+  file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/python*.dll")
+  foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+    install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
+  #install(PROGRAMS "${ENERGYPLUS_DIR}/concrt140.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(UNIX)
     file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
     foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
       install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
     endforeach()
-  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
@@ -1463,3 +1464,4 @@ if (MSVC)
     endif()
   endif()
 endif()
+

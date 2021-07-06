@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -457,122 +457,38 @@ namespace model {
     }
 
     // A5 , \field Total Heating Capacity Function of Temperature Curve Name
-    // \object-list BiquadraticQuadraticCubicCurves
     bool CoilHeatingDXSingleSpeed_Impl::setTotalHeatingCapacityFunctionofTemperatureCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveBiquadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Heating_DX_SingleSpeedFields::TotalHeatingCapacityFunctionofTemperatureCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Heating_DX_SingleSpeedFields::TotalHeatingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
 
     // A6 , \field Total Heating Capacity Function of Flow Fraction Curve Name
-    // \object-list QuadraticCubicCurves
     bool CoilHeatingDXSingleSpeed_Impl::setTotalHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Heating_DX_SingleSpeedFields::TotalHeatingCapacityFunctionofFlowFractionCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Heating_DX_SingleSpeedFields::TotalHeatingCapacityFunctionofFlowFractionCurveName, curve.handle());
     }
 
     // A7 ,  \field Energy Input Ratio Function of Temperature Curve Name
-    // \object-list BiquadraticQuadraticCubicCurves
     bool CoilHeatingDXSingleSpeed_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveBiquadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Heating_DX_SingleSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Heating_DX_SingleSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     }
 
     // A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
-    // \object-list QuadraticCubicCurves
     bool CoilHeatingDXSingleSpeed_Impl::setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Heating_DX_SingleSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Heating_DX_SingleSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle());
     }
 
     // A9 , \field Part Load Fraction Correlation Curve Name
-    // \object-list QuadraticCubicCurves
     bool CoilHeatingDXSingleSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-      bool accepted = false;
-
-      if (model() != curve.model()) {
-        return accepted;
-      }
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      OS_ASSERT(this->setPointer(OS_Coil_Heating_DX_SingleSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle()));
-
-      return accepted;
+      return setPointer(OS_Coil_Heating_DX_SingleSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle());
     }
 
     // A10, \field Defrost Energy Input Ratio Function of Temperature Curve Name
-    // \object-list BiquadraticCurves
-    // not a required curve so it needs a reset
     bool CoilHeatingDXSingleSpeed_Impl::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve> curve) {
       bool accepted = false;
 
       //first, check if a curve was actually passed in
       if (curve) {
         //then, check if the curve is of the appropriate type.  if not, accepted stays false
-        if (curve->optionalCast<CurveBiquadratic>()) {
-          accepted = true;
-          OS_ASSERT(this->setPointer(OS_Coil_Heating_DX_SingleSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, curve->handle()));
-        }
+        accepted = setPointer(OS_Coil_Heating_DX_SingleSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, curve->handle());
       }
       //if no curve was passed in, then set it to "" (this is to accomodate the reset method)
       else {

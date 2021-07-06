@@ -888,6 +888,12 @@ set(${target_name}_src
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
+  HeatExchangerDesiccantBalancedFlow.hpp
+  HeatExchangerDesiccantBalancedFlow_Impl.hpp
+  HeatExchangerDesiccantBalancedFlow.cpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.cpp
   HeatExchangerFluidToFluid.hpp
   HeatExchangerFluidToFluid_Impl.hpp
   HeatExchangerFluidToFluid.cpp
@@ -1022,6 +1028,15 @@ set(${target_name}_src
   OutputJSON.hpp
   OutputJSON_Impl.hpp
   OutputJSON.cpp
+  OutputEnvironmentalImpactFactors.hpp
+  OutputEnvironmentalImpactFactors_Impl.hpp
+  OutputEnvironmentalImpactFactors.cpp
+  EnvironmentalImpactFactors.hpp
+  EnvironmentalImpactFactors_Impl.hpp
+  EnvironmentalImpactFactors.cpp
+  FuelFactors.hpp
+  FuelFactors_Impl.hpp
+  FuelFactors.cpp
   OutputDiagnostics.hpp
   OutputDiagnostics_Impl.hpp
   OutputDiagnostics.cpp
@@ -1571,6 +1586,9 @@ set(${target_name}_src
   WaterHeaterHeatPump.hpp
   WaterHeaterHeatPump_Impl.hpp
   WaterHeaterHeatPump.cpp
+  WaterHeaterSizing.hpp
+  WaterHeaterSizing_Impl.hpp
+  WaterHeaterSizing.cpp
   WaterHeaterStratified.hpp
   WaterHeaterStratified_Impl.hpp
   WaterHeaterStratified.cpp
@@ -2003,6 +2021,8 @@ set(${target_name}_test_src
   test/HeaderedPumpsConstantSpeed_GTest.cpp
   test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
+  test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
+  test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
@@ -2041,6 +2061,9 @@ set(${target_name}_test_src
   test/OutputControlReportingTolerances_GTest.cpp
   test/OutputDebuggingData_GTest.cpp
   test/OutputJSON_GTest.cpp
+  test/OutputEnvironmentalImpactFactors_GTest.cpp
+  test/EnvironmentalImpactFactors_GTest.cpp
+  test/FuelFactors_GTest.cpp
   test/OutputDiagnostics_GTest.cpp
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
@@ -2175,6 +2198,7 @@ set(${target_name}_test_src
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
   test/WaterHeaterHeatPumpWrappedCondenser_GTest.cpp
+  test/WaterHeaterSizing_GTest.cpp
   test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp

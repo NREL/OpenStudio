@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -196,9 +196,11 @@ namespace energyplus {
         std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
         if (std::find_if(_setpointManagers.begin(), _setpointManagers.end(), isTemperatureControl) == _setpointManagers.end()) {
           for (auto _setpointManager : _supplyOutletSetpointManagers) {
-            SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
-            spmClone.addToNode(lowerNode);
-            spmClone.setName(lowerNode.name().get() + " OS Default SPM");
+            if (isTemperatureControl(_setpointManager)) {
+              SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
+              spmClone.addToNode(lowerNode);
+              spmClone.setName(lowerNode.name().get() + " OS Default SPM");
+            }
           }
         }
       }

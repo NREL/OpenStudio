@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,9 +67,13 @@ TEST_F(ModelFixture, ScheduleRuleset) {
   ASSERT_NO_THROW(schedule.summerDesignDaySchedule());
   ASSERT_NO_THROW(schedule.winterDesignDaySchedule());
   ASSERT_NO_THROW(schedule.holidaySchedule());
+  ASSERT_NO_THROW(schedule.customDay1Schedule());
+  ASSERT_NO_THROW(schedule.customDay2Schedule());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
 
   // one default schedule created
   EXPECT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
@@ -818,14 +822,25 @@ TEST_F(ModelFixture, ScheduleRuleset_SpecialDays) {
   schedule.setHolidaySchedule(holidaySchedule);
   EXPECT_NE(holidaySchedule.handle(), schedule.holidaySchedule().handle());
 
-  // DefaultDay, the 3 schedules we created, and the 3 clones made by setters = 7
-  EXPECT_EQ(7u, model.getConcreteModelObjects<ScheduleDay>().size());
+  ScheduleDay customDay1Schedule(model);
+  schedule.setCustomDay1Schedule(customDay1Schedule);
+  EXPECT_NE(customDay1Schedule.handle(), schedule.customDay1Schedule().handle());
+
+  ScheduleDay customDay2Schedule(model);
+  schedule.setCustomDay2Schedule(customDay2Schedule);
+  EXPECT_NE(customDay2Schedule.handle(), schedule.customDay2Schedule().handle());
+
+  // DefaultDay, the 5 schedules we created, and the 5 clones made by setters = 11
+  EXPECT_EQ(11u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   schedule.remove();
 
-  EXPECT_EQ(3u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(5u, model.getConcreteModelObjects<ScheduleDay>().size());
   EXPECT_FALSE(winterSchedule.handle().isNull());
   EXPECT_FALSE(summerSchedule.handle().isNull());
+  EXPECT_FALSE(holidaySchedule.handle().isNull());
+  EXPECT_FALSE(customDay1Schedule.handle().isNull());
+  EXPECT_FALSE(customDay2Schedule.handle().isNull());
 }
 
 TEST_F(ModelFixture, ScheduleRuleset_resetSpecialDays) {
@@ -841,22 +856,32 @@ TEST_F(ModelFixture, ScheduleRuleset_resetSpecialDays) {
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
 
   // For each of these, the setter clones the original schedule
   ScheduleDay winterSchedule(model);
   ScheduleDay summerSchedule(model);
   ScheduleDay holidaySchedule(model);
-  EXPECT_EQ(4u, model.getConcreteModelObjects<ScheduleDay>().size());
-
-  schedule.setWinterDesignDaySchedule(winterSchedule);
-  EXPECT_EQ(5u, model.getConcreteModelObjects<ScheduleDay>().size());
-
-  schedule.setSummerDesignDaySchedule(summerSchedule);
+  ScheduleDay customDay1Schedule(model);
+  ScheduleDay customDay2Schedule(model);
   EXPECT_EQ(6u, model.getConcreteModelObjects<ScheduleDay>().size());
 
-  schedule.setHolidaySchedule(holidaySchedule);
-  // DefaultDay, the 3 schedules we created, and the 3 clones made by setters = 7
+  schedule.setWinterDesignDaySchedule(winterSchedule);
   EXPECT_EQ(7u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setSummerDesignDaySchedule(summerSchedule);
+  EXPECT_EQ(8u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setHolidaySchedule(holidaySchedule);
+  EXPECT_EQ(9u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setCustomDay1Schedule(customDay1Schedule);
+  EXPECT_EQ(10u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setCustomDay2Schedule(customDay2Schedule);
+  // DefaultDay, the 5 schedules we created, and the 5 clones made by setters = 11
+  EXPECT_EQ(11u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   EXPECT_NE(winterSchedule.handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_NE(summerSchedule.handle(), schedule.summerDesignDaySchedule().handle());
@@ -864,25 +889,49 @@ TEST_F(ModelFixture, ScheduleRuleset_resetSpecialDays) {
   EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
 
   // reset should delete the special clone it made when setting
   schedule.resetWinterDesignDaySchedule();
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
-  EXPECT_EQ(6u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(10u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   schedule.resetSummerDesignDaySchedule();
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
-  EXPECT_EQ(5u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(9u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   schedule.resetHolidaySchedule();
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
-  EXPECT_EQ(4u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(8u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.resetCustomDay1Schedule();
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(7u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.resetCustomDay2Schedule();
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(6u, model.getConcreteModelObjects<ScheduleDay>().size());
 }
 
 /*

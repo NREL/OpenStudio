@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -150,8 +150,8 @@ extern "C"
   void Init_zlib(void);
 
   void Init_openssl(void);
-
   void Init_nonblock(void);
+  void Init_ruby_description(void);
 
 #ifndef _WIN32
   void Init_console(void);
@@ -434,6 +434,8 @@ int main(int argc, char* argv[]) {
     Init_nonblock();
     rb_provide("nonblock");
     rb_provide("nonblock.so");
+
+    Init_ruby_description();
 
     Init_objspace();
     rb_provide("objspace");

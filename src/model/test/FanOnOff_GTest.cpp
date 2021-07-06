@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -431,10 +431,6 @@ TEST_F(ModelFixture, FanOnOff_Test_Setters_and_Getters) {
 
   CurveCubic newCurve3(m);
   EXPECT_TRUE(testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(newCurve3));
-
-  EXPECT_FALSE(testObject.setFanPowerRatioFunctionofSpeedRatioCurve(newCurve2));
-  EXPECT_TRUE(testObject.setFanPowerRatioFunctionofSpeedRatioCurve(newCurve3));
-  EXPECT_FALSE(testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(newCurve1));
 }
 
 TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACWaterToAirHeatPump) {

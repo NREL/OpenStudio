@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -226,12 +226,10 @@ namespace model {
     /// Returns the total floor area in square meters.
     /// Includes only spaces marked as included in floor area.
     /// Includes space multipliers in calculation.
-    /// Attribute name: floorArea
     double floorArea() const;
 
     /// Returns the conditioned floor area in square meters.  Currently requires EnergyPlus
     /// simulation output to calculate.
-    /// Attribute name: conditionedFloorArea
     boost::optional<double> conditionedFloorArea() const;
 
     // ETH@20140115 - Should take a bool as to whether to include spaces marked as
@@ -316,6 +314,9 @@ namespace model {
     /// Returns a suggested pattern for skylights targeting a skylight to floor ratio with desired sizes.
     /// Pattern will be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
     std::vector<std::vector<Point3d>> generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const;
+
+    // Calculates the building perimeter
+    double exteriorPerimeter() const;
 
     //@}
    protected:

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,9 +47,7 @@ namespace model {
   }
 
   /** A Material is a ResourceObject that serves as a base class for all objects that can be used
- *  in \link LayeredConstruction LayeredConstructions \endlink. It also provides Attributes for
- *  'thickness', 'getVisibleTransmiattance', 'interiorVisibleAbsorptance', and
- *  'exteriorVisibleAbsorptance'. */
+   *  in \link LayeredConstruction LayeredConstructions \endlink. */
   class MODEL_API Material : public ResourceObject
   {
    public:
@@ -62,25 +60,16 @@ namespace model {
     /** @name Getters */
     //@{
 
-    /** Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always
-   *  returned.
-   *
-   *  Attribute Name: 'thickness' */
+    // Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always returned.
     double thickness() const;
 
-    /** Get the visible transmittance of the material. Virtual implementation.
-   *
-   *  Attribute Name: 'getVisibleTransmittance' */
+    // Get the visible transmittance of the material. Virtual implementation.
     boost::optional<double> getVisibleTransmittance() const;
 
-    /** Get the interiorVisibleAbsorptance of the material. Virtual implementation.
-   *
-   *  Attribute Name: 'interiorVisibleAbsorptance' */
+    // Get the interiorVisibleAbsorptance of the material. Virtual implementation.
     boost::optional<double> interiorVisibleAbsorptance() const;
 
-    /** Get the exteriorVisibleAbsorptance of the material. Virtual implementation.
-   *
-   *  Attribute Name: 'exteriorVisibleAbsorptance' */
+    // Get the exteriorVisibleAbsorptance of the material. Virtual implementation.
     boost::optional<double> exteriorVisibleAbsorptance() const;
 
     /** Returns this materials's standards information, constructing a new object if necessary. */
@@ -90,9 +79,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    /** Set thickness to value (m). For some materials, false is always returned.
-   *
-   *  Attribute Name: 'thickness' */
+    // Set thickness to value (m). For some materials, false is always returned.
     bool setThickness(double value);
 
     // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it

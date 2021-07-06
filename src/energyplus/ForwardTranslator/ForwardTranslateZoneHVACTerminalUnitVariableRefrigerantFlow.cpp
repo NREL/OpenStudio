@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -291,7 +291,7 @@ namespace energyplus {
         LOG(Info, "Will not translate fan for VRF named '" << modelObject.name().get() << "' since it is on an AirLoopHVACOutdoorAirSystem.");
         return;
       }
-      if (modelObject.airLoopHVAC() && modelObject.airLoopHVAC()->supplyFan()) {
+      if (modelObject.airLoopHVAC() && modelObject.airLoopHVAC()->supplyFan() && modelObject.airLoopHVAC()->supplyComponent(modelObject.handle())) {
         LOG(Info, "Will not translate fan for VRF named '" << modelObject.name().get()
                                                            << "' since it is on an AirLoopHVAC main branch that already has a supply Fan assigned.");
         return;

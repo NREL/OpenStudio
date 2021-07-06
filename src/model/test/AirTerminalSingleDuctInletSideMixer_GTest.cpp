@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -222,4 +222,21 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_RemoveObjectWithThermal
 
   testObject.remove();
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
+}
+
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_NewFields_Control_OA) {
+  // Test for #3599 - Adding 'Control for Outdoor' Air and 'Per Person Ventilation Flow Rate'
+  Model model;
+  AirTerminalSingleDuctInletSideMixer atu = AirTerminalSingleDuctInletSideMixer(model);
+
+  EXPECT_TRUE(atu.controlForOutdoorAir());
+  EXPECT_EQ("CurrentOccupancy", atu.perPersonVentilationRateMode());
+
+  EXPECT_TRUE(atu.setControlForOutdoorAir(false));
+  EXPECT_FALSE(atu.controlForOutdoorAir());
+
+  EXPECT_TRUE(atu.setPerPersonVentilationRateMode("DesignOccupancy"));
+  EXPECT_EQ("DesignOccupancy", atu.perPersonVentilationRateMode());
+  EXPECT_FALSE(atu.setPerPersonVentilationRateMode("BADENUM"));
+  EXPECT_EQ("DesignOccupancy", atu.perPersonVentilationRateMode());
 }

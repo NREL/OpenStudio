@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,12 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ZoneHVACComponent.hpp"
 #include "../../model/ZoneHVACComponent_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+
 #include <utilities/idd/AirTerminal_SingleDuct_Mixer_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -106,6 +112,36 @@ namespace energyplus {
     // TerminalUnitSecondaryAirInletNodeName
     if (boost::optional<Node> secondaryInletNode = modelObject.secondaryAirInletNode()) {
       idfObject.setString(AirTerminal_SingleDuct_MixerFields::MixerSecondaryAirInletNodeName, secondaryInletNode->name().get());
+    }
+
+    // ControlForOutdoorAir
+    {
+      if (modelObject.controlForOutdoorAir()) {
+        bool dsoa_found = false;
+        if (auto airLoopHVAC = modelObject.airLoopHVAC()) {
+          auto zones = airLoopHVAC->demandComponents(modelObject, airLoopHVAC->demandOutletNode(), model::ThermalZone::iddObjectType());
+          if (!zones.empty()) {
+            auto zone = zones.front();
+            auto spaces = zone.cast<model::ThermalZone>().spaces();
+            if (!spaces.empty()) {
+              if (auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir()) {
+                idfObject.setString(AirTerminal_SingleDuct_MixerFields::DesignSpecificationOutdoorAirObjectName,
+                                    designSpecificationOutdoorAir->name().get());
+              }
+            }
+          }
+        }
+        if (!dsoa_found) {
+          LOG(Warn, "Cannot set the 'Design Specification Outdoor Air' (DSOA) object for "
+                      << modelObject.briefDescription()
+                      << ". No DSOA was found but 'Control for Outdoor' was set to 'Yes'. Ensure the zone's Space/SpaceType has a DSOA attached.");
+        }
+      }
+    }
+
+    {
+      auto value = modelObject.perPersonVentilationRateMode();
+      idfObject.setString(AirTerminal_SingleDuct_MixerFields::PerPersonVentilationRateMode, value);
     }
 
     // Populate fields for AirDistributionUnit
