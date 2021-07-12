@@ -198,19 +198,13 @@ jobs:
         cmake --build . --target package -j 2
 
     # We always upload to testpypi
-    - name: Upload python bindings to testpypi
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_REPOSITORY: testpypi
-        # Go to repo on github > Settings > Secrets and add it
-        TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
+    - name: Build python wheel
       shell: bash
       working-directory: ./build
       run: |
         cmake --build . --target python_package -j 2
         cd Products/python_package/
         python setup.py bdist_wheel
-        python -m twine upload --skip-existing --repository testpypi dist/*
 
     - name: Zip the wheel to maintain case sensitivy and file permissions
       working-directory: ./build/Products/python_package/
@@ -224,8 +218,57 @@ jobs:
         name: openstudio-${{ matrix.name }}  # something like openstudio-Windows_py37
         path: ./build/Products/python_package/openstudio-${{ matrix.name }}.tar.gz
 
-  test_python_bindings:
+  # Only upload if all builds succeed
+  upload_python_bindings_to_testpypi:
     needs: python_bindings
+    name: Upload to PyPi
+    runs-on: ubuntu-20.04
+    steps:
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine requests packaging
+        mkdir wheels
+
+    - name: Download ALL wheels
+      uses: actions/download-artifact@v2
+      with:
+        path: ./wheels
+
+    - name: Display structure of downloaded files
+      working-directory: ./wheels
+      run: |
+        ls -R
+
+    - name: Extract all tar.gz, then upload
+      working-directory: ./wheels
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_REPOSITORY: testpypi
+        # Go to repo on github > Settings > Secrets and add it
+        TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
+      shell: bash
+      run: |
+        for f in **/*.tar.gz; do
+          mv $f .
+        done;
+
+        for f in *.tar.gz; do
+          tar -xzvf "$f";
+        done;
+
+        ls -R
+        python -m twine upload --skip-existing --repository testpypi dist/*
+
+
+  test_python_bindings:
+    needs: upload_python_bindings_to_testpypi
     name: Test ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.allow_failure }}
@@ -282,29 +325,10 @@ jobs:
           m = openstudio.model.exampleModel()
           print(m)
 
-    - name: Download the specific wheel
-      # if: contains(github.ref, 'refs/tags')
-      uses: actions/download-artifact@v2
-      with:
-        path: ./wheel
-        name: openstudio-${{ matrix.name }}
-
-    - name: Extract the tar.gz, then upload
-      # if: contains(github.ref, 'refs/tags')
-      working-directory: ./wheel
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_REPOSITORY: pypi
-        # Go to repo on github > Settings > Secrets and add it
-        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      shell: bash
-      run: |
-        tar -xzvf "openstudio-${{ matrix.name }}.tar.gz";
-        ls -R
-        python -m twine upload --skip-existing dist/*
-
+  # if python_bindings succeeds but test_python_bindings fails and this is a release, 
+  # remove that version from testpypi
   upload_python_bindings_to_pypi:
-    # if: contains(github.ref, 'refs/tags')
+    if: contains(github.ref, 'refs/tags')
     needs: test_python_bindings
     name: Upload to PyPi
     runs-on: ubuntu-20.04
