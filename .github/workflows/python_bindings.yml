@@ -221,7 +221,7 @@ jobs:
   # Only upload if all builds succeed
   upload_python_bindings_to_testpypi:
     needs: python_bindings
-    name: Upload to PyPi
+    name: Upload to TestPyPi
     runs-on: ubuntu-20.04
     steps:
 
