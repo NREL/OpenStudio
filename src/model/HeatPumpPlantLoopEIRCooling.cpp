@@ -1,0 +1,491 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
+
+#include "HeatPumpPlantLoopEIRCooling.hpp"
+#include "HeatPumpPlantLoopEIRCooling_Impl.hpp"
+#include "Model.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_HeatPump_PlantLoop_EIR_Cooling_FieldEnums.hxx>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "HeatPumpPlantLoopEIRHeating.hpp"
+#include "HeatPumpPlantLoopEIRHeating_Impl.hpp"
+
+namespace openstudio {
+namespace model {
+
+  namespace detail {
+
+    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : WaterToWaterComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == HeatPumpPlantLoopEIRCooling::iddObjectType());
+    }
+
+    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : WaterToWaterComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == HeatPumpPlantLoopEIRCooling::iddObjectType());
+    }
+
+    HeatPumpPlantLoopEIRCooling_Impl::HeatPumpPlantLoopEIRCooling_Impl(const HeatPumpPlantLoopEIRCooling_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : WaterToWaterComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& HeatPumpPlantLoopEIRCooling_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Heat Pump Electricity Energy",
+                                                   "Heat Pump Load Side Heat Transfer Energy",
+                                                   "Heat Pump Source Side Heat Transfer Energy",
+                                                   "Heat Pump Electricity Rate",
+                                                   "Heat Pump Load Side Heat Transfer Rate",
+                                                   "Heat Pump Source Side Heat Transfer Rate",
+                                                   "Heat Pump Load Side Outlet Temperature",
+                                                   "Heat Pump Load Side Inlet Temperature",
+                                                   "Heat Pump Source Side Outlet Temperature",
+                                                   "Heat Pump Source Side Inlet Temperature",
+                                                   "Heat Pump Load Side Mass Flow Rate",
+                                                   "Heat Pump Source Side Mass Flow Rate"};
+      return result;
+    }
+
+    IddObjectType HeatPumpPlantLoopEIRCooling_Impl::iddObjectType() const {
+      return HeatPumpPlantLoopEIRCooling::iddObjectType();
+    }
+
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::supplyInletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideInletNodeName;
+    }
+
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::supplyOutletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName;
+    }
+
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::demandInletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideInletNodeName;
+    }
+
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::demandOutletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideOutletNodeName;
+    }
+
+    std::string HeatPumpPlantLoopEIRCooling_Impl::condenserType() const {
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<HeatPumpPlantLoopEIRHeating> HeatPumpPlantLoopEIRCooling_Impl::companionHeatingHeatPump() const {
+      return getObject<ModelObject>().getModelObjectTarget<HeatPumpPlantLoopEIRHeating>(
+        OS_HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName);
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::referenceLoadSideFlowRate() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, true);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::isReferenceLoadSideFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::referenceSourceSideFlowRate() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideReferenceFlowRate, true);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::isReferenceSourceSideFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideReferenceFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::referenceCapacity() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCapacity, true);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::isReferenceCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    double HeatPumpPlantLoopEIRCooling_Impl::referenceCoefficientofPerformance() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCoefficientofPerformance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double HeatPumpPlantLoopEIRCooling_Impl::sizingFactor() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::SizingFactor, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    CurveBiquadratic HeatPumpPlantLoopEIRCooling_Impl::capacityModifierFunctionofTemperatureCurve() const {
+      WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_CoolingFields::CapacityModifierFunctionofTemperatureCurveName).get();
+      return wo.optionalCast<CurveBiquadratic>().get();
+    }
+
+    CurveBiquadratic HeatPumpPlantLoopEIRCooling_Impl::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+      WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_CoolingFields::ElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName).get();
+      return wo.optionalCast<CurveBiquadratic>().get();
+    }
+
+    CurveQuadratic HeatPumpPlantLoopEIRCooling_Impl::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
+      WorkspaceObject wo =
+        getTarget(OS_HeatPump_PlantLoop_EIR_CoolingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName).get();
+      return wo.optionalCast<CurveQuadratic>().get();
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setCondenserType(std::string condenserType) {
+      return setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, condenserType);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setCompanionHeatingHeatPump(const HeatPumpPlantLoopEIRHeating& companionHP) {
+      return this->setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName, companionHP.handle());
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, referenceLoadSideFlowRate);
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::autosizeReferenceLoadSideFlowRate() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideReferenceFlowRate, referenceSourceSideFlowRate);
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::autosizeReferenceSourceSideFlowRate() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideReferenceFlowRate, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setReferenceCapacity(double referenceCapacity) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCapacity, referenceCapacity);
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::autosizeReferenceCapacity() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCapacity, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCoefficientofPerformance, referenceCoefficientofPerformance);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setSizingFactor(double sizingFactor) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::SizingFactor, sizingFactor);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setCapacityModifierFunctionofTemperatureCurve(
+      const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::CapacityModifierFunctionofTemperatureCurveName,
+                               capacityModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::ElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                               electricInputtoOutputRatioModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+      const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName,
+                               electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.handle());
+      return result;
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedReferenceLoadSideFlowRate() const {
+      return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedReferenceSourceSideFlowRate() const {
+      return getAutosizedValue("Design Size Source Side Volume Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedReferenceCapacity() const {
+      return getAutosizedValue("Design Size Nominal Capacity", "W");
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::autosize() {
+      autosizeReferenceLoadSideFlowRate();
+      autosizeReferenceSourceSideFlowRate();
+      autosizeReferenceCapacity();
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedReferenceLoadSideFlowRate();
+      if (val) {
+        setReferenceLoadSideFlowRate(val.get());
+      }
+
+      val = autosizedReferenceSourceSideFlowRate();
+      if (val) {
+        setReferenceSourceSideFlowRate(val.get());
+      }
+
+      val = autosizedReferenceCapacity();
+      if (val) {
+        setReferenceCapacity(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(const Model& model, const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve,
+                                                           const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve,
+                                                           const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve)
+    : WaterToWaterComponent(HeatPumpPlantLoopEIRCooling::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>());
+
+    autosizeReferenceLoadSideFlowRate();
+    autosizeReferenceSourceSideFlowRate();
+    autosizeReferenceCapacity();
+
+    bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
+    OS_ASSERT(ok);
+
+    ok = setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+    OS_ASSERT(ok);
+
+    ok = setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+    OS_ASSERT(ok);
+
+    setCondenserType("WaterSource");
+    setReferenceCoefficientofPerformance(7.5);
+    setSizingFactor(1.0);
+  }
+
+  HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(const Model& model)
+    : WaterToWaterComponent(HeatPumpPlantLoopEIRCooling::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>());
+
+    autosizeReferenceLoadSideFlowRate();
+    autosizeReferenceSourceSideFlowRate();
+    autosizeReferenceCapacity();
+
+    CurveBiquadratic capacityModifierFunctionofTemperatureCurve(model);  // PlantLoopHeatPump_EIR_WaterSource.idf
+    capacityModifierFunctionofTemperatureCurve.setCoefficient1Constant(1);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient2x(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient4y(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+    capacityModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+    capacityModifierFunctionofTemperatureCurve.setMinimumValueofx(5);
+    capacityModifierFunctionofTemperatureCurve.setMaximumValueofx(10);
+    capacityModifierFunctionofTemperatureCurve.setMinimumValueofy(24);
+    capacityModifierFunctionofTemperatureCurve.setMaximumValueofy(35);
+    capacityModifierFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+    capacityModifierFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
+    bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
+    OS_ASSERT(ok);
+
+    CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve(model);  // PlantLoopHeatPump_EIR_WaterSource.idf
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient1Constant(1);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient2x(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient4y(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient5yPOW2(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setCoefficient6xTIMESY(0);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMinimumValueofx(5);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMaximumValueofx(10);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMinimumValueofy(24);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setMaximumValueofy(35);
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setInputUnitTypeforX("Temperature");
+    electricInputtoOutputRatioModifierFunctionofTemperatureCurve.setInputUnitTypeforY("Temperature");
+    ok = setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+    OS_ASSERT(ok);
+
+    CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(model);  // PlantLoopHeatPump_EIR_WaterSource.idf
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setCoefficient1Constant(1);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setCoefficient2x(0);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setCoefficient3xPOW2(0);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setMinimumValueofx(0);
+    electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.setMaximumValueofx(1);
+    ok = setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+    OS_ASSERT(ok);
+
+    setCondenserType("WaterSource");
+    setReferenceCoefficientofPerformance(7.5);
+    setSizingFactor(1.0);
+  }
+
+  IddObjectType HeatPumpPlantLoopEIRCooling::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_HeatPump_PlantLoop_EIR_Cooling);
+  }
+
+  std::string HeatPumpPlantLoopEIRCooling::condenserType() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->condenserType();
+  }
+
+  boost::optional<HeatPumpPlantLoopEIRHeating> HeatPumpPlantLoopEIRCooling::companionHeatingHeatPump() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->companionHeatingHeatPump();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::referenceLoadSideFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->referenceLoadSideFlowRate();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::isReferenceLoadSideFlowRateAutosized() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->isReferenceLoadSideFlowRateAutosized();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::referenceSourceSideFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->referenceSourceSideFlowRate();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::isReferenceSourceSideFlowRateAutosized() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->isReferenceSourceSideFlowRateAutosized();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::referenceCapacity() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->referenceCapacity();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::isReferenceCapacityAutosized() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->isReferenceCapacityAutosized();
+  }
+
+  double HeatPumpPlantLoopEIRCooling::referenceCoefficientofPerformance() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->referenceCoefficientofPerformance();
+  }
+
+  double HeatPumpPlantLoopEIRCooling::sizingFactor() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->sizingFactor();
+  }
+
+  CurveBiquadratic HeatPumpPlantLoopEIRCooling::capacityModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->capacityModifierFunctionofTemperatureCurve();
+  }
+
+  CurveBiquadratic HeatPumpPlantLoopEIRCooling::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->electricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  }
+
+  CurveQuadratic HeatPumpPlantLoopEIRCooling::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setCondenserType(std::string condenserType) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setCondenserType(condenserType);
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setCompanionHeatingHeatPump(const HeatPumpPlantLoopEIRHeating& companionHP) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setCompanionHeatingHeatPump(companionHP);
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setReferenceLoadSideFlowRate(referenceLoadSideFlowRate);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::autosizeReferenceLoadSideFlowRate() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizeReferenceLoadSideFlowRate();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setReferenceSourceSideFlowRate(referenceSourceSideFlowRate);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::autosizeReferenceSourceSideFlowRate() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizeReferenceSourceSideFlowRate();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setReferenceCapacity(double referenceCapacity) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setReferenceCapacity(referenceCapacity);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::autosizeReferenceCapacity() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizeReferenceCapacity();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setReferenceCoefficientofPerformance(referenceCoefficientofPerformance);
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setSizingFactor(double sizingFactor) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setSizingFactor(sizingFactor);
+  }
+
+  bool
+    HeatPumpPlantLoopEIRCooling::setCapacityModifierFunctionofTemperatureCurve(const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setCapacityModifierFunctionofTemperatureCurve(
+      capacityModifierFunctionofTemperatureCurve);
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+    const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+    const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
+      electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedReferenceLoadSideFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizedReferenceLoadSideFlowRate();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedReferenceSourceSideFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizedReferenceSourceSideFlowRate();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedReferenceCapacity() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizedReferenceCapacity();
+  }
+
+  /// @cond
+  HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(std::shared_ptr<detail::HeatPumpPlantLoopEIRCooling_Impl> impl)
+    : WaterToWaterComponent(std::move(impl)) {}
+  /// @endcond
+
+}  // namespace model
+}  // namespace openstudio

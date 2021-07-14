@@ -33,13 +33,13 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
-#include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
+#include "../../model/HeatPumpPlantLoopEIRCooling.hpp"
+#include "../../model/HeatPumpPlantLoopEIRHeating.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/PlantLoop.hpp"
 
-#include <utilities/idd/HeatPump_WaterToWater_EquationFit_Cooling_FieldEnums.hxx>
-#include <utilities/idd/HeatPump_WaterToWater_EquationFit_Heating_FieldEnums.hxx>
+#include <utilities/idd/HeatPump_PlantLoop_EIR_Cooling_FieldEnums.hxx>
+#include <utilities/idd/HeatPump_PlantLoop_EIR_Heating_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfObject.hpp"
@@ -52,26 +52,26 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpWaterToWaterEquationFit) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR) {
 
   Model m;
 
   PlantLoop plant_loop_cup_clg(m);
   PlantLoop plant_loop_cup_htg(m);
-  PlantLoop plant_loop_wwhp_clg(m);
-  PlantLoop plant_loop_wwhp_htg(m);
+  PlantLoop plant_loop_plhp_clg(m);
+  PlantLoop plant_loop_plhp_htg(m);
 
-  HeatPumpWaterToWaterEquationFitCooling wwhp_clg(m);
-  HeatPumpWaterToWaterEquationFitHeating wwhp_htg(m);
+  HeatPumpPlantLoopEIRCooling plhp_clg(m);
+  HeatPumpPlantLoopEIRHeating plhp_htg(m);
 
-  EXPECT_TRUE(plant_loop_cup_clg.addDemandBranchForComponent(wwhp_clg));
-  EXPECT_TRUE(plant_loop_wwhp_clg.addSupplyBranchForComponent(wwhp_clg));
-  EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(wwhp_htg));
-  EXPECT_TRUE(plant_loop_wwhp_htg.addSupplyBranchForComponent(wwhp_htg));
+  EXPECT_TRUE(plant_loop_cup_clg.addDemandBranchForComponent(plhp_clg));
+  EXPECT_TRUE(plant_loop_plhp_clg.addSupplyBranchForComponent(plhp_clg));
+  EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(plhp_htg));
+  EXPECT_TRUE(plant_loop_plhp_htg.addSupplyBranchForComponent(plhp_htg));
 
   // #3837: These two reference each other, and we want to avoid a recursion problem (each FT function calling each other)
-  EXPECT_TRUE(wwhp_clg.setCompanionHeatingHeatPump(wwhp_htg));
-  EXPECT_TRUE(wwhp_htg.setCompanionCoolingHeatPump(wwhp_clg));
+  EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));
+  EXPECT_TRUE(plhp_htg.setCompanionCoolingHeatPump(plhp_clg));
 
   openstudio::energyplus::ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -79,18 +79,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpWaterToWaterEquationFit) {
   EXPECT_EQ(0u, ft.errors().size());
 
   {
-    WorkspaceObjectVector idf_ccs(w.getObjectsByType(IddObjectType::HeatPump_WaterToWater_EquationFit_Cooling));
+    WorkspaceObjectVector idf_ccs(w.getObjectsByType(IddObjectType::HeatPump_PlantLoop_EIR_Cooling));
     EXPECT_EQ(1u, idf_ccs.size());
     WorkspaceObject idf_cc(idf_ccs[0]);
     // Companion
-    EXPECT_EQ(wwhp_htg.nameString(), idf_cc.getString(HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName).get());
+    EXPECT_EQ(plhp_htg.nameString(), idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName).get());
   }
 
   {
-    WorkspaceObjectVector idf_hcs(w.getObjectsByType(IddObjectType::HeatPump_WaterToWater_EquationFit_Heating));
+    WorkspaceObjectVector idf_hcs(w.getObjectsByType(IddObjectType::HeatPump_PlantLoop_EIR_Heating));
     EXPECT_EQ(1u, idf_hcs.size());
     WorkspaceObject idf_hc(idf_hcs[0]);
     // Companion
-    EXPECT_EQ(wwhp_clg.nameString(), idf_hc.getString(HeatPump_WaterToWater_EquationFit_HeatingFields::CompanionCoolingHeatPumpName).get());
+    EXPECT_EQ(plhp_clg.nameString(), idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName).get());
   }
 }

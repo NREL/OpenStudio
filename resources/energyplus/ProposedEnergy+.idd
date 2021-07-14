@@ -43271,7 +43271,8 @@ HeatPump:PlantLoop:EIR:Cooling,
         \note object for this cooling object. The companion is used in
         \note sizing the heat pump as well as to allow checks for unexpected
         \note simultaneous operation of the two objects.
-        \reference PLHPHeatingNames
+        \type object-list
+        \object-list PLHPHeatingNames
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
@@ -43331,7 +43332,7 @@ HeatPump:PlantLoop:EIR:Cooling,
         \note EIR = 1/COP
         \required-field
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
         \note PLR = part load ratio (cooling load/steady state capacity)
 
@@ -43370,8 +43371,7 @@ HeatPump:PlantLoop:EIR:Heating,
         \note sizing the heat pump as well as to allow checks for unexpected
         \note simultaneous operation of the two objects.
         \type object-list
-        \object-list WWHPCoolingNames
-        \reference PLHPCoolingNames
+        \object-list PLHPCoolingNames
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
@@ -43422,7 +43422,7 @@ HeatPump:PlantLoop:EIR:Heating,
         \note EIR = 1/COP
         \required-field
         \type object-list
-        \object-list BiVariateFunctions
+        \object-list BivariateFunctions
         \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
         \note CWS = supply (leaving) hot water temperature(C)
         \note ECT = entering condenser fluid temperature(C)

@@ -1831,6 +1831,16 @@ namespace energyplus {
         retVal = translateHeatPumpWaterToWaterEquationFitHeating(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Cooling: {
+        auto mo = modelObject.cast<HeatPumpPlantLoopEIRCooling>();
+        retVal = translateHeatPumpPlantLoopEIRCooling(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating: {
+        auto mo = modelObject.cast<HeatPumpPlantLoopEIRHeating>();
+        retVal = translateHeatPumpPlantLoopEIRHeating(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_HotWaterEquipment: {
         model::HotWaterEquipment hotWaterEquipment = modelObject.cast<HotWaterEquipment>();
         retVal = translateHotWaterEquipment(hotWaterEquipment);

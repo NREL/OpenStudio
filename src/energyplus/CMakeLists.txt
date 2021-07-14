@@ -219,6 +219,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitCooling.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitHeating.cpp
+  ForwardTranslator/ForwardTranslateHeatPumpPlantLoopEIRCooling.cpp
+  ForwardTranslator/ForwardTranslateHeatPumpPlantLoopEIRHeating.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamElectric.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamGas.cpp
@@ -671,6 +673,7 @@ set(${target_name}_test_src
   Test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
   Test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
+  Test/HeatPumpPlantLoopEIR_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp
   Test/InteriorPartitionSurface_GTest.cpp

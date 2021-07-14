@@ -879,6 +879,12 @@ set(${target_name}_src
   HeatPumpWaterToWaterEquationFitHeating.hpp
   HeatPumpWaterToWaterEquationFitHeating_Impl.hpp
   HeatPumpWaterToWaterEquationFitHeating.cpp
+  HeatPumpPlantLoopEIRCooling.hpp
+  HeatPumpPlantLoopEIRCooling_Impl.hpp
+  HeatPumpPlantLoopEIRCooling.cpp
+  HeatPumpPlantLoopEIRHeating.hpp
+  HeatPumpPlantLoopEIRHeating_Impl.hpp
+  HeatPumpPlantLoopEIRHeating.cpp
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
@@ -2009,6 +2015,8 @@ set(${target_name}_test_src
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
+  test/HeatPumpPlantLoopEIRHeating_GTest.cpp
+  test/HeatPumpPlantLoopEIRCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
   test/HumidifierSteamGas_GTest.cpp
   test/IlluminanceMap_GTest.cpp
