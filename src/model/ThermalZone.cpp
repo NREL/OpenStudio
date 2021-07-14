@@ -111,6 +111,8 @@
 #include "AirflowNetworkZone_Impl.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -454,6 +456,16 @@ namespace model {
       return edges;
     }
 
+    std::vector<ScheduleTypeKey> ThermalZone_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ThermalZone", "Daylighting Controls Availability"));
+      }
+      return result;
+    }
+
     int ThermalZone_Impl::multiplier() const {
       boost::optional<int> value = getInt(OS_ThermalZoneFields::Multiplier, true);
       OS_ASSERT(value);
@@ -777,6 +789,21 @@ namespace model {
 
     void ThermalZone_Impl::checkDaylightingControlsAndIlluminanceMaps() {
       setDaylightingControlsAndIlluminanceMaps(this->primaryDaylightingControl(), this->secondaryDaylightingControl(), this->illuminanceMap());
+    }
+
+    boost::optional<Schedule> ThermalZone_Impl::daylightingControlsAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName);
+    }
+
+    bool ThermalZone_Impl::setDaylightingControlsAvailabilitySchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName, "ThermalZone", "Daylighting Controls Availability", schedule);
+      return result;
+    }
+
+    void ThermalZone_Impl::resetDaylightingControlsAvailabilitySchedule() {
+      bool result = setString(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<RenderingColor> ThermalZone_Impl::renderingColor() const {
@@ -2850,6 +2877,18 @@ namespace model {
 
   void ThermalZone::checkDaylightingControlsAndIlluminanceMaps() {
     getImpl<detail::ThermalZone_Impl>()->checkDaylightingControlsAndIlluminanceMaps();
+  }
+
+  boost::optional<Schedule> ThermalZone::daylightingControlsAvailabilitySchedule() const {
+    return getImpl<detail::ThermalZone_Impl>()->daylightingControlsAvailabilitySchedule();
+  }
+
+  bool ThermalZone::setDaylightingControlsAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::ThermalZone_Impl>()->setDaylightingControlsAvailabilitySchedule(schedule);
+  }
+
+  void ThermalZone::resetDaylightingControlsAvailabilitySchedule() {
+    getImpl<detail::ThermalZone_Impl>()->resetDaylightingControlsAvailabilitySchedule();
   }
 
   boost::optional<RenderingColor> ThermalZone::renderingColor() const {

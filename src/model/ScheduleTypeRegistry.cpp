@@ -407,6 +407,7 @@ namespace model {
        OptionalDouble()},
       {"ThermostatSetpointDualSetpoint", "Cooling Setpoint Temperature", "coolingSetpointTemperatureSchedule", true, "Temperature", OptionalDouble(),
        OptionalDouble()},
+      {"ThermalZone", "Daylighting Controls Availability", "daylightingControlsAvailabilitySchedule", false, "Availability", 0.0, 1.0},
       {"ZoneControlThermostatStagedDualSetpoint", "Heating Temperature Setpoint Schedule", "heatingTemperatureSetpointSchedule", true, "Temperature",
        OptionalDouble(), OptionalDouble()},
       {"ZoneControlThermostatStagedDualSetpoint", "Cooling Temperature Setpoint Base Schedule", "coolingTemperatureSetpointBaseSchedule", true,

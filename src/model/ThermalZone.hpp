@@ -51,6 +51,7 @@ namespace model {
   class ZoneMixing;
   class AirflowNetworkZone;
   class ZonePropertyUserViewFactorsBySurfaceName;
+  class Schedule;
 
   namespace detail {
 
@@ -223,6 +224,12 @@ namespace model {
     void resetIlluminanceMap();
 
     void checkDaylightingControlsAndIlluminanceMaps();
+
+    boost::optional<Schedule> daylightingControlsAvailabilitySchedule() const;
+
+    bool setDaylightingControlsAvailabilitySchedule(Schedule& schedule);
+
+    void resetDaylightingControlsAvailabilitySchedule();
 
     /// Returns the rendering color.
     boost::optional<RenderingColor> renderingColor() const;
