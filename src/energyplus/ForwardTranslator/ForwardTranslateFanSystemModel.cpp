@@ -179,7 +179,9 @@ namespace energyplus {
       for (const FanSystemModelSpeed& speed : speeds) {
         auto eg = idfObject.pushExtensibleGroup();
         eg.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, speed.flowFraction());
-        eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, speed.electricPowerFraction());
+        if (auto epf_ = speed.electricPowerFraction()) {
+          eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, epf_.get());
+        }
       }
     }
 

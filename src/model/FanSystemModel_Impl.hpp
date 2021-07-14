@@ -145,6 +145,7 @@ namespace model {
       bool addSpeed(const FanSystemModelSpeed& speed);
 
       // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+      bool addSpeed(double flowFraction);
       bool addSpeed(double flowFraction, double electricPowerFraction);
 
       bool removeSpeed(unsigned speedIndex);
@@ -220,7 +221,7 @@ namespace model {
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-      bool addSpeedPrivate(double flowFraction, double electricPowerFraction);
+      bool addSpeedPrivate(double flowFraction, boost::optional<double> electricPowerFraction);
     };
 
   }  // namespace detail
