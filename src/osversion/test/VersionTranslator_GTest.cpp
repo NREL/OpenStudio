@@ -86,7 +86,7 @@ void testExampleModel(int minor, int major) {
         EXPECT_TRUE(translator.warnings().empty());
         // print info for visual inspection
         ASSERT_TRUE(result);
-        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(modelPath) << "' to OpenStudio Version " << result->version().str() << ".");
+        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(modelPath) << "' to OpenStudio Version " << result->version()->versionIdentifier() << ".");
         LOG_FREE(Debug, "OSVersionFixture", "Deprecated objects: ");
         for (const IdfObject& object : translator.deprecatedObjects()) {
           LOG_FREE(Debug, "OSVersionFixture", object);
@@ -168,7 +168,7 @@ void testExampleComponent(int major, int minor) {
         EXPECT_TRUE(translator.warnings().empty());
         // print info for visual inspection
         ASSERT_TRUE(result);
-        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(componentPath) << "' to OpenStudio Version " << result->version().str() << ".");
+        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(componentPath) << "' to OpenStudio Version " << result->version()->versionIdentifier() << ".");
         LOG_FREE(Debug, "OSVersionFixture", "Deprecated objects: ");
         for (const IdfObject& object : translator.deprecatedObjects()) {
           LOG_FREE(Debug, "OSVersionFixture", object);

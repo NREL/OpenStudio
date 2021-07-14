@@ -52,6 +52,8 @@
 #include "../SimulationControl_Impl.hpp"
 #include "../Version.hpp"
 #include "../Version_Impl.hpp"
+#include "../SiteWaterMainsTemperature.hpp"
+#include "../SiteWaterMainsTemperature_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -119,6 +121,24 @@ TEST_F(ModelFixture, Component_LightingSchedule_FromScratch) {
   EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getModelObjects<Lights>().size());
   EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getModelObjects<ScheduleTypeLimits>().size());
   EXPECT_EQ(static_cast<unsigned>(1), lightsComponent.getModelObjects<ScheduleCompact>().size());
+}
+
+TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
+
+  // Test for #2610 - insertComponent can create duplicate unique model objects
+
+  Model justSiteWaterMainsTemperature1;
+  SiteWaterMainsTemperature siteWaterMainsTemperature1 = justSiteWaterMainsTemperature1.getUniqueModelObject<SiteWaterMainsTemperature>();
+  ASSERT_EQ(static_cast<unsigned>(1), justSiteWaterMainsTemperature1.numObjects());
+
+  Model justSiteWaterMainsTemperature2;
+  SiteWaterMainsTemperature siteWaterMainsTemperature2 = justSiteWaterMainsTemperature2.getUniqueModelObject<SiteWaterMainsTemperature>();
+  ASSERT_EQ(static_cast<unsigned>(1), justSiteWaterMainsTemperature2.numObjects());
+
+  Component siteWaterMainsTemperature2Component = siteWaterMainsTemperature2.createComponent();
+  OptionalComponentData ocd = justSiteWaterMainsTemperature1.insertComponent(siteWaterMainsTemperature2Component);
+  EXPECT_EQ(static_cast<unsigned>(1), justSiteWaterMainsTemperature1.getModelObjects<SiteWaterMainsTemperature>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), justSiteWaterMainsTemperature1.numObjects());  
 }
 
 TEST_F(ModelFixture, ComponentWatcher_FromScratch) {
