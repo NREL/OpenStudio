@@ -381,7 +381,6 @@ namespace model {
 
     bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setControllingZone(ThermalZone& zone) {
       return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation, zone.handle());
-      ;
     }
 
     void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::resetControllingZone() {

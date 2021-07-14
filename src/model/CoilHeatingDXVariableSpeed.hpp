@@ -38,6 +38,7 @@ namespace openstudio {
 namespace model {
 
   class Curve;
+  class Schedule;
   class CoilHeatingDXVariableSpeedSpeedData;
 
   namespace detail {
@@ -104,6 +105,20 @@ namespace model {
 
     bool isResistiveDefrostHeaterCapacityAutosized() const;
 
+    boost::optional<Schedule> gridSignalSchedule() const;
+
+    double lowerBoundToApplyGridResponsiveControl() const;
+
+    bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+    double upperBoundToApplyGridResponsiveControl() const;
+
+    bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+    int maxSpeedLevelDuringGridResponsiveControl() const;
+
+    bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -145,6 +160,22 @@ namespace model {
     bool setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity);
 
     void autosizeResistiveDefrostHeaterCapacity();
+
+    bool setGridSignalSchedule(Schedule& schedule);
+
+    void resetGridSignalSchedule();
+
+    bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+    void resetLowerBoundToApplyGridResponsiveControl();
+
+    bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+    void resetUpperBoundToApplyGridResponsiveControl();
+
+    bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+
+    void resetMaxSpeedLevelDuringGridResponsiveControl();
 
     //@}
     /** @name Other */

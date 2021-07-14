@@ -6275,6 +6275,54 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:Coil:Cooling:DX:VariableSpeed") {
+
+        // Inserted 5 fields at position 21 (0-indexed)
+        // * Grid Signal Schedule Name = 21
+        // * Lower Bound To Apply Grid Responsive Control = 22
+        // * Upper Bound To Apply Grid Responsive Control = 23
+        // * Max Speed Level During Grid Responsive Control = 24
+        // * Load Control During Grid Responsive Control = 25
+
+        auto iddObject = idd_3_2_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 21) {
+              newObject.setString(i, value.get());
+            } else {
+              // Every other is shifted by four fields
+              newObject.setString(i + 5, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Heating:DX:VariableSpeed") {
+
+        // Inserted 4 fields at position 18 (0-indexed)
+        // * Grid Signal Schedule Name = 18
+        // * Lower Bound To Apply Grid Responsive Control = 19
+        // * Upper Bound To Apply Grid Responsive Control = 20
+        // * Max Speed Level During Grid Responsive Control = 21
+
+        auto iddObject = idd_3_2_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 18) {
+              newObject.setString(i, value.get());
+            } else {
+              // Every other is shifted by four fields
+              newObject.setString(i + 4, value.get());
+            }
+          }
+        }
+
       } else if ((iddname == "OS:Connection") || (iddname == "OS:PortList")) {
         // Deleted the 'Name' field
         auto iddObject = idd_3_2_0.getObject(iddname);
@@ -6290,6 +6338,7 @@ namespace osversion {
             }
           }
         }
+
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 

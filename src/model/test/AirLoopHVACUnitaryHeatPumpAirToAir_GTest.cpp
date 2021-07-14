@@ -190,17 +190,9 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_CoilSystemIntegratedHeat
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume supplyFan(m, s);
 
-  CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
-  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m);
-  CoilCoolingDXVariableSpeed scdwhCoolingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(m);
-  CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
-
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil, dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil,
-                                                   scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
+  CoilCoolingDXVariableSpeed coolingCoil(m);
+  CoilHeatingDXVariableSpeed heatingCoil(m);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil, heatingCoil);
 
   CoilHeatingElectric coilHeatingElectric(m, s);
 

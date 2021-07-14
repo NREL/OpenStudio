@@ -2653,6 +2653,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(ChillerElectricReformulatedEIR);
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
+    REGISTER_CONSTRUCTOR(CoilChillerAirSourceVariableSpeed);
+    REGISTER_CONSTRUCTOR(CoilChillerAirSourceVariableSpeedSpeedData);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingDX);
     REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitPerformance);
@@ -3024,6 +3026,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
     REGISTER_CONSTRUCTOR(ThermalZone);
     REGISTER_CONSTRUCTOR(ThermalStorageChilledWaterStratified);
+    REGISTER_CONSTRUCTOR(ThermalStoragePcmSimple);
+    REGISTER_CONSTRUCTOR(ThermalStorageHeatingPair);
+    REGISTER_CONSTRUCTOR(ThermalStorageCoolingPair);
     REGISTER_CONSTRUCTOR(ThermalStorageIceDetailed);
     REGISTER_CONSTRUCTOR(Timestep);
     REGISTER_CONSTRUCTOR(UnitarySystemPerformanceMultispeed);
@@ -3175,6 +3180,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricReformulatedEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(CoilChillerAirSourceVariableSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilChillerAirSourceVariableSpeedSpeedData);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDX);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitPerformance);
@@ -3546,6 +3553,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ThermalZone);
     REGISTER_COPYCONSTRUCTORS(ThermalStorageChilledWaterStratified);
+    REGISTER_COPYCONSTRUCTORS(ThermalStoragePcmSimple);
+    REGISTER_COPYCONSTRUCTORS(ThermalStorageHeatingPair);
+    REGISTER_COPYCONSTRUCTORS(ThermalStorageCoolingPair);
     REGISTER_COPYCONSTRUCTORS(ThermalStorageIceDetailed);
     REGISTER_COPYCONSTRUCTORS(Timestep);
     REGISTER_COPYCONSTRUCTORS(UnitarySystemPerformanceMultispeed);

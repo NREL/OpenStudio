@@ -35,6 +35,8 @@
 #include "../Curve_Impl.hpp"
 #include "../CoilHeatingDXVariableSpeedSpeedData.hpp"
 #include "../CoilHeatingDXVariableSpeedSpeedData_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -64,4 +66,48 @@ TEST_F(ModelFixture, CoilHeatingDXVariableSpeed_Remove) {
   auto curves = m.getModelObjects<model::Curve>();
 
   EXPECT_EQ(count, m.modelObjects().size() - curves.size());
+}
+
+TEST_F(ModelFixture, CoilHeatingDXVariableSpeed_Grid) {
+  Model m;
+
+  CoilHeatingDXVariableSpeed coil(m);
+
+  EXPECT_FALSE(coil.gridSignalSchedule());
+  ScheduleConstant sch_const(m);
+  sch_const.setValue(0.5);
+  coil.setGridSignalSchedule(sch_const);
+  EXPECT_TRUE(coil.gridSignalSchedule());
+  boost::optional<Schedule> _sch = coil.gridSignalSchedule();
+  ASSERT_TRUE(_sch);
+  Schedule sch = _sch.get();
+  boost::optional<ScheduleConstant> scheduleConstant = sch.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant);
+  EXPECT_EQ(0.5, (*scheduleConstant).value());
+  coil.resetGridSignalSchedule();
+  EXPECT_FALSE(coil.gridSignalSchedule());
+
+  EXPECT_EQ(100.0, coil.lowerBoundToApplyGridResponsiveControl());
+  EXPECT_TRUE(coil.isLowerBoundToApplyGridResponsiveControlDefaulted());
+  EXPECT_TRUE(coil.setLowerBoundToApplyGridResponsiveControl(50.0));
+  EXPECT_EQ(50.0, coil.lowerBoundToApplyGridResponsiveControl());
+  EXPECT_FALSE(coil.isLowerBoundToApplyGridResponsiveControlDefaulted());
+  coil.resetLowerBoundToApplyGridResponsiveControl();
+  EXPECT_TRUE(coil.isLowerBoundToApplyGridResponsiveControlDefaulted());
+
+  EXPECT_EQ(-100.0, coil.upperBoundToApplyGridResponsiveControl());
+  EXPECT_TRUE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
+  EXPECT_TRUE(coil.setUpperBoundToApplyGridResponsiveControl(-50.0));
+  EXPECT_EQ(-50.0, coil.upperBoundToApplyGridResponsiveControl());
+  EXPECT_FALSE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
+  coil.resetUpperBoundToApplyGridResponsiveControl();
+  EXPECT_TRUE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
+
+  EXPECT_EQ(10, coil.maxSpeedLevelDuringGridResponsiveControl());
+  EXPECT_TRUE(coil.isMaxSpeedLevelDuringGridResponsiveControlDefaulted());
+  EXPECT_TRUE(coil.setMaxSpeedLevelDuringGridResponsiveControl(5));
+  EXPECT_EQ(5, coil.maxSpeedLevelDuringGridResponsiveControl());
+  EXPECT_FALSE(coil.isMaxSpeedLevelDuringGridResponsiveControlDefaulted());
+  coil.resetMaxSpeedLevelDuringGridResponsiveControl();
+  EXPECT_TRUE(coil.isMaxSpeedLevelDuringGridResponsiveControlDefaulted());
 }

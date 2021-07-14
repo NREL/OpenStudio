@@ -133,6 +133,24 @@ namespace model {
 
       double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
+      boost::optional<Schedule> gridSignalSchedule() const;
+
+      double lowerBoundToApplyGridResponsiveControl() const;
+
+      bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+      double upperBoundToApplyGridResponsiveControl() const;
+
+      bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+      int maxSpeedLevelDuringGridResponsiveControl() const;
+
+      bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
+
+      std::string loadControlDuringGridResponsiveControl() const;
+
+      bool isLoadControlDuringGridResponsiveControlDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -186,6 +204,26 @@ namespace model {
       void resetBasinHeaterOperatingSchedule();
 
       bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+      bool setGridSignalSchedule(Schedule& schedule);
+
+      void resetGridSignalSchedule();
+
+      bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+      void resetLowerBoundToApplyGridResponsiveControl();
+
+      bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+      void resetUpperBoundToApplyGridResponsiveControl();
+
+      bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+
+      void resetMaxSpeedLevelDuringGridResponsiveControl();
+
+      bool setLoadControlDuringGridResponsiveControl(std::string loadControlDuringGridResponsiveControl);
+
+      void resetLoadControlDuringGridResponsiveControl();
 
       //@}
       /** @name Other */

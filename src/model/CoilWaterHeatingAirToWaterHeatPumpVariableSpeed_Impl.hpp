@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
   class Curve;
+  class Schedule;
   class CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData;
   class ModelObjectList;
 
@@ -65,6 +66,8 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
+
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       std::vector<ModelObject> children() const override;
 
@@ -114,7 +117,21 @@ namespace model {
 
       std::string evaporatorAirTemperatureTypeforCurveObjects() const;
 
-      Curve partLoadFractionCorrelationCurve() const;
+      boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+
+      boost::optional<Schedule> gridSignalSchedule() const;
+
+      double lowerBoundToApplyGridResponsiveControl() const;
+
+      bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+      double upperBoundToApplyGridResponsiveControl() const;
+
+      bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+      int maxSpeedLevelDuringGridResponsiveControl() const;
+
+      bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
 
       //@}
       /** @name Setters */
@@ -152,7 +169,25 @@ namespace model {
 
       bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
 
-      bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
+      bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& partLoadFractionCorrelationCurve);
+
+      void resetPartLoadFractionCorrelationCurve();
+
+      bool setGridSignalSchedule(Schedule& schedule);
+
+      void resetGridSignalSchedule();
+
+      bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+      void resetLowerBoundToApplyGridResponsiveControl();
+
+      bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+      void resetUpperBoundToApplyGridResponsiveControl();
+
+      bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl);
+
+      void resetMaxSpeedLevelDuringGridResponsiveControl();
 
       //@}
       /** @name Other */
@@ -181,11 +216,6 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeed");
-
-      // Optional getters for use by methods like children() so can remove() if the constructor fails.
-      // There are other ways for the public versions of these getters to fail--perhaps all required
-      // objects should be returned as boost::optionals
-      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
     };
 
   }  // namespace detail

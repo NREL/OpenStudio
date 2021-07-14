@@ -80,6 +80,9 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed: {
         return PlantSizingType::CHILLEDWATER;
       }
+      case openstudio::IddObjectType::OS_ThermalStorage_Pcm_Simple: {
+        return PlantSizingType::CHILLEDWATER;
+      }
       case openstudio::IddObjectType::OS_DistrictCooling: {
         return PlantSizingType::CHILLEDWATER;
       }

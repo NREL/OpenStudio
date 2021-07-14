@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
   class Curve;
+  class Schedule;
   class CoilHeatingDXVariableSpeedSpeedData;
   class ModelObjectList;
 
@@ -64,6 +65,8 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
+
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       virtual unsigned inletPort() const override;
 
@@ -127,6 +130,20 @@ namespace model {
 
       virtual void applySizingValues() override;
 
+      boost::optional<Schedule> gridSignalSchedule() const;
+
+      double lowerBoundToApplyGridResponsiveControl() const;
+
+      bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+      double upperBoundToApplyGridResponsiveControl() const;
+
+      bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+      int maxSpeedLevelDuringGridResponsiveControl() const;
+
+      bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -168,6 +185,22 @@ namespace model {
       bool setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity);
 
       void autosizeResistiveDefrostHeaterCapacity();
+
+      bool setGridSignalSchedule(Schedule& schedule);
+
+      void resetGridSignalSchedule();
+
+      bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+      void resetLowerBoundToApplyGridResponsiveControl();
+
+      bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+      void resetUpperBoundToApplyGridResponsiveControl();
+
+      bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+
+      void resetMaxSpeedLevelDuringGridResponsiveControl();
 
       //@}
       /** @name Other */

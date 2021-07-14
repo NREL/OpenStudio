@@ -120,6 +120,7 @@ namespace model {
   class ChillerElectricEIR;
   class ChillerElectricReformulatedEIR;
   class ChillerHeaterPerformanceElectricEIR;
+  class CoilChillerAirSourceVariableSpeed;
   class CoilCoolingDX;
   class CoilCoolingDXCurveFitPerformance;
   class CoilCoolingDXCurveFitOperatingMode;
@@ -431,6 +432,9 @@ namespace model {
   class TableMultiVariableLookup;
   class TemperingValve;
   class ThermalZone;
+  class ThermalStoragePcmSimple;
+  class ThermalStorageHeatingPair;
+  class ThermalStorageCoolingPair;
   class ThermalStorageIceDetailed;
   class ThermalStorageChilledWaterStratified;
   class ThermostatSetpointDualSetpoint;
@@ -710,6 +714,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateChillerElectricReformulatedEIR(model::ChillerElectricReformulatedEIR& modelObject);
 
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
+
+    boost::optional<IdfObject> translateCoilChillerAirSourceVariableSpeed(model::CoilChillerAirSourceVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
 
@@ -1360,6 +1366,12 @@ namespace energyplus {
     boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
 
     boost::optional<IdfObject> translateTemperingValve(model::TemperingValve& modelObject);
+
+    boost::optional<IdfObject> translateThermalStoragePcmSimple(model::ThermalStoragePcmSimple& modelObject);
+
+    boost::optional<IdfObject> translateThermalStorageHeatingPair(model::ThermalStorageHeatingPair& modelObject);
+
+    boost::optional<IdfObject> translateThermalStorageCoolingPair(model::ThermalStorageCoolingPair& modelObject);
 
     boost::optional<IdfObject> translateThermalStorageIceDetailed(model::ThermalStorageIceDetailed& modelObject);
 

@@ -29,6 +29,8 @@
 
 #include "ThermalStorageIceDetailed.hpp"
 #include "ThermalStorageIceDetailed_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "PlantLoop.hpp"
@@ -99,6 +101,22 @@ namespace model {
         result.push_back(ScheduleTypeKey("ThermalStorageIceDetailed", "Availability Schedule"));
       }
       return result;
+    }
+
+    boost::optional<HVACComponent> ThermalStorageIceDetailed_Impl::containingHVACComponent() const {
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.storageTank()) {
+            if (coilSystem.storageTank().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
+        }
+      }
+
+      return boost::none;
     }
 
     boost::optional<Schedule> ThermalStorageIceDetailed_Impl::availabilitySchedule() const {

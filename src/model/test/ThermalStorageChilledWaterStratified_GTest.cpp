@@ -28,11 +28,28 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+#include <string>
 
 #include "ModelFixture.hpp"
+
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
 
 #include "../ThermalStorageChilledWaterStratified.hpp"
 #include "../ThermalStorageChilledWaterStratified_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, ThermalStorageChilledWaterStratified_ThermalStorageChilledWaterStratified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+    {
+      Model m;
+      ThermalStorageChilledWaterStratified ts(m);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
+}

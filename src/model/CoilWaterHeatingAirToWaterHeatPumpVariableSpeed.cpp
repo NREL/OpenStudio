@@ -110,11 +110,24 @@ namespace model {
       return CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType();
     }
 
+    std::vector<ScheduleTypeKey> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::GridSignalScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("CoilWaterHeatingAirToWaterHeatPumpVariableSpeed", "Grid Signal"));
+      }
+      return result;
+    }
+
     std::vector<ModelObject> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::children() const {
       std::vector<ModelObject> result;
 
-      if (OptionalCurve intermediate = optionalPartLoadFractionCorrelationCurve()) {
-        result.push_back(*intermediate);
+      boost::optional<ModelObject> curve;
+
+      curve = partLoadFractionCorrelationCurve();
+      if (curve) {
+        result.push_back(curve.get());
       }
 
       if (auto const _stageDataList = speedDataList()) {
@@ -162,17 +175,25 @@ namespace model {
       {
         auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
         for (const auto& coilSystem : coilSystems) {
-          if (coilSystem.dedicatedWaterHeatingCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.dedicatedWaterHeatingCoil()) {
+            if (coilSystem.dedicatedWaterHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
-          if (coilSystem.scwhCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.scwhCoil()) {
+            if (coilSystem.scwhCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
-          if (coilSystem.scdwhWaterHeatingCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.scdwhWaterHeatingCoil()) {
+            if (coilSystem.scdwhWaterHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
-          if (coilSystem.shdwhWaterHeatingCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.shdwhWaterHeatingCoil()) {
+            if (coilSystem.shdwhWaterHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
         }
       }
@@ -305,17 +326,47 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::optionalPartLoadFractionCorrelationCurve() const {
+    boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::partLoadFractionCorrelationCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName);
     }
 
-    Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::partLoadFractionCorrelationCurve() const {
-      boost::optional<Curve> value = optionalPartLoadFractionCorrelationCurve();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have a Part Load Fraction Correlation Curve attached.");
-      }
+    boost::optional<Schedule> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::gridSignalSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::GridSignalScheduleName);
+    }
+
+    double CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::lowerBoundToApplyGridResponsiveControl() const {
+      boost::optional<double> value =
+        getDouble(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, true);
+      OS_ASSERT(value);
       return value.get();
+    }
+
+    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl);
+    }
+
+    double CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::upperBoundToApplyGridResponsiveControl() const {
+      boost::optional<double> value =
+        getDouble(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl);
+    }
+
+    int CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
+      boost::optional<int> value =
+        getInt(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl);
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
@@ -424,11 +475,73 @@ namespace model {
       return result;
     }
 
-    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
-      bool result = setPointer(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName,
-                               partLoadFractionCorrelationCurve.handle());
+    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setPartLoadFractionCorrelationCurve(
+      const boost::optional<Curve>& partLoadFractionCorrelationCurve) {
+      bool result(false);
+      if (partLoadFractionCorrelationCurve) {
+        result = setPointer(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName,
+                            partLoadFractionCorrelationCurve.get().handle());
+      } else {
+        resetPartLoadFractionCorrelationCurve();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::resetPartLoadFractionCorrelationCurve() {
+      bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setGridSignalSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::GridSignalScheduleName,
+                                "CoilChillerAirSourceVariableSpeed", "Grid Signal", schedule);
       OS_ASSERT(result);
       return result;
+    }
+
+    void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::resetGridSignalSchedule() {
+      bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::GridSignalScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+      bool result = setDouble(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl,
+                              lowerBoundToApplyGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::resetLowerBoundToApplyGridResponsiveControl() {
+      bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, "");
+      OS_ASSERT(result);
+    }
+
+    bool
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+      bool result = setDouble(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl,
+                              upperBoundToApplyGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::resetUpperBoundToApplyGridResponsiveControl() {
+      bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(
+      int maxSpeedLevelDuringGridResponsiveControl) {
+      bool result = setInt(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl,
+                           maxSpeedLevelDuringGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::resetMaxSpeedLevelDuringGridResponsiveControl() {
+      bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, "");
+      OS_ASSERT(result);
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList) {
@@ -514,13 +627,6 @@ namespace model {
     : HVACComponent(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>());
 
-    CurveQuadratic partLoadFraction = CurveQuadratic(model);
-    partLoadFraction.setCoefficient1Constant(0.75);
-    partLoadFraction.setCoefficient2x(0.25);
-    partLoadFraction.setCoefficient3xPOW2(0.0);
-    partLoadFraction.setMinimumValueofx(0.0);
-    partLoadFraction.setMaximumValueofx(1.0);
-
     bool ok = true;
     ok = setNominalSpeedLevel(1);
     OS_ASSERT(ok);
@@ -548,8 +654,6 @@ namespace model {
     ok = setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10);
     OS_ASSERT(ok);
     ok = setEvaporatorAirTemperatureTypeforCurveObjects("WetBulbTemperature");
-    OS_ASSERT(ok);
-    ok = setPartLoadFractionCorrelationCurve(partLoadFraction);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
 
     auto speedDataList = ModelObjectList(model);
@@ -626,8 +730,36 @@ namespace model {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->evaporatorAirTemperatureTypeforCurveObjects();
   }
 
-  Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::partLoadFractionCorrelationCurve() const {
+  boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::partLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->partLoadFractionCorrelationCurve();
+  }
+
+  boost::optional<Schedule> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::gridSignalSchedule() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->gridSignalSchedule();
+  }
+
+  double CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::lowerBoundToApplyGridResponsiveControl() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->lowerBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->isLowerBoundToApplyGridResponsiveControlDefaulted();
+  }
+
+  double CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::upperBoundToApplyGridResponsiveControl() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->upperBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->isUpperBoundToApplyGridResponsiveControlDefaulted();
+  }
+
+  int CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->maxSpeedLevelDuringGridResponsiveControl();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
   }
 
   bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setNominalSpeedLevel(int nominalSpeedLevel) {
@@ -711,6 +843,45 @@ namespace model {
   bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setPartLoadFractionCorrelationCurve(
       partLoadFractionCorrelationCurve);
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::resetPartLoadFractionCorrelationCurve() {
+    getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->resetPartLoadFractionCorrelationCurve();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setGridSignalSchedule(Schedule& schedule) {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setGridSignalSchedule(schedule);
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::resetGridSignalSchedule() {
+    getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->resetGridSignalSchedule();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setLowerBoundToApplyGridResponsiveControl(
+      lowerBoundToApplyGridResponsiveControl);
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::resetLowerBoundToApplyGridResponsiveControl() {
+    getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->resetLowerBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setUpperBoundToApplyGridResponsiveControl(
+      upperBoundToApplyGridResponsiveControl);
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
+    getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->resetUpperBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
+    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(
+      maxSpeedLevelDuringGridResponsiveControl);
+  }
+
+  void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::resetMaxSpeedLevelDuringGridResponsiveControl() {
+    getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->resetMaxSpeedLevelDuringGridResponsiveControl();
   }
 
   std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::speeds() const {
