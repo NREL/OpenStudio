@@ -5783,6 +5783,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     if( boost::optional<model::ModelObject> mo = translateWtrHtr(wtrHtrElement, model) )
     {
       plantLoop.addSupplyBranchForComponent(mo->cast<model::HVACComponent>());
+
+      auto waterToWater = mo->optionalCast<model::WaterToWaterComponent>();
+      if (waterToWater) {
+        addBranchPump(waterToWater->supplyInletModelObject(), wtrHtrElement);
+      }
+
+      auto straight = mo->optionalCast<model::StraightComponent>();
+      if (straight) {
+        addBranchPump(straight->inletModelObject(), wtrHtrElement);
+      }
     }
   }
 
