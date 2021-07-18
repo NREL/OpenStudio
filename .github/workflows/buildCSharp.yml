@@ -115,8 +115,9 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
-  
-      - name: Tests
+
+      - name: Tests on Windows for x64
+        if: matrix.name == 'Windows64'
         run: |
           cd csharp/examples/OpenStudio.Tests/
           dotnet remove package OpenStudio 
@@ -124,19 +125,30 @@ jobs:
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
           dotnet test OpenStudio.Tests.csproj -f NET5
 
-      - name: Additional Tests on Windows for .Net Framework 4.5 x64
-        if: matrix.name == 'Windows64'
-        run: |
-          cd csharp/examples/OpenStudio.Tests/
           dotnet clean
           dotnet test OpenStudio.Tests.csproj --runtime win-x64 -f NET45
 
-      - name: Additional Tests on Windows for .Net Framework 4.5 x32
+      - name: Tests on Windows for x32
         if: matrix.name == 'Windows32'
         run: |
           cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
+          dotnet test OpenStudio.Tests.csproj --runtime win-x86 -f NET5
+
           dotnet clean
           dotnet test OpenStudio.Tests.csproj --runtime win-x86 -f NET45
+
+
+      - name: Tests dotnet 5 on Mac and Linux
+        if: runner.os != 'Windows'
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
+          dotnet test OpenStudio.Tests.csproj -f NET5
 
       - name: Zip Build/Source Artifact
         if: runner.os != 'Windows'
@@ -169,5 +181,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.name }}_Failed
-          path: ./build/csharp_wrapper/
+          path: |
+            ./build/csharp_wrapper/
+            ./build/Products/
 
