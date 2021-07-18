@@ -12,7 +12,7 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, Windows64, Windows]
+        name: [Ubuntu, macOS, Windows64, Windows32]
         include:
         - name: Ubuntu
           os: ubuntu-18.04
@@ -20,7 +20,7 @@ jobs:
           os: macos-10.15
         - name: Windows64
           os: windows-2019
-        - name: Windows
+        - name: Windows32
           os: windows-2019
 
     steps:
@@ -91,15 +91,15 @@ jobs:
           buildDirectory: ${{ github.workspace }}/build
           buildWithCMake: true
 
-      - name: Compile Windows
-        if: matrix.name == 'Windows'
+      - name: Compile Windows32
+        if: matrix.name == 'Windows32'
         uses: lukka/run-cmake@v2
         with:
           cmakeGenerator: VS16Win32
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
           cmakeBuildType: Release
-          cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
+          cmakeAppendedArgs: '-DUSE32bit=True -DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
           buildWithCMakeArgs: "--config Release -j2"
           buildDirectory: ${{ github.workspace }}/build
           buildWithCMake: true
@@ -124,13 +124,19 @@ jobs:
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
           dotnet test OpenStudio.Tests.csproj -f NET5
 
-      - name: Additional Tests on Windows for .Net Framework 4.5
-        if: runner.os == 'Windows'
+      - name: Additional Tests on Windows for .Net Framework 4.5 x64
+        if: matrix.name == 'Windows64'
         run: |
           cd csharp/examples/OpenStudio.Tests/
           dotnet clean
           dotnet test OpenStudio.Tests.csproj --runtime win-x64 -f NET45
 
+      - name: Additional Tests on Windows for .Net Framework 4.5 x32
+        if: matrix.name == 'Windows32'
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet clean
+          dotnet test OpenStudio.Tests.csproj --runtime win-x86 -f NET45
 
       - name: Zip Build/Source Artifact
         if: runner.os != 'Windows'
