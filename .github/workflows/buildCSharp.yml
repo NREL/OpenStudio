@@ -91,7 +91,7 @@ jobs:
           buildDirectory: ${{ github.workspace }}/build
           buildWithCMake: true
 
-      - name: Compile Windows32
+      - name: Compile Windows 32
         if: matrix.name == 'Windows32'
         uses: lukka/run-cmake@v2
         with:
@@ -99,7 +99,7 @@ jobs:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
           cmakeBuildType: Release
-          cmakeAppendedArgs: '-DUSE32bit=True -DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
+          cmakeAppendedArgs: '-A Win32 -DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
           buildWithCMakeArgs: "--config Release -j2"
           buildDirectory: ${{ github.workspace }}/build
           buildWithCMake: true
