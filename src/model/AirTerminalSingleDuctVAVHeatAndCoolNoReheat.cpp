@@ -91,7 +91,7 @@ namespace model {
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVHeatAndCoolNoReheat", "Availability Schedule"));
       }
-      if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName) != e) {
+      if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MinimumAirFlowTurndownScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVReheat", "Minimum Air Flow Turndown"));
       }
       return result;

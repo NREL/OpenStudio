@@ -91,7 +91,7 @@ namespace model {
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVHeatAndCoolReheat", "Availability Schedule"));
       }
-      if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName) != e) {
+      if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MinimumAirFlowTurndownScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVReheat", "Minimum Air Flow Turndown"));
       }
       return result;
@@ -160,7 +160,7 @@ namespace model {
     }
 
     boost::optional<Schedule> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::minimumAirFlowTurndownSchedule() const {
-      return this->getObject<AirTerminalSingleDuctVAVHeatAndCoolNoReheat>().getModelObjectTarget<Schedule>(
+      return this->getObject<AirTerminalSingleDuctVAVHeatAndCoolReheat>().getModelObjectTarget<Schedule>(
         OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MinimumAirFlowTurndownScheduleName);
     }
 
