@@ -243,6 +243,17 @@ namespace energyplus {
       }
     }
 
+    // MinimumAirFlowTurndownScheduleName
+    boost::optional<Schedule> minAirFlowTurndownSchedule = modelObject.minimumAirFlowTurndownSchedule();
+
+    if (minAirFlowTurndownSchedule) {
+      boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get());
+
+      if (_minAirFlowTurndownSchedule && _minAirFlowTurndownSchedule->name()) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->name().get());
+      }
+    }
+
     return _airDistributionUnit;
   }
 
