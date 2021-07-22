@@ -126,6 +126,14 @@ namespace model {
 
     void resetMinimumAirFlowFractionSchedule();
 
+    /** Returns the Schedule referred to by the MinimumAirFlowTurndownScheduleName field. */
+    boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
+    /** Sets the Schedule referred to by the MinimumAirFlowTurndownScheduleName field. */
+    bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+    void resetMinimumAirFlowTurndownSchedule();
+
     /** Returns the value of the MaximumHotWaterOrSteamFlowRate field. */
     boost::optional<double> maximumHotWaterOrSteamFlowRate();
 

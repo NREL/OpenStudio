@@ -114,6 +114,20 @@ namespace model {
         OS_AirTerminal_DualDuct_VAVFields::DesignSpecificationOutdoorAirObject);
     }
 
+    boost::optional<Schedule> AirTerminalDualDuctVAV_Impl::minimumAirFlowTurndownSchedule() const {
+      return this->getObject<AirTerminalDualDuctVAV>().getModelObjectTarget<Schedule>(
+        OS_AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName);
+    }
+
+    boost::optional<ModelObject> AirTerminalDualDuctVAV_Impl::minimumAirFlowTurndownScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = minimumAirFlowTurndownSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
     bool AirTerminalDualDuctVAV_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_AirTerminal_DualDuct_VAVFields::AvailabilitySchedule, "AirTerminalDualDuctVAV", "Availability Schedule", schedule);
       return result;
@@ -157,6 +171,32 @@ namespace model {
     void AirTerminalDualDuctVAV_Impl::resetDesignSpecificationOutdoorAirObject() {
       bool result = setString(OS_AirTerminal_DualDuct_VAVFields::DesignSpecificationOutdoorAirObject, "");
       OS_ASSERT(result);
+    }
+
+    bool AirTerminalDualDuctVAV_Impl::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, "AirTerminalSingleDuctVAVReheat",
+                                "Minimum Air Flow Turndown", schedule);
+      return result;
+    }
+
+    void AirTerminalDualDuctVAV_Impl::resetMinimumAirFlowTurndownSchedule() {
+      bool result = setString(OS_AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool AirTerminalDualDuctVAV_Impl::setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setMinimumAirFlowTurndownSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetMinimumAirFlowTurndownSchedule();
+      }
+      return true;
     }
 
     unsigned AirTerminalDualDuctVAV_Impl::outletPort() const {
@@ -284,6 +324,10 @@ namespace model {
     return getImpl<detail::AirTerminalDualDuctVAV_Impl>()->designSpecificationOutdoorAirObject();
   }
 
+  boost::optional<Schedule> AirTerminalDualDuctVAV::minimumAirFlowTurndownSchedule() const {
+    return getImpl<detail::AirTerminalDualDuctVAV_Impl>()->minimumAirFlowTurndownSchedule();
+  }
+
   bool AirTerminalDualDuctVAV::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::AirTerminalDualDuctVAV_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -318,6 +362,14 @@ namespace model {
 
   void AirTerminalDualDuctVAV::resetDesignSpecificationOutdoorAirObject() {
     getImpl<detail::AirTerminalDualDuctVAV_Impl>()->resetDesignSpecificationOutdoorAirObject();
+  }
+
+  bool AirTerminalDualDuctVAV::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+    return getImpl<detail::AirTerminalDualDuctVAV_Impl>()->setMinimumAirFlowTurndownSchedule(schedule);
+  }
+
+  void AirTerminalDualDuctVAV::resetMinimumAirFlowTurndownSchedule() {
+    getImpl<detail::AirTerminalDualDuctVAV_Impl>()->resetMinimumAirFlowTurndownSchedule();
   }
 
   /*

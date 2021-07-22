@@ -89,6 +89,8 @@ namespace model {
 
       virtual void applySizingValues() override;
 
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -105,6 +107,10 @@ namespace model {
       void autosizeMaximumAirFlowRate();
 
       bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
+
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+      void resetMinimumAirFlowTurndownSchedule();
 
       //@}
       /** @name Other */
@@ -124,6 +130,10 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
+
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
+      
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

@@ -98,6 +98,7 @@ namespace model {
       bool isFixedMinimumAirFlowRateDefaulted() const;
 
       boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
 
       boost::optional<double> autosizedMaximumAirFlowRate() const;
       boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
@@ -135,6 +136,10 @@ namespace model {
 
       void resetMinimumAirFlowFractionSchedule();
 
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+      
+      void resetMinimumAirFlowTurndownSchedule();
+
       bool controlForOutdoorAir() const;
 
       bool setControlForOutdoorAir(bool controlForOutdoorAir);
@@ -157,9 +162,11 @@ namespace model {
 
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
       boost::optional<ModelObject> minimumAirFlowFractionScheduleAsModelObject() const;
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
 
       bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
       bool setMinimumAirFlowFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

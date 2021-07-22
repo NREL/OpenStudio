@@ -102,6 +102,9 @@ namespace model {
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVNoReheat", "Minimum Air Flow Fraction"));
       }
+      if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVNoReheat", "Minimum Air Flow Turndown"));
+      }
       return result;
     }
 
@@ -227,6 +230,12 @@ namespace model {
         OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
     }
 
+    boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat_Impl::minimumAirFlowTurndownSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName);
+    }
+
+
     bool AirTerminalSingleDuctVAVNoReheat_Impl::setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction) {
       bool result = setDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, constantMinimumAirFlowFraction);
       return result;
@@ -268,6 +277,17 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool AirTerminalSingleDuctVAVNoReheat_Impl::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName, "AirTerminalSingleDuctVAVNoReheat",
+                                "Minimum Air Flow Turndown", schedule);
+      return result;
+    }
+
+    void AirTerminalSingleDuctVAVNoReheat_Impl::resetMinimumAirFlowTurndownSchedule() {
+      bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName);
     }
@@ -284,6 +304,15 @@ namespace model {
     boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::minimumAirFlowFractionScheduleAsModelObject() const {
       OptionalModelObject result;
       OptionalSchedule intermediate = minimumAirFlowFractionSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::minimumAirFlowTurndownScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = minimumAirFlowTurndownSchedule();
       if (intermediate) {
         result = *intermediate;
       }
@@ -399,6 +428,21 @@ namespace model {
         }
       } else {
         resetMinimumAirFlowFractionSchedule();
+      }
+      return true;
+    }
+
+    bool AirTerminalSingleDuctVAVNoReheat_Impl::setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setMinimumAirFlowTurndownSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetMinimumAirFlowTurndownSchedule();
       }
       return true;
     }
@@ -519,6 +563,10 @@ namespace model {
     return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->minimumAirFlowFractionSchedule();
   }
 
+  boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat::minimumAirFlowTurndownSchedule() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->minimumAirFlowTurndownSchedule();
+  }
+
   bool AirTerminalSingleDuctVAVNoReheat::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -573,6 +621,14 @@ namespace model {
 
   void AirTerminalSingleDuctVAVNoReheat::resetMinimumAirFlowFractionSchedule() {
     getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetMinimumAirFlowFractionSchedule();
+  }
+
+  bool AirTerminalSingleDuctVAVNoReheat::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+    return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setMinimumAirFlowTurndownSchedule(schedule);
+  }
+
+  void AirTerminalSingleDuctVAVNoReheat::resetMinimumAirFlowTurndownSchedule() {
+    getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetMinimumAirFlowTurndownSchedule();
   }
 
   bool AirTerminalSingleDuctVAVNoReheat::controlForOutdoorAir() const {
