@@ -147,3 +147,24 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVReheat_remove) {
   EXPECT_TRUE(coil2.handle().isNull());
   EXPECT_TRUE(coil3.handle().isNull());
 }
+
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowTurndownSchedule) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+
+  AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m, s);
+
+  ScheduleCompact alwaysOnSchedule(m);
+  alwaysOnSchedule.setName("ALWAYS_ON");
+  alwaysOnSchedule.setString(3, "Through: 12/31");
+  alwaysOnSchedule.setString(4, "For: AllDays");
+  alwaysOnSchedule.setString(5, "Until: 24:00");
+  alwaysOnSchedule.setString(6, "1");
+
+  EXPECT_FALSE(testObject.minimumAirFlowTurndownSchedule());
+  EXPECT_TRUE(testObject.setMinimumAirFlowTurndownSchedule(alwaysOnSchedule));
+  EXPECT_TRUE(testObject.minimumAirFlowTurndownSchedule());
+  EXPECT_EQ(alwaysOnSchedule, testObject.minimumAirFlowTurndownSchedule().get());
+  testObject.resetMinimumAirFlowRateTurndownSchedule();
+  EXPECT_FALSE(testObject.minimumAirFlowTurndownSchedule());
+}
