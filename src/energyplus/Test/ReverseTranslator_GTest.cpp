@@ -939,11 +939,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
@@ -986,11 +984,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
