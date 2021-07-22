@@ -235,7 +235,6 @@ namespace model {
         OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName);
     }
 
-
     bool AirTerminalSingleDuctVAVNoReheat_Impl::setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction) {
       bool result = setDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, constantMinimumAirFlowFraction);
       return result;

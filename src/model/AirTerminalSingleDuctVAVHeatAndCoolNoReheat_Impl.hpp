@@ -132,7 +132,7 @@ namespace model {
       REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
 
       boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
-      
+
       bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 

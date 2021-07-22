@@ -158,7 +158,7 @@ namespace model {
       boost::optional<HVACComponent> optionalReheatCoil() const;
 
       boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
-      
+
       bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 

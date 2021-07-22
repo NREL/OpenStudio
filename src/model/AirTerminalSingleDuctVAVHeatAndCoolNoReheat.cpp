@@ -164,8 +164,8 @@ namespace model {
     }
 
     bool AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MinimumAirFlowTurndownScheduleName, "AirTerminalSingleDuctVAVReheat",
-                                "Minimum Air Flow Turndown", schedule);
+      bool result = setSchedule(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MinimumAirFlowTurndownScheduleName,
+                                "AirTerminalSingleDuctVAVReheat", "Minimum Air Flow Turndown", schedule);
       return result;
     }
 
@@ -174,7 +174,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    bool AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::setMinimumAirFlowTurndownScheduleAsModelObject(
+      const boost::optional<ModelObject>& modelObject) {
       if (modelObject) {
         OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
         if (intermediate) {

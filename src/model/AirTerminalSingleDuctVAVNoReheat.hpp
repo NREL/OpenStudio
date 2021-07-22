@@ -119,7 +119,7 @@ namespace model {
     void resetMinimumAirFlowFractionSchedule();
 
     bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
-    
+
     void resetMinimumAirFlowTurndownSchedule();
 
     bool setControlForOutdoorAir(bool controlForOutdoorAir);
