@@ -101,6 +101,6 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVHeatAndCoolReheat_MinimumAirFlowTur
   EXPECT_TRUE(terminal.setMinimumAirFlowTurndownSchedule(alwaysOnSchedule));
   EXPECT_TRUE(terminal.minimumAirFlowTurndownSchedule());
   EXPECT_EQ(alwaysOnSchedule, terminal.minimumAirFlowTurndownSchedule().get());
-  terminal.resetMinimumAirFlowRateTurndownSchedule();
+  terminal.resetMinimumAirFlowTurndownSchedule();
   EXPECT_FALSE(terminal.minimumAirFlowTurndownSchedule());
 }
