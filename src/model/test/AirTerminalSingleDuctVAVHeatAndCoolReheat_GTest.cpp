@@ -36,7 +36,8 @@
 #include "../CoilHeatingGas.hpp"
 #include "../CoilHeatingGas_Impl.hpp"
 #include "../Schedule.hpp"
-#include "../Schedule_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 

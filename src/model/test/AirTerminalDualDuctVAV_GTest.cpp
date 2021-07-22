@@ -39,6 +39,9 @@
 #include "../Node_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

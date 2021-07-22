@@ -37,6 +37,8 @@
 #include "../BoilerHotWater_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
