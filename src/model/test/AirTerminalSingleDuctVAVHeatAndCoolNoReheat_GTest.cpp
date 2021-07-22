@@ -35,7 +35,7 @@
 #include "../AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleCompact.hpp"
-#include "../ScheduleCompact_Impl.h
+#include "../ScheduleCompact_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

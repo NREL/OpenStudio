@@ -153,8 +153,8 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVReheat_remove) {
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowTurndownSchedule) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-
-  AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m, s);
+  CoilHeatingElectric coil = CoilHeatingElectric(m, s);
+  AirTerminalSingleDuctVAVReheat testObject(m, s, coil);
 
   ScheduleCompact alwaysOnSchedule(m);
   alwaysOnSchedule.setName("ALWAYS_ON");
