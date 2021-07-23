@@ -56,10 +56,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject) {
 
-
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Tubular, modelObject);
-
-
 
     return idfObject;
   }

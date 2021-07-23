@@ -48,12 +48,8 @@ using namespace openstudio;
 
 TEST_F(ModelFixture, DaylightingDeviceLightWell) {
   Model model;
-
-
 }
 
 TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   Model model;
-
-
 }
