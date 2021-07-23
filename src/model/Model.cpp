@@ -2742,6 +2742,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CurveTriquadratic);
     REGISTER_CONSTRUCTOR(DaylightingControl);
     REGISTER_CONSTRUCTOR(DaylightingDeviceShelf);
+    REGISTER_CONSTRUCTOR(DaylightingDeviceTubular);
+    REGISTER_CONSTRUCTOR(DaylightingDeviceLightWell);
     REGISTER_CONSTRUCTOR(DaylightRedirectionDevice);
     REGISTER_CONSTRUCTOR(DefaultConstructionSet);
     REGISTER_CONSTRUCTOR(DefaultScheduleSet);
@@ -3264,6 +3266,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CurveTriquadratic);
     REGISTER_COPYCONSTRUCTORS(DaylightingControl);
     REGISTER_COPYCONSTRUCTORS(DaylightingDeviceShelf);
+    REGISTER_COPYCONSTRUCTORS(DaylightingDeviceTubular);
+    REGISTER_COPYCONSTRUCTORS(DaylightingDeviceLightWell);
     REGISTER_COPYCONSTRUCTORS(DaylightRedirectionDevice);
     REGISTER_COPYCONSTRUCTORS(DefaultConstructionSet);
     REGISTER_COPYCONSTRUCTORS(DefaultScheduleSet);

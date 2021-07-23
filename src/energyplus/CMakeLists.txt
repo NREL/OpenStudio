@@ -132,6 +132,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCurveTriquadratic.cpp
   ForwardTranslator/ForwardTranslateDaylightingControl.cpp
   ForwardTranslator/ForwardTranslateDaylightingDeviceShelf.cpp
+  ForwardTranslator/ForwardTranslateDaylightingDeviceTubular.cpp
+  ForwardTranslator/ForwardTranslateDaylightingDeviceLightWell.cpp
   ForwardTranslator/ForwardTranslateDaylightRedirectionDevice.cpp
   ForwardTranslator/ForwardTranslateDesignDay.cpp
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
@@ -648,6 +650,8 @@ set(${target_name}_test_src
   Test/CurveQuintLinear_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
+  Test/DaylightingDeviceTubular_GTest.cpp
+  Test/DaylightingDeviceLightWell_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp

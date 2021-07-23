@@ -186,6 +186,8 @@ namespace model {
   class CurveTriquadratic;
   class DaylightingControl;
   class DaylightingDeviceShelf;
+  class DaylightingDeviceTubular;
+  class DaylightingDeviceLightWell;
   class DaylightRedirectionDevice;
   class DesignDay;
   class DesignSpecificationOutdoorAir;
@@ -859,6 +861,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateDaylightingControl(model::DaylightingControl& modelObject);
 
     boost::optional<IdfObject> translateDaylightingDeviceShelf(model::DaylightingDeviceShelf& modelObject);
+
+    boost::optional<IdfObject> translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject);
+
+    boost::optional<IdfObject> translateDaylightingDeviceLightWell(model::DaylightingDeviceLightWell& modelObject);
 
     boost::optional<IdfObject> translateDaylightRedirectionDevice(model::DaylightRedirectionDevice& modelObject);
 
