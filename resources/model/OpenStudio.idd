@@ -4993,14 +4993,18 @@ OS:DaylightingDevice:Shelf,
        \maximum 1
 
 OS:DaylightingDevice:LightWell,
-       \min-fields 6
+       \min-fields 7
        \memo Applies only to exterior windows in daylighting-controlled zones or
        \memo in zones that share an interior window with a daylighting-controlled  zone.
        \memo Generally used with skylights.
   A1, \field Handle
        \type handle
        \required-field
-  A2,  \field Exterior Window Name
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference SpaceItemNames
+  A3,  \field Exterior Window Name
        \required-field
        \type object-list
        \object-list SubSurfNames

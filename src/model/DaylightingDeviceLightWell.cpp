@@ -57,7 +57,7 @@ namespace model {
     }
 
     DaylightingDeviceLightWell_Impl::DaylightingDeviceLightWell_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                             bool keepHandle)
+                                                                     bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == DaylightingDeviceLightWell::iddObjectType());
     }
@@ -73,8 +73,6 @@ namespace model {
     IddObjectType DaylightingDeviceLightWell_Impl::iddObjectType() const {
       return DaylightingDeviceLightWell::iddObjectType();
     }
-
-
 
   }  // namespace detail
 
@@ -103,10 +101,9 @@ namespace model {
     return result;
   }
 
-
-
   /// @cond
-  DaylightingDeviceLightWell::DaylightingDeviceLightWell(std::shared_ptr<detail::DaylightingDeviceLightWell_Impl> impl) : ModelObject(std::move(impl)) {}
+  DaylightingDeviceLightWell::DaylightingDeviceLightWell(std::shared_ptr<detail::DaylightingDeviceLightWell_Impl> impl)
+    : ModelObject(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

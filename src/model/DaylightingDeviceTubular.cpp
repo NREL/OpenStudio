@@ -57,7 +57,7 @@ namespace model {
     }
 
     DaylightingDeviceTubular_Impl::DaylightingDeviceTubular_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                             bool keepHandle)
+                                                                 bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == DaylightingDeviceTubular::iddObjectType());
     }
@@ -74,8 +74,6 @@ namespace model {
       return DaylightingDeviceTubular::iddObjectType();
     }
 
-
-
   }  // namespace detail
 
   DaylightingDeviceTubular::DaylightingDeviceTubular(const SubSurface& subSurface)
@@ -83,7 +81,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::DaylightingDeviceTubular_Impl>());
 
     bool subSurfaceOk = false;
-    if (subSurface.allowDaylightingDeviceTubular()) {
+    if (subSurface.allowDaylightingDeviceTubularDome() || subSurface.allowDaylightingDeviceTubularDiffuser()) {
       if (!subSurface.daylightingDeviceTubular()) {
         subSurfaceOk = true;
       }
@@ -102,8 +100,6 @@ namespace model {
     IddObjectType result(IddObjectType::OS_DaylightingDevice_Tubular);
     return result;
   }
-
-
 
   /// @cond
   DaylightingDeviceTubular::DaylightingDeviceTubular(std::shared_ptr<detail::DaylightingDeviceTubular_Impl> impl) : ModelObject(std::move(impl)) {}

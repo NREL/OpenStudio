@@ -67,17 +67,11 @@ namespace model {
     /** @name Getters */
     //@{
 
-
-
     //@}
     /** @name Setters */
     //@{
 
-
-
     //@}
-
-
 
    protected:
     /// @cond
