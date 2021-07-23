@@ -139,7 +139,7 @@ TEST_F(ModelFixture, AirTerminalDualDuctVAV) {
   }
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVHeatAndCoolNoReheat_MinimumAirFlowTurndownSchedule) {
+TEST_F(ModelFixture, AirTerminalDualDuctVAV_MinimumAirFlowTurndownSchedule) {
   Model m;
   AirTerminalDualDuctVAV terminal(m);
 

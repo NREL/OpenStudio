@@ -150,7 +150,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVReheat_remove) {
   EXPECT_TRUE(coil3.handle().isNull());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowTurndownSchedule) {
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVReheat_MinimumAirFlowTurndownSchedule) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(m, s);
