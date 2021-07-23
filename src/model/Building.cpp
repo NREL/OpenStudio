@@ -56,7 +56,10 @@
 #include "OutputMeter_Impl.hpp"
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 
+#include <string>
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
@@ -232,6 +235,25 @@ namespace model {
           m_zoneMap.insert(std::pair<Handle, ThermalZone>(zone.handle(), clone));
         }
 
+        // This is crude, but since:
+        // 1. Surfaces all are in the name group, so name unicity is enforced
+        // 2. We are cloning the entire building, removing anything that was there prior: names aren't modified
+        // As a result, we do that on name... the alternative is to avoid calling Space::clone, clone surfaces first,
+        // reimplement a version of Space::clone, etc. Too much trouble
+        std::map<std::string, std::string> surfaceToAdjacentMap;
+        for (const auto& s : model().getConcreteModelObjects<Surface>()) {
+          if (auto adjS = s.adjacentSurface()) {
+            surfaceToAdjacentMap.emplace(s.nameString(), adjS->nameString());
+          }
+        }
+
+        std::map<std::string, std::string> subSurfaceToAdjacentMap;
+        for (const auto& s : model().getConcreteModelObjects<SubSurface>()) {
+          if (auto adjS = s.adjacentSubSurface()) {
+            subSurfaceToAdjacentMap.emplace(s.nameString(), adjS->nameString());
+          }
+        }
+
         // Space Instances
         auto t_spaces = spaces();
 
@@ -246,6 +268,26 @@ namespace model {
           if (auto story = space.buildingStory()) {
             auto storyClone = m_storyMap.at(story->handle());
             clone.setBuildingStory(storyClone);
+          }
+        }
+
+        // Now resolve matching of adjacent surfaces
+        for (auto& s : t_model.getConcreteModelObjects<Surface>()) {
+          if (!s.adjacentSurface()) {
+            if (auto it = surfaceToAdjacentMap.find(s.nameString()); it != surfaceToAdjacentMap.end()) {
+              auto adjacentSurface = t_model.getConcreteModelObjectByName<Surface>(it->second);
+              OS_ASSERT(adjacentSurface);
+              s.setAdjacentSurface(adjacentSurface.get());
+            }
+          }
+        }
+        for (auto& s : t_model.getConcreteModelObjects<SubSurface>()) {
+          if (!s.adjacentSubSurface()) {
+            if (auto it = subSurfaceToAdjacentMap.find(s.nameString()); it != subSurfaceToAdjacentMap.end()) {
+              auto adjacentSubSurface = t_model.getConcreteModelObjectByName<SubSurface>(it->second);
+              OS_ASSERT(adjacentSubSurface);
+              s.setAdjacentSubSurface(adjacentSubSurface.get());
+            }
           }
         }
       }
