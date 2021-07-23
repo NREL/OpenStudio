@@ -48,6 +48,10 @@
 #include "Construction_Impl.hpp"
 #include "DaylightingDeviceShelf.hpp"
 #include "DaylightingDeviceShelf_Impl.hpp"
+#include "DaylightingDeviceTubular.hpp"
+#include "DaylightingDeviceTubular_Impl.hpp"
+#include "DaylightingDeviceLightWell.hpp"
+#include "DaylightingDeviceLightWell_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
@@ -119,6 +123,14 @@ namespace model {
       boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf = this->daylightingDeviceShelf();
       if (daylightingDeviceShelf) {
         result.push_back(*daylightingDeviceShelf);
+      }
+      boost::optional<DaylightingDeviceTubular> daylightingDeviceTubular = this->daylightingDeviceTubular();
+      if (daylightingDeviceTubular) {
+        result.push_back(*daylightingDeviceTubular);
+      }
+      boost::optional<DaylightingDeviceLightWell> daylightingDeviceLightWell = this->daylightingDeviceLightWell();
+      if (daylightingDeviceLightWell) {
+        result.push_back(*daylightingDeviceLightWell);
       }
       std::vector<AirflowNetworkSurface> myAFNItems =
         getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
