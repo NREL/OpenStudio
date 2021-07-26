@@ -37,9 +37,9 @@ namespace openstudio {
 namespace model {
 
   class SubSurface;
-  class InteriorPartitionSurface;
-  class ShadingSurface;
-  class DaylightingDeviceTubular;
+  class ConstructionBase;
+  class ThermalZone;
+  class TransitionZone;
 
   namespace detail {
 
@@ -67,10 +67,43 @@ namespace model {
       /** @name Getters */
       //@{
 
+      SubSurface subSurfaceDome() const;
+
+      SubSurface subSurfaceDiffuser() const;
+
+      ConstructionBase construction() const;
+
+      double diameter() const;
+
+      double totalLength() const;
+
+      double effectiveThermalResistance() const;
+
+      std::vector<TransitionZone> transitionZones() const;
+
+      unsigned int numberofTransitionZones() const;
+
       //@}
       /** @name Setters */
       //@{
 
+      bool setConstruction(const ConstructionBase& construction);
+
+      bool setDiameter(double diameter);
+
+      bool setTotalLength(double totalLength);
+
+      bool setEffectiveThermalResistance(double effectiveThermalResistance);
+
+      bool addTransitionZone(const TransitionZone& transitionZone);
+
+      bool addTransitionZone(const ThermalZone& zone, double length);
+
+      bool removeTransitionZone(unsigned groupIndex);
+
+      void removeAllTransitionZones();
+
+      bool addTransitionZones(const std::vector<TransitionZone>& transitionZones);
       //@}
 
      protected:

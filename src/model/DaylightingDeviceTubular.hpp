@@ -33,18 +33,39 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+
 namespace openstudio {
 namespace model {
 
   class SubSurface;
-  class InteriorPartitionSurface;
-  class ShadingSurface;
+  class ConstructionBase;
+  class ThermalZone;
 
   namespace detail {
 
     class DaylightingDeviceTubular_Impl;
 
   }  // namespace detail
+
+  /** This class implements a transition zone */
+  class MODEL_API TransitionZone
+  {
+   public:
+    TransitionZone(const ThermalZone& zone, double length);
+
+    ThermalZone thermalZone() const;
+    double length() const;
+
+   private:
+    ThermalZone m_zone;
+    double m_length;
+    REGISTER_LOGGER("openstudio.model.TransitionZone");
+  };
+
+  // Overload operator<<
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone);
 
   /** DaylightingDeviceTubular is a ModelObject that wraps the OpenStudio IDD object 'OS_DaylightingDevice_Tubular'. */
   class MODEL_API DaylightingDeviceTubular : public ModelObject
@@ -53,7 +74,8 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit DaylightingDeviceTubular(const SubSurface& subSurface);
+    explicit DaylightingDeviceTubular(const SubSurface& dome, const SubSurface& diffuser, const ConstructionBase& construction, double diameter,
+                                      double totalLength);
 
     virtual ~DaylightingDeviceTubular() {}
 
@@ -67,9 +89,43 @@ namespace model {
     /** @name Getters */
     //@{
 
+    SubSurface subSurfaceDome() const;
+
+    SubSurface subSurfaceDiffuser() const;
+
+    ConstructionBase construction() const;
+
+    double diameter() const;
+
+    double totalLength() const;
+
+    double effectiveThermalResistance() const;
+
+    std::vector<TransitionZone> transitionZones() const;
+
+    unsigned int numberofTransitionZones() const;
+
     //@}
     /** @name Setters */
     //@{
+
+    bool setConstruction(const ConstructionBase& construction);
+
+    bool setDiameter(double diameter);
+
+    bool setTotalLength(double totalLength);
+
+    bool setEffectiveThermalResistance(double effectiveThermalResistance);
+
+    bool addTransitionZone(const TransitionZone& transitionZone);
+
+    bool addTransitionZone(const ThermalZone& zone, double length);
+
+    void removeTransitionZone(int groupIndex);
+
+    void removeAllTransitionZones();
+
+    bool addTransitionZones(const std::vector<TransitionZone>& transitionZones);
 
     //@}
 
