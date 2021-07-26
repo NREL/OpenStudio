@@ -37,9 +37,6 @@ namespace openstudio {
 namespace model {
 
   class SubSurface;
-  class InteriorPartitionSurface;
-  class ShadingSurface;
-  class DaylightingDeviceLightWell;
 
   namespace detail {
 
@@ -67,9 +64,27 @@ namespace model {
       /** @name Getters */
       //@{
 
+      SubSurface subSurface() const;
+
+      double heightofWell() const;
+
+      double perimeterofBottomofWell() const;
+
+      double areaofBottomofWell() const;
+
+      double visibleReflectanceofWellWalls() const;
+
       //@}
       /** @name Setters */
       //@{
+
+      bool setHeightofWell(double heightofWell);
+
+      bool setPerimeterofBottomofWell(double perimeterofBottomofWell);
+
+      bool setAreaofBottomofWell(double areaofBottomofWell);
+
+      bool setVisibleReflectanceofWellWalls(double visibleReflectanceofWellWalls);
 
       //@}
 

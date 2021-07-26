@@ -74,6 +74,61 @@ namespace model {
       return DaylightingDeviceLightWell::iddObjectType();
     }
 
+    SubSurface DaylightingDeviceLightWell_Impl::subSurface() const {
+      OptionalSubSurface subSurface =
+        getObject<ModelObject>().getModelObjectTarget<SubSurface>(OS_DaylightingDevice_LightWellFields::ExteriorWindowName);
+      OS_ASSERT(subSurface);
+      return subSurface.get();
+    }
+
+    double DaylightingDeviceLightWell_Impl::heightofWell() const {
+      boost::optional<double> value = getDouble(OS_DaylightingDevice_LightWellFields::HeightofWell, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double DaylightingDeviceLightWell_Impl::perimeterofBottomofWell() const {
+      boost::optional<double> value = getDouble(OS_DaylightingDevice_LightWellFields::PerimeterofBottomofWell, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double DaylightingDeviceLightWell_Impl::areaofBottomofWell() const {
+      boost::optional<double> value = getDouble(OS_DaylightingDevice_LightWellFields::AreaofBottomofWell, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double DaylightingDeviceLightWell_Impl::visibleReflectanceofWellWalls() const {
+      boost::optional<double> value = getDouble(OS_DaylightingDevice_LightWellFields::VisibleReflectanceofWellWalls, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool DaylightingDeviceLightWell_Impl::setHeightofWell(double heightofWell) {
+      bool result = setDouble(OS_DaylightingDevice_LightWellFields::HeightofWell, heightofWell);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool DaylightingDeviceLightWell_Impl::setPerimeterofBottomofWell(double perimeterofBottomofWell) {
+      bool result = setDouble(OS_DaylightingDevice_LightWellFields::PerimeterofBottomofWell, perimeterofBottomofWell);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool DaylightingDeviceLightWell_Impl::setAreaofBottomofWell(double areaofBottomofWell) {
+      bool result = setDouble(OS_DaylightingDevice_LightWellFields::AreaofBottomofWell, areaofBottomofWell);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool DaylightingDeviceLightWell_Impl::setVisibleReflectanceofWellWalls(double visibleReflectanceofWellWalls) {
+      bool result = setDouble(OS_DaylightingDevice_LightWellFields::VisibleReflectanceofWellWalls, visibleReflectanceofWellWalls);
+      OS_ASSERT(result);
+      return result;
+    }
+
   }  // namespace detail
 
   DaylightingDeviceLightWell::DaylightingDeviceLightWell(const SubSurface& subSurface)
@@ -99,6 +154,42 @@ namespace model {
   IddObjectType DaylightingDeviceLightWell::iddObjectType() {
     IddObjectType result(IddObjectType::OS_DaylightingDevice_LightWell);
     return result;
+  }
+
+  SubSurface DaylightingDeviceLightWell::subSurface() const {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->subSurface();
+  }
+
+  double DaylightingDeviceLightWell::heightofWell() const {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->heightofWell();
+  }
+
+  double DaylightingDeviceLightWell::perimeterofBottomofWell() const {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->perimeterofBottomofWell();
+  }
+
+  double DaylightingDeviceLightWell::areaofBottomofWell() const {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->areaofBottomofWell();
+  }
+
+  double DaylightingDeviceLightWell::visibleReflectanceofWellWalls() const {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->visibleReflectanceofWellWalls();
+  }
+
+  bool DaylightingDeviceLightWell::setHeightofWell(double heightofWell) {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->setHeightofWell(heightofWell);
+  }
+
+  bool DaylightingDeviceLightWell::setPerimeterofBottomofWell(double perimeterofBottomofWell) {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->setPerimeterofBottomofWell(perimeterofBottomofWell);
+  }
+
+  bool DaylightingDeviceLightWell::setAreaofBottomofWell(double areaofBottomofWell) {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->setAreaofBottomofWell(areaofBottomofWell);
+  }
+
+  bool DaylightingDeviceLightWell::setVisibleReflectanceofWellWalls(double visibleReflectanceofWellWalls) {
+    return getImpl<detail::DaylightingDeviceLightWell_Impl>()->setVisibleReflectanceofWellWalls(visibleReflectanceofWellWalls);
   }
 
   /// @cond
