@@ -32,19 +32,16 @@
 #include "../../model/Model.hpp"
 #include "../../model/DaylightingDeviceTubular.hpp"
 #include "../../model/DaylightingDeviceTubular_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Surface.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/ShadingSurface.hpp"
-#include "../../model/InteriorPartitionSurface.hpp"
-#include "../../model/InteriorPartitionSurfaceGroup.hpp"
-#include <utilities/idd/OS_DaylightingDevice_Tubular_FieldEnums.hxx>
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/DaylightingDevice_Tubular_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include "../../utilities/geometry/Point3d.hpp"
-#include "../../utilities/geometry/Transformation.hpp"
 
 using namespace openstudio::model;
 
@@ -55,8 +52,32 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject) {
+    SubSurface subSurfaceDome = modelObject.subSurfaceDome();
+    SubSurface subSurfaceDiffuser = modelObject.subSurfaceDiffuser();
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Tubular, modelObject);
+
+    idfObject.setString(DaylightingDevice_TubularFields::DomeName, subSurfaceDome.name().get());
+
+    idfObject.setString(DaylightingDevice_TubularFields::DiffuserName, subSurfaceDiffuser.name().get());
+
+    ConstructionBase construction = modelObject.construction();
+    idfObject.setString(DaylightingDevice_TubularFields::ConstructionName, construction.name().get());
+
+    idfObject.setDouble(DaylightingDevice_TubularFields::Diameter, modelObject.diameter());
+
+    idfObject.setDouble(DaylightingDevice_TubularFields::TotalLength, modelObject.totalLength());
+
+    idfObject.setDouble(DaylightingDevice_TubularFields::EffectiveThermalResistance, modelObject.effectiveThermalResistance());
+
+    std::vector<TransitionZone> transitionZones = modelObject.transitionZones();
+    if (!transitionZones.empty()) {
+      for (const TransitionZone& transitionZone : transitionZones) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setString(DaylightingDevice_TubularExtensibleFields::TransitionZoneName, transitionZone.thermalZone().name().get());
+        eg.setDouble(DaylightingDevice_TubularExtensibleFields::TransitionZoneLength, transitionZone.length());
+      }
+    }
 
     return idfObject;
   }

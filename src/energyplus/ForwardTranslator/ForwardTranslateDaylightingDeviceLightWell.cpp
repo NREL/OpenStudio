@@ -32,19 +32,12 @@
 #include "../../model/Model.hpp"
 #include "../../model/DaylightingDeviceLightWell.hpp"
 #include "../../model/DaylightingDeviceLightWell_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Surface.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/ShadingSurface.hpp"
-#include "../../model/InteriorPartitionSurface.hpp"
-#include "../../model/InteriorPartitionSurfaceGroup.hpp"
-#include <utilities/idd/OS_DaylightingDevice_LightWell_FieldEnums.hxx>
+#include "../../model/SubSurface_Impl.hpp"
 
 #include <utilities/idd/DaylightingDevice_LightWell_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include "../../utilities/geometry/Point3d.hpp"
-#include "../../utilities/geometry/Transformation.hpp"
 
 using namespace openstudio::model;
 
@@ -55,8 +48,19 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceLightWell(model::DaylightingDeviceLightWell& modelObject) {
+    SubSurface subSurface = modelObject.subSurface();
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_LightWell, modelObject);
+
+    idfObject.setString(DaylightingDevice_LightWellFields::ExteriorWindowName, subSurface.name().get());
+
+    idfObject.setDouble(DaylightingDevice_LightWellFields::HeightofWell, modelObject.heightofWell());
+
+    idfObject.setDouble(DaylightingDevice_LightWellFields::PerimeterofBottomofWell, modelObject.perimeterofBottomofWell());
+
+    idfObject.setDouble(DaylightingDevice_LightWellFields::AreaofBottomofWell, modelObject.areaofBottomofWell());
+
+    idfObject.setDouble(DaylightingDevice_LightWellFields::VisibleReflectanceofWellWalls, modelObject.visibleReflectanceofWellWalls());
 
     return idfObject;
   }
