@@ -92,7 +92,7 @@ namespace model {
       LOG_AND_THROW("Cannot create DaylightingDeviceLightWell for SubSurface '" << subSurface.name().get() << "'");
     }
 
-    bool test = setPointer(OS_DaylightingDevice_LightWellFields::WindowName, subSurface.handle());
+    bool test = setPointer(OS_DaylightingDevice_LightWellFields::ExteriorWindowName, subSurface.handle());
     OS_ASSERT(test);
   }
 

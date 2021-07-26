@@ -81,7 +81,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::DaylightingDeviceTubular_Impl>());
 
     bool subSurfaceOk = false;
-    if (subSurface.allowDaylightingDeviceTubularDome() || subSurface.allowDaylightingDeviceTubularDiffuser()) {
+    if (subSurface.allowDaylightingDeviceTubular()) {
       if (!subSurface.daylightingDeviceTubular()) {
         subSurfaceOk = true;
       }
@@ -92,7 +92,13 @@ namespace model {
       LOG_AND_THROW("Cannot create DaylightingDeviceTubular for SubSurface '" << subSurface.name().get() << "'");
     }
 
-    bool test = setPointer(OS_DaylightingDevice_TubularFields::WindowName, subSurface.handle());
+    bool test;
+    std::string subSurfaceType = subSurface.subSurfaceType();
+    if (istringEqual("TubularDaylightDome", subSurfaceType)) {
+      test = setPointer(OS_DaylightingDevice_TubularFields::DomeName, subSurface.handle());
+    } else if (istringEqual("TubularDaylightDiffuser", subSurfaceType)) {
+      test = setPointer(OS_DaylightingDevice_TubularFields::DiffuserName, subSurface.handle());
+    }
     OS_ASSERT(test);
   }
 

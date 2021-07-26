@@ -30,17 +30,17 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/DaylightingDeviceTubular.hpp"
-#include "../../model/DaylightingDeviceTubular_Impl.hpp"
+#include "../../model/DaylightingDeviceLightWell.hpp"
+#include "../../model/DaylightingDeviceLightWell_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/SubSurface.hpp"
 #include "../../model/ShadingSurface.hpp"
 #include "../../model/InteriorPartitionSurface.hpp"
 #include "../../model/InteriorPartitionSurfaceGroup.hpp"
-#include <utilities/idd/OS_DaylightingDevice_Tubular_FieldEnums.hxx>
+#include <utilities/idd/OS_DaylightingDevice_LightWell_FieldEnums.hxx>
 
-#include <utilities/idd/DaylightingDevice_Tubular_FieldEnums.hxx>
+#include <utilities/idd/DaylightingDevice_LightWell_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/geometry/Point3d.hpp"
@@ -54,9 +54,9 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceLightWell(model::DaylightingDeviceLightWell& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Tubular, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_LightWell, modelObject);
 
     return idfObject;
   }
