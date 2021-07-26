@@ -615,12 +615,12 @@ namespace model {
           }
         }
 
-        if (!allowDaylightingDeviceTubular()) {
+        /* TODO        if (!allowDaylightingDeviceTubularDome() && !allowDaylightingDeviceTubularDiffuser()) {
           boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular();
           if (tubular) {
             tubular->remove();
           }
-        }
+        } */
 
         if (!allowDaylightingDeviceLightWell()) {
           boost::optional<DaylightingDeviceLightWell> lightwell = this->daylightingDeviceLightWell();
@@ -1144,11 +1144,22 @@ namespace model {
       return result;
     }
 
-    bool SubSurface_Impl::allowDaylightingDeviceTubular() const {
+    bool SubSurface_Impl::allowDaylightingDeviceTubularDome() const {
       bool result = false;
 
       std::string subSurfaceType = this->subSurfaceType();
-      if (istringEqual(subSurfaceType, "TubularDaylightDome") || istringEqual(subSurfaceType, "TubularDaylightDiffuser")) {
+      if (istringEqual(subSurfaceType, "TubularDaylightDome")) {
+        result = true;
+      }
+
+      return result;
+    }
+
+    bool SubSurface_Impl::allowDaylightingDeviceTubularDiffuser() const {
+      bool result = false;
+
+      std::string subSurfaceType = this->subSurfaceType();
+      if (istringEqual(subSurfaceType, "TubularDaylightDiffuser")) {
         result = true;
       }
 
@@ -1165,22 +1176,6 @@ namespace model {
       } else if (tubulars.size() > 1) {
         result = tubulars[0];
       }
-      return result;
-    }
-
-    boost::optional<DaylightingDeviceTubular> SubSurface_Impl::addDaylightingDeviceTubular() const {
-      boost::optional<DaylightingDeviceTubular> result = this->daylightingDeviceTubular();
-      if (result) {
-        return result;
-      }
-
-      if (allowDaylightingDeviceTubular()) {
-        try {
-          result = DaylightingDeviceTubular(getObject<SubSurface>());
-        } catch (const std::exception&) {
-        }
-      }
-
       return result;
     }
 
@@ -1533,16 +1528,16 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->addDaylightingDeviceShelf();
   }
 
-  bool SubSurface::allowDaylightingDeviceTubular() const {
-    return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceTubular();
+  bool SubSurface::allowDaylightingDeviceTubularDome() const {
+    return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceTubularDome();
+  }
+
+  bool SubSurface::allowDaylightingDeviceTubularDiffuser() const {
+    return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceTubularDiffuser();
   }
 
   boost::optional<DaylightingDeviceTubular> SubSurface::daylightingDeviceTubular() const {
     return getImpl<detail::SubSurface_Impl>()->daylightingDeviceTubular();
-  }
-
-  boost::optional<DaylightingDeviceTubular> SubSurface::addDaylightingDeviceTubular() const {
-    return getImpl<detail::SubSurface_Impl>()->addDaylightingDeviceTubular();
   }
 
   bool SubSurface::allowDaylightingDeviceLightWell() const {

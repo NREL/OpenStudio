@@ -236,15 +236,14 @@ namespace model {
    * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
     boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
-    /** Returns true if this sub surface allows the addition of a daylighting light tubular. */
-    bool allowDaylightingDeviceTubular() const;
+    /** Returns true if this sub surface allows the addition of a daylighting light tubular dome. */
+    bool allowDaylightingDeviceTubularDome() const;
+
+    /** Returns true if this sub surface allows the addition of a daylighting light tubular diffuser. */
+    bool allowDaylightingDeviceTubularDiffuser() const;
 
     /** Get the daylighting light tubular associated with this sub surface if there is one. */
     boost::optional<DaylightingDeviceTubular> daylightingDeviceTubular() const;
-
-    /** Add a daylighting light tubular associated with this sub surface.  Only succeeds if this is a fixed window,
-   * operable window, or glass door. Will return existing daylighting light tubular if there already is one. */
-    boost::optional<DaylightingDeviceTubular> addDaylightingDeviceTubular() const;
 
     /** Returns true if this sub surface allows the addition of a daylighting light light well. */
     bool allowDaylightingDeviceLightWell() const;
