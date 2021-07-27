@@ -83,19 +83,19 @@ namespace model {
     }
 
     unsigned HeatPumpPlantLoopEIRCooling_Impl::supplyInletPort() const {
-      return OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideInletNodeName;
-    }
-
-    unsigned HeatPumpPlantLoopEIRCooling_Impl::supplyOutletPort() const {
-      return OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName;
-    }
-
-    unsigned HeatPumpPlantLoopEIRCooling_Impl::demandInletPort() const {
       return OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideInletNodeName;
     }
 
-    unsigned HeatPumpPlantLoopEIRCooling_Impl::demandOutletPort() const {
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::supplyOutletPort() const {
       return OS_HeatPump_PlantLoop_EIR_CoolingFields::LoadSideOutletNodeName;
+    }
+
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::demandInletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideInletNodeName;
+    }
+
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::demandOutletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName;
     }
 
     std::string HeatPumpPlantLoopEIRCooling_Impl::condenserType() const {

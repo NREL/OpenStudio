@@ -107,12 +107,6 @@ namespace model {
 
       CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
 
-      boost::optional<double> autosizedReferenceLoadSideFlowRate() const;
-
-      boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
-
-      boost::optional<double> autosizedReferenceCapacity() const;
-
       //@}
       /** @name Setters */
       //@{
@@ -148,6 +142,12 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      boost::optional<double> autosizedReferenceLoadSideFlowRate() const;
+
+      boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
+
+      boost::optional<double> autosizedReferenceCapacity() const;
 
       //@}
      protected:
