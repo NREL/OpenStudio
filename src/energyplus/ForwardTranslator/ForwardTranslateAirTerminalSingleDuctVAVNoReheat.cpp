@@ -175,8 +175,8 @@ namespace energyplus {
     if (minAirFlowFractionSchedule) {
       boost::optional<IdfObject> _minAirFlowFractionSchedule = translateAndMapModelObject(minAirFlowFractionSchedule.get());
 
-      if (_minAirFlowFractionSchedule && _minAirFlowFractionSchedule->name()) {
-        idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName, _minAirFlowFractionSchedule->name().get());
+      if (_minAirFlowFractionSchedule) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName, _minAirFlowFractionSchedule->nameString());
       }
     }
 
@@ -205,8 +205,8 @@ namespace energyplus {
     if (minAirFlowTurndownSchedule) {
       boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get());
 
-      if (_minAirFlowTurndownSchedule && _minAirFlowTurndownSchedule->name()) {
-        idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->name().get());
+      if (_minAirFlowTurndownSchedule) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->nameString());
       }
     }
 

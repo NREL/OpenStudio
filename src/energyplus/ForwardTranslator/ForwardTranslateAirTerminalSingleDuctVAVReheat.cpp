@@ -169,8 +169,8 @@ namespace energyplus {
     if (minAirFlowFractionSchedule) {
       boost::optional<IdfObject> _minAirFlowFractionSchedule = translateAndMapModelObject(minAirFlowFractionSchedule.get());
 
-      if (_minAirFlowFractionSchedule && _minAirFlowFractionSchedule->name()) {
-        idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowFractionScheduleName, _minAirFlowFractionSchedule->name().get());
+      if (_minAirFlowFractionSchedule) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowFractionScheduleName, _minAirFlowFractionSchedule->nameString());
       }
     }
 

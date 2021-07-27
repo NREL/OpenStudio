@@ -107,8 +107,8 @@ namespace energyplus {
     if (minAirFlowTurndownSchedule) {
       boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get());
 
-      if (_minAirFlowTurndownSchedule && _minAirFlowTurndownSchedule->name()) {
-        idfObject.setString(AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->name().get());
+      if (_minAirFlowTurndownSchedule) {
+        idfObject.setString(AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->nameString());
       }
     }
 
