@@ -12687,7 +12687,6 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \object-list ConnectionNames
    A5, \field Condenser Type
        \type choice
-       \note required-field disabled as it has a default
        \key WaterSource
        \key AirSource
        \required-field
@@ -12709,7 +12708,6 @@ OS:HeatPump:PlantLoop:EIR:Heating,
    N1, \field Load Side Reference Flow Rate
        \note This component is currently a constant-flow device, meaning it will always
        \note try to request the full design flow from the central plant manager.
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \units m3/s
@@ -12717,7 +12715,6 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \autosizable
        \required-field
    N2, \field Source Side Reference Flow Rate
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \units m3/s
@@ -12725,21 +12722,18 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \autosizable
        \required-field
    N3, \field Reference Capacity
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \units W
        \autosizable
        \required-field
    N4, \field Reference Coefficient of Performance
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \required-field
        \units W/W
    N5, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \required-field
@@ -12789,7 +12783,6 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \required-field
        \object-list ConnectionNames
    A5, \field Condenser Type
-       \note required-field disabled as it has a default
        \type choice
        \key WaterSource
        \key AirSource
@@ -12812,7 +12805,6 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
    N1, \field Load Side Reference Flow Rate
        \note This component is currently a constant-flow device, meaning it will always
        \note try to request the full design flow from the central plant manager.
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \units m3/s
@@ -12820,7 +12812,6 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \autosizable
        \required-field
    N2, \field Source Side Reference Flow Rate
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \units m3/s
@@ -12828,20 +12819,17 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \autosizable
        \required-field
    N3, \field Reference Capacity
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \units W
        \autosizable
        \required-field
    N4, \field Reference Coefficient of Performance
-       \note required-field disabled as it has a default
        \type real
        \minimum> 0.0
        \required-field
        \units W/W
    N5, \field Sizing Factor
-       \note required-field disabled as it has a default
        \note Multiplies the autosized capacity and flow rates
        \type real
        \minimum> 0.0
