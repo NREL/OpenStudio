@@ -83,6 +83,9 @@ namespace model {
       if (std::find(b, e, OS_AirTerminal_DualDuct_VAVFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalDualDuctVAV", "Availability Schedule"));
       }
+      if (std::find(b, e, OS_AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("AirTerminalDualDuctVAV", "Minimum Air Flow Turndown"));
+      }
       return result;
     }
 
