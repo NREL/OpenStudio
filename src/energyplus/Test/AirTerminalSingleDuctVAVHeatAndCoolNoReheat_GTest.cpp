@@ -46,6 +46,4 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVHeatAndCoolNoReheat) {
 
   Model m;
-
-
 }
