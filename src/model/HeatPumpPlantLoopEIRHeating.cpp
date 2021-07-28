@@ -30,6 +30,8 @@
 #include "HeatPumpPlantLoopEIRHeating.hpp"
 #include "HeatPumpPlantLoopEIRHeating_Impl.hpp"
 #include "Model.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp
 #include "CurveBiquadratic.hpp"
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveQuadratic.hpp"
@@ -160,20 +162,20 @@ namespace model {
       return value.get();
     }
 
-    CurveBiquadratic HeatPumpPlantLoopEIRHeating_Impl::capacityModifierFunctionofTemperatureCurve() const {
+    Curve HeatPumpPlantLoopEIRHeating_Impl::capacityModifierFunctionofTemperatureCurve() const {
       WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::CapacityModifierFunctionofTemperatureCurveName).get();
-      return wo.optionalCast<CurveBiquadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
-    CurveBiquadratic HeatPumpPlantLoopEIRHeating_Impl::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+    Curve HeatPumpPlantLoopEIRHeating_Impl::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
       WorkspaceObject wo = getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName).get();
-      return wo.optionalCast<CurveBiquadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
-    CurveQuadratic HeatPumpPlantLoopEIRHeating_Impl::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
+    Curve HeatPumpPlantLoopEIRHeating_Impl::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
       WorkspaceObject wo =
         getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName).get();
-      return wo.optionalCast<CurveQuadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
     bool HeatPumpPlantLoopEIRHeating_Impl::setCondenserType(std::string condenserType) {
@@ -219,22 +221,21 @@ namespace model {
       return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::SizingFactor, sizingFactor);
     }
 
-    bool HeatPumpPlantLoopEIRHeating_Impl::setCapacityModifierFunctionofTemperatureCurve(
-      const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve) {
+    bool HeatPumpPlantLoopEIRHeating_Impl::setCapacityModifierFunctionofTemperatureCurve(const Curve& capacityModifierFunctionofTemperatureCurve) {
       bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::CapacityModifierFunctionofTemperatureCurveName,
                                capacityModifierFunctionofTemperatureCurve.handle());
       return result;
     }
 
     bool HeatPumpPlantLoopEIRHeating_Impl::setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
-      const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+      const Curve& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
       bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
                                electricInputtoOutputRatioModifierFunctionofTemperatureCurve.handle());
       return result;
     }
 
     bool HeatPumpPlantLoopEIRHeating_Impl::setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
-      const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
+      const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
       bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName,
                                electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.handle());
       return result;
@@ -278,9 +279,9 @@ namespace model {
 
   }  // namespace detail
 
-  HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(const Model& model, const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve,
-                                                           const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve,
-                                                           const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve)
+  HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(const Model& model, const Curve& capacityModifierFunctionofTemperatureCurve,
+                                                           const Curve& electricInputtoOutputRatioModifierFunctionofTemperatureCurve,
+                                                           const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve)
     : WaterToWaterComponent(HeatPumpPlantLoopEIRHeating::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>());
 
@@ -289,16 +290,28 @@ namespace model {
     autosizeReferenceCapacity();
 
     bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s capacity modifier function of temperature curve to "
+                                     << capacityModifierFunctionofTemperatureCurve.briefDescription() << ".");
+    }
 
     ok = setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s electric input to output ratio modifier function of temperature curve to "
+                                     << electricInputtoOutputRatioModifierFunctionofTemperatureCurve.briefDescription() << ".");
+    }
 
     ok = setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s electric input to output ratio modifier function of part load ratio curve to "
+                                     << electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.briefDescription() << ".");
+    }
 
     setCondenserType("WaterSource");
-    setReferenceCoefficientofPerformance(7.5);
+    setReferenceCoefficientofPerformance(7.5);  // IDD default
     setSizingFactor(1.0);
   }
 

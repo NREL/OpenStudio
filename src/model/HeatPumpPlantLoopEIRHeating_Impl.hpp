@@ -37,8 +37,7 @@ namespace openstudio {
 namespace model {
 
   class HeatPumpPlantLoopEIRCooling;
-  class CurveBiquadratic;
-  class CurveQuadratic;
+  class Curve;
 
   namespace detail {
 
@@ -101,11 +100,11 @@ namespace model {
 
       double sizingFactor() const;
 
-      CurveBiquadratic capacityModifierFunctionofTemperatureCurve() const;
+      Curve capacityModifierFunctionofTemperatureCurve() const;
 
-      CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
+      Curve electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
 
-      CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
+      Curve electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
 
       //@}
       /** @name Setters */
@@ -131,13 +130,12 @@ namespace model {
 
       bool setSizingFactor(double sizingFactor);
 
-      bool setCapacityModifierFunctionofTemperatureCurve(const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve);
+      bool setCapacityModifierFunctionofTemperatureCurve(const Curve& capacityModifierFunctionofTemperatureCurve);
 
-      bool setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
-        const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+      bool setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(const Curve& electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
 
       bool setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
-        const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+        const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 
       //@}
       /** @name Other */

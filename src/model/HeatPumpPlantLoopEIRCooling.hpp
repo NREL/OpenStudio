@@ -38,8 +38,7 @@ namespace openstudio {
 namespace model {
 
   class HeatPumpPlantLoopEIRHeating;
-  class CurveBiquadratic;
-  class CurveQuadratic;
+  class Curve;
 
   namespace detail {
 
@@ -54,9 +53,9 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit HeatPumpPlantLoopEIRCooling(const Model& model, const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve,
-                                         const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve,
-                                         const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+    explicit HeatPumpPlantLoopEIRCooling(const Model& model, const Curve& capacityModifierFunctionofTemperatureCurve,
+                                         const Curve& electricInputtoOutputRatioModifierFunctionofTemperatureCurve,
+                                         const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 
     explicit HeatPumpPlantLoopEIRCooling(const Model& model);
 
@@ -89,11 +88,11 @@ namespace model {
 
     double sizingFactor() const;
 
-    CurveBiquadratic capacityModifierFunctionofTemperatureCurve() const;
+    Curve capacityModifierFunctionofTemperatureCurve() const;
 
-    CurveBiquadratic electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
+    Curve electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
 
-    CurveQuadratic electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
+    Curve electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
 
     //@}
     /** @name Setters */
@@ -119,13 +118,12 @@ namespace model {
 
     bool setSizingFactor(double sizingFactor);
 
-    bool setCapacityModifierFunctionofTemperatureCurve(const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve);
+    bool setCapacityModifierFunctionofTemperatureCurve(const Curve& capacityModifierFunctionofTemperatureCurve);
 
-    bool setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
-      const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+    bool setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(const Curve& electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
 
-    bool setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
-      const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+    bool
+      setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 
     //@}
     /** @name Other */
