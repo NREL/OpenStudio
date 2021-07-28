@@ -31,6 +31,9 @@
 
 #include "ModelFixture.hpp"
 
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+
 #include "../HeatPumpPlantLoopEIRHeating.hpp"
 #include "../HeatPumpPlantLoopEIRHeating_Impl.hpp"
 #include "../HeatPumpPlantLoopEIRCooling.hpp"
