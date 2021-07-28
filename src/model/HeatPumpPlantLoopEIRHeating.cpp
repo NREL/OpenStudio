@@ -373,6 +373,10 @@ namespace model {
     return IddObjectType(IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating);
   }
 
+  std::vector<std::string> HeatPumpPlantLoopEIRHeating::validCondenserTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType);
+  }
+
   std::string HeatPumpPlantLoopEIRHeating::condenserType() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->condenserType();
   }
