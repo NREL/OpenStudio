@@ -116,9 +116,16 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
 
   hp.autosizeReferenceLoadSideFlowRate();
-  hp.autosizeReferenceSourceSideFlowRate();
-  hp.autosizeReferenceCapacity();
+  EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
+  EXPECT_FALSE(hp.isReferenceSourceSideFlowRateAutosized());
+  EXPECT_FALSE(hp.isReferenceCapacityAutosized());
 
+  hp.autosizeReferenceSourceSideFlowRate();
+  EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
+  EXPECT_TRUE(hp.isReferenceSourceSideFlowRateAutosized());
+  EXPECT_FALSE(hp.isReferenceCapacityAutosized());
+
+  hp.autosizeReferenceCapacity();
   EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
   EXPECT_TRUE(hp.isReferenceSourceSideFlowRateAutosized());
   EXPECT_TRUE(hp.isReferenceCapacityAutosized());
@@ -139,12 +146,14 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
   CurveBiquadratic curve2(m);
   CurveQuadratic curve3(m);
   HeatPumpPlantLoopEIRHeating hp(m, curve1, curve2, curve3);
+  EXPECT_EQ(3u, m.getConcreteModelObjects<Curve>().size());
 
   {
     HeatPumpPlantLoopEIRHeating hpClone = hp.clone(m).cast<HeatPumpPlantLoopEIRHeating>();
     EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
+    EXPECT_EQ(3u, m.getConcreteModelObjects<Curve>().size());
   }
 
   {
@@ -153,5 +162,6 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
     EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
+    EXPECT_EQ(3u, m2.getConcreteModelObjects<Curve>().size());
   }
 }
