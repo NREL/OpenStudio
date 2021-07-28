@@ -84,12 +84,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR) {
   EXPECT_TRUE(plhp_htg.setReferenceCapacity(3.0));
   EXPECT_TRUE(plhp_htg.setReferenceCoefficientofPerformance(4.0));
   EXPECT_TRUE(plhp_htg.setSizingFactor(5.0));
-  CurveBiquadratic curve1(m);
-  EXPECT_TRUE(plhp_htg.setCapacityModifierFunctionofTemperatureCurve(curve1));
-  CurveBiquadratic curve2(m);
-  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
-  CurveQuadratic curve3(m);
-  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+  CurveBiquadratic curve4(m);
+  EXPECT_TRUE(plhp_htg.setCapacityModifierFunctionofTemperatureCurve(curve4));
+  CurveBiquadratic curve5(m);
+  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve5));
+  CurveQuadratic curve6(m);
+  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve6));
 
   EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));
   EXPECT_TRUE(plhp_htg.setCompanionCoolingHeatPump(plhp_clg));
