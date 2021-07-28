@@ -37,6 +37,8 @@
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_HeatPump_PlantLoop_EIR_Heating_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -417,15 +419,15 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->sizingFactor();
   }
 
-  CurveBiquadratic HeatPumpPlantLoopEIRHeating::capacityModifierFunctionofTemperatureCurve() const {
+  Curve HeatPumpPlantLoopEIRHeating::capacityModifierFunctionofTemperatureCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->capacityModifierFunctionofTemperatureCurve();
   }
 
-  CurveBiquadratic HeatPumpPlantLoopEIRHeating::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+  Curve HeatPumpPlantLoopEIRHeating::electricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->electricInputtoOutputRatioModifierFunctionofTemperatureCurve();
   }
 
-  CurveQuadratic HeatPumpPlantLoopEIRHeating::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
+  Curve HeatPumpPlantLoopEIRHeating::electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   }
 
@@ -469,20 +471,19 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setSizingFactor(sizingFactor);
   }
 
-  bool
-    HeatPumpPlantLoopEIRHeating::setCapacityModifierFunctionofTemperatureCurve(const CurveBiquadratic& capacityModifierFunctionofTemperatureCurve) {
+  bool HeatPumpPlantLoopEIRHeating::setCapacityModifierFunctionofTemperatureCurve(const Curve& capacityModifierFunctionofTemperatureCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setCapacityModifierFunctionofTemperatureCurve(
       capacityModifierFunctionofTemperatureCurve);
   }
 
   bool HeatPumpPlantLoopEIRHeating::setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
-    const CurveBiquadratic& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+    const Curve& electricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
       electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
   }
 
   bool HeatPumpPlantLoopEIRHeating::setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
-    const CurveQuadratic& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
+    const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
       electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
   }
