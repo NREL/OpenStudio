@@ -31,7 +31,7 @@
 #include "HeatPumpPlantLoopEIRHeating_Impl.hpp"
 #include "Model.hpp"
 #include "Curve.hpp"
-#include "Curve_Impl.hpp
+#include "Curve_Impl.hpp"
 #include "CurveBiquadratic.hpp"
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveQuadratic.hpp"
