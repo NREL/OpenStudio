@@ -48,7 +48,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAV) {
   Model m;
 
   Schedule s = m.alwaysOnDiscreteSchedule();
-  AirTerminalSingleDuctVAVReheat aterm(m);
+  AirTerminalDualDuctVAV aterm(m);
   aterm.setMinimumAirFlowTurndownSchedule(s);
   // TODO
 
@@ -59,8 +59,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAV) {
   ASSERT_EQ(1u, idfAirTerms.size());
   WorkspaceObject idfAirTerm(idfAirTerms[0]);
 
-  boost::optional<WorkspaceObject> woAvailabilitySchedule(idfAirTerm.getTarget(AirTerminal_DualDuct_VAVFields
-                                                                               : AvailabilityScheduleName::AvailabilityScheduleName));
+  boost::optional<WorkspaceObject> woAvailabilitySchedule(idfAirTerm.getTarget(AirTerminal_DualDuct_VAVFields::AvailabilityScheduleName));
   EXPECT_TRUE(woAvailabilitySchedule);
   EXPECT_EQ(woAvailabilitySchedule->iddObject().type(), IddObjectType::Schedule_Constant);
   // TODO

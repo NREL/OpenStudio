@@ -38,7 +38,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 
-#include <utilities/idd/AirTerminal_DualDuct_VAV_FieldEnums.hxx>
+#include <utilities/idd/AirTerminal_SingleDuct_VAV_Reheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -61,8 +61,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVReheat) {
   ASSERT_EQ(1u, idfAirTerms.size());
   WorkspaceObject idfAirTerm(idfAirTerms[0]);
 
-  boost::optional<WorkspaceObject> woAvailabilitySchedule(idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_ReheatFields
-                                                                               : AvailabilityScheduleName::AvailabilityScheduleName));
+  boost::optional<WorkspaceObject> woAvailabilitySchedule(idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_ReheatFields::AvailabilityScheduleName));
   EXPECT_TRUE(woAvailabilitySchedule);
   EXPECT_EQ(woAvailabilitySchedule->iddObject().type(), IddObjectType::Schedule_Constant);
   // TODO
