@@ -35,6 +35,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/AirTerminalSingleDuctVAVHeatAndCoolNoReheat.hpp"
 #include "../../model/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl.hpp"
+#include "../../model/Schedule.hpp"
 
 #include <utilities/idd/AirTerminal_DualDuct_VAV_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -44,6 +45,27 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVHeatAndCoolNoReheat) {
-
   Model m;
+
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctVAVHeatAndCoolNoReheat aterm(m);
+  aterm.setMinimumAirFlowTurndownSchedule(s);
+  // TODO
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfAirTerms(w.getObjectsByType(IddObjectType::AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat));
+  ASSERT_EQ(1u, idfAirTerms.size());
+  WorkspaceObject idfAirTerm(idfAirTerms[0]);
+
+  boost::optional<WorkspaceObject> woAvailabilitySchedule(idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields
+                                                                               : AvailabilityScheduleName::AvailabilityScheduleName));
+  EXPECT_TRUE(woAvailabilitySchedule);
+  EXPECT_EQ(woAvailabilitySchedule->iddObject().type(), IddObjectType::Schedule_Constant);
+  // TODO
+  boost::optional<WorkspaceObject> woTurndownSchedule(
+    idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MinimumAirFlowTurndownScheduleName));
+  EXPECT_TRUE(woTurndownSchedule);
+  EXPECT_EQ(woTurndownSchedule->iddObject().type(), IddObjectType::Schedule_Constant);
 }
