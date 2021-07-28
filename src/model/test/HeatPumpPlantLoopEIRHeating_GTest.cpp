@@ -35,6 +35,8 @@
 #include "../HeatPumpPlantLoopEIRHeating_Impl.hpp"
 #include "../HeatPumpPlantLoopEIRCooling.hpp"
 #include "../HeatPumpPlantLoopEIRCooling_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
@@ -68,12 +70,12 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
   EXPECT_TRUE(hp.isReferenceCapacityAutosized());
   EXPECT_EQ(7.5, hp.referenceCoefficientofPerformance());
   EXPECT_EQ(1.0, hp.sizingFactor());
-  boost::optional<CurveBiquadratic> capacityModifierFunctionofTemperatureCurve = hp.capacityModifierFunctionofTemperatureCurve();
+  boost::optional<Curve> capacityModifierFunctionofTemperatureCurve = hp.capacityModifierFunctionofTemperatureCurve();
   EXPECT_TRUE(capacityModifierFunctionofTemperatureCurve);
-  boost::optional<CurveBiquadratic> electricInputtoOutputRatioModifierFunctionofTemperatureCurve =
+  boost::optional<Curve> electricInputtoOutputRatioModifierFunctionofTemperatureCurve =
     hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve();
   EXPECT_TRUE(electricInputtoOutputRatioModifierFunctionofTemperatureCurve);
-  boost::optional<CurveQuadratic> electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve =
+  boost::optional<Curve> electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve =
     hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   EXPECT_TRUE(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
 }

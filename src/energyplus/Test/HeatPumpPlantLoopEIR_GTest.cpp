@@ -64,44 +64,40 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR) {
   PlantLoop plant_loop_plhp_htg(m);
 
   HeatPumpPlantLoopEIRCooling plhp_clg(m);
-  EXPECT_TRUE(hp.setCondenserType("AirSource"));
-  HeatPumpPlantLoopEIRHeating companionHP(m);
-  EXPECT_TRUE(hp.setCompanionHeatingHeatPump(companionHP));
-  EXPECT_TRUE(hp.setReferenceLoadSideFlowRate(1.0));
-  EXPECT_TRUE(hp.setReferenceSourceSideFlowRate(2.0));
-  EXPECT_TRUE(hp.setReferenceCapacity(3.0));
-  EXPECT_TRUE(hp.setReferenceCoefficientofPerformance(4.0));
-  EXPECT_TRUE(hp.setSizingFactor(5.0));
+  EXPECT_TRUE(plhp_clg.setCondenserType("AirSource"));
+  EXPECT_TRUE(plhp_clg.setReferenceLoadSideFlowRate(1.0));
+  EXPECT_TRUE(plhp_clg.setReferenceSourceSideFlowRate(2.0));
+  EXPECT_TRUE(plhp_clg.setReferenceCapacity(3.0));
+  EXPECT_TRUE(plhp_clg.setReferenceCoefficientofPerformance(4.0));
+  EXPECT_TRUE(plhp_clg.setSizingFactor(5.0));
   CurveBiquadratic curve1(m);
-  EXPECT_TRUE(hp.setCapacityModifierFunctionofTemperatureCurve(curve1));
+  EXPECT_TRUE(plhp_clg.setCapacityModifierFunctionofTemperatureCurve(curve1));
   CurveBiquadratic curve2(m);
-  EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
+  EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
-  EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+  EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
 
   HeatPumpPlantLoopEIRHeating plhp_htg(m);
-  EXPECT_TRUE(hp.setCondenserType("AirSource"));
-  HeatPumpPlantLoopEIRCooling companionHP(m);
-  EXPECT_TRUE(hp.setCompanionCoolingHeatPump(companionHP));
-  EXPECT_TRUE(hp.setReferenceLoadSideFlowRate(1.0));
-  EXPECT_TRUE(hp.setReferenceSourceSideFlowRate(2.0));
-  EXPECT_TRUE(hp.setReferenceCapacity(3.0));
-  EXPECT_TRUE(hp.setReferenceCoefficientofPerformance(4.0));
-  EXPECT_TRUE(hp.setSizingFactor(5.0));
+  EXPECT_TRUE(plhp_htg.setCondenserType("AirSource"));
+  EXPECT_TRUE(plhp_htg.setReferenceLoadSideFlowRate(1.0));
+  EXPECT_TRUE(plhp_htg.setReferenceSourceSideFlowRate(2.0));
+  EXPECT_TRUE(plhp_htg.setReferenceCapacity(3.0));
+  EXPECT_TRUE(plhp_htg.setReferenceCoefficientofPerformance(4.0));
+  EXPECT_TRUE(plhp_htg.setSizingFactor(5.0));
   CurveBiquadratic curve1(m);
-  EXPECT_TRUE(hp.setCapacityModifierFunctionofTemperatureCurve(curve1));
+  EXPECT_TRUE(plhp_htg.setCapacityModifierFunctionofTemperatureCurve(curve1));
   CurveBiquadratic curve2(m);
-  EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
+  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve2));
   CurveQuadratic curve3(m);
-  EXPECT_TRUE(hp.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+  EXPECT_TRUE(plhp_htg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
+
+  EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));
+  EXPECT_TRUE(plhp_htg.setCompanionCoolingHeatPump(plhp_clg));
 
   EXPECT_TRUE(plant_loop_cup_clg.addDemandBranchForComponent(plhp_clg));
   EXPECT_TRUE(plant_loop_plhp_clg.addSupplyBranchForComponent(plhp_clg));
   EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(plhp_htg));
   EXPECT_TRUE(plant_loop_plhp_htg.addSupplyBranchForComponent(plhp_htg));
-
-  EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));
-  EXPECT_TRUE(plhp_htg.setCompanionCoolingHeatPump(plhp_clg));
 
   openstudio::energyplus::ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
