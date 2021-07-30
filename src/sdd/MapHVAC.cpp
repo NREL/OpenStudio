@@ -1035,6 +1035,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   auto optStartElement = airSystemElement.child("OptStart");
   if( optStartElement ) {
     model::AvailabilityManagerOptimumStart optimumStart(model);
+    airLoopHVAC.addAvailabilityManager(optimumStart);
 
     auto optStartCtrlElement = airSystemElement.child("OptStartCtrl");
     if( istringEqual(optStartCtrlElement.text().as_string(),"ControlZone") ) {
@@ -1072,63 +1073,63 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     if (_optStartNumDays) {
       optimumStart.setNumberofPreviousDays(_optStartNumDays.get());
     }
-  } else {
-    // Night Cycle
-    pugi::xml_node nightCycleFanCtrlElement = airSystemElement.child("NightCycleFanCtrl");
+  }
 
-    if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnCallAnyZone") )
-    {
-      airLoopHVAC.setNightCycleControlType("CycleOnAny");
-    }
-    else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnCallPrimaryZone") )
-    {
-      model::AvailabilityManagerNightCycle nightCycle(model);
-      nightCycle.setControlType("CycleOnControlZone");
+  // Night Cycle
+  pugi::xml_node nightCycleFanCtrlElement = airSystemElement.child("NightCycleFanCtrl");
 
-      airLoopHVAC.addAvailabilityManager(nightCycle);
+  if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnCallAnyZone") )
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");
+  }
+  else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnCallPrimaryZone") )
+  {
+    model::AvailabilityManagerNightCycle nightCycle(model);
+    nightCycle.setControlType("CycleOnControlZone");
 
-      auto pair = std::pair<std::string,model::AvailabilityManagerNightCycle>(controlZone,nightCycle);
-      m_nightCycleControlZones.insert(pair);
-    }
-    else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleZoneFansOnly") )
-    {
-      airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
-    }
-    else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnAnyCooling") )
-    {
-      airLoopHVAC.setNightCycleControlType("CycleOnAnyCoolingZone");
-    }
-    else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnAnyHeating") )
-    {
-      airLoopHVAC.setNightCycleControlType("CycleOnAnyHeatingZone");
-    }
+    airLoopHVAC.addAvailabilityManager(nightCycle);
 
-    auto ncms = subsetCastVector<model::AvailabilityManagerNightCycle>(airLoopHVAC.availabilityManagers());
-    if (!ncms.empty()) {
-      auto ncm = ncms.front();
-      ncm.setCyclingRunTimeControlType("ThermostatWithMinimumRunTime");
-      ncm.setCyclingRunTime(300.0);
+    auto pair = std::pair<std::string,model::AvailabilityManagerNightCycle>(controlZone,nightCycle);
+    m_nightCycleControlZones.insert(pair);
+  }
+  else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleZoneFansOnly") )
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
+  }
+  else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnAnyCooling") )
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAnyCoolingZone");
+  }
+  else if( istringEqual(nightCycleFanCtrlElement.text().as_string(),"CycleOnAnyHeating") )
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAnyHeatingZone");
+  }
 
-      auto cycleTime = lexicalCastToDouble(airSystemElement.child("NightCycleRunTime"));
-      if (cycleTime) {
-        ncm.setCyclingRunTime(cycleTime.get());
+  auto ncms = subsetCastVector<model::AvailabilityManagerNightCycle>(airLoopHVAC.availabilityManagers());
+  if (!ncms.empty()) {
+    auto ncm = ncms.front();
+    ncm.setCyclingRunTimeControlType("ThermostatWithMinimumRunTime");
+    ncm.setCyclingRunTime(300.0);
+
+    auto cycleTime = lexicalCastToDouble(airSystemElement.child("NightCycleRunTime"));
+    if (cycleTime) {
+      ncm.setCyclingRunTime(cycleTime.get());
+    }
+  }
+
+  if( ! airLoopHVAC.availabilityManagers().empty() ) {
+    auto avm = airLoopHVAC.availabilityManagers().front();
+    if( auto nightCycle = avm.optionalCast<model::AvailabilityManagerNightCycle>() ) {
+      auto nightCycleTstatToleranceElement = airSystemElement.child("NightCycleTstatTolerance");
+      boost::optional<double> _nightCycleTstatTolerance = lexicalCastToDouble(nightCycleTstatToleranceElement);
+      if( _nightCycleTstatTolerance ) {
+        nightCycle->setThermostatTolerance(_nightCycleTstatTolerance.get() * 5.0 / 9.0);
       }
-    }
 
-    if( ! airLoopHVAC.availabilityManagers().empty() ) {
-      auto avm = airLoopHVAC.availabilityManagers().front();
-      if( auto nightCycle = avm.optionalCast<model::AvailabilityManagerNightCycle>() ) {
-        auto nightCycleTstatToleranceElement = airSystemElement.child("NightCycleTstatTolerance");
-        boost::optional<double> _nightCycleTstatTolerance = lexicalCastToDouble(nightCycleTstatToleranceElement);
-        if( _nightCycleTstatTolerance ) {
-          nightCycle->setThermostatTolerance(_nightCycleTstatTolerance.get() * 5.0 / 9.0);
-        }
-
-        auto nightCycleRunTimeElement = airSystemElement.child("NightCycleRunTime");
-        boost::optional<double> _nightCycleRunTime = lexicalCastToDouble(nightCycleRunTimeElement);
-        if( _nightCycleRunTime ) {
-          nightCycle->setCyclingRunTime(_nightCycleRunTime.get());
-        }
+      auto nightCycleRunTimeElement = airSystemElement.child("NightCycleRunTime");
+      boost::optional<double> _nightCycleRunTime = lexicalCastToDouble(nightCycleRunTimeElement);
+      if( _nightCycleRunTime ) {
+        nightCycle->setCyclingRunTime(_nightCycleRunTime.get());
       }
     }
   }
