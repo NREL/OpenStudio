@@ -151,14 +151,16 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
   CurveBiquadratic curve2(m);
   CurveQuadratic curve3(m);
   HeatPumpPlantLoopEIRHeating hp(m, curve1, curve2, curve3);
-  EXPECT_EQ(3u, m.getConcreteModelObjects<Curve>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CurveQuadratic>().size());
 
   {
     HeatPumpPlantLoopEIRHeating hpClone = hp.clone(m).cast<HeatPumpPlantLoopEIRHeating>();
     EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
-    EXPECT_EQ(3u, m.getConcreteModelObjects<Curve>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<CurveQuadratic>().size());
   }
 
   {
@@ -167,6 +169,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
     EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
-    EXPECT_EQ(3u, m2.getConcreteModelObjects<Curve>().size());
+    EXPECT_EQ(2u, m2.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1u, m2.getConcreteModelObjects<CurveQuadratic>().size());
   }
 }
