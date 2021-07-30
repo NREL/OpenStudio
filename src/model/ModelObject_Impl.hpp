@@ -39,7 +39,6 @@
 
 namespace openstudio {
 
-class Attribute;
 class TimeSeries;
 
 namespace model {

@@ -251,6 +251,12 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateOutputJSON(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateOutputEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateFuelFactors(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateOutputTableSummaryReports(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateOtherEquipment(const WorkspaceObject& workspaceObject);

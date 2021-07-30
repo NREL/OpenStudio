@@ -147,7 +147,6 @@ namespace model {
     bool isAirWall() const;
 
     /// Computes the surface's gross area (m^2).
-    /// Attribute name: grossArea
     double grossArea() const;
 
     /// Reports if user should subtract this surface's net area from parent's gross area
@@ -155,7 +154,6 @@ namespace model {
     bool subtractFromGrossArea() const;
 
     /// Computes the surface's net area (m^2).
-    /// Attribute name: netArea
     double netArea() const;
 
     /// Returns the outward normal vector in local coordinates.
@@ -170,47 +168,31 @@ namespace model {
     /// Throws openstudio::Exception if cannot compute outward normal for this surface.
     double azimuth() const;
 
-    /** Returns the u-factor of this surface. Includes standard film coefficients, does not consider any custom SurfacePropertyConvectionCoefficients.
-  *   Attribute name: uFactor */
+    // Returns the u-factor of this surface. Includes standard film coefficients, does not consider any custom SurfacePropertyConvectionCoefficients.
     boost::optional<double> uFactor() const;
 
     /** Sets the u-factor of this surface in W/m^2*K, if possible. Value should already include appropriate
-   *  standard film coefficients, assuming still air indoors and 15 mph outdoor air speed. Does not consider any custom SurfacePropertyConvectionCoefficients
-   *  Attribute name: uFactor */
+      *  standard film coefficients, assuming still air indoors and 15 mph outdoor air speed.
+      *  Does not consider any custom SurfacePropertyConvectionCoefficients */
     bool setUFactor(double value);
 
-    /** Returns the thermal conductance of this surface in W/m^2*K. Does not include film coefficients.
-   *  Attribute name: thermalConductance */
+    // Returns the thermal conductance of this surface in W/m^2*K. Does not include film coefficients.
     boost::optional<double> thermalConductance() const;
 
-    /** Sets the conductance of this surface in W/m^2*K, if possible. Value should not include any film
-   *  coefficients.
-   *  Attribute name: thermalConductance */
+    // Sets the conductance of this surface in W/m^2*K, if possible. Value should not include any film coefficients.
     bool setThermalConductance(double value);
 
-    /** Returns the heat capacity of this surface in J/m^2*K, if available.
-  *  Attribute name: heatCapacity */
+    // Returns the heat capacity of this surface in J/m^2*K, if available.
     boost::optional<double> heatCapacity() const;
 
-    /// Returns interior visible absorptance (unitless), if available.
-    /// Attribute name: interiorVisibleAbsorptance
+    // Returns interior visible absorptance (unitless), if available.
     boost::optional<double> interiorVisibleAbsorptance() const;
 
-    /** \deprecated
-   *   This will be removed after 1.4.0 */
-    boost::optional<double> interiorVisibleAbsorbtance() const;
-
     /// Returns exterior visible absorptance (unitless), if available.
-    /// Attribute name: exteriorVisibleAbsorptance
     boost::optional<double> exteriorVisibleAbsorptance() const;
-
-    /** \deprecated
-   *   This will be removed after 1.4.0 */
-    boost::optional<double> exteriorVisibleAbsorbtance() const;
 
     /// Returns visible transmittance (unitless), if available.
     /// May require EnergyPlus simulation output.
-    /// Attribute name: visibleTransmittance
     boost::optional<double> visibleTransmittance() const;
 
     /// Check if this planar surface's vertices are equal to the other's in the building coordinate system

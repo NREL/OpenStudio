@@ -721,19 +721,9 @@ namespace model {
     return getImpl<detail::PlanarSurface_Impl>()->interiorVisibleAbsorptance();
   }
 
-  OptionalDouble PlanarSurface::interiorVisibleAbsorbtance() const {
-    LOG(Warn, "interiorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
-    return interiorVisibleAbsorptance();
-  }
-
   /// get exterior visible absorptance (unitless)
   OptionalDouble PlanarSurface::exteriorVisibleAbsorptance() const {
     return getImpl<detail::PlanarSurface_Impl>()->exteriorVisibleAbsorptance();
-  }
-
-  OptionalDouble PlanarSurface::exteriorVisibleAbsorbtance() const {
-    LOG(Warn, "exteriorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
-    return exteriorVisibleAbsorptance();
   }
 
   boost::optional<PlanarSurfaceGroup> PlanarSurface::planarSurfaceGroup() const {

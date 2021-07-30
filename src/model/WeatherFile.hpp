@@ -38,6 +38,7 @@
 namespace openstudio {
 
 class EpwFile;
+class DayOfWeek;
 
 namespace model {
 
@@ -104,6 +105,10 @@ namespace model {
     boost::optional<openstudio::path> path() const;
 
     boost::optional<std::string> checksum() const;
+
+    boost::optional<int> startDateActualYear() const;
+
+    boost::optional<DayOfWeek> startDayOfWeek() const;
 
     //@}
     /** @name Setters */

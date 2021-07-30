@@ -38,6 +38,7 @@
 namespace openstudio {
 
 class EpwFile;
+class DayOfWeek;
 
 namespace model {
 
@@ -74,6 +75,10 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
+
       /** @name Getters */
       //@{
 
@@ -103,9 +108,9 @@ namespace model {
 
       boost::optional<std::string> checksum() const;
 
-      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      boost::optional<int> startDateActualYear() const;
 
-      virtual std::vector<std::string> emsInternalVariableNames() const override;
+      boost::optional<DayOfWeek> startDayOfWeek() const;
 
       //@}
       /** @name Setters */

@@ -228,11 +228,25 @@ namespace model {
 
       std::string dayofWeekforStartDay = this->dayofWeekforStartDay();
       if (!dayofWeekforStartDay.empty()) {
-        try {
+        if (istringEqual(dayofWeekforStartDay, "UseWeatherFile")) {
+          if (auto weatherFile_ = this->model().weatherFile()) {
+            if (auto epwStartYear = weatherFile_->startDateActualYear()) {
+              LOG(Info, "YearDescription::assumedYear: using the WeatherFile startDateActualYear = " << epwStartYear.get());
+              return epwStartYear.get();
+            } else if (boost::optional<openstudio::DayOfWeek> dow_ = weatherFile_->startDayOfWeek()) {
+              auto dow = dow_.get();
+              LOG(Info, "assumedYear: using the WeatherFile startDayOfWeek = " << dow);
+              yd.yearStartsOnDayOfWeek = dow;
+            } else {
+              LOG(Error, "'UseWeatherFile' is selected in YearDescription"
+                           << " but the WeatherFile has neither an actual start year nor a Start Day of Week");
+            }
+          } else {
+            LOG(Error, "'UseWeatherFile' is selected in YearDescription, but there are no weather file set for the model.");
+          }
+        } else {
           openstudio::DayOfWeek dow(dayofWeekforStartDay);
           yd.yearStartsOnDayOfWeek = dow;
-        } catch (const std::exception&) {
-          LOG(Error, "'" << dayofWeekforStartDay << "' is not yet a supported option for YearDescription");
         }
       }
 
@@ -240,26 +254,12 @@ namespace model {
     }
 
     openstudio::Date YearDescription_Impl::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth) {
-      boost::optional<int> calendarYear = this->calendarYear();
-      if (calendarYear) {
-        return openstudio::Date(monthOfYear, dayOfMonth, *calendarYear);
+      boost::optional<int> year = this->calendarYear();
+      if (!year) {
+        year = this->assumedYear();
       }
 
-      openstudio::YearDescription yd;
-
-      yd.isLeapYear = this->isLeapYear();
-
-      std::string dayofWeekforStartDay = this->dayofWeekforStartDay();
-      if (!dayofWeekforStartDay.empty()) {
-        if (istringEqual(dayofWeekforStartDay, "UseWeatherFile")) {
-          LOG(Info, "'UseWeatherFile' is not yet a supported option for YearDescription");
-        } else {
-          openstudio::DayOfWeek dow(dayofWeekforStartDay);
-          yd.yearStartsOnDayOfWeek = dow;
-        }
-      }
-
-      return openstudio::Date(monthOfYear, dayOfMonth, yd);
+      return openstudio::Date(monthOfYear, dayOfMonth, *year);
     }
 
     openstudio::Date YearDescription_Impl::makeDate(unsigned monthOfYear, unsigned dayOfMonth) {

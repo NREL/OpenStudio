@@ -33,7 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ParentObject_Impl.hpp"
 
-#include "../utilities/data/Attribute.hpp"
 #include "../utilities/data/CalibrationResult.hpp"
 #include "../utilities/data/EndUses.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -242,10 +241,8 @@ namespace model {
       boost::optional<double> hoursCoolingSetpointNotMet() const;
 
       boost::optional<EndUses> endUses() const;
-      boost::optional<Attribute> endUsesAttribute() const;
 
       boost::optional<CalibrationResult> calibrationResult() const;
-      boost::optional<Attribute> calibrationResultAttribute() const;
 
       //@}
      protected:

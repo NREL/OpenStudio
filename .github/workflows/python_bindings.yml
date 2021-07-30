@@ -2,7 +2,7 @@ name: Python Bindings
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [ master, develop, actions_pypi ]
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
@@ -17,7 +17,7 @@ env:
 
 jobs:
   python_bindings:
-    name: ${{ matrix.name }}
+    name: Build ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.allow_failure }}
     strategy:
@@ -102,6 +102,13 @@ jobs:
           echo "$MSVC_DIR\VC\Auxiliary\Build" >> $GITHUB_PATH
         fi;
 
+        if [[ "$GITHUB_REF" == *"refs/tags"* ]]; then
+          PYTHON_PIP_REPOSITORY=pypi
+        else
+          PYTHON_PIP_REPOSITORY=testpypi
+        fi;
+        echo "PYTHON_PIP_REPOSITORY=$PYTHON_PIP_REPOSITORY" >> $GITHUB_ENV
+
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
 
@@ -166,7 +173,7 @@ jobs:
         echo "Using vcvarsall to initialize the development environment"
         call vcvarsall.bat x64
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_VERSION=${{ matrix.python-version }} -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} ../
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_PIP_REPOSITORY=${{ env.PYTHON_PIP_REPOSITORY }} -DPYTHON_VERSION=${{ matrix.python-version }} -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} ../
         ninja
         ninja python_package
 
@@ -178,7 +185,7 @@ jobs:
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
         cmake -DCMAKE_BUILD_TYPE=Release \
-              -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_VERSION=${{ matrix.python-version }} \
+              -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_PIP_REPOSITORY=${{ env.PYTHON_PIP_REPOSITORY }} -DPYTHON_VERSION=${{ matrix.python-version }} \
               -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
 
@@ -190,25 +197,79 @@ jobs:
         set -x
         cmake --build . --target package -j 2
 
-    - name: Upload python bindings to testpypi
-      # TODO: for now, not filtering on tags
-      # if: contains(github.ref, 'refs/tags')
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_REPOSITORY: testpypi
-        # Go to repo on github > Settings > Secrets and add it
-        TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
+    # We always upload to testpypi
+    - name: Build python wheel
       shell: bash
       working-directory: ./build
       run: |
         cmake --build . --target python_package -j 2
         cd Products/python_package/
         python setup.py bdist_wheel
+
+    - name: Zip the wheel to maintain case sensitivy and file permissions
+      working-directory: ./build/Products/python_package/
+      shell: bash
+      run: |
+        tar -cvzf openstudio-${{ matrix.name }}.tar.gz dist/
+
+    - name: Upload .whl to artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: openstudio-${{ matrix.name }}  # something like openstudio-Windows_py37
+        path: ./build/Products/python_package/openstudio-${{ matrix.name }}.tar.gz
+
+  # Only upload if all builds succeed
+  upload_python_bindings_to_testpypi:
+    needs: python_bindings
+    name: Upload to TestPyPi
+    runs-on: ubuntu-20.04
+    steps:
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine requests packaging
+        mkdir wheels
+
+    - name: Download ALL wheels
+      uses: actions/download-artifact@v2
+      with:
+        path: ./wheels
+
+    - name: Display structure of downloaded files
+      working-directory: ./wheels
+      run: |
+        ls -R
+
+    - name: Extract all tar.gz, then upload
+      working-directory: ./wheels
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_REPOSITORY: testpypi
+        # Go to repo on github > Settings > Secrets and add it
+        TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
+      shell: bash
+      run: |
+        for f in **/*.tar.gz; do
+          mv $f .
+        done;
+
+        for f in *.tar.gz; do
+          tar -xzvf "$f";
+        done;
+
+        ls -R
         python -m twine upload --skip-existing --repository testpypi dist/*
 
+
   test_python_bindings:
-    needs: python_bindings
-    name: ${{ matrix.name }}
+    needs: upload_python_bindings_to_testpypi
+    name: Test ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.allow_failure }}
     strategy:
@@ -251,9 +312,11 @@ jobs:
       run: |
           set -x
           python -m pip install --upgrade pip
-          pip install requests packaging
+          # Note: if we choose to do ALL or nothing, remove  setuptools wheel twine (not needed unless trying to upload within this step)
+          pip install requests packaging setuptools wheel twine
           bindings_v=$(python ./python/find_pypi_tag.py --current)
           pip install -i https://test.pypi.org/simple/ openstudio==$bindings_v
+          mkdir wheel
 
     - name: Test the bindings
       shell: python
@@ -261,3 +324,53 @@ jobs:
           import openstudio
           m = openstudio.model.exampleModel()
           print(m)
+
+  # if python_bindings succeeds but test_python_bindings fails and this is a release, 
+  # remove that version from testpypi
+  upload_python_bindings_to_pypi:
+    if: contains(github.ref, 'refs/tags')
+    needs: test_python_bindings
+    name: Upload to PyPi
+    runs-on: ubuntu-20.04
+    steps:
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine requests packaging
+        mkdir wheels
+
+    - name: Download ALL wheels
+      uses: actions/download-artifact@v2
+      with:
+        path: ./wheels
+
+    - name: Display structure of downloaded files
+      working-directory: ./wheels
+      run: |
+        ls -R
+
+    - name: Extract all tar.gz, then upload
+      working-directory: ./wheels
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_REPOSITORY: pypi
+        # Go to repo on github > Settings > Secrets and add it
+        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      shell: bash
+      run: |
+        for f in **/*.tar.gz; do
+          mv $f .
+        done;
+
+        for f in *.tar.gz; do
+          tar -xzvf "$f";
+        done;
+
+        ls -R
+        python -m twine upload --skip-existing --repository pypi dist/*
