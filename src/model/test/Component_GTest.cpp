@@ -138,7 +138,7 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
   Component siteWaterMainsTemperature2Component = siteWaterMainsTemperature2.createComponent();
   OptionalComponentData ocd = justSiteWaterMainsTemperature1.insertComponent(siteWaterMainsTemperature2Component);
   EXPECT_EQ(static_cast<unsigned>(1), justSiteWaterMainsTemperature1.getModelObjects<SiteWaterMainsTemperature>().size());
-  EXPECT_EQ(static_cast<unsigned>(2), justSiteWaterMainsTemperature1.numObjects());  
+  EXPECT_EQ(static_cast<unsigned>(2), justSiteWaterMainsTemperature1.numObjects());
 }
 
 TEST_F(ModelFixture, ComponentWatcher_FromScratch) {
