@@ -24981,9 +24981,12 @@ OS:ThermalZone,
        \type choice
        \key Yes
        \key No
-  A16; \field Humidistat Name
+  A16, \field Humidistat Name
        \type object-list
        \object-list HumidistatNames
+  A17; \field Daylighting Controls Availability Schedule Name
+       \type object-list
+       \object-list ScheduleNames
 
 OS:ZoneControl:Humidistat,
        \memo Specifies zone relative humidity setpoint schedules for humidifying and dehumidifying.
