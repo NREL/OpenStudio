@@ -33,13 +33,7 @@
 #include "../Model_Impl.hpp"
 #include "../DaylightingDeviceTubular.hpp"
 #include "../DaylightingDeviceTubular_Impl.hpp"
-#include "../Space.hpp"
-#include "../Surface.hpp"
 #include "../SubSurface.hpp"
-#include "../ShadingSurfaceGroup.hpp"
-#include "../ShadingSurface.hpp"
-#include "../InteriorPartitionSurfaceGroup.hpp"
-#include "../InteriorPartitionSurface.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 
@@ -48,8 +42,114 @@ using namespace openstudio;
 
 TEST_F(ModelFixture, DaylightingDeviceTubular) {
   Model model;
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0, 0, 1));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(0, 1, 0));
+  points1.push_back(Point3d(0, 1, 1));
+  SubSurface dome(points1, model);
+  EXPECT_EQ("FixedWindow", dome.subSurfaceType());
+
+  EXPECT_FALSE(dome.daylightingDeviceTubular());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 2));
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(0, 2, 0));
+  points2.push_back(Point3d(0, 2, 2));
+  SubSurface diffuser(points2, model);
+  EXPECT_EQ("FixedWindow", diffuser.subSurfaceType());
+
+  EXPECT_FALSE(diffuser.daylightingDeviceTubular());
+
+  daylightingDeviceTubular tubular(dome, diffuser, construction, 1, 2);
+  UUID tubularHandle = tubular.handle();
+  ASSERT_TRUE(window.daylightingDeviceTubular());
+  EXPECT_EQ(tubularHandle, window.daylightingDeviceTubular()->handle());
+  /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
+  /* EXPECT_EQ(tubularHandle, window.addDaylightingDeviceShelf()->handle()); */
+  /* EXPECT_EQ(window.addDaylightingDeviceShelf()->handle(), window.daylightingDeviceTubular()->handle()); */
+  EXPECT_EQ(window.handle(), tubular.subSurface().handle());
+
+  tubular.remove();
+  EXPECT_FALSE(window.daylightingDeviceTubular());
+  /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
+  /* tubularHandle = window.addDaylightingDeviceShelf()->handle(); */
+  /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
+  /* EXPECT_EQ(tubularHandle, window.addDaylightingDeviceShelf()->handle()); */
+  /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
+  /* EXPECT_EQ(tubularHandle, window.addDaylightingDeviceShelf()->handle()); */
+  ASSERT_TRUE(window.daylightingDeviceTubular());
+  EXPECT_EQ(tubularHandle, window.daylightingDeviceTubular()->handle());
+
+  // changing to door removes light tubular
+  EXPECT_TRUE(dome.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", dome.subSurfaceType());
+  EXPECT_FALSE(dome.daylightingDeviceTubular());
+  /* EXPECT_FALSE(window.addDaylightingDeviceShelf()); */
 }
 
 TEST_F(ModelFixture, DaylightingDeviceTubular_Throw) {
   Model model;
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0, 0, 1));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(0, 1, 0));
+  points1.push_back(Point3d(0, 1, 1));
+  SubSurface door1(points1, model);
+  EXPECT_TRUE(door1.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door1.subSurfaceType());
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 1));
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(0, 1, 0));
+  points2.push_back(Point3d(0, 1, 1));
+  SubSurface door2(points2, model);
+  EXPECT_TRUE(door2.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door2.subSurfaceType());
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
+
+  bool didThrow = false;
+  try {
+    DaylightingDeviceTubular tubular(door1, door2, construction, 1, 2);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_TRUE(didThrow);
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
+
+  // change to a window
+  EXPECT_TRUE(door.setSubSurfaceType("FixedWindow"));
+  EXPECT_EQ("FixedWindow", door.subSurfaceType());
+
+  // first one succeeds
+  didThrow = false;
+  try {
+    DaylightingDeviceTubular tubular(door1, door2, construction, 1, 2);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_FALSE(didThrow);
+  EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
+
+  // second call throws
+  didThrow = false;
+  try {
+    DaylightingDeviceTubular tubular(door1, door2, construction, 1, 2);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_TRUE(didThrow);
+  EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
+
+  // changing to door removes light tubular
+  EXPECT_TRUE(door.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door.subSurfaceType());
+  EXPECT_FALSE(door.daylightingDeviceTubular());
+  /* EXPECT_FALSE(door.addDaylightingDeviceShelf()); */
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 }

@@ -33,13 +33,7 @@
 #include "../Model_Impl.hpp"
 #include "../DaylightingDeviceLightWell.hpp"
 #include "../DaylightingDeviceLightWell_Impl.hpp"
-#include "../Space.hpp"
-#include "../Surface.hpp"
 #include "../SubSurface.hpp"
-#include "../ShadingSurfaceGroup.hpp"
-#include "../ShadingSurface.hpp"
-#include "../InteriorPartitionSurfaceGroup.hpp"
-#include "../InteriorPartitionSurface.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 
@@ -48,8 +42,94 @@ using namespace openstudio;
 
 TEST_F(ModelFixture, DaylightingDeviceLightWell) {
   Model model;
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 1, 1));
+  SubSurface window(points, model);
+  EXPECT_EQ("FixedWindow", window.subSurfaceType());
+
+  EXPECT_FALSE(window.daylightingDeviceLightWell());
+
+  DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 4);
+  UUID lightWellHandle = lightWell.handle();
+  ASSERT_TRUE(window.daylightingDeviceLightWell());
+  EXPECT_EQ(lightWellHandle, window.daylightingDeviceLightWell()->handle());
+  ASSERT_TRUE(window.addDaylightingDeviceLightWell());
+  EXPECT_EQ(lightWellHandle, window.addDaylightingDeviceLightWell()->handle());
+  EXPECT_EQ(window.addDaylightingDeviceLightWell()->handle(), window.daylightingDeviceLightWell()->handle());
+  EXPECT_EQ(window.handle(), lightWell.subSurface().handle());
+
+  lightWell.remove();
+  EXPECT_FALSE(window.daylightingDeviceLightWell());
+  ASSERT_TRUE(window.addDaylightingDeviceLightWell());
+  lightWellHandle = window.addDaylightingDeviceLightWell()->handle();
+  ASSERT_TRUE(window.addDaylightingDeviceLightWell());
+  EXPECT_EQ(lightWellHandle, window.addDaylightingDeviceLightWell()->handle());
+  ASSERT_TRUE(window.addDaylightingDeviceLightWell());
+  EXPECT_EQ(lightWellHandle, window.addDaylightingDeviceLightWell()->handle());
+  ASSERT_TRUE(window.daylightingDeviceLightWell());
+  EXPECT_EQ(lightWellHandle, window.daylightingDeviceLightWell()->handle());
+
+  // changing to door removes light light well
+  EXPECT_TRUE(window.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", window.subSurfaceType());
+  EXPECT_FALSE(window.daylightingDeviceLightWell());
+  EXPECT_FALSE(window.addDaylightingDeviceLightWell());
 }
 
 TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   Model model;
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 1, 1));
+  SubSurface door(points, model);
+  EXPECT_TRUE(door.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door.subSurfaceType());
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  bool didThrow = false;
+  try {
+    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 4);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_TRUE(didThrow);
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  // change to a window
+  EXPECT_TRUE(door.setSubSurfaceType("FixedWindow"));
+  EXPECT_EQ("FixedWindow", door.subSurfaceType());
+
+  // first one succeeds
+  didThrow = false;
+  try {
+    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 4);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_FALSE(didThrow);
+  EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  // second call throws
+  didThrow = false;
+  try {
+    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 4);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_TRUE(didThrow);
+  EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  // changing to door removes light light well
+  EXPECT_TRUE(door.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door.subSurfaceType());
+  EXPECT_FALSE(door.DaylightingDeviceLightWell());
+  EXPECT_FALSE(door.addDaylightingDeviceLightWell());
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 }
