@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>NET45</TargetFramework>
+	  <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">NET45;NET5</TargetFrameworks>
     <TargetFramework Condition="'$(OS)' != 'Windows_NT'">NET5</TargetFramework>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
