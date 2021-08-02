@@ -34,6 +34,7 @@
 #include "../DaylightingDeviceTubular.hpp"
 #include "../DaylightingDeviceTubular_Impl.hpp"
 #include "../SubSurface.hpp"
+#include "../Construction.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 
@@ -62,6 +63,8 @@ TEST_F(ModelFixture, DaylightingDeviceTubular) {
   EXPECT_EQ("FixedWindow", diffuser.subSurfaceType());
 
   EXPECT_FALSE(diffuser.daylightingDeviceTubular());
+
+  Construction construction(model);
 
   daylightingDeviceTubular tubular(dome, diffuser, construction, 1, 2);
   UUID tubularHandle = tubular.handle();
@@ -113,6 +116,8 @@ TEST_F(ModelFixture, DaylightingDeviceTubular_Throw) {
   EXPECT_EQ("Door", door2.subSurfaceType());
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 
+  Construction construction(model);
+
   bool didThrow = false;
   try {
     DaylightingDeviceTubular tubular(door1, door2, construction, 1, 2);
@@ -123,8 +128,10 @@ TEST_F(ModelFixture, DaylightingDeviceTubular_Throw) {
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 
   // change to a window
-  EXPECT_TRUE(door.setSubSurfaceType("FixedWindow"));
-  EXPECT_EQ("FixedWindow", door.subSurfaceType());
+  EXPECT_TRUE(door1.setSubSurfaceType("FixedWindow"));
+  EXPECT_EQ("FixedWindow", door1.subSurfaceType());
+  EXPECT_TRUE(door2.setSubSurfaceType("FixedWindow"));
+  EXPECT_EQ("FixedWindow", door2.subSurfaceType());
 
   // first one succeeds
   didThrow = false;
@@ -147,9 +154,9 @@ TEST_F(ModelFixture, DaylightingDeviceTubular_Throw) {
   EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 
   // changing to door removes light tubular
-  EXPECT_TRUE(door.setSubSurfaceType("Door"));
-  EXPECT_EQ("Door", door.subSurfaceType());
-  EXPECT_FALSE(door.daylightingDeviceTubular());
+  EXPECT_TRUE(door1.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door1.subSurfaceType());
+  EXPECT_FALSE(door1.daylightingDeviceTubular());
   /* EXPECT_FALSE(door.addDaylightingDeviceShelf()); */
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 }
