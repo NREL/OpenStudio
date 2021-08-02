@@ -56,6 +56,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVHeatAndCoolN
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctVAVHeatAndCoolNoReheat aterm(m);
+  aterm.setAvailabilitySchedule(sch);
   aterm.setMinimumAirFlowTurndownSchedule(sch);
   // TODO
 

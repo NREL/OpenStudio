@@ -56,6 +56,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAV) {
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
   AirTerminalDualDuctVAV aterm(m);
+  aterm.setAvailabilitySchedule(sch);
   aterm.setMinimumAirFlowTurndownSchedule(sch);
   // TODO
 
