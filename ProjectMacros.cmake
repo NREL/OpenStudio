@@ -607,7 +607,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       else()
         # openstudio_utilities
         if(MSVC)
-            set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
+          set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
         elseif(APPLE)
           set(CSHARP_OUTPUT_NAME "openstudio_csharp.dylib")
         else()
