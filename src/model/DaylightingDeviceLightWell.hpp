@@ -56,6 +56,8 @@ namespace model {
     explicit DaylightingDeviceLightWell(const SubSurface& subSurface, double heightofWell, double perimeterofBottomofWell, double areaofBottomofWell,
                                         double visibleReflectanceofWellWalls);
 
+    explicit DaylightingDeviceLightWell(const SubSurface& subSurface);
+
     virtual ~DaylightingDeviceLightWell() {}
 
     //@}

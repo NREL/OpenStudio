@@ -264,6 +264,39 @@ namespace model {
     setEffectiveThermalResistance(0.28);
   }
 
+  DaylightingDeviceTubular::DaylightingDeviceTubular(const SubSurface& dome, const SubSurface& diffuser, const ConstructionBase& construction)
+    : ModelObject(DaylightingDeviceTubular::iddObjectType(), dome.model()) {
+    OS_ASSERT(getImpl<detail::DaylightingDeviceTubular_Impl>());
+
+    bool subSurfaceOk = true;
+    if (dome.allowDaylightingDeviceTubularDome() && diffuser.allowDaylightingDeviceTubularDiffuser()) {
+      if (!dome.daylightingDeviceTubular() && !diffuser.daylightingDeviceTubular()) {
+        subSurfaceOk = true;
+      }
+    }
+
+    if (!subSurfaceOk) {
+      this->remove();
+      LOG_AND_THROW("Cannot create DaylightingDeviceTubular for SubSurface '" << dome.name().get() << "' and '" << diffuser.name().get() << "'");
+    }
+
+    bool test;
+
+    test = setPointer(OS_DaylightingDevice_TubularFields::DomeName, dome.handle());
+    OS_ASSERT(test);
+    test = setPointer(OS_DaylightingDevice_TubularFields::DiffuserName, diffuser.handle());
+    OS_ASSERT(test);
+
+    test = setPointer(OS_DaylightingDevice_TubularFields::ConstructionName, construction.handle());
+    OS_ASSERT(test);
+
+    setDiameter(0.3556);  // DaylightingDeviceTubular.idf
+
+    setTotalLength(1.4);  // DaylightingDeviceTubular.idf
+
+    setEffectiveThermalResistance(0.28);
+  }
+
   IddObjectType DaylightingDeviceTubular::iddObjectType() {
     IddObjectType result(IddObjectType::OS_DaylightingDevice_Tubular);
     return result;
