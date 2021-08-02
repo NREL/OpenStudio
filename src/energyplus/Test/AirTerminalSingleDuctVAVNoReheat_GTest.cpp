@@ -36,6 +36,9 @@
 #include "../../model/AirTerminalSingleDuctVAVNoReheat.hpp"
 #include "../../model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/AirLoopHVAC.hpp"
 
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -47,10 +50,17 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVNoReheat) {
   Model m;
 
+  ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
+
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctVAVNoReheat aterm(m, s);
   aterm.setMinimumAirFlowTurndownSchedule(s);
   // TODO
+
+  AirLoopHVAC a(m);
+  a.addBranchForZone(z, aterm);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);

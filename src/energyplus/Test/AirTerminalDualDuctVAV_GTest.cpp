@@ -36,6 +36,9 @@
 #include "../../model/AirTerminalDualDuctVAV.hpp"
 #include "../../model/AirTerminalDualDuctVAV_Impl.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/AirLoopHVAC.hpp"
 
 #include <utilities/idd/AirTerminal_DualDuct_VAV_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -47,10 +50,17 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAV) {
   Model m;
 
+  ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
+
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirTerminalDualDuctVAV aterm(m);
   aterm.setMinimumAirFlowTurndownSchedule(s);
   // TODO
+
+  AirLoopHVAC a(m);
+  a.addBranchForZone(z, aterm);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
