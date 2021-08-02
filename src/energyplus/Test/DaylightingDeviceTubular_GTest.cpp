@@ -31,7 +31,6 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
-#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/Construction.hpp"
@@ -40,14 +39,6 @@
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/ShadingSurface.hpp"
-#include "../../model/ShadingSurface_Impl.hpp"
-#include "../../model/ShadingSurfaceGroup.hpp"
-#include "../../model/InteriorPartitionSurface.hpp"
-#include "../../model/InteriorPartitionSurface_Impl.hpp"
-#include "../../model/InteriorPartitionSurfaceGroup.hpp"
-#include "../../model/InternalMass.hpp"
-#include "../../model/InternalMass_Impl.hpp"
 #include "../../model/DaylightingDeviceTubular.hpp"
 #include "../../model/DaylightingDeviceTubular_Impl.hpp"
 
@@ -61,4 +52,61 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   Model model;
+  Construction construction(model);
+  ThermalZone zone(model);
+  Space space(model);
+  space.setThermalZone(zone);
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 10, 3));
+  points.push_back(Point3d(0, 10, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 0, 3));
+  Surface surface(points, model);
+  surface.setSpace(space);
+  EXPECT_EQ("Wall", surface.surfaceType());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 1));
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(0, 1, 0));
+  points2.push_back(Point3d(0, 1, 1));
+  SubSurface dome(points2, model);
+  dome.setSurface(surface);
+
+  Point3dVector points3;
+  points3.push_back(Point3d(0, 0, 2));
+  points3.push_back(Point3d(0, 0, 0));
+  points3.push_back(Point3d(0, 2, 0));
+  points3.push_back(Point3d(0, 2, 2));
+  SubSurface diffuser(points3, model);
+  diffuser.setSurface(surface);
+
+  EXPECT_FALSE(window.daylightingDeviceLightTubular());
+  DaylightingDeviceTubular tubular(dome, diffuser, construction);
+  EXPECT_TRUE(window.daylightingDeviceTubular());
+  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceTubular>().size());
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> wos = w.getObjectsByType(IddObjectType::DaylightingDevice_Tubular);
+  ASSERT_EQ(1u, wos.size());
+  WorkspaceObject wo(wos[0]);
+
+  boost::optional<WorkspaceObject> idf_dome(wo.getTarget(DaylightingDevice_TubularFields::DomeName));
+  ASSERT_TRUE(idf_dome);
+  EXPECT_EQ(dome.nameString(), idf_dome->nameString());
+
+  boost::optional<WorkspaceObject> idf_diffuser(wo.getTarget(DaylightingDevice_TubularFields::DiffuserName));
+  ASSERT_TRUE(idf_diffuser);
+  EXPECT_EQ(diffuser.nameString(), idf_diffuser->nameString());
+
+  boost::optional<WorkspaceObject> idf_constr(wo.getTarget(DaylightingDevice_TubularFields::ConstructionName));
+  ASSERT_TRUE(idf_constr);
+  EXPECT_EQ(construction.nameString(), idf_constr->nameString());
+
+  EXPECT_EQ(0.3556, wo.getDouble(DaylightingDevice_TubularFields::Diameter, false).get());
+  EXPECT_EQ(1.4, wo.getDouble(DaylightingDevice_TubularFields::TotalLength, false).get());
+  EXPECT_EQ(0.28, wo.getDouble(DaylightingDevice_TubularFields::EffectiveThermalResistance, false).get());
 }

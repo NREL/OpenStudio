@@ -31,23 +31,13 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
-#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/Construction.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/ShadingSurface.hpp"
-#include "../../model/ShadingSurface_Impl.hpp"
-#include "../../model/ShadingSurfaceGroup.hpp"
-#include "../../model/InteriorPartitionSurface.hpp"
-#include "../../model/InteriorPartitionSurface_Impl.hpp"
-#include "../../model/InteriorPartitionSurfaceGroup.hpp"
-#include "../../model/InternalMass.hpp"
-#include "../../model/InternalMass_Impl.hpp"
 #include "../../model/DaylightingDeviceLightWell.hpp"
 #include "../../model/DaylightingDeviceLightWell_Impl.hpp"
 
@@ -61,4 +51,45 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceLightWell) {
   Model model;
+  ThermalZone zone(model);
+  Space space(model);
+  space.setThermalZone(zone);
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 10, 3));
+  points.push_back(Point3d(0, 10, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 0, 3));
+  Surface surface(points, model);
+  surface.setSpace(space);
+  EXPECT_EQ("Wall", surface.surfaceType());
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 1));
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(0, 1, 0));
+  points2.push_back(Point3d(0, 1, 1));
+  SubSurface window(points2, model);
+  window.setSurface(surface);
+
+  EXPECT_FALSE(window.daylightingDeviceLightWell());
+  DaylightingDeviceLightWell lightWell(window);
+  EXPECT_TRUE(window.daylightingDeviceLightWell());
+  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceLightWell>().size());
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> wos = w.getObjectsByType(IddObjectType::DaylightingDevice_LightWell);
+  ASSERT_EQ(1u, wos.size());
+  WorkspaceObject wo(wos[0]);
+
+  boost::optional<WorkspaceObject> idf_window(wo.getTarget(DaylightingDevice_LightWellFields::ExteriorWindowName));
+  ASSERT_TRUE(idf_window);
+  EXPECT_EQ(window.nameString(), idf_window->nameString());
+
+  EXPECT_EQ(1.2, wo.getDouble(DaylightingDevice_LightWellFields::HeightofWell, false).get());
+  EXPECT_EQ(12.0, wo.getDouble(DaylightingDevice_LightWellFields::PerimeterofBottomofWell, false).get());
+  EXPECT_EQ(9.0, wo.getDouble(DaylightingDevice_LightWellFields::AreaofBottomofWell, false).get());
+  EXPECT_EQ(0.7, wo.getDouble(DaylightingDevice_LightWellFields::VisibleReflectanceofWellWalls, false).get());
 }
