@@ -53,7 +53,8 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit DaylightingDeviceLightWell(const SubSurface& subSurface);
+    explicit DaylightingDeviceLightWell(const SubSurface& subSurface, double heightofWell, double perimeterofBottomofWell, double areaofBottomofWell,
+                                        double visibleReflectanceofWellWalls);
 
     virtual ~DaylightingDeviceLightWell() {}
 

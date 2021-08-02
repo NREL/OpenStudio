@@ -131,7 +131,8 @@ namespace model {
 
   }  // namespace detail
 
-  DaylightingDeviceLightWell::DaylightingDeviceLightWell(const SubSurface& subSurface)
+  DaylightingDeviceLightWell::DaylightingDeviceLightWell(const SubSurface& subSurface, double heightofWell, double perimeterofBottomofWell,
+                                                         double areaofBottomofWell, double visibleReflectanceofWellWalls)
     : ModelObject(DaylightingDeviceLightWell::iddObjectType(), subSurface.model()) {
     OS_ASSERT(getImpl<detail::DaylightingDeviceLightWell_Impl>());
 
@@ -149,6 +150,14 @@ namespace model {
 
     bool test = setPointer(OS_DaylightingDevice_LightWellFields::ExteriorWindowName, subSurface.handle());
     OS_ASSERT(test);
+
+    setHeightofWell(heightofWell);
+
+    setPerimeterofBottomofWell(perimeterofBottomofWell);
+
+    setAreaofBottomofWell(areaofBottomofWell);
+
+    setVisibleReflectanceofWellWalls(visibleReflectanceofWellWalls);
   }
 
   IddObjectType DaylightingDeviceLightWell::iddObjectType() {
