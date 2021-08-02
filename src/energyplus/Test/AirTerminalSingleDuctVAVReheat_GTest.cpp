@@ -55,10 +55,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVReheat) {
   Space s(m);
   s.setThermalZone(z);
 
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  CoilHeatingElectric coil = CoilHeatingElectric(m, s);
-  AirTerminalSingleDuctVAVReheat aterm(m, s, coil);
-  aterm.setMinimumAirFlowTurndownSchedule(s);
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  CoilHeatingElectric coil = CoilHeatingElectric(m, sch);
+  AirTerminalSingleDuctVAVReheat aterm(m, sch, coil);
+  aterm.setMinimumAirFlowTurndownSchedule(sch);
   // TODO
 
   AirLoopHVAC a(m);

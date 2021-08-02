@@ -54,9 +54,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVNoReheat) {
   Space s(m);
   s.setThermalZone(z);
 
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  AirTerminalSingleDuctVAVNoReheat aterm(m, s);
-  aterm.setMinimumAirFlowTurndownSchedule(s);
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctVAVNoReheat aterm(m, sch);
+  aterm.setMinimumAirFlowTurndownSchedule(sch);
   // TODO
 
   AirLoopHVAC a(m);
