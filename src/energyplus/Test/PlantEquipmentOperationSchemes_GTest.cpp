@@ -564,6 +564,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatP
   Workspace w = ft.translateModel(m);
 
   {
+    boost::optional<WorkspaceObject> _wo;
     _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, plant_loop_plhp_htg.name().get());
     ASSERT_TRUE(_wo.is_initialized());
     WorkspaceObject idf_use_loop = _wo.get();
@@ -595,6 +596,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatP
   }
 
   {
+    boost::optional<WorkspaceObject> _wo;
     _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, plant_loop_plhp_clg.name().get());
     ASSERT_TRUE(_wo.is_initialized());
     WorkspaceObject idf_use_loop = _wo.get();
