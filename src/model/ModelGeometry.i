@@ -157,6 +157,15 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::TransitionZone {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -197,6 +206,7 @@ MODELOBJECT_TEMPLATES(DaylightingControl);
 MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
+MODELOBJECT_TEMPLATES(TransitionZone);
 MODELOBJECT_TEMPLATES(DaylightingDeviceTubular);
 MODELOBJECT_TEMPLATES(DaylightingDeviceLightWell);
 MODELOBJECT_TEMPLATES(SpaceType);
