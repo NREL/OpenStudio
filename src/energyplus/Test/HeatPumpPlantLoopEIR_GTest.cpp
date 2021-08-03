@@ -109,10 +109,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
     EXPECT_EQ(1u, idf_ccs.size());
     WorkspaceObject idf_cc(idf_ccs[0]);
 
-    EXPECT_EQ("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideInletNodeName, false).get());
-    EXPECT_EQ("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideOutletNodeName, false).get());
-    EXPECT_EQ("Inlet Node For Source Side", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideInletNodeName, false).get());
-    EXPECT_EQ("Outlet Node For Source Side", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName, false).get());
+    EXPECT_NE("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideInletNodeName, false).get());
+    EXPECT_NE("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideOutletNodeName, false).get());
+    EXPECT_EQ("Heat Pump Plant Loop EIR Cooling 1 Inlet Node For Source Side",
+              idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideInletNodeName, false).get());
+    EXPECT_EQ("Heat Pump Plant Loop EIR Cooling 1 Outlet Node For Source Side",
+              idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName, false).get());
     EXPECT_EQ("AirSource", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, false).get());
     EXPECT_EQ(plhp_htg.nameString(), idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName).get());
     EXPECT_EQ(1.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, false).get());
@@ -138,10 +140,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
     EXPECT_EQ(1u, idf_hcs.size());
     WorkspaceObject idf_hc(idf_hcs[0]);
 
-    EXPECT_EQ("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideInletNodeName, false).get());
-    EXPECT_EQ("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideOutletNodeName, false).get());
-    EXPECT_EQ("Inlet Node For Source Side", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, false).get());
-    EXPECT_EQ("Outlet Node For Source Side", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, false).get());
+    EXPECT_NE("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideInletNodeName, false).get());
+    EXPECT_NE("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideOutletNodeName, false).get());
+    EXPECT_EQ("Heat Pump Plant Loop EIR Heating 1 Inlet Node For Source Side",
+              idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, false).get());
+    EXPECT_EQ("Heat Pump Plant Loop EIR Heating 1 Outlet Node For Source Side",
+              idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, false).get());
     EXPECT_EQ("AirSource", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, false).get());
     EXPECT_EQ(plhp_clg.nameString(), idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName).get());
     EXPECT_EQ(1.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, false).get());
@@ -218,10 +222,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_WaterSource) {
     EXPECT_EQ(1u, idf_ccs.size());
     WorkspaceObject idf_cc(idf_ccs[0]);
 
-    EXPECT_EQ("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideInletNodeName, false).get());
-    EXPECT_EQ("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideOutletNodeName, false).get());
-    EXPECT_EQ("Inlet Node For Source Side", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideInletNodeName, false).get());
-    EXPECT_EQ("Outlet Node For Source Side", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName, false).get());
+    EXPECT_NE("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideInletNodeName, false).get());
+    EXPECT_NE("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideOutletNodeName, false).get());
+    EXPECT_NE("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideInletNodeName, false).get());
+    EXPECT_NE("", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName, false).get());
     EXPECT_EQ("WaterSource", idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, false).get());
     EXPECT_EQ(plhp_htg.nameString(), idf_cc.getString(HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName).get());
     EXPECT_EQ(1.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, false).get());
@@ -247,10 +251,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_WaterSource) {
     EXPECT_EQ(1u, idf_hcs.size());
     WorkspaceObject idf_hc(idf_hcs[0]);
 
-    EXPECT_EQ("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideInletNodeName, false).get());
-    EXPECT_EQ("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideOutletNodeName, false).get());
-    EXPECT_EQ("Inlet Node For Source Side", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, false).get());
-    EXPECT_EQ("Outlet Node For Source Side", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, false).get());
+    EXPECT_NE("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideInletNodeName, false).get());
+    EXPECT_NE("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideOutletNodeName, false).get());
+    EXPECT_NE("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, false).get());
+    EXPECT_NE("", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, false).get());
     EXPECT_EQ("WaterSource", idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, false).get());
     EXPECT_EQ(plhp_clg.nameString(), idf_hc.getString(HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName).get());
     EXPECT_EQ(1.0, idf_hc.getDouble(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideReferenceFlowRate, false).get());
