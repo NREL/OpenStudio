@@ -7897,6 +7897,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   }
 
   auto fluidSysElement = element.parent();
+  auto fluidSysType = fluidSysElement.child("Type").text().as_string();
 
   std::string typeSim = element.child("TypeSim").text().as_string();
   if( istringEqual(typeSim,"HeatPumpSplit") ) {
@@ -7938,6 +7939,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     coil.setFractionofCondenserPumpHeattoWater(0.2);
     coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10.0);
     coil.setEvaporatorAirTemperatureTypeforCurveObjects("DryBulbTemperature");
+
+    // Save coil so that a meter can be created later
+    if( istringEqual(fluidSysType, "ServiceHotWater") ) {
+      m_spaceHeatingAirToWaterHeatPumps.push_back(coil);
+    }
 
     auto fan = heatPump.fan().cast<model::FanOnOff>();
     fan.setName(hpName + " Fan");

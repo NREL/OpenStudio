@@ -42,6 +42,7 @@
 #include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
+#include "../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
 
 namespace pugi {
 class xml_node;
@@ -239,6 +240,10 @@ namespace sdd {
       double tubeSpacing{0.5};
     };
     std::map<std::string, std::vector<RadiantSurfaceInfo> > m_radiantSurfaces;
+
+    // As CoilWaterHeatingAirToWaterHeatPump objects are translated, this is used to record
+    // those that are used for space heating. Custom meters will be setup to do accounting.
+    std::vector<model::CoilWaterHeatingAirToWaterHeatPump> m_spaceHeatingAirToWaterHeatPumps;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

@@ -96,6 +96,10 @@
 #include "../model/Mixer_Impl.hpp"
 #include "../model/OutputMeter.hpp"
 #include "../model/OutputMeter_Impl.hpp"
+#include "../model/MeterCustom.hpp"
+#include "../model/MeterCustomDecrement_Impl.hpp"
+#include "../model/MeterCustomDecrement.hpp"
+#include "../model/MeterCustom_Impl.hpp"
 #include "../model/WaterToWaterComponent.hpp"
 #include "../model/WaterToWaterComponent_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
@@ -971,6 +975,33 @@ namespace sdd {
     meter.setEndUseType(EndUseType::ExteriorLights);
     meter.setSpecificEndUse("NonReg Ltg");
     meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    // Custom meter that adds together the standard "Heating:Electricity",
+    // plus the heat pump water heater energy that is used for space heating
+    auto customSpaceHeatingMeter = model::MeterCustom(*result);
+    customSpaceHeatingMeter.setName("Custom Space Heating Electricity");
+    customSpaceHeatingMeter.setFuelType("Electricity");
+    customSpaceHeatingMeter.addKeyVarGroup("", "Heating:Electricity");
+    for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
+      customSpaceHeatingMeter.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
+    }
+    meter = model::OutputMeter(*result);
+    //meter.setFuelType(FuelType::Electricity);
+    meter.setName(customSpaceHeatingMeter.nameString());
+    meter.setReportingFrequency("Hourly");
+
+    // Custom meter that removes the energy from heat pump water heaters,
+    // which are used for space heating
+    auto customSpaceHeatingDecrement = model::MeterCustomDecrement(*result, "WaterSystems:Electricity");
+    customSpaceHeatingDecrement.setName("Custom Water Systems Electricity");
+    customSpaceHeatingDecrement.setFuelType("Electricity");
+    for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
+      customSpaceHeatingDecrement.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
+    }
+    meter = model::OutputMeter(*result);
+    //meter.setFuelType(FuelType::Electricity);
+    meter.setName(customSpaceHeatingDecrement.nameString());
     meter.setReportingFrequency("Hourly");
 
     {
