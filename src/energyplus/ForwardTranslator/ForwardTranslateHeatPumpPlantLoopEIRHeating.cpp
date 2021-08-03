@@ -70,35 +70,31 @@ namespace energyplus {
       idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::LoadSideInletNodeName, value->name().get());
     }
 
-    if (auto value = modelObject.demandOutletModelObject()) {
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, value->name().get());
-    }
-
-    if (auto value = modelObject.demandInletModelObject()) {
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, value->name().get());
-    }
-
     std::string condenserType = modelObject.condenserType();
     idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, condenserType);
+
     if (openstudio::istringEqual(condenserType, "WaterSource")) {
+
       if (auto value = modelObject.demandOutletModelObject()) {
         idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, value->name().get());
       }
-      ​ if (auto value = modelObject.demandInletModelObject()) {
+
+      if (auto value = modelObject.demandInletModelObject()) {
         idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, value->name().get());
       }
+
     } else {
       // AirSource
+      // Name the source side outlet node
+      auto name = modelObject.nameString() + " Outlet Node For Source Side";
+      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, name);
+
       // Create an OutdoorAir:NodeList for the source side inlet conditions to be set directly from weather file
       IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
       auto name = modelObject.nameString() + " Inlet Node For Source Side";
       oaNodeListIdf.setString(0, name);
       m_idfObjects.push_back(oaNodeListIdf);
       idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, name);
-
-      // Name the source side outlet node
-      auto name = modelObject.nameString() + " Outlet Node For Source Side";
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, name);
     }
 
     boost::optional<HeatPumpPlantLoopEIRCooling> companion = modelObject.companionCoolingHeatPump();
