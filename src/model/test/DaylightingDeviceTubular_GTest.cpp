@@ -66,27 +66,33 @@ TEST_F(ModelFixture, DaylightingDeviceTubular) {
 
   Construction construction(model);
 
-  daylightingDeviceTubular tubular(dome, diffuser, construction, 1, 2);
+  DaylightingDeviceTubular tubular(dome, diffuser, construction, 1, 2);
   UUID tubularHandle = tubular.handle();
-  ASSERT_TRUE(window.daylightingDeviceTubular());
-  EXPECT_EQ(tubularHandle, window.daylightingDeviceTubular()->handle());
+  ASSERT_TRUE(dome.daylightingDeviceTubular());
+  ASSERT_TRUE(diffuser.daylightingDeviceTubular());
+  EXPECT_EQ(tubularHandle, dome.daylightingDeviceTubular()->handle());
+  EXPECT_EQ(tubularHandle, diffuser.daylightingDeviceTubular()->handle());
   /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
   /* EXPECT_EQ(tubularHandle, window.addDaylightingDeviceShelf()->handle()); */
   /* EXPECT_EQ(window.addDaylightingDeviceShelf()->handle(), window.daylightingDeviceTubular()->handle()); */
-  EXPECT_EQ(window.handle(), tubular.subSurface().handle());
+  EXPECT_EQ(dome.handle(), tubular.subSurfaceDome().handle());
+  EXPECT_EQ(diffuser.handle(), tubular.subSurfaceDiffuser().handle());
 
   tubular.remove();
-  EXPECT_FALSE(window.daylightingDeviceTubular());
+  EXPECT_FALSE(dome.daylightingDeviceTubular());
+  EXPECT_FALSE(diffuser.daylightingDeviceTubular());
   /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
   /* tubularHandle = window.addDaylightingDeviceShelf()->handle(); */
   /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
   /* EXPECT_EQ(tubularHandle, window.addDaylightingDeviceShelf()->handle()); */
   /* ASSERT_TRUE(window.addDaylightingDeviceShelf()); */
   /* EXPECT_EQ(tubularHandle, window.addDaylightingDeviceShelf()->handle()); */
-  ASSERT_TRUE(window.daylightingDeviceTubular());
-  EXPECT_EQ(tubularHandle, window.daylightingDeviceTubular()->handle());
+  ASSERT_TRUE(dome.daylightingDeviceTubular());
+  ASSERT_TRUE(diffuser.daylightingDeviceTubular());
+  EXPECT_EQ(tubularHandle, dome.daylightingDeviceTubular()->handle());
+  EXPECT_EQ(tubularHandle, diffuser.daylightingDeviceTubular()->handle());
 
-  // changing to door removes light tubular
+  // changing to door removes tubular
   EXPECT_TRUE(dome.setSubSurfaceType("Door"));
   EXPECT_EQ("Door", dome.subSurfaceType());
   EXPECT_FALSE(dome.daylightingDeviceTubular());

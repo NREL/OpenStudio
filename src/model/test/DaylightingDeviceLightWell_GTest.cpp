@@ -129,7 +129,7 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   // changing to door removes light light well
   EXPECT_TRUE(door.setSubSurfaceType("Door"));
   EXPECT_EQ("Door", door.subSurfaceType());
-  EXPECT_FALSE(door.DaylightingDeviceLightWell());
+  EXPECT_FALSE(door.daylightingDeviceLightWell());
   EXPECT_FALSE(door.addDaylightingDeviceLightWell());
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 }

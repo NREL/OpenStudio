@@ -82,9 +82,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   SubSurface diffuser(points3, model);
   diffuser.setSurface(surface);
 
-  EXPECT_FALSE(window.daylightingDeviceLightTubular());
+  EXPECT_FALSE(dome.daylightingDeviceTubular());
+  EXPECT_FALSE(diffuser.daylightingDeviceTubular());
   DaylightingDeviceTubular tubular(dome, diffuser, construction);
-  EXPECT_TRUE(window.daylightingDeviceTubular());
+  EXPECT_TRUE(dome.daylightingDeviceTubular());
+  EXPECT_TRUE(diffuser.daylightingDeviceTubular());
   EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceTubular>().size());
 
   ForwardTranslator ft;
