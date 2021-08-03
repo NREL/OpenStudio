@@ -85,16 +85,20 @@ namespace energyplus {
 
     } else {
       // AirSource
-      // Name the source side outlet node
-      auto name = modelObject.nameString() + " Outlet Node For Source Side";
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, name);
+      {
+        // Name the source side outlet node
+        auto name = modelObject.nameString() + " Outlet Node For Source Side";
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName, name);
+      }
 
-      // Create an OutdoorAir:NodeList for the source side inlet conditions to be set directly from weather file
-      IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
-      auto name = modelObject.nameString() + " Inlet Node For Source Side";
-      oaNodeListIdf.setString(0, name);
-      m_idfObjects.push_back(oaNodeListIdf);
-      idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, name);
+      {
+        // Create an OutdoorAir:NodeList for the source side inlet conditions to be set directly from weather file
+        IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+        auto name = modelObject.nameString() + " Inlet Node For Source Side";
+        oaNodeListIdf.setString(0, name);
+        m_idfObjects.push_back(oaNodeListIdf);
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideInletNodeName, name);
+      }
     }
 
     boost::optional<HeatPumpPlantLoopEIRCooling> companion = modelObject.companionCoolingHeatPump();
