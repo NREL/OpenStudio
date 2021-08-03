@@ -75,7 +75,7 @@ namespace model {
     //@{
 
     explicit DaylightingDeviceTubular(const SubSurface& dome, const SubSurface& diffuser, const ConstructionBase& construction, double diameter,
-                                      double totalLength);
+                                      double totalLength, double effectiveThermalResistance);
 
     explicit DaylightingDeviceTubular(const SubSurface& dome, const SubSurface& diffuser, const ConstructionBase& construction);
 
