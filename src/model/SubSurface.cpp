@@ -615,12 +615,23 @@ namespace model {
           }
         }
 
-        /* TODO        if (!allowDaylightingDeviceTubularDome() && !allowDaylightingDeviceTubularDiffuser()) {
+        if (!allowDaylightingDeviceTubularDome()) {
           boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular();
           if (tubular) {
-            tubular->remove();
+            if (tubular->subSurfaceDome().handle() == this->handle()) {
+              tubular->remove();
+            }
           }
-        } */
+        }
+
+        if (!allowDaylightingDeviceTubularDiffuser()) {
+          boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular();
+          if (tubular) {
+            if (tubular->subSurfaceDiffuser().handle() == this->handle()) {
+              tubular->remove();
+            }
+          }
+        }
 
         if (!allowDaylightingDeviceLightWell()) {
           boost::optional<DaylightingDeviceLightWell> lightwell = this->daylightingDeviceLightWell();
