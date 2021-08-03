@@ -6342,31 +6342,6 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
-      } else if (iddname == "OS:GroundHeatExchanger:Vertical") {
-
-        // Removed 1 fields at position 11 (0-indexed)
-        // * Design Flow Rate  = 11
-        // I moved it to the field 4, previously maximumFlowRate. I'm discarding the previous Design Flow Rate version as that's what the comments in
-        // GroundHeatExchangerVertical.hpp were saying (maximumFlowRate was used instead of designFlowRate which was unused...)
-
-        auto iddObject = idd_3_2_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
-
-        for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i))) {
-            if (i < 11) {
-              newObject.setString(i, value.get());
-            } else if (i == 11) {
-              // No-op
-            } else {
-              newObject.setString(i - 1, value.get());
-            }
-          }
-        }
-
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
-
       } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
 
         // Field 13 (0-index) 'Supply Air Fan Placement' is now defaulted inside the Ctor
@@ -6725,6 +6700,31 @@ namespace osversion {
         // Set new fields per IDD default, same as Model Ctor, since it was made required-field
         newObject.setString(5, "Yes");
         newObject.setString(6, "CurrentOccupancy");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:GroundHeatExchanger:Vertical") {
+
+        // Removed 1 fields at position 11 (0-indexed)
+        // * Design Flow Rate  = 11
+        // I moved it to the field 4, previously maximumFlowRate. I'm discarding the previous Design Flow Rate version as that's what the comments in
+        // GroundHeatExchangerVertical.hpp were saying (maximumFlowRate was used instead of designFlowRate which was unused...)
+
+        auto iddObject = idd_3_2_2.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 11) {
+              newObject.setString(i, value.get());
+            } else if (i == 11) {
+              // No-op
+            } else {
+              newObject.setString(i - 1, value.get());
+            }
+          }
+        }
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;

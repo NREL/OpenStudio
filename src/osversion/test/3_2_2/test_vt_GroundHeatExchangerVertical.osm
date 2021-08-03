@@ -1,10 +1,10 @@
 
 OS:Version,
-  {c35dfd2f-c165-4774-8c34-624babcf75cb}, !- Handle
-  3.1.0;                                  !- Version Identifier
+  {56098b14-aaab-491e-bc48-0b11896dcc90}, !- Handle
+  3.2.1;                                  !- Version Identifier
 
 OS:GroundHeatExchanger:Vertical,
-  {fff3e8e3-9c5a-43a9-b4b0-be0a605b0642}, !- Handle
+  {1097e3a7-f498-42e1-af7f-7a8dd4dfa731}, !- Handle
   Ground Heat Exchanger Vertical 1,       !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name

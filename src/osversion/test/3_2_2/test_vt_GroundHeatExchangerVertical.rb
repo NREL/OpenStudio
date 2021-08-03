@@ -1,3 +1,5 @@
+#require '/usr/local/openstudio-3.2.1/Ruby/openstudio'
+
 include OpenStudio::Model
 
 m = Model.new
