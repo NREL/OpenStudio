@@ -70,10 +70,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceLightWell) {
   points2.push_back(Point3d(0, 1, 0));
   points2.push_back(Point3d(0, 1, 1));
   SubSurface window(points2, model);
+  window.setSubSurfaceType("FixedWindow");
   window.setSurface(surface);
 
   EXPECT_FALSE(window.daylightingDeviceLightWell());
-  DaylightingDeviceLightWell lightWell(window);
+  DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 0.5);
   EXPECT_TRUE(window.daylightingDeviceLightWell());
   EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceLightWell>().size());
 
@@ -88,8 +89,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceLightWell) {
   ASSERT_TRUE(idf_window);
   EXPECT_EQ(window.nameString(), idf_window->nameString());
 
-  EXPECT_EQ(1.2, wo.getDouble(DaylightingDevice_LightWellFields::HeightofWell, false).get());
-  EXPECT_EQ(12.0, wo.getDouble(DaylightingDevice_LightWellFields::PerimeterofBottomofWell, false).get());
-  EXPECT_EQ(9.0, wo.getDouble(DaylightingDevice_LightWellFields::AreaofBottomofWell, false).get());
-  EXPECT_EQ(0.7, wo.getDouble(DaylightingDevice_LightWellFields::VisibleReflectanceofWellWalls, false).get());
+  EXPECT_EQ(1, wo.getDouble(DaylightingDevice_LightWellFields::HeightofWell, false).get());
+  EXPECT_EQ(2, wo.getDouble(DaylightingDevice_LightWellFields::PerimeterofBottomofWell, false).get());
+  EXPECT_EQ(3, wo.getDouble(DaylightingDevice_LightWellFields::AreaofBottomofWell, false).get());
+  EXPECT_EQ(0.5, wo.getDouble(DaylightingDevice_LightWellFields::VisibleReflectanceofWellWalls, false).get());
 }

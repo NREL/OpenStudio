@@ -72,6 +72,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   points2.push_back(Point3d(0, 1, 0));
   points2.push_back(Point3d(0, 1, 1));
   SubSurface dome(points2, model);
+  dome.setSubSurfaceType("TubularDaylightDome");
   dome.setSurface(surface);
 
   Point3dVector points3;
@@ -80,14 +81,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   points3.push_back(Point3d(0, 2, 0));
   points3.push_back(Point3d(0, 2, 2));
   SubSurface diffuser(points3, model);
+  diffuser.setSubSurfaceType("TubularDaylightDiffuser");
   diffuser.setSurface(surface);
 
   EXPECT_FALSE(dome.daylightingDeviceTubular());
   EXPECT_FALSE(diffuser.daylightingDeviceTubular());
-  DaylightingDeviceTubular tubular(dome, diffuser, construction);
+  DaylightingDeviceTubular tubular(dome, diffuser, construction, 1, 2, 3);
   EXPECT_TRUE(dome.daylightingDeviceTubular());
   EXPECT_TRUE(diffuser.daylightingDeviceTubular());
   EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceTubular>().size());
+
+  ThermalZone thermalZone1(model);
+  ThermalZone thermalZone2(model);
+
+  std::vector<TransitionZone> transitionZonesToAdd;
+  TransitionZone transitionZone1(thermalZone1, 4);
+  transitionZonesToAdd.push_back(transitionZone1);
+  TransitionZone transitionZone2(thermalZone2, 5);
+  transitionZonesToAdd.push_back(transitionZone2);
+  ASSERT_TRUE(tubular.addTransitionZones(transitionZonesToAdd));
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(model);
@@ -108,7 +120,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   ASSERT_TRUE(idf_constr);
   EXPECT_EQ(construction.nameString(), idf_constr->nameString());
 
-  EXPECT_EQ(0.3556, wo.getDouble(DaylightingDevice_TubularFields::Diameter, false).get());
-  EXPECT_EQ(1.4, wo.getDouble(DaylightingDevice_TubularFields::TotalLength, false).get());
-  EXPECT_EQ(0.28, wo.getDouble(DaylightingDevice_TubularFields::EffectiveThermalResistance, false).get());
+  EXPECT_EQ(1, wo.getDouble(DaylightingDevice_TubularFields::Diameter, false).get());
+  EXPECT_EQ(2, wo.getDouble(DaylightingDevice_TubularFields::TotalLength, false).get());
+  EXPECT_EQ(3, wo.getDouble(DaylightingDevice_TubularFields::EffectiveThermalResistance, false).get());
+
+  EXPECT_EQ(2u, wo.numExtensibleGroups());
 }
