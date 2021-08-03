@@ -102,12 +102,8 @@ namespace energyplus {
     }
 
     // MinimumAirFlowTurndownScheduleName
-    boost::optional<Schedule> minAirFlowTurndownSchedule = modelObject.minimumAirFlowTurndownSchedule();
-
-    if (minAirFlowTurndownSchedule) {
-      boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get());
-
-      if (_minAirFlowTurndownSchedule) {
+    if (boost::optional<Schedule> minAirFlowTurndownSchedule = modelObject.minimumAirFlowTurndownSchedule()) {
+      if (boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get())) {
         idfObject.setString(AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->nameString());
       }
     }
