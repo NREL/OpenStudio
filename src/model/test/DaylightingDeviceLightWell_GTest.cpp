@@ -53,7 +53,7 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell) {
 
   EXPECT_FALSE(window.daylightingDeviceLightWell());
 
-  DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 4);
+  DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 0.75);
   UUID lightWellHandle = lightWell.handle();
   ASSERT_TRUE(window.daylightingDeviceLightWell());
   EXPECT_EQ(lightWellHandle, window.daylightingDeviceLightWell()->handle());
@@ -95,7 +95,7 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
 
   bool didThrow = false;
   try {
-    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 4);
+    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 0.8);
   } catch (const openstudio::Exception&) {
     didThrow = true;
   }
@@ -109,7 +109,7 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   // first one succeeds
   didThrow = false;
   try {
-    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 4);
+    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 0.8);
   } catch (const openstudio::Exception&) {
     didThrow = true;
   }
@@ -119,7 +119,7 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   // second call throws
   didThrow = false;
   try {
-    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 4);
+    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 0.8);
   } catch (const openstudio::Exception&) {
     didThrow = true;
   }
@@ -132,4 +132,88 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   EXPECT_FALSE(door.daylightingDeviceLightWell());
   EXPECT_FALSE(door.addDaylightingDeviceLightWell());
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+}
+
+TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw2) {
+  Model model;
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 1, 1));
+  SubSurface door(points, model);
+  EXPECT_TRUE(door.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door.subSurfaceType());
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  bool didThrow = false;
+  try {
+    DaylightingDeviceLightWell lightWell(door);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_TRUE(didThrow);
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  // change to a window
+  EXPECT_TRUE(door.setSubSurfaceType("FixedWindow"));
+  EXPECT_EQ("FixedWindow", door.subSurfaceType());
+
+  // first one succeeds
+  didThrow = false;
+  try {
+    DaylightingDeviceLightWell lightWell(door);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_FALSE(didThrow);
+  EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  // second call throws
+  didThrow = false;
+  try {
+    DaylightingDeviceLightWell lightWell(door);
+  } catch (const openstudio::Exception&) {
+    didThrow = true;
+  }
+  EXPECT_TRUE(didThrow);
+  EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
+  // changing to door removes light light well
+  EXPECT_TRUE(door.setSubSurfaceType("Door"));
+  EXPECT_EQ("Door", door.subSurfaceType());
+  EXPECT_FALSE(door.daylightingDeviceLightWell());
+  EXPECT_FALSE(door.addDaylightingDeviceLightWell());
+  EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+}
+
+TEST_F(ModelFixture, DaylightingDeviceLightWell_SettersGetters) {
+  Model model;
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 1, 1));
+  SubSurface window(points, model);
+  EXPECT_EQ("FixedWindow", window.subSurfaceType());
+
+  DaylightingDeviceLightWell lightWell(window);
+
+  EXPECT_EQ(window, lightWell.subSurface());
+  EXPECT_EQ(1.2, lightWell.heightofWell());
+  EXPECT_EQ(12.0, lightWell.perimeterofBottomofWell());
+  EXPECT_EQ(9.0, lightWell.areaofBottomofWell());
+  EXPECT_EQ(0.7, lightWell.visibleReflectanceofWellWalls());
+
+  EXPECT_TRUE(lightWell.setHeightofWell(1));
+  EXPECT_TRUE(lightWell.setPerimeterofBottomofWell(2));
+  EXPECT_TRUE(lightWell.setAreaofBottomofWell(3));
+  EXPECT_TRUE(lightWell.setVisibleReflectanceofWellWalls(0.9));
+
+  EXPECT_EQ(1, lightWell.heightofWell());
+  EXPECT_EQ(2, lightWell.perimeterofBottomofWell());
+  EXPECT_EQ(3, lightWell.areaofBottomofWell());
+  EXPECT_EQ(0.9, lightWell.visibleReflectanceofWellWalls());
 }
