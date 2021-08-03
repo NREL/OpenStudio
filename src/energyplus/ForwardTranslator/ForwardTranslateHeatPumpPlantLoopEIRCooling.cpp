@@ -80,7 +80,7 @@ namespace energyplus {
 
     std::string condenserType = modelObject.condenserType();
     idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, condenserType);
-    if (openstudio::istringEqual(condenserType, "WaterSource") {
+    if (openstudio::istringEqual(condenserType, "WaterSource")) {
       if (auto value = modelObject.demandOutletModelObject()) {
         idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName, value->name().get());
       }
