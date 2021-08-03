@@ -177,7 +177,7 @@ namespace model {
     }
 
     bool AirTerminalDualDuctVAV_Impl::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, "AirTerminalSingleDuctVAVReheat",
+      bool result = setSchedule(OS_AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, "AirTerminalDualDuctVAV",
                                 "Minimum Air Flow Turndown", schedule);
       return result;
     }
