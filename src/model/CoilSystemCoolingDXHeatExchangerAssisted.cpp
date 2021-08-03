@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,8 @@
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "HeatExchangerDesiccantBalancedFlow.hpp"
+#include "HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 
 #include "ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
@@ -249,6 +251,21 @@ namespace model {
 
     HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
     heatExchanger.setSupplyAirOutletTemperatureControl(false);
+    setHeatExchanger(heatExchanger);
+  }
+
+  CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger)
+    : StraightComponent(CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>());
+
+    bool ok = setHeatExchanger(heatExchanger);
+    if (!ok) {
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heat Exchanger " << heatExchanger.briefDescription() << ".");
+    }
+
+    CoilCoolingDXSingleSpeed coolingCoil(model);
+    setCoolingCoil(coolingCoil);
+
     setHeatExchanger(heatExchanger);
   }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -179,7 +179,9 @@ namespace energyplus {
       for (const FanSystemModelSpeed& speed : speeds) {
         auto eg = idfObject.pushExtensibleGroup();
         eg.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, speed.flowFraction());
-        eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, speed.electricPowerFraction());
+        if (auto epf_ = speed.electricPowerFraction()) {
+          eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, epf_.get());
+        }
       }
     }
 

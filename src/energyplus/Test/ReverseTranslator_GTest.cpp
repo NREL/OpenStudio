@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -812,7 +812,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
   ASSERT_EQ(1u, thermalZones.size());
   ThermalZone thermalZone = thermalZones[0];
-  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1");
   std::vector<Surface> surfaces = model.getModelObjects<Surface>();
   EXPECT_EQ(2u, surfaces.size());
   std::sort(surfaces.begin(), surfaces.end(), openstudio::WorkspaceObjectNameLess());
@@ -822,7 +822,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   EXPECT_EQ(1u, zoneProp.numberofViewFactors());
   std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
   ViewFactor viewFactor = viewFactors[0];
-  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1");
   EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
   EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 2");
   EXPECT_EQ(0.25, viewFactor.viewFactor());
@@ -882,13 +882,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
   ASSERT_EQ(1u, thermalZones.size());
   ThermalZone thermalZone = thermalZones[0];
-  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1");
   std::vector<Surface> surfaces = model.getModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
   EXPECT_EQ(surface.name().get(), "Surface 1");
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
-  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1");
 
   // We allow toSurface to be equal to fromSurface
   EXPECT_EQ(1u, zoneProp.numberofViewFactors());
@@ -939,11 +939,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
@@ -986,11 +984,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());

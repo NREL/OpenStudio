@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,14 +57,28 @@ pugi::xml_node RemoteQueryResponse::root() const {
 
 // TODO: please note that you should use getClient everywhere after instead of instantiating your own http_client_config
 // as it will allow us to change http_client_config (SSL settings etc) in  only one place
-web::http::client::http_client RemoteBCL::getClient(const std::string& url) {
+web::http::client::http_client RemoteBCL::getClient(const std::string& url, unsigned timeOutSeconds) {
   web::http::client::http_client_config config;
   // bcl.nrel.gov can be slow to respond to client requests so bump the default of 30 seconds to 60 to account for lengthy response time.
   // this is timeout is for each send and receive operation on the client and not the entire client session.
-  config.set_timeout(std::chrono::seconds(60));
+  config.set_timeout(std::chrono::seconds(timeOutSeconds));
   config.set_validate_certificates(false);
 
   return web::http::client::http_client(utility::conversions::to_string_t(url), config);
+}
+
+unsigned RemoteBCL::timeOutSeconds() const {
+  return m_timeOutSeconds;
+}
+bool RemoteBCL::setTimeOutSeconds(unsigned timeOutSeconds) {
+  if (timeOutSeconds < 10) {
+    LOG(Error, "Setting a timeout of " << timeOutSeconds << " is too low.");
+    return false;
+  } else if (timeOutSeconds < 60) {
+    LOG(Warn, "Setting a timeout of " << timeOutSeconds << " appears low and you risk failures to download components and measures");
+  }
+  m_timeOutSeconds = timeOutSeconds;
+  return true;
 }
 
 bool RemoteBCL::DownloadFile::open() {
@@ -98,7 +112,8 @@ RemoteBCL::RemoteBCL()
     m_lastTotalResults(0),
     m_apiVersion("2.0"),
     validProdAuthKey(false),
-    validDevAuthKey(false) {
+    validDevAuthKey(false),
+    m_timeOutSeconds(120) {
   useRemoteProductionUrl();
 }
 
@@ -213,7 +228,7 @@ int RemoteBCL::checkForComponentUpdates() {
 
     m_lastSearch.clear();
 
-    auto client = getClient(remoteUrl());
+    auto client = getClient(remoteUrl(), m_timeOutSeconds);
     web::uri_builder builder(U("/api/search/"));
 
     builder.append_path(U("*.xml"));
@@ -222,7 +237,7 @@ int RemoteBCL::checkForComponentUpdates() {
 
     builder.append_query(U("api_version"), to_string_t(m_apiVersion));
 
-    //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+    // LOG(Debug, m_remoteUrl << builder.to_string());
 
     m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                        .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -254,7 +269,7 @@ int RemoteBCL::checkForMeasureUpdates() {
 
     m_lastSearch.clear();
 
-    auto client = getClient(remoteUrl());
+    auto client = getClient(remoteUrl(), m_timeOutSeconds);
     web::uri_builder builder(U("/api/search/"));
 
     builder.append_path(U("*.xml"));
@@ -263,7 +278,7 @@ int RemoteBCL::checkForMeasureUpdates() {
 
     builder.append_query(U("api_version"), to_string_t(m_apiVersion));
 
-    //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+    // LOG(Debug, m_remoteUrl << builder.to_string());
 
     m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                        .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -475,7 +490,7 @@ bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& r
 
     m_lastSearch.clear();
 
-    auto client = getClient(remoteUrl);
+    auto client = getClient(remoteUrl, m_timeOutSeconds);
     web::uri_builder builder(U("/api/search/"));
 
     builder.append_path(U("*.xml"));
@@ -483,7 +498,7 @@ bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& r
     builder.append_query(U("api_version"), to_string_t(m_apiVersion));
     builder.append_query(U("show_rows"), U("0"));
 
-    //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+    // LOG(Debug, m_remoteUrl << builder.to_string());
 
     m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                        .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -513,32 +528,52 @@ bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& r
   return false;
 }
 
-boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload() const {
+  if (waitForLock()) {
     return m_lastComponentDownload;
   }
   return boost::none;
 }
 
-boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int) const {
+  LOG(Warn, "waitForComponentDownload(int msec) is deprecated, the parameter is unused. Use waitForComponentDownload() instead");
+  return waitForComponentDownload();
+}
+
+boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload() const {
+  if (waitForLock()) {
     return m_lastMeasureDownload;
   }
   return boost::none;
 }
 
-boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload(int) const {
+  LOG(Warn, "waitForMeasureDownloadint is deprecated, the parameter is unused. Use waitForMeasureDownload() instead");
+  return waitForMeasureDownload();
+}
+
+boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch() const {
+  if (waitForLock()) {
     return m_lastMetaSearch;
   }
   return boost::none;
 }
 
-std::vector<BCLSearchResult> RemoteBCL::waitForSearch(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch(int) const {
+  LOG(Warn, "waitForMetaSearchint is deprecated, the parameter is unused. Use waitForMetaSearch() instead");
+  return waitForMetaSearch();
+}
+
+std::vector<BCLSearchResult> RemoteBCL::waitForSearch() const {
+  if (waitForLock()) {
     return m_lastSearch;
   }
   return std::vector<BCLSearchResult>();
+}
+
+std::vector<BCLSearchResult> RemoteBCL::waitForSearch(int) const {
+  LOG(Warn, "waitForSearchint is deprecated, the parameter is unused. Use waitForSearch() instead");
+  return waitForSearch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -565,7 +600,7 @@ bool RemoteBCL::downloadComponent(const std::string& uid) {
 
   m_downloadUid = uid;
   // request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/component/download"));
 
   builder.append_query(U("uids"), to_string_t(uid));
@@ -575,6 +610,8 @@ bool RemoteBCL::downloadComponent(const std::string& uid) {
                     U("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17"));
   msg.set_request_uri(builder.to_string());
 
+  // LOG(Debug, m_remoteUrl << builder.to_string());
+
   m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                      .then([](web::http::http_response resp) { return resp.extract_vector(); })
                      .then([this](const std::vector<unsigned char>& zip) {
@@ -583,8 +620,6 @@ bool RemoteBCL::downloadComponent(const std::string& uid) {
                        m_downloadFile->close();
                      })
                      .then([this]() { onDownloadComplete(); });
-
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
 
   return true;
 }
@@ -601,12 +636,13 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
 
   m_lastMetaSearch.reset();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/metasearch/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
-  builder.append_path(to_string_t(query + ".xml"));
+  // web::uri::encode_data_string will Encodes a string by converting all characters
+  // except for RFC 3986 unreserved characters to their hexadecimal representation. (eg: '+' => %2B, ' ' => %20)
+  std::string query = searchTerm.empty() ? "*" : searchTerm;
+  builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
 
@@ -634,7 +670,7 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
@@ -647,12 +683,11 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
 
   m_lastMetaSearch.reset();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/metasearch/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
-  builder.append_path(to_string_t(query + ".xml"));
+  std::string query = searchTerm.empty() ? "*" : searchTerm;
+  builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
 
@@ -679,7 +714,7 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
@@ -693,12 +728,11 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
 
   m_lastSearch.clear();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/search/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
-  builder.append_path(to_string_t(query + ".xml"));
+  std::string query = searchTerm.empty() ? "*" : searchTerm;
+  builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
 
@@ -722,7 +756,7 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
@@ -736,12 +770,11 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
 
   m_lastSearch.clear();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/search/"));
 
-  auto query = searchTerm.empty() ? "*" : searchTerm;
-  query = std::regex_replace(query, std::regex("\\+"), "%2B");
-  builder.append_path(to_string_t(query + ".xml"));
+  std::string query = searchTerm.empty() ? "*" : searchTerm;
+  builder.append_path(web::uri::encode_data_string(utility::conversions::to_string_t(query + ".xml")));
 
   builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
 
@@ -763,36 +796,22 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
 
-bool RemoteBCL::waitForLock(int msec) const {
-  int msecPerLoop = 20;
-  int numTries = msec / msecPerLoop;
-  int current = 0;
-  while (true) {
-    // if no request was made and the optional is empty return
-    if (!m_httpResponse) {
-      return false;
-    }
+bool RemoteBCL::waitForLock() const {
 
-    // if we can get the lock then the download is complete
-    if (m_httpResponse->is_done()) {
-      return true;
-    }
+  if (!m_httpResponse) {
+    return false;
+  }
 
-    // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
-    // this calls process events
-    System::msleep(msecPerLoop);
-
-    if (current > numTries) {
-      LOG(Error, "waitForLock timeout");
-      break;
-    }
-
-    ++current;
+  try {
+    m_httpResponse->wait();
+    return true;
+  } catch (const std::exception& e) {
+    LOG(Error, "Request to url '" << m_remoteUrl << " 'failed with message: " << e.what());
   }
 
   return false;

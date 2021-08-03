@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -219,21 +219,42 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_AddToNodeOutdoo
   EXPECT_EQ(1, outdoorAirSystem.oaComponents().size());
   EXPECT_EQ(1, outdoorAirSystem.reliefComponents().size());
 
-  if (boost::optional<Node> OANode = outdoorAirSystem.outboardOANode()) {
+  {
+    boost::optional<Node> OANode = outdoorAirSystem.outboardOANode();
+    ASSERT_TRUE(OANode);
     ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
 
     EXPECT_TRUE(testObject.addToNode(OANode.get()));
     EXPECT_EQ(3, airLoop.supplyComponents().size());
-    EXPECT_EQ(3, outdoorAirSystem.oaComponents().size());
+    auto oaComps = outdoorAirSystem.oaComponents();
+    ASSERT_EQ(3, oaComps.size());
+
     EXPECT_TRUE(testObject.airLoopHVACOutdoorAirSystem());
+
+    // Test for #4354
+    EXPECT_EQ(testObject.inletNode().get(), oaComps[0]);
+    EXPECT_EQ(OANode.get(), oaComps[0]);
+    EXPECT_EQ(testObject, oaComps[1]);
+    EXPECT_EQ(testObject.outletNode().get(), oaComps[2]);
   }
 
-  if (boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode()) {
+  {
+    boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode();
+    ASSERT_TRUE(reliefNode);
+
     ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
     EXPECT_TRUE(testObject.addToNode(reliefNode.get()));
     EXPECT_EQ(3, airLoop.supplyComponents().size());
-    EXPECT_EQ(3, outdoorAirSystem.reliefComponents().size());
+    auto reliefComps = outdoorAirSystem.reliefComponents();
+    ASSERT_EQ(3, reliefComps.size());
+
     EXPECT_TRUE(testObject.airLoopHVACOutdoorAirSystem());
+
+    // Test for #4354
+    EXPECT_EQ(testObject.inletNode().get(), reliefComps[0]);
+    EXPECT_EQ(testObject, reliefComps[1]);
+    EXPECT_EQ(testObject.outletNode().get(), reliefComps[2]);
+    EXPECT_EQ(reliefNode.get(), reliefComps[2]);
   }
 }
 

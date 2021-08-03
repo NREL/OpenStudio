@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,12 +43,16 @@
 #include "CurveCubic_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include <utilities/idd/IddFactory.hxx>
+#include "WaterHeaterSizing.hpp"
+#include "WaterHeaterSizing_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Mixed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 
@@ -127,6 +131,18 @@ namespace model {
 
     IddObjectType WaterHeaterMixed_Impl::iddObjectType() const {
       return WaterHeaterMixed::iddObjectType();
+    }
+
+    std::vector<ModelObject> WaterHeaterMixed_Impl::children() const {
+      return std::vector<ModelObject>{waterHeaterSizing()};
+    }
+
+    ModelObject WaterHeaterMixed_Impl::clone(Model model) const {
+      auto whClone = WaterToWaterComponent_Impl::clone(model).cast<WaterHeaterMixed>();
+
+      auto sizingClone = waterHeaterSizing().clone(model).cast<WaterHeaterSizing>();
+      sizingClone.getImpl<WaterHeaterSizing_Impl>()->setWaterHeater(whClone);
+      return whClone;
     }
 
     std::vector<ScheduleTypeKey> WaterHeaterMixed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
@@ -1179,6 +1195,27 @@ namespace model {
       return true;
     }
 
+    WaterHeaterSizing WaterHeaterMixed_Impl::waterHeaterSizing() const {
+      boost::optional<WaterHeaterSizing> waterHeaterSizing_;
+
+      auto sizingObjects = getObject<WaterHeaterMixed>().getModelObjectSources<WaterHeaterSizing>();
+      auto predicate = [thisHandle = this->handle()](const auto& siz) {
+        try {
+          return siz.waterHeater().handle() == thisHandle;
+        } catch (...) {
+          LOG(Debug, siz.briefDescription() << " is not attached to a WaterHeater object.");
+          return false;
+        }
+      };
+
+      auto it = std::find_if(sizingObjects.cbegin(), sizingObjects.cend(), predicate);
+      if (it != sizingObjects.cend()) {
+        return *it;
+      } else {
+        LOG_AND_THROW(briefDescription() << " missing WaterHeater:Sizing object.");
+      }
+    }
+
   }  // namespace detail
 
   WaterHeaterMixed::WaterHeaterMixed(const Model& model) : WaterToWaterComponent(WaterHeaterMixed::iddObjectType(), model) {
@@ -1214,6 +1251,8 @@ namespace model {
 
     setSourceSideFlowControlMode("IndirectHeatPrimarySetpoint");
     setEndUseSubcategory("General");
+
+    WaterHeaterSizing waterHeaterSizing(*this);
   }
 
   IddObjectType WaterHeaterMixed::iddObjectType() {
@@ -1785,6 +1824,10 @@ namespace model {
 
   boost::optional<double> WaterHeaterMixed::autosizedSourceSideDesignFlowRate() const {
     return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
+
+  WaterHeaterSizing WaterHeaterMixed::waterHeaterSizing() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->waterHeaterSizing();
   }
 
 }  // namespace model

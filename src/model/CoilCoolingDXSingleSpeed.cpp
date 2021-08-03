@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,6 +55,10 @@
 #include "Node_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -232,18 +236,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeed_Impl::setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve) {
-      if (model() != curve.model()) {
-        LOG(Warn, "Cannot set curve that doesn't belong to the same model as " << briefDescription());
-        return false;
-      }
-
-      if (!curve.optionalCast<CurveBiquadratic>()) {
-        LOG(Warn, "Wrong curve type (Biquadratic expected) for " << briefDescription());
-        return false;
-      }
-      bool result = this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
-      OS_ASSERT(result);
-      return result;
+      return setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
 
     Curve CoilCoolingDXSingleSpeed_Impl::totalCoolingCapacityFunctionOfFlowFractionCurve() const {
@@ -253,27 +246,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeed_Impl::setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve) {
-      if (model() != curve.model()) {
-        LOG(Warn, "Cannot set curve that doesn't belong to the same model as " << briefDescription());
-        return false;
-      }
-
-      bool accepted = false;
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      if (!accepted) {
-        LOG(Warn, "Wrong curve type (Quadratic or Cubic expected) for " << briefDescription());
-        return false;
-      }
-
-      bool result = this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle());
-      OS_ASSERT(result);
-      return result;
+      return setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle());
     }
 
     Curve CoilCoolingDXSingleSpeed_Impl::energyInputRatioFunctionOfTemperatureCurve() const {
@@ -283,18 +256,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeed_Impl::setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve) {
-      if (model() != curve.model()) {
-        LOG(Warn, "Cannot set curve that doesn't belong to the same model as " << briefDescription());
-        return false;
-      }
-
-      if (!curve.optionalCast<Curve>()) {
-        return false;
-      }
-
-      bool result = this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
-      OS_ASSERT(result);
-      return result;
+      return setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
     }
 
     Curve CoilCoolingDXSingleSpeed_Impl::energyInputRatioFunctionOfFlowFractionCurve() const {
@@ -304,27 +266,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeed_Impl::setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve) {
-      if (model() != curve.model()) {
-        LOG(Warn, "Cannot set curve that doesn't belong to the same model as " << briefDescription());
-        return false;
-      }
-
-      bool accepted = false;
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      if (!accepted) {
-        LOG(Warn, "Wrong curve type (Quadratic or Cubic expected) for " << briefDescription());
-        return false;
-      }
-
-      bool result = this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle());
-      OS_ASSERT(result);
-      return result;
+      return setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle());
     }
 
     Curve CoilCoolingDXSingleSpeed_Impl::partLoadFractionCorrelationCurve() const {
@@ -334,27 +276,7 @@ namespace model {
     }
 
     bool CoilCoolingDXSingleSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& curve) {
-      if (model() != curve.model()) {
-        LOG(Warn, "Cannot set curve that doesn't belong to the same model as " << briefDescription());
-        return false;
-      }
-
-      bool accepted = false;
-
-      if (curve.optionalCast<CurveQuadratic>()) {
-        accepted = true;
-      } else if (curve.optionalCast<CurveCubic>()) {
-        accepted = true;
-      }
-
-      if (!accepted) {
-        LOG(Warn, "Wrong curve type (Quadratic or Cubic expected) for " << briefDescription());
-        return false;
-      }
-
-      bool result = this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle());
-      OS_ASSERT(result);
-      return result;
+      return setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle());
     }
 
     OptionalDouble CoilCoolingDXSingleSpeed_Impl::nominalTimeForCondensateRemovalToBegin() const {
@@ -803,6 +725,10 @@ namespace model {
           } else {
             return StraightComponent_Impl::addToNode(node);
           }
+        }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        if (oas->airLoopHVACDedicatedOutdoorAirSystem()) {
+          return StraightComponent_Impl::addToNode(node);
         }
       }
 

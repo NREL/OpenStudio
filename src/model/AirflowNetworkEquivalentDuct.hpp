@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,11 +44,11 @@ namespace model {
   // AFNCoilNames
   // AFNHeatExchangerNames
   //   HeatExchanger:AirToAir:FlatPlate
-  //   HeatExchanger:Desiccant:BalancedFlow
 
   namespace detail {
 
     class HeatExchangerAirToAirSensibleAndLatent_Impl;
+    class HeatExchangerDesiccantBalancedFlow_Impl;
     class CoilHeatingDXMultiSpeed_Impl;
     class CoilHeatingWater_Impl;
     class CoilHeatingDesuperheater_Impl;
@@ -127,6 +127,7 @@ namespace model {
     friend class detail::CoilHeatingWater_Impl;
     friend class detail::CoilHeatingDXMultiSpeed_Impl;
     friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
+    friend class detail::HeatExchangerDesiccantBalancedFlow_Impl;
 
     friend class detail::AirflowNetworkEquivalentDuct_Impl;
     friend class Model;

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -1010,9 +1010,13 @@ class Run
     k = OpenStudio::Workflow::Run.new osw_path, run_options
 
     $logger.debug "Beginning run"
-    k.run
-
-    0
+    state = k.run
+    # check if state symbol is either :finished or :errored
+    if state == :finished
+      return 0
+    else
+      return 1
+    end
   end
 end
 

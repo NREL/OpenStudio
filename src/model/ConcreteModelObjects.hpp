@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -296,6 +296,8 @@
 #include "HeaderedPumpsVariableSpeed.hpp"
 #include "HeatBalanceAlgorithm.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "HeatExchangerDesiccantBalancedFlow.hpp"
+#include "HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp"
 #include "HeatExchangerFluidToFluid.hpp"
 #include "HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "HeatPumpWaterToWaterEquationFitHeating.hpp"
@@ -337,6 +339,9 @@
 #include "OutputDiagnostics.hpp"
 #include "OutputEnergyManagementSystem.hpp"
 #include "OutputJSON.hpp"
+#include "OutputEnvironmentalImpactFactors.hpp"
+#include "EnvironmentalImpactFactors.hpp"
+#include "FuelFactors.hpp"
 #include "OutputMeter.hpp"
 #include "OutputVariable.hpp"
 #include "OutputTableSummaryReports.hpp"
@@ -494,6 +499,7 @@
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterHeatPump.hpp"
 #include "WaterHeaterHeatPumpWrappedCondenser.hpp"
+#include "WaterHeaterSizing.hpp"
 #include "WaterHeaterStratified.hpp"
 #include "WaterUseConnections.hpp"
 #include "WaterUseEquipment.hpp"
@@ -804,6 +810,8 @@
 #include "HeaderedPumpsVariableSpeed_Impl.hpp"
 #include "HeatBalanceAlgorithm_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "HeatExchangerDesiccantBalancedFlow_Impl.hpp"
+#include "HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl.hpp"
 #include "HeatExchangerFluidToFluid_Impl.hpp"
 #include "HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
 #include "HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
@@ -845,6 +853,9 @@
 #include "OutputDiagnostics_Impl.hpp"
 #include "OutputEnergyManagementSystem_Impl.hpp"
 #include "OutputJSON_Impl.hpp"
+#include "OutputEnvironmentalImpactFactors_Impl.hpp"
+#include "EnvironmentalImpactFactors_Impl.hpp"
+#include "FuelFactors_Impl.hpp"
 #include "OutputMeter_Impl.hpp"
 #include "OutputVariable_Impl.hpp"
 #include "OutputTableSummaryReports_Impl.hpp"
@@ -1002,6 +1013,7 @@
 #include "WaterHeaterMixed_Impl.hpp"
 #include "WaterHeaterHeatPump_Impl.hpp"
 #include "WaterHeaterHeatPumpWrappedCondenser_Impl.hpp"
+#include "WaterHeaterSizing_Impl.hpp"
 #include "WaterHeaterStratified_Impl.hpp"
 #include "WaterUseConnections_Impl.hpp"
 #include "WaterUseEquipment_Impl.hpp"

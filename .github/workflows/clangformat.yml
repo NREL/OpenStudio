@@ -22,5 +22,5 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v2
       with:
-          name: OpenStudioApplication-${{ github.sha }}-clang_format.patch
+          name: OpenStudio-${{ github.sha }}-clang_format.patch
           path: clang_format.patch

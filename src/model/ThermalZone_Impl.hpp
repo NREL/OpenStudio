@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,6 +52,7 @@ namespace model {
   class ZoneHVACEquipmentList;
   class AirflowNetworkZone;
   class ZonePropertyUserViewFactorsBySurfaceName;
+  class Schedule;
 
   namespace detail {
 
@@ -91,6 +92,8 @@ namespace model {
       virtual IddObjectType iddObjectType() const override;
 
       virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
+
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       /** @name Getters */
       //@{
@@ -236,6 +239,12 @@ namespace model {
                                                     const boost::optional<IlluminanceMap>& illuminanceMap);
 
       void checkDaylightingControlsAndIlluminanceMaps();
+
+      boost::optional<Schedule> daylightingControlsAvailabilitySchedule() const;
+
+      bool setDaylightingControlsAvailabilitySchedule(Schedule& schedule);
+
+      void resetDaylightingControlsAvailabilitySchedule();
 
       /// Returns the rendering color.
       boost::optional<RenderingColor> renderingColor() const;

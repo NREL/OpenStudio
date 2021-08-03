@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1660,6 +1660,64 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ZoneHVACTerminalUnitVariableRefri
   EXPECT_EQ("Fan Op Schedule", vrf.getString(12, false, true).get());
   EXPECT_EQ("DrawThrough", vrf.getString(13, false, true).get());
   EXPECT_EQ("Supply Air Fan", vrf.getString(14, false, true).get());
+}
+
+TEST_F(OSVersionFixture, update_3_2_0_to_3_2_1_WaterHeaterSizing) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_1/test_vt_WaterHeaterSizing.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_1/test_vt_WaterHeaterSizing_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> whMixeds = model->getObjectsByType("OS:WaterHeater:Mixed");
+  ASSERT_EQ(1u, whMixeds.size());
+  auto whMixed = whMixeds[0];
+
+  std::vector<WorkspaceObject> whStratifieds = model->getObjectsByType("OS:WaterHeater:Stratified");
+  ASSERT_EQ(1u, whStratifieds.size());
+  auto whStratified = whStratifieds[0];
+
+  // VT should have added one WaterHeater:Sizing object for each WaterHeater (Mixed/Stratified)
+  std::vector<WorkspaceObject> sizingObjs = model->getObjectsByType("OS:WaterHeater:Sizing");
+  ASSERT_EQ(2u, sizingObjs.size());
+
+  auto foundMixed = false;
+  auto foundStratified = false;
+  for (const auto& sizingObj : sizingObjs) {
+    auto wh_ = sizingObj.getTarget(1);
+    ASSERT_TRUE(wh_);
+    if (wh_->handle() == whMixed.handle()) {
+      foundMixed = true;
+    } else if (wh_->handle() == whStratified.handle()) {
+      foundStratified = true;
+    }
+    EXPECT_EQ("PeakDraw", sizingObj.getString(2, false, true).get());
+    EXPECT_EQ(0.538503, sizingObj.getDouble(3).get());
+    EXPECT_EQ(0.0, sizingObj.getDouble(4).get());
+    EXPECT_EQ(1.0, sizingObj.getDouble(5).get());
+  }
+  EXPECT_TRUE(foundMixed);
+  EXPECT_TRUE(foundStratified);
+}
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_AirTerminalSingleDuctInletSideMixer) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> atus = model->getObjectsByType("OS:AirTerminal:SingleDuct:InletSideMixer");
+  ASSERT_EQ(1u, atus.size());
+  auto atu = atus[0];
+
+  // Two new fields
+  EXPECT_EQ("Yes", atu.getString(5).get());
+  EXPECT_EQ("CurrentOccupancy", atu.getString(6).get());
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_GroundHeatExchangerVertical) {

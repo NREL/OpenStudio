@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1806,6 +1806,16 @@ namespace energyplus {
         retVal = translateHeatExchangerAirToAirSensibleAndLatent(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_HeatExchanger_Desiccant_BalancedFlow: {
+        model::HeatExchangerDesiccantBalancedFlow mo = modelObject.cast<HeatExchangerDesiccantBalancedFlow>();
+        retVal = translateHeatExchangerDesiccantBalancedFlow(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_HeatExchanger_Desiccant_BalancedFlow_PerformanceDataType1: {
+        model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1 mo = modelObject.cast<HeatExchangerDesiccantBalancedFlowPerformanceDataType1>();
+        retVal = translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid: {
         model::HeatExchangerFluidToFluid mo = modelObject.cast<HeatExchangerFluidToFluid>();
         retVal = translateHeatExchangerFluidToFluid(mo);
@@ -1891,6 +1901,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser: {
         auto mo = modelObject.cast<WaterHeaterHeatPumpWrappedCondenser>();
         retVal = translateWaterHeaterHeatPumpWrappedCondenser(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_WaterHeater_Sizing: {
+        model::WaterHeaterSizing waterHeaterSizing = modelObject.cast<WaterHeaterSizing>();
+        retVal = translateWaterHeaterSizing(waterHeaterSizing);
         break;
       }
       case openstudio::IddObjectType::OS_WaterHeater_Stratified: {
@@ -2138,6 +2153,21 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Output_JSON: {
         auto mo = modelObject.cast<OutputJSON>();
         retVal = translateOutputJSON(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
+        auto mo = modelObject.cast<OutputEnvironmentalImpactFactors>();
+        retVal = translateOutputEnvironmentalImpactFactors(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_EnvironmentalImpactFactors: {
+        auto mo = modelObject.cast<EnvironmentalImpactFactors>();
+        retVal = translateEnvironmentalImpactFactors(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_FuelFactors: {
+        auto mo = modelObject.cast<FuelFactors>();
+        retVal = translateFuelFactors(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Output_Meter: {
@@ -3061,6 +3091,12 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Output_DebuggingData);
     result.push_back(IddObjectType::OS_Output_Diagnostics);
     result.push_back(IddObjectType::OS_Output_JSON);
+
+    // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
+    result.push_back(IddObjectType::OS_Output_EnvironmentalImpactFactors);
+    // result.push_back(IddObjectType::OS_EnvironmentalImpactFactors);
+    // result.push_back(IddObjectType::OS_FuelFactors);
+
     result.push_back(IddObjectType::OS_Output_Table_SummaryReports);
     result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 

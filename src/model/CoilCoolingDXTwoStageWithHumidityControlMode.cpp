@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,6 +47,10 @@
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
@@ -475,6 +479,10 @@ namespace model {
     bool CoilCoolingDXTwoStageWithHumidityControlMode_Impl::addToNode(Node& node) {
       if (auto airLoop = node.airLoopHVAC()) {
         if (!airLoop->demandComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      } else if (boost::optional<AirLoopHVACOutdoorAirSystem> oas = node.airLoopHVACOutdoorAirSystem()) {
+        if (oas->airLoopHVACDedicatedOutdoorAirSystem()) {
           return StraightComponent_Impl::addToNode(node);
         }
       }

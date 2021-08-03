@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.2.0)
+project(OpenStudio VERSION 3.2.2)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "rc1")
+set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -750,16 +750,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f05343ac87c2e3e6fa37cf5515f6bf39")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210602-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0621666a08a612b9cd704804fd451c72")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8fd4e9ac409f56541c6932e0cbf47c83")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210602-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c9048b2d159d7a5a151312b5fabca520")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210422-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d2d7591b60a5a3dab255d3bc9e413e43")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210602-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "52adf17bdc3af17ef64ef950d7176c8a")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -1149,7 +1149,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Prerelease_Notes_3_2_0.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_2_0.20210504.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)

@@ -214,6 +214,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeaderedPumpsVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerAirToAirSensibleAndLatent.cpp
+  ForwardTranslator/ForwardTranslateHeatExchangerDesiccantBalancedFlow.cpp
+  ForwardTranslator/ForwardTranslateHeatExchangerDesiccantBalancedFlowPerformanceDataType1.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitCooling.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitHeating.cpp
@@ -247,6 +249,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputDiagnostics.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
+  ForwardTranslator/ForwardTranslateOutputEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateFuelFactors.cpp
   ForwardTranslator/ForwardTranslateOutputTableSummaryReports.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
@@ -381,6 +386,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateWaterHeaterMixed.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPump.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterHeatPumpWrappedCondenser.cpp
+  ForwardTranslator/ForwardTranslateWaterHeaterSizing.cpp
   ForwardTranslator/ForwardTranslateWaterHeaterStratified.cpp
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
@@ -511,6 +517,9 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
   ReverseTranslator/ReverseTranslateOutputJSON.cpp
+  ReverseTranslator/ReverseTranslateOutputEnvironmentalImpactFactors.cpp
+  ReverseTranslator/ReverseTranslateEnvironmentalImpactFactors.cpp
+  ReverseTranslator/ReverseTranslateFuelFactors.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp
   ReverseTranslator/ReverseTranslateOutputMeterCumulative.cpp
@@ -598,6 +607,7 @@ set(${target_name}_test_src
   Test/AirTerminalDualDuctConstantVolume_GTest.cpp
   Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
+  Test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
@@ -658,6 +668,8 @@ set(${target_name}_test_src
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/GeneratorWindTurbine_GTest.cpp
+  Test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
+  Test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp
@@ -672,6 +684,9 @@ set(${target_name}_test_src
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
+  Test/OutputEnvironmentalImpactFactors_GTest.cpp
+  Test/EnvironmentalImpactFactors_GTest.cpp
+  Test/FuelFactors_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
   Test/PhotovoltaicPerformanceSandia_GTest.cpp
@@ -705,6 +720,7 @@ set(${target_name}_test_src
   Test/ThermostatSetpointDualSetpoint_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/WaterHeaterMixed_GTest.cpp
+  Test/WaterHeaterSizing_GTest.cpp
   Test/WaterHeaterStratified_GTest.cpp
   Test/WaterUseConnections_GTest.cpp
   Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -74,6 +74,7 @@
 #include "../../osversion/VersionTranslator.hpp"
 
 #include <math.h>
+#include <algorithm>
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -786,4 +787,20 @@ TEST_F(ModelFixture, Building_exteriorPerimeter) {
     double perimeter = building.exteriorPerimeter();
     ASSERT_NEAR(perimeter, 1428.0, 0.01);
   }
+}
+
+TEST_F(ModelFixture, Building_clone_SurfaceMatching) {
+  Model m = exampleModel();
+  Building b = m.getUniqueModelObject<Building>();
+
+  auto surfaces = m.getConcreteModelObjects<Surface>();
+  auto nMatched = std::count_if(surfaces.cbegin(), surfaces.cend(), [](const auto& s) { return s.adjacentSurface(); });
+  EXPECT_EQ(8, nMatched);
+
+  Model m2;
+  auto bClone = b.clone(m2);
+  auto surfaceClones = m2.getConcreteModelObjects<Surface>();
+  EXPECT_EQ(surfaces.size(), surfaceClones.size());
+  auto nMatchedClone = std::count_if(surfaceClones.cbegin(), surfaceClones.cend(), [](const auto& s) { return s.adjacentSurface(); });
+  EXPECT_EQ(nMatched, nMatchedClone);
 }

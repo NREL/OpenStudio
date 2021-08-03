@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,6 +54,8 @@
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleRuleset_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 #include "../SetpointManagerSingleZoneReheat.hpp"
 #include "../SizingZone.hpp"
 #include "../SizingZone_Impl.hpp"
@@ -795,4 +797,20 @@ TEST_F(ModelFixture, ThermalZone_AddToNode_NotInSeries) {
   connectingNode = mixer.lastInletModelObject()->cast<Node>();
   EXPECT_FALSE(z2.multiAddToNode(connectingNode));
   EXPECT_EQ(13u, a.demandComponents().size());
+}
+
+TEST_F(ModelFixture, ThermalZone_DaylightingControlsAvailabilitySchedule) {
+  Model m;
+  ThermalZone z(m);
+
+  EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
+
+  auto schedule = m.alwaysOffDiscreteSchedule();
+
+  EXPECT_TRUE(z.setDaylightingControlsAvailabilitySchedule(schedule));
+  ASSERT_TRUE(z.daylightingControlsAvailabilitySchedule());
+  EXPECT_EQ(schedule, z.daylightingControlsAvailabilitySchedule().get());
+
+  z.resetDaylightingControlsAvailabilitySchedule();
+  EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
 }

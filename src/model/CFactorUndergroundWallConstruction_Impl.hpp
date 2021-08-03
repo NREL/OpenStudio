@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,11 +72,12 @@ namespace model {
       virtual int renderingColorIndex() const override;
 
       /// Returns cFactor.
-      virtual double cFactor() const;
-      virtual bool setCFactor(double cFactor);
+      double cFactor() const;
+      bool setCFactor(double cFactor);
+
       /// Returns height.
-      virtual double height() const;
-      virtual bool setHeight(double height);
+      double height() const;
+      bool setHeight(double height);
 
       //@}
 

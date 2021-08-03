@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -679,6 +679,18 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::Output_JSON: {
         modelObject = translateOutputJSON(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Output_EnvironmentalImpactFactors: {
+        modelObject = translateOutputEnvironmentalImpactFactors(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::EnvironmentalImpactFactors: {
+        modelObject = translateEnvironmentalImpactFactors(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::FuelFactors: {
+        modelObject = translateFuelFactors(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Output_IlluminanceMap: {
