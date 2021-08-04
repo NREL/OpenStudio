@@ -34,11 +34,12 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/AirTerminalSingleDuctVAVNoReheat.hpp"
-#include "../../model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/AirLoopHVAC.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
 
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -55,26 +56,53 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVNoReheat) {
   s.setThermalZone(z);
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
-  AirTerminalSingleDuctVAVNoReheat aterm(m, sch);
-  aterm.setMinimumAirFlowTurndownSchedule(sch);
-  // TODO
+  AirTerminalSingleDuctVAVNoReheat atu(m, sch);
+  atu.setName("ATU SingleDuct VAV No Reheat");
+  atu.setAvailabilitySchedule(sch);
+  atu.setMaximumAirFlowRate(0.1);
+  atu.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
+  atu.setConstantMinimumAirFlowFraction(0.2);
+  atu.setFixedMinimumAirFlowRate(0.3);
+  atu.setMinimumAirFlowFractionSchedule(sch);
+  atu.setMinimumAirFlowTurndownSchedule(sch);
+  atu.setControlForOutdoorAir(true);
 
   AirLoopHVAC a(m);
-  a.addBranchForZone(z, aterm);
+  a.addBranchForZone(z, atu);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idfAirTerms(w.getObjectsByType(IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat));
-  ASSERT_EQ(1u, idfAirTerms.size());
-  WorkspaceObject idfAirTerm(idfAirTerms[0]);
+  WorkspaceObjectVector idf_atus(w.getObjectsByType(IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat));
+  ASSERT_EQ(1u, idf_atus.size());
+  WorkspaceObject idf_atu(idf_atus[0]);
 
-  boost::optional<WorkspaceObject> woAvailabilitySchedule(idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName));
+  boost::optional<WorkspaceObject> woAvailabilitySchedule(idf_atu.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName));
   EXPECT_TRUE(woAvailabilitySchedule);
   EXPECT_EQ(woAvailabilitySchedule->iddObject().type(), IddObjectType::Schedule_Constant);
-  // TODO
+  EXPECT_EQ("Always On Discrete", woAvailabilitySchedule->nameString());
+
+  EXPECT_EQ(atu.outletModelObject()->nameString(), idf_atu.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::AirOutletNodeName).get());
+  EXPECT_EQ(atu.inletModelObject()->nameString(), idf_atu.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::AirInletNodeName).get());
+
+  EXPECT_EQ(0.1, idf_atu.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate).get());
+  EXPECT_EQ("FixedFlowRate", idf_atu.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod).get());
+  EXPECT_EQ(0.2, idf_atu.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction).get());
+  EXPECT_EQ(0.3, idf_atu.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate).get());
+
+  boost::optional<WorkspaceObject> woFractionSchedule(
+    idf_atu.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName));
+  EXPECT_TRUE(woFractionSchedule);
+  EXPECT_EQ(woFractionSchedule->iddObject().type(), IddObjectType::Schedule_Constant);
+  EXPECT_EQ("Always On Discrete", woFractionSchedule->nameString());
+
   boost::optional<WorkspaceObject> woTurndownSchedule(
-    idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName));
+    idf_atu.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName));
   EXPECT_TRUE(woTurndownSchedule);
   EXPECT_EQ(woTurndownSchedule->iddObject().type(), IddObjectType::Schedule_Constant);
+  EXPECT_EQ("Always On Discrete", woTurndownSchedule->nameString());
+
+  boost::optional<WorkspaceObject> idf_dsoa(idf_atu.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName));
+  EXPECT_TRUE(idf_dsoa);
+  EXPECT_EQ(idf_dsoa->iddObject().type(), IddObjectType::DesignSpecification_OutdoorAir);
 }
