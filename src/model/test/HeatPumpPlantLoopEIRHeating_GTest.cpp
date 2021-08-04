@@ -44,6 +44,8 @@
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -63,7 +65,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
   Model m;
   HeatPumpPlantLoopEIRHeating hp(m);
 
-  EXPECT_EQ("WaterSource", hp.condenserType());
+  EXPECT_EQ("AirSource", hp.condenserType());
   EXPECT_FALSE(hp.companionCoolingHeatPump());
   EXPECT_FALSE(hp.referenceLoadSideFlowRate());
   EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
@@ -172,4 +174,64 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
     EXPECT_EQ(2u, m2.getConcreteModelObjects<CurveBiquadratic>().size());
     EXPECT_EQ(1u, m2.getConcreteModelObjects<CurveQuadratic>().size());
   }
+}
+
+// Check condenser type setting/defaulting
+TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_CondenserType) {
+  Model m;
+
+  PlantLoop pl1(m);
+  PlantLoop pl2(m);
+
+  HeatPumpPlantLoopEIRHeating hp(m);
+
+  // By default, AirCooled (from IDD)
+  EXPECT_EQ("AirSource", hp.condenserType());
+
+  // Not connected to a secondary plantLoop
+  EXPECT_TRUE(hp.setCondenserType("AirSource"));
+  EXPECT_EQ("AirSource", hp.condenserType());
+
+  EXPECT_FALSE(hp.setCondenserType("WaterSource"));
+
+  // Add to primary plant loop (on supply), behavior should be the same
+  EXPECT_TRUE(pl1.addSupplyBranchForComponent(hp));
+  // Should have stayed
+  EXPECT_EQ("AirSource", hp.condenserType());
+  EXPECT_FALSE(hp.setCondenserType("WaterSource"));
+
+  // Add to the Secondary plant loop (on demand), behavior should be reversed
+  EXPECT_TRUE(pl2.addDemandBranchForComponent(hp));
+  // Should have been automatically set to WaterSource
+  EXPECT_EQ("WaterSource", hp.condenserType());
+
+  EXPECT_FALSE(hp.setCondenserType("AirSource"));
+
+  // Test the convenience functions provided for clarity
+  EXPECT_EQ(hp.plantLoop().get(), hp.loadSideWaterLoop().get());
+  EXPECT_EQ(hp.supplyInletModelObject()->cast<Node>(), hp.loadSideWaterInletNode());
+  EXPECT_EQ(hp.supplyOutletModelObject()->cast<Node>(), hp.loadSideWaterOutletNode());
+
+  EXPECT_EQ(hp.secondaryPlantLoop().get(), hp.sourceSideWaterLoop().get());
+  EXPECT_EQ(hp.demandInletModelObject()->cast<Node>(), hp.sourceSideWaterInletNode());
+  EXPECT_EQ(hp.demandOutletModelObject()->cast<Node>(), hp.sourceSideWaterOutletNode());
+
+  // Disconnect from the secondary plant Loop
+  EXPECT_TRUE(hp.removeFromSecondaryPlantLoop());
+  // Should have been automatically switched to AirSource
+  EXPECT_EQ("AirSource", hp.condenserType());
+
+  EXPECT_FALSE(hp.setCondenserType("WaterSource"));
+
+  // Test convenience functions again
+  EXPECT_EQ(hp.plantLoop().get(), hp.loadSideWaterLoop().get());
+  EXPECT_EQ(hp.supplyInletModelObject()->cast<Node>(), hp.loadSideWaterInletNode());
+  EXPECT_EQ(hp.supplyOutletModelObject()->cast<Node>(), hp.loadSideWaterOutletNode());
+
+  EXPECT_FALSE(hp.secondaryPlantLoop());
+  EXPECT_FALSE(hp.sourceSideWaterLoop());
+  EXPECT_FALSE(hp.demandInletModelObject());
+  EXPECT_FALSE(hp.sourceSideWaterInletNode());
+  EXPECT_FALSE(hp.demandOutletModelObject());
+  EXPECT_FALSE(hp.sourceSideWaterOutletNode());
 }
