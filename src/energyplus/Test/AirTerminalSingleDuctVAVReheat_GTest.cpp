@@ -55,6 +55,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVReheat) {
   ThermalZone z(m);
   Space s(m);
   s.setThermalZone(z);
+  DesignSpecificationOutdoorAir dsoa(m);
+  EXPECT_TRUE(s.setDesignSpecificationOutdoorAir(dsoa));
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(m, sch);
@@ -95,6 +97,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVReheat) {
 
   EXPECT_EQ("ATU SingleDuct VAV Reheat Damper Outlet", idf_atu.getString(AirTerminal_SingleDuct_VAV_ReheatFields::DamperAirOutletNodeName).get());
   EXPECT_EQ(atu.inletModelObject()->nameString(), idf_atu.getString(AirTerminal_SingleDuct_VAV_ReheatFields::AirInletNodeName).get());
+
+  EXPECT_EQ("Coil:Heating:Electric", idf_atu.getString(AirTerminal_SingleDuct_VAV_ReheatFields::ReheatCoilObjectType).get());
+
+  boost::optional<WorkspaceObject> woReheatCoil(idf_atu.getTarget(AirTerminal_SingleDuct_VAV_ReheatFields::ReheatCoilName));
+  EXPECT_TRUE(woReheatCoil);
+  EXPECT_EQ(woReheatCoil->iddObject().type(), IddObjectType::Coil_Heating_Electric);
+  EXPECT_EQ("Coil Heating Electric 1", woReheatCoil->nameString());
 
   EXPECT_EQ(0.1, idf_atu.getDouble(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate).get());
   EXPECT_EQ("FixedFlowRate", idf_atu.getString(AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod).get());

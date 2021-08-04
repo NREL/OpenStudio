@@ -55,28 +55,39 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVHeatAndCoolN
   s.setThermalZone(z);
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
-  AirTerminalSingleDuctVAVHeatAndCoolNoReheat aterm(m);
-  aterm.setAvailabilitySchedule(sch);
-  aterm.setMinimumAirFlowTurndownSchedule(sch);
-  // TODO
+  AirTerminalSingleDuctVAVHeatAndCoolNoReheat atu(m);
+  atu.setAvailabilitySchedule(sch);
+  atu.setName("ATU SingleDuct VAV HeatAndCool No Reheat");
+  atu.setMaximumAirFlowRate(0.1);
+  atu.setZoneMinimumAirFlowFraction(0.2);
+  atu.setMinimumAirFlowTurndownSchedule(sch);
 
   AirLoopHVAC a(m);
-  a.addBranchForZone(z, aterm);
+  a.addBranchForZone(z, atu);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idfAirTerms(w.getObjectsByType(IddObjectType::AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat));
-  ASSERT_EQ(1u, idfAirTerms.size());
-  WorkspaceObject idfAirTerm(idfAirTerms[0]);
+  WorkspaceObjectVector idf_atus(w.getObjectsByType(IddObjectType::AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat));
+  ASSERT_EQ(1u, idf_atus.size());
+  WorkspaceObject idf_atu(idf_atus[0]);
+
+  EXPECT_EQ("ATU SingleDuct VAV HeatAndCool No Reheat", idf_atu.nameString());
 
   boost::optional<WorkspaceObject> woAvailabilitySchedule(
-    idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AvailabilityScheduleName));
+    idf_atu.getTarget(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AvailabilityScheduleName));
   EXPECT_TRUE(woAvailabilitySchedule);
   EXPECT_EQ(woAvailabilitySchedule->iddObject().type(), IddObjectType::Schedule_Constant);
-  // TODO
+  EXPECT_EQ("Always On Discrete", woAvailabilitySchedule->nameString());
+
+  EXPECT_EQ(atu.outletModelObject()->nameString(), idf_atu.getString(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AirOutletNodeName).get());
+  EXPECT_EQ(atu.inletModelObject()->nameString(), idf_atu.getString(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AirInletNodeName).get());
+
+  EXPECT_EQ(0.1, idf_atu.getDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MaximumAirFlowRate).get());
+  EXPECT_EQ(0.2, idf_atu.getDouble(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::ZoneMinimumAirFlowFraction).get());
+
   boost::optional<WorkspaceObject> woTurndownSchedule(
-    idfAirTerm.getTarget(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MinimumAirFlowTurndownScheduleName));
+    idf_atu.getTarget(AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::MinimumAirFlowTurndownScheduleName));
   EXPECT_TRUE(woTurndownSchedule);
   EXPECT_EQ(woTurndownSchedule->iddObject().type(), IddObjectType::Schedule_Constant);
 }

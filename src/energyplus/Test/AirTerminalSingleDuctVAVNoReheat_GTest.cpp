@@ -54,6 +54,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVNoReheat) {
   ThermalZone z(m);
   Space s(m);
   s.setThermalZone(z);
+  DesignSpecificationOutdoorAir dsoa(m);
+  EXPECT_TRUE(s.setDesignSpecificationOutdoorAir(dsoa));
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctVAVNoReheat atu(m, sch);
@@ -76,6 +78,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctVAVNoReheat) {
   WorkspaceObjectVector idf_atus(w.getObjectsByType(IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat));
   ASSERT_EQ(1u, idf_atus.size());
   WorkspaceObject idf_atu(idf_atus[0]);
+
+  EXPECT_EQ("ATU SingleDuct VAV No Reheat", idf_atu.nameString());
 
   boost::optional<WorkspaceObject> woAvailabilitySchedule(idf_atu.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName));
   EXPECT_TRUE(woAvailabilitySchedule);
