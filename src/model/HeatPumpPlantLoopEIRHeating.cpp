@@ -102,10 +102,56 @@ namespace model {
       return OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName;
     }
 
+
+    /** Convenience Function to return the Load Side Water Loop (HeatPump on supply side) **/
+    boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating_Impl::loadSideWaterLoop() const {
+      return WaterToWaterComponent_Impl::plantLoop();
+    }
+
+    /** Convenience Function to return the Source Side (Condenser) Water Loop (HeatPump on demand side) **/
+    boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating_Impl::sourceSideWaterLoop() const {
+      return WaterToWaterComponent_Impl::secondaryPlantLoop();
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::addToNode(Node& node) {
+
+      // call the base class implementation to connect the component
+      bool ok = WaterToWaterComponent_Impl::addToNode(node);
+
+      // If there's a secondary plant loop, switch the condenser type to "WaterCooled"
+      if (this->sourceSideWaterLoop()) {
+        this->setCondenserType("WaterSource");
+      }
+      return ok;
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::removeFromSecondaryPlantLoop() {
+      // Disconnect the component
+      bool ok = WaterToWaterComponent_Impl::removeFromSecondaryPlantLoop();
+
+      // Switch the condenser type back to "AirSource"
+      this->setCondenserType("AirSource");
+      return ok;
+    }
+
     std::string HeatPumpPlantLoopEIRHeating_Impl::condenserType() const {
       boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, true);
       OS_ASSERT(value);
       return value.get();
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setCondenserType(const std::string& condenserType) {
+      bool ok = false;
+      if (openstudio::istringEqual("AirSource", condenserType) && (this->secondaryPlantLoop())) {
+        LOG(Warn,
+            "Cannot set condenserType to AirSource, HeatPumpPlantLoopEIRHeating '" << this->name() << "' is connected to a Source Side Loop. Use removeFromSecondaryPlantLoop() instead.");
+      } else if (istringEqual("WaterSource", condenserType) && !(this->secondaryPlantLoop())) {
+        LOG(Warn, "Cannot set condenserType to 'WaterSource', HeatPumpPlantLoopEIRHeating '" << this->name() << "' is not connected to a Source Side Loop. Use addToNode(PlantLoop&) instead.");
+      } else {
+        ok = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, condenserType);
+      }
+
+      return ok;
     }
 
     boost::optional<HeatPumpPlantLoopEIRCooling> HeatPumpPlantLoopEIRHeating_Impl::companionCoolingHeatPump() const {
@@ -178,10 +224,6 @@ namespace model {
       WorkspaceObject wo =
         getTarget(OS_HeatPump_PlantLoop_EIR_HeatingFields::ElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurveName).get();
       return wo.optionalCast<Curve>().get();
-    }
-
-    bool HeatPumpPlantLoopEIRHeating_Impl::setCondenserType(std::string condenserType) {
-      return setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, condenserType);
     }
 
     bool HeatPumpPlantLoopEIRHeating_Impl::setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP) {
@@ -312,7 +354,9 @@ namespace model {
                                      << electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve.briefDescription() << ".");
     }
 
-    setCondenserType("WaterSource");
+    // Bypass the check by calling setString directly
+    setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, "AirSource");
+
     setReferenceCoefficientofPerformance(7.5);  // IDD default
     setSizingFactor(1.0);
   }
@@ -325,7 +369,11 @@ namespace model {
     autosizeReferenceSourceSideFlowRate();
     autosizeReferenceCapacity();
 
-    CurveBiquadratic capacityModifierFunctionofTemperatureCurve(model);  // PlantLoopHeatPump_EIR_WaterSource.idf
+    // Note: The default HAS to be AirSource (since it's not connected to a plantLoop...)
+    // But in both PlantLoopHeatPump_EIR_WaterSource.idf and PlantLoopHeatPump_EIR_AirSource.idf, the curves are flatlines
+    // The only difference is the Source Side Flow Rate (m3/s), but here it's autosized anyways
+
+    CurveBiquadratic capacityModifierFunctionofTemperatureCurve(model);
     capacityModifierFunctionofTemperatureCurve.setCoefficient1Constant(1);
     capacityModifierFunctionofTemperatureCurve.setCoefficient2x(0);
     capacityModifierFunctionofTemperatureCurve.setCoefficient3xPOW2(0);
@@ -366,7 +414,9 @@ namespace model {
     ok = setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
     OS_ASSERT(ok);
 
-    setCondenserType("WaterSource");
+    // Bypass the check by calling setString directly
+    setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType, "AirSource");
+
     setReferenceCoefficientofPerformance(7.5);
     setSizingFactor(1.0);
   }
@@ -375,8 +425,12 @@ namespace model {
     return IddObjectType(IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating);
   }
 
-  std::vector<std::string> HeatPumpPlantLoopEIRHeating::validCondenserTypeValues() {
+  std::vector<std::string> HeatPumpPlantLoopEIRHeating::condenserTypeValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_HeatPump_PlantLoop_EIR_HeatingFields::CondenserType);
+  }
+
+  std::vector<std::string> HeatPumpPlantLoopEIRHeating::validCondenserTypeValues() {
+    return HeatPumpPlantLoopEIRHeating::condenserTypeValues();
   }
 
   std::string HeatPumpPlantLoopEIRHeating::condenserType() const {
@@ -431,7 +485,7 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve();
   }
 
-  bool HeatPumpPlantLoopEIRHeating::setCondenserType(std::string condenserType) {
+  bool HeatPumpPlantLoopEIRHeating::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setCondenserType(condenserType);
   }
 
@@ -498,6 +552,15 @@ namespace model {
 
   boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedReferenceCapacity() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedReferenceCapacity();
+  }
+
+  // Convenience functions
+  boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating::loadSideWaterLoop() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->loadSideWaterLoop();
+  }
+
+  boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating::sourceSideWaterLoop() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->sourceSideWaterLoop();
   }
 
   /// @cond

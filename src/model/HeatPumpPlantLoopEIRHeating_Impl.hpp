@@ -72,6 +72,14 @@ namespace model {
 
       virtual unsigned demandOutletPort() const override;
 
+      /* This function will call the base class' method WaterToWaterComponent_Impl::addToNode()
+       * If this is connecting to the demand side of a loop, will set the condenserType to 'WaterSource'
+       */
+      virtual bool addToNode(Node& node) override;
+
+      /** Override to switch the condenser type to 'AirSource' **/
+      virtual bool removeFromSecondaryPlantLoop() override;
+
       virtual void autosize() override;
 
       virtual void applySizingValues() override;
@@ -110,7 +118,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setCondenserType(std::string condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
       bool setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP);
 
@@ -146,6 +154,13 @@ namespace model {
       boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
 
       boost::optional<double> autosizedReferenceCapacity() const;
+
+
+      /** Convenience Function to return the Load Side Water Loop (HeatPump on supply side) **/
+      boost::optional<PlantLoop> loadSideWaterLoop() const;
+
+      /** Convenience Function to return the Source Side (Condenser) Water Loop (HeatPump on demand side) **/
+      boost::optional<PlantLoop> sourceSideWaterLoop() const;
 
       //@}
      protected:
