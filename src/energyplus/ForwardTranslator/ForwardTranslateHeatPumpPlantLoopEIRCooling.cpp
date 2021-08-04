@@ -70,6 +70,9 @@ namespace energyplus {
       idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideInletNodeName, value->name().get());
     }
 
+    // CondenserType
+    // The "smart" logic is handled in model itself
+    // (eg: if you connect the HP to a secondaryPlantLoop, it switches automatically to "WaterSource")
     std::string condenserType = modelObject.condenserType();
     idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, condenserType);
 

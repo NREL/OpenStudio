@@ -235,4 +235,3 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_CondenserType) {
   EXPECT_FALSE(hp.demandOutletModelObject());
   EXPECT_FALSE(hp.sourceSideWaterOutletNode());
 }
-

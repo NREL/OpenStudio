@@ -58,13 +58,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
 
   Model m;
 
-  PlantLoop plant_loop_cup_clg(m);
-  PlantLoop plant_loop_cup_htg(m);
   PlantLoop plant_loop_plhp_clg(m);
   PlantLoop plant_loop_plhp_htg(m);
 
   HeatPumpPlantLoopEIRCooling plhp_clg(m);
-  EXPECT_TRUE(plhp_clg.setCondenserType("AirSource"));
   EXPECT_TRUE(plhp_clg.setReferenceLoadSideFlowRate(1.0));
   EXPECT_TRUE(plhp_clg.setReferenceSourceSideFlowRate(2.0));
   EXPECT_TRUE(plhp_clg.setReferenceCapacity(3.0));
@@ -78,7 +75,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
 
   HeatPumpPlantLoopEIRHeating plhp_htg(m);
-  EXPECT_TRUE(plhp_htg.setCondenserType("AirSource"));
   EXPECT_TRUE(plhp_htg.setReferenceLoadSideFlowRate(1.0));
   EXPECT_TRUE(plhp_htg.setReferenceSourceSideFlowRate(2.0));
   EXPECT_TRUE(plhp_htg.setReferenceCapacity(3.0));
@@ -94,10 +90,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));
   EXPECT_TRUE(plhp_htg.setCompanionCoolingHeatPump(plhp_clg));
 
-  EXPECT_TRUE(plant_loop_cup_clg.addDemandBranchForComponent(plhp_clg));
   EXPECT_TRUE(plant_loop_plhp_clg.addSupplyBranchForComponent(plhp_clg));
-  EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(plhp_htg));
   EXPECT_TRUE(plant_loop_plhp_htg.addSupplyBranchForComponent(plhp_htg));
+
+  // Didn't connect them to the demand side of a loop, so should be AirSource
+  EXPECT_EQ("AirSource", plhp_clg.condenserType());
+  EXPECT_EQ("AirSource", plhp_htg.condenserType());
 
   openstudio::energyplus::ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -177,7 +175,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_WaterSource) {
   PlantLoop plant_loop_plhp_htg(m);
 
   HeatPumpPlantLoopEIRCooling plhp_clg(m);
-  EXPECT_TRUE(plhp_clg.setCondenserType("WaterSource"));
+
   EXPECT_TRUE(plhp_clg.setReferenceLoadSideFlowRate(1.0));
   EXPECT_TRUE(plhp_clg.setReferenceSourceSideFlowRate(2.0));
   EXPECT_TRUE(plhp_clg.setReferenceCapacity(3.0));
@@ -191,7 +189,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_WaterSource) {
   EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
 
   HeatPumpPlantLoopEIRHeating plhp_htg(m);
-  EXPECT_TRUE(plhp_htg.setCondenserType("WaterSource"));
+
   EXPECT_TRUE(plhp_htg.setReferenceLoadSideFlowRate(1.0));
   EXPECT_TRUE(plhp_htg.setReferenceSourceSideFlowRate(2.0));
   EXPECT_TRUE(plhp_htg.setReferenceCapacity(3.0));
@@ -211,6 +209,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_WaterSource) {
   EXPECT_TRUE(plant_loop_plhp_clg.addSupplyBranchForComponent(plhp_clg));
   EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(plhp_htg));
   EXPECT_TRUE(plant_loop_plhp_htg.addSupplyBranchForComponent(plhp_htg));
+
+  // Connected them to the demand side of a loop, so should be WaterSource
+  EXPECT_EQ("WaterSource", plhp_htg.condenserType());
+  EXPECT_EQ("WaterSource", plhp_clg.condenserType());
 
   openstudio::energyplus::ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
