@@ -289,7 +289,7 @@ bool LocalBCL::initializeLocalDb() {
   std::vector<std::pair<std::string, std::string>> vals = {
     {"dbVersion", m_dbVersion},
     {"prodAuthKey", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"},
-    {"devAuthKey", ""},
+    {"devAuthKey", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"},
   };
 
   bool errorsFound = false;
