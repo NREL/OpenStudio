@@ -36,6 +36,8 @@
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -112,6 +114,41 @@ namespace model {
       return WaterToWaterComponent_Impl::secondaryPlantLoop();
     }
 
+    boost::optional<Node> HeatPumpPlantLoopEIRCooling_Impl::sourceSideWaterInletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = demandInletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
+
+    boost::optional<Node> HeatPumpPlantLoopEIRCooling_Impl::sourceSideWaterOutletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = demandOutletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
+
+    boost::optional<Node> HeatPumpPlantLoopEIRCooling_Impl::loadSideWaterInletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = supplyInletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
+
+    boost::optional<Node> HeatPumpPlantLoopEIRCooling_Impl::loadSideWaterOutletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = supplyOutletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
 
     bool HeatPumpPlantLoopEIRCooling_Impl::addToNode(Node& node) {
 
@@ -134,7 +171,6 @@ namespace model {
       return ok;
     }
 
-
     std::string HeatPumpPlantLoopEIRCooling_Impl::condenserType() const {
       boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, true);
       OS_ASSERT(value);
@@ -144,10 +180,11 @@ namespace model {
     bool HeatPumpPlantLoopEIRCooling_Impl::setCondenserType(const std::string& condenserType) {
       bool ok = false;
       if (openstudio::istringEqual("AirSource", condenserType) && (this->secondaryPlantLoop())) {
-        LOG(Warn,
-            "Cannot set condenserType to AirSource, HeatPumpPlantLoopEIRCooling '" << this->name() << "' is connected to a Source Side Loop. Use removeFromSecondaryPlantLoop() instead.");
+        LOG(Warn, "Cannot set condenserType to AirSource, HeatPumpPlantLoopEIRCooling '"
+                    << this->name() << "' is connected to a Source Side Loop. Use removeFromSecondaryPlantLoop() instead.");
       } else if (istringEqual("WaterSource", condenserType) && !(this->secondaryPlantLoop())) {
-        LOG(Warn, "Cannot set condenserType to 'WaterSource', HeatPumpPlantLoopEIRCooling '" << this->name() << "' is not connected to a Source Side Loop. Use addToNode(PlantLoop&) instead.");
+        LOG(Warn, "Cannot set condenserType to 'WaterSource', HeatPumpPlantLoopEIRCooling '"
+                    << this->name() << "' is not connected to a Source Side Loop. Use addToNode(PlantLoop&) instead.");
       } else {
         ok = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::CondenserType, condenserType);
       }
@@ -555,7 +592,6 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizedReferenceCapacity();
   }
 
-
   // Convenience functions
   boost::optional<PlantLoop> HeatPumpPlantLoopEIRCooling::loadSideWaterLoop() const {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->loadSideWaterLoop();
@@ -563,6 +599,22 @@ namespace model {
 
   boost::optional<PlantLoop> HeatPumpPlantLoopEIRCooling::sourceSideWaterLoop() const {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->sourceSideWaterLoop();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRCooling::sourceSideWaterInletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->sourceSideWaterInletNode();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRCooling::sourceSideWaterOutletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->sourceSideWaterOutletNode();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRCooling::loadSideWaterInletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->loadSideWaterInletNode();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRCooling::loadSideWaterOutletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->loadSideWaterOutletNode();
   }
 
   /// @cond

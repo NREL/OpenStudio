@@ -155,12 +155,21 @@ namespace model {
 
       boost::optional<double> autosizedReferenceCapacity() const;
 
-
       /** Convenience Function to return the Load Side Water Loop (HeatPump on supply side) **/
       boost::optional<PlantLoop> loadSideWaterLoop() const;
 
       /** Convenience Function to return the Source Side (Condenser) Water Loop (HeatPump on demand side) **/
       boost::optional<PlantLoop> sourceSideWaterLoop() const;
+
+      // Convenience function to return the inletNode on the Source Side
+      boost::optional<Node> sourceSideWaterInletNode() const;
+      // Convenience function to return the outletNode on the Source Side
+      boost::optional<Node> sourceSideWaterOutletNode() const;
+
+      // Convenience function to return the inletNode on the Load Side
+      boost::optional<Node> loadSideWaterInletNode() const;
+      // Convenience function to return the outletNode on the Load Side
+      boost::optional<Node> loadSideWaterOutletNode() const;
 
       //@}
      protected:
