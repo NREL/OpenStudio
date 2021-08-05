@@ -112,15 +112,15 @@ namespace energyplus {
       }
     }
 
-    if (modelObject.isReferenceLoadSideFlowRateAutosized()) {
+    if (modelObject.isLoadSideReferenceFlowRateAutosized()) {
       idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, "Autosize");
-    } else if ((optvalue = modelObject.referenceLoadSideFlowRate())) {
+    } else if ((optvalue = modelObject.loadSideReferenceFlowRate())) {
       idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::LoadSideReferenceFlowRate, optvalue.get());
     }
 
-    if (modelObject.isReferenceSourceSideFlowRateAutosized()) {
+    if (modelObject.isSourceSideReferenceFlowRateAutosized()) {
       idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideReferenceFlowRate, "Autosize");
-    } else if ((optvalue = modelObject.referenceSourceSideFlowRate())) {
+    } else if ((optvalue = modelObject.sourceSideReferenceFlowRate())) {
       idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::SourceSideReferenceFlowRate, optvalue.get());
     }
 

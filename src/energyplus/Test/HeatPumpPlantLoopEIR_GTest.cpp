@@ -62,8 +62,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   PlantLoop plant_loop_plhp_htg(m);
 
   HeatPumpPlantLoopEIRCooling plhp_clg(m);
-  EXPECT_TRUE(plhp_clg.setReferenceLoadSideFlowRate(1.0));
-  EXPECT_TRUE(plhp_clg.setReferenceSourceSideFlowRate(2.0));
+  EXPECT_TRUE(plhp_clg.setLoadSideReferenceFlowRate(1.0));
+  EXPECT_TRUE(plhp_clg.setSourceSideReferenceFlowRate(2.0));
   EXPECT_TRUE(plhp_clg.setReferenceCapacity(3.0));
   EXPECT_TRUE(plhp_clg.setReferenceCoefficientofPerformance(4.0));
   EXPECT_TRUE(plhp_clg.setSizingFactor(5.0));
@@ -75,8 +75,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   EXPECT_TRUE(plhp_clg.setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(curve3));
 
   HeatPumpPlantLoopEIRHeating plhp_htg(m);
-  EXPECT_TRUE(plhp_htg.setReferenceLoadSideFlowRate(1.0));
-  EXPECT_TRUE(plhp_htg.setReferenceSourceSideFlowRate(2.0));
+  EXPECT_TRUE(plhp_htg.setLoadSideReferenceFlowRate(1.0));
+  EXPECT_TRUE(plhp_htg.setSourceSideReferenceFlowRate(2.0));
   EXPECT_TRUE(plhp_htg.setReferenceCapacity(3.0));
   EXPECT_TRUE(plhp_htg.setReferenceCoefficientofPerformance(4.0));
   EXPECT_TRUE(plhp_htg.setSizingFactor(5.0));
@@ -176,8 +176,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_WaterSource) {
 
   HeatPumpPlantLoopEIRCooling plhp_clg(m);
 
-  EXPECT_TRUE(plhp_clg.setReferenceLoadSideFlowRate(1.0));
-  EXPECT_TRUE(plhp_clg.setReferenceSourceSideFlowRate(2.0));
+  EXPECT_TRUE(plhp_clg.setLoadSideReferenceFlowRate(1.0));
+  EXPECT_TRUE(plhp_clg.setSourceSideReferenceFlowRate(2.0));
   EXPECT_TRUE(plhp_clg.setReferenceCapacity(3.0));
   EXPECT_TRUE(plhp_clg.setReferenceCoefficientofPerformance(4.0));
   EXPECT_TRUE(plhp_clg.setSizingFactor(5.0));
@@ -190,8 +190,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_WaterSource) {
 
   HeatPumpPlantLoopEIRHeating plhp_htg(m);
 
-  EXPECT_TRUE(plhp_htg.setReferenceLoadSideFlowRate(1.0));
-  EXPECT_TRUE(plhp_htg.setReferenceSourceSideFlowRate(2.0));
+  EXPECT_TRUE(plhp_htg.setLoadSideReferenceFlowRate(1.0));
+  EXPECT_TRUE(plhp_htg.setSourceSideReferenceFlowRate(2.0));
   EXPECT_TRUE(plhp_htg.setReferenceCapacity(3.0));
   EXPECT_TRUE(plhp_htg.setReferenceCoefficientofPerformance(4.0));
   EXPECT_TRUE(plhp_htg.setSizingFactor(5.0));

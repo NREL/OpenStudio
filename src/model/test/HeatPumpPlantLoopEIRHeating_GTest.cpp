@@ -67,10 +67,10 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_HeatPumpPlantLoopEIRHeating) {
 
   EXPECT_EQ("AirSource", hp.condenserType());
   EXPECT_FALSE(hp.companionCoolingHeatPump());
-  EXPECT_FALSE(hp.referenceLoadSideFlowRate());
-  EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
-  EXPECT_FALSE(hp.referenceSourceSideFlowRate());
-  EXPECT_TRUE(hp.isReferenceSourceSideFlowRateAutosized());
+  EXPECT_FALSE(hp.loadSideReferenceFlowRate());
+  EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
+  EXPECT_FALSE(hp.sourceSideReferenceFlowRate());
+  EXPECT_TRUE(hp.isSourceSideReferenceFlowRateAutosized());
   EXPECT_FALSE(hp.referenceCapacity());
   EXPECT_TRUE(hp.isReferenceCapacityAutosized());
   EXPECT_EQ(7.5, hp.referenceCoefficientofPerformance());
@@ -92,8 +92,8 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_TRUE(hp.setCondenserType("AirSource"));
   HeatPumpPlantLoopEIRCooling companionHP(m);
   EXPECT_TRUE(hp.setCompanionCoolingHeatPump(companionHP));
-  EXPECT_TRUE(hp.setReferenceLoadSideFlowRate(1.0));
-  EXPECT_TRUE(hp.setReferenceSourceSideFlowRate(2.0));
+  EXPECT_TRUE(hp.setLoadSideReferenceFlowRate(1.0));
+  EXPECT_TRUE(hp.setSourceSideReferenceFlowRate(2.0));
   EXPECT_TRUE(hp.setReferenceCapacity(3.0));
   EXPECT_TRUE(hp.setReferenceCoefficientofPerformance(4.0));
   EXPECT_TRUE(hp.setSizingFactor(5.0));
@@ -107,12 +107,12 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ("AirSource", hp.condenserType());
   ASSERT_TRUE(hp.companionCoolingHeatPump());
   EXPECT_EQ(companionHP.handle(), hp.companionCoolingHeatPump().get().handle());
-  ASSERT_TRUE(hp.referenceLoadSideFlowRate());
-  EXPECT_EQ(1.0, hp.referenceLoadSideFlowRate().get());
-  EXPECT_FALSE(hp.isReferenceLoadSideFlowRateAutosized());
-  ASSERT_TRUE(hp.referenceSourceSideFlowRate());
-  EXPECT_EQ(2.0, hp.referenceSourceSideFlowRate());
-  EXPECT_FALSE(hp.isReferenceSourceSideFlowRateAutosized());
+  ASSERT_TRUE(hp.loadSideReferenceFlowRate());
+  EXPECT_EQ(1.0, hp.loadSideReferenceFlowRate().get());
+  EXPECT_FALSE(hp.isLoadSideReferenceFlowRateAutosized());
+  ASSERT_TRUE(hp.sourceSideReferenceFlowRate());
+  EXPECT_EQ(2.0, hp.sourceSideReferenceFlowRate());
+  EXPECT_FALSE(hp.isSourceSideReferenceFlowRateAutosized());
   ASSERT_TRUE(hp.referenceCapacity());
   EXPECT_EQ(3.0, hp.referenceCapacity().get());
   EXPECT_FALSE(hp.isReferenceCapacityAutosized());
@@ -122,19 +122,19 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
   EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
 
-  hp.autosizeReferenceLoadSideFlowRate();
-  EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
-  EXPECT_FALSE(hp.isReferenceSourceSideFlowRateAutosized());
+  hp.autosizeLoadSideReferenceFlowRate();
+  EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
+  EXPECT_FALSE(hp.isSourceSideReferenceFlowRateAutosized());
   EXPECT_FALSE(hp.isReferenceCapacityAutosized());
 
-  hp.autosizeReferenceSourceSideFlowRate();
-  EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
-  EXPECT_TRUE(hp.isReferenceSourceSideFlowRateAutosized());
+  hp.autosizeSourceSideReferenceFlowRate();
+  EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
+  EXPECT_TRUE(hp.isSourceSideReferenceFlowRateAutosized());
   EXPECT_FALSE(hp.isReferenceCapacityAutosized());
 
   hp.autosizeReferenceCapacity();
-  EXPECT_TRUE(hp.isReferenceLoadSideFlowRateAutosized());
-  EXPECT_TRUE(hp.isReferenceSourceSideFlowRateAutosized());
+  EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
+  EXPECT_TRUE(hp.isSourceSideReferenceFlowRateAutosized());
   EXPECT_TRUE(hp.isReferenceCapacityAutosized());
 }
 
@@ -157,7 +157,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
   EXPECT_EQ(1u, m.getConcreteModelObjects<CurveQuadratic>().size());
 
   {
-    HeatPumpPlantLoopEIRHeating hpClone = hp.clone(m).cast<HeatPumpPlantLoopEIRHeating>();
+    auto hpClone = hp.clone(m).cast<HeatPumpPlantLoopEIRHeating>();
     EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
@@ -167,7 +167,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_clone) {
 
   {
     Model m2;
-    HeatPumpPlantLoopEIRHeating hpClone2 = hp.clone(m2).cast<HeatPumpPlantLoopEIRHeating>();
+    auto hpClone2 = hp.clone(m2).cast<HeatPumpPlantLoopEIRHeating>();
     EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
     EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());

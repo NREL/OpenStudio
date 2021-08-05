@@ -92,13 +92,13 @@ namespace model {
 
       boost::optional<HeatPumpPlantLoopEIRHeating> companionHeatingHeatPump() const;
 
-      boost::optional<double> referenceLoadSideFlowRate() const;
+      boost::optional<double> loadSideReferenceFlowRate() const;
 
-      bool isReferenceLoadSideFlowRateAutosized() const;
+      bool isLoadSideReferenceFlowRateAutosized() const;
 
-      boost::optional<double> referenceSourceSideFlowRate() const;
+      boost::optional<double> sourceSideReferenceFlowRate() const;
 
-      bool isReferenceSourceSideFlowRateAutosized() const;
+      bool isSourceSideReferenceFlowRateAutosized() const;
 
       boost::optional<double> referenceCapacity() const;
 
@@ -122,13 +122,13 @@ namespace model {
 
       bool setCompanionHeatingHeatPump(const HeatPumpPlantLoopEIRHeating& companionHP);
 
-      bool setReferenceLoadSideFlowRate(double referenceLoadSideFlowRate);
+      bool setLoadSideReferenceFlowRate(double loadSideReferenceFlowRate);
 
-      void autosizeReferenceLoadSideFlowRate();
+      void autosizeLoadSideReferenceFlowRate();
 
-      bool setReferenceSourceSideFlowRate(double referenceSourceSideFlowRate);
+      bool setSourceSideReferenceFlowRate(double sourceSideReferenceFlowRate);
 
-      void autosizeReferenceSourceSideFlowRate();
+      void autosizeSourceSideReferenceFlowRate();
 
       bool setReferenceCapacity(double referenceCapacity);
 
@@ -149,9 +149,9 @@ namespace model {
       /** @name Other */
       //@{
 
-      boost::optional<double> autosizedReferenceLoadSideFlowRate() const;
+      boost::optional<double> autosizedLoadSideReferenceFlowRate() const;
 
-      boost::optional<double> autosizedReferenceSourceSideFlowRate() const;
+      boost::optional<double> autosizedSourceSideReferenceFlowRate() const;
 
       boost::optional<double> autosizedReferenceCapacity() const;
 
