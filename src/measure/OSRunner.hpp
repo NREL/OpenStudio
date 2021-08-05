@@ -211,6 +211,10 @@ namespace measure {
    *  required or has a default. */
     bool getBoolArgumentValue(const std::string& argument_name, const std::map<std::string, OSArgument>& user_arguments);
 
+    /** Call this method to retrieve the value of an OSArgument of type boolean that is optional
+   *  (not required and does not have a default). */
+    boost::optional<bool> getOptionalBoolArgumentValue(const std::string& argument_name, const std::map<std::string, OSArgument>& user_arguments);
+
     /** Call this method to retrieve the value of an OSArgument of type double that is either
    *  required or has a default. */
     double getDoubleArgumentValue(const std::string& argument_name, const std::map<std::string, OSArgument>& user_arguments);
