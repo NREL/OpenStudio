@@ -2844,7 +2844,7 @@ namespace detail {
   }
 
   /// reference point for map - form RefPtn=(x:y:illuminance)
-  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(const std::string& name, const int& ptNum) const {
+  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(const std::string& name, int ptNum) const {
     boost::optional<std::string> refPt;
     boost::optional<int> mapIndex = illuminanceMapIndex(name);
 
@@ -2856,7 +2856,7 @@ namespace detail {
     return refPt;
   }
 
-  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(const int& mapIndex, const int& ptNum) const {
+  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(int mapIndex, int ptNum) const {
     boost::optional<std::string> refPt;
     std::stringstream s;
     s << "select ReferencePt" << ptNum << " from daylightmaps where MapNumber=" << mapIndex;
@@ -2888,7 +2888,7 @@ namespace detail {
   }
 
   /// minimum value of map
-  boost::optional<double> SqlFile_Impl::illuminanceMapMinValue(const int& mapIndex) const {
+  boost::optional<double> SqlFile_Impl::illuminanceMapMinValue(int mapIndex) const {
     boost::optional<double> minValue;
     std::stringstream s;
     s << "select min(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = r.HourlyReportIndex "
@@ -2922,7 +2922,7 @@ namespace detail {
   }
 
   /// maximum value of map
-  boost::optional<double> SqlFile_Impl::illuminanceMapMaxValue(const int& mapIndex) const {
+  boost::optional<double> SqlFile_Impl::illuminanceMapMaxValue(int mapIndex) const {
     boost::optional<double> maxValue;
     std::stringstream s;
     s << "select max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = r.HourlyReportIndex "
@@ -2952,7 +2952,7 @@ namespace detail {
   }
 
   /// minimum and maximum of map
-  void SqlFile_Impl::illuminanceMapMaxValue(const int& mapIndex, double& minValue, double& maxValue) const {
+  void SqlFile_Impl::illuminanceMapMaxValue(int mapIndex, double& minValue, double& maxValue) const {
     std::stringstream s;
     s << "select min(d.Illuminance), max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = "
          "r.HourlyReportIndex where r.MapNumber="
@@ -2985,7 +2985,7 @@ namespace detail {
   }
 
   /// get all zone names for specified illuminance map
-  std::vector<std::string> SqlFile_Impl::illuminanceMapZoneNames(const int& mapIndex) const {
+  std::vector<std::string> SqlFile_Impl::illuminanceMapZoneNames(int mapIndex) const {
     std::vector<std::string> names;
 
     if (auto _vec = execAndReturnVectorOfString("SELECT ZoneName FROM Zones WHERE ZoneIndex in (SELECT Zone from DaylightMaps WHERE MapNumber = ?",
@@ -2998,7 +2998,7 @@ namespace detail {
   }
 
   /// x position (m) of the illuminance map
-  Vector SqlFile_Impl::illuminanceMapX(const int& hourlyReportIndex) const {
+  Vector SqlFile_Impl::illuminanceMapX(int hourlyReportIndex) const {
     std::vector<double> xv;
     if (auto _vec = execAndReturnVectorOfDouble("SELECT X FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY X",
                                                 // Bind Args
@@ -3034,7 +3034,7 @@ namespace detail {
   }
 
   /// y position (m) of the illuminance map
-  Vector SqlFile_Impl::illuminanceMapY(const int& hourlyReportIndex) const {
+  Vector SqlFile_Impl::illuminanceMapY(int hourlyReportIndex) const {
     std::vector<double> yv;
 
     if (auto _vec = execAndReturnVectorOfDouble("SELECT Y FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY Y",
@@ -3082,7 +3082,7 @@ namespace detail {
     return reportIndices;
   }
 
-  std::vector<int> SqlFile_Impl::illuminanceMapHourlyReportIndices(const int& mapIndex) const {
+  std::vector<int> SqlFile_Impl::illuminanceMapHourlyReportIndices(int mapIndex) const {
     std::vector<int> result;
 
     if (auto _vec = execAndReturnVectorOfInt("SELECT HourlyReportIndex FROM DaylightMapHourlyReports WHERE MapNumber=?",
@@ -3106,7 +3106,7 @@ namespace detail {
     return reportIndicesDates;
   }
 
-  std::vector<std::pair<int, DateTime>> SqlFile_Impl::illuminanceMapHourlyReportIndicesDates(const int& mapIndex) const {
+  std::vector<std::pair<int, DateTime>> SqlFile_Impl::illuminanceMapHourlyReportIndicesDates(int mapIndex) const {
     std::vector<std::pair<int, DateTime>> reportIndicesDates;
     std::stringstream s;
     s << "select HourlyReportIndex, ";
@@ -3147,7 +3147,7 @@ namespace detail {
     return reportIndicesDates;
   }
 
-  boost::optional<DateTime> SqlFile_Impl::illuminanceMapDate(const int& hourlyReportIndex) const {
+  boost::optional<DateTime> SqlFile_Impl::illuminanceMapDate(int hourlyReportIndex) const {
     boost::optional<unsigned> year;
     unsigned month = 0, dayOfMonth = 0, hour = 0;
     std::stringstream s;
@@ -3186,7 +3186,7 @@ namespace detail {
     return DateTime(date, Time(0, hour, 0, 0));
   }
 
-  boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const {
+  boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(int mapIndex, const DateTime& dateTime) const {
     // E+ doesn't have a Year for this table
     // int year = dateTime.date().year();
     int monthOfYear = dateTime.date().monthOfYear().value();
@@ -3250,8 +3250,7 @@ namespace detail {
     return illuminanceMap(*timeIndex);
   }
 
-  void SqlFile_Impl::illuminanceMap(const int& hourlyReportIndex, std::vector<double>& x, std::vector<double>& y,
-                                    std::vector<double>& illuminance) const {
+  void SqlFile_Impl::illuminanceMap(int hourlyReportIndex, std::vector<double>& x, std::vector<double>& y, std::vector<double>& illuminance) const {
     double xVal(0.0), yVal(0.0), yValPrevious(0.0), illuminanceVal(0.0);
     bool yValChanged = false;
 
@@ -3314,7 +3313,7 @@ namespace detail {
 
   /// value (lux) of the illuminance map at hourlyReportIndex
   /// value(i,j) is the illuminance at x(i), y(j)
-  Matrix SqlFile_Impl::illuminanceMap(const int& hourlyReportIndex) const {
+  Matrix SqlFile_Impl::illuminanceMap(int hourlyReportIndex) const {
 
     /// loop over all points
     Vector x = SqlFile_Impl::illuminanceMapX(hourlyReportIndex);

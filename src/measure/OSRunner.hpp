@@ -189,7 +189,7 @@ namespace measure {
 
     /** Updates the progress bar to value (between 0 and 100). Base class implementation does
    *  nothing. */
-    virtual void updateProgress(const double& value) const;
+    virtual void updateProgress(double value) const;
 
     /** Destroys the progress bar. Base class implementation does nothing. */
     virtual void destroyProgressBar() const;
