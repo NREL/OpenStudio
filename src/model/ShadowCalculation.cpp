@@ -284,7 +284,7 @@ namespace model {
       for (const auto& tz : thermalZones) {
         bool ok = shadingZoneGroupList.addModelObject(tz);
         if (!ok) {
-          LOG(Warn, "Failed to add " << tz.briefDescription() << " to " << shadingZoneGroupList.name() << ". Continuing");
+          LOG(Warn, "Failed to add " << tz.briefDescription() << " to " << shadingZoneGroupList.nameString() << ". Continuing");
         }
       }
 
