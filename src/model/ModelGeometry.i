@@ -29,6 +29,12 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   %ignore openstudio::model::Space::waterUseEquipment;
+
+  %ignore openstudio::model::DaylightingDeviceTubular::transitionZones;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZone;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZones;
+
+
   // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
@@ -83,6 +89,7 @@ class Schedule;
 class DefaultScheduleType;
 class DefaultScheduleSet;
 class ThermalZone;
+class TransitionZone;
 class BuildingStory;
 class BuildingUnit;
 class ShadingSurfaceGroup;
@@ -157,15 +164,6 @@ class ExteriorLoadInstance;
   }
 };
 
-%extend openstudio::model::TransitionZone {
-  // Use the overloaded operator<< for string representation
-  std::string __str__() {
-    std::ostringstream os;
-    os << *$self;
-    return os.str();
-  }
-};
-
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -206,7 +204,6 @@ MODELOBJECT_TEMPLATES(DaylightingControl);
 MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
-MODELOBJECT_TEMPLATES(TransitionZone);
 MODELOBJECT_TEMPLATES(DaylightingDeviceTubular);
 MODELOBJECT_TEMPLATES(DaylightingDeviceLightWell);
 MODELOBJECT_TEMPLATES(SpaceType);

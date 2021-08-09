@@ -43,29 +43,16 @@ namespace model {
   class ConstructionBase;
   class ThermalZone;
 
+  // Note: TransitionZone is a class defined in ThermalZone.hpp so that the order things are exposed to SWIG makes sense
+  class TransitionZone;
+
   namespace detail {
 
     class DaylightingDeviceTubular_Impl;
 
   }  // namespace detail
 
-  /** This class implements a transition zone */
-  class MODEL_API TransitionZone
-  {
-   public:
-    TransitionZone(const ThermalZone& zone, double length);
 
-    ThermalZone thermalZone() const;
-    double length() const;
-
-   private:
-    ThermalZone m_zone;
-    double m_length;
-    REGISTER_LOGGER("openstudio.model.TransitionZone");
-  };
-
-  // Overload operator<<
-  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone);
 
   /** DaylightingDeviceTubular is a ModelObject that wraps the OpenStudio IDD object 'OS_DaylightingDevice_Tubular'. */
   class MODEL_API DaylightingDeviceTubular : public ModelObject
