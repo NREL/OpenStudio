@@ -52,8 +52,6 @@ namespace model {
 
   }  // namespace detail
 
-
-
   /** DaylightingDeviceTubular is a ModelObject that wraps the OpenStudio IDD object 'OS_DaylightingDevice_Tubular'. */
   class MODEL_API DaylightingDeviceTubular : public ModelObject
   {

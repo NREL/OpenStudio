@@ -3243,8 +3243,6 @@ namespace model {
   ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl) : HVACComponent(std::move(impl)) {}
   /// @endcond
 
-
-
   /** This class implements a transition zone, for DaylightingDeviceTubular */
   TransitionZone::TransitionZone(const ThermalZone& zone, double length) : m_zone(zone), m_length(length) {
 

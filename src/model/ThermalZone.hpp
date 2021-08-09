@@ -563,8 +563,6 @@ namespace model {
   /** \relates ThermalZone*/
   typedef std::vector<ThermalZone> ThermalZoneVector;
 
-
-
   /** This class implements a transition zone, for DaylightingDeviceTubular */
   class MODEL_API TransitionZone
   {
@@ -582,7 +580,6 @@ namespace model {
 
   // Overload operator<<
   MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone);
-
 
 }  // namespace model
 }  // namespace openstudio
