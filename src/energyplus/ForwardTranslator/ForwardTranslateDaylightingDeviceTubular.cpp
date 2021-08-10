@@ -52,14 +52,17 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject) {
-    SubSurface subSurfaceDome = modelObject.subSurfaceDome();
-    SubSurface subSurfaceDiffuser = modelObject.subSurfaceDiffuser();
-
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Tubular, modelObject);
 
-    idfObject.setString(DaylightingDevice_TubularFields::DomeName, subSurfaceDome.name().get());
+    SubSurface subSurfaceDome = modelObject.subSurfaceDome();
+    if (boost::optional<IdfObject> subSurfDome = translateAndMapModelObject(subSurfaceDome)) {
+      idfObject.setString(DaylightingDevice_TubularFields::DomeName, subSurfDome->name().get());
+    }
 
-    idfObject.setString(DaylightingDevice_TubularFields::DiffuserName, subSurfaceDiffuser.name().get());
+    SubSurface subSurfaceDiffuser = modelObject.subSurfaceDiffuser();
+    if (boost::optional<IdfObject> subSurfDiffuser = translateAndMapModelObject(subSurfaceDiffuser)) {
+      idfObject.setString(DaylightingDevice_TubularFields::DiffuserName, subSurfDiffuser->name().get());
+    }
 
     ConstructionBase construction = modelObject.construction();
     idfObject.setString(DaylightingDevice_TubularFields::ConstructionName, construction.name().get());

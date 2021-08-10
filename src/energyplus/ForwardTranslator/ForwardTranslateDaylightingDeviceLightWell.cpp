@@ -48,11 +48,12 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceLightWell(model::DaylightingDeviceLightWell& modelObject) {
-    SubSurface subSurface = modelObject.subSurface();
-
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_LightWell, modelObject);
 
-    idfObject.setString(DaylightingDevice_LightWellFields::ExteriorWindowName, subSurface.name().get());
+    SubSurface subSurface = modelObject.subSurface();
+    if (boost::optional<IdfObject> subSurf = translateAndMapModelObject(subSurface)) {
+      idfObject.setString(DaylightingDevice_LightWellFields::ExteriorWindowName, subSurf->name().get());
+    }
 
     idfObject.setDouble(DaylightingDevice_LightWellFields::HeightofWell, modelObject.heightofWell());
 
