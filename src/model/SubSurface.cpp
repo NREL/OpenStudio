@@ -611,6 +611,7 @@ namespace model {
         if (!allowDaylightingDeviceShelf()) {
           boost::optional<DaylightingDeviceShelf> shelf = this->daylightingDeviceShelf();
           if (shelf) {
+            LOG(Warn, briefDescription() << " cannot be used as a subsurface on a Daylighting Device Shelf object.");
             shelf->remove();
           }
         }
@@ -619,6 +620,7 @@ namespace model {
           boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular();
           if (tubular) {
             if (tubular->subSurfaceDome().handle() == this->handle()) {
+              LOG(Warn, briefDescription() << " cannot be used as a dome subsurface on a Daylighting Device Tubular object.");
               tubular->remove();
             }
           }
@@ -628,6 +630,7 @@ namespace model {
           boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular();
           if (tubular) {
             if (tubular->subSurfaceDiffuser().handle() == this->handle()) {
+              LOG(Warn, briefDescription() << " cannot be used as a diffuser subsurface on a Daylighting Device Tubular object.");
               tubular->remove();
             }
           }
@@ -636,6 +639,7 @@ namespace model {
         if (!allowDaylightingDeviceLightWell()) {
           boost::optional<DaylightingDeviceLightWell> lightwell = this->daylightingDeviceLightWell();
           if (lightwell) {
+            LOG(Warn, briefDescription() << " cannot be used as a subsurface on a Daylighting Device Light Well object.");
             lightwell->remove();
           }
         }
