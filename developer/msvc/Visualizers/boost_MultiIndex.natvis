@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright 2017 Anton Tokar <anton@tokar.xyz>
+ Use, modification and distribution are subject
+ to the Boost Software License, Version 1.0. (See accompanying file LICENSE
+ or copy at http://www.boost.org/LICENSE_1_0.txt) -->
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <!-- Sequenced index represents linked list (std::list-like) -->
+  <Type Name="boost::multi_index::detail::header_holder&lt;boost::multi_index::detail::sequenced_index_node&lt;*&gt;*,*&gt;">
+    <DisplayString>{{ size={(($T2*)this)-&gt;node_count} }}</DisplayString>
+    <Expand>
+      <LinkedListItems>
+        <Size>(($T2*)this)-&gt;node_count</Size>
+        <HeadPointer>((boost::multi_index::detail::sequenced_index_node&lt;$T1&gt;*)(member))-&gt;next_</HeadPointer>
+        <NextPointer>next_</NextPointer>
+        <ValueNode>*reinterpret_cast&lt;$T2::value_type*&gt;(&amp;((boost::multi_index::detail::sequenced_index_node&lt;$T1&gt;*)this)-&gt;space)</ValueNode>
+      </LinkedListItems>
+    </Expand>
+  </Type>
+
+  <!-- Ordered index represents red-black tree (std::set-like) -->
+  <Type Name="boost::multi_index::detail::header_holder&lt;boost::multi_index::detail::ordered_index_node&lt;*,*&gt;*,*&gt;" Priority="Medium">
+    <DisplayString>{{ size={(($T3*)this)-&gt;node_count} }}</DisplayString>
+    <Expand>
+      <!-- Visualization for ordered_index_node_compressed_base (reduced node size) -->
+      <TreeItems Optional="true">
+        <Size>(($T3*)this)-&gt;node_count</Size>
+        <HeadPointer>(boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)(((boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)(member))-&gt;parentcolor_&amp;~uintptr_type(1))</HeadPointer>
+        <LeftPointer>(boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)left_</LeftPointer>
+        <RightPointer>(boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)right_</RightPointer>
+        <ValueNode>*reinterpret_cast&lt;$T3::value_type*&gt;(&amp;((boost::multi_index::detail::ordered_index_node&lt;$T1,$T2&gt;*)this)-&gt;space)</ValueNode>
+      </TreeItems>
+      <!-- Visualization for ordered_index_node_std_base (full node size) -->
+      <TreeItems Optional="true">
+        <Size>(($T3*)this)-&gt;node_count</Size>
+        <HeadPointer>(boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)(((boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)(member))-&gt;parent_)</HeadPointer>
+        <LeftPointer>(boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)left_</LeftPointer>
+        <RightPointer>(boost::multi_index::detail::ordered_index_node_trampoline&lt;$T1,$T2&gt;*)right_</RightPointer>
+        <ValueNode>*reinterpret_cast&lt;$T3::value_type*&gt;(&amp;((boost::multi_index::detail::ordered_index_node&lt;$T1,$T2&gt;*)this)-&gt;space)</ValueNode>
+      </TreeItems>
+    </Expand>
+  </Type>
+
+  <!-- Random access index represents continuous memory range (std::vector-like) -->
+  <Type Name="boost::multi_index::detail::header_holder&lt;boost::multi_index::detail::random_access_index_node&lt;*&gt;*,*&gt;">
+    <DisplayString>{{ size={(($T2*)this)-&gt;node_count} }}</DisplayString>
+    <Expand>
+      <Item Name="[capacity]">(($T2*)this)-&gt;ptrs.capacity_</Item>
+      <IndexListItems>
+        <Size>(($T2*)this)-&gt;node_count</Size>
+        <ValueNode>*reinterpret_cast&lt;$T2::value_type*&gt;(&amp;((boost::multi_index::detail::random_access_index_node&lt;$T1&gt;*)((($T2*)this)-&gt;ptrs.spc.data_[$i]))-&gt;space)</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="boost::multi_index::detail::header_holder&lt;boost::multi_index::detail::hashed_index_node&lt;*,*&gt;*,*&gt;">
+    <DisplayString>{{ size={(($T3*)this)-&gt;node_count} }}</DisplayString>
+    <Expand>
+      <!--Easier to take size from auto_space<...> since it always +1 from real size-->
+      <Item Name="[buckets]" IncludeView="detailed">(($T3*)this)-&gt;buckets.spc.n_ - 1</Item>
+      <Item Name="[max_load]" IncludeView="detailed">(($T3*)this)-&gt;max_load</Item>
+      <Item Name="[max_load_factor]" IncludeView="detailed">(($T3*)this)-&gt;mlf</Item>
+      <Item Name="[key_eq]" IncludeView="detailed">(($T3*)this)-&gt;eq_</Item>
+      <Item Name="[hash_function]" IncludeView="detailed">(($T3*)this)-&gt;hash_</Item>
+      <CustomListItems>
+        <Variable Name="NumBuckets" InitialValue="(($T3*)this)-&gt;buckets.spc.n_ - 1"/>
+        <Variable Name="BucketIndex" InitialValue="0"/>
+        <Variable Name="NodePtr" InitialValue="(boost::multi_index::detail::hashed_index_node_trampoline&lt;$T1&gt;*)nullptr"/>
+
+        <!-- Iterate through all buckets -->
+        <Loop>
+          <Break Condition="BucketIndex == NumBuckets"/>
+
+          <!-- If bucket is not empty -->
+          <Exec>NodePtr = (boost::multi_index::detail::hashed_index_node_trampoline&lt;$T1&gt;*)((((($T3*)this)-&gt;buckets.spc.data_ + BucketIndex))-&gt;prior_)</Exec>
+          <If Condition="NodePtr != nullptr">
+            <!-- Let's iterate over its nodes -->
+            <Loop>
+              <Item>*reinterpret_cast&lt;$T3::value_type*&gt;(&amp;(((boost::multi_index::detail::hashed_index_node&lt;$T1,$T2&gt;*)NodePtr))-&gt;space)</Item>
+
+              <!-- Tricky (but legal) check that node is last -->
+              <Break Condition="NodePtr-&gt;next_-&gt;prior_ != NodePtr"/>
+              <Exec>NodePtr = (boost::multi_index::detail::hashed_index_node_trampoline&lt;$T1&gt;*)(NodePtr-&gt;next_)</Exec>
+            </Loop>
+          </If>
+
+          <Exec>++BucketIndex</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>
