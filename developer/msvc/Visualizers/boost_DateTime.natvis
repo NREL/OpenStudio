@@ -41,14 +41,14 @@
 
 <!--boost::posix_time::time_duration-->
 <Type Name="boost::date_time::time_duration&lt;boost::posix_time::time_duration,boost::date_time::time_resolution_traits&lt;boost::date_time::time_resolution_traits_adapted64_impl,*,*&gt; &gt;">
-    <Intrinsic Name="day"         Expression="ticks_.value_/(86400*$T2)"/>
-    <Intrinsic Name="_t_hours"    Expression="ticks_.value_-(86400*$T2)*day()"/>
-    <Intrinsic Name="hour"        Expression="_t_hours()/(3600*$T2)"/>
-    <Intrinsic Name="_t_minutes"  Expression="_t_hours()-(3600*$T2)*hour()"/>
-    <Intrinsic Name="minute"      Expression="_t_minutes()/(60*$T2)"/>
-    <Intrinsic Name="second"      Expression="(_t_minutes()-(60*$T2)*minute())/$T2"/>
-    <Intrinsic Name="millisecond" Expression="(ticks_.value_%$T2)/1000"/>
-    <Intrinsic Name="nanosecond"  Expression="ticks_.value_%1000"/>
+    <Intrinsic Name="day"         Expression="ticks_.value_/(86400ll*$T2)"/>
+    <Intrinsic Name="_t_hours"    Expression="ticks_.value_-(86400ll*$T2)*day()"/>
+    <Intrinsic Name="hour"        Expression="_t_hours()/(3600ll*$T2)"/>
+    <Intrinsic Name="_t_minutes"  Expression="_t_hours()-(3600ll*$T2)*hour()"/>
+    <Intrinsic Name="minute"      Expression="_t_minutes()/(60ll*$T2)"/>
+    <Intrinsic Name="second"      Expression="(_t_minutes()-(60ll*$T2)*minute())/$T2"/>
+    <Intrinsic Name="millisecond" Expression="(ticks_.value_%$T2)/1000ll"/>
+    <Intrinsic Name="nanosecond"  Expression="ticks_.value_%1000ll"/>
     <DisplayString>{day()}d {hour()/10}{hour()%10}:{minute()/10}{minute()%10}:{second()/10}{second()%10} {millisecond()}ms {nanosecond()}us</DisplayString>
     <Expand>
         <Synthetic Name="[day]"><DisplayString>{day()}</DisplayString></Synthetic>
@@ -124,7 +124,7 @@
     <Intrinsic Name="second"      Expression="(_t_minutes()-60000000*minute())/1000000"/>
     <Intrinsic Name="millisecond" Expression="(base_utc_offset_.ticks_.value_%1000000)/1000"/>
     <Intrinsic Name="nanosecond"  Expression="base_utc_offset_.ticks_.value_%1000"/>
-    <DisplayString>{zone_names_.std_zone_abbrev_,sb}{hour()/10}{hour()%10}:{minute()/10}{minute()%10}:{second()/10}{second()%10}</DisplayString>
+    <DisplayString>{zone_names_.std_zone_abbrev_,sb}{hour()}:{minute()/10}{minute()%10}:{second()/10}{second()%10}</DisplayString>
 </Type>
 
 <Type Name="boost::local_time::local_date_time_base&lt;boost::posix_time::ptime,*&gt;">

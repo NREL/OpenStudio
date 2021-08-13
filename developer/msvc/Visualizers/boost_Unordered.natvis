@@ -16,6 +16,7 @@
 
 <!-- boost >= 1.58 -->
 <Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;" Priority="Medium">
+    <AlternativeType Name="boost::unordered::detail::table&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;" /> <!-- boost >= 1.66 -->
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
@@ -31,6 +32,7 @@
    and the value in the value column.  If desired, the "ShowElementsByIndex" view can be used to fall back to the prior
    behavior and show the index in the name column and the key-value pair in the value column. -->
 <Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;" ExcludeView="ShowElementsByIndex" Priority="MediumHigh">
+    <AlternativeType Name="boost::unordered::detail::table&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;" /> <!-- boost >= 1.66 -->
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
@@ -83,6 +85,7 @@
 
 <!-- boost >= 1.58 -->
 <Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::set&lt;*,*&gt;&gt;" Priority="Medium">
+    <AlternativeType Name="boost::unordered::detail::table&lt;boost::unordered::detail::set&lt;*,*,*&gt;&gt;" /> <!-- boost >= 1.66 -->
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
