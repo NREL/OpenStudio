@@ -38,7 +38,7 @@
 #include <regex>
 
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
-#define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
+#define REMOTE_DEVELOPMENT_SERVER "https://bcl2.nrel.gov"
 
 using namespace utility::conversions;
 
