@@ -53,6 +53,7 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell) {
 
   EXPECT_FALSE(window.daylightingDeviceLightWell());
 
+  EXPECT_EQ(0u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
   DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 0.75);
   UUID lightWellHandle = lightWell.handle();
   ASSERT_TRUE(window.daylightingDeviceLightWell());
@@ -61,13 +62,20 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell) {
   EXPECT_EQ(lightWellHandle, window.addDaylightingDeviceLightWell()->handle());
   EXPECT_EQ(window.addDaylightingDeviceLightWell()->handle(), window.daylightingDeviceLightWell()->handle());
   EXPECT_EQ(window.handle(), lightWell.subSurface().handle());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 
   lightWell.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
   EXPECT_FALSE(window.daylightingDeviceLightWell());
   ASSERT_TRUE(window.addDaylightingDeviceLightWell());
   lightWellHandle = window.addDaylightingDeviceLightWell()->handle();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+  // Calling it a second time while a Light Well already exists returns the existing one, doesn't create a second
   ASSERT_TRUE(window.addDaylightingDeviceLightWell());
   EXPECT_EQ(lightWellHandle, window.addDaylightingDeviceLightWell()->handle());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
   ASSERT_TRUE(window.addDaylightingDeviceLightWell());
   EXPECT_EQ(lightWellHandle, window.addDaylightingDeviceLightWell()->handle());
   ASSERT_TRUE(window.daylightingDeviceLightWell());
@@ -78,6 +86,8 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell) {
   EXPECT_EQ("Door", window.subSurfaceType());
   EXPECT_FALSE(window.daylightingDeviceLightWell());
   EXPECT_FALSE(window.addDaylightingDeviceLightWell());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
+
 }
 
 TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
@@ -93,13 +103,7 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   EXPECT_EQ("Door", door.subSurfaceType());
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 
-  bool didThrow = false;
-  try {
-    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 0.8);
-  } catch (const openstudio::Exception&) {
-    didThrow = true;
-  }
-  EXPECT_TRUE(didThrow);
+  EXPECT_ANY_THROW({DaylightingDeviceLightWell lightWell(door);});
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 
   // change to a window
@@ -107,23 +111,11 @@ TEST_F(ModelFixture, DaylightingDeviceLightWell_Throw) {
   EXPECT_EQ("FixedWindow", door.subSurfaceType());
 
   // first one succeeds
-  didThrow = false;
-  try {
-    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 0.8);
-  } catch (const openstudio::Exception&) {
-    didThrow = true;
-  }
-  EXPECT_FALSE(didThrow);
+  EXPECT_NO_THROW({DaylightingDeviceLightWell lightWell(door);});
   EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 
   // second call throws
-  didThrow = false;
-  try {
-    DaylightingDeviceLightWell lightWell(door, 1, 2, 3, 0.8);
-  } catch (const openstudio::Exception&) {
-    didThrow = true;
-  }
-  EXPECT_TRUE(didThrow);
+  EXPECT_ANY_THROW({DaylightingDeviceLightWell lightWell(door);});
   EXPECT_EQ(1, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 
   // changing to door removes light light well

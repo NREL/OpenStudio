@@ -232,8 +232,8 @@ namespace model {
     /** Get the daylighting light shelf associated with this sub surface if there is one. */
     boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
-    /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
-   * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
+    /** Add a new daylighting light shelf associated with this sub surface. Only succeeds if this is a fixed window,
+     *  operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
     boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
     /** Returns true if this sub surface allows the addition of a daylighting light tubular dome. */
@@ -251,8 +251,8 @@ namespace model {
     /** Get the daylighting light light well associated with this sub surface if there is one. */
     boost::optional<DaylightingDeviceLightWell> daylightingDeviceLightWell() const;
 
-    /** Add a daylighting light light well associated with this sub surface.  Only succeeds if this is a fixed window,
-   * operable window, or glass door. Will return existing daylighting light light well if there already is one. */
+    /** Add a new daylighting light well associated with this sub surface. Only succeeds if this is a fixed window,
+    *   operable window, or glass door. Will return existing daylighting light well if there already is one. */
     boost::optional<DaylightingDeviceLightWell> addDaylightingDeviceLightWell() const;
 
     AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);

@@ -36,7 +36,6 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
-#include "../../model/Surface_Impl.hpp"
 #include "../../model/SubSurface.hpp"
 #include "../../model/DaylightingDeviceLightWell.hpp"
 #include "../../model/DaylightingDeviceLightWell_Impl.hpp"

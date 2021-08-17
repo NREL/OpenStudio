@@ -29,11 +29,8 @@
 
 #include "../ForwardTranslator.hpp"
 
-#include "../../model/Model.hpp"
 #include "../../model/DaylightingDeviceLightWell.hpp"
-#include "../../model/DaylightingDeviceLightWell_Impl.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/SubSurface_Impl.hpp"
 
 #include <utilities/idd/DaylightingDevice_LightWell_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -52,7 +49,7 @@ namespace energyplus {
 
     SubSurface subSurface = modelObject.subSurface();
     if (boost::optional<IdfObject> subSurf = translateAndMapModelObject(subSurface)) {
-      idfObject.setString(DaylightingDevice_LightWellFields::ExteriorWindowName, subSurf->name().get());
+      idfObject.setString(DaylightingDevice_LightWellFields::ExteriorWindowName, subSurf->nameString());
     }
 
     idfObject.setDouble(DaylightingDevice_LightWellFields::HeightofWell, modelObject.heightofWell());

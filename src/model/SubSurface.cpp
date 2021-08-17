@@ -600,52 +600,49 @@ namespace model {
       bool result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
       if (result) {
 
-        if (!allowShadingControl()) {
+        if (!allowShadingControl() && (numberofShadingControls() > 0 )) {
+          LOG(Warn, briefDescription() << " new subSurfaceType='" << subSurfaceType << "' is incompatible with Shading Controls. Removing this SubSurface from the Shading Controls.");
           this->removeAllShadingControls();
         }
 
-        if (!allowWindowPropertyFrameAndDivider()) {
+        if (!allowWindowPropertyFrameAndDivider() && windowPropertyFrameAndDivider()) {
+          LOG(Warn, briefDescription() << " new subSurfaceType=" << subSurfaceType << "' is incompatible with the Window Property Frame and Divider. Resetting the Frame and Divider object.");
           this->resetWindowPropertyFrameAndDivider();
         }
 
         if (!allowDaylightingDeviceShelf()) {
-          boost::optional<DaylightingDeviceShelf> shelf = this->daylightingDeviceShelf();
-          if (shelf) {
-            LOG(Warn, briefDescription() << " cannot be used as a subsurface on a Daylighting Device Shelf object.");
+          if (boost::optional<DaylightingDeviceShelf> shelf = this->daylightingDeviceShelf()) {
+            LOG(Warn, briefDescription() << " new subSurfaceType='" << subSurfaceType << "' is incompatible with Daylighting Device Shelf. Removing the Shelf object.");
             shelf->remove();
           }
         }
 
         if (!allowDaylightingDeviceTubularDome()) {
-          boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular();
-          if (tubular) {
+          if (boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular()) {
             if (tubular->subSurfaceDome().handle() == this->handle()) {
-              LOG(Warn, briefDescription() << " cannot be used as a dome subsurface on a Daylighting Device Tubular object.");
+              LOG(Warn, briefDescription() << " cannot be used as a dome subsurface on a Daylighting Device Tubular object. Removing the Tubular object.");
               tubular->remove();
             }
           }
         }
 
         if (!allowDaylightingDeviceTubularDiffuser()) {
-          boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular();
-          if (tubular) {
+          if (boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular()) {
             if (tubular->subSurfaceDiffuser().handle() == this->handle()) {
-              LOG(Warn, briefDescription() << " cannot be used as a diffuser subsurface on a Daylighting Device Tubular object.");
+              LOG(Warn, briefDescription() << " cannot be used as a diffuser subsurface on a Daylighting Device Tubular object. Removing the Tubular object.");
               tubular->remove();
             }
           }
         }
 
         if (!allowDaylightingDeviceLightWell()) {
-          boost::optional<DaylightingDeviceLightWell> lightwell = this->daylightingDeviceLightWell();
-          if (lightwell) {
-            LOG(Warn, briefDescription() << " cannot be used as a subsurface on a Daylighting Device Light Well object.");
+          if (boost::optional<DaylightingDeviceLightWell> lightwell = this->daylightingDeviceLightWell()) {
+            LOG(Warn, briefDescription() << " cannot be used as a subsurface on a Daylighting Device Light Well object. Removing the Well object.");
             lightwell->remove();
           }
         }
 
-        boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
-        if (adjacentSubSurface) {
+        if (boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface()) {
           adjacentSubSurface->setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
           adjacentSubSurface->removeAllShadingControls();
         }

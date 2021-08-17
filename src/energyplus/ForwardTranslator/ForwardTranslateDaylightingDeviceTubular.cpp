@@ -29,13 +29,9 @@
 
 #include "../ForwardTranslator.hpp"
 
-#include "../../model/Model.hpp"
 #include "../../model/DaylightingDeviceTubular.hpp"
-#include "../../model/DaylightingDeviceTubular_Impl.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/SubSurface_Impl.hpp"
 #include "../../model/ConstructionBase.hpp"
-#include "../../model/ConstructionBase_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 

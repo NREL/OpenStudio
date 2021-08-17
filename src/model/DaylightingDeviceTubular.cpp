@@ -162,7 +162,7 @@ namespace model {
       bool result;
 
       // Push an extensible group
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool zone = eg.setPointer(OS_DaylightingDevice_TubularExtensibleFields::TransitionZoneName, transitionZone.thermalZone().handle());
       bool length = eg.setDouble(OS_DaylightingDevice_TubularExtensibleFields::TransitionZoneLength, transitionZone.length());
       if (zone && length) {
@@ -180,8 +180,7 @@ namespace model {
 
     bool DaylightingDeviceTubular_Impl::addTransitionZone(const ThermalZone& zone, double length) {
       // Make a transition zone, and then call the above function
-      TransitionZone transitionZone(zone, length);
-      return addTransitionZone(transitionZone);
+      return addTransitionZone(TransitionZone{zone, length});
     }
 
     bool DaylightingDeviceTubular_Impl::removeTransitionZone(unsigned groupIndex) {
@@ -227,9 +226,7 @@ namespace model {
       LOG_AND_THROW("Cannot create DaylightingDeviceTubular for SubSurface '" << dome.name().get() << "' and '" << diffuser.name().get() << "'");
     }
 
-    bool test;
-
-    test = setPointer(OS_DaylightingDevice_TubularFields::DomeName, dome.handle());
+    bool test = setPointer(OS_DaylightingDevice_TubularFields::DomeName, dome.handle());
     OS_ASSERT(test);
     test = setPointer(OS_DaylightingDevice_TubularFields::DiffuserName, diffuser.handle());
     OS_ASSERT(test);
@@ -260,9 +257,7 @@ namespace model {
       LOG_AND_THROW("Cannot create DaylightingDeviceTubular for SubSurface '" << dome.name().get() << "' and '" << diffuser.name().get() << "'");
     }
 
-    bool test;
-
-    test = setPointer(OS_DaylightingDevice_TubularFields::DomeName, dome.handle());
+    bool test = setPointer(OS_DaylightingDevice_TubularFields::DomeName, dome.handle());
     OS_ASSERT(test);
     test = setPointer(OS_DaylightingDevice_TubularFields::DiffuserName, diffuser.handle());
     OS_ASSERT(test);
