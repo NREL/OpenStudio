@@ -3243,5 +3243,26 @@ namespace model {
   ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl) : HVACComponent(std::move(impl)) {}
   /// @endcond
 
+  /** This class implements a transition zone, for DaylightingDeviceTubular */
+  TransitionZone::TransitionZone(const ThermalZone& zone, double length) : m_zone(zone), m_length(length) {
+
+    if (m_length < 0) {
+      LOG_AND_THROW("Unable to create transition zone, length of " << m_length << " less than 0");
+    }
+  }
+
+  ThermalZone TransitionZone::thermalZone() const {
+    return m_zone;
+  }
+
+  double TransitionZone::length() const {
+    return m_length;
+  }
+
+  std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone) {
+    out << "thermal zone name=" << transitionZone.thermalZone().name().get() << ", length=" << transitionZone.length();
+    return out;
+  }
+
 }  // namespace model
 }  // namespace openstudio

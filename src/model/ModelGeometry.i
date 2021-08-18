@@ -29,6 +29,12 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   %ignore openstudio::model::Space::waterUseEquipment;
+
+  %ignore openstudio::model::DaylightingDeviceTubular::transitionZones;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZone;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZones;
+
+
   // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
@@ -83,6 +89,7 @@ class Schedule;
 class DefaultScheduleType;
 class DefaultScheduleSet;
 class ThermalZone;
+class TransitionZone;
 class BuildingStory;
 class BuildingUnit;
 class ShadingSurfaceGroup;
@@ -197,6 +204,8 @@ MODELOBJECT_TEMPLATES(DaylightingControl);
 MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
+MODELOBJECT_TEMPLATES(DaylightingDeviceTubular);
+MODELOBJECT_TEMPLATES(DaylightingDeviceLightWell);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
 MODELOBJECT_TEMPLATES(CustomBlock);
@@ -249,6 +258,8 @@ SWIG_MODELOBJECT(DaylightingControl, 1);
 SWIG_MODELOBJECT(GlareSensor, 1);
 SWIG_MODELOBJECT(IlluminanceMap, 1);
 SWIG_MODELOBJECT(DaylightingDeviceShelf, 1);
+SWIG_MODELOBJECT(DaylightingDeviceTubular, 1);
+SWIG_MODELOBJECT(DaylightingDeviceLightWell, 1);
 SWIG_MODELOBJECT(SpaceType, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);

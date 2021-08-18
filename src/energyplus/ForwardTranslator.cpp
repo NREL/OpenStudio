@@ -1355,6 +1355,16 @@ namespace energyplus {
         retVal = translateDaylightingDeviceShelf(daylightingDeviceShelf);
         break;
       }
+      case openstudio::IddObjectType::OS_DaylightingDevice_Tubular: {
+        model::DaylightingDeviceTubular daylightingDeviceTubular = modelObject.cast<DaylightingDeviceTubular>();
+        retVal = translateDaylightingDeviceTubular(daylightingDeviceTubular);
+        break;
+      }
+      case openstudio::IddObjectType::OS_DaylightingDevice_LightWell: {
+        model::DaylightingDeviceLightWell daylightingDeviceLightWell = modelObject.cast<DaylightingDeviceLightWell>();
+        retVal = translateDaylightingDeviceLightWell(daylightingDeviceLightWell);
+        break;
+      }
       case openstudio::IddObjectType::OS_DefaultConstructionSet: {
         // no-op
         return retVal;
@@ -3157,6 +3167,8 @@ namespace energyplus {
 
     result.push_back(IddObjectType::OS_Daylighting_Control);
     result.push_back(IddObjectType::OS_DaylightingDevice_Shelf);
+    result.push_back(IddObjectType::OS_DaylightingDevice_Tubular);
+    result.push_back(IddObjectType::OS_DaylightingDevice_LightWell);
     result.push_back(IddObjectType::OS_IlluminanceMap);
 
     // Definition objects will be translated as needed by instance objects.

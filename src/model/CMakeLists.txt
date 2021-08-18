@@ -564,6 +564,12 @@ set(${target_name}_src
   DaylightingDeviceShelf.hpp
   DaylightingDeviceShelf_Impl.hpp
   DaylightingDeviceShelf.cpp
+  DaylightingDeviceTubular.hpp
+  DaylightingDeviceTubular_Impl.hpp
+  DaylightingDeviceTubular.cpp
+  DaylightingDeviceLightWell.hpp
+  DaylightingDeviceLightWell_Impl.hpp
+  DaylightingDeviceLightWell.cpp
   DaylightRedirectionDevice.hpp
   DaylightRedirectionDevice_Impl.hpp
   DaylightRedirectionDevice.cpp
@@ -1921,6 +1927,8 @@ set(${target_name}_test_src
 
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
+  test/DaylightingDeviceTubular_GTest.cpp
+  test/DaylightingDeviceLightWell_GTest.cpp
   test/DaylightRedirectionDevice_GTest.cpp
   test/DefaultConstructionSet_GTest.cpp
   test/DefaultScheduleSet_GTest.cpp
