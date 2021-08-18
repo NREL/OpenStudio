@@ -186,6 +186,8 @@ namespace model {
   class CurveTriquadratic;
   class DaylightingControl;
   class DaylightingDeviceShelf;
+  class DaylightingDeviceTubular;
+  class DaylightingDeviceLightWell;
   class DaylightRedirectionDevice;
   class DesignDay;
   class DesignSpecificationOutdoorAir;
@@ -273,6 +275,8 @@ namespace model {
   class HeatExchangerFluidToFluid;
   class HeatPumpWaterToWaterEquationFitCooling;
   class HeatPumpWaterToWaterEquationFitHeating;
+  class HeatPumpPlantLoopEIRCooling;
+  class HeatPumpPlantLoopEIRHeating;
   class HotWaterEquipment;
   class HumidifierSteamElectric;
   class HumidifierSteamGas;
@@ -860,6 +864,10 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateDaylightingDeviceShelf(model::DaylightingDeviceShelf& modelObject);
 
+    boost::optional<IdfObject> translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject);
+
+    boost::optional<IdfObject> translateDaylightingDeviceLightWell(model::DaylightingDeviceLightWell& modelObject);
+
     boost::optional<IdfObject> translateDaylightRedirectionDevice(model::DaylightRedirectionDevice& modelObject);
 
     boost::optional<IdfObject> translateDesignDay(model::DesignDay& modelObject);
@@ -1036,6 +1044,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitCooling(model::HeatPumpWaterToWaterEquationFitCooling& modelObject);
 
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitHeating(model::HeatPumpWaterToWaterEquationFitHeating& modelObject);
+
+    boost::optional<IdfObject> translateHeatPumpPlantLoopEIRCooling(model::HeatPumpPlantLoopEIRCooling& modelObject);
+
+    boost::optional<IdfObject> translateHeatPumpPlantLoopEIRHeating(model::HeatPumpPlantLoopEIRHeating& modelObject);
 
     boost::optional<IdfObject> translateHumidifierSteamElectric(model::HumidifierSteamElectric& modelObject);
 

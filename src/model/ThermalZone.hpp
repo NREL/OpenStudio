@@ -563,6 +563,24 @@ namespace model {
   /** \relates ThermalZone*/
   typedef std::vector<ThermalZone> ThermalZoneVector;
 
+  /** This class implements a transition zone, for DaylightingDeviceTubular */
+  class MODEL_API TransitionZone
+  {
+   public:
+    TransitionZone(const ThermalZone& zone, double length);
+
+    ThermalZone thermalZone() const;
+    double length() const;
+
+   private:
+    ThermalZone m_zone;
+    double m_length;
+    REGISTER_LOGGER("openstudio.model.TransitionZone");
+  };
+
+  // Overload operator<<
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone);
+
 }  // namespace model
 }  // namespace openstudio
 

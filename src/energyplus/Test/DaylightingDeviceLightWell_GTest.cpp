@@ -33,64 +33,63 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
-#include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
-#include "../../model/Node.hpp"
-#include "../../model/PlantLoop.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/DaylightingDeviceLightWell.hpp"
+#include "../../model/DaylightingDeviceLightWell_Impl.hpp"
 
-#include <utilities/idd/HeatPump_WaterToWater_EquationFit_Cooling_FieldEnums.hxx>
-#include <utilities/idd/HeatPump_WaterToWater_EquationFit_Heating_FieldEnums.hxx>
-
+#include "../../utilities/geometry/Point3d.hpp"
+#include <utilities/idd/DaylightingDevice_LightWell_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../../utilities/idf/IdfObject.hpp"
-#include "../../utilities/idf/IdfObject_Impl.hpp"
-
-#include "../../utilities/idf/WorkspaceObject.hpp"
-#include "../../utilities/idf/WorkspaceObject_Impl.hpp"
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpWaterToWaterEquationFit) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceLightWell) {
+  Model model;
+  ThermalZone zone(model);
+  Space space(model);
+  space.setThermalZone(zone);
 
-  Model m;
+  Point3dVector points;
+  points.push_back(Point3d(0, 10, 3));
+  points.push_back(Point3d(0, 10, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 0, 3));
+  Surface surface(points, model);
+  surface.setSpace(space);
+  EXPECT_EQ("Wall", surface.surfaceType());
 
-  PlantLoop plant_loop_cup_clg(m);
-  PlantLoop plant_loop_cup_htg(m);
-  PlantLoop plant_loop_wwhp_clg(m);
-  PlantLoop plant_loop_wwhp_htg(m);
+  Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 1));
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(0, 1, 0));
+  points2.push_back(Point3d(0, 1, 1));
+  SubSurface window(points2, model);
+  window.setSubSurfaceType("FixedWindow");
+  window.setSurface(surface);
 
-  HeatPumpWaterToWaterEquationFitCooling wwhp_clg(m);
-  HeatPumpWaterToWaterEquationFitHeating wwhp_htg(m);
+  EXPECT_FALSE(window.daylightingDeviceLightWell());
+  DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 0.5);
+  EXPECT_TRUE(window.daylightingDeviceLightWell());
+  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceLightWell>().size());
 
-  EXPECT_TRUE(plant_loop_cup_clg.addDemandBranchForComponent(wwhp_clg));
-  EXPECT_TRUE(plant_loop_wwhp_clg.addSupplyBranchForComponent(wwhp_clg));
-  EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(wwhp_htg));
-  EXPECT_TRUE(plant_loop_wwhp_htg.addSupplyBranchForComponent(wwhp_htg));
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(model);
 
-  // #3837: These two reference each other, and we want to avoid a recursion problem (each FT function calling each other)
-  EXPECT_TRUE(wwhp_clg.setCompanionHeatingHeatPump(wwhp_htg));
-  EXPECT_TRUE(wwhp_htg.setCompanionCoolingHeatPump(wwhp_clg));
+  std::vector<WorkspaceObject> wos = w.getObjectsByType(IddObjectType::DaylightingDevice_LightWell);
+  ASSERT_EQ(1u, wos.size());
+  WorkspaceObject wo(wos[0]);
 
-  openstudio::energyplus::ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
+  boost::optional<WorkspaceObject> idf_window(wo.getTarget(DaylightingDevice_LightWellFields::ExteriorWindowName));
+  ASSERT_TRUE(idf_window);
+  EXPECT_EQ(window.nameString(), idf_window->nameString());
 
-  EXPECT_EQ(0u, ft.errors().size());
-
-  {
-    WorkspaceObjectVector idf_ccs(w.getObjectsByType(IddObjectType::HeatPump_WaterToWater_EquationFit_Cooling));
-    EXPECT_EQ(1u, idf_ccs.size());
-    WorkspaceObject idf_cc(idf_ccs[0]);
-    // Companion
-    EXPECT_EQ(wwhp_htg.nameString(), idf_cc.getString(HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName).get());
-  }
-
-  {
-    WorkspaceObjectVector idf_hcs(w.getObjectsByType(IddObjectType::HeatPump_WaterToWater_EquationFit_Heating));
-    EXPECT_EQ(1u, idf_hcs.size());
-    WorkspaceObject idf_hc(idf_hcs[0]);
-    // Companion
-    EXPECT_EQ(wwhp_clg.nameString(), idf_hc.getString(HeatPump_WaterToWater_EquationFit_HeatingFields::CompanionCoolingHeatPumpName).get());
-  }
+  EXPECT_EQ(1, wo.getDouble(DaylightingDevice_LightWellFields::HeightofWell, false).get());
+  EXPECT_EQ(2, wo.getDouble(DaylightingDevice_LightWellFields::PerimeterofBottomofWell, false).get());
+  EXPECT_EQ(3, wo.getDouble(DaylightingDevice_LightWellFields::AreaofBottomofWell, false).get());
+  EXPECT_EQ(0.5, wo.getDouble(DaylightingDevice_LightWellFields::VisibleReflectanceofWellWalls, false).get());
 }
