@@ -115,17 +115,17 @@ namespace model {
 
       bool isDaylightSavingTimeIndicatorDefaulted() const;
 
-      std::string humidityIndicatingType() const;
+      std::string humidityIndicatingType() const; // DEPRECATE -> humidityConditionType
 
       bool isHumidityIndicatingTypeDefaulted() const;
 
-      boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+      boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const; // DEPRECATE -> humidityConditionDaySchedule
 
       std::string dryBulbTemperatureRangeModifierType() const;
 
       bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
 
-      boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+      boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const; // DEPRECATE -> dryBulbTemperatureRangeModifierDaySchedule
 
       std::string solarModelIndicator() const;
 
@@ -135,11 +135,11 @@ namespace model {
 
       boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
 
-      double ashraeTaub() const;
+      double ashraeTaub() const; // DEPRECATE -> ashraeClearSkyOpticalDepthforBeamIrradiance
 
       bool isAshraeTaubDefaulted() const;
 
-      double ashraeTaud() const;
+      double ashraeTaud() const; // DEPRECATE -> ashraeClearSkyOpticalDepthforDiffuseIrradiance
 
       bool isAshraeTaudDefaulted() const;
 
