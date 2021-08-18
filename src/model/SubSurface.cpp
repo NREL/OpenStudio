@@ -584,7 +584,7 @@ namespace model {
       return result;
     }
 
-    bool SubSurface_Impl::setSubSurfaceType(std::string subSurfaceType) {
+    bool SubSurface_Impl::setSubSurfaceType(const std::string& subSurfaceType) {
       bool result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
       if (result) {
 
@@ -1274,7 +1274,7 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->isNumberofVerticesAutocalculated();
   }
 
-  bool SubSurface::setSubSurfaceType(std::string subSurfaceType) {
+  bool SubSurface::setSubSurfaceType(const std::string& subSurfaceType) {
     return getImpl<detail::SubSurface_Impl>()->setSubSurfaceType(subSurfaceType);
   }
 

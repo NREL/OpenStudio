@@ -118,7 +118,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setSubSurfaceType(std::string subSurfaceType);
+    bool setSubSurfaceType(const std::string& subSurfaceType);
 
     void resetSubSurfaceType();
 
