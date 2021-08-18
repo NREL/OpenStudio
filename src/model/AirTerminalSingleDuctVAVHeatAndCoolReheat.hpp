@@ -84,6 +84,8 @@ namespace model {
 
     double maximumReheatAirTemperature() const;
 
+    boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -109,6 +111,10 @@ namespace model {
     bool setConvergenceTolerance(double convergenceTolerance);
 
     bool setMaximumReheatAirTemperature(double maximumReheatAirTemperature);
+
+    bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+    void resetMinimumAirFlowTurndownSchedule();
 
     //@}
     /** @name Other */

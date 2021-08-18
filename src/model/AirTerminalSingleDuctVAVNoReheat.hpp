@@ -83,6 +83,7 @@ namespace model {
     bool isFixedMinimumAirFlowRateDefaulted() const;
 
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
+    boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
 
     /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
     * with the terminal's zone on export to EnergyPlus idf format.
@@ -116,6 +117,10 @@ namespace model {
     bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 
     void resetMinimumAirFlowFractionSchedule();
+
+    bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+    void resetMinimumAirFlowTurndownSchedule();
 
     bool setControlForOutdoorAir(bool controlForOutdoorAir);
 

@@ -87,6 +87,8 @@ namespace model {
 
       boost::optional<double> autosizedMaximumDamperAirFlowRate() const;
 
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -104,6 +106,10 @@ namespace model {
       bool setDesignSpecificationOutdoorAirObject(const boost::optional<DesignSpecificationOutdoorAir>& designSpecificationOutdoorAir);
 
       void resetDesignSpecificationOutdoorAirObject();
+
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+      void resetMinimumAirFlowTurndownSchedule();
 
       //@}
       /** @name Other */
@@ -135,6 +141,10 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctVAV");
+
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
+
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

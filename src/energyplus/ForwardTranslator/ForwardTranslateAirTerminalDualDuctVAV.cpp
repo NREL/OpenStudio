@@ -101,6 +101,13 @@ namespace energyplus {
       }
     }
 
+    // MinimumAirFlowTurndownScheduleName
+    if (boost::optional<Schedule> minAirFlowTurndownSchedule = modelObject.minimumAirFlowTurndownSchedule()) {
+      if (boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get())) {
+        idfObject.setString(AirTerminal_DualDuct_VAVFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->nameString());
+      }
+    }
+
     // Populate fields for AirDistributionUnit
     if (boost::optional<ModelObject> outletNode = modelObject.outletModelObject()) {
       _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName, outletNode->name().get());

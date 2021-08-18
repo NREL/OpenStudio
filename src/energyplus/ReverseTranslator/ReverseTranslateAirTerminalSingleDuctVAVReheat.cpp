@@ -197,6 +197,17 @@ namespace energyplus {
         airTerminal->setMaximumReheatAirTemperature(value.get());
       }
 
+      // MinimumAirFlowTurndownScheduleName
+      _schedule = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName);
+      if (_schedule) {
+        boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_schedule.get());
+        if (mo) {
+          if (boost::optional<Schedule> schedule = mo->optionalCast<Schedule>()) {
+            airTerminal->setMinimumAirFlowTurndownSchedule(schedule.get());
+          }
+        }
+      }
+
       return airTerminal.get();
     } else {
       LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());

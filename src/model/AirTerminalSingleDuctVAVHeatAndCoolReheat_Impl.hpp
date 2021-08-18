@@ -98,6 +98,8 @@ namespace model {
 
       virtual void applySizingValues() override;
 
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -126,6 +128,10 @@ namespace model {
 
       bool setMaximumReheatAirTemperature(double maximumReheatAirTemperature);
 
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+      void resetMinimumAirFlowTurndownSchedule();
+
       //@}
       /** @name Other */
       //@{
@@ -150,6 +156,10 @@ namespace model {
       REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolReheat");
 
       boost::optional<HVACComponent> optionalReheatCoil() const;
+
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
+
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

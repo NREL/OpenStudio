@@ -75,6 +75,8 @@ namespace model {
 
     boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
 
+    boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -92,6 +94,10 @@ namespace model {
     bool setDesignSpecificationOutdoorAirObject(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir);
 
     void resetDesignSpecificationOutdoorAirObject();
+
+    bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+    void resetMinimumAirFlowTurndownSchedule();
 
     //@}
     /** @name Other */

@@ -609,9 +609,14 @@ set(${target_name}_test_src
   Test/AirLoopHVACUnitarySystem_GTest.cpp
   Test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   Test/AirTerminalDualDuctConstantVolume_GTest.cpp
+  Test/AirTerminalDualDuctVAV_GTest.cpp
   Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
   Test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
+  Test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
+  Test/AirTerminalSingleDuctVAVReheat_GTest.cpp
+  Test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
+  Test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
