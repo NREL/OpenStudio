@@ -200,7 +200,7 @@ namespace model {
 
     OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
 
-    void resetwWetBulbOrDewPointAtMaximumDryBulb();
+    void resetWetBulbOrDewPointAtMaximumDryBulb();
 
     bool setBarometricPressure(double barometricPressure);
 
