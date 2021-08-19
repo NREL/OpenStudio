@@ -78,14 +78,6 @@ namespace model {
 
     bool isDailyDryBulbTemperatureRangeDefaulted() const;
 
-    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
-
-    double wetBulbOrDewPointAtMaximumDryBulb() const;
-
-    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
-
-    bool isWetBulbOrDewPointAtMaximumDryBulbDefaulted() const;
-
     double barometricPressure() const;
 
     bool isBarometricPressureDefaulted() const;
@@ -138,6 +130,16 @@ namespace model {
 
     boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
 
+    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
+
+    boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb() const;
+
+    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+
+    boost::optional<double> humidityRatioAtMaximumDryBulb() const;
+
+    boost::optional<double> enthalpyAtMaximumDryBulb() const;
+
     std::string dryBulbTemperatureRangeModifierType() const;
 
     bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
@@ -172,10 +174,6 @@ namespace model {
 
     boost::optional<double> dailyWetBulbTemperatureRange() const;
 
-    boost::optional<double> humidityRatioAtMaximumDryBulb() const;
-
-    boost::optional<double> enthalpyAtMaximumDryBulb() const;
-
     boost::optional<int> maximumNumberWarmupDays() const;
 
     std::string beginEnvironmentResetMode() const;
@@ -193,14 +191,6 @@ namespace model {
     bool setDailyDryBulbTemperatureRange(double dailyDryBulbTemperatureRange);
 
     void resetDailyDryBulbTemperatureRange();
-
-    OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
-
-    bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
-
-    OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
-
-    void resetWetBulbOrDewPointAtMaximumDryBulb();
 
     bool setBarometricPressure(double barometricPressure);
 
@@ -261,6 +251,22 @@ namespace model {
 
     void resetHumidityConditionDaySchedule();
 
+    OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+
+    bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
+
+    OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+
+    void resetWetBulbOrDewPointAtMaximumDryBulb();
+
+    bool setHumidityRatioAtMaximumDryBulb(double humidityRatioAtMaximumDryBulb);
+
+    void resetHumidityRatioAtMaximumDryBulb();
+
+    bool setEnthalpyAtMaximumDryBulb(< double enthalpyAtMaximumDryBulb);
+
+    void resetEnthalpyAtMaximumDryBulb();
+
     bool setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType);
 
     void resetDryBulbTemperatureRangeModifierType();
@@ -307,14 +313,6 @@ namespace model {
     bool setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
 
     void resetDailyWetBulbTemperatureRange();
-
-    bool setHumidityRatioAtMaximumDryBulb(boost::optional<double> humidityRatioAtMaximumDryBulb);
-
-    void resetHumidityRatioAtMaximumDryBulb();
-
-    bool setEnthalpyAtMaximumDryBulb(boost::optional<double> enthalpyAtMaximumDryBulb);
-
-    void resetEnthalpyAtMaximumDryBulb();
 
     bool setMaximumNumberWarmupDays(boost::optional<int> maximumNumberWarmupDays);
 

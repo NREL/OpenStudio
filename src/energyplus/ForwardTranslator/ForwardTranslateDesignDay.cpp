@@ -96,8 +96,7 @@ namespace energyplus {
         || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
         || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
       // units for this field are C
-      idfObject.setDouble(SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb,
-                          modelObject.wetBulbOrDewPointAtMaximumDryBulb());
+      idfObject.setDouble(SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb, modelObject.wetBulbOrDewPointAtMaximumDryBulb());
     }
 
     // Humidity Condition Day Schedule Name
@@ -197,10 +196,12 @@ namespace energyplus {
 
     if (istringEqual(solarModelIndicator, "ASHRAETau")) {
       // ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub)
-      idfObject.setDouble(SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforBeamIrradiance_taub_, modelObject.ashraeClearSkyOpticalDepthForBeamIrradiance());
+      idfObject.setDouble(SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforBeamIrradiance_taub_,
+                          modelObject.ashraeClearSkyOpticalDepthForBeamIrradiance());
 
       // ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud)
-      idfObject.setDouble(SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforDiffuseIrradiance_taud_, modelObject.ashraeClearSkyOpticalDepthForDiffuseIrradiance());
+      idfObject.setDouble(SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforDiffuseIrradiance_taud_,
+                          modelObject.ashraeClearSkyOpticalDepthForDiffuseIrradiance());
     }
 
     // Sky Clearness
@@ -209,10 +210,10 @@ namespace energyplus {
     }
 
     // Maximum Number Warmup Days
-    if (maximumNumberWarmupDays = modelObject.maximumNumberWarmupDays()) {
+    if (boost::optional<int> maximumNumberWarmupDays = modelObject.maximumNumberWarmupDays()) {
       idfObject.setInt(SizingPeriod_DesignDayFields::MaximumNumberWarmpupDays, maximumNumberWarmupDays.get());
     }
-    
+
     // Begin Environment Reset Mode
     std::string beginEnvironmentResetMode = modelObject.beginEnvironmentResetMode();
     idfObject.setString(SizingPeriod_DesignDayFields::BeginEnvironmentResetMode, beginEnvironmentResetMode);
