@@ -56,7 +56,9 @@ namespace model {
 
     static std::vector<std::string> validDayTypeValues();
 
-    static std::vector<std::string> validHumidityIndicatingTypeValues();
+    OS_DEPRECATED static std::vector<std::string> validHumidityIndicatingTypeValues();
+
+    static std::vector<std::string> validHumidityConditionTypeValues();
 
     static std::vector<std::string> validDryBulbTemperatureRangeModifierTypeValues();
 
@@ -76,7 +78,11 @@ namespace model {
 
     OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
 
+    double wetBulbOrDewPointAtMaximumDryBulb() const;
+
     OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+
+    bool isWetBulbOrDewPointAtMaximumDryBulbDefaulted() const;
 
     double barometricPressure() const;
 
@@ -120,15 +126,23 @@ namespace model {
 
     OS_DEPRECATED std::string humidityIndicatingType() const;
 
+    std::string humidityConditionType() const;
+
     OS_DEPRECATED bool isHumidityIndicatingTypeDefaulted() const;
 
+    bool isHumidityConditionTypeDefaulted() const;
+
     OS_DEPRECATED boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+
+    boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
 
     std::string dryBulbTemperatureRangeModifierType() const;
 
     bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
 
     OS_DEPRECATED boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+
+    boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierDaySchedule() const;
 
     std::string solarModelIndicator() const;
 
@@ -140,11 +154,19 @@ namespace model {
 
     OS_DEPRECATED double ashraeTaub() const;
 
+    double ashraeClearSkyOpticalDepthForBeamIrradiance() const;
+
     OS_DEPRECATED bool isAshraeTaubDefaulted() const;
+
+    bool isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted() const;
 
     OS_DEPRECATED double ashraeTaud() const;
 
+    double ashraeClearSkyOpticalDepthForDiffuseIrradiance() const;
+
     OS_DEPRECATED bool isAshraeTaudDefaulted() const;
+
+    bool isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted() const;
 
     boost::optional<double> dailyWetBulbTemperatureRange() const;
 
@@ -162,7 +184,11 @@ namespace model {
 
     OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
 
+    bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
+
     OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+
+    void resetwWetBulbOrDewPointAtMaximumDryBulb();
 
     bool setBarometricPressure(double barometricPressure);
 
@@ -206,14 +232,22 @@ namespace model {
 
     OS_DEPRECATED bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
 
+    bool setHumidityConditionType(const std::string& humidityConditionType);
+
     OS_DEPRECATED void resetHumidityIndicatingType();
+
+    void resetHumidityConditionType();
 
     /** Sets the humidity indicating day schedule. The appropriate ScheduleTypeLimits varies
    *  depending on the humidity indicating type. Please see the EnergyPlus input-output reference
    *  for details before using this feature. */
     OS_DEPRECATED bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
 
+    bool setHumidityConditionDaySchedule(const ScheduleDay& schedule);
+
     OS_DEPRECATED void resetHumidityIndicatingDaySchedule();
+
+    void resetHumidityConditionDaySchedule();
 
     bool setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType);
 
@@ -224,7 +258,11 @@ namespace model {
    *  see the EnergyPlus input-output reference for details before using this feature. */
     OS_DEPRECATED bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
 
+    bool setDryBulbTemperatureRangeModifierDaySchedule(const ScheduleDay& schedule);
+
     OS_DEPRECATED void resetDryBulbTemperatureRangeModifierSchedule();
+
+    void resetDryBulbTemperatureRangeModifierDaySchedule();
 
     bool setSolarModelIndicator(const std::string& solarModelIndicator);
 
@@ -240,11 +278,19 @@ namespace model {
 
     OS_DEPRECATED bool setAshraeTaub(double ashraeTaub);
 
+    bool setAshraeClearSkyOpticalDepthForBeamIrradiance();
+
     OS_DEPRECATED void resetAshraeTaub();
+
+    void resetAshraeClearSkyOpticalDepthForBeamIrradiance();
 
     OS_DEPRECATED bool setAshraeTaud(double ashraeTaud);
 
+    bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance();
+
     OS_DEPRECATED void resetAshraeTaud();
+
+    void resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
 
     bool setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
 
