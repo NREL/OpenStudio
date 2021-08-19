@@ -222,7 +222,7 @@ namespace model {
     /** Sets the dry bulb temperature range modifier day schedule. The appropriate
    *  ScheduleTypeLimits varies depending on the dry bulb temperature range modifier type. Please
    *  see the EnergyPlus input-output reference for details before using this feature. */
-    OS_DEPRECATED  bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
 
     OS_DEPRECATED void resetDryBulbTemperatureRangeModifierSchedule();
 
