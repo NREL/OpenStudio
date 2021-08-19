@@ -444,45 +444,45 @@ namespace model {
     }
 
     bool DesignDay_Impl::setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb) {
-      bool result = setDouble(OS_SizingPeriod_DesignDayFields::WetBulbOrDewPointAtMaximumDryBulb, wetBulbOrDewPointAtMaximumDryBulb);
+      bool result = setDouble(OS_SizingPeriod_DesignDayFields::WetBulborDewPointatMaximumDryBulb, wetBulbOrDewPointAtMaximumDryBulb);
       OS_ASSERT(result);
       return result;
     }
 
     void DesignDay_Impl::resetWetBulbOrDewPointAtMaximumDryBulb() {
-      bool result = setString(OS_SizingPeriod_DesignDayFields::WetBulbOrDewPointAtMaximumDryBulb, "");
+      bool result = setString(OS_SizingPeriod_DesignDayFields::WetBulborDewPointatMaximumDryBulb, "");
       OS_ASSERT(result);
     }
 
     bool DesignDay_Impl::setHumidityRatioAtMaximumDryBulb(boost::optional<double> humidityRatioAtMaximumDryBulb) {
       bool result = false;
       if (humidityRatioAtMaximumDryBulb) {
-        result = setDouble(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, humidityRatioAtMaximumDryBulb.get());
+        result = setDouble(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb, humidityRatioAtMaximumDryBulb.get());
       } else {
-        result = setString(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, "");
+        result = setString(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb, "");
       }
       OS_ASSERT(result);
       return result;
     }
 
     void DesignDay_Impl::resetHumidityRatioAtMaximumDryBulb() {
-      bool result = setString(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, "");
+      bool result = setString(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb, "");
       OS_ASSERT(result);
     }
 
     bool DesignDay_Impl::setEnthalpyAtMaximumDryBulb(boost::optional<double> enthalpyAtMaximumDryBulb) {
       bool result = false;
       if (enthalpyAtMaximumDryBulb) {
-        result = setDouble(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, enthalpyAtMaximumDryBulb.get());
+        result = setDouble(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb, enthalpyAtMaximumDryBulb.get());
       } else {
-        result = setString(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, "");
+        result = setString(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb, "");
       }
       OS_ASSERT(result);
       return result;
     }
 
     void DesignDay_Impl::resetEnthalpyAtMaximumDryBulb() {
-      bool result = setString(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, "");
+      bool result = setString(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb, "");
       OS_ASSERT(result);
     }
 

@@ -90,15 +90,6 @@ namespace energyplus {
     }
     idfObject.setString(SizingPeriod_DesignDayFields::HumidityConditionType, humidityConditionType);
 
-    // Wetbulb or DewPoint at Maximum Dry-Bulb
-    if (istringEqual(humidityConditionType, "Wetbulb") || istringEqual(humidityConditionType, "Dewpoint")
-        || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
-        || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
-        || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
-      // units for this field are C
-      idfObject.setDouble(SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb, modelObject.wetBulbOrDewPointAtMaximumDryBulb());
-    }
-
     // Humidity Condition Day Schedule Name
     if (istringEqual(humidityConditionType, "RelativeHumiditySchedule") || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
         || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
@@ -110,16 +101,31 @@ namespace energyplus {
       }
     }
 
+    // Wetbulb or DewPoint at Maximum Dry-Bulb
+    if (istringEqual(humidityConditionType, "Wetbulb") || istringEqual(humidityConditionType, "Dewpoint")
+        || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
+      if (boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb = modelObject.wetBulbOrDewPointAtMaximumDryBulb()) {
+        // units for this field are C
+        idfObject.setDouble(SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb, wetBulbOrDewPointAtMaximumDryBulb.get());
+      }
+    }
+
     // Humidity Ratio at Maximum Dry-Bulb
     if (istringEqual(humidityConditionType, "HumidityRatio")) {
-      // units for this field are kgWater/kgDryAir
-      idfObject.setDouble(SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb, modelObject.humidityRatioatMaximumDryBulb());
+      if (boost::optional<double> humidityRatioAtMaximumDryBulb = modelObject.humidityRatioAtMaximumDryBulb()) {
+        // units for this field are kgWater/kgDryAir
+        idfObject.setDouble(SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb, humidityRatioAtMaximumDryBulb.get());
+      }
     }
 
     // Enthalpy at Maximum Dry-Bulb
     if (istringEqual(humidityConditionType, "Enthalpy")) {
-      // units for this field are J/kg
-      idfObject.setDouble(SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb, modelObject.enthalpyatMaximumDryBulb());
+      if (boost::optional<double> enthalpyAtMaximumDryBulb = modelObject.enthalpyAtMaximumDryBulb()) {
+        // units for this field are J/kg
+        idfObject.setDouble(SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb, enthalpyAtMaximumDryBulb.get());
+      }
     }
 
     // Daily Wet-Bulb Temperature Range
@@ -211,7 +217,7 @@ namespace energyplus {
 
     // Maximum Number Warmup Days
     if (boost::optional<int> maximumNumberWarmupDays = modelObject.maximumNumberWarmupDays()) {
-      idfObject.setInt(SizingPeriod_DesignDayFields::MaximumNumberWarmpupDays, maximumNumberWarmupDays.get());
+      idfObject.setInt(SizingPeriod_DesignDayFields::MaximumNumberWarmupDays, maximumNumberWarmupDays.get());
     }
 
     // Begin Environment Reset Mode

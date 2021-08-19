@@ -263,7 +263,7 @@ namespace model {
 
     void resetHumidityRatioAtMaximumDryBulb();
 
-    bool setEnthalpyAtMaximumDryBulb(< double enthalpyAtMaximumDryBulb);
+    bool setEnthalpyAtMaximumDryBulb(double enthalpyAtMaximumDryBulb);
 
     void resetEnthalpyAtMaximumDryBulb();
 
