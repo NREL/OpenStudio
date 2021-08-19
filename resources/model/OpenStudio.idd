@@ -1321,13 +1321,6 @@ OS:SizingPeriod:DesignDay,
        \units deltaC
        \minimum 0
        \default 0.0
-  N3,  \field Wetbulb or DewPoint at Maximum Dry-Bulb
-       \note Wetbulb or dewpoint temperature coincident with the maximum temperature.
-       \note Required only if field Humidity Condition Type is "Wetbulb", "Dewpoint",
-       \note "WetBulbProfileMultiplierSchedule", "WetBulbProfileDifferenceSchedule",
-       \note or "WetBulbProfileDefaultMultipliers"
-       \type real
-       \units C
   N4,  \field Barometric Pressure
        \note This field's value is also checked against the calculated "standard barometric pressure"
        \note for the location.  If out of range (>10%), then is replaced by standard value.
@@ -1430,6 +1423,23 @@ OS:SizingPeriod:DesignDay,
        \note   from the maximum wet-bulb temperature for each timestep in the day. (units = deltaC)
        \type object-list
        \object-list DayScheduleNames
+  N3,  \field Wetbulb or DewPoint at Maximum Dry-Bulb
+       \note Wetbulb or dewpoint temperature coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Wetbulb", "Dewpoint",
+       \note "WetBulbProfileMultiplierSchedule", "WetBulbProfileDifferenceSchedule",
+       \note or "WetBulbProfileDefaultMultipliers"
+       \type real
+       \units C
+  N13, \field Humidity Ratio at Maximum Dry-Bulb
+       \note Humidity ratio coincident with the maximum temperature (constant humidity ratio throughout day).
+       \note Required only if field Humidity Condition Type is "HumidityRatio".
+       \type real
+       \units kgWater/kgDryAir
+  N14, \field Enthalpy at Maximum Dry-Bulb
+       \note Enthalpy coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Enthalpy".
+       \type real
+       \units J/kg
   A9,  \field Dry-Bulb Temperature Range Modifier Type
        \note Type of modifier to the dry-bulb temperature calculated for the timestep
        \type choice
@@ -1486,16 +1496,6 @@ OS:SizingPeriod:DesignDay,
        \note Required only if Humidity Indicating Type = "WetbulbProfileMultiplierSchedule" or "WetBulbProfileDefaultMultipliers"
        \type real
        \units deltaC
-  N13, \field Humidity Ratio at Maximum Dry-Bulb
-       \note Humidity ratio coincident with the maximum temperature (constant humidity ratio throughout day).
-       \note Required only if field Humidity Condition Type is "HumidityRatio".
-       \type real
-       \units kgWater/kgDryAir
-  N14, \field Enthalpy at Maximum Dry-Bulb
-       \note Enthalpy coincident with the maximum temperature.
-       \note Required only if field Humidity Condition Type is "Enthalpy".
-       \type real
-       \units J/kg
   N15, \field Maximum Number Warmup Days
        \note If used this design day will be run with a custom limit on the maximum number of days that are repeated for warmup.
        \note Limiting the number of warmup days can improve run time.
