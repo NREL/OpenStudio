@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "SizingPeriod.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -73,9 +74,9 @@ namespace model {
 
     bool isDailyDryBulbTemperatureRangeDefaulted() const;
 
-    double humidityIndicatingConditionsAtMaximumDryBulb() const;
+    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
 
-    bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
 
     double barometricPressure() const;
 
@@ -117,17 +118,17 @@ namespace model {
 
     bool isDaylightSavingTimeIndicatorDefaulted() const;
 
-    std::string humidityIndicatingType() const;
+    OS_DEPRECATED std::string humidityIndicatingType() const;
 
-    bool isHumidityIndicatingTypeDefaulted() const;
+    OS_DEPRECATED bool isHumidityIndicatingTypeDefaulted() const;
 
-    boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+    OS_DEPRECATED boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
 
     std::string dryBulbTemperatureRangeModifierType() const;
 
     bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
 
-    boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+    OS_DEPRECATED boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
 
     std::string solarModelIndicator() const;
 
@@ -137,13 +138,13 @@ namespace model {
 
     boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
 
-    double ashraeTaub() const;
+    OS_DEPRECATED double ashraeTaub() const;
 
-    bool isAshraeTaubDefaulted() const;
+    OS_DEPRECATED bool isAshraeTaubDefaulted() const;
 
-    double ashraeTaud() const;
+    OS_DEPRECATED double ashraeTaud() const;
 
-    bool isAshraeTaudDefaulted() const;
+    OS_DEPRECATED bool isAshraeTaudDefaulted() const;
 
     boost::optional<double> dailyWetBulbTemperatureRange() const;
 
@@ -159,9 +160,9 @@ namespace model {
 
     void resetDailyDryBulbTemperatureRange();
 
-    bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+    OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
 
-    void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+    OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
 
     bool setBarometricPressure(double barometricPressure);
 
@@ -203,16 +204,16 @@ namespace model {
 
     void resetDaylightSavingTimeIndicator();
 
-    bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
+    OS_DEPRECATED bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
 
-    void resetHumidityIndicatingType();
+    OS_DEPRECATED void resetHumidityIndicatingType();
 
     /** Sets the humidity indicating day schedule. The appropriate ScheduleTypeLimits varies
    *  depending on the humidity indicating type. Please see the EnergyPlus input-output reference
    *  for details before using this feature. */
-    bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
 
-    void resetHumidityIndicatingDaySchedule();
+    OS_DEPRECATED void resetHumidityIndicatingDaySchedule();
 
     bool setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType);
 
@@ -221,9 +222,9 @@ namespace model {
     /** Sets the dry bulb temperature range modifier day schedule. The appropriate
    *  ScheduleTypeLimits varies depending on the dry bulb temperature range modifier type. Please
    *  see the EnergyPlus input-output reference for details before using this feature. */
-    bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED  bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
 
-    void resetDryBulbTemperatureRangeModifierSchedule();
+    OS_DEPRECATED void resetDryBulbTemperatureRangeModifierSchedule();
 
     bool setSolarModelIndicator(const std::string& solarModelIndicator);
 
@@ -237,13 +238,13 @@ namespace model {
 
     void resetDiffuseSolarDaySchedule();
 
-    bool setAshraeTaub(double ashraeTaub);
+    OS_DEPRECATED bool setAshraeTaub(double ashraeTaub);
 
-    void resetAshraeTaub();
+    OS_DEPRECATED void resetAshraeTaub();
 
-    bool setAshraeTaud(double ashraeTaud);
+    OS_DEPRECATED bool setAshraeTaud(double ashraeTaud);
 
-    void resetAshraeTaud();
+    OS_DEPRECATED void resetAshraeTaud();
 
     bool setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
 
