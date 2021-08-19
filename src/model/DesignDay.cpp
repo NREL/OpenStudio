@@ -277,6 +277,28 @@ namespace model {
       return getDouble(OS_SizingPeriod_DesignDayFields::DailyWetBulbTemperatureRange, true);
     }
 
+    boost::optional<double> DesignDay_Impl::humidityRatioAtMaximumDryBulb() const {
+      return getDouble(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, true);
+    }
+
+    boost::optional<double> DesignDay_Impl::enthalpyAtMaximumDryBulb() const {
+      return getDouble(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, true);
+    }
+
+    boost::optional<int> DesignDay_Impl::maximumNumberWarmupDays() const {
+      return getInt(OS_SizingPeriod_DesignDayFields::MaximumNumberWarmupDays, true);
+    }
+
+    std::string DesignDay_Impl::beginEnvironmentResetMode() const {
+      boost::optional<std::string> value = getString(OS_SizingPeriod_DesignDayFields::BeginEnvironmentResetMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool DesignDay_Impl::isBeginEnvironmentResetModeDefaulted() const {
+      return isEmpty(OS_SizingPeriod_DesignDayFields::BeginEnvironmentResetMode);
+    }
+
     bool DesignDay_Impl::setMaximumDryBulbTemperature(double maximumDryBulbTemperature) {
       bool result = setDouble(OS_SizingPeriod_DesignDayFields::MaximumDryBulbTemperature, maximumDryBulbTemperature);
       return result;
@@ -298,8 +320,7 @@ namespace model {
     }
 
     bool DesignDay_Impl::setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb) {
-      bool result =
-        setDouble(OS_SizingPeriod_DesignDayFields::WetBulbOrDewPointAtMaximumDryBulb, wetBulbOrDewPointAtMaximumDryBulb);
+      bool result = setDouble(OS_SizingPeriod_DesignDayFields::WetBulbOrDewPointAtMaximumDryBulb, wetBulbOrDewPointAtMaximumDryBulb);
       OS_ASSERT(result);
       return result;
     }
@@ -573,7 +594,8 @@ namespace model {
     }
 
     bool DesignDay_Impl::setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance) {
-      bool result = setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForBeamIrradiance, ashraeClearSkyOpticalDepthForBeamIrradiance);
+      bool result =
+        setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForBeamIrradiance, ashraeClearSkyOpticalDepthForBeamIrradiance);
       return result;
     }
 
@@ -583,7 +605,8 @@ namespace model {
     }
 
     bool DesignDay_Impl::setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance) {
-      bool result = setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForDiffuseIrradiance, ashraeClearSkyOpticalDepthForDiffuseIrradiance);
+      bool result =
+        setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForDiffuseIrradiance, ashraeClearSkyOpticalDepthForDiffuseIrradiance);
       return result;
     }
 
@@ -619,6 +642,64 @@ namespace model {
           this->setInt(OS_SizingPeriod_DesignDayFields::DayofMonth, 28);
         }
       }
+    }
+
+    bool DesignDay_Impl::setHumidityRatioAtMaximumDryBulb(boost::optional<double> humidityRatioAtMaximumDryBulb) {
+      bool result = false;
+      if (humidityRatioAtMaximumDryBulb) {
+        result = setDouble(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, humidityRatioAtMaximumDryBulb.get());
+      } else {
+        result = setString(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, "");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void DesignDay_Impl::resetHumidityRatioAtMaximumDryBulb() {
+      bool result = setString(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, "");
+      OS_ASSERT(result);
+    }
+
+    bool DesignDay_Impl::setEnthalpyAtMaximumDryBulb(boost::optional<double> enthalpyAtMaximumDryBulb) {
+      bool result = false;
+      if (enthalpyAtMaximumDryBulb) {
+        result = setDouble(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, enthalpyAtMaximumDryBulb.get());
+      } else {
+        result = setString(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, "");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void DesignDay_Impl::resetEnthalpyAtMaximumDryBulb() {
+      bool result = setString(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, "");
+      OS_ASSERT(result);
+    }
+
+    bool DesignDay_Impl::setMaximumNumberWarmupDays(boost::optional<int> maximumNumberWarmupDays) {
+      bool result = false;
+      if (maximumNumberWarmupDays) {
+        result = setInt(OS_SizingPeriod_DesignDayFields::MaximumNumberWarmupDays, maximumNumberWarmupDays.get());
+      } else {
+        result = setString(OS_SizingPeriod_DesignDayFields::MaximumNumberWarmupDays, "");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void DesignDay_Impl::resetMaximumNumberWarmupDays() {
+      bool result = setString(OS_SizingPeriod_DesignDayFields::MaximumNumberWarmupDays, "");
+      OS_ASSERT(result);
+    }
+
+    bool DesignDay_Impl::setBeginEnvironmentResetMode(const std::string& beginEnvironmentResetMode) {
+      bool result = setString(OS_SizingPeriod_DesignDayFields::BeginEnvironmentResetMode, beginEnvironmentResetMode);
+      return result;
+    }
+
+    void DesignDay_Impl::resetBeginEnvironmentResetMode() {
+      bool result = setString(OS_SizingPeriod_DesignDayFields::BeginEnvironmentResetMode, "");
+      OS_ASSERT(result);
     }
 
   }  // namespace detail
@@ -882,6 +963,26 @@ namespace model {
     return getImpl<detail::DesignDay_Impl>()->dailyWetBulbTemperatureRange();
   }
 
+  boost::optional<double> DesignDay::humidityRatioAtMaximumDryBulb() const {
+    return getImpl<detail::DesignDay_Impl>()->humidityRatioAtMaximumDryBulb();
+  }
+
+  boost::optional<double> DesignDay::enthalpyAtMaximumDryBulb() const {
+    return getImpl<detail::DesignDay_Impl>()->enthalpyAtMaximumDryBulb();
+  }
+
+  boost::optional<int> DesignDay::maximumNumberWarmupDays() const {
+    return getImpl<detail::DesignDay_Impl>()->maximumNumberWarmupDays();
+  }
+
+  std::string DesignDay::beginEnvironmentResetMode() const {
+    return getImpl<detail::DesignDay_Impl>()->beginEnvironmentResetMode();
+  }
+
+  bool DesignDay::isBeginEnvironmentResetModeDefaulted() const {
+    return getImpl<detail::DesignDay_Impl>()->isBeginEnvironmentResetModeDefaulted();
+  }
+
   bool DesignDay::setMaximumDryBulbTemperature(double maximumDryBulbTemperature) {
     return getImpl<detail::DesignDay_Impl>()->setMaximumDryBulbTemperature(maximumDryBulbTemperature);
   }
@@ -1112,6 +1213,38 @@ namespace model {
 
   void DesignDay::resetDailyWetBulbTemperatureRange() {
     getImpl<detail::DesignDay_Impl>()->resetDailyWetBulbTemperatureRange();
+  }
+
+  bool DesignDay::setHumidityRatioAtMaximumDryBulb(double humidityRatioAtMaximumDryBulb) {
+    return getImpl<detail::DesignDay_Impl>()->setHumidityRatioAtMaximumDryBulb(humidityRatioAtMaximumDryBulb);
+  }
+
+  void DesignDay::resetHumidityRatioAtMaximumDryBulb() {
+    getImpl<detail::DesignDay_Impl>()->resetHumidityRatioAtMaximumDryBulb();
+  }
+
+  bool DesignDay::setEnthalpyAtMaximumDryBulb(double enthalpyAtMaximumDryBulb) {
+    return getImpl<detail::DesignDay_Impl>()->setEnthalpyAtMaximumDryBulb(enthalpyAtMaximumDryBulb);
+  }
+
+  void DesignDay::resetEnthalpyAtMaximumDryBulb() {
+    getImpl<detail::DesignDay_Impl>()->resetEnthalpyAtMaximumDryBulb();
+  }
+
+  bool DesignDay::setMaximumNumberWarmupDays(int maximumNumberWarmupDays) {
+    return getImpl<detail::DesignDay_Impl>()->setMaximumNumberWarmupDays(maximumNumberWarmupDays);
+  }
+
+  void DesignDay::resetMaximumNumberWarmupDays() {
+    getImpl<detail::DesignDay_Impl>()->resetMaximumNumberWarmupDays();
+  }
+
+  bool DesignDay::setBeginEnvironmentResetMode(const std::string& beginEnvironmentResetMode) {
+    return getImpl<detail::DesignDay_Impl>()->setBeginEnvironmentResetMode(beginEnvironmentResetMode);
+  }
+
+  void DesignDay::resetBeginEnvironmentResetMode() {
+    getImpl<detail::DesignDay_Impl>()->resetBeginEnvironmentResetMode();
   }
 
 }  // namespace model
