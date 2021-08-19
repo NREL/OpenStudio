@@ -64,6 +64,8 @@ namespace model {
 
     static std::vector<std::string> validSolarModelIndicatorValues();
 
+    static std::vector<std::string> validBeginEnvironmentResetModeValues();
+
     //@}
     /** @name Getters */
     //@{
@@ -169,6 +171,16 @@ namespace model {
     bool isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted() const;
 
     boost::optional<double> dailyWetBulbTemperatureRange() const;
+
+    boost::optional<double> humidityRatioAtMaximumDryBulb() const;
+
+    boost::optional<double> enthalpyAtMaximumDryBulb() const;
+
+    boost::optional<int> maximumNumberWarmupDays() const;
+
+    std::string beginEnvironmentResetMode() const;
+
+    bool isBeginEnvironmentResetModeDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -295,6 +307,22 @@ namespace model {
     bool setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
 
     void resetDailyWetBulbTemperatureRange();
+
+    bool setHumidityRatioAtMaximumDryBulb(boost::optional<double> humidityRatioAtMaximumDryBulb);
+
+    void resetHumidityRatioAtMaximumDryBulb();
+
+    bool setEnthalpyAtMaximumDryBulb(boost::optional<double> enthalpyAtMaximumDryBulb);
+
+    void resetEnthalpyAtMaximumDryBulb();
+
+    bool setMaximumNumberWarmupDays(boost::optional<int> maximumNumberWarmupDays);
+
+    void resetMaximumNumberWarmupDays();
+
+    bool setBeginEnvironmentResetMode(const std::string& beginEnvironmentResetMode);
+
+    void resetBeginEnvironmentResetMode();
 
     //@}
 

@@ -145,6 +145,16 @@ namespace model {
 
       boost::optional<double> dailyWetBulbTemperatureRange() const;
 
+      boost::optional<double> humidityRatioAtMaximumDryBulb() const;
+
+      boost::optional<double> enthalpyAtMaximumDryBulb() const;
+
+      boost::optional<int> maximumNumberWarmupDays() const;
+
+      std::string beginEnvironmentResetMode() const;
+
+      bool isBeginEnvironmentResetModeDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -229,17 +239,33 @@ namespace model {
 
       void resetDiffuseSolarDaySchedule();
 
-      bool setAshraeClearSkyOpticalDepthForBeamIrradiance();
+      bool setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance);
 
       void resetAshraeClearSkyOpticalDepthForBeamIrradiance();
 
-      bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance();
+      bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance);
 
       void resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
 
       bool setDailyWetBulbTemperatureRange(boost::optional<double> dailyWetBulbTemperatureRange);
 
       void resetDailyWetBulbTemperatureRange();
+
+      bool setHumidityRatioAtMaximumDryBulb(boost::optional<double> humidityRatioAtMaximumDryBulb);
+
+      void resetHumidityRatioAtMaximumDryBulb();
+
+      bool setEnthalpyAtMaximumDryBulb(boost::optional<double> enthalpyAtMaximumDryBulb);
+
+      void resetEnthalpyAtMaximumDryBulb();
+
+      bool setMaximumNumberWarmupDays(boost::optional<int> maximumNumberWarmupDays);
+
+      void resetMaximumNumberWarmupDays();
+
+      bool setBeginEnvironmentResetMode(const std::string& beginEnvironmentResetMode);
+
+      void resetBeginEnvironmentResetMode();
 
       // ensure that this object does not contain the date 2/29
       virtual void ensureNoLeapDays() override;
