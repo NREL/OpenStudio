@@ -129,8 +129,8 @@ namespace model {
 
     bool DesignDay_Impl::rainIndicator() const {
       bool result(false);
-      int i = getInt(OS_SizingPeriod_DesignDayFields::RainIndicator, true).get();
-      if (i == 1) {
+      std::string i = getString(OS_SizingPeriod_DesignDayFields::RainIndicator, true).get();
+      if (i == "Yes") {
         result = true;
       }
       return result;
@@ -142,8 +142,8 @@ namespace model {
 
     bool DesignDay_Impl::snowIndicator() const {
       bool result(false);
-      int i = getInt(OS_SizingPeriod_DesignDayFields::SnowIndicator, true).get();
-      if (i == 1) {
+      std::string i = getString(OS_SizingPeriod_DesignDayFields::SnowIndicator, true).get();
+      if (i == "Yes") {
         result = true;
       }
       return result;
@@ -185,8 +185,8 @@ namespace model {
 
     bool DesignDay_Impl::daylightSavingTimeIndicator() const {
       bool result(false);
-      int i = getInt(OS_SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator, true).get();
-      if (i == 1) {
+      std::string i = getString(OS_SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator, true).get();
+      if (i == "Yes") {
         result = true;
       }
       return result;
@@ -355,9 +355,9 @@ namespace model {
 
     bool DesignDay_Impl::setRainIndicator(bool rainIndicator) {
       if (rainIndicator) {
-        return this->setInt(OS_SizingPeriod_DesignDayFields::RainIndicator, 1);
+        return this->setString(OS_SizingPeriod_DesignDayFields::RainIndicator, "Yes");
       } else {
-        return this->setInt(OS_SizingPeriod_DesignDayFields::RainIndicator, 0);
+        return this->setString(OS_SizingPeriod_DesignDayFields::RainIndicator, "No");
       }
       return false;
     }
@@ -369,9 +369,9 @@ namespace model {
 
     bool DesignDay_Impl::setSnowIndicator(bool snowIndicator) {
       if (snowIndicator) {
-        return this->setInt(OS_SizingPeriod_DesignDayFields::SnowIndicator, 1);
+        return this->setString(OS_SizingPeriod_DesignDayFields::SnowIndicator, "Yes");
       } else {
-        return this->setInt(OS_SizingPeriod_DesignDayFields::SnowIndicator, 0);
+        return this->setString(OS_SizingPeriod_DesignDayFields::SnowIndicator, "No");
       }
       return false;
     }
@@ -413,9 +413,9 @@ namespace model {
 
     bool DesignDay_Impl::setDaylightSavingTimeIndicator(bool daylightSavingTimeIndicator) {
       if (daylightSavingTimeIndicator) {
-        return this->setInt(OS_SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator, 1);
+        return this->setString(OS_SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator, "Yes");
       } else {
-        return this->setInt(OS_SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator, 0);
+        return this->setString(OS_SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator, "No");
       }
       return false;
     }
@@ -707,21 +707,7 @@ namespace model {
   DesignDay::DesignDay(const Model& model) : SizingPeriod(DesignDay::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::DesignDay_Impl>());
 
-    setMaximumDryBulbTemperature(23.0);
-    setDailyDryBulbTemperatureRange(0.0);
     setWetBulbOrDewPointAtMaximumDryBulb(23.0);
-    setBarometricPressure(31000);
-    setWindSpeed(0.0);
-    setWindDirection(0.0);
-    setSkyClearness(0.0);
-    setSnowIndicator(0);
-    setDayOfMonth(1);
-    setMonth(1);
-    setDayType("SummerDesignDay");
-    setDaylightSavingTimeIndicator(false);
-    setHumidityConditionType("WetBulb");
-    setDryBulbTemperatureRangeModifierType("DefaultMultipliers");
-    setSolarModelIndicator("ASHRAEClearSky");
   }
 
   // constructor
