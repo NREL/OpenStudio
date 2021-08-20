@@ -207,19 +207,19 @@ namespace model {
     }
 
     boost::optional<ScheduleDay> DesignDay_Impl::humidityConditionDaySchedule() const {
-      return this->getObject<ModelObject>().getModelObjectTarget<ScheduleDay>(OS_SizingPeriod_DesignDayFields::HumidityConditionDaySchedule);
+      return this->getObject<ModelObject>().getModelObjectTarget<ScheduleDay>(OS_SizingPeriod_DesignDayFields::HumidityConditionDayScheduleName);
     }
 
     boost::optional<double> DesignDay_Impl::wetBulbOrDewPointAtMaximumDryBulb() const {
-      return getDouble(OS_SizingPeriod_DesignDayFields::WetBulbOrDewPointAtMaximumDryBulb, true);
+      return getDouble(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb, true);
     }
 
     boost::optional<double> DesignDay_Impl::humidityRatioAtMaximumDryBulb() const {
-      return getDouble(OS_SizingPeriod_DesignDayFields::HumidityRatioAtMaximumDryBulb, true);
+      return getDouble(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb, true);
     }
 
     boost::optional<double> DesignDay_Impl::enthalpyAtMaximumDryBulb() const {
-      return getDouble(OS_SizingPeriod_DesignDayFields::EnthalpyAtMaximumDryBulb, true);
+      return getDouble(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb, true);
     }
 
     std::string DesignDay_Impl::dryBulbTemperatureRangeModifierType() const {
@@ -256,23 +256,23 @@ namespace model {
     }
 
     double DesignDay_Impl::ashraeClearSkyOpticalDepthForBeamIrradiance() const {
-      boost::optional<double> value = getDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForBeamIrradiance, true);
+      boost::optional<double> value = getDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforBeamIrradiance, true);
       OS_ASSERT(value);
       return value.get();
     }
 
     bool DesignDay_Impl::isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted() const {
-      return isEmpty(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForBeamIrradiance);
+      return isEmpty(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforBeamIrradiance);
     }
 
     double DesignDay_Impl::ashraeClearSkyOpticalDepthForDiffuseIrradiance() const {
-      boost::optional<double> value = getDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForDiffuseIrradiance, true);
+      boost::optional<double> value = getDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforDiffuseIrradiance, true);
       OS_ASSERT(value);
       return value.get();
     }
 
     bool DesignDay_Impl::isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted() const {
-      return isEmpty(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForDiffuseIrradiance);
+      return isEmpty(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforDiffuseIrradiance);
     }
 
     boost::optional<double> DesignDay_Impl::dailyWetBulbTemperatureRange() const {
@@ -443,14 +443,19 @@ namespace model {
       this->setString(OS_SizingPeriod_DesignDayFields::HumidityConditionDayScheduleName, "");
     }
 
-    bool DesignDay_Impl::setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb) {
-      bool result = setDouble(OS_SizingPeriod_DesignDayFields::WetBulborDewPointatMaximumDryBulb, wetBulbOrDewPointAtMaximumDryBulb);
+    bool DesignDay_Impl::setWetBulbOrDewPointAtMaximumDryBulb(boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb) {
+      bool result = false;
+      if (wetBulbOrDewPointAtMaximumDryBulb) {
+        result = setDouble(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb, wetBulbOrDewPointAtMaximumDryBulb.get());
+      } else {
+        result = setString(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb, "");
+      }
       OS_ASSERT(result);
       return result;
     }
 
     void DesignDay_Impl::resetWetBulbOrDewPointAtMaximumDryBulb() {
-      bool result = setString(OS_SizingPeriod_DesignDayFields::WetBulborDewPointatMaximumDryBulb, "");
+      bool result = setString(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb, "");
       OS_ASSERT(result);
     }
 
@@ -621,23 +626,23 @@ namespace model {
 
     bool DesignDay_Impl::setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance) {
       bool result =
-        setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForBeamIrradiance, ashraeClearSkyOpticalDepthForBeamIrradiance);
+        setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforBeamIrradiance, ashraeClearSkyOpticalDepthForBeamIrradiance);
       return result;
     }
 
     void DesignDay_Impl::resetAshraeClearSkyOpticalDepthForBeamIrradiance() {
-      bool result = setString(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForBeamIrradiance, "");
+      bool result = setString(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforBeamIrradiance, "");
       OS_ASSERT(result);
     }
 
     bool DesignDay_Impl::setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance) {
       bool result =
-        setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForDiffuseIrradiance, ashraeClearSkyOpticalDepthForDiffuseIrradiance);
+        setDouble(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforDiffuseIrradiance, ashraeClearSkyOpticalDepthForDiffuseIrradiance);
       return result;
     }
 
     void DesignDay_Impl::resetAshraeClearSkyOpticalDepthForDiffuseIrradiance() {
-      bool result = setString(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthForDiffuseIrradiance, "");
+      bool result = setString(OS_SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforDiffuseIrradiance, "");
       OS_ASSERT(result);
     }
 
@@ -769,14 +774,6 @@ namespace model {
     return getImpl<detail::DesignDay_Impl>()->isDailyDryBulbTemperatureRangeDefaulted();
   }
 
-  double DesignDay::humidityIndicatingConditionsAtMaximumDryBulb() const {
-    return getImpl<detail::DesignDay_Impl>()->wetBulbOrDewPointAtMaximumDryBulb();
-  }
-
-  bool DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const {
-    return getImpl<detail::DesignDay_Impl>()->isWetBulbOrDewPointAtMaximumDryBulbDefaulted();
-  }
-
   double DesignDay::barometricPressure() const {
     return getImpl<detail::DesignDay_Impl>()->barometricPressure();
   }
@@ -881,7 +878,11 @@ namespace model {
     return getImpl<detail::DesignDay_Impl>()->humidityConditionDaySchedule();
   }
 
-  double DesignDay::wetBulbOrDewPointAtMaximumDryBulb() const {
+  boost::optional<double> DesignDay::humidityIndicatingConditionsAtMaximumDryBulb() const {
+    return getImpl<detail::DesignDay_Impl>()->wetBulbOrDewPointAtMaximumDryBulb();
+  }
+
+  boost::optional<double> DesignDay::wetBulbOrDewPointAtMaximumDryBulb() const {
     return getImpl<detail::DesignDay_Impl>()->wetBulbOrDewPointAtMaximumDryBulb();
   }
 
@@ -987,14 +988,6 @@ namespace model {
 
   void DesignDay::resetDailyDryBulbTemperatureRange() {
     getImpl<detail::DesignDay_Impl>()->resetDailyDryBulbTemperatureRange();
-  }
-
-  bool DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
-    return getImpl<detail::DesignDay_Impl>()->setWetBulbOrDewPointAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
-  }
-
-  void DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb() {
-    getImpl<detail::DesignDay_Impl>()->resetWetBulbOrDewPointAtMaximumDryBulb();
   }
 
   bool DesignDay::setBarometricPressure(double barometricPressure) {
@@ -1107,6 +1100,14 @@ namespace model {
 
   void DesignDay::resetHumidityConditionDaySchedule() {
     getImpl<detail::DesignDay_Impl>()->resetHumidityConditionDaySchedule();
+  }
+
+  bool DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
+    return getImpl<detail::DesignDay_Impl>()->setWetBulbOrDewPointAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
+  }
+
+  void DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb() {
+    getImpl<detail::DesignDay_Impl>()->resetWetBulbOrDewPointAtMaximumDryBulb();
   }
 
   bool DesignDay::setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb) {

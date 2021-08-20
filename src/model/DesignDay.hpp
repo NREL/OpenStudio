@@ -130,11 +130,9 @@ namespace model {
 
     boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
 
-    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
+    OS_DEPRECATED boost::optional<double> humidityIndicatingConditionsAtMaximumDryBulb() const;
 
     boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb() const;
-
-    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
 
     boost::optional<double> humidityRatioAtMaximumDryBulb() const;
 
@@ -296,7 +294,7 @@ namespace model {
 
     OS_DEPRECATED bool setAshraeTaub(double ashraeTaub);
 
-    bool setAshraeClearSkyOpticalDepthForBeamIrradiance();
+    bool setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance);
 
     OS_DEPRECATED void resetAshraeTaub();
 
@@ -304,7 +302,7 @@ namespace model {
 
     OS_DEPRECATED bool setAshraeTaud(double ashraeTaud);
 
-    bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance();
+    bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance);
 
     OS_DEPRECATED void resetAshraeTaud();
 
@@ -314,7 +312,7 @@ namespace model {
 
     void resetDailyWetBulbTemperatureRange();
 
-    bool setMaximumNumberWarmupDays(boost::optional<int> maximumNumberWarmupDays);
+    bool setMaximumNumberWarmupDays(int maximumNumberWarmupDays);
 
     void resetMaximumNumberWarmupDays();
 

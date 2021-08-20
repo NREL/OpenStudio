@@ -1321,7 +1321,7 @@ OS:SizingPeriod:DesignDay,
        \units deltaC
        \minimum 0
        \default 0.0
-  N4,  \field Barometric Pressure
+  N3,  \field Barometric Pressure
        \note This field's value is also checked against the calculated "standard barometric pressure"
        \note for the location.  If out of range (>10%), then is replaced by standard value.
        \type real
@@ -1330,14 +1330,14 @@ OS:SizingPeriod:DesignDay,
        \minimum 31000
        \maximum 120000
        \default 31000.0
-  N5,  \field Wind Speed
+  N4,  \field Wind Speed
        \type real
        \units m/s
        \ip-units miles/hr
        \minimum 0
        \maximum 40
        \default 0.0
-  N6,  \field Wind Direction
+  N5,  \field Wind Direction
        \note North=0.0 East=90.0
        \note 0 and 360 are the same direction.
        \type real
@@ -1345,7 +1345,7 @@ OS:SizingPeriod:DesignDay,
        \minimum 0
        \maximum 360
        \default 0.0
-  N7,  \field Sky Clearness
+  N6,  \field Sky Clearness
        \note Only used if Sky Model Indicator = ASHRAEClearSky
        \note 0.0 is totally unclear, 1.0 is totally clear
        \type real
@@ -1364,13 +1364,13 @@ OS:SizingPeriod:DesignDay,
        \key No
        \default No
        \note Yes is Snow on Ground, No is no Snow on Grou
-  N8,  \field Day of Month
+  N7,  \field Day of Month
        \note must be valid for Month field
        \type integer
        \minimum 1
        \maximum 31
        \default 1
-  N9,  \field Month
+  N8,  \field Month
        \type integer
        \minimum 1
        \maximum 12
@@ -1423,19 +1423,19 @@ OS:SizingPeriod:DesignDay,
        \note   from the maximum wet-bulb temperature for each timestep in the day. (units = deltaC)
        \type object-list
        \object-list DayScheduleNames
-  N3,  \field Wetbulb or DewPoint at Maximum Dry-Bulb
+  N9,  \field Wetbulb or DewPoint at Maximum Dry-Bulb
        \note Wetbulb or dewpoint temperature coincident with the maximum temperature.
        \note Required only if field Humidity Condition Type is "Wetbulb", "Dewpoint",
        \note "WetBulbProfileMultiplierSchedule", "WetBulbProfileDifferenceSchedule",
        \note or "WetBulbProfileDefaultMultipliers"
        \type real
        \units C
-  N13, \field Humidity Ratio at Maximum Dry-Bulb
+  N10, \field Humidity Ratio at Maximum Dry-Bulb
        \note Humidity ratio coincident with the maximum temperature (constant humidity ratio throughout day).
        \note Required only if field Humidity Condition Type is "HumidityRatio".
        \type real
        \units kgWater/kgDryAir
-  N14, \field Enthalpy at Maximum Dry-Bulb
+  N11, \field Enthalpy at Maximum Dry-Bulb
        \note Enthalpy coincident with the maximum temperature.
        \note Required only if field Humidity Condition Type is "Enthalpy".
        \type real
@@ -1478,21 +1478,21 @@ OS:SizingPeriod:DesignDay,
        \note if Solar Model Indicator = Schedule, then diffuse schedule name (for day)
        \type object-list
        \object-list DayScheduleNames
-  N10, \field ASHRAE Clear Sky Optical Depth for Beam Irradiance
+  N12, \field ASHRAE Clear Sky Optical Depth for Beam Irradiance
        \units dimensionless
        \note Required if Solar Model Indicator = ASHRAETau or ASHRAETau2017
        \note ASHRAETau2017 solar model can be used with 2013 and 2017 HOF matching taub
        \minimum 0
        \maximum 1.2
        \default 0
-  N11, \field ASHRAE Clear Sky Optical Depth for Diffuse Irradiance
+  N13, \field ASHRAE Clear Sky Optical Depth for Diffuse Irradiance
        \units dimensionless
        \note required if solar model indicator = ashraetau or ashraetau2017
        \note ashraetau2017 solar model can be used with 2013 and 2017 hof matching taud
        \minimum 0
        \maximum 3
        \default 0
-  N12, \field Daily Wet-Bulb Temperature Range
+  N14, \field Daily Wet-Bulb Temperature Range
        \note Required only if Humidity Indicating Type = "WetbulbProfileMultiplierSchedule" or "WetBulbProfileDefaultMultipliers"
        \type real
        \units deltaC
