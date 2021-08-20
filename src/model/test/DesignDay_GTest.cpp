@@ -44,28 +44,14 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, DesignDay_DesignDay) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT(
-    {
-
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
-
-
+  ASSERT_EXIT({ exit(0); }, ::testing::ExitedWithCode(0), "");
 }
 
 // test setting and getting
-TEST_F(ModelFixture, DesignDay_SetGetFields) {
-
-}
+TEST_F(ModelFixture, DesignDay_SetGetFields) {}
 
 // test cloning it
-TEST_F(ModelFixture, DesignDay_Clone) {
-
-}
+TEST_F(ModelFixture, DesignDay_Clone) {}
 
 // check that remove works
-TEST_F(ModelFixture, DesignDay_Remove) {
-
-}
+TEST_F(ModelFixture, DesignDay_Remove) {}

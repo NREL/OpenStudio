@@ -321,7 +321,7 @@ namespace energyplus {
     if (i) {
       designDay.setMaximumNumberWarmupDays(i.get());
     }
-    
+
     // Begin Environment Reset Mode
     s = workspaceObject.getString(SizingPeriod_DesignDayFields::BeginEnvironmentResetMode);
     if (s) {
