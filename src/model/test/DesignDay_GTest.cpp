@@ -37,6 +37,8 @@
 
 #include "../DesignDay.hpp"
 #include "../DesignDay_Impl.hpp"
+#include "../ScheduleDay.hpp"
+#include "../ScheduleDay_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -44,14 +46,288 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, DesignDay_DesignDay) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT({ exit(0); }, ::testing::ExitedWithCode(0), "");
+  ASSERT_EXIT(
+    {
+      Model m;
+      DesignDay designDay(m);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  DesignDay designDay(m);
+
+  EXPECT_EQ(23, designDay.maximumDryBulbTemperature());
+  EXPECT_TRUE(designDay.isMaximumDryBulbTemperatureDefaulted());
+  EXPECT_EQ(0, designDay.dailyDryBulbTemperatureRange());
+  EXPECT_TRUE(designDay.isDailyDryBulbTemperatureRangeDefaulted());
+  EXPECT_EQ(31000, designDay.barometricPressure());
+  EXPECT_TRUE(designDay.isBarometricPressureDefaulted());
+  EXPECT_EQ(0, designDay.windSpeed());
+  EXPECT_TRUE(designDay.isWindSpeedDefaulted());
+  EXPECT_EQ(0, designDay.windDirection());
+  EXPECT_TRUE(designDay.isWindDirectionDefaulted());
+  EXPECT_EQ(0, designDay.skyClearness());
+  EXPECT_TRUE(designDay.isSkyClearnessDefaulted());
+  EXPECT_FALSE(designDay.rainIndicator());
+  EXPECT_TRUE(designDay.isRainIndicatorDefaulted());
+  EXPECT_FALSE(designDay.snowIndicator());
+  EXPECT_TRUE(designDay.isSnowIndicatorDefaulted());
+  EXPECT_EQ(1, designDay.dayOfMonth());
+  EXPECT_TRUE(designDay.isDayOfMonthDefaulted());
+  EXPECT_EQ(1, designDay.month());
+  EXPECT_TRUE(designDay.isMonthDefaulted());
+  EXPECT_EQ("SummerDesignDay", designDay.dayType());
+  EXPECT_TRUE(designDay.isDayTypeDefaulted());
+  EXPECT_FALSE(designDay.daylightSavingTimeIndicator());
+  EXPECT_TRUE(designDay.isDaylightSavingTimeIndicatorDefaulted());
+  EXPECT_EQ("WetBulb", designDay.humidityIndicatingType());
+  EXPECT_EQ("WetBulb", designDay.humidityConditionType());
+  EXPECT_TRUE(designDay.isHumidityIndicatingTypeDefaulted());
+  EXPECT_TRUE(designDay.isHumidityConditionTypeDefaulted());
+  EXPECT_FALSE(designDay.humidityIndicatingDaySchedule());
+  EXPECT_FALSE(designDay.humidityConditionDaySchedule());
+  ASSERT_TRUE(designDay.humidityIndicatingConditionsAtMaximumDryBulb());
+  EXPECT_EQ(23, designDay.humidityIndicatingConditionsAtMaximumDryBulb().get());
+  ASSERT_TRUE(designDay.wetBulbOrDewPointAtMaximumDryBulb());
+  EXPECT_EQ(23, designDay.wetBulbOrDewPointAtMaximumDryBulb().get());
+  EXPECT_FALSE(designDay.humidityRatioAtMaximumDryBulb());
+  EXPECT_FALSE(designDay.enthalpyAtMaximumDryBulb());
+  EXPECT_EQ("DefaultMultipliers", designDay.dryBulbTemperatureRangeModifierType());
+  EXPECT_TRUE(designDay.isDryBulbTemperatureRangeModifierTypeDefaulted());
+  EXPECT_FALSE(designDay.dryBulbTemperatureRangeModifierSchedule());
+  EXPECT_FALSE(designDay.dryBulbTemperatureRangeModifierDaySchedule());
+  EXPECT_EQ("ASHRAEClearSky", designDay.solarModelIndicator());
+  EXPECT_TRUE(designDay.isSolarModelIndicatorDefaulted());
+  EXPECT_FALSE(designDay.beamSolarDaySchedule());
+  EXPECT_FALSE(designDay.diffuseSolarDaySchedule());
+  EXPECT_EQ(0, designDay.ashraeTaub());
+  EXPECT_EQ(0, designDay.ashraeClearSkyOpticalDepthForBeamIrradiance());
+  EXPECT_TRUE(designDay.isAshraeTaubDefaulted());
+  EXPECT_TRUE(designDay.isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted());
+  EXPECT_EQ(0, designDay.ashraeTaud());
+  EXPECT_EQ(0, designDay.ashraeClearSkyOpticalDepthForDiffuseIrradiance());
+  EXPECT_TRUE(designDay.isAshraeTaudDefaulted());
+  EXPECT_TRUE(designDay.isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted());
+  EXPECT_FALSE(designDay.dailyWetBulbTemperatureRange());
+  EXPECT_FALSE(designDay.maximumNumberWarmupDays());
+  EXPECT_EQ("FullResetAtBeginEnvironment", designDay.beginEnvironmentResetMode());
+  EXPECT_TRUE(designDay.isBeginEnvironmentResetModeDefaulted());
 }
 
 // test setting and getting
-TEST_F(ModelFixture, DesignDay_SetGetFields) {}
+TEST_F(ModelFixture, DesignDay_SetGetFields) {
+  Model m;
+  DesignDay designDay(m);
+  ScheduleDay daySchedule(m);
+
+  EXPECT_TRUE(designDay.setMaximumDryBulbTemperature(1));
+  EXPECT_TRUE(designDay.setDailyDryBulbTemperatureRange(2));
+  EXPECT_TRUE(designDay.setBarometricPressure(100000));
+  EXPECT_TRUE(designDay.setWindSpeed(4));
+  EXPECT_TRUE(designDay.setWindDirection(5));
+  EXPECT_TRUE(designDay.setSkyClearness(0.5));
+  EXPECT_TRUE(designDay.setRainIndicator(true));
+  EXPECT_TRUE(designDay.setSnowIndicator(true));
+  EXPECT_TRUE(designDay.setDayOfMonth(7));
+  EXPECT_TRUE(designDay.setMonth(8));
+  EXPECT_TRUE(designDay.setDayType("Sunday"));
+  EXPECT_TRUE(designDay.setDaylightSavingTimeIndicator(true));
+  EXPECT_TRUE(designDay.setHumidityIndicatingType("DewPoint"));
+  EXPECT_TRUE(designDay.setHumidityConditionType("DewPoint"));
+  EXPECT_TRUE(designDay.setHumidityIndicatingDaySchedule(daySchedule));
+  EXPECT_TRUE(designDay.setHumidityConditionDaySchedule(daySchedule));
+  EXPECT_TRUE(designDay.setHumidityIndicatingConditionsAtMaximumDryBulb(9));
+  EXPECT_TRUE(designDay.setWetBulbOrDewPointAtMaximumDryBulb(9));
+  EXPECT_TRUE(designDay.setHumidityRatioAtMaximumDryBulb(10));
+  EXPECT_TRUE(designDay.setEnthalpyAtMaximumDryBulb(11));
+  EXPECT_TRUE(designDay.setDryBulbTemperatureRangeModifierType("MultiplierSchedule"));
+  EXPECT_TRUE(designDay.setDryBulbTemperatureRangeModifierSchedule(daySchedule));
+  EXPECT_TRUE(designDay.setDryBulbTemperatureRangeModifierDaySchedule(daySchedule));
+  EXPECT_TRUE(designDay.setSolarModelIndicator("ZhangHuang"));
+  EXPECT_TRUE(designDay.setBeamSolarDaySchedule(daySchedule));
+  EXPECT_TRUE(designDay.setDiffuseSolarDaySchedule(daySchedule));
+  EXPECT_TRUE(designDay.setAshraeTaub(0.6));
+  EXPECT_TRUE(designDay.setAshraeClearSkyOpticalDepthForBeamIrradiance(0.6));
+  EXPECT_TRUE(designDay.setAshraeTaud(0.7));
+  EXPECT_TRUE(designDay.setAshraeClearSkyOpticalDepthForDiffuseIrradiance(0.7));
+  EXPECT_TRUE(designDay.setDailyWetBulbTemperatureRange(14));
+  EXPECT_TRUE(designDay.setMaximumNumberWarmupDays(15));
+  EXPECT_TRUE(designDay.setBeginEnvironmentResetMode("SuppressAllBeginEnvironmentResets"));
+
+  EXPECT_EQ(1, designDay.maximumDryBulbTemperature());
+  EXPECT_FALSE(designDay.isMaximumDryBulbTemperatureDefaulted());
+  EXPECT_EQ(2, designDay.dailyDryBulbTemperatureRange());
+  EXPECT_FALSE(designDay.isDailyDryBulbTemperatureRangeDefaulted());
+  EXPECT_EQ(100000, designDay.barometricPressure());
+  EXPECT_FALSE(designDay.isBarometricPressureDefaulted());
+  EXPECT_EQ(4, designDay.windSpeed());
+  EXPECT_FALSE(designDay.isWindSpeedDefaulted());
+  EXPECT_EQ(5, designDay.windDirection());
+  EXPECT_FALSE(designDay.isWindDirectionDefaulted());
+  EXPECT_EQ(0.5, designDay.skyClearness());
+  EXPECT_FALSE(designDay.isSkyClearnessDefaulted());
+  EXPECT_TRUE(designDay.rainIndicator());
+  EXPECT_FALSE(designDay.isRainIndicatorDefaulted());
+  EXPECT_TRUE(designDay.snowIndicator());
+  EXPECT_FALSE(designDay.isSnowIndicatorDefaulted());
+  EXPECT_EQ(7, designDay.dayOfMonth());
+  EXPECT_FALSE(designDay.isDayOfMonthDefaulted());
+  EXPECT_EQ(8, designDay.month());
+  EXPECT_FALSE(designDay.isMonthDefaulted());
+  EXPECT_EQ("Sunday", designDay.dayType());
+  EXPECT_FALSE(designDay.isDayTypeDefaulted());
+  EXPECT_TRUE(designDay.daylightSavingTimeIndicator());
+  EXPECT_FALSE(designDay.isDaylightSavingTimeIndicatorDefaulted());
+  EXPECT_EQ("DewPoint", designDay.humidityIndicatingType());
+  EXPECT_EQ("DewPoint", designDay.humidityConditionType());
+  EXPECT_FALSE(designDay.isHumidityIndicatingTypeDefaulted());
+  EXPECT_FALSE(designDay.isHumidityConditionTypeDefaulted());
+  EXPECT_TRUE(designDay.humidityIndicatingDaySchedule());
+  EXPECT_TRUE(designDay.humidityConditionDaySchedule());
+  ASSERT_TRUE(designDay.humidityIndicatingConditionsAtMaximumDryBulb());
+  EXPECT_EQ(9, designDay.humidityIndicatingConditionsAtMaximumDryBulb().get());
+  ASSERT_TRUE(designDay.wetBulbOrDewPointAtMaximumDryBulb());
+  EXPECT_EQ(9, designDay.wetBulbOrDewPointAtMaximumDryBulb().get());
+  ASSERT_TRUE(designDay.humidityRatioAtMaximumDryBulb());
+  EXPECT_EQ(10, designDay.humidityRatioAtMaximumDryBulb().get());
+  ASSERT_TRUE(designDay.enthalpyAtMaximumDryBulb());
+  EXPECT_EQ(11, designDay.enthalpyAtMaximumDryBulb().get());
+  EXPECT_EQ("MultiplierSchedule", designDay.dryBulbTemperatureRangeModifierType());
+  EXPECT_FALSE(designDay.isDryBulbTemperatureRangeModifierTypeDefaulted());
+  EXPECT_TRUE(designDay.dryBulbTemperatureRangeModifierSchedule());
+  EXPECT_TRUE(designDay.dryBulbTemperatureRangeModifierDaySchedule());
+  EXPECT_EQ("ZhangHuang", designDay.solarModelIndicator());
+  EXPECT_FALSE(designDay.isSolarModelIndicatorDefaulted());
+  EXPECT_TRUE(designDay.beamSolarDaySchedule());
+  EXPECT_TRUE(designDay.diffuseSolarDaySchedule());
+  EXPECT_EQ(0.6, designDay.ashraeTaub());
+  EXPECT_EQ(0.6, designDay.ashraeClearSkyOpticalDepthForBeamIrradiance());
+  EXPECT_FALSE(designDay.isAshraeTaubDefaulted());
+  EXPECT_FALSE(designDay.isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted());
+  EXPECT_EQ(0.7, designDay.ashraeTaud());
+  EXPECT_EQ(0.7, designDay.ashraeClearSkyOpticalDepthForDiffuseIrradiance());
+  EXPECT_FALSE(designDay.isAshraeTaudDefaulted());
+  EXPECT_FALSE(designDay.isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted());
+  ASSERT_TRUE(designDay.dailyWetBulbTemperatureRange());
+  EXPECT_EQ(14, designDay.dailyWetBulbTemperatureRange().get());
+  ASSERT_TRUE(designDay.maximumNumberWarmupDays());
+  EXPECT_EQ(15, designDay.maximumNumberWarmupDays().get());
+  EXPECT_EQ("SuppressAllBeginEnvironmentResets", designDay.beginEnvironmentResetMode());
+  EXPECT_FALSE(designDay.isBeginEnvironmentResetModeDefaulted());
+
+  designDay.resetMaximumDryBulbTemperature();
+  designDay.resetDailyDryBulbTemperatureRange();
+  designDay.resetBarometricPressure();
+  designDay.resetWindSpeed();
+  designDay.resetWindDirection();
+  designDay.resetSkyClearness();
+  designDay.resetRainIndicator();
+  designDay.resetSnowIndicator();
+  designDay.resetDayOfMonth();
+  designDay.resetMonth();
+  designDay.resetDayType();
+  designDay.resetDaylightSavingTimeIndicator();
+  designDay.resetHumidityIndicatingType();
+  designDay.resetHumidityConditionType();
+  designDay.resetHumidityIndicatingDaySchedule();
+  designDay.resetHumidityConditionDaySchedule();
+  designDay.resetHumidityIndicatingConditionsAtMaximumDryBulb();
+  designDay.resetWetBulbOrDewPointAtMaximumDryBulb();
+  designDay.resetHumidityRatioAtMaximumDryBulb();
+  designDay.resetEnthalpyAtMaximumDryBulb();
+  designDay.resetDryBulbTemperatureRangeModifierType();
+  designDay.resetDryBulbTemperatureRangeModifierSchedule();
+  designDay.resetDryBulbTemperatureRangeModifierDaySchedule();
+  designDay.resetSolarModelIndicator();
+  designDay.resetBeamSolarDaySchedule();
+  designDay.resetDiffuseSolarDaySchedule();
+  designDay.resetAshraeTaub();
+  designDay.resetAshraeClearSkyOpticalDepthForBeamIrradiance();
+  designDay.resetAshraeTaud();
+  designDay.resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
+  designDay.resetDailyWetBulbTemperatureRange();
+  designDay.resetMaximumNumberWarmupDays();
+  designDay.resetBeginEnvironmentResetMode();
+
+  EXPECT_EQ(23, designDay.maximumDryBulbTemperature());
+  EXPECT_TRUE(designDay.isMaximumDryBulbTemperatureDefaulted());
+  EXPECT_EQ(0, designDay.dailyDryBulbTemperatureRange());
+  EXPECT_TRUE(designDay.isDailyDryBulbTemperatureRangeDefaulted());
+  EXPECT_EQ(31000, designDay.barometricPressure());
+  EXPECT_TRUE(designDay.isBarometricPressureDefaulted());
+  EXPECT_EQ(0, designDay.windSpeed());
+  EXPECT_TRUE(designDay.isWindSpeedDefaulted());
+  EXPECT_EQ(0, designDay.windDirection());
+  EXPECT_TRUE(designDay.isWindDirectionDefaulted());
+  EXPECT_EQ(0, designDay.skyClearness());
+  EXPECT_TRUE(designDay.isSkyClearnessDefaulted());
+  EXPECT_FALSE(designDay.rainIndicator());
+  EXPECT_TRUE(designDay.isRainIndicatorDefaulted());
+  EXPECT_FALSE(designDay.snowIndicator());
+  EXPECT_TRUE(designDay.isSnowIndicatorDefaulted());
+  EXPECT_EQ(1, designDay.dayOfMonth());
+  EXPECT_TRUE(designDay.isDayOfMonthDefaulted());
+  EXPECT_EQ(1, designDay.month());
+  EXPECT_TRUE(designDay.isMonthDefaulted());
+  EXPECT_EQ("SummerDesignDay", designDay.dayType());
+  EXPECT_TRUE(designDay.isDayTypeDefaulted());
+  EXPECT_FALSE(designDay.daylightSavingTimeIndicator());
+  EXPECT_TRUE(designDay.isDaylightSavingTimeIndicatorDefaulted());
+  EXPECT_EQ("WetBulb", designDay.humidityIndicatingType());
+  EXPECT_EQ("WetBulb", designDay.humidityConditionType());
+  EXPECT_TRUE(designDay.isHumidityIndicatingTypeDefaulted());
+  EXPECT_TRUE(designDay.isHumidityConditionTypeDefaulted());
+  EXPECT_FALSE(designDay.humidityIndicatingDaySchedule());
+  EXPECT_FALSE(designDay.humidityConditionDaySchedule());
+  EXPECT_FALSE(designDay.humidityIndicatingConditionsAtMaximumDryBulb());
+  EXPECT_FALSE(designDay.wetBulbOrDewPointAtMaximumDryBulb());
+  EXPECT_FALSE(designDay.humidityRatioAtMaximumDryBulb());
+  EXPECT_FALSE(designDay.enthalpyAtMaximumDryBulb());
+  EXPECT_EQ("DefaultMultipliers", designDay.dryBulbTemperatureRangeModifierType());
+  EXPECT_TRUE(designDay.isDryBulbTemperatureRangeModifierTypeDefaulted());
+  EXPECT_FALSE(designDay.dryBulbTemperatureRangeModifierSchedule());
+  EXPECT_FALSE(designDay.dryBulbTemperatureRangeModifierDaySchedule());
+  EXPECT_EQ("ASHRAEClearSky", designDay.solarModelIndicator());
+  EXPECT_TRUE(designDay.isSolarModelIndicatorDefaulted());
+  EXPECT_FALSE(designDay.beamSolarDaySchedule());
+  EXPECT_FALSE(designDay.diffuseSolarDaySchedule());
+  EXPECT_EQ(0, designDay.ashraeTaub());
+  EXPECT_EQ(0, designDay.ashraeClearSkyOpticalDepthForBeamIrradiance());
+  EXPECT_TRUE(designDay.isAshraeTaubDefaulted());
+  EXPECT_TRUE(designDay.isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted());
+  EXPECT_EQ(0, designDay.ashraeTaud());
+  EXPECT_EQ(0, designDay.ashraeClearSkyOpticalDepthForDiffuseIrradiance());
+  EXPECT_TRUE(designDay.isAshraeTaudDefaulted());
+  EXPECT_TRUE(designDay.isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted());
+  EXPECT_FALSE(designDay.dailyWetBulbTemperatureRange());
+  EXPECT_FALSE(designDay.maximumNumberWarmupDays());
+  EXPECT_EQ("FullResetAtBeginEnvironment", designDay.beginEnvironmentResetMode());
+  EXPECT_TRUE(designDay.isBeginEnvironmentResetModeDefaulted());
+}
 
 // test cloning it
-TEST_F(ModelFixture, DesignDay_Clone) {}
+TEST_F(ModelFixture, DesignDay_Clone) {
+  Model m;
+  DesignDay designDay(m);
+
+  designDay.setSnowIndicator(true);
+
+  DesignDay designDayClone = designDay.clone(m).cast<DesignDay>();
+  EXPECT_TRUE(designDayClone.snowIndicator());
+
+  Model m2;
+  DesignDay designDayClone2 = designDay.clone(m2).cast<DesignDay>();
+  EXPECT_TRUE(designDay.snowIndicator());
+}
 
 // check that remove works
-TEST_F(ModelFixture, DesignDay_Remove) {}
+TEST_F(ModelFixture, DesignDay_Remove) {
+  Model m;
+  auto size = m.modelObjects().size();
+  DesignDay designDay(m);
+  EXPECT_EQ(size + 1, m.modelObjects().size());
+  EXPECT_FALSE(designDay.remove().empty());
+  EXPECT_EQ(size, m.modelObjects().size());
+}
