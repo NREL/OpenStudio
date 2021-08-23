@@ -29,11 +29,17 @@
 
 #include <gtest/gtest.h>
 #include "BCLFixture.hpp"
-#include "../../core/PathHelpers.hpp"
-
 #include "../BCLMeasure.hpp"
+#include "../BCLFileReference.hpp"
+#include "../../core/ApplicationPathHelpers.hpp"
+#include "../../core/PathHelpers.hpp"
+#include "utilities/core/Filesystem.hpp"
+
+#include <algorithm>
 
 using namespace openstudio;
+
+namespace fs = openstudio::filesystem;
 
 TEST_F(BCLFixture, BCLMeasure) {
   openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/");
@@ -130,7 +136,8 @@ TEST_F(BCLFixture, BCLMeasure) {
 }
 
 TEST_F(BCLFixture, BCLMeasure_CTor) {
-  openstudio::path dir = openstudio::filesystem::system_complete(toPath("./TestMeasure/"));
+
+  openstudio::path dir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing/TestMeasure/"));
   if (exists(dir)) {
     removeDirectory(dir);
   }
@@ -218,3 +225,186 @@ TEST_F(BCLFixture, PatApplicationMeasures)
 
 }
 */
+
+struct TestPath
+{
+  TestPath(fs::path t_path, bool t_allowed) : path(std::move(t_path)), allowed(t_allowed){};
+  fs::path path;
+  bool allowed;
+};
+
+std::vector<TestPath> generateTestMeasurePaths() {
+
+  std::vector<TestPath> testPaths;
+
+  std::vector<std::string> approvedRootFiles{
+    "measure.rb", "README.md", "README.md.erb", "LICENSE.md",
+    // ".gitkeep"      // assuming .gitkeep outside a subfolder makes zero sense...
+    // "measure.xml"   // not included in itself!
+  };
+
+  std::vector<std::string> approved_folders{"docs", "resources", "tests"};
+
+  std::vector<std::string> ignoredPaths{"root_file.txt", "tests/output/output.txt", "subfolder/subfolder.txt", ".git/index",
+                                        ".hidden_folder/file.txt"};
+
+  testPaths.reserve(approvedRootFiles.size() + 2 * approved_folders.size() + ignoredPaths.size());
+  for (const auto& s : approvedRootFiles) {
+    testPaths.emplace_back(fs::path{s}, true);
+  }
+
+  for (const auto& s : approved_folders) {
+    fs::path file(s);
+    file.replace_extension(".rb");
+    testPaths.emplace_back(fs::path{s} / file, true);
+    testPaths.emplace_back(fs::path(s) / "subfolder" / "subfolder_file.txt", true);
+  }
+
+  for (const auto& s : ignoredPaths) {
+    testPaths.emplace_back(fs::path{s}, false);
+  }
+
+  return testPaths;
+}
+
+void createTestMeasureDirectory(const fs::path& srcDir, const std::vector<TestPath>& testPaths) {
+
+  auto absolutePath = fs::weakly_canonical(srcDir);
+  // fs::remove_all(srcDir);
+  fs::create_directories(absolutePath);
+
+  for (const auto& testPath : testPaths) {
+    fs::path p = fs::weakly_canonical(absolutePath / testPath.path);
+    if (!fs::exists(p)) {
+      fs::create_directories(p.parent_path());
+      std::ofstream(p.string()) << p.string();
+    } else {
+      std::cout << p << " already exists\n";
+    }
+  }
+}
+
+TEST_F(BCLFixture, 4156_TestRecursive) {
+
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path srcDir = testDir / toPath("TestMeasureRecursive");
+  openstudio::path destDir = testDir / toPath("TestMeasureRecursiveClone");
+
+  for (const auto& dir : {srcDir, destDir}) {
+    if (exists(dir)) {
+      removeDirectory(dir);
+    }
+    ASSERT_FALSE(fs::exists(dir));
+  }
+
+  try {
+    BCLMeasure measure("Test Recursive Measure", "TestRecursiveMeasure", srcDir, "Envelope.Fenestration", MeasureType::ModelMeasure, "Description",
+                       "Modeler Description");
+  } catch (const std::exception& e) {
+    LOG_FREE(Error, "BCLFixture", "exception during measure creation: " << e.what());
+    ASSERT_TRUE(false);
+  }
+  ASSERT_TRUE(exists(srcDir));
+
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
+  ASSERT_TRUE(measure);
+  size_t numFiles = measure->files().size();
+
+  // │   └── ./docs/.gitkeep
+  // ├── ./LICENSE.md
+  // ├── ./measure.rb
+  // ├── ./measure.xml
+  // ├── ./README.md.erb
+  // └── ./tests
+  //     ├── ./tests/a_test_measure_test.rb
+  //     └── ./tests/example_model.osm
+  std::vector<fs::path> expectedInitialPaths = {
+    "docs/.gitkeep", "LICENSE.md", "measure.rb", "README.md.erb", "tests/a_test_measure_test.rb", "tests/example_model.osm",
+    // "measure.xml": it's not included in itself!
+  };
+  EXPECT_EQ(numFiles, expectedInitialPaths.size());
+
+  std::vector<TestPath> testPaths = generateTestMeasurePaths();
+  EXPECT_GT(testPaths.size(), 5);
+
+  size_t addedFiles = std::count_if(testPaths.cbegin(), testPaths.cend(), [&expectedInitialPaths](const TestPath& t) {
+    return t.allowed && (std::find(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), t.path) == expectedInitialPaths.cend());
+  });
+
+  // This will add a few files if not existing, including some that shouldn't be allowed
+  createTestMeasureDirectory(srcDir, testPaths);
+
+  // Trigger update of the BCLXML via scanning of the new files
+  EXPECT_TRUE(measure->checkForUpdatesFiles());
+  EXPECT_TRUE(measure->checkForUpdatesXML());
+  auto files = measure->files();
+  EXPECT_EQ(numFiles + 4, files.size());
+  EXPECT_EQ(numFiles + addedFiles, files.size());
+
+  auto checkError = [](const std::vector<fs::path>& paths, std::string_view headerEnd) {
+    std::stringstream ss;
+    if (!paths.empty()) {
+      ss << "There are " << paths.size() << " " << headerEnd << ":\n";
+      for (const auto& p : paths) {
+        ss << "* " << p << '\n';
+      }
+    }
+    EXPECT_TRUE(paths.empty()) << ss.str();
+  };
+
+  {
+    std::vector<fs::path> missing;
+    std::vector<fs::path> extra;
+    for (const auto& testPath : testPaths) {
+      const auto& p = testPath.path;
+      if (std::find_if(files.cbegin(), files.cend(),
+                       [&p, &srcDir](const BCLFileReference& fileRef) {
+                         // fileRef.path() is an absolute path, while p is a relative one
+                         return fileRef.path() == srcDir / p;
+                       })
+          == files.cend()) {
+        // EXPECT_FALSE(testPath.allowed) << p << " doesn't exist in the XML when it should";
+        if (testPath.allowed) {
+          missing.push_back(p);
+        }
+      } else {
+        // EXPECT_TRUE(testPath.allowed) << p << " shouldn't exist in the XML";
+        if (!testPath.allowed) {
+          extra.push_back(p);
+        }
+      }
+    }
+    checkError(missing, "missing files in the XML");
+    checkError(extra, "extra files in the XML");
+  }
+
+  boost::optional<BCLMeasure> measure2 = measure->clone(destDir);
+  ASSERT_TRUE(measure2);
+  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_FALSE(measure2->checkForUpdatesXML());
+
+  // EXPECT_TRUE(copyDir(srcDir, destDir));
+  files = measure2->files();
+  EXPECT_EQ(numFiles + addedFiles, files.size());
+
+  {
+    std::vector<fs::path> missing;
+    std::vector<fs::path> extra;
+    for (const auto& testPath : testPaths) {
+      fs::path p = fs::weakly_canonical(destDir / testPath.path);
+      if (testPath.allowed) {
+        // EXPECT_TRUE(fs::exists(p)) << p << " doesn't exist in the cloned Dir";
+        if (!fs::exists(p)) {
+          missing.push_back(p);
+        }
+      } else {
+        // EXPECT_FALSE(fs::exists(p)) << p << " shouldn't exist in the cloned Dir";
+        if (fs::exists(p)) {
+          extra.push_back(p);
+        }
+      }
+    }
+    checkError(missing, "missing files in the cloned Dir");
+    checkError(extra, "extra files in the cloned Dir");
+  }
+}
