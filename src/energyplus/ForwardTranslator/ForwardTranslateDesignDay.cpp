@@ -102,7 +102,7 @@ namespace energyplus {
     }
 
     // Wetbulb or DewPoint at Maximum Dry-Bulb
-    if (istringEqual(humidityConditionType, "Wetbulb") || istringEqual(humidityConditionType, "Dewpoint")
+    if (istringEqual(humidityConditionType, "WetBulb") || istringEqual(humidityConditionType, "DewPoint")
         || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
         || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
         || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
