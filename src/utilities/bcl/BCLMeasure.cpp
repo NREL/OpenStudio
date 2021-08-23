@@ -791,20 +791,13 @@ bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const Me
       boost::regex re;
 
       if (oldMeasureType != newMeasureType) {
-        // TODO: JM 2018-11-06 boost::replace_all should work but I'm using GCC-7 to build the pre update_depends branch
-        // so boost was compiled with an older GCC (there was ABI compatibility breakage in between)
-        // boost::replace_all(fileString, oldMeasureType.valueName(), newMeasureType.valueName());
-        re.set_expression(oldMeasureType.valueName());
-        fileString = boost::regex_replace(fileString, re, newMeasureType.valueName());
+        boost::replace_all(fileString, oldMeasureType.valueName(), newMeasureType.valueName());
       }
 
       if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName) {
         // DLM: might also want to check that oldClassName is greater than 3 characters long?
         // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?
-        // TODO: same as above
-        // boost::replace_all(fileString, oldClassName, newClassName);
-        re.set_expression(oldClassName);
-        fileString = boost::regex_replace(fileString, re, newClassName);
+        boost::replace_all(fileString, oldClassName, newClassName);
       }
 
       // Note JM 2018-11-06: Use the iterator overload of regex_replace for inplace replacement? Actually don't.
@@ -928,12 +921,18 @@ bool BCLMeasure::checkForUpdatesFiles() {
 
   std::vector<BCLFileReference> filesToRemove;
   std::vector<BCLFileReference> filesToAdd;
-  for (BCLFileReference file : m_bclXML.files()) {
+
+  // For all files we have on reference in the measure.xml
+  for (BCLFileReference& file : m_bclXML.files()) {
     std::string filename = file.fileName();
+
+    // If the file has been deleted from disk, mark it for removal
     if (!exists(file.path())) {
       result = true;
       // what if this is the measure.rb file?
       filesToRemove.push_back(file);
+
+      // Otherwise, if it's to be ignored
     } else if (filename.empty() || boost::starts_with(filename, ".")) {
       if (filename == ".gitkeep") {
         // allow this file
@@ -941,6 +940,8 @@ bool BCLMeasure::checkForUpdatesFiles() {
         result = true;
         filesToRemove.push_back(file);
       }
+
+      // otherwise, compute new checksum, and if not the same: mark it for addition
     } else if (file.checkForUpdate()) {
       result = true;
       filesToAdd.push_back(file);
@@ -952,16 +953,16 @@ bool BCLMeasure::checkForUpdatesFiles() {
   openstudio::path ignoreDir = srcDir / "output";
 
   if (openstudio::filesystem::is_directory(srcDir)) {
+
+    // TODO: The code below seems to be assuming that recursive_directory_files is called since it tries to exclude output/*** files
     for (const auto& file : openstudio::filesystem::directory_files(srcDir)) {
       openstudio::path srcItemPath = srcDir / file;
       openstudio::path parentPath = srcItemPath.parent_path();
-      bool ignore = false;
 
       std::string filename = toString(file.filename());
-      if (filename.empty() || boost::starts_with(filename, ".")) {
-        ignore = true;
-      }
+      bool ignore = (filename.empty() || boost::starts_with(filename, "."));
 
+      // This will check back up to the root (C:\ or /)... It's missing a condition `parentPath != srcDir`
       while (!ignore && !parentPath.empty()) {
         if (parentPath == ignoreDir) {
           ignore = true;
@@ -1104,6 +1105,8 @@ bool BCLMeasure::save() const {
 }
 
 boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) const {
+
+  // The logic here is weird.
   if (openstudio::filesystem::exists(newDir)) {
     if (!isEmptyDirectory(newDir)) {
       return boost::none;
