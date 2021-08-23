@@ -408,3 +408,50 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
     checkError(extra, "extra files in the cloned Dir");
   }
 }
+
+TEST_F(BCLFixture, TestIgnoredSubDirectoryLogic) {
+
+  auto isInIgnoredSubDirectory = [](const fs::path& relativeFilePath, const fs::path& measureDir,
+                                    const std::vector<fs::path>& ignoredSubFolders = {}) {
+    fs::path srcItemPath = measureDir / relativeFilePath;
+    auto parentPath = srcItemPath.parent_path();
+    std::string filename = toString(relativeFilePath.filename());
+    bool ignore = (filename.empty() || boost::starts_with(filename, "."));
+
+    // This will check back up to the root (C:\ or /)... It's missing a condition `parentPath != srcDir`
+    while (!ignore && !parentPath.empty()) {
+      if (std::find_if(ignoredSubFolders.begin(), ignoredSubFolders.end(),
+                       [&measureDir, &parentPath](const auto& subFolderPath) {
+                         auto fullSubFolderPath = measureDir / subFolderPath;
+                         return parentPath == fullSubFolderPath;
+                       })
+          != ignoredSubFolders.end()) {
+        ignore = true;
+        break;
+      }
+      parentPath = parentPath.parent_path();
+
+      // I shouldn't go above the measure directory
+      // fs::equivalent needs both path to exist, they don't here
+      // EXPECT_FALSE(fs::equivalent(parentPath, measureDir / ".."));
+      EXPECT_NE(parentPath, measureDir.parent_path().parent_path())
+        << "For relativeFilePath = " << relativeFilePath << ", measureDir = " << measureDir;
+    }
+
+    return ignore;
+  };
+
+  {
+    // relativeFilePath, measureDir, expectIgnored
+    std::vector<std::tuple<fs::path, fs::path, bool>> tests = {{"tests/myfile.txt", "/usr/local/mymeasure", false},
+                                                               {"tests/myfile.txt", "/usr/local/output/something/mymeasure", false},
+                                                               {"tests/output/myfile.txt", "/usr/local/mymeasure", true},
+                                                               {"docs/myfile.txt", "/usr/local/mymeasure", false}};
+
+    std::vector<fs::path> ignoredSubFolders{"docs/", "tests/output"};
+
+    for (auto& [relativeFilePath, measureDir, expectedIgnored] : tests) {
+      EXPECT_EQ(expectedIgnored, isInIgnoredSubDirectory(relativeFilePath, measureDir, ignoredSubFolders));
+    }
+  }
+}
