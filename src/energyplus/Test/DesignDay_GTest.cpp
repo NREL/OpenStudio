@@ -58,13 +58,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignDay) {
 
   ScheduleDay humidityConditionDaySchedule(m);
   humidityConditionDaySchedule.setName("Humidity Condition Day Schedule");
-  
+
   ScheduleDay dryBulbTemperatureRangeModifierDaySchedule(m);
   dryBulbTemperatureRangeModifierDaySchedule.setName("Dry Bulb Temperature Range Modifier Day Schedule");
 
   ScheduleDay beamSolarDaySchedule(m);
   beamSolarDaySchedule.setName("Beam Solar Day Schedule");
-  
+
   ScheduleDay diffuseSolarDaySchedule(m);
   diffuseSolarDaySchedule.setName("Diffuse Solar Day Schedule");
 
@@ -105,7 +105,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignDay) {
   WorkspaceObjectVector idf_dds(w.getObjectsByType(IddObjectType::SizingPeriod_DesignDay));
   EXPECT_EQ(1u, idf_dds.size());
   WorkspaceObject idf_dd(idf_dds[0]);
-  
+
   EXPECT_EQ(8, idf_dd.getInt(SizingPeriod_DesignDayFields::Month, false).get());
   EXPECT_EQ(7, idf_dd.getInt(SizingPeriod_DesignDayFields::DayofMonth, false).get());
   EXPECT_EQ("Sunday", idf_dd.getString(SizingPeriod_DesignDayFields::DayType, false).get());
@@ -145,16 +145,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignDay) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_DesignDay) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
-  
+
   openstudio::IdfObject idfObject(openstudio::IddObjectType::SizingPeriod_DesignDay);
   idfObject.setString(SizingPeriod_DesignDayFields::Name, "Design Day");
-  
+
   openstudio::WorkspaceObject epDD = workspace.addObject(idfObject).get();
-  
+
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
-  
+
   std::vector<DesignDay> designDays = model.getModelObjects<DesignDay>();
   ASSERT_EQ(1u, designDays.size());
   DesignDay designDay = designDays[0];
