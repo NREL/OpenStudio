@@ -1450,11 +1450,19 @@ RunPeriod,
        \key Yes
        \key No
        \default Yes
-  A8;  \field Treat Weather as Actual
+  A8,  \field Treat Weather as Actual
        \type choice
        \key Yes
        \key No
        \default No
+  A9; \field First Hour Interpolation Starting Values
+       \note When the weather data timestep is longer than the simulation timestep, weather data is interpolated. For the first hour of the
+       \note simulation, this field specifies which values from the first day of the run period to use as the interpolation starting point.
+       \note This same interpolation will be used for repeated warmup days.
+       \type choice
+       \key Hour1
+       \key Hour24
+       \default Hour24
 
 RunPeriodControl:SpecialDays,
      \min-fields 4
@@ -11229,9 +11237,11 @@ People,
        \begin-extensible
 
 ComfortViewFactorAngles,
-       \memo Used to specify radiant view factors for thermal comfort calculations.
-       \extensible:2
-       \max-fields 42
+       \memo Note that the following angle factor fractions must sum up to 1.0
+       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+       \memo The number of surfaces can be expanded beyond 100, if necessary, by adding more
+       \memo groups to the end of the list.
+       \max-fields 202
   A1 , \field Name
        \type alpha
        \reference AllHeatTranAngFacNames
@@ -13874,10 +13884,11 @@ AirflowNetwork:MultiZone:ReferenceCrackConditions,
       \reference ReferenceCrackConditions
       \note Enter a unique name for this object.
  N1 , \field Reference Temperature
+      \required-field
       \type real
       \units C
-      \default 20
       \note Enter the reference temperature under which the surface crack data were obtained.
+      \note Suggested value 20C.
  N2 , \field Reference Barometric Pressure
       \type real
       \units Pa
@@ -27388,6 +27399,7 @@ AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \minimum 0.0
        \maximum 1.0
        \autosizable
+       \note When set to autosize, the calculated air flow is determined based on the System Outdoor Air Method used in the air loop's Sizing:System object.
   A3,  \field Supply Air Inlet Node Name
        \type node
   A4,  \field Secondary Air Inlet Node Name
@@ -27463,6 +27475,7 @@ AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \minimum 0.0
        \maximum 1.0
        \autosizable
+       \note When set to autosize, the calculated air flow is determined based on the System Outdoor Air Method used in the air loop's Sizing:System object.
   N4,  \field Fan On Flow Fraction
        \required-field
        \type real
@@ -46168,7 +46181,8 @@ FluidCooler:TwoSpeed,
 GroundHeatExchanger:System,
         \memo Models vertical ground heat exchangers systems using the response factor approach
         \memo developed by Eskilson. Response factors are calculated using a finite line source
-        \memo model assuming uniform heat flux at the borehole wall.
+        \memo model assuming uniform heat flux at the borehole wall if UHFcalc is specified,
+        \memo or uniform borehole wall temperature if UBHWTcalc is specified.
         \extensible:1
         \min-fields 9
   A1,   \field Name
@@ -46215,10 +46229,15 @@ GroundHeatExchanger:System,
   A6,   \field GHE:Vertical:ResponseFactors Object Name
         \type object-list
         \object-list GroundHeatExchangerVerticalResponseFactorNames
-  A7,   \field GHE:Vertical:Array Object Name
+  A7,   \field g-Function Calculation Method
+        \type choice
+        \key UHFcalc
+        \key UBHWTcalc
+        \default UHFcalc
+  A8,   \field GHE:Vertical:Array Object Name
         \type object-list
         \object-list GroundHeatExchangerVerticalArrayNames
-  A8;   \field GHE:Vertical:Single Object Name 1
+  A9;   \field GHE:Vertical:Single Object Name 1
         \begin-extensible
         \type object-list
         \object-list GroundHeatExchangerVerticalSingleNames
@@ -59083,6 +59102,7 @@ ComponentCost:LineItem,
        \key General
        \key Construction
        \key Coil:DX
+       \key Coil:Cooling:DX
        \key Coil:Cooling:DX:SingleSpeed
        \key Coil:Heating:Fuel
        \key Chiller:Electric
