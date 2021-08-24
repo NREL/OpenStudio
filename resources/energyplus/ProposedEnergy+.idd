@@ -37759,17 +37759,19 @@ AirConditioner:VariableRefrigerantFlow,
        \note Enter the coefficient of performance at rated conditions or leave blank to use default.
        \note COP includes compressor and condenser fan electrical energy input
        \note COP does not include supply fan heat or supply fan electric power input
-  N3 , \field Minimum Outdoor Temperature in Cooling Mode
+  N3 , \field Minimum Condenser Inlet Node Temperature in Cooling Mode
        \type real
        \units C
        \default -6.0
-       \note Enter the minimum outdoor temperature allowed for cooling operation.
+       \note For cooling mode operation, enter the minimum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or minimum inlet water temperature for water-cooled units.
        \note Cooling is disabled below this temperature.
-  N4 , \field Maximum Outdoor Temperature in Cooling Mode
+  N4 , \field Maximum Condenser Inlet Node Temperature in Cooling Mode
        \type real
        \units C
        \default 43.0
-       \note Enter the maximum outdoor temperature allowed for cooling operation.
+       \note For cooling mode operation, enter the maximum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or maximum inlet water temperature for water-cooled units.
        \note Cooling is disabled above this temperature.
   A3 , \field Cooling Capacity Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
@@ -37863,16 +37865,20 @@ AirConditioner:VariableRefrigerantFlow,
        \note COP includes compressor and condenser fan electrical energy input
        \note COP does not include supply fan heat or supply fan electrical energy input
        \default 3.4
-  N8 , \field Minimum Outdoor Temperature in Heating Mode
+  N8 , \field Minimum Condenser Inlet Node Temperature in Heating Mode
        \type real
        \units C
        \default -20.0
-       \note Enter the minimum outdoor temperature allowed for heating operation.
-  N9 , \field Maximum Outdoor Temperature in Heating Mode
+       \note For heating mode operation, enter the minimum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or minimum inlet water temperature for water-cooled units.
+       \note Heating is disabled below this temperature.
+  N9 , \field Maximum Condenser Inlet Node Temperature in Heating Mode
        \type real
        \units C
        \default 16.0
-       \note Enter the maximum outdoor temperature allowed for heating operation.
+       \note For heating mode operation, enter the maximum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or maximum inlet water temperature for water-cooled units.
+       \note Heating is disabled below this temperature.
   A13, \field Heating Capacity Ratio Modifier Function of Low Temperature Curve Name
        \type object-list
        \object-list BivariateFunctions
@@ -38183,16 +38189,18 @@ AirConditioner:VariableRefrigerantFlow,
        \key OtherFuel1
        \key OtherFuel2
        \default Electricity
-  N29, \field Minimum Outdoor Temperature in Heat Recovery Mode
+  N29, \field Minimum Condenser Inlet Node Temperature in Heat Recovery Mode
        \type real
        \units C
-       \note The minimum outdoor temperature below which heat
-       \note recovery mode will not operate.
-  N30, \field Maximum Outdoor Temperature in Heat Recovery Mode
+       \note For heat recovery mode operation, enter the minimum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or minimum inlet water temperature for water-cooled units.
+       \note Heat recovery is disabled below this temperature.
+  N30, \field Maximum Condenser Inlet Node Temperature in Heat Recovery Mode
        \type real
        \units C
-       \note The maximum outdoor temperature above which heat
-       \note recovery mode will not operate.
+       \note For heat recovery mode operation, enter the maximum inlet outdoor air dry-bulb temperature
+       \note for air-cooled units or maximum inlet water temperature for water-cooled units.
+       \note Heat recovery is disabled above this temperature.
   A40, \field Heat Recovery Cooling Capacity Modifier Curve Name
        \type object-list
        \object-list BivariateFunctions

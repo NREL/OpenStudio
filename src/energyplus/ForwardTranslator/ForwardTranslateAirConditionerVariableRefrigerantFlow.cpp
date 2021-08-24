@@ -96,16 +96,16 @@ namespace energyplus {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedCoolingCOP, value.get());
     }
 
-    // MinimumOutdoorTemperatureinCoolingMode
+    // MinimumCondenserInletNodeTemperatureinCoolingMode
 
     if ((value = modelObject.minimumOutdoorTemperatureinCoolingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinCoolingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumCondenserInletNodeTemperatureinCoolingMode, value.get());
     }
 
-    // MaximumOutdoorTemperatureinCoolingMode
+    // MaximumCondenserInletNodeTemperatureinCoolingMode
 
     if ((value = modelObject.maximumOutdoorTemperatureinCoolingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinCoolingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinCoolingMode, value.get());
     }
 
     // CoolingCapacityRatioModifierFunctionofLowTemperatureCurveName
@@ -214,16 +214,16 @@ namespace energyplus {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCOP, value.get());
     }
 
-    // MinimumOutdoorTemperatureinHeatingMode
+    // MinimumCondenserInletNodeTemperatureinHeatingMode
 
     if ((value = modelObject.minimumOutdoorTemperatureinHeatingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumCondenserInletNodeTemperatureinHeatingMode, value.get());
     }
 
-    // MaximumOutdoorTemperatureinHeatingMode
+    // MaximumCondenserInletNodeTemperatureinHeatingMode
 
     if ((value = modelObject.maximumOutdoorTemperatureinHeatingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinHeatingMode, value.get());
     }
 
     // HeatingCapacityRatioModifierFunctionofLowTemperatureCurveName
@@ -568,16 +568,16 @@ namespace energyplus {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::FuelType, s.get());
     }
 
-    // MinimumOutdoorTemperatureinHeatRecoveryMode
+    // MinimumCondenserInletNodeTemperatureinHeatRecoveryMode
 
     if ((value = modelObject.minimumOutdoorTemperatureinHeatRecoveryMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatRecoveryMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumCondenserInletNodeTemperatureinHeatRecoveryMode, value.get());
     }
 
-    // MaximumOutdoorTemperatureinHeatRecoveryMode
+    // MaximumTemperatureinHeatRecoveryMode
 
     if ((value = modelObject.maximumOutdoorTemperatureinHeatingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatRecoveryMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinHeatRecoveryMode, value.get());
     }
 
     // HeatRecoveryCoolingCapacityModifierCurveName
