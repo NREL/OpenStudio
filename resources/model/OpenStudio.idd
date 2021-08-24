@@ -548,6 +548,12 @@ OS:PerformancePrecisionTradeoffs,
       \minimum 0.002
       \maximum 0.1
       \default 0.002
+  A5; \field Use Representative Surfaces for Calculations
+      \note Automatically group surfaces with similar characteristics and perform relevant calculations only once for each group.
+      \type choice
+      \key Yes
+      \key No
+      \default No
 
 OS:Sizing:Parameters,
        \unique-object

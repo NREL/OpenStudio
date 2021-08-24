@@ -492,6 +492,7 @@ PerformancePrecisionTradeoffs,
       \key Mode05
       \key Mode06
       \key Mode07
+      \key Mode08
       \key Advanced
       \default Normal
   N1, \field MaxZoneTempDiff
@@ -501,13 +502,19 @@ PerformancePrecisionTradeoffs,
       \minimum 0.1
       \maximum 3.0
       \default 0.3
-  N2; \field MaxAllowedDelTemp
+  N2, \field MaxAllowedDelTemp
       \note Maximum surface temperature change before HVAC timestep is shortened.
       \note Only used when Override Mode is set to Advanced
       \type real
       \minimum 0.002
       \maximum 0.1
       \default 0.002
+  A4; \field Use Representative Surfaces for Calculations
+      \note Automatically group surfaces with similar characteristics and perform relevant calculations only once for each group.
+      \type choice
+      \key Yes
+      \key No
+      \default No
 
 Building,
        \memo Describes parameters that are used during the simulation

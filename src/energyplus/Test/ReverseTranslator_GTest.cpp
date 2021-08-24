@@ -708,6 +708,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
   idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
+  idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "Yes");
 
   openstudio::WorkspaceObject epPerformancePrecisionTradeoffs = workspace.addObject(idfObject).get();
 
@@ -725,6 +726,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.useRepresentativeSurfacesforCalculations());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
