@@ -762,8 +762,8 @@ ThreeUserData::ThreeUserData(const Json::Value& value) {
   Json::Value airLoopNames = value.get("airLoopHVACNames", Json::arrayValue);
   Json::Value airLoopHandles = value.get("airLoopHVACHandles", Json::arrayValue);
   Json::Value airLoopMaterialNames = value.get("airLoopHVACMaterialNames", Json::arrayValue);
-  OS_ASSERT(airLoopNames.size() == airLoopHandles.size());
-  OS_ASSERT(airLoopNames.size() == airLoopMaterialNames.size());
+  // OS_ASSERT(airLoopNames.size() == airLoopHandles.size());
+  // OS_ASSERT(airLoopNames.size() == airLoopMaterialNames.size());
   for (Json::ArrayIndex loopIdx = 0; loopIdx < airLoopNames.size(); ++loopIdx) {
     m_airLoopHVACNames.push_back(airLoopNames[loopIdx].asString());
     m_airLoopHVACHandles.push_back(airLoopHandles[loopIdx].asString());
