@@ -1,9 +1,17 @@
-!IDD_Version 9.5.0
+!IDD_Version 9.6.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
 ! The IDD defines the syntax and data model for each type of input "Object."
 ! Lines in EnergyPlus input files (and IDD) are limited to 500 characters.
+!
+!
+! Note on IDD Processing/Usage
+! ----------------------------
+! The IDD is converted to the epJSON schema and compiled into the EnergyPlus exe.
+! Any modification to this IDD will have no impact on EnergyPlus input processing
+! without rebuilding the exe.  Only the IDF Editor and possibly other third-party
+! tools read the IDD directly.
 !
 ! Object Description
 ! ------------------
@@ -170,14 +178,17 @@
 !                   appropriate message to the error file.
 !                   usage:  \obsolete New=>[New object name]
 !
-!  \extensible:<#>  This object is dynamically extensible -- meaning, if you
-!           change the IDD appropriately (if the object has a simple list
-!           structure -- just add items to the list arguments (i.e. BRANCH
-!           LIST). These will be automatically redimensioned and used during
-!           the simulation. <#> should be entered by the developer to signify
-!           how many of the last fields are needed to be extended (and EnergyPlus
-!           will attempt to auto-extend the object). The first field of the first
-!           instance of the extensible field set is marked with \begin-extensible.
+!  \extensible:<#>  This object is dynamically extensible -- meaning the input
+!                   object may be extended beyond the number of fields shown in
+!                   the IDD.  <#> signifies the size of the extensible field set.
+!                   The first field of the first instance of the extensible field
+!                   set is marked with \begin-extensible.  EnergyPlus will accept
+!                   an extensible object of any length as long as the extended
+!                   fields match the extensible field set size.  Note that the
+!                   classic windows IDF Editor limits objects to the number of
+!                   fields specified in the IDD. Editing the IDD enables IDF
+!                   Editor to read longer objects.  In the epJSON schema, each
+!                   extensible group is a named array. See Energy+.schema.epJSON
 !
 !  \begin-extensible See previous item, marks beginning of extensible fields in
 !                   an object.
@@ -393,7 +404,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 9.5
+      \default 9.6
 
 SimulationControl,
       \unique-object
@@ -5642,8 +5653,14 @@ GeometryTransform,
       \note Aspect ratio to transform to during run
 
 Zone,
-       \memo Defines a thermal zone of the building.
-  \format vertices
+       \memo Defines a thermal zone of the building. Every zone contains one or more Spaces.
+       \memo Space is an optional input. 
+       \memo If a Zone has no Space(s) specified in input then a default Space named <Zone Name> will be created.
+       \memo If some surfaces in a Zone are assigned to a space and some are not, then a default Space
+       \memo named <Zone Name>-Remainder will be created. 
+       \memo Input references to Space Names must have a matching Space object
+       \memo (default space names may not be referenced except in output variable keys).
+       \format vertices
   A1 , \field Name
        \required-field
        \type alpha
