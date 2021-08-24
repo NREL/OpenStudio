@@ -24770,7 +24770,8 @@ OS:Sizing:System,
        \type choice
        \default ZoneSum
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1SimplifiedProcedure
   N13, \field Zone Maximum Outdoor Air Fraction
        \type real
        \minimum> 0.0
@@ -24899,7 +24900,7 @@ OS:Sizing:System,
        \required-field
        \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
        \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
-  A12; \field Central Cooling Capacity Control Method
+  A12, \field Central Cooling Capacity Control Method
        \note Method used to control the coil's output
        \required-field
        \type choice
@@ -24907,6 +24908,15 @@ OS:Sizing:System,
        \key Bypass
        \key VT
        \key OnOff
+  N27; \field Occupant Diversity
+       \type real
+       \maximum 1.0
+       \minimum 0.0
+       \autosizable
+       \note The Occupant Diversity is used to determine a multi-zone system's outdoor air intake when the System Outdoor Air Method is 
+       \note Standard62.1VentilationRateProcedure or the Standard62.1SimplifiedProcedure. If set to be autosized, it will be calculated
+       \note using the information in the People objects assigned to each zone attached to this system/airloop.
+       \required-field
 
 OS:Sizing:Zone,
        \min-fields 20

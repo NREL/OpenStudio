@@ -22417,7 +22417,8 @@ Sizing:System,
   A8, \field System Outdoor Air Method
       \type choice
       \key ZoneSum
-      \key VentilationRateProcedure
+      \key Standard62.1VentilationRateProcedure
+      \key Standard62.1SimplifiedProcedure
       \default ZoneSum
  N20, \field Zone Maximum Outdoor Air Fraction
       \type real
@@ -22492,7 +22493,7 @@ Sizing:System,
       \minimum 0.0
       \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
- A11; \field Central Cooling Capacity Control Method
+ A11, \field Central Cooling Capacity Control Method
       \note Method used to control the coil's output
       \type choice
       \key VAV
@@ -22500,6 +22501,15 @@ Sizing:System,
       \key VT
       \key OnOff
       \default OnOff
+  N27; \field Occupant Diversity
+      \type real
+      \maximum 1.0
+      \minimum 0.0
+      \autosizable
+      \default autosize
+      \note The Occupant Diversity is used to determine a multi-zone system's outdoor air intake when the System Outdoor Air Method is 
+      \note Standard62.1VentilationRateProcedure or the Standard62.1SimplifiedProcedure. If set to be autosized, it will be calculated
+      \note using the information in the People objects assigned to each zone attached to this system/airloop.
 
 Sizing:Plant,
       \memo Specifies the input needed to autosize plant loop flow rates and equipment capacities.
@@ -29122,13 +29132,24 @@ Coil:Cooling:Water:DetailedGeometry,
   A7 , \field Condensate Collection Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
-  N17; \field Design Water Temperature Difference
+  N17, \field Design Water Temperature Difference
        \type real
        \units deltaC
        \minimum> 0.0
        \note This input field is optional. If specified, it is used for sizing the Design Water Flow Rate.
        \note If blank or omitted, the Loop Design Temperature Difference value specified in Sizing:Plant
        \note object is used for sizing the Design Water Flow Rate.
+  N18; \field Design Inlet Water Temperature
+       \type real
+       \units C
+       \autosizable
+       \default autosize
+       \minimum> 0
+       \note This input field is optional. If specified, it is used for sizing the coil Design Geomtery
+       \note Parameters. If autosized, the Design Loop Exit Temperature value specified in Sizing:Plant
+       \note object is used for sizing the coil Design Geomtery Parameters. If the autosized value is 
+       \note higher than the coil design outlet air temperature, then the design inlet water temperature 
+       \note value is reset to coil design outlet air temperature minus 5.0 DeltaC
 
 Coil:Cooling:DX,
        \memo New general DX cooling coil supporting on or more speeds and one or or operating  modes.

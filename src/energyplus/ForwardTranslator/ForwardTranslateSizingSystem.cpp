@@ -305,6 +305,14 @@ namespace energyplus {
       idfObject.setString(Sizing_SystemFields::CentralCoolingCapacityControlMethod, s.get());
     }
 
+    // OccupantDiversity
+    value = modelObject.occupantDiversity();
+    if (modelObject.isOccupantDiversityAutosized()) {
+      idfObject.setString(Sizing_SystemFields::OccupantDiversity, "Autosize");
+    } else if (value) {
+      idfObject.setDouble(Sizing_SystemFields::OccupantDiversity, value.get());
+    }
+
     return idfObject;
   }
 

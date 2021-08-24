@@ -382,6 +382,19 @@ namespace model {
       return value.get();
     }
 
+    boost::optional<double> SizingSystem_Impl::occupantDiversity() const {
+      return getDouble(OS_Sizing_SystemFields::OccupantDiversity, true);
+    }
+
+    bool SizingSystem_Impl::isOccupantDiversityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Sizing_SystemFields::OccupantDiversity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
     bool SizingSystem_Impl::setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn) {
       bool result = setString(OS_Sizing_SystemFields::TypeofLoadtoSizeOn, typeofLoadtoSizeOn);
       return result;
@@ -666,6 +679,19 @@ namespace model {
       return result;
     }
 
+    bool SizingSystem_Impl::setOccupantDiversity(boost::optional<double> occupantDiversity) {
+      bool result(false);
+      if (occupantDiversity) {
+        result = setDouble(OS_Sizing_SystemFields::OccupantDiversity, occupantDiversity.get());
+      }
+      return result;
+    }
+
+    void SizingSystem_Impl::autosizeHeatingDesignCapacity() {
+      bool result = setString(OS_Sizing_SystemFields::OccupantDiversity, "autosize");
+      OS_ASSERT(result);
+    }
+
     AirLoopHVAC SizingSystem_Impl::airLoopHVAC() const {
       WorkspaceObject wo = getTarget(OS_Sizing_SystemFields::AirLoopName).get();
 
@@ -915,12 +941,19 @@ namespace model {
 
       return result;
     }
+    
+    boost::optional<double> SizingSystem_Impl::autosizedOccupantDiversity() const {
+      boost::optional<double> result;
+      // TODO
+      return result;
+    }
 
     void SizingSystem_Impl::autosize() {
       autosizeDesignOutdoorAirFlowRate();
       autosizeCoolingDesignCapacity();
       autosizeHeatingDesignCapacity();
       autosizeCentralHeatingMaximumSystemAirFlowRatio();
+      autosizeOccupantDiversity();
     }
 
     void SizingSystem_Impl::applySizingValues() {
@@ -943,6 +976,11 @@ namespace model {
       val = autosizedCentralHeatingMaximumSystemAirFlowRatio();
       if (val) {
         setCentralHeatingMaximumSystemAirFlowRatio(val.get());
+      }
+      
+      val = autosizedOccupantDiversity();
+      if (val) {
+        setOccupantDiversity(val.get());
       }
     }
 
@@ -1031,6 +1069,7 @@ namespace model {
     setHeatingDesignCapacityPerFloorArea(157.0);
     setFractionofAutosizedHeatingDesignCapacity(1.0);
     setCentralCoolingCapacityControlMethod("OnOff");
+    autosizeOccupantDiversity();
   }
 
   IddObjectType SizingSystem::iddObjectType() {
@@ -1258,6 +1297,14 @@ namespace model {
     return getImpl<detail::SizingSystem_Impl>()->centralCoolingCapacityControlMethod();
   }
 
+  boost::optional<double> SizingSystem::occupantDiversity() const {
+    return getImpl<detail::SizingSystem_Impl>()->occupantDiversity();
+  }
+
+  bool SizingSystem::isOccupantDiversityAutosized() const {
+    return getImpl<detail::SizingSystem_Impl>()->isOccupantDiversityAutosized();
+  }
+
   bool SizingSystem::setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn) {
     return getImpl<detail::SizingSystem_Impl>()->setTypeofLoadtoSizeOn(typeofLoadtoSizeOn);
   }
@@ -1461,6 +1508,15 @@ namespace model {
     return getImpl<detail::SizingSystem_Impl>()->setCentralCoolingCapacityControlMethod(centralCoolingCapacityControlMethod);
   }
 
+
+  bool SizingSystem::setOccupantDiversity(double occupantDiversity) {
+    return getImpl<detail::SizingSystem_Impl>()->setOccupantDiversity(occupantDiversity);
+  }
+
+  void SizingSystem::autosizeOccupantDiversity() {
+    getImpl<detail::SizingSystem_Impl>()->autosizeOccupantDiversity();
+  }
+
   AirLoopHVAC SizingSystem::airLoopHVAC() const {
     return getImpl<detail::SizingSystem_Impl>()->airLoopHVAC();
   }
@@ -1483,6 +1539,10 @@ namespace model {
 
   boost::optional<double> SizingSystem::autosizedHeatingDesignCapacity() const {
     return getImpl<detail::SizingSystem_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  boost::optional<double> SizingSystem::autosizedOccupantDiversity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedOccupantDiversity();
   }
 
   void SizingSystem::autosize() {

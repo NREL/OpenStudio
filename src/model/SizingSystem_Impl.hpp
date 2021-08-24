@@ -160,6 +160,10 @@ namespace model {
 
       std::string centralCoolingCapacityControlMethod() const;
 
+      boost::optional<double> occupantDiversity() const;
+
+      bool isOccupantDiversityAutosized() const;
+
       bool setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn);
 
       void resetTypeofLoadtoSizeOn();
@@ -260,6 +264,10 @@ namespace model {
 
       bool setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod);
 
+      bool setOccupantDiversity(boost::optional<double> occupantDiversity);
+
+      void autosizeOccupantDiversity();
+
       AirLoopHVAC airLoopHVAC() const;
 
       bool setAirLoopHVAC(const AirLoopHVAC& airLoopHVAC);
@@ -276,6 +284,8 @@ namespace model {
       boost::optional<double> autosizedCoolingDesignCapacity() const;
 
       boost::optional<double> autosizedHeatingDesignCapacity() const;
+
+      boost::optional<double> autosizedOccupantDiversity() const;
 
       void autosize();
 
