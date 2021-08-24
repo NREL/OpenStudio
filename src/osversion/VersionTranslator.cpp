@@ -6734,12 +6734,14 @@ namespace osversion {
         auto iddObject = idd_3_2_2.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
+        std::string humidityIndicatingType;
+
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i))) {
             if (i < 4) {
               newObject.setString(i, value.get());
             } else if (i == 4) {
-              std::string humidityIndicatingType = object.getString(15).get();  // Humidity Indicating Type
+              humidityIndicatingType = object.getString(15).get();  // Humidity Indicating Type
               if (istringEqual(humidityIndicatingType, "WetBulb") || istringEqual(humidityIndicatingType, "DewPoint")
                   || istringEqual(humidityIndicatingType, "WetBulbProfileMultiplierSchedule")
                   || istringEqual(humidityIndicatingType, "WetBulbProfileDifferenceSchedule")
@@ -6759,15 +6761,15 @@ namespace osversion {
             } else if (i < 15) {
               newObject.setString(i - 1, value.get());
             } else if (i == 15) {
-              // No-op
+              newObject.setString(i - 1, humidityIndicatingType);
             } else if (i == 16) {
-              newObject.setString(15, value.get());
+              newObject.setString(i - 1, value.get());
             } else if (i < 25) {
               newObject.setString(i + 2, value.get());
             }
           }
-        }        
-        
+        }
+
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 

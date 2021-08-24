@@ -1749,11 +1749,18 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_DesignDay) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_DesignDay_updated.osm");
   model->save(outPath, true);
-  
+
   std::vector<WorkspaceObject> dds = model->getObjectsByType("OS:SizingPeriod:DesignDay");
   ASSERT_EQ(1u, dds.size());
   WorkspaceObject dd = dds[0];
+
+  EXPECT_EQ("", dd.getString(8).get());
+  EXPECT_EQ("No", dd.getString(9).get());
+  EXPECT_EQ("WetBulb", dd.getString(14).get());
+  EXPECT_EQ(23, dd.getDouble(16).get());
+  EXPECT_EQ("", dd.getString(17).get());
+  EXPECT_EQ("", dd.getString(18).get());
 }
