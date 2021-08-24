@@ -30,6 +30,7 @@
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 
+#include "../core/Filesystem.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 #include "../core/StringHelpers.hpp"
@@ -46,7 +47,115 @@
 
 #include <src/utilities/embedded_files.hxx>
 
+#include <array>
+#include <algorithm>
+#include <string_view>
+#include <cctype>  // std::isalpha, std::isdigit
+
 namespace openstudio {
+
+/*****************************************************************************************************************************************************
+*                                    F I L T E R I N G    R U L E S    F O R    W H A T    I S    A L L O W E D                                      *
+*****************************************************************************************************************************************************/
+
+/***************
+*  R U L E S  *
+***************/
+
+static constexpr std::array<std::pair<std::string_view, std::string_view>, 4> rootToUsageTypeMap{{
+  // fileName, usageType
+  {"measure.rb", "script"},
+  {"LICENSE.md", "license"},
+  {"README.md", "readme"},
+  {"README.md.erb", "readmeerb"}
+  // ".gitkeep"      // assuming .gitkeep outside a subfolder makes zero sense...
+  // "measure.xml"   // not included in itself!
+}};
+
+static constexpr std::array<std::pair<std::string_view, std::string_view>, 3> approvedSubFolderToUsageMap{{
+  {"docs", "doc"},
+  {"tests", "test"},
+  {"resources", "resource"},
+}};
+
+static constexpr std::array<std::string_view, 1> ignoredSubFolders{"tests/output"};
+
+// TODO: do we want to keep ignoring the docs/ directory?
+static constexpr std::array<std::string_view, 1> usageTypesIgnoredOnClone{"doc"};
+
+/******************************************************************
+*  C A L C U L A T E D    T H I N G S    A N D    H E L P E R S  *
+******************************************************************/
+
+static constexpr std::array<std::string_view, rootToUsageTypeMap.size()> approvedRootFiles = []() {
+  std::array<std::string_view, rootToUsageTypeMap.size()> result;
+  for (size_t i = 0; i < rootToUsageTypeMap.size(); ++i) {
+    result[i] = rootToUsageTypeMap[i].first;
+  }
+  return result;
+}();
+
+static constexpr std::array<std::string_view, approvedSubFolderToUsageMap.size()> approvedSubFolders = []() {
+  std::array<std::string_view, approvedSubFolderToUsageMap.size()> result;
+  for (size_t i = 0; i < approvedSubFolderToUsageMap.size(); ++i) {
+    result[i] = approvedSubFolderToUsageMap[i].first;
+  }
+  return result;
+}();
+
+bool BCLMeasure::isIgnoredFileName(const std::string& fileName) {
+  return (fileName.empty() || (boost::starts_with(fileName, ".") && (fileName != ".gitkeep")));
+}
+
+bool BCLMeasure::isApprovedFile(const openstudio::path& absoluteFilePath, const openstudio::path& measureDir) {
+
+  std::string fileName = toString(absoluteFilePath.filename());
+  if (isIgnoredFileName(fileName)) {
+    return false;
+  }
+
+  openstudio::path parentPath = absoluteFilePath.parent_path();
+
+  if (parentPath == measureDir) {
+    if (std::find_if(approvedRootFiles.cbegin(), approvedRootFiles.cend(), [&fileName](const auto& sv) { return fileName == std::string(sv); })
+        == approvedRootFiles.cend()) {
+      LOG(Warn, absoluteFilePath << " is not one of the approved top level files");
+      return false;
+    }
+  } else {
+    bool ignored = true;
+    // Keep going back up the directory structure, until you either find one excluded folder or an approved one
+
+    auto isPathInContainer = [&measureDir, &parentPath](const auto& container) -> bool {
+      return std::find_if(container.begin(), container.end(),
+                          [&measureDir, &parentPath](const auto& subFolderPath) {
+                            auto fullSubFolderPath = measureDir / toPath(subFolderPath);
+                            return parentPath == fullSubFolderPath;
+                          })
+             != container.end();
+    };
+
+    // Don't go back up further than the measure directory root
+    while (!parentPath.empty() && (parentPath != measureDir)) {
+      if (isPathInContainer(ignoredSubFolders)) {
+        ignored = true;
+        break;
+      } else if (isPathInContainer(approvedSubFolders)) {
+        ignored = false;
+        break;
+      }
+      parentPath = parentPath.parent_path();
+    }
+
+    if (ignored) {
+      LOG(Warn, absoluteFilePath << " is not inside an approved subfolder.");
+      return false;
+    }
+  }
+
+  return true;
+}
+/****************************************************************************************************************************************************/
 
 void BCLMeasure::createDirectory(const openstudio::path& dir) {
   if (exists(dir)) {
@@ -58,28 +167,6 @@ void BCLMeasure::createDirectory(const openstudio::path& dir) {
       LOG_AND_THROW("'" << toString(dir) << "' cannot be created as an empty directory");
     }
   }
-}
-
-bool BCLMeasure::copyDirectory(const path& source, const path& destination) const {
-
-  if (!openstudio::filesystem::create_directories(destination)) {
-    return false;
-  }
-
-  openstudio::path xmlPath = openstudio::filesystem::system_complete(m_bclXML.path());
-
-  for (const auto& path : openstudio::filesystem::directory_files(source)) {
-    const auto srcItemPath = source / path;
-    const auto dstItemPath = destination / path;
-
-    if (m_bclXML.hasFile(srcItemPath) || (xmlPath == openstudio::filesystem::system_complete(srcItemPath))) {
-      if (!openstudio::filesystem::copy_file_no_throw(srcItemPath, dstItemPath)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
 }
 
 BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir, const std::string& taxonomyTag,
@@ -903,22 +990,23 @@ bool BCLMeasure::checkForUpdatesFiles() {
 
   // For all files we have on reference in the measure.xml
   for (BCLFileReference& file : m_bclXML.files()) {
-    std::string filename = file.fileName();
 
+    openstudio::path filePath = file.path();
     // If the file has been deleted from disk, mark it for removal
-    if (!exists(file.path())) {
+    if (!openstudio::filesystem::exists(filePath)) {
       result = true;
       // what if this is the measure.rb file?
       filesToRemove.push_back(file);
 
       // Otherwise, if it's to be ignored
-    } else if (filename.empty() || boost::starts_with(filename, ".")) {
-      if (filename == ".gitkeep") {
-        // allow this file
-      } else {
-        result = true;
-        filesToRemove.push_back(file);
-      }
+    } else if (!isApprovedFile(filePath, m_directory)) {
+      // The only way this file could have been added to the XML is if the user had manually added it,
+      // or we have changed the rules in the source code. In either case, I think a log message is helpful...
+      // We filter for ALL allowed cases here, so that we catch all mistakes, eg any file that the user manually added that isn't one of the
+      // approved root files or under an approved subdirectory
+      LOG(Warn, filePath << " was present in your measure.xml but it is not an approved file and will be removed from tracking.");
+      result = true;
+      filesToRemove.push_back(file);
 
       // otherwise, compute new checksum, and if not the same: mark it for addition
     } else if (file.checkForUpdate()) {
@@ -927,127 +1015,116 @@ bool BCLMeasure::checkForUpdatesFiles() {
     }
   }
 
-  // look for new files and add them
-  openstudio::path srcDir = m_directory / "tests";
-  openstudio::path ignoreDir = srcDir / "output";
+  /**
 
-  if (openstudio::filesystem::is_directory(srcDir)) {
+  auto isInIgnoredSubDirectory = [](const openstudio::path& absoluteFilePath, const openstudio::path& startDir,
+                                    const std::vector<openstudio::path>& ignoredSubFolders = {}) {
+    auto parentPath = absoluteFilePath.parent_path();
+    bool ignore = false;
 
-    // TODO: The code below seems to be assuming that recursive_directory_files is called since it tries to exclude output/*** files
-    for (const auto& file : openstudio::filesystem::directory_files(srcDir)) {
-      openstudio::path srcItemPath = srcDir / file;
-      openstudio::path parentPath = srcItemPath.parent_path();
-
-      std::string filename = toString(file.filename());
-      bool ignore = (filename.empty() || boost::starts_with(filename, "."));
-
-      // This will check back up to the root (C:\ or /)... It's missing a condition `parentPath != srcDir`
-      while (!ignore && !parentPath.empty()) {
-        if (parentPath == ignoreDir) {
-          ignore = true;
-          break;
-        }
-        parentPath = parentPath.parent_path();
+    // This will check back up to the root (C:\ or /) unless we add a condition `parentPath != startDir`
+    while (!ignore && !parentPath.empty() && (parentPath != startDir)) {
+      if (std::find_if(ignoredSubFolders.begin(), ignoredSubFolders.end(),
+                       [&startDir, &parentPath](const auto& subFolderPath) {
+                         auto fullSubFolderPath = startDir / subFolderPath;
+                         return parentPath == fullSubFolderPath;
+                       })
+          != ignoredSubFolders.end()) {
+        ignore = true;
+        break;
       }
-
-      if (ignore) {
-        continue;
-      }
-
-      if (!m_bclXML.hasFile(srcItemPath)) {
-        BCLFileReference fileref(srcItemPath, true);
-        fileref.setUsageType("test");
-        result = true;
-        filesToAdd.push_back(fileref);
-      }
+      parentPath = parentPath.parent_path();
     }
-  }
 
-  srcDir = m_directory / "resources";
-  if (openstudio::filesystem::is_directory(srcDir)) {
-    for (const auto& file : openstudio::filesystem::directory_files(srcDir)) {
-      openstudio::path srcItemPath = srcDir / file;
+    return ignore;
+  };
+  */
 
-      std::string filename = toString(file.filename());
-      if (filename.empty() || boost::starts_with(filename, ".")) {
-        continue;
-      }
-
-      if (!m_bclXML.hasFile(srcItemPath)) {
-        BCLFileReference fileref(srcItemPath, true);
-        fileref.setUsageType("resource");
-        result = true;
-        filesToAdd.push_back(fileref);
-      }
+  auto addWithUsageTypeIfNotExisting = [this, &filesToAdd](const openstudio::path& relativeFilePath, const std::string& usageType) -> bool {
+    if (!m_bclXML.hasFile(m_directory / relativeFilePath)) {
+      BCLFileReference fileref(m_directory, relativeFilePath, true);
+      fileref.setUsageType(usageType);
+      filesToAdd.push_back(fileref);
+      return true;
+    } else {
+      return false;
     }
-  }
+  };
 
-  srcDir = m_directory / "docs";
-  if (openstudio::filesystem::is_directory(srcDir)) {
-    for (const auto& file : openstudio::filesystem::directory_files(srcDir)) {
-      openstudio::path srcItemPath = srcDir / file;
-
-      std::string filename = toString(file.filename());
-      if (filename.empty() || boost::starts_with(filename, ".")) {
-        if (filename == ".gitkeep") {
-          // allow this file
-        } else {
+  // I could loop on all recursive_directory_files for the entire measureDir,
+  // but this is likely faster by prefiltering on what has potential to be added
+  for (const auto& [subFolderName, usageType] : approvedSubFolderToUsageMap) {
+    openstudio::path approvedSubFolderAbsolutePath = m_directory / toPath(subFolderName);
+    if (openstudio::filesystem::exists(approvedSubFolderAbsolutePath)) {
+      for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(approvedSubFolderAbsolutePath)) {
+        openstudio::path absoluteFilePath = approvedSubFolderAbsolutePath / relativeFilePath;
+        if (!isApprovedFile(absoluteFilePath, m_directory)) {
           continue;
         }
-      }
-
-      if (!m_bclXML.hasFile(srcItemPath)) {
-        BCLFileReference fileref(srcItemPath, true);
-        fileref.setUsageType("doc");
-        result = true;
-        filesToAdd.push_back(fileref);
+        result |= addWithUsageTypeIfNotExisting(toPath(subFolderName) / relativeFilePath, std::string(usageType));
       }
     }
   }
 
-  // check for measure.rb
-  openstudio::path srcItemPath = m_directory / toPath("measure.rb");
-  if (!m_bclXML.hasFile(srcItemPath)) {
-    if (exists(srcItemPath)) {
-      BCLFileReference file(srcItemPath, true);
-      file.setUsageType("script");
-      // we don't know what the actual version this was created for, we also don't know minimum version
-      file.setSoftwareProgramVersion(openStudioVersion());
-      result = true;
-      filesToAdd.push_back(file);
-    }
-  }
+  //   // look for new files and add them
+  //   openstudio::path srcDir = m_directory / "tests";
+  //   openstudio::path ignoreDir = srcDir / "output";
+  //
+  //   if (openstudio::filesystem::is_directory(srcDir)) {
+  //
+  //     // TODO: The code below seems to be assuming that recursive_directory_files is called since it tries to exclude output/*** files
+  //     for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(srcDir)) {
+  //
+  //       if (isIgnoredFile(relativeFilePath)) {
+  //         continue;
+  //       }
+  //
+  //       openstudio::path absoluteFilePath = srcDir / relativeFilePath;
+  //
+  //       if (isInIgnoredSubDirectory(absoluteFilePath, srcDir, ignoredSubFolders())) {
+  //         continue;
+  //       }
+  //
+  //       result |= addWithUsageTypeIfNotExisting(absoluteFilePath, "test");
+  //
+  //     }
+  //   }
+  //
+  //   srcDir = m_directory / "resources";
+  //   if (openstudio::filesystem::is_directory(srcDir)) {
+  //     for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(srcDir)) {
+  //
+  //       if (isIgnoredFile(relativeFilePath)) {
+  //         continue;
+  //       }
+  //
+  //       openstudio::path absoluteFilePath = srcDir / relativeFilePath;
+  //       result |= addWithUsageTypeIfNotExisting(absoluteFilePath, "resource");
+  //     }
+  //   }
+  //
+  //   srcDir = m_directory / "docs";
+  //   if (openstudio::filesystem::is_directory(srcDir)) {
+  //     for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(srcDir)) {
+  //
+  //       if (isIgnoredFile(relativeFilePath)) {
+  //         continue;
+  //       }
+  //
+  //       openstudio::path absoluteFilePath = srcDir / relativeFilePath;
+  //       result |= addWithUsageTypeIfNotExisting(absoluteFilePath, "doc");
+  //     }
+  //   }
 
-  // check for LICENSE.md
-  srcItemPath = m_directory / toPath("LICENSE.md");
-  if (!m_bclXML.hasFile(srcItemPath)) {
-    if (exists(srcItemPath)) {
-      BCLFileReference file(srcItemPath, true);
-      file.setUsageType("license");
-      result = true;
-      filesToAdd.push_back(file);
-    }
-  }
-
-  // check for README.me
-  srcItemPath = m_directory / toPath("README.md");
-  if (!m_bclXML.hasFile(srcItemPath)) {
-    if (exists(srcItemPath)) {
-      BCLFileReference file(srcItemPath, true);
-      file.setUsageType("readme");
-      result = true;
-      filesToAdd.push_back(file);
-    }
-  }
-
-  // check for README.me.erb
-  srcItemPath = m_directory / toPath("README.md.erb");
-  if (!m_bclXML.hasFile(srcItemPath)) {
-    if (exists(srcItemPath)) {
-      BCLFileReference file(srcItemPath, true);
-      file.setUsageType("readmeerb");
-      result = true;
-      filesToAdd.push_back(file);
+  for (const auto& [fileName, usageType] : rootToUsageTypeMap) {
+    openstudio::path absoluteFilePath = m_directory / toPath(fileName);
+    if (openstudio::filesystem::exists(absoluteFilePath)) {
+      bool thisResult = addWithUsageTypeIfNotExisting(absoluteFilePath, std::string(usageType));
+      if (thisResult && (fileName == "measure.rb")) {
+        // we don't know what the actual version this was created for, we also don't know minimum version
+        filesToAdd.back().setSoftwareProgramVersion(openStudioVersion());
+      }
+      result |= thisResult;
     }
   }
 
@@ -1085,32 +1162,44 @@ bool BCLMeasure::save() const {
 
 boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) const {
 
-  // The logic here is weird.
   if (openstudio::filesystem::exists(newDir)) {
     if (!isEmptyDirectory(newDir)) {
+      LOG(Warn, "Cannot clone measure to newDir=" << newDir << " since it already exists and is not empty.");
       return boost::none;
     }
   } else {
     if (!openstudio::filesystem::create_directories(newDir)) {
+      LOG(Warn, "Cannot clone measure to newDir=" << newDir << " since we cannot create the directory. Check file permissions.");
       return boost::none;
     }
   }
 
-  removeDirectory(newDir);
+  // TODO: The logic here is weird. why are we creating then removing it?
+  // removeDirectory(newDir);
 
-  // DLM: do not copy entire directory, only copy tracked files
-  if (!this->copyDirectory(this->directory(), newDir)) {
-    return boost::none;
-  }
+  // TODO: isn't it better to copy only what's inside measure.xml?
+  // The only caveat is what if the measure.xml is outdated? As a reminder, The BCL measure wouldn't have been loaded first, which updates the XML
+  // So the only potential issue is if the user loads the measure (in IRB/PRY for eg), then continues to make changes to the filesystem, then much
+  // later calls measure.clone. I don't think this is an issue
 
-  openstudio::path tests = toPath("tests");
-  if (exists(this->directory() / tests) && !this->copyDirectory(this->directory() / tests, newDir / tests)) {
-    return boost::none;
-  }
+  // Copy the measure.xml
+  openstudio::filesystem::copy_file_no_throw(m_directory / openstudio::path{"measure.xml"}, newDir / openstudio::path{"measure.xml"});
 
-  openstudio::path resources = toPath("resources");
-  if (exists(this->directory() / resources) && !this->copyDirectory(this->directory() / resources, newDir / resources)) {
-    return boost::none;
+  // Then copy whatever is referneced in the measure.xml
+  for (const BCLFileReference& file : this->files()) {
+
+    if (std::find_if(usageTypesIgnoredOnClone.cbegin(), usageTypesIgnoredOnClone.cend(),
+                     [&file](const auto& sv) { return file.usageType() == std::string(sv); })
+        == usageTypesIgnoredOnClone.cend()) {
+
+      // BCLFileReference::path() is absolute
+      openstudio::path oriPath = file.path();
+      openstudio::path relativePath = openstudio::filesystem::relative(oriPath, m_directory);
+      openstudio::path destination = newDir / relativePath;
+      // Create parent directories in destination if need be
+      openstudio::filesystem::create_directories(destination.parent_path());
+      openstudio::filesystem::copy_file_no_throw(oriPath, destination);
+    }
   }
 
   return BCLMeasure::load(newDir);
