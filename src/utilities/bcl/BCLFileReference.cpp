@@ -35,7 +35,9 @@
 
 namespace openstudio {
 
-BCLFileReference::BCLFileReference(const openstudio::path& path, const bool setMembers) : m_path(openstudio::filesystem::system_complete(path)) {
+BCLFileReference::BCLFileReference(const openstudio::path& measureRootDir, const openstudio::path& relativePath, const bool setMembers)
+  : m_measureRootDir(openstudio::filesystem::system_complete(measureRootDir)),
+    m_path(openstudio::filesystem::system_complete(measureRootDir / relativePath)) {
   // DLM: why would you not want to set the members?
   if (setMembers) {
     m_checksum = openstudio::checksum(m_path);
@@ -84,7 +86,18 @@ boost::optional<VersionString> BCLFileReference::maxCompatibleVersion() const {
 }
 
 std::string BCLFileReference::fileName() const {
-  return toString(m_path.filename());
+
+  std::string usageType = this->usageType();
+  openstudio::path baseDir = m_measureRootDir;
+  if (usageType == "doc") {
+    baseDir /= "docs";
+  } else if (usageType == "resource") {
+    baseDir /= "resources";
+  } else if (usageType == "test") {
+    baseDir /= "tests";
+  }
+
+  return toString(openstudio::filesystem::relative(m_path, baseDir));
 }
 
 std::string BCLFileReference::fileType() const {

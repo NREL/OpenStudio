@@ -49,8 +49,9 @@
 
 #include <array>
 #include <algorithm>
-#include <string_view>
 #include <cctype>  // std::isalpha, std::isdigit
+#include <string_view>
+#include <vector>
 
 namespace openstudio {
 
@@ -172,13 +173,13 @@ void BCLMeasure::createDirectory(const openstudio::path& dir) {
 BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir, const std::string& taxonomyTag,
                        MeasureType measureType, const std::string& description, const std::string& modelerDescription)
   : m_directory(openstudio::filesystem::system_complete(dir)), m_bclXML(BCLXMLType::MeasureXML) {
-  openstudio::path measureDocDir = dir / toPath("docs");
-  openstudio::path measureTestDir = dir / toPath("tests");
+  openstudio::path measureDocRelativeDir = toPath("docs");
+  openstudio::path measureTestRelativeDir = toPath("tests");
   std::string lowerClassName = toUnderscoreCase(className);
 
-  createDirectory(dir);
-  createDirectory(measureDocDir);
-  createDirectory(measureTestDir);
+  createDirectory(m_directory);
+  createDirectory(m_directory / measureDocRelativeDir);
+  createDirectory(m_directory / measureTestRelativeDir);
 
   // read in template files
   std::string measureTemplate;
@@ -198,17 +199,16 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   std::string testEPW;
   std::string resourceFile;
 
-  openstudio::path testOSMPath;
-  openstudio::path testEPWPath;
-  openstudio::path resourceFilePath;
+  openstudio::path testOSMRelativePath;
+  openstudio::path testEPWRelativePath;
+  openstudio::path resourceFileRelativePath;
   if (measureType == MeasureType::ModelMeasure) {
     measureTemplate = ":/templates/ModelMeasure/measure.rb";
     testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
     testOSM = ":/templates/ModelMeasure/tests/example_model.osm";
     templateClassName = "ModelMeasureName";
 
-    createDirectory(dir / toPath("tests"));
-    testOSMPath = dir / toPath("tests/example_model.osm");
+    testOSMRelativePath = toPath("tests/example_model.osm");
 
     std::string argName("space_name");
     std::string argDisplayName("New space name");
@@ -223,8 +223,6 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
     templateClassName = "EnergyPlusMeasureName";
 
-    createDirectory(dir / toPath("tests"));
-
     std::string argName("zone_name");
     std::string argDisplayName("New zone name");
     std::string argDescription("This name will be used as the name of the new zone.");
@@ -238,8 +236,6 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
     templateClassName = "UtilityMeasureName";
 
-    createDirectory(dir / toPath("tests"));
-
   } else if (measureType == MeasureType::ReportingMeasure) {
     measureTemplate = ":/templates/ReportingMeasure/measure.rb";
     testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
@@ -248,12 +244,11 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
     templateClassName = "ReportingMeasureName";
 
-    createDirectory(dir / toPath("tests"));
-    testOSMPath = dir / toPath("tests/example_model.osm");
-    testEPWPath = dir / toPath("tests/USA_CO_Golden-NREL.724666_TMY3.epw");
+    testOSMRelativePath = toPath("tests/example_model.osm");
+    testEPWRelativePath = toPath("tests/USA_CO_Golden-NREL.724666_TMY3.epw");
 
-    createDirectory(dir / toPath("resources"));
-    resourceFilePath = dir / toPath("resources/report.html.in");
+    createDirectory(m_directory / toPath("resources"));
+    resourceFileRelativePath = toPath("resources/report.html.in");
   }
 
   std::string measureString;
@@ -304,131 +299,38 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   }
 
   // write files
-  openstudio::path measureXMLPath = dir / toPath("measure.xml");
-  openstudio::path measureScriptPath = dir / toPath("measure.rb");
-  openstudio::path measureLicensePath = dir / toPath("LICENSE.md");
-  openstudio::path measureReadmePath = dir / toPath("README.md.erb");
-  openstudio::path measureDocPath = measureDocDir / toPath(".gitkeep");
-  openstudio::path measureTestPath = measureTestDir / toPath(lowerClassName + "_test.rb");
-
-  // write measure.rb
-  {
-    openstudio::filesystem::ofstream file(measureScriptPath, std::ios_base::binary);
+  auto writeFile = [this](const openstudio::path& relativeFilePath, const std::string& usageType, const std::string& contentText,
+                          bool addVersion = false) {
+    openstudio::path absoluteFilePath = m_directory / relativeFilePath;
+    openstudio::filesystem::ofstream file(absoluteFilePath, std::ios_base::binary);
     if (!file.is_open()) {
-      LOG_AND_THROW("Cannot write measure.rb to '" << toString(measureScriptPath) << "'");
+      LOG_AND_THROW("Cannot write " << usageType << " file to '" << toString(absoluteFilePath) << "'");
     }
-    file << measureString;
+    file << contentText;
     file.close();
 
-    BCLFileReference measureScriptFileReference(measureScriptPath, true);
-    measureScriptFileReference.setUsageType("script");
-    measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
-    m_bclXML.addFile(measureScriptFileReference);
+    BCLFileReference fileRef(m_directory, relativeFilePath, true);
+    fileRef.setUsageType(usageType);
+    if (addVersion) {
+      fileRef.setSoftwareProgramVersion(openStudioVersion());
+    }
+    m_bclXML.addFile(fileRef);
+  };
+
+  writeFile(toPath("measure.rb"), "script", measureString, true);
+  writeFile(toPath("LICENSE.md"), "license", licenseString);
+  writeFile(toPath("README.md.erb"), "readmeerb", readmeString);
+  writeFile(measureDocRelativeDir / toPath(".gitkeep"), "doc", docString);
+  writeFile(measureTestRelativeDir / toPath(lowerClassName + "_test.rb"), "test", testString);
+  if (!testOSMString.empty()) {
+    writeFile(testOSMRelativePath, "test", testOSMString);
+  }
+  if (!testEPWString.empty()) {
+    writeFile(testEPWRelativePath, "test", testEPWString);
   }
 
-  // write LICENSE.md
-  {
-    openstudio::filesystem::ofstream file(measureLicensePath, std::ios_base::binary);
-    if (!file.is_open()) {
-      LOG_AND_THROW("Cannot write LICENSE.md to '" << toString(measureLicensePath) << "'");
-    }
-    file << licenseString;
-    file.close();
-
-    BCLFileReference measureLicenseFileReference(measureLicensePath, true);
-    measureLicenseFileReference.setUsageType("license");
-    m_bclXML.addFile(measureLicenseFileReference);
-  }
-
-  // write README.md.erb
-  {
-    openstudio::filesystem::ofstream file(measureReadmePath, std::ios_base::binary);
-    if (!file.is_open()) {
-      LOG_AND_THROW("Cannot write README.md.erb to '" << toString(measureReadmePath) << "'");
-    }
-    file << readmeString;
-    file.close();
-
-    BCLFileReference measureReadmeFileReference(measureReadmePath, true);
-    measureReadmeFileReference.setUsageType("readmeerb");
-    m_bclXML.addFile(measureReadmeFileReference);
-  }
-
-  // write docs
-  {
-    openstudio::filesystem::ofstream file(measureDocPath, std::ios_base::binary);
-    if (!file.is_open()) {
-      LOG_AND_THROW("Cannot write doc file to '" << toString(measureDocPath) << "'");
-    }
-    file << docString;
-    file.close();
-
-    BCLFileReference measureDocFileReference(measureDocPath, true);
-    measureDocFileReference.setUsageType("doc");
-    m_bclXML.addFile(measureDocFileReference);
-  }
-
-  // write test
-  {
-    openstudio::filesystem::ofstream file(measureTestPath, std::ios_base::binary);
-    if (!file.is_open()) {
-      LOG_AND_THROW("Cannot write test file to '" << toString(measureTestPath) << "'");
-    }
-    file << testString;
-    file.close();
-
-    BCLFileReference measureTestFileReference(measureTestPath, true);
-    measureTestFileReference.setUsageType("test");
-    m_bclXML.addFile(measureTestFileReference);
-  }
-
-  // write test osm
-  {
-    if (!testOSMString.empty()) {
-      openstudio::filesystem::ofstream file(testOSMPath, std::ios_base::binary);
-      if (!file.is_open()) {
-        LOG_AND_THROW("Cannot write test osm file to '" << toString(testOSMPath) << "'");
-      }
-      file << testOSMString;
-      file.close();
-
-      BCLFileReference measureTestOSMFileReference(testOSMPath, true);
-      measureTestOSMFileReference.setUsageType("test");
-      m_bclXML.addFile(measureTestOSMFileReference);
-    }
-  }
-
-  // write test epw
-  {
-    if (!testEPWString.empty()) {
-      openstudio::filesystem::ofstream file(testEPWPath);
-      if (!file.good()) {
-        LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
-      }
-
-      file << toString(testEPWString);
-      file.close();
-
-      BCLFileReference measureTestEPWFileReference(testEPWPath, true);
-      measureTestEPWFileReference.setUsageType("test");
-      m_bclXML.addFile(measureTestEPWFileReference);
-    }
-  }
-
-  // write resource
-  {
-    if (!resourceFileString.empty()) {
-      openstudio::filesystem::ofstream file(resourceFilePath, std::ios_base::binary);
-      if (!file.is_open()) {
-        LOG_AND_THROW("Cannot write resource file to '" << toString(resourceFilePath) << "'");
-      }
-      file << resourceFileString;
-      file.close();
-
-      BCLFileReference resourceFileReference(resourceFilePath, true);
-      resourceFileReference.setUsageType("resource");
-      m_bclXML.addFile(resourceFileReference);
-    }
+  if (!resourceFileString.empty()) {
+    writeFile(resourceFileRelativePath, "test", resourceFileString);
   }
 
   // set rest of measure fields
@@ -445,6 +347,7 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   // reset the checksum to trigger update even if nothing has changed
   m_bclXML.resetXMLChecksum();
 
+  openstudio::path measureXMLPath = m_directory / toPath("measure.xml");
   m_bclXML.saveAs(measureXMLPath);
 }
 
@@ -1015,31 +918,6 @@ bool BCLMeasure::checkForUpdatesFiles() {
     }
   }
 
-  /**
-
-  auto isInIgnoredSubDirectory = [](const openstudio::path& absoluteFilePath, const openstudio::path& startDir,
-                                    const std::vector<openstudio::path>& ignoredSubFolders = {}) {
-    auto parentPath = absoluteFilePath.parent_path();
-    bool ignore = false;
-
-    // This will check back up to the root (C:\ or /) unless we add a condition `parentPath != startDir`
-    while (!ignore && !parentPath.empty() && (parentPath != startDir)) {
-      if (std::find_if(ignoredSubFolders.begin(), ignoredSubFolders.end(),
-                       [&startDir, &parentPath](const auto& subFolderPath) {
-                         auto fullSubFolderPath = startDir / subFolderPath;
-                         return parentPath == fullSubFolderPath;
-                       })
-          != ignoredSubFolders.end()) {
-        ignore = true;
-        break;
-      }
-      parentPath = parentPath.parent_path();
-    }
-
-    return ignore;
-  };
-  */
-
   auto addWithUsageTypeIfNotExisting = [this, &filesToAdd](const openstudio::path& relativeFilePath, const std::string& usageType) -> bool {
     if (!m_bclXML.hasFile(m_directory / relativeFilePath)) {
       BCLFileReference fileref(m_directory, relativeFilePath, true);
@@ -1066,60 +944,11 @@ bool BCLMeasure::checkForUpdatesFiles() {
     }
   }
 
-  //   // look for new files and add them
-  //   openstudio::path srcDir = m_directory / "tests";
-  //   openstudio::path ignoreDir = srcDir / "output";
-  //
-  //   if (openstudio::filesystem::is_directory(srcDir)) {
-  //
-  //     // TODO: The code below seems to be assuming that recursive_directory_files is called since it tries to exclude output/*** files
-  //     for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(srcDir)) {
-  //
-  //       if (isIgnoredFile(relativeFilePath)) {
-  //         continue;
-  //       }
-  //
-  //       openstudio::path absoluteFilePath = srcDir / relativeFilePath;
-  //
-  //       if (isInIgnoredSubDirectory(absoluteFilePath, srcDir, ignoredSubFolders())) {
-  //         continue;
-  //       }
-  //
-  //       result |= addWithUsageTypeIfNotExisting(absoluteFilePath, "test");
-  //
-  //     }
-  //   }
-  //
-  //   srcDir = m_directory / "resources";
-  //   if (openstudio::filesystem::is_directory(srcDir)) {
-  //     for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(srcDir)) {
-  //
-  //       if (isIgnoredFile(relativeFilePath)) {
-  //         continue;
-  //       }
-  //
-  //       openstudio::path absoluteFilePath = srcDir / relativeFilePath;
-  //       result |= addWithUsageTypeIfNotExisting(absoluteFilePath, "resource");
-  //     }
-  //   }
-  //
-  //   srcDir = m_directory / "docs";
-  //   if (openstudio::filesystem::is_directory(srcDir)) {
-  //     for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(srcDir)) {
-  //
-  //       if (isIgnoredFile(relativeFilePath)) {
-  //         continue;
-  //       }
-  //
-  //       openstudio::path absoluteFilePath = srcDir / relativeFilePath;
-  //       result |= addWithUsageTypeIfNotExisting(absoluteFilePath, "doc");
-  //     }
-  //   }
-
   for (const auto& [fileName, usageType] : rootToUsageTypeMap) {
-    openstudio::path absoluteFilePath = m_directory / toPath(fileName);
+    openstudio::path relativeFilePath = toPath(fileName);
+    openstudio::path absoluteFilePath = m_directory / relativeFilePath;
     if (openstudio::filesystem::exists(absoluteFilePath)) {
-      bool thisResult = addWithUsageTypeIfNotExisting(absoluteFilePath, std::string(usageType));
+      bool thisResult = addWithUsageTypeIfNotExisting(relativeFilePath, std::string(usageType));
       if (thisResult && (fileName == "measure.rb")) {
         // we don't know what the actual version this was created for, we also don't know minimum version
         filesToAdd.back().setSoftwareProgramVersion(openStudioVersion());

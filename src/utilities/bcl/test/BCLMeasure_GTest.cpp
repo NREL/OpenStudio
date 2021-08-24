@@ -67,7 +67,7 @@ TEST_F(BCLFixture, BCLMeasure) {
   EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 
   EXPECT_EQ(6u, measure->files().size());
-  for (BCLFileReference file : measure->files()) {
+  for (BCLFileReference& file : measure->files()) {
     EXPECT_TRUE(exists(file.path()));
     EXPECT_FALSE(file.checkForUpdate());
   }
@@ -374,7 +374,7 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
 
   // .
   // ├── ./docs
-  //+│   ├── ./docs/docs.rb
+  //+│   ├── ./docs/docs.rb
   // │   ├── ./docs/.gitkeep
   // │   └── ./docs/subfolder
   //+│       └── ./docs/subfolder/subfolder_file.txt
@@ -408,7 +408,7 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
   EXPECT_EQ(addedFiles, 7);
 
   std::vector<fs::path> newXMLPaths;
-  std::transform(files.cbegin(), files.cend(), std::back_inserter(newXMLPaths), [&srcDir](const auto& fileRef) { return fileRef.path(); });
+  std::transform(files.cbegin(), files.cend(), std::back_inserter(newXMLPaths), [](const auto& fileRef) { return fileRef.path(); });
   std::sort(newXMLPaths.begin(), newXMLPaths.end());
 
   std::vector<fs::path> expectedAfterNewFilesPaths = {

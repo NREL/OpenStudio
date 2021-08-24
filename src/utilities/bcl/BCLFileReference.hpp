@@ -53,7 +53,7 @@ class UTILITIES_API BCLFileReference
   //@{
 
   /// Constructor from file path.
-  explicit BCLFileReference(const openstudio::path& path, const bool setMembers = false);
+  explicit BCLFileReference(const openstudio::path& measureRootDir, const openstudio::path& relativePath, const bool setMembers = false);
 
   //@}
   /** @name Destructor */
@@ -121,6 +121,7 @@ class UTILITIES_API BCLFileReference
   // configure logging
   REGISTER_LOGGER("utilities.bcl.BCLFileReference");
 
+  openstudio::path m_measureRootDir;
   openstudio::path m_path;
   std::string m_checksum;
   std::string m_softwareProgram;
