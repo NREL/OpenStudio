@@ -1743,3 +1743,17 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_GroundHeatExchangerVertical) {
 
   EXPECT_EQ(35, ghe.numExtensibleGroups());
 }
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_DesignDay) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_2/test_vt_DesignDay.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+  
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_DesignDay_updated.osm");
+  model->save(outPath, true);
+  
+  std::vector<WorkspaceObject> dds = model->getObjectsByType("OS:SizingPeriod:DesignDay");
+  ASSERT_EQ(1u, dds.size());
+  WorkspaceObject dd = dds[0];
+}
