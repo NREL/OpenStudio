@@ -34,6 +34,8 @@
 
 #include <ostream>
 #include <boost/optional.hpp>
+#include <string>
+#include <string_view>
 
 #include "Filesystem.hpp"
 
@@ -53,6 +55,8 @@ UTILITIES_API path toPath(const char* s);
 
 /** UTF-8 encoded std::string to path*/
 UTILITIES_API path toPath(const std::string& s);
+
+UTILITIES_API path toPath(std::string_view s);
 
 #ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/
