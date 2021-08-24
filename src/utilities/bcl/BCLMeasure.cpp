@@ -400,10 +400,10 @@ std::string BCLMeasure::makeClassName(const std::string& name) {
 
   bool startsWithLetter = false;
   for (std::size_t i = 0; i < str.size(); ++i) {
-    if (!(isalpha(str[i]) || isdigit(str[i]))) {
+    if (!(std::isalpha(str[i]) || std::isdigit(str[i]))) {
       str[i] = ' ';
     } else if (i == 0) {
-      startsWithLetter = isalpha(str[i]);
+      startsWithLetter = std::isalpha(str[i]);
     }
   }
 
@@ -443,94 +443,75 @@ boost::optional<BCLMeasure> BCLMeasure::load(const openstudio::path& dir) {
 }
 
 std::vector<std::string> BCLMeasure::suggestedIntendedSoftwareTools() {
-  std::vector<std::string> result;
-  result.push_back("Apply Measure Now");
-  result.push_back("OpenStudio Application");
-  result.push_back("Parametric Analysis Tool");
-  result.push_back("Analysis Spreadsheet");
+  std::vector<std::string> result{"Apply Measure Now", "OpenStudio Application", "Parametric Analysis Tool", "Analysis Spreadsheet"};
   return result;
 }
 
 std::vector<std::string> BCLMeasure::suggestedIntendedUseCases() {
-  std::vector<std::string> result;
-  result.push_back("Model Articulation");
-  result.push_back("Calibration");
-  result.push_back("Sensitivity Analysis");
-  result.push_back("New Construction EE");
-  result.push_back("Retrofit EE");
-  result.push_back("Automatic Report Generation");
+  std::vector<std::string> result{"Model Articulation",  "Calibration", "Sensitivity Analysis",
+                                  "New Construction EE", "Retrofit EE", "Automatic Report Generation"};
+
   return result;
 }
 
 std::vector<std::string> BCLMeasure::suggestedFirstLevelTaxonomyTerms() {
-  std::vector<std::string> result;
-  result.reserve(12);
-
-  result.push_back("Envelope");
-  result.push_back("Electric Lighting");
-  result.push_back("Equipment");
-  result.push_back("People");
-  result.push_back("HVAC");
-  result.push_back("Refrigeration");
-  result.push_back("Service Water Heating");
-  result.push_back("Onsite Power Generation");
-  result.push_back("Whole Building");
-  result.push_back("Economics");
-  result.push_back("Reporting");
+  std::vector<std::string> result{
+    "Envelope",       "Electric Lighting", "Equipment", "People", "HVAC", "Refrigeration", "Service Water Heating", "Onsite Power Generation",
+    "Whole Building", "Economics",         "Reporting"};
 
   return result;
 }
 
 std::vector<std::string> BCLMeasure::suggestedSecondLevelTaxonomyTerms(const std::string& firstLevelTaxonomyTerm) {
   std::vector<std::string> result;
-  result.reserve(12);
+  result.reserve(8);
 
   if (firstLevelTaxonomyTerm == "Envelope") {
-    result.push_back("Form");
-    result.push_back("Opaque");
-    result.push_back("Fenestration");
-    result.push_back("Construction Sets");
-    result.push_back("Daylighting");
-    result.push_back("Infiltration");
+    result.emplace_back("Form");
+    result.emplace_back("Opaque");
+    result.emplace_back("Fenestration");
+    result.emplace_back("Construction Sets");
+    result.emplace_back("Daylighting");
+    result.emplace_back("Infiltration");
   } else if (firstLevelTaxonomyTerm == "Electric Lighting") {
-    result.push_back("Electric Lighting Controls");
-    result.push_back("Lighting Equipment");
+    result.emplace_back("Electric Lighting Controls");
+    result.emplace_back("Lighting Equipment");
   } else if (firstLevelTaxonomyTerm == "Equipment") {
-    result.push_back("Equipment Controls");
-    result.push_back("Electric Equipment");
-    result.push_back("Gas Equipment");
+    result.emplace_back("Equipment Controls");
+    result.emplace_back("Electric Equipment");
+    result.emplace_back("Gas Equipment");
   } else if (firstLevelTaxonomyTerm == "People") {
-    result.push_back("Characteristics");
-    result.push_back("People Schedules");
+    result.emplace_back("Characteristics");
+    result.emplace_back("People Schedules");
   } else if (firstLevelTaxonomyTerm == "HVAC") {
-    result.push_back("HVAC Controls");
-    result.push_back("Heating");
-    result.push_back("Cooling");
-    result.push_back("Heat Rejection");
-    result.push_back("Energy Recovery");
-    result.push_back("Distribution");
-    result.push_back("Ventilation");
-    result.push_back("Whole System");
+    result.emplace_back("HVAC Controls");
+    result.emplace_back("Heating");
+    result.emplace_back("Cooling");
+    result.emplace_back("Heat Rejection");
+    result.emplace_back("Energy Recovery");
+    result.emplace_back("Distribution");
+    result.emplace_back("Ventilation");
+    result.emplace_back("Whole System");
   } else if (firstLevelTaxonomyTerm == "Refrigeration") {
-    result.push_back("Refrigeration Controls");
-    result.push_back("Cases and Walkins");
-    result.push_back("Compressors");
-    result.push_back("Condensers");
-    result.push_back("Heat Reclaim");
+    result.emplace_back("Refrigeration Controls");
+    result.emplace_back("Cases and Walkins");
+    result.emplace_back("Compressors");
+    result.emplace_back("Condensers");
+    result.emplace_back("Heat Reclaim");
   } else if (firstLevelTaxonomyTerm == "Service Water Heating") {
-    result.push_back("Water Use");
-    result.push_back("Water Heating");
-    result.push_back("Distribution");
+    result.emplace_back("Water Use");
+    result.emplace_back("Water Heating");
+    result.emplace_back("Distribution");
   } else if (firstLevelTaxonomyTerm == "Onsite Power Generation") {
-    result.push_back("Photovoltaic");
+    result.emplace_back("Photovoltaic");
   } else if (firstLevelTaxonomyTerm == "Whole Building") {
-    result.push_back("Whole Building Schedules");
-    result.push_back("Space Types");
+    result.emplace_back("Whole Building Schedules");
+    result.emplace_back("Space Types");
   } else if (firstLevelTaxonomyTerm == "Economics") {
-    result.push_back("Life Cycle Cost Analysis");
+    result.emplace_back("Life Cycle Cost Analysis");
   } else if (firstLevelTaxonomyTerm == "Reporting") {
-    result.push_back("QAQC");
-    result.push_back("Troubleshooting");
+    result.emplace_back("QAQC");
+    result.emplace_back("Troubleshooting");
   }
 
   return result;
@@ -707,9 +688,8 @@ void BCLMeasure::setMeasureType(const MeasureType& measureType) {
 std::vector<std::string> BCLMeasure::intendedSoftwareTools() const {
   std::vector<std::string> result;
   std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Software Tool");
-  for (const Attribute& attribute : attributes) {
-    result.push_back(attribute.valueAsString());
-  }
+  std::transform(attributes.cbegin(), attributes.cend(), std::back_inserter(result),
+                 [](const Attribute& attribute) { return attribute.valueAsString(); });
   return result;
 }
 
@@ -717,9 +697,8 @@ std::vector<std::string> BCLMeasure::intendedSoftwareTools() const {
 std::vector<std::string> BCLMeasure::intendedUseCases() const {
   std::vector<std::string> result;
   std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Use Case");
-  for (const Attribute& attribute : attributes) {
-    result.push_back(attribute.valueAsString());
-  }
+  std::transform(attributes.cbegin(), attributes.cend(), std::back_inserter(result),
+                 [](const Attribute& attribute) { return attribute.valueAsString(); });
   return result;
 }
 
