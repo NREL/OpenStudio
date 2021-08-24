@@ -51,9 +51,9 @@ TEST_F(GeometryFixture, ThreeJS) {
   boost::optional<ThreeScene> scene = ThreeScene::load(contents);
   ASSERT_TRUE(scene);
 
-  std::vector<ThreeSceneChild> sceneChildren = scene->object()->children();
+  std::vector<ThreeSceneChild> sceneChildren = scene->object().children();
   for (const ThreeSceneChild sceneChild : sceneChildren) {
-    ThreeUserData userData = scheneChild.userData();
+    ThreeUserData userData = sceneChild.userData();
     EXPECT_DOUBLE_EQ(1, userData.airLoopHVACNames().size());
   }
 
