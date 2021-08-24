@@ -195,7 +195,7 @@ set(ENERGYPLUS_BUILD_SHA "82391071e9")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.6.0")
+set(ENERGYPLUS_RELEASE_NAME "v9.6.0-IOFreeze")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")

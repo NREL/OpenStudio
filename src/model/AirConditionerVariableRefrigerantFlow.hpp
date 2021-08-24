@@ -89,10 +89,12 @@ namespace model {
     OS_DEPRECATED double ratedCoolingCOP() const;
     OS_DEPRECATED bool setRatedCoolingCOP(double ratedCoolingCOP);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Cooling Mode" **/
     double minimumOutdoorTemperatureinCoolingMode() const;
 
     bool setMinimumOutdoorTemperatureinCoolingMode(double minimumOutdoorTemperatureinCoolingMode);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Maximum Condenser Inlet Node Temperature in Cooling Mode" **/
     double maximumOutdoorTemperatureinCoolingMode() const;
 
     bool setMaximumOutdoorTemperatureinCoolingMode(double maximumOutdoorTemperatureinCoolingMode);
@@ -176,10 +178,12 @@ namespace model {
 
     bool setRatedHeatingCOP(double ratedHeatingCOP);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Heating Mode" **/
     double minimumOutdoorTemperatureinHeatingMode() const;
 
     bool setMinimumOutdoorTemperatureinHeatingMode(double minimumOutdoorTemperatureinHeatingMode);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Maximum Condenser Inlet Node Temperature in Heating Mode" **/
     double maximumOutdoorTemperatureinHeatingMode() const;
 
     bool setMaximumOutdoorTemperatureinHeatingMode(double maximumOutdoorTemperatureinHeatingMode);
@@ -407,10 +411,12 @@ namespace model {
 
     bool setFuelType(std::string fuelType);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Heat Recovery Mode" **/
     double minimumOutdoorTemperatureinHeatRecoveryMode() const;
 
     bool setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Maximum Condenser Inlet Node Temperature in Heat Recovery Mode" **/
     double maximumOutdoorTemperatureinHeatRecoveryMode() const;
 
     bool setMaximumOutdoorTemperatureinHeatRecoveryMode(double maximumOutdoorTemperatureinHeatRecoveryMode);
