@@ -262,6 +262,11 @@ class UTILITIES_API ThreeUserData
   std::string windExposure() const;
   double illuminanceSetpoint() const;
   bool airWall() const;
+
+  std::vector<std::string> airLoopHVACNames() const;
+  std::vector<std::string> airLoopHVACHandles() const;
+  std::vector<std::string> airLoopHVACMaterialNames() const;
+  
   //bool plenum() const;
   //bool belowFloorPlenum() const;
   //bool aboveCeilingPlenum() const;
@@ -305,6 +310,9 @@ class UTILITIES_API ThreeUserData
   void setWindExposure(const std::string& s);
   void setIlluminanceSetpoint(double d);
   void setAirWall(bool b);
+  void addAirLoopHVACName(const std::string& s);
+  void addAirLoopHVACHandle(const std::string& s);
+  void addAirLoopHVACMaterialName(const std::string& s);
   //void setBelowFloorPlenum(bool v);
   //void setAboveCeilingPlenum(bool v);
 
@@ -353,6 +361,9 @@ class UTILITIES_API ThreeUserData
   std::string m_windExposure;
   double m_illuminanceSetpoint;
   bool m_airWall;
+  std::vector<std::string> m_airLoopHVACNames;
+  std::vector<std::string> m_airLoopHVACHandles;
+  std::vector<std::string> m_airLoopHVACMaterialNames;
   //bool m_belowFloorPlenum;
   //bool m_aboveCeilingPlenum;
 };
