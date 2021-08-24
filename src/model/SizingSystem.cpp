@@ -941,7 +941,7 @@ namespace model {
 
       return result;
     }
-    
+
     boost::optional<double> SizingSystem_Impl::autosizedOccupantDiversity() const {
       boost::optional<double> result;
       // TODO
@@ -977,7 +977,7 @@ namespace model {
       if (val) {
         setCentralHeatingMaximumSystemAirFlowRatio(val.get());
       }
-      
+
       val = autosizedOccupantDiversity();
       if (val) {
         setOccupantDiversity(val.get());
@@ -1507,7 +1507,6 @@ namespace model {
   bool SizingSystem::setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod) {
     return getImpl<detail::SizingSystem_Impl>()->setCentralCoolingCapacityControlMethod(centralCoolingCapacityControlMethod);
   }
-
 
   bool SizingSystem::setOccupantDiversity(double occupantDiversity) {
     return getImpl<detail::SizingSystem_Impl>()->setOccupantDiversity(occupantDiversity);

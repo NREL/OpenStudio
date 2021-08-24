@@ -76,7 +76,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_PerformancePrecisionTradeoffs
 
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
   EXPECT_EQ(0.002, performancePrecisionTradeoffs.maxAllowedDelTemp());
-  
+
   EXPECT_TRUE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
   EXPECT_FALSE(performancePrecisionTradeoffs.useRepresentativeSurfacesforCalculations());
 }

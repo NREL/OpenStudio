@@ -185,7 +185,7 @@ namespace model {
       OS_ASSERT(value);
       return openstudio::istringEqual(value.get(), "Yes");
     }
-    
+
     bool PerformancePrecisionTradeoffs_Impl::isUseRepresentativeSurfacesforCalculationsDefaulted() const {
       return isEmpty(OS_PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations);
     }
@@ -200,7 +200,7 @@ namespace model {
       OS_ASSERT(result);
       return result;
     }
-    
+
     void PerformancePrecisionTradeoffs_Impl::resetUseRepresentativeSurfacesforCalculations() {
       bool result = setString(OS_PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "");
       OS_ASSERT(result);
@@ -307,7 +307,8 @@ namespace model {
   }
 
   bool PerformancePrecisionTradeoffs::setUseRepresentativeSurfacesforCalculations(bool useRepresentativeSurfacesforCalculations) {
-    return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setUseRepresentativeSurfacesforCalculations(useRepresentativeSurfacesforCalculations);
+    return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setUseRepresentativeSurfacesforCalculations(
+      useRepresentativeSurfacesforCalculations);
   }
 
   void PerformancePrecisionTradeoffs::resetUseRepresentativeSurfacesforCalculations() {
