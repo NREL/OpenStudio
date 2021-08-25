@@ -65,6 +65,10 @@ openstudio::path BCLFileReference::path() const {
   return m_path;
 }
 
+openstudio::path BCLFileReference::relativePath() const {
+  return openstudio::filesystem::relative(m_path, m_measureRootDir);
+}
+
 std::string BCLFileReference::checksum() const {
   return m_checksum;
 }
