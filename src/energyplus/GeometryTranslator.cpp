@@ -2316,7 +2316,7 @@ namespace energyplus {
     // daylighting reference points
     for (WorkspaceObject daylightingPoint : m_workspace.getObjectsByType(IddObjectType::Daylighting_ReferencePoint)) {
       if (daylightingCoordChange != CoordinateChange::NoChange) {
-        OptionalWorkspaceObject zone = daylightingPoint.getTarget(Daylighting_ReferencePointFields::ZoneName);
+        OptionalWorkspaceObject zone = daylightingPoint.getTarget(Daylighting_ReferencePointFields::ZoneorSpaceName);
         if (!zone) {
           LOG(Error, "Could not find zone");
           continue;
