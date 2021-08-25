@@ -1,4 +1,4 @@
-  Version,9.5;
+  Version,9.6;
 
   Building,
     Building 1,              !- Name
@@ -29,6 +29,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -45,6 +46,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 4,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -61,6 +63,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 10,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -77,6 +80,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 16,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -93,6 +97,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 22,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -109,6 +114,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 55,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -527,6 +533,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -543,6 +550,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -574,6 +582,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 23,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -590,6 +599,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 28,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -606,6 +616,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 9,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -622,6 +633,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 43,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -951,6 +963,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 27,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -967,6 +980,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 3,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -983,6 +997,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 37,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -999,6 +1014,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1015,6 +1031,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1046,6 +1063,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 17,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1187,6 +1205,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1203,6 +1222,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1234,6 +1254,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 5,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1250,6 +1271,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 29,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1266,6 +1288,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 15,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1282,6 +1305,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 49,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1424,6 +1448,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1440,6 +1465,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1471,6 +1497,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 11,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1487,6 +1514,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 26,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1503,6 +1531,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 21,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1519,6 +1548,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 31,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1648,6 +1678,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 30,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1664,6 +1695,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 34,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1680,6 +1712,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 40,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1696,6 +1729,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 46,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1712,6 +1746,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 52,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1728,6 +1763,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 85,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1896,6 +1932,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 18,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1912,6 +1949,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1943,6 +1981,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 53,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1959,6 +1998,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 58,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1975,6 +2015,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 39,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1991,6 +2032,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 73,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2146,6 +2188,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 12,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2162,6 +2205,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2193,6 +2237,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 47,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2209,6 +2254,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 57,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2225,6 +2271,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 33,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2241,6 +2288,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 67,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2380,6 +2428,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 24,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2396,6 +2445,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2427,6 +2477,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 35,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2443,6 +2494,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 59,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2459,6 +2511,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 45,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2475,6 +2528,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 79,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2653,6 +2707,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 6,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2669,6 +2724,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2700,6 +2756,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 41,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2716,6 +2773,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 56,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2732,6 +2790,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 51,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2748,6 +2807,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 61,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2913,6 +2973,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 60,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2929,6 +2990,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 64,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2945,6 +3007,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 70,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2961,6 +3024,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 76,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2977,6 +3041,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 82,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2993,6 +3058,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3164,6 +3230,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 48,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3180,6 +3247,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3211,6 +3279,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 83,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3227,6 +3296,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 88,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3243,6 +3313,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 69,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3259,6 +3330,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3422,6 +3494,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 42,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3438,6 +3511,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3469,6 +3543,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 77,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3485,6 +3560,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 87,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3501,6 +3577,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 63,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3517,6 +3594,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3672,6 +3750,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 54,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3688,6 +3767,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3719,6 +3799,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 65,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3735,6 +3816,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 89,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3751,6 +3833,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 75,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3767,6 +3850,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3945,6 +4029,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 36,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3961,6 +4046,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3992,6 +4078,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 71,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -4008,6 +4095,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 86,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -4024,6 +4112,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 81,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -4040,6 +4129,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -5873,8 +5963,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 3,  !- Name
     Air Loop HVAC Outdoor Air System 3 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 3 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 3 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 3 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 3 Controller List,  !- Name
@@ -6084,8 +6173,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 2,  !- Name
     Air Loop HVAC Outdoor Air System 2 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 2 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 2 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 2 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 2 Controller List,  !- Name
@@ -6303,8 +6391,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 1,  !- Name
     Air Loop HVAC Outdoor Air System 1 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 1 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 1 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 1 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 1 Controller List,  !- Name
@@ -6623,8 +6710,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 5,  !- Name
     Air Loop HVAC Outdoor Air System 5 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 5 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 5 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 5 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 5 Controller List,  !- Name
@@ -6988,8 +7074,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 4,  !- Name
     Air Loop HVAC Outdoor Air System 4 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 4 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 4 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 4 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 4 Controller List,  !- Name
@@ -7361,8 +7446,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 7,  !- Name
     Air Loop HVAC Outdoor Air System 7 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 7 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 7 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 7 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 7 Controller List,  !- Name
@@ -7636,8 +7720,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 6,  !- Name
     Air Loop HVAC Outdoor Air System 6 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 6 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 6 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 6 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 6 Controller List,  !- Name
@@ -9298,7 +9381,7 @@
 
   Lights,
     90.1-2007 - Office - Corridor Lights,  !- Name
-    90.1-2007 - Office - Corridor,  !- Zone or ZoneList Name
+    90.1-2007 - Office - Corridor,  !- Zone or ZoneList or Space or SpaceList Name
     Office Bldg Light,       !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
@@ -9311,19 +9394,19 @@
 
   People,
     90.1-2007 - Office - Corridor People,  !- Name
-    90.1-2007 - Office - Corridor,  !- Zone or ZoneList Name
+    90.1-2007 - Office - Corridor,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Occ,  !- Number of People Schedule Name
     People/Area,             !- Number of People Calculation Method
     ,                        !- Number of People
-    0.0107639104167097,      !- People per Zone Floor Area {person/m2}
-    ,                        !- Zone Floor Area per Person {m2/person}
+    0.0107639104167097,      !- People per Floor Area {person/m2}
+    ,                        !- Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
     Autocalculate,           !- Sensible Heat Fraction
     Medium Office Activity;  !- Activity Level Schedule Name
 
   ElectricEquipment,
     90.1-2007 - Office - Corridor Electric Equipment,  !- Name
-    90.1-2007 - Office - Corridor,  !- Zone or ZoneList Name
+    90.1-2007 - Office - Corridor,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Equip,!- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
@@ -9366,7 +9449,7 @@
 
   Lights,
     90.1-2007 - Office - OpenOffice Lights,  !- Name
-    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList Name
+    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList or Space or SpaceList Name
     Office Bldg Light,       !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
@@ -9379,19 +9462,19 @@
 
   People,
     90.1-2007 - Office - OpenOffice People,  !- Name
-    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList Name
+    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Occ,  !- Number of People Schedule Name
     People/Area,             !- Number of People Calculation Method
     ,                        !- Number of People
-    0.056510529687726,       !- People per Zone Floor Area {person/m2}
-    ,                        !- Zone Floor Area per Person {m2/person}
+    0.056510529687726,       !- People per Floor Area {person/m2}
+    ,                        !- Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
     Autocalculate,           !- Sensible Heat Fraction
     Medium Office Activity;  !- Activity Level Schedule Name
 
   ElectricEquipment,
     90.1-2007 - Office - OpenOffice Electric Equipment,  !- Name
-    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList Name
+    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Equip,!- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
