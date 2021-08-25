@@ -376,11 +376,13 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
 
     EXPECT_EQ(numFiles, expectedInitialPaths.size());
     std::vector<fs::path> expectedInitialAbsolutePaths;
+    expectedInitialAbsolutePaths.reserve(expectedInitialPaths.size());
     std::transform(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), std::back_inserter(expectedInitialAbsolutePaths),
                    [&srcDir](const auto& p) { return srcDir / p; });
     std::sort(expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end());
 
     std::vector<fs::path> initialPaths;
+    initialPaths.reserve(files.size());
     std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [](const auto& fileRef) { return fileRef.path(); });
     std::sort(initialPaths.begin(), initialPaths.end());
 
@@ -445,6 +447,7 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
   EXPECT_EQ(addedFiles, 7);
 
   std::vector<fs::path> newXMLPaths;
+  newXMLPaths.reserve(files.size());
   std::transform(files.cbegin(), files.cend(), std::back_inserter(newXMLPaths), [](const auto& fileRef) { return fileRef.path(); });
   std::sort(newXMLPaths.begin(), newXMLPaths.end());
 
@@ -465,6 +468,7 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
   };
   EXPECT_EQ(numFiles + addedFiles, expectedAfterNewFilesPaths.size());
   std::vector<fs::path> expectedAfterNewFilesAbsolutePaths;
+  expectedAfterNewFilesAbsolutePaths.reserve(expectedAfterNewFilesPaths.size());
   std::transform(expectedAfterNewFilesPaths.cbegin(), expectedAfterNewFilesPaths.cend(), std::back_inserter(expectedAfterNewFilesAbsolutePaths),
                  [&srcDir](const auto& p) { return srcDir / p; });
   std::sort(expectedAfterNewFilesAbsolutePaths.begin(), expectedAfterNewFilesAbsolutePaths.end());
@@ -692,11 +696,13 @@ TEST_F(BCLFixture, 4156_TweakXML) {
 
     EXPECT_EQ(numFiles, expectedInitialPaths.size());
     std::vector<fs::path> expectedInitialAbsolutePaths;
+    expectedInitialAbsolutePaths.reserve(expectedInitialPaths.size());
     std::transform(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), std::back_inserter(expectedInitialAbsolutePaths),
                    [&srcDir](const auto& p) { return srcDir / p; });
     std::sort(expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end());
 
     std::vector<fs::path> initialPaths;
+    initialPaths.reserve(files.size());
     std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [](const auto& fileRef) { return fileRef.path(); });
     std::sort(initialPaths.begin(), initialPaths.end());
 

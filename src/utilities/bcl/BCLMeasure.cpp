@@ -678,6 +678,7 @@ void BCLMeasure::setMeasureType(const MeasureType& measureType) {
 std::vector<std::string> BCLMeasure::intendedSoftwareTools() const {
   std::vector<std::string> result;
   std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Software Tool");
+  result.reserve(attributes.size());
   std::transform(attributes.cbegin(), attributes.cend(), std::back_inserter(result),
                  [](const Attribute& attribute) { return attribute.valueAsString(); });
   return result;
@@ -687,6 +688,7 @@ std::vector<std::string> BCLMeasure::intendedSoftwareTools() const {
 std::vector<std::string> BCLMeasure::intendedUseCases() const {
   std::vector<std::string> result;
   std::vector<Attribute> attributes = m_bclXML.getAttributes("Intended Use Case");
+  result.reserve(attributes.size());
   std::transform(attributes.cbegin(), attributes.cend(), std::back_inserter(result),
                  [](const Attribute& attribute) { return attribute.valueAsString(); });
   return result;
