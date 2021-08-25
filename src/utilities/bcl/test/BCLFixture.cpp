@@ -86,7 +86,8 @@ void BCLFixture::TearDown() {
 void BCLFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./BCLFixture.log"));
-  logFile->setLogLevel(Info);
+  logFile->setLogLevel(Debug);
+  Logger::instance().standardOutLogger().disable();
 }
 
 void BCLFixture::TearDownTestSuite() {
