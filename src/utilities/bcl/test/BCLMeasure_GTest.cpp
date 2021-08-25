@@ -37,6 +37,8 @@
 #include "utilities/core/Filesystem.hpp"
 
 #include <algorithm>
+#include <sstream>
+#include <pugixml.hpp>
 
 using namespace openstudio;
 
@@ -289,11 +291,46 @@ size_t createTestMeasureDirectory(const fs::path& srcDir, const std::vector<Test
   return added;
 }
 
+TEST_F(BCLFixture, isApprovedFile) {
+
+  EXPECT_TRUE(BCLMeasure::isIgnoredFileName(".hello"));
+  EXPECT_TRUE(BCLMeasure::isIgnoredFileName(""));
+  EXPECT_TRUE(BCLMeasure::isIgnoredFileName("."));
+  EXPECT_TRUE(BCLMeasure::isIgnoredFileName(".."));
+  EXPECT_FALSE(BCLMeasure::isIgnoredFileName(".gitkeep"));
+  EXPECT_FALSE(BCLMeasure::isIgnoredFileName("hello"));
+
+  openstudio::path measureDir = "/usr/output/my_measure";
+
+  std::vector<std::pair<openstudio::path, bool>> tests{
+    {fs::path("measure.rb"), true},
+    {fs::path("somethingelse.rb"), false},  // Non approved root file
+    {fs::path("docs/hello.rb"), true},
+    {fs::path("docs/subfolder/hello.rb"), true},
+    {fs::path("tests/hello.rb"), true},
+    {fs::path("tests/subfolder/hello.rb"), true},
+    {fs::path("tests/output/hello.rb"), false},  // excluded subfolder
+    {fs::path("resources/hello.rb"), true},
+    {fs::path("resources/subfolder/hello.rb"), true},
+    {fs::path("resources/output/hello.rb"), true},
+
+    // Not an approved subfolder
+    {fs::path("non_approved_subfolder/hello.rb"), false},
+    {fs::path("non_approved_subfolder/subfolder/hello.rb"), false},
+    {fs::path("non_approved_subfolder/output/hello.rb"), false},
+  };
+
+  for (const auto& [relativeFilePath, expectedAllowed] : tests) {
+    openstudio::path absoluteFilePath = measureDir / relativeFilePath;
+    EXPECT_EQ(expectedAllowed, BCLMeasure::isApprovedFile(absoluteFilePath, measureDir));
+  }
+}
+
 TEST_F(BCLFixture, 4156_TestRecursive) {
 
-  /*****************************************************************************************************************************************************
-*                                                C R E A T E    A   T E M P L A T E    M E A S U R E                                                *
-*****************************************************************************************************************************************************/
+  /***************************************************************************************************************************************************
+   *                                               C R E A T E    A   T E M P L A T E    M E A S U R E                                               *
+   **************************************************************************************************************************************************/
 
   openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
   openstudio::path srcDir = testDir / toPath("TestMeasureRecursive");
@@ -344,7 +381,7 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
     std::sort(expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end());
 
     std::vector<fs::path> initialPaths;
-    std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [&srcDir](const auto& fileRef) { return fileRef.path(); });
+    std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [](const auto& fileRef) { return fileRef.path(); });
     std::sort(initialPaths.begin(), initialPaths.end());
 
     EXPECT_TRUE(std::equal(initialPaths.begin(), initialPaths.end(), expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end()));
@@ -357,9 +394,9 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
     return t.allowed && (std::find(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), t.path) == expectedInitialPaths.cend());
   });
 
-  /*****************************************************************************************************************************************************
-*                                               A D D    E X T R A    F I L E S    I N    F O L D E R                                               *
-*****************************************************************************************************************************************************/
+  /***************************************************************************************************************************************************
+   *                                             A D D    E X T R A    F I L E S    I N    F O L D E R                                               *
+   **************************************************************************************************************************************************/
 
   // This will add a few files if not existing, including some that shouldn't be allowed
   size_t added = createTestMeasureDirectory(srcDir, testPaths);
@@ -472,9 +509,9 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
     checkError(extra, "extra files in the XML");
   }
 
-  /*****************************************************************************************************************************************************
-*                                                                     C L O N E                                                                     *
-*****************************************************************************************************************************************************/
+  /***************************************************************************************************************************************************
+   *                                                                    C L O N E                                                                    *
+   **************************************************************************************************************************************************/
 
   boost::optional<BCLMeasure> measure2 = measure->clone(destDir);
   ASSERT_TRUE(measure2);
@@ -516,39 +553,156 @@ TEST_F(BCLFixture, 4156_TestRecursive) {
   // Save, so we can inspect the measure.xml
   measure->save();
   measure2->save();
+
+  /**************************************************************************************************************************************************
+  *                                                         P U G I    X M L    C H E C K                                                          *
+  **************************************************************************************************************************************************/
+  {
+    pugi::xml_document bclXML;
+    auto xmlPath = srcDir / toPath("measure.xml");
+    openstudio::filesystem::ifstream file(xmlPath);
+    ASSERT_TRUE(file.is_open());
+    ASSERT_TRUE(bclXML.load(file));
+    auto measureElement = bclXML.child("measure");
+    auto xmlFilesElement = measureElement.child("files");
+    std::vector<fs::path> xmlFilePaths;
+    for (auto& fileElement : xmlFilesElement.children("file")) {
+      if (!fileElement.first_child().empty()) {
+        // Filename is a relative path, and if usageType is doc/resource/test it omits the subdirectory
+        std::string fileName = fileElement.child("filename").text().as_string();
+        std::string usageType = fileElement.child("usage_type").text().as_string();
+        fs::path baseDir;
+        if (usageType == "doc") {
+          baseDir /= "docs";
+        } else if (usageType == "resource") {
+          baseDir /= "resources";
+        } else if (usageType == "test") {
+          baseDir /= "tests";
+        }
+        xmlFilePaths.emplace_back(srcDir / baseDir / toPath(fileName));
+      }
+    }
+
+    std::sort(xmlFilePaths.begin(), xmlFilePaths.end());
+
+    EXPECT_TRUE(
+      std::equal(xmlFilePaths.begin(), xmlFilePaths.end(), expectedAfterNewFilesAbsolutePaths.begin(), expectedAfterNewFilesAbsolutePaths.end()));
+  }
 }
 
-TEST_F(BCLFixture, isApprovedFile) {
+TEST_F(BCLFixture, 4156_TweakXML) {
 
-  EXPECT_TRUE(BCLMeasure::isIgnoredFileName(".hello"));
-  EXPECT_TRUE(BCLMeasure::isIgnoredFileName(""));
-  EXPECT_TRUE(BCLMeasure::isIgnoredFileName("."));
-  EXPECT_TRUE(BCLMeasure::isIgnoredFileName(".."));
-  EXPECT_FALSE(BCLMeasure::isIgnoredFileName(".gitkeep"));
-  EXPECT_FALSE(BCLMeasure::isIgnoredFileName("hello"));
+  /**************************************************************************************************************************************************
+  *                                      T E S T    W I T H    " M A N U A L L Y "    T W E A K E D    X M L                                       *
+  **************************************************************************************************************************************************/
 
-  openstudio::path measureDir = "/usr/output/my_measure";
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path srcDir = testDir / toPath("TestMeasureTweakXML");
 
-  std::vector<std::pair<openstudio::path, bool>> tests{
-    {fs::path("measure.rb"), true},
-    {fs::path("somethingelse.rb"), false},  // Non approved root file
-    {fs::path("docs/hello.rb"), true},
-    {fs::path("docs/subfolder/hello.rb"), true},
-    {fs::path("tests/hello.rb"), true},
-    {fs::path("tests/subfolder/hello.rb"), true},
-    {fs::path("tests/output/hello.rb"), false},  // excluded subfolder
-    {fs::path("resources/hello.rb"), true},
-    {fs::path("resources/subfolder/hello.rb"), true},
-    {fs::path("resources/output/hello.rb"), true},
-
-    // Not an approved subfolder
-    {fs::path("non_approved_subfolder/hello.rb"), false},
-    {fs::path("non_approved_subfolder/subfolder/hello.rb"), false},
-    {fs::path("non_approved_subfolder/output/hello.rb"), false},
-  };
-
-  for (const auto& [relativeFilePath, expectedAllowed] : tests) {
-    openstudio::path absoluteFilePath = measureDir / relativeFilePath;
-    EXPECT_EQ(expectedAllowed, BCLMeasure::isApprovedFile(absoluteFilePath, measureDir));
+  if (exists(srcDir)) {
+    removeDirectory(srcDir);
   }
+  ASSERT_FALSE(fs::exists(srcDir));
+
+  try {
+    BCLMeasure measure("Test Recursive Measure", "TestRecursiveMeasure", srcDir, "Envelope.Fenestration", MeasureType::ModelMeasure, "Description",
+                       "Modeler Description");
+  } catch (const std::exception& e) {
+    LOG_FREE(Error, "BCLFixture", "exception during measure creation: " << e.what());
+    ASSERT_TRUE(false);
+  }
+  ASSERT_TRUE(exists(srcDir));
+
+  std::vector<fs::path> expectedInitialPaths = {
+    "docs/.gitkeep", "LICENSE.md", "measure.rb", "README.md.erb", "tests/test_recursive_measure_test.rb", "tests/example_model.osm",
+    // "measure.xml": it's not included in itself!
+  };
+  std::sort(expectedInitialPaths.begin(), expectedInitialPaths.end());
+
+  /**************************************************************************************************************************************************
+  *                                                         P U G I    X M L    C H E C K                                                          *
+  **************************************************************************************************************************************************/
+  {
+    pugi::xml_document bclXML;
+    auto xmlPath = srcDir / toPath("measure.xml");
+    openstudio::filesystem::ifstream file(xmlPath);
+    ASSERT_TRUE(file.is_open());
+    ASSERT_TRUE(bclXML.load(file));
+    auto measureElement = bclXML.child("measure");
+    auto xmlFilesElement = measureElement.child("files");
+    std::vector<fs::path> xmlRelativeFilePaths;
+    for (auto& fileElement : xmlFilesElement.children("file")) {
+      if (!fileElement.first_child().empty()) {
+        // Filename is a relative path, and if usageType is doc/resource/test it omits the subdirectory. We check that
+        std::string fileName = fileElement.child("filename").text().as_string();
+        std::string usageType = fileElement.child("usage_type").text().as_string();
+        fs::path baseDir;
+        if (usageType == "doc") {
+          baseDir /= "docs";
+        } else if (usageType == "resource") {
+          baseDir /= "resources";
+        } else if (usageType == "test") {
+          baseDir /= "tests";
+        }
+        xmlRelativeFilePaths.emplace_back(baseDir / toPath(fileName));
+      }
+    }
+
+    std::sort(xmlRelativeFilePaths.begin(), xmlRelativeFilePaths.end());
+
+    EXPECT_TRUE(std::equal(expectedInitialPaths.begin(), expectedInitialPaths.end(), xmlRelativeFilePaths.begin(), xmlRelativeFilePaths.end()));
+  }
+
+  // Load the BCLXML manually
+  auto xmlPath = srcDir / toPath("measure.xml");
+  BCLXML bclXML(xmlPath);
+  size_t numFiles = bclXML.files().size();
+  EXPECT_EQ(6, numFiles);
+
+  size_t addedUntrackedFiles = 0;
+  for (const openstudio::path& relativeFilePath : {"root_file.rb", "untracked_subfolder/subfolder_file.rb", "tests/output/test_report.html"}) {
+    auto absoluteFilePath = srcDir / relativeFilePath;
+    fs::create_directories(absoluteFilePath.parent_path());
+    std::ofstream(absoluteFilePath.string()) << absoluteFilePath.string();
+    BCLFileReference fileRef(srcDir, relativeFilePath, true);
+    fileRef.setUsageType("script");
+    bclXML.addFile(fileRef);
+    ++addedUntrackedFiles;
+    EXPECT_EQ(numFiles + addedUntrackedFiles, bclXML.files().size());
+  }
+
+  // Save the XML
+  bclXML.save();
+
+  // Now load back the measure.
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
+  ASSERT_TRUE(measure);
+  EXPECT_EQ(numFiles + addedUntrackedFiles, measure->files().size());
+
+  // Call CheckUpdateFiles(), it should detect the files that aren't allowed
+  EXPECT_TRUE(measure->checkForUpdatesFiles());
+  EXPECT_TRUE(measure->checkForUpdatesXML());
+
+  // number of files is back at original
+  auto files = measure->files();
+  EXPECT_EQ(numFiles, files.size());
+
+  // We check that they are what we expect
+  {
+
+    EXPECT_EQ(numFiles, expectedInitialPaths.size());
+    std::vector<fs::path> expectedInitialAbsolutePaths;
+    std::transform(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), std::back_inserter(expectedInitialAbsolutePaths),
+                   [&srcDir](const auto& p) { return srcDir / p; });
+    std::sort(expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end());
+
+    std::vector<fs::path> initialPaths;
+    std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [](const auto& fileRef) { return fileRef.path(); });
+    std::sort(initialPaths.begin(), initialPaths.end());
+
+    EXPECT_TRUE(std::equal(initialPaths.begin(), initialPaths.end(), expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end()));
+  }
+
+  // We save the measure so we can inspect the XML
+  measure->save();
 }
