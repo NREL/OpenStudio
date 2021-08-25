@@ -34,10 +34,13 @@
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
+#include <utilities/idd/SpaceList_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -69,7 +72,15 @@ namespace energyplus {
     IdfObject idfObject(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListName, _zone->name().get());
+    IdfObject spaceListIdf(IddObjectType::SpaceList);
+    spaceListIdf.setName(zone.name().get() + " Space List");
+    m_idfObjects.push_back(spaceListIdf);
+    std::vector<Space> spaces = zone.spaces();
+    for (const Space& space : spaces) {
+      auto eg = spaceListIdf.pushExtensibleGroup();
+      eg.setString(SpaceListExtensibleFields::SpaceName, space.name().get());
+    }    
+    idfObject.setString(ZoneProperty_UserViewFactors_BySurfaceNameFields::SpaceorSpaceListName, spaceListIdf.name().get());
 
     for (const ViewFactor& viewFactor : viewFactors) {
 

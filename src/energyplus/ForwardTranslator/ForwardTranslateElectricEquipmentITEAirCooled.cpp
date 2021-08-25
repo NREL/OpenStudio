@@ -88,7 +88,7 @@ namespace energyplus {
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
         // Assign object to zone
-        idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ZoneName, thermalZone->name().get());
+        idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName, thermalZone->name().get());
         // attach the supply air node to zone if there is an available supply air node
         // search airloop first
         if (auto mo = thermalZone->inletPortList().airLoopHVACModelObject()) {
