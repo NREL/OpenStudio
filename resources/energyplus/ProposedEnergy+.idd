@@ -5667,6 +5667,60 @@ GeometryTransform,
       \minimum> 0
       \note Aspect ratio to transform to during run
 
+Space,
+       \memo Defines a space (room) in the building. All Spaces are part of a Zone.
+       \memo Every Zone contains one or more spaces. Space is an optional input.
+       \memo If a Zone has no Space(s) specified in input then a default Space named <Zone Name> will be created.
+       \memo If some surfaces in a Zone are assigned to a space and some are not, then a default Space
+       \memo named <Zone Name>-Remainder will be created. 
+       \memo Input references to Space Names must have a matching Space object
+       \memo (default space names may not be referenced except in output variable keys).
+       \min-fields 3
+       \extensible:1
+  A1,  \field Name
+       \required-field
+       \type alpha
+       \reference SpaceNames
+       \reference SpaceAndSpaceListNames
+  A2,  \field Zone Name
+       \required-field
+       \type object-list
+       \object-list ZoneNames
+  N1 , \field Floor Area
+       \note If this field is 0.0, negative or autocalculate, then the floor area of the space
+       \note is automatically calculated and used in subsequent calculations.
+       \note If this field is positive, then the number entered here will be used.
+       \units m2
+       \type real
+       \autocalculatable
+       \default autocalculate
+  A3,  \field Space Type
+       \note Space type is used to tag spaces by activity type, such as office, classroom, storage, etc.
+       \type alpha
+       \default General
+  A4;  \field Tag 1
+       \note Optional reporting tag
+       \type alpha
+       \begin-extensible
+
+SpaceList,
+       \memo Defines a list of Spaces which can be referenced as a group. The SpaceList name
+       \memo may be used elsewhere in the input to apply a parameter to all Spaces in the list.
+       \memo SpaceLists can be used effectively with the following objects: InternalMass, People, Lights,
+       \memo ElectricEquipment, GasEquipment, HotWaterEquipment, and others.
+       \min-fields 2
+       \extensible:1
+  A1 , \field Name
+       \note Name of the Space List
+       \required-field
+       \type alpha
+       \reference SpaceListNames
+       \reference SpaceAndSpaceListNames
+  A2 ; \field Space 1 Name
+       \begin-extensible
+       \type object-list
+       \object-list SpaceNames
+
 Zone,
        \memo Defines a thermal zone of the building. Every zone contains one or more Spaces.
        \memo Space is an optional input. 
@@ -5813,7 +5867,7 @@ BuildingSurface:Detailed,
   \memo Allows for detailed entry of building heat transfer surfaces. Does not include subsurfaces such as windows or doors.
   \extensible:3 -- duplicate last set of x,y,z coordinates (last 3 fields), remembering to remove ; from "inner" fields.
   \format vertices
-  \min-fields 19
+  \min-fields 20
   A1 , \field Name
        \required-field
        \type alpha
@@ -5839,10 +5893,14 @@ BuildingSurface:Detailed,
        \object-list ConstructionNames
   A4 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
-  A5 , \field Outside Boundary Condition
+  A5 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
+  A6 , \field Outside Boundary Condition
        \required-field
        \type choice
        \key Adiabatic
@@ -5861,7 +5919,7 @@ BuildingSurface:Detailed,
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
        \key GroundBasementPreprocessorLowerWall
-  A6,  \field Outside Boundary Condition Object
+  A7,  \field Outside Boundary Condition Object
        \type object-list
        \object-list OutFaceEnvNames
        \note Non-blank only if the field Outside Boundary Condition is Surface,
@@ -5874,12 +5932,12 @@ BuildingSurface:Detailed,
        \note the program will calculate the heat transfer appropriately
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
-  A7 , \field Sun Exposure
+  A8 , \field Sun Exposure
        \type choice
        \key SunExposed
        \key NoSun
        \default SunExposed
-  A8,  \field Wind Exposure
+  A9,  \field Wind Exposure
        \type choice
        \key WindExposed
        \key NoWind
@@ -5921,7 +5979,7 @@ Wall:Detailed,
   \memo Allows for detailed entry of wall heat transfer surfaces.
   \extensible:3 -- duplicate last set of x,y,z coordinates (last 3 fields), remembering to remove ; from "inner" fields.
   \format vertices
-  \min-fields 18
+  \min-fields 19
   A1 , \field Name
        \required-field
        \type alpha
@@ -5939,10 +5997,14 @@ Wall:Detailed,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
-  A4 , \field Outside Boundary Condition
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
+  A5 , \field Outside Boundary Condition
        \required-field
        \type choice
        \key Adiabatic
@@ -5961,7 +6023,7 @@ Wall:Detailed,
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
        \key GroundBasementPreprocessorLowerWall
-  A5,  \field Outside Boundary Condition Object
+  A6,  \field Outside Boundary Condition Object
        \type object-list
        \object-list OutFaceEnvNames
        \note Non-blank only if the field Outside Boundary Condition is Surface,
@@ -5973,12 +6035,12 @@ Wall:Detailed,
        \note If Foundation, specify the name of the corresponding Foundation object and
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
-  A6 , \field Sun Exposure
+  A7 , \field Sun Exposure
        \type choice
        \key SunExposed
        \key NoSun
        \default SunExposed
-  A7,  \field Wind Exposure
+  A8,  \field Wind Exposure
        \type choice
        \key WindExposed
        \key NoWind
@@ -6018,7 +6080,7 @@ RoofCeiling:Detailed,
   \memo Allows for detailed entry of roof/ceiling heat transfer surfaces.
   \extensible:3 -- duplicate last set of x,y,z coordinates (last 3 fields), remembering to remove ; from "inner" fields.
   \format vertices
-  \min-fields 18
+  \min-fields 19
   A1 , \field Name
        \required-field
        \type alpha
@@ -6036,10 +6098,14 @@ RoofCeiling:Detailed,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
-  A4 , \field Outside Boundary Condition
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
+  A5 , \field Outside Boundary Condition
        \required-field
        \type choice
        \key Adiabatic
@@ -6056,7 +6122,7 @@ RoofCeiling:Detailed,
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
        \key GroundBasementPreprocessorLowerWall
- A5,  \field Outside Boundary Condition Object
+ A6,  \field Outside Boundary Condition Object
        \type object-list
        \object-list OutFaceEnvNames
        \note Non-blank only if the field Outside Boundary Condition is Surface,
@@ -6067,12 +6133,12 @@ RoofCeiling:Detailed,
        \note the program will generate the corresponding interzone surface
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
-  A6 , \field Sun Exposure
+  A7 , \field Sun Exposure
        \type choice
        \key SunExposed
        \key NoSun
        \default SunExposed
-  A7,  \field Wind Exposure
+  A8,  \field Wind Exposure
        \type choice
        \key WindExposed
        \key NoWind
@@ -6112,7 +6178,7 @@ Floor:Detailed,
   \memo Allows for detailed entry of floor heat transfer surfaces.
   \extensible:3 -- duplicate last set of x,y,z coordinates (last 3 fields), remembering to remove ; from "inner" fields.
   \format vertices
-  \min-fields 18
+  \min-fields 19
   A1 , \field Name
        \required-field
        \type alpha
@@ -6131,10 +6197,14 @@ Floor:Detailed,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
-  A4 , \field Outside Boundary Condition
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
+  A5 , \field Outside Boundary Condition
        \required-field
        \type choice
        \key Adiabatic
@@ -6153,7 +6223,7 @@ Floor:Detailed,
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
        \key GroundBasementPreprocessorLowerWall
- A5,  \field Outside Boundary Condition Object
+ A6,  \field Outside Boundary Condition Object
        \type object-list
        \object-list OutFaceEnvNames
        \note Non-blank only if the field Outside Boundary Condition is Surface,
@@ -6165,12 +6235,12 @@ Floor:Detailed,
        \note If Foundation, specify the name of the corresponding Foundation object and
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
-  A6 , \field Sun Exposure
+  A7 , \field Sun Exposure
        \type choice
        \key SunExposed
        \key NoSun
        \default SunExposed
-  A7,  \field Wind Exposure
+  A8,  \field Wind Exposure
        \type choice
        \key WindExposed
        \key NoWind
@@ -6225,9 +6295,13 @@ Wall:Exterior,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
   N1,  \field Azimuth Angle
        \note Facing direction of outside of wall (S=180,N=0,E=90,W=270)
        \minimum 0
@@ -6269,9 +6343,13 @@ Wall:Adiabatic,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
   N1,  \field Azimuth Angle
        \note Facing direction of outside of wall (S=180,N=0,E=90,W=270)
        \minimum 0
@@ -6315,9 +6393,13 @@ Wall:Underground,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
   N1,  \field Azimuth Angle
        \note Facing direction of outside of wall (S=180,N=0,E=90,W=270)
        \minimum 0
@@ -6360,10 +6442,14 @@ Wall:Interzone,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone for the inside of the surface
+       \note Zone for the inside face of the surface.
        \type object-list
        \object-list ZoneNames
-  A4 , \field Outside Boundary Condition Object
+  A4 , \field Space Name
+       \note Space for the inside face of the surface (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
+  A5 , \field Outside Boundary Condition Object
        \required-field
        \note Specify a surface name in an adjacent zone for known interior walls.
        \note Specify a zone name of an adjacent zone to automatically generate
@@ -6412,9 +6498,13 @@ Roof,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
   N1,  \field Azimuth Angle
        \note Facing direction of outside of Roof
        \minimum 0
@@ -6458,9 +6548,13 @@ Ceiling:Adiabatic,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
   N1,  \field Azimuth Angle
        \note Facing direction of outside of Ceiling
        \minimum 0
@@ -6506,10 +6600,14 @@ Ceiling:Interzone,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone for the inside of the surface
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
-  A4 , \field Outside Boundary Condition Object
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
+  A5 , \field Outside Boundary Condition Object
        \required-field
        \note Specify a surface name in an adjacent zone for known interior floors
        \note Specify a zone name of an adjacent zone to automatically generate
@@ -6563,9 +6661,13 @@ Floor:GroundContact,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
   N1,  \field Azimuth Angle
        \units deg
        \minimum 0
@@ -6611,9 +6713,13 @@ Floor:Adiabatic,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \type object-list
        \object-list ZoneNames
+  A4 , \field Space Name
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
   N1,  \field Azimuth Angle
        \units deg
        \minimum 0
@@ -6659,10 +6765,14 @@ Floor:Interzone,
        \object-list ConstructionNames
   A3 , \field Zone Name
        \required-field
-       \note Zone for the inside of the surface
+       \note Zone for the inside face of the surface.
        \type object-list
        \object-list ZoneNames
-  A4 , \field Outside Boundary Condition Object
+  A4 , \field Space Name
+       \note Space for the inside face of the surface (optional, see description of Space object for more details).
+       \type object-list
+       \object-list SpaceNames
+  A5 , \field Outside Boundary Condition Object
        \required-field
        \note Specify a surface name in an adjacent zone for known interior ceilings.
        \note Specify a zone name of an adjacent zone to automatically generate
@@ -7489,7 +7599,7 @@ InternalMass,
        \memo Used to describe internal zone surface area that does not need to be part of geometric
        \memo representation. This should be the total surface area exposed to the zone air.
        \memo If you use a ZoneList in the Zone or ZoneList name field then this definition applies
-       \memo to all the zones in the ZoneList.
+       \memo to all the zones in the ZoneList. Likewise for SpaceList.
   A1 , \field Name
        \required-field
        \type alpha
@@ -7505,8 +7615,13 @@ InternalMass,
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
-       \note Zone the surface is a part of
+       \note Zone the surface is a part of.
        \note used to be Interior Environment
+  A4 , \field Space or SpaceList Name
+       \type object-list
+       \object-list SpaceAndSpaceListNames
+       \note Space the surface is a part of (optional, see description of Space object for more details).
+       \note This field is ignored when a ZoneList Name is specified for Zone or ZoneList Name.
   N1 ; \field Surface Area
        \required-field
        \units m2
@@ -9638,11 +9753,12 @@ ZoneProperty:UserViewFactors:BySurfaceName,
        \memo (Number of Surfaces)**2 are expected. Any omitted surface pairs will be assumed to have a view factor of zero.
        \extensible:3 - copy last three fields, remembering to remove ;
        \format ViewFactor
-  A1,  \field Zone or ZoneList Name
-       \note View factors may be entered for a single zone or for a group of zones connected by Construction:AirBoundary
+  A1,  \field Space or SpaceList Name
+       \note View factors may be entered for a single space or for a group of spaces in the same enclosure
+       \note by way of Constructon:AirBoundary or open spaces within a zone.
        \type object-list
-       \object-list ZoneNames
-       \object-list ZoneListNames
+       \object-list SpaceNames
+       \object-list SpaceListNames
   A2,  \field From Surface 1
        \begin-extensible
        \type object-list
@@ -11114,8 +11230,9 @@ RoomAirSettings:AirflowNetwork,
 
 People,
    \memo Sets internal gains and contaminant rates for occupants in the zone.
-   \memo If you use a ZoneList in the Zone or ZoneList name field then this definition applies
-   \memo to all the zones in the ZoneList.
+   \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Name.
    \extensible:1
    \min-fields 10
    \max-fields 24
@@ -11123,10 +11240,11 @@ People,
        \required-field
        \type alpha
        \reference PeopleNames
-  A2 , \field Zone or ZoneList Name
+  A2 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A3 , \field Number of People Schedule Name
        \required-field
        \type object-list
@@ -11136,8 +11254,8 @@ People,
        \note The entered calculation method is used to create the maximum number of people
        \note for this set of attributes (i.e. sensible fraction, schedule, etc)
        \note Choices: People -- simply enter number of occupants.
-       \note People per Zone Floor Area -- enter the number to apply. Value * Floor Area = Number of people
-       \note Zone Floor Area per Person -- enter the number to apply. Floor Area / Value = Number of people
+       \note People per Floor Area -- enter the number to apply. Value * Floor Area = Number of people
+       \note Floor Area per Person -- enter the number to apply. Floor Area / Value = Number of people
        \type choice
        \key People
        \key People/Area
@@ -11146,11 +11264,11 @@ People,
   N1 , \field Number of People
        \type real
        \minimum 0
-  N2 , \field People per Zone Floor Area
+  N2 , \field People per Floor Area
        \type real
        \minimum 0
        \units person/m2
-  N3 , \field Zone Floor Area per Person
+  N3 , \field Floor Area per Person
        \type real
        \minimum 0
        \units m2/person
@@ -11259,17 +11377,19 @@ ComfortViewFactorAngles,
 
 Lights,
    \memo Sets internal gains for lights in the zone.
-   \memo If you use a ZoneList in the Zone or ZoneList name field then this definition applies
-   \memo to all the zones in the ZoneList.
+   \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Name.
        \min-fields 11
   A1 , \field Name
        \required-field
        \type alpha
        \reference LightsNames
-  A2 , \field Zone or ZoneList Name
+  A2 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A3 , \field Schedule Name
        \required-field
        \type object-list
@@ -11347,26 +11467,32 @@ Lights,
        \units 1/K
        \minimum 0.0
        \default 0.0
-  A7 ; \field Return Air Heat Gain Node Name
+  A7 , \field Return Air Heat Gain Node Name
        \note Name of the return air node for this heat gain.
        \note If left blank, defaults to the first return air node for the zone.
        \note Leave this field blank when using a ZoneList name.
        \type node
-
+  A8 ; \field Exhaust Air Heat Gain Node Name
+       \note Name of the exhaust air node for this heat gain.
+       \note If the node name is entered, return heat gain will be shared by both return and exhaust air nodes.
+       \note The air properties of both nodes are weighted by both node mass flow rates.
+       \type node
 
 ElectricEquipment,
    \memo Sets internal gains for electric equipment in the zone.
-   \memo If you use a ZoneList in the Zone or ZoneList name field then this definition applies
-   \memo to all the zones in the ZoneList.
+   \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Name.
    \min-fields 10
   A1 , \field Name
        \required-field
        \type alpha
        \reference ElectricEquipmentNames
-  A2 , \field Zone or ZoneList Name
+  A2 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A3 , \field Schedule Name
        \required-field
        \type object-list
@@ -11421,15 +11547,18 @@ ElectricEquipment,
 
 GasEquipment,
    \memo Sets internal gains and contaminant rates for gas equipment in the zone.
-   \memo If you use a ZoneList in the Zone name field then this definition applies to all those zones.
+   \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Name.
    \min-fields 10
   A1 , \field Name
        \required-field
        \type alpha
-  A2 , \field Zone or ZoneList Name
+  A2 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A3 , \field Schedule Name
        \required-field
        \type object-list
@@ -11498,15 +11627,18 @@ GasEquipment,
 
 HotWaterEquipment,
    \memo Sets internal gains for hot water equipment in the zone.
-   \memo If you use a ZoneList in the Zone name field then this definition applies to all those zones.
+   \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Name.
    \min-fields 10
   A1 , \field Name
        \required-field
        \type alpha
-  A2 , \field Zone or ZoneList Name
+  A2 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A3 , \field Schedule Name
        \required-field
        \type object-list
@@ -11563,14 +11695,18 @@ HotWaterEquipment,
 
 SteamEquipment,
    \memo Sets internal gains for steam equipment in the zone.
+   \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Nam
    \min-fields 10
   A1 , \field Name
        \required-field
        \type alpha
-  A2 , \field Zone or ZoneList Name
+  A2 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A3 , \field Schedule Name
        \required-field
        \type object-list
@@ -11627,6 +11763,9 @@ SteamEquipment,
 
 OtherEquipment,
    \memo Sets internal gains or losses for "other" equipment in the zone.
+   \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Name.
    \min-fields 11
   A1 , \field Name
        \required-field
@@ -11648,10 +11787,11 @@ OtherEquipment,
        \key DistrictHeating
        \key DistrictCooling
        \default None
-  A3 , \field Zone or ZoneList Name
+  A3 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
        \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A4 , \field Schedule Name
        \required-field
        \type object-list
@@ -11716,14 +11856,19 @@ OtherEquipment,
 ElectricEquipment:ITE:AirCooled,
    \memo This object describes air-cooled electric information technology equipment (ITE) which has
    \memo variable power consumption as a function of loading and temperature.
+   \memo If a Zone comprised of more than one Space is specified
+   \memo then this definition applies to all applicable spaces, and each instance will
+   \memo be named with the Space Name plus this Object Name.
        \min-fields 28
   A1 , \field Name
        \required-field
        \type alpha
-  A2 , \field Zone Name
+  A2 , \field Zone or Space Name
+       \note ZoneList and SpaceList names are not allowed.
        \required-field
        \type object-list
        \object-list ZoneNames
+       \object-list SpaceNames
   A3 , \field Air Flow Calculation Method
        \note The specified method is used to calculate the IT inlet temperature and zone return
        \note air temperature. If FlowFromSystem is chosen, the zone is assumed to be well-mixed.
@@ -11931,14 +12076,18 @@ ElectricEquipment:ITE:AirCooled,
 
 ZoneBaseboard:OutdoorTemperatureControlled,
        \memo Specifies outside temperature-controlled electric baseboard heating.
+       \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
+       \memo then this definition applies to all applicable spaces, and each instance will
+       \memo be named with the Space Name plus this Object Name.
        \min-fields 8
   A1 , \field Name
        \required-field
        \type alpha
-  A2 , \field Zone Name
+  A2 , \field Zone or ZoneList or Space or SpaceList Name
        \required-field
        \type object-list
-       \object-list ZoneNames
+       \object-list ZoneAndZoneListNames
+       \object-list SpaceAndSpaceListNames
   A3 , \field Schedule Name
        \required-field
        \type object-list
@@ -12259,10 +12408,11 @@ Daylighting:Controls,
        \required-field
        \type alpha
        \reference DaylightingControlNames
-  A2,  \field Zone Name
+  A2,  \field Zone or Space Name
        \required-field
        \type object-list
        \object-list ZoneNames
+       \object-list SpaceNames
   A3,  \field Daylighting Method
        \type choice
        \key SplitFlux
@@ -12326,7 +12476,7 @@ Daylighting:Controls,
        \object-list DaylightReferencePointNames
        \begin-extensible
        \required-field
-  N8,  \field Fraction of Zone Controlled by Reference Point 1
+  N8,  \field Fraction of Lights Controlled by Reference Point 1
        \type real
        \minimum 0.0
        \maximum 1.0
@@ -12341,15 +12491,16 @@ Daylighting:ReferencePoint,
        \min-fields 5
        \memo Used by Daylighting:Controls to identify the reference point coordinates for each sensor.
        \memo Reference points are given in coordinates specified in the GlobalGeometryRules object
-       \memo Daylighting Reference Point CoordinateSystem field
+       \memo Daylighting Reference Point CoordinateSystem field.
   A1,  \field Name
        \required-field
        \type alpha
        \reference DaylightReferencePointNames
-  A2,  \field Zone Name
+  A2,  \field Zone or Space Name
        \required-field
        \type object-list
        \object-list ZoneNames
+       \object-list SpaceNames
   N1,  \field X-Coordinate of Reference Point
        \units m
        \required-field
@@ -13966,6 +14117,28 @@ AirflowNetwork:MultiZone:Surface:EffectiveLeakageArea,
       \maximum 1.0
       \note Enter the exponent used in the air mass flow equation.
 
+AirflowNetwork:MultiZone:SpecifiedFlowRate,
+      \min-fields 2
+      \memo This object is used to define specified flow through a linkage.
+ A1 , \field Name
+      \required-field
+      \type alpha
+      \reference SurfaceAirflowLeakageNames
+      \note Enter a unique name for this object.
+ N1 , \field Air Flow Value
+      \required-field
+      \type real
+      \unitsBasedOnField A2
+      \note Enter the specified flow rate.
+ A2 ; \field Air Flow Units
+      \type choice
+      \key VolumetricFlow
+      \key MassFlow
+      \default MassFlow
+      \note Enter the units of the air flow value.
+      \note VolumetricFlow (m3/s)
+      \note MassFlow (kg/s)
+
 AirflowNetwork:MultiZone:Component:DetailedOpening,
       \min-fields 16
       \memo This object specifies the properties of airflow through windows and doors (window, door and
@@ -15296,6 +15469,7 @@ HVACTemplate:Zone:IdealLoadsAirSystem,
   A11, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the minimum
        \note outdoor air flow rate will be computed using these specifications. The outdoor air
        \note flow rate will also be affected by the next two fields.
@@ -15413,6 +15587,7 @@ HVACTemplate:Zone:BaseboardHeat,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
   A8; \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -15567,6 +15742,7 @@ HVACTemplate:Zone:FanCoil,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
  A13, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -15833,6 +16009,7 @@ HVACTemplate:Zone:PTAC,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
  A15, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -16136,6 +16313,7 @@ HVACTemplate:Zone:PTHP,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
  A19, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -16421,6 +16599,7 @@ HVACTemplate:Zone:WaterToAirHeatPump,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
  A16, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -16574,6 +16753,7 @@ HVACTemplate:Zone:VRF,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
   A6, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -16866,6 +17046,7 @@ HVACTemplate:Zone:Unitary,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
  A12; \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -17015,6 +17196,7 @@ HVACTemplate:Zone:VAV,
  A10, \field Design Specification Outdoor Air Object Name for Control
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
       \note unit will increase flow as needed to meet this outdoor air requirement.
       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
@@ -17099,6 +17281,7 @@ HVACTemplate:Zone:VAV,
       \note (see above) is used to actively control the VAV terminal air flow rate.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
  A18; \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -17298,6 +17481,7 @@ HVACTemplate:Zone:VAV:FanPowered,
  A15, \field Design Specification Outdoor Air Object Name
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
  A16; \field Design Specification Zone Air Distribution Object Name
       \type object-list
       \object-list DesignSpecificationZoneAirDistributionNames
@@ -17383,6 +17567,7 @@ HVACTemplate:Zone:VAV:HeatAndCool,
       \note (see above) is used to actively control the VAV terminal air flow rate.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
   A6, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -17544,6 +17729,7 @@ HVACTemplate:Zone:ConstantVolume,
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
   A6, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -17712,6 +17898,7 @@ HVACTemplate:Zone:DualDuct,
       \note (see above) is used to actively control the VAV terminal air flow rate.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
   A6, \field Design Specification Zone Air Distribution Object Name
       \note This field is used only when Outdoor Air Method=DetailedSpecification.
       \type object-list
@@ -17719,6 +17906,7 @@ HVACTemplate:Zone:DualDuct,
   A7, \field Design Specification Outdoor Air Object Name for Control
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
       \note unit will increase flow as needed to meet this outdoor air requirement.
       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
@@ -21779,6 +21967,26 @@ DesignSpecification:OutdoorAir,
       \note This input is only used to calculate the minimum outdoor air flow rate when the field
       \note System Outdoor Air Method = ProportionalControlBasedOnDesignOARate in Controller:MechanicalVentilation.
 
+DesignSpecification:OutdoorAir:SpaceList,
+       \memo Defines a list of DesignSpecification:OutdoorAir names which can be referenced as a group. 
+       \memo The DesignSpecification:OutdoorAir:SpaceList name may be used in Sizing:Zone and 
+       \memo Controller:MechanicalVentilation to specify space-by-space OA requirements and anywhere else
+       \memo that accepts a DesignSpecification:OutdoorAir object name.
+       \min-fields 3
+       \extensible:2
+  A1 , \field Name
+       \note Name of the List
+       \required-field
+       \type alpha
+       \reference DSOASpaceListNames
+  A2 , \field Space 1 Name
+       \begin-extensible
+       \type object-list
+       \object-list SpaceNames
+  A3 ; \field Space 1 Design Specification Outdoor Air Object Name
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+
 DesignSpecification:ZoneAirDistribution,
   \min-fields 1
   \memo This object is used to describe zone air distribution in terms of air distribution
@@ -21894,8 +22102,12 @@ Sizing:Zone,
       \type real
       \units kgWater/kgDryAir
   A4, \field Design Specification Outdoor Air Object Name
+      \note Specify the name of a DesignSpecification:OutdoorAir object to specify one set of requirements for the Zone.
+      \note Use a DesignSpecification:OutdoorAir:SpaceList object name to specify different 
+      \note requirements for Spaces within the Zone.
       \type object-list
       \object-list DesignSpecificationOutdoorAirNames
+      \object-list DSOASpaceListNames
   N7, \field Zone Heating Sizing Factor
       \note if blank or zero, global heating sizing factor from Sizing:Parameters is used.
       \minimum 0
@@ -23232,6 +23444,7 @@ ZoneHVAC:IdealLoadsAirSystem,
   A12, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the minimum
        \note outdoor air flow rate will be computed using these specifications. The outdoor air
        \note flow rate will also be affected by the next two fields.
@@ -24710,7 +24923,6 @@ ZoneHVAC:HybridUnitaryHVAC,
     A1, \field Name
         \required-field
         \type alpha
-        \retaincase
         \reference ZoneEquipmentNames
     A2, \field Availability Schedule Name
         \note Enter the availability schedule name for this system. Schedule value > 0 means the system is available. If this field is blank, the system is always available.
@@ -24865,6 +25077,7 @@ ZoneHVAC:HybridUnitaryHVAC,
    A19, \field Design Specification Outdoor Air Object Name
         \type object-list
         \object-list DesignSpecificationOutdoorAirNames
+        \object-list DSOASpaceListNames
         \note Enter the name of a DesignSpecification:OutdoorAir object. Information in that object will be used to compute the minimum outdoor air flow rate in each time step.
         \note If this field is blank, the system may still supply outdoor air, if it is capable as described by lookup tables, when doing so is the most efficient way to satisfy other constraints.
    A20, \field Mode 0 Name
@@ -26921,6 +27134,7 @@ AirTerminal:SingleDuct:ConstantVolume:NoReheat,
    A5, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note This field is used to modulate the terminal unit flow rate based on the specified outdoor air
        \note requirement. When the name of a DesignSpecification:OutdoorAir object is entered, the terminal unit will
        \note adjust flow to meet this outdoor air requirement and no more. There is no control for zone load.
@@ -27002,6 +27216,7 @@ AirTerminal:SingleDuct:VAV:NoReheat,
   A7 , \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
        \note unit will increase flow as needed to meet this outdoor air requirement.
        \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
@@ -27157,6 +27372,7 @@ AirTerminal:SingleDuct:VAV:Reheat,
   A11, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
        \note unit will increase flow as needed to meet this outdoor air requirement.
        \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
@@ -27964,6 +28180,7 @@ AirTerminal:SingleDuct:Mixer,
    A8, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
        \note unit will adjust flow to meet this outdoor air requirement.
        \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
@@ -28041,6 +28258,7 @@ AirTerminal:DualDuct:VAV,
   A6 , \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
        \note unit will increase flow as needed to meet this outdoor air requirement.
        \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
@@ -28089,6 +28307,7 @@ AirTerminal:DualDuct:VAV:OutdoorAir,
        \required-field
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
+       \object-list DSOASpaceListNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
        \note unit will increase flow as needed to meet this outdoor air requirement.
        \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
@@ -29150,6 +29369,108 @@ Coil:Cooling:Water:DetailedGeometry,
        \note object is used for sizing the coil Design Geomtery Parameters. If the autosized value is 
        \note higher than the coil design outlet air temperature, then the design inlet water temperature 
        \note value is reset to coil design outlet air temperature minus 5.0 DeltaC
+
+CoilSystem:Cooling:Water,
+       \memo Virtual container component that consists of a water cooling coil
+       \memo and its associated controls. This control object supports the
+       \memo available water coil types and may be placed directly on an
+       \memo air loop branch or in an outdoor air equipment list.
+       \min-fields 10
+   A1, \field Name
+       \required-field
+       \type alpha
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
+       \reference-class-name validOASysEquipmentTypes
+       \reference validOASysEquipmentNames
+   A2, \field Air Inlet Node Name
+       \required-field
+       \type node
+   A3, \field Air Outlet Node Name
+       \required-field
+       \type node
+   A4, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0
+       \note means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+   A5, \field Cooling Coil Object Type
+       \type choice
+       \required-field
+       \key Coil:Cooling:Water
+       \key Coil:Cooling:Water:DetailedGeometry
+       \key CoilSystem:Cooling:Water:HeatExchangerAssisted
+   A6, \field Cooling Coil Name
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsWater
+   A7, \field Dehumidification Control Type
+       \type choice
+       \key None
+       \key Multimode
+       \key CoolReheat
+       \default None
+       \note None = meet sensible load only. Valid with all cooling coil types. When a heat 
+       \note exchanger assisted cooling coil is used, the heat exchanger is locked on at all times.   
+       \note Multimode = activate water coil and meet sensible load. If no sensible load exists,     
+       \note and Run on Latent Load = Yes, and a latent load exists, the coil will operate to meet
+       \note the latent load. If the latent load cannot be met the heat exchanger will be activated.
+       \note Valid only with cooling coil type CoilSystem:Cooling:Water:HeatExchangerAssisted.   
+       \note CoolReheat = cool beyond the dry-bulb setpoint as required to meet the humidity setpoint.
+       \note Valid with all cooling coil types. When a heat exchanger assisted cooling coil is used,
+       \note the heat exchanger is locked on at all times.      
+       \note For all dehumidification controls, the max humidity setpoint on the Sensor Node is used.
+       \note SetpointManager:SingleZone:Humidity:Maximum,
+       \note SetpointManager:MultiZone:Humidity:Maximum, or
+       \note SetpointManager:MultiZone:MaximumHumidity:Average, and
+       \note SetpointManager:OutdoorAirPretreat (optional) objects.
+   A8, \field Run on Sensible Load
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+       \note If Yes, unit will run if there is a sensible load.
+       \note If No, unit will not run if there is only a sensible load.
+       \note Dehumidification controls will be active if specified.
+   A9, \field Run on Latent Load
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note If Yes, unit will run if there is a latent load.
+       \note even if there is no sensible load.
+       \note If No, unit will not run if there is only a latent load.
+       \note Dehumidification controls will be active if specified.
+   N1, \field Minimum Air To Water Temperature Offset
+       \note Coil will turn on as required when inlet air temperature is above
+       \note water temperature by amount of offset. To model a waterside
+       \note economizer connect to condenser loop and increase offset as desired.
+       \type real
+       \units deltaC
+       \minimum 0.0
+       \default 0.0
+  A10, \field Economizer Lockout
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+       \note Yes means that the heat exchanger will be locked out (off)
+   N2, \field Minimum Water Loop Temperature For Heat Recovery
+       \note Only used for heat recovery loops.
+       \note Loop will turn off below this temperature.
+       \type real
+       \units C
+       \default 0.0
+  A11; \field Companion Coil Used For Heat Recovery
+       \note Only used for heat recovery loops.
+       \note Entering a coil name indicates a heat recovery loop is specified.
+       \note Coil listed is connected in series with this objects coil on demand side 
+       \note branch of a plant loop. A dedicated plant loop with no supply side
+       \note equipment, other than a pump, is currently required.
+       \note Only Coil:Cooling:Water coil type is currently allowed for heat recovery loops.
+       \type object-list
+       \object-list CoolingCoilsWater
 
 Coil:Cooling:DX,
        \memo New general DX cooling coil supporting on or more speeds and one or or operating  modes.
@@ -39241,14 +39562,15 @@ Controller:MechanicalVentilation,
    A4,  \field System Outdoor Air Method
         \type choice
         \key ZoneSum
-        \key VentilationRateProcedure
+        \key Standard62.1VentilationRateProcedure
+        \key Standard62.1VentilationRateProcedureWithLimit
         \key IndoorAirQualityProcedure
         \key ProportionalControlBasedOnDesignOccupancy
         \key ProportionalControlBasedOnOccupancySchedule
         \key IndoorAirQualityProcedureGenericContaminant
         \key IndoorAirQualityProcedureCombined
         \key ProportionalControlBasedOnDesignOARate
-        \default VentilationRateProcedure
+        \default Standard62.1VentilationRateProcedure
    N1,  \field Zone Maximum Outdoor Air Fraction
         \type real
         \default 1.0
@@ -39261,10 +39583,14 @@ Controller:MechanicalVentilation,
         \object-list ZoneAndZoneListNames
         \note A zone name or a zone list name may be used here
    A6,  \field Design Specification Outdoor Air Object Name 1
+        \note Specify the name of a DesignSpecification:OutdoorAir object to specify one set of requirements for the Zone.
+        \note Use a DesignSpecification:OutdoorAir:SpaceList object name to specify different 
+        \note requirements for Spaces within the Zone.
         \note If left blank, the name will be taken from the Sizing:Zone object for this zone.
         \note If no specification is found for this zone, then the default of 0.00944 m3/s-person will be used.
         \type object-list
         \object-list DesignSpecificationOutdoorAirNames
+        \object-list DSOASpaceListNames
    A7;  \field Design Specification Zone Air Distribution Object Name 1
         \note If left blank, the name will be taken from the Sizing:Zone object for this zone.
         \note If no specification is found for this zone, then effectivness will be 1.0 and
@@ -39390,15 +39716,11 @@ AirLoopHVAC:OutdoorAirSystem,
        \note AirLoopHVAC:DedicatedOutdoorAirSystem.
        \type object-list
        \object-list ControllerLists
-   A3, \field Outdoor Air Equipment List Name
+   A3; \field Outdoor Air Equipment List Name
        \note Enter the name of an AirLoopHVAC:OutdoorAirSystem:EquipmentList object.
        \required-field
        \type object-list
        \object-list AirLoopOAEquipmentLists
-   A4; \field Availability Manager List Name
-       \note Enter the name of an AvailabilityManagerAssignmentList object.
-       \type object-list
-       \object-list SystemAvailabilityManagerLists
 
 OutdoorAir:Mixer,
       \memo Outdoor air mixer. Node names cannot be duplicated within a single OutdoorAir:Mixer
