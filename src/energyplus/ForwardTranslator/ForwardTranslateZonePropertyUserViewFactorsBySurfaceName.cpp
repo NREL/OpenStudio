@@ -79,7 +79,7 @@ namespace energyplus {
     for (const Space& space : spaces) {
       auto eg = spaceListIdf.pushExtensibleGroup();
       eg.setString(SpaceListExtensibleFields::SpaceName, space.name().get());
-    }    
+    }
     idfObject.setString(ZoneProperty_UserViewFactors_BySurfaceNameFields::SpaceorSpaceListName, spaceListIdf.name().get());
 
     for (const ViewFactor& viewFactor : viewFactors) {

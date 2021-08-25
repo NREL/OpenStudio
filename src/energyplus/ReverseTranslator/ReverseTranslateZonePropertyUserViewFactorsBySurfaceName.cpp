@@ -79,7 +79,7 @@ namespace energyplus {
         }
 
       } else if (target->iddObject().type() == IddObjectType::Space) {
-        
+
         boost::optional<WorkspaceObject> target_zone = target->getTarget(SpaceFields::ZoneName);
         if (target_zone) {
           i_zones.push_back(target_zone.get());
@@ -98,7 +98,8 @@ namespace energyplus {
         }
 
       } else {
-        LOG(Error, "For ZonePropertyUserViewFactorsBySurfaceName, an extensible group entry is neither a Zone or ZoneList or Space or SpaceList, skipping.");
+        LOG(Error,
+            "For ZonePropertyUserViewFactorsBySurfaceName, an extensible group entry is neither a Zone or ZoneList or Space or SpaceList, skipping.");
         return boost::none;
       }
 
