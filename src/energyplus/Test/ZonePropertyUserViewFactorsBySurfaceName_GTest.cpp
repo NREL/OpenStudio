@@ -82,11 +82,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZonePropertyUserViewFactorsBySurface
   EXPECT_TRUE(zoneProp.addViewFactor(intMass, surface, 0.25));
 
   ForwardTranslator ft;
-
   Workspace workspace = ft.translateModel(model);
 
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+
   std::vector<WorkspaceObject> idf_zoneProps = workspace.getObjectsByType(IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
-  ASSERT_EQ(idf_zoneProps.size(), 1);
+  ASSERT_EQ(1u, idf_zoneProps.size());
   WorkspaceObject idf_zoneProp(idf_zoneProps[0]);
 
   EXPECT_EQ(2u, idf_zoneProp.numExtensibleGroups());
