@@ -121,7 +121,7 @@ namespace energyplus {
       steamEquipment.setName(*s);
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::SteamEquipmentFields::ZoneorZoneListName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::SteamEquipmentFields::ZoneorZoneListorSpaceorSpaceListName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

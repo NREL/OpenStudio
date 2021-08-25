@@ -39,6 +39,9 @@
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
+#include <utilities/idd/ZoneList_FieldEnums.hxx>
+#include <utilities/idd/Space_FieldEnums.hxx>
+#include <utilities/idd/SpaceList_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -56,20 +59,56 @@ namespace energyplus {
       return boost::none;
     }
 
-    boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListName);
+    boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameFields::SpaceorSpaceListName);
 
     std::vector<ThermalZone> thermalZones;
-
     if (target) {
 
-      boost::optional<ModelObject> mo;
+      std::vector<WorkspaceObject> i_zones;
       if (target->iddObject().type() == IddObjectType::Zone) {
-        mo = translateAndMapWorkspaceObject(target.get());
-        if (mo) {
-          if (boost::optional<Space> space = mo->optionalCast<Space>()) {
-            boost::optional<ThermalZone> thermalZone = space->thermalZone();
-            if (thermalZone) {
-              thermalZones.push_back(*thermalZone);
+
+        i_zones.push_back(target.get());
+
+      } else if (target->iddObject().type() == IddObjectType::ZoneList) {
+
+        for (const IdfExtensibleGroup& zeg : target->extensibleGroups()) {
+          OptionalWorkspaceObject target_zone = zeg.cast<WorkspaceExtensibleGroup>().getTarget(ZoneListExtensibleFields::ZoneName);
+          if (target_zone) {
+            i_zones.push_back(target_zone.get());
+          }
+        }
+
+      } else if (target->iddObject().type() == IddObjectType::Space) {
+        
+        boost::optional<WorkspaceObject> target_zone = target->getTarget(SpaceFields::ZoneName);
+        if (target_zone) {
+          i_zones.push_back(target_zone.get());
+        }
+
+      } else if (target->iddObject().type() == IddObjectType::SpaceList) {
+
+        for (const IdfExtensibleGroup& seg : target->extensibleGroups()) {
+          OptionalWorkspaceObject target_space = seg.cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName);
+          if (target_space) {
+            boost::optional<WorkspaceObject> target_zone = target_space->getTarget(SpaceFields::ZoneName);
+            if (target_zone) {
+              i_zones.push_back(target_zone.get());
+            }
+          }
+        }
+
+      } else {
+        LOG(Error, "For ZonePropertyUserViewFactorsBySurfaceName, an extensible group entry is neither a Zone or ZoneList or Space or SpaceList, skipping.");
+        return boost::none;
+      }
+
+      for (const WorkspaceObject& i_zone : i_zones) {
+        // Zone is translated, and a Space is returned instead
+        OptionalModelObject _mo = translateAndMapWorkspaceObject(i_zone);
+        if (_mo) {
+          if (boost::optional<Space> _space = _mo->optionalCast<Space>()) {
+            if (auto _zone = _space->thermalZone()) {
+              thermalZones.push_back(_zone.get());
             }
           }
         }
