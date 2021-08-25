@@ -687,7 +687,7 @@ namespace model {
       return result;
     }
 
-    void SizingSystem_Impl::autosizeHeatingDesignCapacity() {
+    void SizingSystem_Impl::autosizeOccupantDiversity() {
       bool result = setString(OS_Sizing_SystemFields::OccupantDiversity, "autosize");
       OS_ASSERT(result);
     }
