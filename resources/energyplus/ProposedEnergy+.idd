@@ -9704,7 +9704,6 @@ SurfaceProperty:SurroundingSurfaces,
        \required-field
        \type alpha
    N3, \field Surrounding Surface 1 View Factor
-       \required-field
        \minimum 0.0
        \maximum 1.0
        \default 0.0
