@@ -273,7 +273,7 @@ void IddFile_BuildingSurfaceDetailed(const IddFile& iddFile) {
   ASSERT_TRUE(object);
   EXPECT_TRUE(iequals(object->name(), objectName));
   ASSERT_TRUE(object->nonextensibleFields().size() > 0);
-  EXPECT_EQ(object->nonextensibleFields().size(), static_cast<unsigned int>(10));
+  EXPECT_EQ(object->nonextensibleFields().size(), static_cast<unsigned int>(11));
   EXPECT_FALSE(object->properties().format.empty());
   EXPECT_TRUE(iequals("vertices", object->properties().format));
 
