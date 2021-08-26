@@ -672,6 +672,7 @@ TEST_F(IdfFixture, Workspace_BadObjects) {
     Wall,                    !- Surface Type \n\
     Wall,                    !- Construction Name \n\
     Zone,                    !- Zone Name \n\
+    ,                        !- Space Name \n\
     Outdoors,                !- Outside Boundary Condition \n\
     ,                        !- Outside Boundary Condition Object \n\
     SunExposed,              !- Sun Exposure \n\
@@ -701,6 +702,7 @@ Wall:Exterior, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -754,6 +756,7 @@ Window, \n\
   Wall,        !- Surface Type \n\
   ,            !- Construction Name \n\
   Zone,        !- Zone Name \n\
+  ,            !- Space Name \n\
   Outdoors,    !- Outside Boundary Condition \n\
   ,            !- Outside Boundary Condition Object \n\
   SunExposed,  !- Sun Exposure \n\
@@ -820,6 +823,7 @@ Wall:Adiabatic, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -873,6 +877,7 @@ Window, \n\
   Wall,        !- Surface Type \n\
   ,            !- Construction Name \n\
   Zone,        !- Zone Name \n\
+  ,            !- Space Name \n\
   Adiabatic,   !- Outside Boundary Condition \n\
   ,            !- Outside Boundary Condition Object \n\
   NoSun,       !- Sun Exposure \n\
@@ -938,6 +943,7 @@ Wall:Adiabatic, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
