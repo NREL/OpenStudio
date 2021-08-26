@@ -541,7 +541,7 @@ OS:PerformancePrecisionTradeoffs,
       \minimum 0.1
       \maximum 3.0
       \default 0.3
-  N2; \field MaxAllowedDelTemp
+  N2, \field MaxAllowedDelTemp
       \note Maximum surface temperature change before HVAC timestep is shortened.
       \note Only used when Override Mode is set to Advanced
       \type real
