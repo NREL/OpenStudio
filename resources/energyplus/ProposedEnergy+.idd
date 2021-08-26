@@ -5718,6 +5718,7 @@ SpaceList,
        \reference SpaceAndSpaceListNames
   A2 ; \field Space 1 Name
        \begin-extensible
+       \required-field
        \type object-list
        \object-list SpaceNames
 
@@ -9703,6 +9704,7 @@ SurfaceProperty:SurroundingSurfaces,
        \required-field
        \type alpha
    N3, \field Surrounding Surface 1 View Factor
+       \required-field
        \minimum 0.0
        \maximum 1.0
        \default 0.0
@@ -41301,8 +41303,8 @@ SolarCollector:FlatPlate:Water,
        \type alpha
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
-       \reference-class-name validPlantEquipmentTypes ! Need to be able to place it on PlantEquipmentList
-       \reference validPlantEquipmentNames ! Need to be able to place it on PlantEquipmentList
+       \reference-class-name validPlantEquipmentTypes
+       \reference validPlantEquipmentNames
   A2 , \field SolarCollectorPerformance Name
        \required-field
        \type object-list
@@ -41331,8 +41333,8 @@ SolarCollector:FlatPlate:PhotovoltaicThermal,
        \reference validOASysEquipmentNames
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
-       \reference-class-name validPlantEquipmentTypes ! Need to be able to place it on PlantEquipmentList
-       \reference validPlantEquipmentNames ! Need to be able to place it on PlantEquipmentList
+       \reference-class-name validPlantEquipmentTypes
+       \reference validPlantEquipmentNames
   A2 , \field Surface Name
        \required-field
        \type object-list
@@ -41400,8 +41402,8 @@ SolarCollector:IntegralCollectorStorage,
        \type alpha
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
-       \reference-class-name validPlantEquipmentTypes ! Need to be able to place it on PlantEquipmentList
-       \reference validPlantEquipmentNames ! Need to be able to place it on PlantEquipmentList
+       \reference-class-name validPlantEquipmentTypes
+       \reference validPlantEquipmentNames
   A2 , \field IntegralCollectorStorageParameters Name
        \required-field
        \type object-list
@@ -48481,8 +48483,8 @@ ThermalStorage:Ice:Detailed,
        \reference IceThermalStorageEquipment
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
-       \reference-class-name validPlantEquipmentTypes  ! Need to be able to place it on PlantEquipmentList
-       \reference validPlantEquipmentNames  ! Need to be able to place it on PlantEquipmentList
+       \reference-class-name validPlantEquipmentTypes
+       \reference validPlantEquipmentNames
   A2 , \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
