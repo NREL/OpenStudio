@@ -1005,31 +1005,75 @@ boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) co
     }
   }
 
-  // TODO: The logic here is weird. why are we creating then removing it?
-  // removeDirectory(newDir);
-
   // TODO: isn't it better to copy only what's inside measure.xml?
-  // The only caveat is what if the measure.xml is outdated? As a reminder, The BCL measure wouldn't have been loaded first, which updates the XML
-  // So the only potential issue is if the user loads the measure (in IRB/PRY for eg), then continues to make changes to the filesystem, then much
-  // later calls measure.clone. I don't think this is an issue
+  constexpr bool weCareAboutOutdatedMeasureXML = true;
+  // The only caveat is what if the measure.xml is outdated with regards to <files>?
+  // Currently the BCLMeasure(const path&) ctor **does NOT** call checkUpdatesFiles()
+  //
+  // We could call it here by that would require a const_cast and it would increment the measure.xml versionId of the original measure,
+  // and update the list of files, which isn't a big deal if the user doesn't then save it too? Even if the user did it, wouldn't we be helping out anyways?
+
+  // If this is really not wanted, we can go back to scanning the files on disk, with a similar logic as in checkForUpdatesFiles:
+  // loop on all files on disk, and if isApproved is true, then copy them
 
   // Copy the measure.xml
   openstudio::filesystem::copy_file_no_throw(m_directory / openstudio::path{"measure.xml"}, newDir / openstudio::path{"measure.xml"});
 
-  // Then copy whatever is referneced in the measure.xml
-  for (const BCLFileReference& file : this->files()) {
+  if constexpr (!weCareAboutOutdatedMeasureXML) {
+    // Then copy whatever is referneced in the measure.xml
+    for (const BCLFileReference& file : this->files()) {
 
-    if (std::find_if(usageTypesIgnoredOnClone.cbegin(), usageTypesIgnoredOnClone.cend(),
-                     [&file](const auto& sv) { return file.usageType() == std::string(sv); })
-        == usageTypesIgnoredOnClone.cend()) {
+      if (std::find_if(usageTypesIgnoredOnClone.cbegin(), usageTypesIgnoredOnClone.cend(),
+                       [&file](const auto& sv) { return file.usageType() == std::string(sv); })
+          == usageTypesIgnoredOnClone.cend()) {
 
-      // BCLFileReference::path() is absolute
-      openstudio::path oriPath = file.path();
-      openstudio::path relativePath = openstudio::filesystem::relative(oriPath, m_directory);
-      openstudio::path destination = newDir / relativePath;
-      // Create parent directories in destination if need be
-      openstudio::filesystem::create_directories(destination.parent_path());
-      openstudio::filesystem::copy_file_no_throw(oriPath, destination);
+        // BCLFileReference::path() is absolute
+        openstudio::path oriPath = file.path();
+        openstudio::path relativePath = openstudio::filesystem::relative(oriPath, m_directory);
+        openstudio::path destination = newDir / relativePath;
+        // Create parent directories in destination if need be
+        openstudio::filesystem::create_directories(destination.parent_path());
+        openstudio::filesystem::copy_file_no_throw(oriPath, destination);
+      }
+    }
+  } else {
+
+    std::vector<std::pair<openstudio::path, openstudio::path>> filesToCopy;
+
+    // I could loop on all recursive_directory_files for the entire measureDir,
+    // but this is likely faster by prefiltering on what has potential to be added
+    for (const auto& subFolderToUsagePair : approvedSubFolderToUsageMap) {
+      // Structure bindings are never names of variables so they can't be captured in lambda, hence call to first and second on the pair
+      std::string_view subFolderName = subFolderToUsagePair.first;
+      std::string_view usageType = subFolderToUsagePair.second;
+      if (std::find_if(usageTypesIgnoredOnClone.cbegin(), usageTypesIgnoredOnClone.cend(),
+                       [usageType](const auto& sv) { return usageType == std::string(sv); })
+          != usageTypesIgnoredOnClone.cend()) {
+        continue;
+      }
+      openstudio::path subFolderPath = toPath(subFolderName);
+      openstudio::path approvedSubFolderAbsolutePath = m_directory / subFolderPath;
+      if (openstudio::filesystem::exists(approvedSubFolderAbsolutePath)) {
+        for (const auto& relativeFilePath : openstudio::filesystem::recursive_directory_files(approvedSubFolderAbsolutePath)) {
+          openstudio::path absoluteFilePath = approvedSubFolderAbsolutePath / relativeFilePath;
+          if (isApprovedFile(absoluteFilePath, m_directory)) {
+            filesToCopy.emplace_back(absoluteFilePath, newDir / subFolderPath / relativeFilePath);
+          }
+        }
+      }
+    }
+
+    for (std::string_view fileName : approvedRootFiles) {
+      openstudio::path relativeFilePath = toPath(fileName);
+      openstudio::path absoluteFilePath = m_directory / relativeFilePath;
+      if (openstudio::filesystem::exists(absoluteFilePath)) {
+        filesToCopy.emplace_back(absoluteFilePath, newDir / relativeFilePath);
+      }
+    }
+
+    for (const auto& [oriPath, destPath] : filesToCopy) {
+      openstudio::filesystem::create_directories(destPath.parent_path());
+      openstudio::filesystem::copy_file_no_throw(oriPath, destPath);
     }
   }
 

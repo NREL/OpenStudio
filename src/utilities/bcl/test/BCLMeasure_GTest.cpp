@@ -712,3 +712,122 @@ TEST_F(BCLFixture, 4156_TweakXML) {
   // We save the measure so we can inspect the XML
   measure->save();
 }
+
+TEST_F(BCLFixture, 4156_TestRecursive_OutdatedXML) {
+
+  /***************************************************************************************************************************************************
+   *                                               C R E A T E    A   T E M P L A T E    M E A S U R E                                               *
+   **************************************************************************************************************************************************/
+
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path srcDir = testDir / toPath("TestMeasureRecursiveOutdatedXML");
+  openstudio::path destDir = testDir / toPath("TestMeasureRecursiveOutdatedXMLClone");
+
+  for (const auto& dir : {srcDir, destDir}) {
+    if (exists(dir)) {
+      removeDirectory(dir);
+    }
+    ASSERT_FALSE(fs::exists(dir));
+  }
+
+  try {
+    BCLMeasure measure("Test Recursive Measure", "TestRecursiveMeasure", srcDir, "Envelope.Fenestration", MeasureType::ModelMeasure, "Description",
+                       "Modeler Description");
+  } catch (const std::exception& e) {
+    LOG_FREE(Error, "BCLFixture", "exception during measure creation: " << e.what());
+    ASSERT_TRUE(false);
+  }
+  ASSERT_TRUE(exists(srcDir));
+
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
+  ASSERT_TRUE(measure);
+  auto files = measure->files();
+  size_t numFiles = files.size();
+
+  std::vector<TestPath> testPaths = generateTestMeasurePaths();
+  EXPECT_EQ(15, testPaths.size());
+
+  /***************************************************************************************************************************************************
+   *                                             A D D    E X T R A    F I L E S    I N    F O L D E R                                               *
+   **************************************************************************************************************************************************/
+
+  // This will add a few files if not existing, including some that shouldn't be allowed
+  size_t added = createTestMeasureDirectory(srcDir, testPaths);
+
+  // DO NOT CALL CHECKFORUPDATESFILES: XML IS OUTDATED
+  // EXPECT_TRUE(measure->checkForUpdatesFiles());
+  // EXPECT_TRUE(measure->checkForUpdatesXML());
+
+  EXPECT_EQ(added, 7);
+
+  std::vector<fs::path> expectedAfterNewFilesPaths = {
+    "LICENSE.md",
+    "README.md",
+    "README.md.erb",
+    "measure.rb",
+    "docs/.gitkeep",
+    "docs/docs.rb",
+    "docs/subfolder/subfolder_file.txt",
+    "resources/resources.rb",
+    "resources/subfolder/subfolder_file.txt",
+    "tests/example_model.osm",
+    "tests/subfolder/subfolder_file.txt",
+    "tests/test_recursive_measure_test.rb",
+    "tests/tests.rb",
+  };
+  EXPECT_EQ(numFiles + added, expectedAfterNewFilesPaths.size());
+
+  /**************************************************************************************************************************************************
+  *                                            C L O N E    W I T H    A N    O U T D A T E D    X M L                                             *
+  **************************************************************************************************************************************************/
+  auto checkError = [](const std::vector<fs::path>& paths, std::string_view headerEnd) {
+    std::stringstream ss;
+    if (!paths.empty()) {
+      ss << "There are " << paths.size() << " " << headerEnd << ":\n";
+      for (const auto& p : paths) {
+        ss << "* " << p << '\n';
+      }
+    }
+    EXPECT_TRUE(paths.empty()) << ss.str();
+  };
+
+  boost::optional<BCLMeasure> measure2 = measure->clone(destDir);
+  ASSERT_TRUE(measure2);
+  // I do expect this one to be true, since we do not copy the docs/ subdirectory during clone
+  EXPECT_TRUE(measure2->checkForUpdatesFiles());
+  // And I do expect this one to be true, because we copied the measure.xml without doing measure->save() first so it's outdated
+  EXPECT_TRUE(measure2->checkForUpdatesXML());
+
+  // EXPECT_TRUE(copyDir(srcDir, destDir));
+  files = measure2->files();
+  size_t nClonedFiles = std::count_if(expectedAfterNewFilesPaths.begin(), expectedAfterNewFilesPaths.end(),
+                                      [](const openstudio::path& p) { return *(p.begin()) != "docs"; });
+  EXPECT_EQ(nClonedFiles, numFiles + added - 3);
+  EXPECT_EQ(nClonedFiles, files.size());
+
+  {
+    std::vector<fs::path> missing;
+    std::vector<fs::path> extra;
+    for (const auto& testPath : testPaths) {
+      fs::path p = fs::weakly_canonical(destDir / testPath.path);
+      if (testPath.allowed) {
+        // EXPECT_TRUE(fs::exists(p)) << p << " doesn't exist in the cloned Dir";
+        if (!fs::exists(p)) {
+          if (*(testPath.path.begin()) != "docs") {
+            missing.push_back(p);
+          }
+        }
+      } else {
+        // EXPECT_FALSE(fs::exists(p)) << p << " shouldn't exist in the cloned Dir";
+        if (fs::exists(p)) {
+          extra.push_back(p);
+        }
+      }
+    }
+    checkError(missing, "missing files in the cloned Dir");
+    checkError(extra, "extra files in the cloned Dir");
+  }
+
+  // Save, so we can inspect the measure.xml
+  measure2->save();
+}
