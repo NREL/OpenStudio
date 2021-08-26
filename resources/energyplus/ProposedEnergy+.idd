@@ -6063,7 +6063,7 @@ Wall:Detailed,
        \minimum 3
        \default autocalculate
        \note vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates
-       \note are "relative" to the Zone Origin.  If world, then building and zone origins are used
+       \note are "relative" to the Zone Origin. If world, then building and zone origins are used
        \note for some internal calculations, but all coordinates are given in an "absolute" system.
   N3,  \field Vertex 1 X-coordinate
        \begin-extensible
@@ -6122,7 +6122,7 @@ RoofCeiling:Detailed,
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
        \key GroundBasementPreprocessorLowerWall
- A6,  \field Outside Boundary Condition Object
+  A6,  \field Outside Boundary Condition Object
        \type object-list
        \object-list OutFaceEnvNames
        \note Non-blank only if the field Outside Boundary Condition is Surface,
@@ -6223,7 +6223,7 @@ Floor:Detailed,
        \key GroundBasementPreprocessorAverageFloor
        \key GroundBasementPreprocessorUpperWall
        \key GroundBasementPreprocessorLowerWall
- A6,  \field Outside Boundary Condition Object
+  A6,  \field Outside Boundary Condition Object
        \type object-list
        \object-list OutFaceEnvNames
        \note Non-blank only if the field Outside Boundary Condition is Surface,
@@ -6235,7 +6235,7 @@ Floor:Detailed,
        \note If Foundation, specify the name of the corresponding Foundation object and
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
-  A7 , \field Sun Exposure
+  A7,  \field Sun Exposure
        \type choice
        \key SunExposed
        \key NoSun
@@ -11355,11 +11355,11 @@ People,
        \begin-extensible
 
 ComfortViewFactorAngles,
+       \memo Used to specify radiant view factors for thermal comfort calculations.
        \memo Note that the following angle factor fractions must sum up to 1.0
-       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
        \memo The number of surfaces can be expanded beyond 100, if necessary, by adding more
        \memo groups to the end of the list.
-       \max-fields 202
+       \extensible:2
   A1 , \field Name
        \type alpha
        \reference AllHeatTranAngFacNames
@@ -11380,7 +11380,7 @@ Lights,
    \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
    \memo then this definition applies to all applicable spaces, and each instance will
    \memo be named with the Space Name plus this Object Name.
-       \min-fields 11
+   \min-fields 11
   A1 , \field Name
        \required-field
        \type alpha
@@ -11697,7 +11697,7 @@ SteamEquipment,
    \memo Sets internal gains for steam equipment in the zone.
    \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
    \memo then this definition applies to all applicable spaces, and each instance will
-   \memo be named with the Space Name plus this Object Nam
+   \memo be named with the Space Name plus this Object Name.
    \min-fields 10
   A1 , \field Name
        \required-field
@@ -29368,7 +29368,7 @@ Coil:Cooling:Water:DetailedGeometry,
        \note Parameters. If autosized, the Design Loop Exit Temperature value specified in Sizing:Plant
        \note object is used for sizing the coil Design Geomtery Parameters. If the autosized value is
        \note higher than the coil design outlet air temperature, then the design inlet water temperature
-       \note value is reset to coil design outlet air temperature minus 5.0 DeltaC
+       \note value is reset to coil design outlet air temperature minus 5.0 DeltaC.
 
 CoilSystem:Cooling:Water,
        \memo Virtual container component that consists of a water cooling coil
