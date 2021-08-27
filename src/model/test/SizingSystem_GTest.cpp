@@ -118,7 +118,7 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
   AirLoopHVAC airLoopHVAC(m);
   SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
   EXPECT_EQ(sizingSystem.airLoopHVAC().handle(), airLoopHVAC.handle());
-  
+
   EXPECT_TRUE(sizingSystem.setTypeofLoadtoSizeOn("VentilationRequirement"));
   EXPECT_TRUE(sizingSystem.setDesignOutdoorAirFlowRate(1));
   EXPECT_TRUE(sizingSystem.setPreheatDesignTemperature(2));
@@ -212,7 +212,7 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
   ASSERT_TRUE(sizingSystem.occupantDiversity());
   EXPECT_EQ(0.5, sizingSystem.occupantDiversity().get());
   EXPECT_FALSE(sizingSystem.isOccupantDiversityAutosized());
-  
+
   sizingSystem.resetTypeofLoadtoSizeOn();
   sizingSystem.resetDesignOutdoorAirFlowRate();
   EXPECT_TRUE(sizingSystem.isDesignOutdoorAirFlowRateDefaulted());
@@ -230,7 +230,7 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
   sizingSystem.autosizeCoolingDesignCapacity();
   sizingSystem.autosizeHeatingDesignCapacity();
   sizingSystem.autosizeOccupantDiversity();
-  
+
   EXPECT_EQ("Sensible", sizingSystem.typeofLoadtoSizeOn());
   EXPECT_TRUE(sizingSystem.isTypeofLoadtoSizeOnDefaulted());
   EXPECT_FALSE(sizingSystem.designOutdoorAirFlowRate());
@@ -274,10 +274,11 @@ TEST_F(ModelFixture, SizingSystem_remove) {
   EXPECT_FALSE(sizingSystem.remove().empty());
   EXPECT_EQ(size, m.modelObjects().size());
   EXPECT_EQ(1u, m.getConcreteModelObjects<AirLoopHVAC>().size());
-  EXPECT_EQ(1u, m.getConcreteModelObjects<SizingSystem>().size());  // FIXME: should you be able to remove SizingSystem? doesn't the AirLoopHVAC need one?
+  EXPECT_EQ(1u,
+            m.getConcreteModelObjects<SizingSystem>().size());  // FIXME: should you be able to remove SizingSystem? doesn't the AirLoopHVAC need one?
   SizingSystem sizingSystem2 = airLoopHVAC.sizingSystem();
-  EXPECT_EQ(sizingSystem.handle(), sizingSystem2.handle());  
-  
+  EXPECT_EQ(sizingSystem.handle(), sizingSystem2.handle());
+
   EXPECT_FALSE(airLoopHVAC.remove().empty());
   EXPECT_EQ(2, m.modelObjects().size());
   EXPECT_EQ(0u, m.getConcreteModelObjects<AirLoopHVAC>().size());
@@ -288,7 +289,7 @@ TEST_F(ModelFixture, SizingSystem_clone) {
   Model m;
   AirLoopHVAC airLoopHVAC(m);
   SizingSystem sizingSystem(m, airLoopHVAC);  // FIXME: should this remove the original SizingSystem? otherwise doesn't it get orphaned?
-  
+
   EXPECT_EQ(1u, m.getConcreteModelObjects<SizingSystem>().size());
   auto sizingSystemClone = sizingSystem.clone(m).cast<SizingSystem>();  // FIXME: should you be able to clone this? doesn't it need an AirLoopHVAC?
   EXPECT_EQ(1u, m.getConcreteModelObjects<AirLoopHVAC>().size());
