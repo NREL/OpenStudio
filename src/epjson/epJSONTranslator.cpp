@@ -346,6 +346,7 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
     auto& json_group = result[type_description];
 
     const bool is_fluid_properties_name = type_description.find("FluidProperties:Name") != std::string::npos;
+    const bool is_lcc_use_price_escalation = type_description.find("LifeCycleCost:UsePriceEscalation") != std::string::npos;
 
     const auto& usable_json_object_name = [&]() {
       if (name && !is_fluid_properties_name) {
@@ -362,8 +363,12 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
     auto& json_object = json_group[usable_json_object_name];
     json_object = Json::Value(Json::objectValue);
 
-    if (name && is_fluid_properties_name) {
-      json_object["fluid_name"] = *name;
+    if (name) {
+      if (is_fluid_properties_name) {
+        json_object["fluid_name"] = *name;
+      } else if (is_lcc_use_price_escalation) {
+        json_object["lcc_price_escalation_name"] = *name;
+      }
     }
 
     const auto visitField = [&schema, &type_description](auto&& visitor, const openstudio::IddField& iddField, const std::string& group_name,
@@ -467,8 +472,8 @@ Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::pat
   return toJSON(workspace.toIdfFile(), schemaPath);
 }
 
-std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& schemaPath) {
-  return toJSON(idfFile, schemaPath).toStyledString();
+std::string toJSONString(const openstudio::IdfFile& inputFile, const openstudio::path& schemaPath) {
+  return toJSON(inputFile, schemaPath).toStyledString();
 }
 
 std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& schemaPath) {
