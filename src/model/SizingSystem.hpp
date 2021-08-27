@@ -76,6 +76,12 @@ namespace model {
 
     bool isDesignOutdoorAirFlowRateAutosized() const;
 
+    boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
+
+    bool isCentralHeatingMaximumSystemAirFlowRatioDefaulted() const;
+
+    bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
+
     double preheatDesignTemperature() const;
 
     double preheatDesignHumidityRatio() const;
@@ -185,6 +191,12 @@ namespace model {
 
     void autosizeDesignOutdoorAirFlowRate();
 
+    bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
+
+    void resetCentralHeatingMaximumSystemAirFlowRatio();
+
+    void autosizeCentralHeatingMaximumSystemAirFlowRatio();
+
     bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
     bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
@@ -280,11 +292,6 @@ namespace model {
     void autosizeOccupantDiversity();
 
     AirLoopHVAC airLoopHVAC() const;
-
-    boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
-    bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
-    bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
-    void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
     // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
     /** Deprecated, forwards to centralHeatingMaximumSystemAirFlowRatio

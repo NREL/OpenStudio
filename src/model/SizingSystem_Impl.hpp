@@ -70,6 +70,12 @@ namespace model {
 
       bool isDesignOutdoorAirFlowRateAutosized() const;
 
+      boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
+
+      bool isCentralHeatingMaximumSystemAirFlowRatioDefaulted() const;
+
+      bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
+
       double preheatDesignTemperature() const;
 
       double preheatDesignHumidityRatio() const;
@@ -174,6 +180,12 @@ namespace model {
 
       void autosizeDesignOutdoorAirFlowRate();
 
+      bool setCentralHeatingMaximumSystemAirFlowRatio(boost::optional<double> centralHeatingMaximumSystemAirFlowRatio);
+
+      void resetCentralHeatingMaximumSystemAirFlowRatio();
+
+      void autosizeCentralHeatingMaximumSystemAirFlowRatio();
+
       bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
       bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
@@ -271,11 +283,6 @@ namespace model {
       AirLoopHVAC airLoopHVAC() const;
 
       bool setAirLoopHVAC(const AirLoopHVAC& airLoopHVAC);
-
-      boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
-      bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
-      bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
-      void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
       boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
 

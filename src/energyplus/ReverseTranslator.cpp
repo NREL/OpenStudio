@@ -855,7 +855,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::Sizing_System: {
-        //modelObject = translateSizingSystem(workspaceObject );
+        modelObject = translateSizingSystem(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Sizing_Zone: {

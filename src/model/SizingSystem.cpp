@@ -111,9 +111,8 @@ namespace model {
       return getDouble(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, true);
     }
 
-    bool SizingSystem_Impl::setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
-      bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, centralHeatingMaximumSystemAirFlowRatio);
-      return result;
+    bool SizingSystem_Impl::isCentralHeatingMaximumSystemAirFlowRatioDefaulted() const {
+      return isEmpty(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio);
     }
 
     bool SizingSystem_Impl::isCentralHeatingMaximumSystemAirFlowRatioAutosized() const {
@@ -123,11 +122,6 @@ namespace model {
         result = openstudio::istringEqual(value.get(), "Autosize");
       }
       return result;
-    }
-
-    void SizingSystem_Impl::autosizeCentralHeatingMaximumSystemAirFlowRatio() {
-      bool result = setString(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "Autosize");
-      OS_ASSERT(result);
     }
 
     double SizingSystem_Impl::preheatDesignTemperature() const {
@@ -422,6 +416,26 @@ namespace model {
 
     void SizingSystem_Impl::autosizeDesignOutdoorAirFlowRate() {
       bool result = setString(OS_Sizing_SystemFields::DesignOutdoorAirFlowRate, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool SizingSystem_Impl::setCentralHeatingMaximumSystemAirFlowRatio(boost::optional<double> centralHeatingMaximumSystemAirFlowRatio) {
+      bool result = false;
+      if (centralHeatingMaximumSystemAirFlowRatio) {
+        result = setDouble(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, centralHeatingMaximumSystemAirFlowRatio.get());
+      } else {
+        result = setString(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "");
+      }
+      return result;
+    }
+
+    void SizingSystem_Impl::resetCentralHeatingMaximumSystemAirFlowRatio() {
+      bool result = setString(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "");
+      OS_ASSERT(result);
+    }
+
+    void SizingSystem_Impl::autosizeCentralHeatingMaximumSystemAirFlowRatio() {
+      bool result = setString(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "Autosize");
       OS_ASSERT(result);
     }
 
@@ -1105,6 +1119,18 @@ namespace model {
     return getImpl<detail::SizingSystem_Impl>()->isDesignOutdoorAirFlowRateAutosized();
   }
 
+  boost::optional<double> SizingSystem::centralHeatingMaximumSystemAirFlowRatio() const {
+    return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
+  }
+
+  bool SizingSystem::isCentralHeatingMaximumSystemAirFlowRatioDefaulted() const {
+    return getImpl<detail::SizingSystem_Impl>()->isCentralHeatingMaximumSystemAirFlowRatioDefaulted();
+  }
+
+  bool SizingSystem::isCentralHeatingMaximumSystemAirFlowRatioAutosized() const {
+    return getImpl<detail::SizingSystem_Impl>()->isCentralHeatingMaximumSystemAirFlowRatioAutosized();
+  }
+
   double SizingSystem::preheatDesignTemperature() const {
     return getImpl<detail::SizingSystem_Impl>()->preheatDesignTemperature();
   }
@@ -1311,6 +1337,18 @@ namespace model {
 
   void SizingSystem::autosizeDesignOutdoorAirFlowRate() {
     getImpl<detail::SizingSystem_Impl>()->autosizeDesignOutdoorAirFlowRate();
+  }
+
+  bool SizingSystem::setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
+    return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
+  }
+
+  void SizingSystem::resetCentralHeatingMaximumSystemAirFlowRatio() {
+    getImpl<detail::SizingSystem_Impl>()->resetCentralHeatingMaximumSystemAirFlowRatio();
+  }
+
+  void SizingSystem::autosizeCentralHeatingMaximumSystemAirFlowRatio() {
+    getImpl<detail::SizingSystem_Impl>()->autosizeCentralHeatingMaximumSystemAirFlowRatio();
   }
 
   bool SizingSystem::setPreheatDesignTemperature(double preheatDesignTemperature) {
@@ -1538,22 +1576,6 @@ namespace model {
 
   void SizingSystem::applySizingValues() {
     return getImpl<detail::SizingSystem_Impl>()->applySizingValues();
-  }
-
-  boost::optional<double> SizingSystem::centralHeatingMaximumSystemAirFlowRatio() const {
-    return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
-  }
-
-  bool SizingSystem::setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
-    return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
-  }
-
-  bool SizingSystem::isCentralHeatingMaximumSystemAirFlowRatioAutosized() const {
-    return getImpl<detail::SizingSystem_Impl>()->isCentralHeatingMaximumSystemAirFlowRatioAutosized();
-  }
-
-  void SizingSystem::autosizeCentralHeatingMaximumSystemAirFlowRatio() {
-    getImpl<detail::SizingSystem_Impl>()->autosizeCentralHeatingMaximumSystemAirFlowRatio();
   }
 
   boost::optional<double> SizingSystem::autosizedCentralHeatingMaximumSystemAirFlowRatio() const {

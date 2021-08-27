@@ -64,6 +64,10 @@ TEST_F(ModelFixture, SizingSystem_SizingSystem) {
   EXPECT_FALSE(sizingSystem.designOutdoorAirFlowRate());
   EXPECT_TRUE(sizingSystem.isDesignOutdoorAirFlowRateDefaulted());
   EXPECT_TRUE(sizingSystem.isDesignOutdoorAirFlowRateAutosized());
+  ASSERT_TRUE(sizingSystem.centralHeatingMaximumSystemAirFlowRatio());
+  EXPECT_EQ(0.3, sizingSystem.centralHeatingMaximumSystemAirFlowRatio());
+  EXPECT_FALSE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioDefaulted());
+  EXPECT_FALSE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioAutosized());
   EXPECT_EQ(7.0, sizingSystem.preheatDesignTemperature());
   EXPECT_EQ(0.008, sizingSystem.preheatDesignHumidityRatio());
   EXPECT_EQ(12.8, sizingSystem.precoolDesignTemperature());
@@ -121,6 +125,7 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
 
   EXPECT_TRUE(sizingSystem.setTypeofLoadtoSizeOn("VentilationRequirement"));
   EXPECT_TRUE(sizingSystem.setDesignOutdoorAirFlowRate(1));
+  EXPECT_TRUE(sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(0.25));
   EXPECT_TRUE(sizingSystem.setPreheatDesignTemperature(2));
   EXPECT_TRUE(sizingSystem.setPreheatDesignHumidityRatio(3));
   EXPECT_TRUE(sizingSystem.setPrecoolDesignTemperature(4));
@@ -162,6 +167,10 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
   EXPECT_EQ(1, sizingSystem.designOutdoorAirFlowRate().get());
   EXPECT_FALSE(sizingSystem.isDesignOutdoorAirFlowRateDefaulted());
   EXPECT_FALSE(sizingSystem.isDesignOutdoorAirFlowRateAutosized());
+  ASSERT_TRUE(sizingSystem.centralHeatingMaximumSystemAirFlowRatio());
+  EXPECT_EQ(0.25, sizingSystem.centralHeatingMaximumSystemAirFlowRatio().get());
+  EXPECT_FALSE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioDefaulted());
+  EXPECT_FALSE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioAutosized());
   EXPECT_EQ(2, sizingSystem.preheatDesignTemperature());
   EXPECT_EQ(3, sizingSystem.preheatDesignHumidityRatio());
   EXPECT_EQ(4, sizingSystem.precoolDesignTemperature());
@@ -217,6 +226,9 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
   sizingSystem.resetDesignOutdoorAirFlowRate();
   EXPECT_TRUE(sizingSystem.isDesignOutdoorAirFlowRateDefaulted());
   sizingSystem.autosizeDesignOutdoorAirFlowRate();
+  sizingSystem.resetCentralHeatingMaximumSystemAirFlowRatio();
+  EXPECT_TRUE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioDefaulted());
+  sizingSystem.autosizeCentralHeatingMaximumSystemAirFlowRatio();
   sizingSystem.resetSizingOption();
   sizingSystem.resetAllOutdoorAirinCooling();
   sizingSystem.resetAllOutdoorAirinHeating();
@@ -236,6 +248,9 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
   EXPECT_FALSE(sizingSystem.designOutdoorAirFlowRate());
   EXPECT_FALSE(sizingSystem.isDesignOutdoorAirFlowRateDefaulted());
   EXPECT_TRUE(sizingSystem.isDesignOutdoorAirFlowRateAutosized());
+  EXPECT_FALSE(sizingSystem.centralHeatingMaximumSystemAirFlowRatio());
+  EXPECT_FALSE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioDefaulted());
+  EXPECT_TRUE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioAutosized());
   EXPECT_EQ("NonCoincident", sizingSystem.sizingOption());
   EXPECT_TRUE(sizingSystem.isSizingOptionDefaulted());
   EXPECT_FALSE(sizingSystem.allOutdoorAirinCooling());
