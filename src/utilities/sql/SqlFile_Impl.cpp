@@ -52,6 +52,9 @@ namespace openstudio {
 namespace detail {
 
   std::string columnText(const unsigned char* column) {
+    if (column == nullptr) {
+      return std::string();
+    }
     return std::string(reinterpret_cast<const char*>(column));
   }
 
