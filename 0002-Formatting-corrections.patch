@@ -1,0 +1,86 @@
+From b5657e1a812968f2eb2c66da4bdcb50c441cb0cd Mon Sep 17 00:00:00 2001
+From: "Gerard.Gartside" <Gerard.Gartside@D-Alchemy.com>
+Date: Mon, 29 Mar 2021 14:57:04 -0500
+Subject: [PATCH 2/3] Formatting corrections
+
+---
+ src/model/Surface.cpp      | 27 +++++++++++++--------------
+ src/model/Surface.hpp      |  2 +-
+ src/model/Surface_Impl.hpp |  2 +-
+ 3 files changed, 15 insertions(+), 16 deletions(-)
+
+diff --git a/src/model/Surface.cpp b/src/model/Surface.cpp
+index a5e009f95..2a2002003 100644
+--- a/src/model/Surface.cpp
++++ b/src/model/Surface.cpp
+@@ -2021,28 +2021,27 @@ namespace model {
+       return types;
+     }
+ 
+-    
+     double Surface_Impl::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+       Transformation tr = space()->transformation();
+ 
+       double perimeter = 0;
+ 
+-        if (surfaceType() == "Floor" && outsideBoundaryCondition() == "Ground") {
+-          auto vertices = this->vertices();
+-          if (vertices.size() > 0 && vertices[0].z() == 0) {
+-            vertices = tr * vertices;
+-            for (size_t i = 0; i < vertices.size(); i++) {
+-              Point3dVector line;
+-              line.push_back(vertices[i]);
+-              line.push_back(vertices[(i + 1) % vertices.size()]);
+-              Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
+-              for (auto overlap : overlaps) {
+-                perimeter += openstudio::getDistance(overlap[0], overlap[1]);
+-              }
++      if (surfaceType() == "Floor" && outsideBoundaryCondition() == "Ground") {
++        auto vertices = this->vertices();
++        if (vertices.size() > 0 && vertices[0].z() == 0) {
++          vertices = tr * vertices;
++          for (size_t i = 0; i < vertices.size(); i++) {
++            Point3dVector line;
++            line.push_back(vertices[i]);
++            line.push_back(vertices[(i + 1) % vertices.size()]);
++            Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
++            for (auto overlap : overlaps) {
++              perimeter += openstudio::getDistance(overlap[0], overlap[1]);
+             }
+           }
+         }
+-    
++      }
++
+       return perimeter;
+     }
+ 
+diff --git a/src/model/Surface.hpp b/src/model/Surface.hpp
+index 799e1fcc4..5995a40a0 100644
+--- a/src/model/Surface.hpp
++++ b/src/model/Surface.hpp
+@@ -321,7 +321,7 @@ namespace model {
+     // resets the surface property exposed foundation perimeter
+     void resetSurfacePropertyExposedFoundationPerimeter();
+ 
+-   // calculates the exposed perimeter of the surface
++    // calculates the exposed perimeter of the surface
+     double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
+ 
+    protected:
+diff --git a/src/model/Surface_Impl.hpp b/src/model/Surface_Impl.hpp
+index 2d02b8f0f..23a7bd6d8 100644
+--- a/src/model/Surface_Impl.hpp
++++ b/src/model/Surface_Impl.hpp
+@@ -34,7 +34,7 @@
+ #include "PlanarSurface_Impl.hpp"
+ 
+ namespace openstudio {
+-  class Polygon3d;
++class Polygon3d;
+ namespace model {
+ 
+   class AirflowNetworkSurface;
+-- 
+2.28.0.windows.1
+

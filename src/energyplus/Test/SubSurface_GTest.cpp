@@ -127,3 +127,59 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SubSurface) {
   ASSERT_TRUE(subSurfaceObject.getTarget(FenestrationSurface_DetailedFields::FrameandDividerName));
   EXPECT_EQ(frameObject.handle(), subSurfaceObject.getTarget(FenestrationSurface_DetailedFields::FrameandDividerName)->handle());
 }
+
+// https://github.com/NREL/OpenStudio/issues/4361
+TEST_F(EnergyPlusFixture, Issue_4361) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  // Create a surface and subsurface
+  // get the surface net and gross area & subsurface gross area
+  // surface gross area == surface net area + subsurface gross area
+  // That is before the subsurface is assigned a frame and divider
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 2, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(2, 0, 0));
+  vertices.push_back(Point3d(2, 2, 0));
+  Surface surface(vertices, model);
+  surface.setSpace(space);
+
+  vertices.clear();
+  vertices.push_back(Point3d(0, 1, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+
+  SubSurface subSurface(vertices, model);
+  subSurface.setSurface(surface);
+  subSurface.assignDefaultSubSurfaceType();
+
+  double surfaceGrossArea = surface.grossArea();
+  double surfaceNetArea = surface.netArea();
+  double subSurfaceGrossArea = subSurface.grossArea();
+  double subSurfaceTotalArea = subSurface.totalArea();
+
+  EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceGrossArea);
+
+  // Then assign a frame and divider to the subsurface
+  // then do the same thing with the areas
+
+  WindowPropertyFrameAndDivider frame(model);
+  frame.setFrameWidth(0.030);
+  subSurface.setWindowPropertyFrameAndDivider(frame);
+  
+  auto ss = subSurface.windowPropertyFrameAndDivider();
+  WindowPropertyFrameAndDivider sss = *ss;
+
+  surfaceGrossArea = surface.grossArea();
+  surfaceNetArea = surface.netArea();
+  subSurfaceGrossArea = subSurface.grossArea();
+  subSurfaceTotalArea = subSurface.totalArea();
+  EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceTotalArea);
+}

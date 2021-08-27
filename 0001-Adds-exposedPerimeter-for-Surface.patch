@@ -1,0 +1,117 @@
+From d17df783191c744c6edb4dfdab45bfb074e2f7cc Mon Sep 17 00:00:00 2001
+From: "Gerard.Gartside" <Gerard.Gartside@D-Alchemy.com>
+Date: Mon, 29 Mar 2021 14:55:46 -0500
+Subject: [PATCH 1/3] Adds exposedPerimeter for Surface
+
+---
+ src/model/Surface.cpp      | 34 ++++++++++++++++++++++++++++++++++
+ src/model/Surface.hpp      |  5 +++++
+ src/model/Surface_Impl.hpp |  4 ++++
+ 3 files changed, 43 insertions(+)
+
+diff --git a/src/model/Surface.cpp b/src/model/Surface.cpp
+index 44ea854b0..a5e009f95 100644
+--- a/src/model/Surface.cpp
++++ b/src/model/Surface.cpp
+@@ -1039,6 +1039,12 @@ namespace model {
+ 
+       boost::optional<Space> space = this->space();
+       boost::optional<Space> otherSpace = otherSurface.space();
++
++      std::string spaceName = space->nameString();
++      std::string otherSpaceName = otherSpace->nameString();
++      std::string surfaceName = nameString();
++      std::string otherSurfaceName = otherSurface.nameString();
++
+       if (!space || !otherSpace || space->handle() == otherSpace->handle()) {
+         LOG(Error, "Cannot find spaces for each surface in intersection or surfaces in same space.");
+         return boost::none;
+@@ -2015,6 +2021,31 @@ namespace model {
+       return types;
+     }
+ 
++    
++    double Surface_Impl::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
++      Transformation tr = space()->transformation();
++
++      double perimeter = 0;
++
++        if (surfaceType() == "Floor" && outsideBoundaryCondition() == "Ground") {
++          auto vertices = this->vertices();
++          if (vertices.size() > 0 && vertices[0].z() == 0) {
++            vertices = tr * vertices;
++            for (size_t i = 0; i < vertices.size(); i++) {
++              Point3dVector line;
++              line.push_back(vertices[i]);
++              line.push_back(vertices[(i + 1) % vertices.size()]);
++              Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
++              for (auto overlap : overlaps) {
++                perimeter += openstudio::getDistance(overlap[0], overlap[1]);
++              }
++            }
++          }
++        }
++    
++      return perimeter;
++    }
++
+   }  // namespace detail
+ 
+   Surface::Surface(const std::vector<Point3d>& vertices, const Model& model) : PlanarSurface(Surface::iddObjectType(), vertices, model) {
+@@ -2386,5 +2417,8 @@ namespace model {
+     return getImpl<detail::Surface_Impl>()->airflowNetworkSurface();
+   }
+ 
++  double Surface::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
++    return getImpl<detail::Surface_Impl>()->exposedPerimeter(buildingPerimeter);
++  }
+ }  // namespace model
+ }  // namespace openstudio
+diff --git a/src/model/Surface.hpp b/src/model/Surface.hpp
+index 3abce0e98..799e1fcc4 100644
+--- a/src/model/Surface.hpp
++++ b/src/model/Surface.hpp
+@@ -37,6 +37,8 @@
+ #include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
+ 
+ namespace openstudio {
++class Polygon3d;
++
+ namespace model {
+ 
+   class Space;
+@@ -319,6 +321,9 @@ namespace model {
+     // resets the surface property exposed foundation perimeter
+     void resetSurfacePropertyExposedFoundationPerimeter();
+ 
++   // calculates the exposed perimeter of the surface
++    double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
++
+    protected:
+     /// @cond
+     typedef detail::Surface_Impl ImplType;
+diff --git a/src/model/Surface_Impl.hpp b/src/model/Surface_Impl.hpp
+index 31a2a2ca6..2d02b8f0f 100644
+--- a/src/model/Surface_Impl.hpp
++++ b/src/model/Surface_Impl.hpp
+@@ -34,6 +34,7 @@
+ #include "PlanarSurface_Impl.hpp"
+ 
+ namespace openstudio {
++  class Polygon3d;
+ namespace model {
+ 
+   class AirflowNetworkSurface;
+@@ -281,6 +282,9 @@ namespace model {
+       // resets the surface property exposed foundation perimeter
+       void resetSurfacePropertyExposedFoundationPerimeter();
+ 
++      // calculates the exposed perimeter of the surface
++      double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
++
+      protected:
+      private:
+       friend class openstudio::model::Surface;
+-- 
+2.28.0.windows.1
+

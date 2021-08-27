@@ -263,6 +263,9 @@ namespace model {
 
     boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
+    /* Get the total area of the sub surface including frame and divider area */
+    double totalArea();
+
     // DLM: todo add methods to create light shelves by projection factor
 
    protected:

@@ -268,7 +268,7 @@ namespace model {
             if (subSurface) {
               multiplier = subSurface->multiplier();
             }
-            result -= multiplier * surface->grossArea();
+            result -= multiplier * subSurface->totalArea();
           }
         }
       }

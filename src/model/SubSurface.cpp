@@ -82,6 +82,7 @@
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Intersection.hpp"
 #include "../utilities/core/Assert.hpp"
 
 using boost::to_upper_copy;
@@ -1594,6 +1595,39 @@ namespace model {
   // DEPRECATED
   void SubSurface::resetShadingControl() {
     removeAllShadingControls();
+  }
+
+  double SubSurface::totalArea() {
+
+    double area = grossArea();
+    
+    auto frameAndDivider = windowPropertyFrameAndDivider();
+    if (frameAndDivider) {
+        // Get the frame width (the amount to osset by)
+      double fw = frameAndDivider->frameWidth();
+      // Get a transform to change the points to x/y
+      Transformation faceTransform = Transformation::alignFace(this->vertices());
+      Transformation faceTransformInverse = faceTransform.inverse();
+      std::vector<Point3d> faceVertices = faceTransformInverse * this->vertices();
+      // Offset the points by the framewidth
+      boost::optional<std::vector<Point3d>> offset = openstudio::buffer(faceVertices, fw, 0.01);
+      if (!offset) {
+          // If offset faile dit is because the points are in the wrong order
+        faceVertices = openstudio::reverse(faceVertices);
+        offset = openstudio::buffer(faceVertices, fw, 0.01);
+      }
+
+      // If the offset worked get the offset area - this is the total area of the sub surface
+      // including the frame
+      if (offset) {
+        boost::optional<double> offsetArea = openstudio::getArea(*offset);
+        if (offsetArea) {
+          area = *offsetArea;
+        }
+      }
+    }
+
+    return area;
   }
   /// @endcond
 
