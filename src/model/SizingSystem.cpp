@@ -1029,9 +1029,6 @@ namespace model {
 
     setAirLoopHVAC(airLoopHVAC);
 
-    setTypeofLoadtoSizeOn("Sensible");
-    autosizeDesignOutdoorAirFlowRate();
-
     setCentralHeatingMaximumSystemAirFlowRatio(0.3);
     // TODO: should we autosize (E+ default) instead?
     // autosizeCentralHeatingMaximumSystemAirFlowRatio();
@@ -1042,16 +1039,7 @@ namespace model {
     setPrecoolDesignHumidityRatio(0.008);
     setCentralCoolingDesignSupplyAirTemperature(12.8);
     setCentralHeatingDesignSupplyAirTemperature(16.7);
-    setSizingOption("NonCoincident");
-    setAllOutdoorAirinCooling("No");
-    setAllOutdoorAirinHeating("No");
     setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
-    setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
-    setCoolingDesignAirFlowMethod("DesignDay");
-    setCoolingDesignAirFlowRate(0.0);
-    setHeatingDesignAirFlowMethod("DesignDay");
-    setHeatingDesignAirFlowRate(0.0);
-    setSystemOutdoorAirMethod("ZoneSum");
     setZoneMaximumOutdoorAirFraction(1.0);
     setCoolingSupplyAirFlowRatePerFloorArea(9.9676501E-3);
     setCoolingFractionofAutosizedCoolingSupplyAirFlowRate(1.0);
