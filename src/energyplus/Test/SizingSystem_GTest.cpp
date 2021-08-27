@@ -54,19 +54,19 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_SizingSystem) {
 
   Model m;
-  
+
   AirLoopHVAC airLoopHVAC(m);
   airLoopHVAC.setName("Air Loop HVAC");
-  
+
   openstudio::energyplus::ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
-  
+
   EXPECT_EQ(0u, ft.errors().size());
-  
+
   WorkspaceObjectVector idf_sss(w.getObjectsByType(IddObjectType::Sizing_System));
   EXPECT_EQ(1u, idf_sss.size());
   WorkspaceObject idf_ss(idf_sss[0]);
-  
+
   EXPECT_EQ(airLoopHVAC.nameString(), idf_ss.getString(Sizing_SystemFields::AirLoopName, false).get());
   EXPECT_EQ("Sensible", idf_ss.getString(Sizing_SystemFields::TypeofLoadtoSizeOn, false).get());
   EXPECT_EQ("Autosize", idf_ss.getString(Sizing_SystemFields::DesignOutdoorAirFlowRate, false).get());
@@ -109,60 +109,60 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingSystem) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_SizingSystem) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
-  
+
   // air loop hvac
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::AirLoopHVAC);
-  
+
   openstudio::WorkspaceObject epAirLoopHVAC = workspace.addObject(idfObject1).get();
   idfObject1.setString(AirLoopHVACFields::Name, "Air Loop HVAC");
-  
+
   // sizing system
   openstudio::IdfObject idfObject2(openstudio::IddObjectType::Sizing_System);
   idfObject2.setString(Sizing_SystemFields::AirLoopName, "Air Loop HVAC");
-  idfObject2.setString(Sizing_SystemFields::TypeofLoadtoSizeOn, "Sensible") ;
-  idfObject2.setString(Sizing_SystemFields::DesignOutdoorAirFlowRate, "Autosize") ;
-  idfObject2.setString(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "Autosize") ;
-  idfObject2.setDouble(Sizing_SystemFields::PreheatDesignTemperature, 7.0) ;
-  idfObject2.setDouble(Sizing_SystemFields::PreheatDesignHumidityRatio, 0.008) ;
-  idfObject2.setDouble(Sizing_SystemFields::PrecoolDesignTemperature, 12.8) ;
-  idfObject2.setDouble(Sizing_SystemFields::PrecoolDesignHumidityRatio, 0.008) ;
-  idfObject2.setDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, 12.8) ;
-  idfObject2.setDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, 16.7) ;
-  idfObject2.setString(Sizing_SystemFields::TypeofZoneSumtoUse, "NonCoincident") ;
-  idfObject2.setString(Sizing_SystemFields::AllOutdoorAirinCooling, "No") ;
-  idfObject2.setString(Sizing_SystemFields::AllOutdoorAirinHeating, "No") ;
-  idfObject2.setDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, 0.0085) ;
-  idfObject2.setDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, 0.008) ;
-  idfObject2.setString(Sizing_SystemFields::CoolingSupplyAirFlowRateMethod, "DesignDay") ;
-  idfObject2.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRate, 0.0) ;
-  idfObject2.setString(Sizing_SystemFields::HeatingSupplyAirFlowRateMethod, "DesignDay") ;
-  idfObject2.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRate, 0.0) ;
-  idfObject2.setString(Sizing_SystemFields::SystemOutdoorAirMethod, "ZoneSum") ;
-  idfObject2.setDouble(Sizing_SystemFields::ZoneMaximumOutdoorAirFraction, 1.0) ;
-  idfObject2.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRatePerFloorArea, 9.9676501E-3) ;
-  idfObject2.setDouble(Sizing_SystemFields::CoolingFractionofAutosizedCoolingSupplyAirFlowRate, 1.0) ;
-  idfObject2.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRatePerUnitCoolingCapacity, 3.9475456E-5) ;
-  idfObject2.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerFloorArea, 9.9676501E-3) ;
-  idfObject2.setDouble(Sizing_SystemFields::HeatingFractionofAutosizedHeatingSupplyAirFlowRate, 1.0) ;
-  idfObject2.setDouble(Sizing_SystemFields::HeatingFractionofAutosizedCoolingSupplyAirFlowRate, 1.0) ;
-  idfObject2.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerUnitHeatingCapacity, 3.1588213E-5) ;
-  idfObject2.setString(Sizing_SystemFields::CoolingDesignCapacityMethod,"CoolingDesignCapacity") ;
-  idfObject2.setString(Sizing_SystemFields::CoolingDesignCapacity, "Autosize") ;
-  idfObject2.setDouble(Sizing_SystemFields::CoolingDesignCapacityPerFloorArea, 234.7) ;
-  idfObject2.setDouble(Sizing_SystemFields::FractionofAutosizedCoolingDesignCapacity, 1.0) ;
-  idfObject2.setString(Sizing_SystemFields::HeatingDesignCapacityMethod, "HeatingDesignCapacity") ;
-  idfObject2.setString(Sizing_SystemFields::HeatingDesignCapacity, "Autosize") ;
-  idfObject2.setDouble(Sizing_SystemFields::HeatingDesignCapacityPerFloorArea, 157.0) ;
-  idfObject2.setDouble(Sizing_SystemFields::FractionofAutosizedHeatingDesignCapacity, 1.0) ;
-  idfObject2.setString(Sizing_SystemFields::CentralCoolingCapacityControlMethod, "OnOff") ;
-  idfObject2.setString(Sizing_SystemFields::OccupantDiversity, "Autosize") ;
-  
+  idfObject2.setString(Sizing_SystemFields::TypeofLoadtoSizeOn, "Sensible");
+  idfObject2.setString(Sizing_SystemFields::DesignOutdoorAirFlowRate, "Autosize");
+  idfObject2.setString(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "Autosize");
+  idfObject2.setDouble(Sizing_SystemFields::PreheatDesignTemperature, 7.0);
+  idfObject2.setDouble(Sizing_SystemFields::PreheatDesignHumidityRatio, 0.008);
+  idfObject2.setDouble(Sizing_SystemFields::PrecoolDesignTemperature, 12.8);
+  idfObject2.setDouble(Sizing_SystemFields::PrecoolDesignHumidityRatio, 0.008);
+  idfObject2.setDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, 12.8);
+  idfObject2.setDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, 16.7);
+  idfObject2.setString(Sizing_SystemFields::TypeofZoneSumtoUse, "NonCoincident");
+  idfObject2.setString(Sizing_SystemFields::AllOutdoorAirinCooling, "No");
+  idfObject2.setString(Sizing_SystemFields::AllOutdoorAirinHeating, "No");
+  idfObject2.setDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, 0.0085);
+  idfObject2.setDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, 0.008);
+  idfObject2.setString(Sizing_SystemFields::CoolingSupplyAirFlowRateMethod, "DesignDay");
+  idfObject2.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRate, 0.0);
+  idfObject2.setString(Sizing_SystemFields::HeatingSupplyAirFlowRateMethod, "DesignDay");
+  idfObject2.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRate, 0.0);
+  idfObject2.setString(Sizing_SystemFields::SystemOutdoorAirMethod, "ZoneSum");
+  idfObject2.setDouble(Sizing_SystemFields::ZoneMaximumOutdoorAirFraction, 1.0);
+  idfObject2.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRatePerFloorArea, 9.9676501E-3);
+  idfObject2.setDouble(Sizing_SystemFields::CoolingFractionofAutosizedCoolingSupplyAirFlowRate, 1.0);
+  idfObject2.setDouble(Sizing_SystemFields::CoolingSupplyAirFlowRatePerUnitCoolingCapacity, 3.9475456E-5);
+  idfObject2.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerFloorArea, 9.9676501E-3);
+  idfObject2.setDouble(Sizing_SystemFields::HeatingFractionofAutosizedHeatingSupplyAirFlowRate, 1.0);
+  idfObject2.setDouble(Sizing_SystemFields::HeatingFractionofAutosizedCoolingSupplyAirFlowRate, 1.0);
+  idfObject2.setDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerUnitHeatingCapacity, 3.1588213E-5);
+  idfObject2.setString(Sizing_SystemFields::CoolingDesignCapacityMethod, "CoolingDesignCapacity");
+  idfObject2.setString(Sizing_SystemFields::CoolingDesignCapacity, "Autosize");
+  idfObject2.setDouble(Sizing_SystemFields::CoolingDesignCapacityPerFloorArea, 234.7);
+  idfObject2.setDouble(Sizing_SystemFields::FractionofAutosizedCoolingDesignCapacity, 1.0);
+  idfObject2.setString(Sizing_SystemFields::HeatingDesignCapacityMethod, "HeatingDesignCapacity");
+  idfObject2.setString(Sizing_SystemFields::HeatingDesignCapacity, "Autosize");
+  idfObject2.setDouble(Sizing_SystemFields::HeatingDesignCapacityPerFloorArea, 157.0);
+  idfObject2.setDouble(Sizing_SystemFields::FractionofAutosizedHeatingDesignCapacity, 1.0);
+  idfObject2.setString(Sizing_SystemFields::CentralCoolingCapacityControlMethod, "OnOff");
+  idfObject2.setString(Sizing_SystemFields::OccupantDiversity, "Autosize");
+
   openstudio::WorkspaceObject epSizingSystem = workspace.addObject(idfObject2).get();
-  
+
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
-  
+
   std::vector<SizingSystem> sizingSystems = model.getModelObjects<SizingSystem>();
   ASSERT_EQ(1u, sizingSystems.size());
   SizingSystem sizingSystem = sizingSystems[0];

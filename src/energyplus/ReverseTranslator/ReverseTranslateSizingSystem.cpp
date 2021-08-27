@@ -188,7 +188,7 @@ namespace energyplus {
       sizingSystem.setSystemOutdoorAirMethod(s.get());
     }
 
-    // ZoneMaximumOutdoorAirFraction    
+    // ZoneMaximumOutdoorAirFraction
     value = workspaceObject.getDouble(Sizing_SystemFields::ZoneMaximumOutdoorAirFraction);
     if (value) {
       sizingSystem.setZoneMaximumOutdoorAirFraction(value.get());
@@ -223,19 +223,19 @@ namespace energyplus {
     if (value) {
       sizingSystem.setHeatingFractionofAutosizedHeatingSupplyAirFlowRate(value.get());
     }
-    
+
     // HeatingFractionofAutosizedCoolingSupplyAirFlowRate
     value = workspaceObject.getDouble(Sizing_SystemFields::HeatingFractionofAutosizedCoolingSupplyAirFlowRate);
     if (value) {
       sizingSystem.setHeatingFractionofAutosizedCoolingSupplyAirFlowRate(value.get());
     }
-    
+
     // HeatingSupplyAirFlowRatePerUnitHeatingCapacity
     value = workspaceObject.getDouble(Sizing_SystemFields::HeatingSupplyAirFlowRatePerUnitHeatingCapacity);
     if (value) {
       sizingSystem.setHeatingSupplyAirFlowRatePerUnitHeatingCapacity(value.get());
     }
-    
+
     // CoolingDesignCapacityMethod
     s = workspaceObject.getString(Sizing_SystemFields::CoolingDesignCapacityMethod);
     if (s) {
@@ -250,13 +250,13 @@ namespace energyplus {
     } else if (s && istringEqual(s.get(), "Autosize")) {
       sizingSystem.autosizeCoolingDesignCapacity();
     }
-    
+
     // CoolingDesignCapacityPerFloorArea
     value = workspaceObject.getDouble(Sizing_SystemFields::CoolingDesignCapacityPerFloorArea);
     if (value) {
       sizingSystem.setCoolingDesignCapacityPerFloorArea(value.get());
     }
-    
+
     // FractionofAutosizedCoolingDesignCapacity
     value = workspaceObject.getDouble(Sizing_SystemFields::FractionofAutosizedCoolingDesignCapacity);
     if (value) {
@@ -277,7 +277,7 @@ namespace energyplus {
     } else if (s && istringEqual(s.get(), "Autosize")) {
       sizingSystem.autosizeHeatingDesignCapacity();
     }
-    
+
     // HeatingDesignCapacityPerFloorArea
     value = workspaceObject.getDouble(Sizing_SystemFields::HeatingDesignCapacityPerFloorArea);
     if (value) {
