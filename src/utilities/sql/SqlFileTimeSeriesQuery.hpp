@@ -55,7 +55,7 @@ class UTILITIES_API EnvironmentIdentifier
 {
  public:
   /** Construct from EnvironmentType enumeration. */
-  EnvironmentIdentifier(const openstudio::EnvironmentType& type = EnvironmentType());
+  EnvironmentIdentifier(openstudio::EnvironmentType type = EnvironmentType());
   /** Construct from name. */
   EnvironmentIdentifier(const std::string& name);
 
@@ -139,8 +139,8 @@ class UTILITIES_API SqlFileTimeSeriesQuery
   SqlFileTimeSeriesQuery(const EnvironmentIdentifier& envId);
 
   /** Construct from fully specified query. */
-  SqlFileTimeSeriesQuery(const std::string& environmentPeriod, const openstudio::ReportingFrequency& reportingFrequency,
-                         const std::string& timeSeriesName, const std::string& keyValue);
+  SqlFileTimeSeriesQuery(const std::string& environmentPeriod, openstudio::ReportingFrequency reportingFrequency, const std::string& timeSeriesName,
+                         const std::string& keyValue);
 
   //@}
   /** @name Getters */
@@ -169,7 +169,7 @@ class UTILITIES_API SqlFileTimeSeriesQuery
   void setEnvironment(const EnvironmentIdentifier& envId);
 
   /** Set the ReportingFrequency. */
-  void setReportingFrequency(const openstudio::ReportingFrequency& rf);
+  void setReportingFrequency(openstudio::ReportingFrequency rf);
 
   /** Set the TimeSeries NameIdentifier. */
   void setTimeSeries(const TimeSeriesIdentifier& tsId);

@@ -474,8 +474,7 @@ namespace sdd {
     return m_serviceHotWaterSetpointSchedule.get();
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFSys(const pugi::xml_node& vrfSysElement,
-                                                                                     openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFSys(pugi::xml_node vrfSysElement, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     model::AirConditionerVariableRefrigerantFlow vrf(model);
@@ -919,7 +918,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirSystem(const pugi::xml_node& airSystemElement,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirSystem(pugi::xml_node airSystemElement,
                                                                                         openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
@@ -1974,7 +1973,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilHeating(const pugi::xml_node& heatingCoilElement,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilHeating(pugi::xml_node heatingCoilElement,
                                                                                           openstudio::model::Model& model) {
     boost::optional<model::ModelObject> result;
 
@@ -2460,7 +2459,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(const pugi::xml_node& fanElement, openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(pugi::xml_node fanElement, openstudio::model::Model& model) {
     boost::optional<model::ModelObject> result;
 
     if (!istringEqual(fanElement.name(), "Fan")) {
@@ -2702,8 +2701,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRcvry(const pugi::xml_node& element,
-                                                                                      openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRcvry(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "HtRcvry")) {
       return boost::none;
     }
@@ -2834,8 +2832,7 @@ namespace sdd {
     return hx;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateEvapClr(const pugi::xml_node& element,
-                                                                                      openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateEvapClr(pugi::xml_node element, openstudio::model::Model& model) {
     boost::optional<model::ModelObject> result;
 
     model::Schedule schedule = model.alwaysOnDiscreteSchedule();
@@ -2930,7 +2927,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilCooling(const pugi::xml_node& coolingCoilElement,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilCooling(pugi::xml_node coolingCoilElement,
                                                                                           openstudio::model::Model& model) {
     boost::optional<model::ModelObject> result;
 
@@ -3504,7 +3501,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& thermalZoneElement,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThermalZone(pugi::xml_node thermalZoneElement,
                                                                                           openstudio::model::Model& model) {
     UnitSystem siSys(UnitSystem::SI);
     UnitSystem whSys(UnitSystem::Wh);
@@ -4390,7 +4387,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const pugi::xml_node& trmlUnitElement, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(pugi::xml_node trmlUnitElement, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     if (!istringEqual(trmlUnitElement.name(), "TrmlUnit")) {
@@ -4727,7 +4724,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFluidSys(const pugi::xml_node& fluidSysElement,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFluidSys(pugi::xml_node fluidSysElement,
                                                                                        openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
@@ -5092,7 +5089,7 @@ namespace sdd {
     std::vector<EquipmentList> equipmentLists;
 
     // Lambda to sort two pugi::xml_node according to their 'index' attribute
-    auto sortByIndex = [&plantName](const pugi::xml_node& lhs, const ::pugi::xml_node& rhs) {
+    auto sortByIndex = [&plantName](pugi::xml_node lhs, ::pugi::xml_node rhs) {
       boost::optional<unsigned> _lhs_index = lexicalCastToUnsigned(lhs.attribute("index"));
       boost::optional<unsigned> _rhs_index = lexicalCastToUnsigned(rhs.attribute("index"));
       if (_lhs_index && _rhs_index) {
@@ -5521,8 +5518,7 @@ namespace sdd {
     return plantLoop;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump(const pugi::xml_node& pumpElement,
-                                                                                   openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump(pugi::xml_node pumpElement, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     if (!istringEqual(pumpElement.name(), "Pump")) {
@@ -5687,8 +5683,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoiler(const pugi::xml_node& boilerElement,
-                                                                                     openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoiler(pugi::xml_node boilerElement, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     if (!istringEqual(boilerElement.name(), "Blr")) {
@@ -5786,8 +5781,7 @@ namespace sdd {
     return boiler;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRej(const pugi::xml_node& htRejElement,
-                                                                                    openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRej(pugi::xml_node htRejElement, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     if (!istringEqual(htRejElement.name(), "HtRej")) {
@@ -5959,7 +5953,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(const pugi::xml_node& hxElement, openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(pugi::xml_node hxElement, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     if (!istringEqual(hxElement.name(), "HX")) {
@@ -6032,7 +6026,7 @@ namespace sdd {
 
     return result;
   }
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrmlEngyStor(const pugi::xml_node& tesElement,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrmlEngyStor(pugi::xml_node tesElement,
                                                                                             openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
@@ -6152,7 +6146,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChiller(const pugi::xml_node& chillerElement,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChiller(pugi::xml_node chillerElement,
                                                                                       openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
@@ -6449,7 +6443,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrHtr(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrHtr(pugi::xml_node element, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     if (!istringEqual(element.name(), "WtrHtr")) {
@@ -6854,7 +6848,7 @@ namespace sdd {
     }
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSys(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSys(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "ZnSys")) {
       return boost::none;
     }
@@ -7628,7 +7622,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilHeatingDXVariableRefrigerantFlow(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilHeatingDXVariableRefrigerantFlow(pugi::xml_node element,
                                                                                                                    openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CoilHtg")) {
       return boost::none;
@@ -7682,7 +7676,7 @@ namespace sdd {
     return coil;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilCoolingDXVariableRefrigerantFlow(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilCoolingDXVariableRefrigerantFlow(pugi::xml_node element,
                                                                                                                    openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CoilClg")) {
       return boost::none;
@@ -7735,8 +7729,7 @@ namespace sdd {
     return coil;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvDblQuad(const pugi::xml_node& element,
-                                                                                         openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvDblQuad(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CrvDblQuad")) {
       return boost::none;
     }
@@ -7858,8 +7851,7 @@ namespace sdd {
     return curve;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvCubic(const pugi::xml_node& element,
-                                                                                       openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvCubic(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CrvCubic")) {
       return boost::none;
     }
@@ -7941,7 +7933,7 @@ namespace sdd {
     return curve;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvLin(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvLin(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CrvLin")) {
       return boost::none;
     }
@@ -7997,8 +7989,7 @@ namespace sdd {
     return curve;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQuad(const pugi::xml_node& element,
-                                                                                      openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQuad(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CrvQuad")) {
       return boost::none;
     }
@@ -8074,8 +8065,7 @@ namespace sdd {
     return curve;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapDblVar(const pugi::xml_node& element,
-                                                                                           openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapDblVar(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CrvMapDblVar")) {
       return boost::none;
     }
@@ -8173,8 +8163,7 @@ namespace sdd {
     return table;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapSglVar(const pugi::xml_node& element,
-                                                                                           openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapSglVar(pugi::xml_node element, openstudio::model::Model& model) {
     if (!istringEqual(element.name(), "CrvMapSglVar")) {
       return boost::none;
     }
@@ -8244,7 +8233,7 @@ namespace sdd {
     return table;
   }
 
-  pugi::xml_node ReverseTranslator::findZnSysElement(const pugi::xml_node& znSysRefElement) {
+  pugi::xml_node ReverseTranslator::findZnSysElement(pugi::xml_node znSysRefElement) {
     pugi::xml_node projectElement = getProjectElement(znSysRefElement);
     // TODO: perhaps we should rely on the makeVectorOfChildrenRecursive instead (uses Xpath instead of having to harcoded the path)
     // Not sure about speed penalties
@@ -8271,7 +8260,7 @@ namespace sdd {
     return pugi::xml_node();
   }
 
-  pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_node& znNameElement) {
+  pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(pugi::xml_node znNameElement) {
     pugi::xml_node projectElement = getProjectElement(znNameElement);
     // Proj > Bldg > [AirSys]
     std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(projectElement.child("Bldg"), "AirSys");
@@ -8299,14 +8288,14 @@ namespace sdd {
     return pugi::xml_node();
   }
 
-  pugi::xml_node ReverseTranslator::findAirSysElement(const pugi::xml_node& airSyRefElement) {
+  pugi::xml_node ReverseTranslator::findAirSysElement(pugi::xml_node airSyRefElement) {
 
     pugi::xml_node projectElement = getProjectElement(airSyRefElement);
     std::string airSysName = airSyRefElement.text().as_string();
     return findAirSysElement(airSysName, projectElement);
   }
 
-  pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysName, const pugi::xml_node& projectElement) {
+  pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysName, pugi::xml_node projectElement) {
     if (!projectElement || (strcmp(projectElement.name(), "Proj") != 0)) {
       LOG(Error, "findAirSysElement has to be called with the projectElement");
       OS_ASSERT(false);

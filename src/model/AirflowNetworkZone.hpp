@@ -181,7 +181,7 @@ namespace model {
     typedef detail::AirflowNetworkZone_Impl ImplType;
 
     explicit AirflowNetworkZone(std::shared_ptr<detail::AirflowNetworkZone_Impl> impl);
-    AirflowNetworkZone(const Model& model, const Handle& handle);
+    AirflowNetworkZone(const Model& model, openstudio::Handle handle);
 
     bool setThermalZone(const ThermalZone& thermalZone);
     void resetThermalZone();

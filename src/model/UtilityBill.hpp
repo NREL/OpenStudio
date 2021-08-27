@@ -161,7 +161,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit UtilityBill(const FuelType& fuelType, const Model& model);
+    explicit UtilityBill(openstudio::FuelType fuelType, const Model& model);
 
     virtual ~UtilityBill() {}
 
@@ -220,7 +220,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
+    bool setMeterInstallLocation(openstudio::InstallLocationType meterInstallLocation);
 
     void resetMeterInstallLocation();
 
@@ -228,7 +228,7 @@ namespace model {
 
     void resetMeterSpecificInstallLocation();
 
-    bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
+    bool setMeterEndUseCategory(openstudio::EndUseCategoryType meterEndUseCategory);
 
     void resetMeterEndUseCategory();
 

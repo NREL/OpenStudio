@@ -100,7 +100,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirflowNetworkFan::AirflowNetworkFan(const Model& model, const Handle& handle)
+  AirflowNetworkFan::AirflowNetworkFan(const Model& model, openstudio::Handle handle)
     : AirflowNetworkComponent(AirflowNetworkFan::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkFan_Impl>());
     bool ok = getImpl<detail::AirflowNetworkFan_Impl>()->setPointer(OS_AirflowNetworkFanFields::FanName, handle);

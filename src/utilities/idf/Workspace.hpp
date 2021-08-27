@@ -167,10 +167,10 @@ class UTILITIES_API Workspace
 
   /** Returns the IddObject corresponding to type if it is available from the underlying IddFile.
    *  Otherwise the return value evaluates to false. */
-  boost::optional<IddObject> getIddObject(const IddObjectType& type) const;
+  boost::optional<IddObject> getIddObject(openstudio::IddObjectType type) const;
 
   /** Returns the object name associated with handle. */
-  boost::optional<std::string> name(const Handle& handle) const;
+  boost::optional<std::string> name(openstudio::Handle handle) const;
 
   /** Get an object from its handle. */
   boost::optional<WorkspaceObject> getObject(Handle handle) const;
@@ -326,7 +326,7 @@ class UTILITIES_API Workspace
    *  This function removes only the object specified by handle it is not overridden
    *  to "do the right thing" for ModelObject.
    */
-  bool removeObject(const Handle& handle);
+  bool removeObject(openstudio::Handle handle);
 
   /** Remove objects from Workspace with the expectation that they will be destructed.
    *  This function removes only the objects specified by handles it is not overridden
@@ -371,10 +371,10 @@ class UTILITIES_API Workspace
   unsigned numObjectsOfType(const IddObject& objectType) const;
 
   /** True if handle corresponds to an object in this workspace. */
-  bool isMember(const Handle& handle) const;
+  bool isMember(openstudio::Handle handle) const;
 
   /** True if an \\object-list field referencing the given names can point to this object. */
-  bool canBeTarget(const Handle& handle, const std::set<std::string>& referenceListNames) const;
+  bool canBeTarget(openstudio::Handle handle, const std::set<std::string>& referenceListNames) const;
 
   /** True if the IddObject of type is in iddFile(). */
   bool isInIddFile(IddObjectType type) const;
@@ -385,7 +385,7 @@ class UTILITIES_API Workspace
 
   /** Returns the next name in the pattern 'iddObject().name() << " " << int' for iddObjectType.
    *  If fillIn, will use unused integer values smaller than the largest one. */
-  std::string nextName(const IddObjectType& iddObjectType, bool fillIn) const;
+  std::string nextName(openstudio::IddObjectType iddObjectType, bool fillIn) const;
 
   /** Returns true if this Workspace is valid at strictnessLevel(). */
   bool isValid() const;
@@ -420,7 +420,7 @@ class UTILITIES_API Workspace
   static boost::optional<Workspace> load(const openstudio::path& p);
 
   /** Load a Workspace from path using the IddFactory and iddFileType. */
-  static boost::optional<Workspace> load(const openstudio::path& p, const IddFileType& iddFileType);
+  static boost::optional<Workspace> load(const openstudio::path& p, openstudio::IddFileType iddFileType);
 
   /** Load a Workspace from path using iddFile. */
   static boost::optional<Workspace> load(const openstudio::path& p, const IddFile& iddFile);

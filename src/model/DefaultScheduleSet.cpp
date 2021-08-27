@@ -243,7 +243,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    boost::optional<Schedule> DefaultScheduleSet_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+    boost::optional<Schedule> DefaultScheduleSet_Impl::getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const {
       unsigned index = defaultScheduleType.value() + 1;
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(index);
     }
@@ -693,7 +693,7 @@ namespace model {
     getImpl<detail::DefaultScheduleSet_Impl>()->resetInfiltrationSchedule();
   }
 
-  boost::optional<Schedule> DefaultScheduleSet::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  boost::optional<Schedule> DefaultScheduleSet::getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const {
     return getImpl<detail::DefaultScheduleSet_Impl>()->getDefaultSchedule(defaultScheduleType);
   }
 

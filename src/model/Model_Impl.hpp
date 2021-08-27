@@ -311,15 +311,15 @@ namespace model {
 
       // private slots:
       void clearCachedData();
-      void clearCachedBuilding(const Handle& handle);
-      void clearCachedFoundationKivaSettings(const Handle& handle);
-      void clearCachedOutputControlFiles(const Handle& handle);
-      void clearCachedOutputTableSummaryReports(const Handle& handle);
-      void clearCachedLifeCycleCostParameters(const Handle& handle);
-      void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
-      void clearCachedRunPeriod(const Handle& handle);
-      void clearCachedYearDescription(const Handle& handle);
-      void clearCachedWeatherFile(const Handle& handle);
+      void clearCachedBuilding(openstudio::Handle handle);
+      void clearCachedFoundationKivaSettings(openstudio::Handle handle);
+      void clearCachedOutputControlFiles(openstudio::Handle handle);
+      void clearCachedOutputTableSummaryReports(openstudio::Handle handle);
+      void clearCachedLifeCycleCostParameters(openstudio::Handle handle);
+      void clearCachedPerformancePrecisionTradeoffs(openstudio::Handle handle);
+      void clearCachedRunPeriod(openstudio::Handle handle);
+      void clearCachedYearDescription(openstudio::Handle handle);
+      void clearCachedWeatherFile(openstudio::Handle handle);
 
       typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
         Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>

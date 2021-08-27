@@ -47,7 +47,7 @@ static constexpr auto PLENUMCOLOR("#C0C0C0");                    // DLM: needs t
 FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString)
   : m_id(id), m_name(name), m_handle(toUUID(handleString)), m_handleString(handleString) {}
 
-FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const UUID& handle)
+FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, openstudio::UUID handle)
   : m_id(id), m_name(name), m_handle(handle), m_handleString(toString(handle)) {}
 
 FloorplanObject::FloorplanObject(const Json::Value& value) : m_data(value) {

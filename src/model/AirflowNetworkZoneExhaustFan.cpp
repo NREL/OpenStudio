@@ -97,7 +97,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirflowNetworkZoneExhaustFan::AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle)
+  AirflowNetworkZoneExhaustFan::AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack& crack, openstudio::Handle handle)
     : ModelObject(AirflowNetworkZoneExhaustFan::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkZoneExhaustFan_Impl>());
     bool ok = setCrack(crack);

@@ -38,7 +38,7 @@ namespace openstudio {
 
 // ENVIRONMENT IDENTIFIER
 
-EnvironmentIdentifier::EnvironmentIdentifier(const EnvironmentType& type) : m_type(type) {}
+EnvironmentIdentifier::EnvironmentIdentifier(openstudio::EnvironmentType type) : m_type(type) {}
 
 EnvironmentIdentifier::EnvironmentIdentifier(const std::string& name) : m_name(name) {}
 
@@ -96,7 +96,7 @@ SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const boost::optional<Environment
 
 SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const EnvironmentIdentifier& envId) : m_vetted(false), m_environment(envId) {}
 
-SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const std::string& environmentPeriod, const ReportingFrequency& reportingFrequency,
+SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const std::string& environmentPeriod, openstudio::ReportingFrequency reportingFrequency,
                                                const std::string& timeSeriesName, const std::string& keyValue)
   : m_vetted(false),
     m_environment(EnvironmentIdentifier(environmentPeriod)),
@@ -133,7 +133,7 @@ void SqlFileTimeSeriesQuery::setEnvironment(const EnvironmentIdentifier& envId) 
   m_vetted = false;
 }
 
-void SqlFileTimeSeriesQuery::setReportingFrequency(const ReportingFrequency& rf) {
+void SqlFileTimeSeriesQuery::setReportingFrequency(openstudio::ReportingFrequency rf) {
   m_reportingFrequency = rf;
   m_vetted = false;
 }

@@ -158,7 +158,7 @@ namespace model {
       /// This space types's default schedule set
       /// The building's default schedule set
       /// The building's space type's default schedule set
-      boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+      boost::optional<Schedule> getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const;
 
       /// Returns all InternalMass in this space type.
       std::vector<InternalMass> internalMass() const;

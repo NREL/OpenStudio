@@ -118,7 +118,7 @@ namespace measure {
 
   OSOutput::OSOutput() {}
 
-  OSOutput::OSOutput(const std::string& name, const OSOutputType& type, bool modelDependent)
+  OSOutput::OSOutput(const std::string& name, openstudio::measure::OSOutputType type, bool modelDependent)
     : m_name(name), m_displayName(name), m_shortName(name), m_type(type), m_modelDependent(modelDependent) {}
 
   std::ostream& operator<<(std::ostream& os, const OSOutput& output) {

@@ -97,8 +97,8 @@ namespace model {
     void mergeBuildingUnit(BuildingUnit& currentBuildingUnit, const BuildingUnit& newBuildingUnit);
     void mergeDefaultConstructionSet(DefaultConstructionSet& currentDefaultConstructionSet, const DefaultConstructionSet& newDefaultConstructionSet);
 
-    boost::optional<UUID> getNewModelHandle(const UUID& currentHandle);
-    boost::optional<UUID> getCurrentModelHandle(const UUID& newHandle);
+    boost::optional<UUID> getNewModelHandle(openstudio::UUID currentHandle);
+    boost::optional<UUID> getCurrentModelHandle(openstudio::UUID newHandle);
 
     boost::optional<WorkspaceObject> getCurrentModelObject(const WorkspaceObject& newObject);
 

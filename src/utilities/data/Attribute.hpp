@@ -106,10 +106,10 @@ struct UTILITIES_API AttributeDescription
   OSAttributeVariant defaultValue;
 
   AttributeDescription(const std::string& t_name, const std::string& t_displayName, const std::string& t_description,
-                       const AttributeValueType& t_validValueType, bool t_required);
+                       openstudio::AttributeValueType t_validValueType, bool t_required);
 
   AttributeDescription(const std::string& t_name, const std::string& t_displayName, const std::string& t_description,
-                       const AttributeValueType& t_validValueType, bool t_required, OSAttributeVariant t_defaultValue);
+                       openstudio::AttributeValueType t_validValueType, bool t_required, OSAttributeVariant t_defaultValue);
 
   AttributeDescription(const std::string& t_name, const std::string& t_displayName, const std::string& t_description,
                        const std::vector<AttributeValueType>& t_validValueTypes, bool t_required);
@@ -142,63 +142,56 @@ class UTILITIES_API Attribute
   Attribute(const std::string& name, bool value);
   Attribute(const std::string& name, bool value, const std::string& units);
   Attribute(const std::string& name, bool value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-            const boost::optional<std::string>& displayName, bool value, const boost::optional<std::string>& units,
-            const std::string& source = std::string());
+  Attribute(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName, bool value,
+            const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // AttributeValueType::Double
   Attribute(const std::string& name, double value);
   Attribute(const std::string& name, double value, const std::string& units);
   Attribute(const std::string& name, double value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-            const boost::optional<std::string>& displayName, double value, const boost::optional<std::string>& units,
-            const std::string& source = std::string());
+  Attribute(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+            double value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // AttributeValueType::Integer
   Attribute(const std::string& name, int value);
   Attribute(const std::string& name, int value, const std::string& units);
   Attribute(const std::string& name, int value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-            const boost::optional<std::string>& displayName, int value, const boost::optional<std::string>& units,
-            const std::string& source = std::string());
+  Attribute(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName, int value,
+            const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // AttributeValueType::Unsigned
   Attribute(const std::string& name, unsigned value);
   Attribute(const std::string& name, unsigned value, const std::string& units);
   Attribute(const std::string& name, unsigned value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-            const boost::optional<std::string>& displayName, unsigned value, const boost::optional<std::string>& units,
-            const std::string& source = std::string());
+  Attribute(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+            unsigned value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // AttributeValueType::String
   // Const char overload is needed because otherwise it'll resolve to the bool constructor (implicit conversion of pointer to bool)
   Attribute(const std::string& name, const char* value);
   Attribute(const std::string& name, const char* value, const std::string& units);
   Attribute(const std::string& name, const char* value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-            const boost::optional<std::string>& displayName, const char* value, const boost::optional<std::string>& units,
-            const std::string& source = std::string());
+  Attribute(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+            const char* value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
   Attribute(const std::string& name, const std::string& value);
   Attribute(const std::string& name, const std::string& value, const std::string& units);
   Attribute(const std::string& name, const std::string& value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-            const boost::optional<std::string>& displayName, const std::string& value, const boost::optional<std::string>& units,
-            const std::string& source = std::string());
+  Attribute(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+            const std::string& value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // AttributeValueType::AttributeVector
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const std::string& units);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-            const boost::optional<std::string>& displayName, const std::vector<openstudio::Attribute>& value,
-            const boost::optional<std::string>& units, const std::string& source = std::string());
+  Attribute(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+            const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // Destructor
   virtual ~Attribute() {}
 
   // constructor from xml, throws if required arguments are missing
-  explicit Attribute(const pugi::xml_node& element);
+  explicit Attribute(pugi::xml_node element);
 
   Attribute(const Attribute& other);
 

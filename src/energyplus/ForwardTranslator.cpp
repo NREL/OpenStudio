@@ -4218,14 +4218,14 @@ namespace energyplus {
     }
   }
 
-  IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
+  IdfObject ForwardTranslator::createAndRegisterIdfObject(openstudio::IddObjectType idfObjectType, const model::ModelObject& modelObject) {
     IdfObject idfObject(idfObjectType);
     m_idfObjects.push_back(idfObject);
     m_map.insert(std::make_pair(modelObject.handle(), idfObject));
     return idfObject;
   }
 
-  IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
+  IdfObject ForwardTranslator::createRegisterAndNameIdfObject(openstudio::IddObjectType idfObjectType, const model::ModelObject& modelObject) {
     IdfObject idfObject = createAndRegisterIdfObject(idfObjectType, modelObject);
     if (OptionalString moName = modelObject.name()) {
       idfObject.setName(*moName);

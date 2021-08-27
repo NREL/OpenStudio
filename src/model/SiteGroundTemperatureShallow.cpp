@@ -242,7 +242,7 @@ namespace model {
       return retval;
     }
 
-    double SiteGroundTemperatureShallow_Impl::getTemperatureByMonth(const openstudio::MonthOfYear& month) const {
+    double SiteGroundTemperatureShallow_Impl::getTemperatureByMonth(openstudio::MonthOfYear month) const {
       return getTemperatureByMonth(month.value());
     }
 
@@ -292,7 +292,7 @@ namespace model {
       return is_defaulted;
     }
 
-    bool SiteGroundTemperatureShallow_Impl::isMonthDefaulted(const openstudio::MonthOfYear& month) const {
+    bool SiteGroundTemperatureShallow_Impl::isMonthDefaulted(openstudio::MonthOfYear month) const {
       return isMonthDefaulted(month.value());
     }
 
@@ -482,7 +482,7 @@ namespace model {
       }
     }
 
-    bool SiteGroundTemperatureShallow_Impl::setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature) {
+    bool SiteGroundTemperatureShallow_Impl::setTemperatureByMonth(openstudio::MonthOfYear month, double temperature) {
       return setTemperatureByMonth(month.value(), temperature);
     }
 
@@ -530,7 +530,7 @@ namespace model {
       }
     }
 
-    void SiteGroundTemperatureShallow_Impl::resetTemperatureByMonth(const openstudio::MonthOfYear& month) {
+    void SiteGroundTemperatureShallow_Impl::resetTemperatureByMonth(openstudio::MonthOfYear month) {
       return resetTemperatureByMonth(month.value());
     }
 
@@ -658,7 +658,7 @@ namespace model {
     return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->getTemperatureByMonth(month);
   }
 
-  double SiteGroundTemperatureShallow::getTemperatureByMonth(const openstudio::MonthOfYear& month) const {
+  double SiteGroundTemperatureShallow::getTemperatureByMonth(openstudio::MonthOfYear month) const {
     return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->getTemperatureByMonth(month);
   }
 
@@ -666,7 +666,7 @@ namespace model {
     return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->isMonthDefaulted(month);
   }
 
-  bool SiteGroundTemperatureShallow::isMonthDefaulted(const openstudio::MonthOfYear& month) const {
+  bool SiteGroundTemperatureShallow::isMonthDefaulted(openstudio::MonthOfYear month) const {
     return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->isMonthDefaulted(month);
   }
 
@@ -774,7 +774,7 @@ namespace model {
     return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setTemperatureByMonth(month, temperature);
   }
 
-  bool SiteGroundTemperatureShallow::setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature) {
+  bool SiteGroundTemperatureShallow::setTemperatureByMonth(openstudio::MonthOfYear month, double temperature) {
     return getImpl<detail::SiteGroundTemperatureShallow_Impl>()->setTemperatureByMonth(month, temperature);
   }
 
@@ -782,7 +782,7 @@ namespace model {
     getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetTemperatureByMonth(month);
   }
 
-  void SiteGroundTemperatureShallow::resetTemperatureByMonth(const openstudio::MonthOfYear& month) {
+  void SiteGroundTemperatureShallow::resetTemperatureByMonth(openstudio::MonthOfYear month) {
     getImpl<detail::SiteGroundTemperatureShallow_Impl>()->resetTemperatureByMonth(month);
   }
 

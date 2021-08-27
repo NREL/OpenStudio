@@ -80,7 +80,7 @@
 namespace openstudio {
 namespace gbxml {
 
-  std::ostream& operator<<(std::ostream& os, const pugi::xml_node& element) {
+  std::ostream& operator<<(std::ostream& os, pugi::xml_node element) {
     pugi::xml_document doc;
     doc.append_copy(element);
     doc.save(os, "  ");
@@ -157,11 +157,11 @@ namespace gbxml {
     return value;
   }
 
-  boost::optional<model::Model> ReverseTranslator::convert(const pugi::xml_node& root) {
+  boost::optional<model::Model> ReverseTranslator::convert(pugi::xml_node root) {
     return translateGBXML(root);
   }
 
-  boost::optional<model::Model> ReverseTranslator::translateGBXML(const pugi::xml_node& root) {
+  boost::optional<model::Model> ReverseTranslator::translateGBXML(pugi::xml_node root) {
     openstudio::model::Model model;
     model.setFastNaming(true);
 
@@ -337,7 +337,7 @@ namespace gbxml {
     return model;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateCampus(pugi::xml_node element, openstudio::model::Model& model) {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
     auto buildingElement = element.child("Building");
@@ -369,7 +369,7 @@ namespace gbxml {
     return facility;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(pugi::xml_node element, openstudio::model::Model& model) {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
     std::string id = element.attribute("id").value();
@@ -416,7 +416,7 @@ namespace gbxml {
     return building;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(pugi::xml_node element, openstudio::model::Model& model) {
     openstudio::model::BuildingStory story(model);
 
     std::string id = element.attribute("id").value();
@@ -433,7 +433,7 @@ namespace gbxml {
     return story;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(pugi::xml_node element, openstudio::model::Model& model) {
     openstudio::model::ThermalZone zone(model);
 
     std::string id = element.attribute("id").value();
@@ -458,7 +458,7 @@ namespace gbxml {
     return zone;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(pugi::xml_node element, openstudio::model::Model& model) {
     openstudio::model::Space space(model);
 
     std::string id = element.attribute("id").value();
@@ -526,7 +526,7 @@ namespace gbxml {
     return space;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(pugi::xml_node element, openstudio::model::Model& model) {
     boost::optional<model::ModelObject> result;
     std::vector<openstudio::Point3d> vertices;
 
@@ -937,7 +937,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(pugi::xml_node element,
                                                                                          openstudio::model::Surface& surface) {
     openstudio::model::Model model = surface.model();
 
@@ -1046,7 +1046,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(pugi::xml_node element,
                                                                                           openstudio::model::ModelObject& modelObject) {
     model::AdditionalProperties result = modelObject.additionalProperties();
 

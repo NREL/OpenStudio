@@ -150,7 +150,7 @@ class UTILITIES_API DateTime
   static boost::optional<DateTime> fromXsdDateTime(const std::string& str);
 
   /// construct from epoch time_t in UTC
-  static DateTime fromEpoch(const std::time_t& time);
+  static DateTime fromEpoch(std::time_t time);
 
  private:
   // ensure that stored time is less than 24 hrs and adjust date accordingly

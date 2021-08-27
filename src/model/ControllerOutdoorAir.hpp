@@ -175,7 +175,7 @@ namespace model {
 
     ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
 
-    ControllerOutdoorAir(const Handle& handle, const Model& model);
+    ControllerOutdoorAir(openstudio::Handle handle, const Model& model);
 
     REGISTER_LOGGER("openstudio.model.ControllerOutdoorAir");
   };

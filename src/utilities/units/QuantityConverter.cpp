@@ -337,7 +337,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
   return result;
 }
 
-Quantity QuantityConverterSingleton::m_convertFromSI(const Quantity& original, const UnitSystem& targetSys) const {
+Quantity QuantityConverterSingleton::m_convertFromSI(const Quantity& original, openstudio::UnitSystem targetSys) const {
   Quantity working(original);
 
   // Make sure to work unscaled: 10^0

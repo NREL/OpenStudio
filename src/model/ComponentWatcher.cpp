@@ -118,7 +118,7 @@ namespace model {
       return;
     }
 
-    void ComponentWatcher_Impl::objectRemove(const Handle& handleOfRemovedObject) {
+    void ComponentWatcher_Impl::objectRemove(openstudio::Handle handleOfRemovedObject) {
 
       // no ComponentData means no Component to watch
       if (handleOfRemovedObject == m_componentData.handle()) {
@@ -146,7 +146,7 @@ namespace model {
       return;
     }
 
-    void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid) {
+    void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject, openstudio::IddObjectType type, openstudio::UUID uuid) {
       /*IddObjectType type =*/addedObject.iddObject().type();
       return;
     }

@@ -63,7 +63,7 @@ class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher
 
   void relationshipChange(int index, Handle newHandle, Handle oldHandle);
 
-  void removedFromWorkspace(const Handle& handle);
+  void removedFromWorkspace(openstudio::Handle handle);
 
  protected:
   bool m_relationshipChanged;

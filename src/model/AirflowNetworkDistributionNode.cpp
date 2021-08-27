@@ -123,7 +123,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirflowNetworkDistributionNode::AirflowNetworkDistributionNode(const Model& model, const Handle& handle)
+  AirflowNetworkDistributionNode::AirflowNetworkDistributionNode(const Model& model, openstudio::Handle handle)
     : AirflowNetworkNode(AirflowNetworkDistributionNode::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkDistributionNode_Impl>());
     bool ok =

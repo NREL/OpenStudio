@@ -79,8 +79,7 @@ namespace gbxml {
     return *result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleDay(const pugi::xml_node& element,
-                                                                                          openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleDay(pugi::xml_node element, openstudio::model::Model& model) {
     std::string id = element.attribute("id").value();
     std::string type = element.attribute("type").value();
 
@@ -108,7 +107,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleWeek(const pugi::xml_node& element, const pugi::xml_node& root,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleWeek(pugi::xml_node element, pugi::xml_node root,
                                                                                            openstudio::model::Model& model) {
     std::string id = element.attribute("id").value();
     std::string type = element.attribute("type").value();
@@ -180,7 +179,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(const pugi::xml_node& element, const pugi::xml_node& root,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(pugi::xml_node element, pugi::xml_node root,
                                                                                        openstudio::model::Model& model) {
     std::string id = element.attribute("id").value();
     std::string type = element.attribute("type").value();

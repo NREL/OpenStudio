@@ -24,11 +24,11 @@ class Observer
 
   //-----------------------------------------------------------PRIVATE METHODS
 
-  void insert(DelegateKey const& key, Observer* obs) {
+  void insert(Nano::DelegateKey key, Observer* obs) {
     head = new SSNode{{key, obs}, head};
   }
 
-  void remove(DelegateKey const& key, Observer* obs) {
+  void remove(Nano::DelegateKey key, Observer* obs) {
     SSNode* node = head;
     SSNode* prev = nullptr;
     // Only delete the first occurrence

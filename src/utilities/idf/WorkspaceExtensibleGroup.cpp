@@ -59,7 +59,7 @@ WorkspaceObjectVector WorkspaceExtensibleGroup::getTargets() const {
   return result;
 }
 
-std::vector<unsigned> WorkspaceExtensibleGroup::getSourceFieldIndices(const Handle& targetHandle) const {
+std::vector<unsigned> WorkspaceExtensibleGroup::getSourceFieldIndices(openstudio::Handle targetHandle) const {
   UnsignedVector result;
   if (empty()) {
     return result;
@@ -77,11 +77,11 @@ boost::optional<std::string> WorkspaceExtensibleGroup::getField(unsigned index) 
 }
 
 // SETTERS
-bool WorkspaceExtensibleGroup::setPointer(unsigned fieldIndex, const Handle& targetHandle) {
+bool WorkspaceExtensibleGroup::setPointer(unsigned fieldIndex, openstudio::Handle targetHandle) {
   return setPointer(fieldIndex, targetHandle, true);
 }
 
-bool WorkspaceExtensibleGroup::setPointer(unsigned fieldIndex, const Handle& targetHandle, bool checkValidity) {
+bool WorkspaceExtensibleGroup::setPointer(unsigned fieldIndex, openstudio::Handle targetHandle, bool checkValidity) {
   if (checkValidity) {
     if (!isValid(fieldIndex)) {
       return false;

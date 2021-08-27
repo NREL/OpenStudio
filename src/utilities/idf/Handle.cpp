@@ -31,7 +31,7 @@
 
 namespace openstudio {
 
-Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
+Handle applyHandleMap(openstudio::Handle original, const HandleMap& handleMap) {
   Handle result;
   auto it = handleMap.find(original);
   if (it != handleMap.end()) {

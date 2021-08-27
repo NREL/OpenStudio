@@ -176,7 +176,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, const Handle& handle)
+  AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, openstudio::Handle handle)
     : AirflowNetworkComponent(AirflowNetworkEquivalentDuct::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkEquivalentDuct_Impl>());
     bool ok = getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setPointer(OS_AirflowNetworkEquivalentDuctFields::ComponentName, handle);

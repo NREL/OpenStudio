@@ -76,7 +76,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject
   std::vector<WorkspaceObject> targets() const;
 
   /** Returns the index of the field in this object that points to targetHandle, if possible. */
-  std::vector<unsigned> getSourceIndices(const Handle& targetHandle) const;
+  std::vector<unsigned> getSourceIndices(openstudio::Handle targetHandle) const;
 
   /** Returns all objects that point to this object, filtering for duplicate objects. */
   std::vector<WorkspaceObject> sources() const;
@@ -97,7 +97,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject
   /** Sets the pointer at field index to targetHandle, if possible. The field must be of object-list
    *  type, and targetHandle must be valid (null or in the containing Workspace, and if the strictness
    *  is greater than enums::None, must correspond to an object of a proper type). */
-  bool setPointer(unsigned index, const Handle& targetHandle);
+  bool setPointer(unsigned index, openstudio::Handle targetHandle);
 
   //@}
   /** @name Queries */

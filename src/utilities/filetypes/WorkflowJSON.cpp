@@ -627,7 +627,7 @@ namespace detail {
     OS_ASSERT(test);
   }
 
-  std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(const MeasureType& measureType) const {
+  std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(openstudio::MeasureType measureType) const {
     std::vector<MeasureStep> result;
     size_t n = m_steps.size();
     OS_ASSERT(m_measureTypes.size() == n);
@@ -641,7 +641,7 @@ namespace detail {
     return result;
   }
 
-  bool WorkflowJSON_Impl::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps) {
+  bool WorkflowJSON_Impl::setMeasureSteps(openstudio::MeasureType measureType, const std::vector<MeasureStep>& steps) {
 
     // verify steps
     for (const auto& step : steps) {
@@ -689,7 +689,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(const UUID& id) const {
+  boost::optional<BCLMeasure> WorkflowJSON_Impl::getBCLMeasureByUUID(openstudio::UUID id) const {
     for (const auto& step : m_steps) {
       if (step.optionalCast<MeasureStep>()) {
         boost::optional<BCLMeasure> bclMeasure = getBCLMeasure(step.cast<MeasureStep>());
@@ -1109,11 +1109,11 @@ void WorkflowJSON::resetWorkflowSteps() {
   getImpl<detail::WorkflowJSON_Impl>()->resetWorkflowSteps();
 }
 
-std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType) const {
+std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(openstudio::MeasureType measureType) const {
   return getImpl<detail::WorkflowJSON_Impl>()->getMeasureSteps(measureType);
 }
 
-bool WorkflowJSON::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps) {
+bool WorkflowJSON::setMeasureSteps(openstudio::MeasureType measureType, const std::vector<MeasureStep>& steps) {
   return getImpl<detail::WorkflowJSON_Impl>()->setMeasureSteps(measureType, steps);
 }
 
@@ -1121,7 +1121,7 @@ boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasure(const MeasureStep& step)
   return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasure(step);
 }
 
-boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(const UUID& id) const {
+boost::optional<BCLMeasure> WorkflowJSON::getBCLMeasureByUUID(openstudio::UUID id) const {
   return getImpl<detail::WorkflowJSON_Impl>()->getBCLMeasureByUUID(id);
 }
 

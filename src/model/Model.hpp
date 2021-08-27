@@ -230,7 +230,7 @@ namespace model {
    *  Zone_Impl.hpp.  It may be better to instantiate each version of this template method to avoid
    *  exposing the implementation objects, this is an open question. */
     template <typename T>
-    boost::optional<T> getModelObject(const Handle& handle) const {
+    boost::optional<T> getModelObject(openstudio::Handle handle) const {
       boost::optional<T> result;
       boost::optional<WorkspaceObject> wo = this->getObject(handle);
       if (wo) {

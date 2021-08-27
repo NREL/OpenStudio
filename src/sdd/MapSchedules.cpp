@@ -53,8 +53,7 @@
 namespace openstudio {
 namespace sdd {
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleDay(const pugi::xml_node& element,
-                                                                                          openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleDay(pugi::xml_node element, openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
     pugi::xml_node typeElement = element.child("Type");
 
@@ -128,8 +127,7 @@ namespace sdd {
     return scheduleDay;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleWeek(const pugi::xml_node& element,
-                                                                                           openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleWeek(pugi::xml_node element, openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
     pugi::xml_node typeElement = element.child("Type");
     pugi::xml_node schDaySunRefElement = element.child("SchDaySunRef");
@@ -269,8 +267,7 @@ namespace sdd {
     return scheduleWeek;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(const pugi::xml_node& element,
-                                                                                       openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(pugi::xml_node element, openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
     pugi::xml_node typeElement = element.child("Type");
 
@@ -338,8 +335,7 @@ namespace sdd {
     return scheduleYear;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHoliday(const pugi::xml_node& element,
-                                                                                      openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHoliday(pugi::xml_node element, openstudio::model::Model& model) {
     //<Name>Thanksgiving Day</Name>
     //<SpecMthd>Fourth</SpecMthd>
     //<DayOfWeek>Thursday</DayOfWeek>

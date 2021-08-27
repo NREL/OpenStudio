@@ -98,10 +98,10 @@ class UTILITIES_API WorkspaceWatcher
   void change();
 
   // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
-  void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+  void objectAdd(const WorkspaceObject& addedObject, openstudio::IddObjectType type, openstudio::UUID uuid);
 
   // Note: Args 2 & 3 are simply to comply with Nano::Signal template parameters
-  void objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+  void objectRemove(const WorkspaceObject& removedObject, openstudio::IddObjectType type, openstudio::UUID uuid);
 
  private:
   bool m_enabled;

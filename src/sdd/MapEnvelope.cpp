@@ -72,7 +72,7 @@
 namespace openstudio {
 namespace sdd {
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstructAssembly(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstructAssembly(pugi::xml_node element,
                                                                                                 openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
@@ -270,7 +270,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateDoorConstruction(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateDoorConstruction(pugi::xml_node element,
                                                                                                openstudio::model::Model& model) {
     //SIExpnt(int kg=0,int m=0,int s=0,int K=0,..)
     //IPExpnt(int lbm=0,int ft=0,int s=0,int R=0,..)
@@ -328,7 +328,7 @@ namespace sdd {
     return boost::none;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFenestrationConstruction(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFenestrationConstruction(pugi::xml_node element,
                                                                                                        openstudio::model::Model& model) {
     //SIExpnt(int kg=0,int m=0,int s=0,int K=0,..)
     //IPExpnt(int lbm=0,int ft=0,int s=0,int R=0,..)
@@ -384,8 +384,7 @@ namespace sdd {
     return boost::none;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const pugi::xml_node& element,
-                                                                                       openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(pugi::xml_node element, openstudio::model::Model& model) {
 
     //SIExpnt(int kg=0,int m=0,int s=0,int K=0,..)
     //IPExpnt(int lbm=0,int ft=0,int s=0,int R=0,..)

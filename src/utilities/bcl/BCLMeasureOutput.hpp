@@ -47,7 +47,7 @@ class UTILITIES_API BCLMeasureOutput
 {
  public:
   // constructor from xml, throws if required arguments are missing
-  BCLMeasureOutput(const pugi::xml_node& element);
+  BCLMeasureOutput(pugi::xml_node element);
 
   // constructor from xml, throws if required arguments are missing
   BCLMeasureOutput(const std::string& name, const std::string& displayName, const boost::optional<std::string>& shortName,

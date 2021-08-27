@@ -200,7 +200,7 @@ namespace model {
 
     explicit AirflowNetworkSurface(std::shared_ptr<detail::AirflowNetworkSurface_Impl> impl);
 
-    AirflowNetworkSurface(const Model& model, const Handle& compHandle, const Handle& surfHandle);
+    AirflowNetworkSurface(const Model& model, openstudio::Handle compHandle, openstudio::Handle surfHandle);
 
     bool setSurface(const Surface& surfAndSubSurf);
     bool setSurface(const SubSurface& surfAndSubSurf);

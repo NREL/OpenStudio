@@ -141,7 +141,7 @@
 namespace openstudio {
 namespace sdd {
 
-  std::ostream& operator<<(std::ostream& os, const pugi::xml_node& element) {
+  std::ostream& operator<<(std::ostream& os, pugi::xml_node element) {
     pugi::xml_document doc;
     doc.append_copy(element);
     doc.save(os, "  ");
@@ -219,11 +219,11 @@ namespace sdd {
     return name;
   }
 
-  boost::optional<model::Model> ReverseTranslator::convert(const pugi::xml_node& root) {
+  boost::optional<model::Model> ReverseTranslator::convert(pugi::xml_node root) {
     return translateSDD(root);
   }
 
-  boost::optional<model::Model> ReverseTranslator::translateSDD(const pugi::xml_node& root) {
+  boost::optional<model::Model> ReverseTranslator::translateSDD(pugi::xml_node root) {
     boost::optional<model::Model> result;
 
     // get project, assume one project per file
@@ -1646,8 +1646,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRunPeriod(const pugi::xml_node& element,
-                                                                                        openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRunPeriod(pugi::xml_node element, openstudio::model::Model& model) {
     //<HVACAutoSizing>1</HVACAutoSizing>
     //<SimDsgnDays>0</SimDsgnDays>
     //<RunPeriodBeginMonth>1</RunPeriodBeginMonth>
@@ -1747,7 +1746,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSite(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSite(pugi::xml_node element, openstudio::model::Model& model) {
     //<CliZn>ClimateZone12</CliZn>
     //<Lat>38.58</Lat>
     //<Long>-121.49</Long>
@@ -1801,7 +1800,7 @@ namespace sdd {
     return site;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWaterMainsTemperature(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWaterMainsTemperature(pugi::xml_node element,
                                                                                                     openstudio::model::Model& model) {
     //<WtrMnTempSchRef>WaterMainCZ12</WtrMnTempSchRef>
 
@@ -1818,7 +1817,7 @@ namespace sdd {
     return boost::none;
   }
 
-  std::vector<WorkspaceObject> ReverseTranslator::translateDesignDays(const pugi::xml_node& element, openstudio::model::Model& model) {
+  std::vector<WorkspaceObject> ReverseTranslator::translateDesignDays(pugi::xml_node element, openstudio::model::Model& model) {
     std::vector<WorkspaceObject> result;
 
     //<DDWeatherFile>F:/360Local/AEC/CBECCn/CBECC Source Files/CBECC-Com13/Data/EPW/SACRAMENTO-EXECUTIVE_724830_CZ2010.ddy</DDWeatherFile>
@@ -1857,8 +1856,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWeatherFile(const pugi::xml_node& element,
-                                                                                          openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWeatherFile(pugi::xml_node element, openstudio::model::Model& model) {
     //<AnnualWeatherFile>F:/360Local/AEC/CBECCn/CBECC Source Files/CBECC-Com13/Data/EPW/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile>
 
     pugi::xml_node annualWeatherFileElement = element.child("AnnualWeatherFile");
@@ -1899,7 +1897,7 @@ namespace sdd {
     return weatherFile.get();
   }
 
-  pugi::xml_node ReverseTranslator::supplySegment(const pugi::xml_node& fluidSegInRefElement) {
+  pugi::xml_node ReverseTranslator::supplySegment(pugi::xml_node fluidSegInRefElement) {
 
     pugi::xml_node projectElement = getProjectElement(fluidSegInRefElement);
     std::string fluidSegmentName = fluidSegInRefElement.text().as_string();
@@ -1924,8 +1922,7 @@ namespace sdd {
     return pugi::xml_node();
   }
 
-  boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const pugi::xml_node& fluidSegInRefElement,
-                                                                            openstudio::model::Model& model) {
+  boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(pugi::xml_node fluidSegInRefElement, openstudio::model::Model& model) {
     auto fluidSegmentElement = supplySegment(fluidSegInRefElement);
     auto fluidSysElement = fluidSegmentElement.parent();
     auto fluidSysNameElement = fluidSysElement.child("Name");
@@ -1933,7 +1930,7 @@ namespace sdd {
     return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
   }
 
-  boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const pugi::xml_node& fluidSegInRefElement,
+  boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(pugi::xml_node fluidSegInRefElement,
                                                                                            openstudio::model::Model& model) {
 
     pugi::xml_node projectElement = getProjectElement(fluidSegInRefElement);

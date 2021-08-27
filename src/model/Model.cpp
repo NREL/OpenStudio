@@ -930,39 +930,39 @@ namespace model {
       clearCachedPerformancePrecisionTradeoffs(dummy);
     }
 
-    void Model_Impl::clearCachedBuilding(const Handle&) {
+    void Model_Impl::clearCachedBuilding(openstudio::Handle) {
       m_cachedBuilding.reset();
     }
 
-    void Model_Impl::clearCachedFoundationKivaSettings(const Handle&) {
+    void Model_Impl::clearCachedFoundationKivaSettings(openstudio::Handle) {
       m_cachedFoundationKivaSettings.reset();
     }
 
-    void Model_Impl::clearCachedOutputControlFiles(const Handle&) {
+    void Model_Impl::clearCachedOutputControlFiles(openstudio::Handle) {
       m_cachedOutputControlFiles.reset();
     }
 
-    void Model_Impl::clearCachedOutputTableSummaryReports(const Handle&) {
+    void Model_Impl::clearCachedOutputTableSummaryReports(openstudio::Handle) {
       m_cachedOutputTableSummaryReports.reset();
     }
 
-    void Model_Impl::clearCachedLifeCycleCostParameters(const Handle& handle) {
+    void Model_Impl::clearCachedLifeCycleCostParameters(openstudio::Handle handle) {
       m_cachedLifeCycleCostParameters.reset();
     }
 
-    void Model_Impl::clearCachedRunPeriod(const Handle& handle) {
+    void Model_Impl::clearCachedRunPeriod(openstudio::Handle handle) {
       m_cachedRunPeriod.reset();
     }
 
-    void Model_Impl::clearCachedYearDescription(const Handle& handle) {
+    void Model_Impl::clearCachedYearDescription(openstudio::Handle handle) {
       m_cachedYearDescription.reset();
     }
 
-    void Model_Impl::clearCachedWeatherFile(const Handle& handle) {
+    void Model_Impl::clearCachedWeatherFile(openstudio::Handle handle) {
       m_cachedWeatherFile.reset();
     }
 
-    void Model_Impl::clearCachedPerformancePrecisionTradeoffs(const Handle&) {
+    void Model_Impl::clearCachedPerformancePrecisionTradeoffs(openstudio::Handle) {
       m_cachedPerformancePrecisionTradeoffs.reset();
     }
 

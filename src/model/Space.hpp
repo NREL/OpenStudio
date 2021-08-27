@@ -154,7 +154,7 @@ namespace model {
     /// This space's building story's default schedule set
     /// The building's default schedule set
     /// The building's space type's default schedule set
-    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+    boost::optional<Schedule> getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const;
 
     /// Sets the default schedule set for this space directly.
     bool setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet);

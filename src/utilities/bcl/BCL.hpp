@@ -48,7 +48,7 @@ namespace openstudio {
 class UTILITIES_API BCLFacet
 {
  public:
-  BCLFacet(const pugi::xml_node& facetElement);
+  BCLFacet(pugi::xml_node facetElement);
 
   /// Field name of the facet to use during meta searches,
   /// e.g. 'construction_type'
@@ -72,7 +72,7 @@ class UTILITIES_API BCLFacet
 class UTILITIES_API BCLTaxonomyTerm
 {
  public:
-  BCLTaxonomyTerm(const pugi::xml_node& taxonomyElement);
+  BCLTaxonomyTerm(pugi::xml_node taxonomyElement);
 
   std::string name() const;
   unsigned tid() const;
@@ -88,7 +88,7 @@ class UTILITIES_API BCLTaxonomyTerm
 class UTILITIES_API BCLFile
 {
  public:
-  BCLFile(const pugi::xml_node& fileElement);
+  BCLFile(pugi::xml_node fileElement);
 
   std::string softwareProgram() const;
   std::string identifier() const;
@@ -116,7 +116,7 @@ class UTILITIES_API BCLFile
 class UTILITIES_API BCLProvenance
 {
  public:
-  BCLProvenance(const pugi::xml_node& provenanceElement);
+  BCLProvenance(pugi::xml_node provenanceElement);
 
   std::string author() const;
   std::string datetime() const;
@@ -132,7 +132,7 @@ class UTILITIES_API BCLProvenance
 class UTILITIES_API BCLCost
 {
  public:
-  BCLCost(const pugi::xml_node& costElement);
+  BCLCost(pugi::xml_node costElement);
 
   std::string instanceName() const;
   std::string costType() const;
@@ -170,7 +170,7 @@ class UTILITIES_API BCLCost
 class UTILITIES_API BCLMetaSearchResult
 {
  public:
-  BCLMetaSearchResult(const pugi::xml_node& resultElement);
+  BCLMetaSearchResult(pugi::xml_node resultElement);
 
   unsigned numResults() const;
   std::vector<BCLFacet> facets() const;
@@ -188,7 +188,7 @@ class UTILITIES_API BCLMetaSearchResult
 class UTILITIES_API BCLSearchResult
 {
  public:
-  BCLSearchResult(const pugi::xml_node& componentElement);
+  BCLSearchResult(pugi::xml_node componentElement);
 
   std::string name() const;
   std::string uid() const;

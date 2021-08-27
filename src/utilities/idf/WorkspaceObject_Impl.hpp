@@ -54,7 +54,7 @@ namespace detail {
     /// \todo Default constructor needed to iterate over Source Map, but setting fieldIndex to 0
     /// seems sub-optimal.
     ForwardPointer() : fieldIndex(0) {}
-    ForwardPointer(unsigned i, const Handle& h) : fieldIndex(i), targetHandle(h) {}
+    ForwardPointer(unsigned i, openstudio::Handle h) : fieldIndex(i), targetHandle(h) {}
   };
   typedef std::set<ForwardPointer, FieldIndexLess<ForwardPointer>> ForwardPointerSet;
 
@@ -75,7 +75,7 @@ namespace detail {
     unsigned fieldIndex;
 
     ReversePointer() : fieldIndex(0) {}
-    ReversePointer(const Handle& h, unsigned i) : sourceHandle(h), fieldIndex(i) {}
+    ReversePointer(openstudio::Handle h, unsigned i) : sourceHandle(h), fieldIndex(i) {}
   };
   struct UTILITIES_API ReversePointerLess
   {
@@ -162,7 +162,7 @@ namespace detail {
     std::vector<WorkspaceObject> targets() const;
 
     /** Returns the index of the field in this object that points to targetHandle, if possible. */
-    std::vector<unsigned> getSourceIndices(const Handle& targetHandle) const;
+    std::vector<unsigned> getSourceIndices(openstudio::Handle targetHandle) const;
 
     /** Returns the objects that point to this object. */
     std::vector<WorkspaceObject> sources() const;
@@ -198,8 +198,8 @@ namespace detail {
     /** Sets the pointer at field index to targetHandle, if possible. The field must be of \object-list
      *  type, and targetHandle must be valid (null or in the containing Workspace, and if the strictness
      *  is greater than enums::None, must correspond to an object of a proper type). */
-    virtual bool setPointer(unsigned index, const Handle& targetHandle);
-    virtual bool setPointer(unsigned index, const Handle& targetHandle, bool checkValidity);
+    virtual bool setPointer(unsigned index, openstudio::Handle targetHandle);
+    virtual bool setPointer(unsigned index, openstudio::Handle targetHandle, bool checkValidity);
 
     /** Pushes a new field onto the object, if possible. Returns false if the operation cannot be completed
      *  for any reason. */
@@ -210,8 +210,8 @@ namespace detail {
 
     /** Pushes a new pointer field onto the object, pointing to targetHandle, if possible. Returns
      *  false if operation cannot be completed for any reason. */
-    bool pushPointer(const Handle& targetHandle);
-    bool pushPointer(const Handle& targetHandle, bool checkValidity);
+    bool pushPointer(openstudio::Handle targetHandle);
+    bool pushPointer(openstudio::Handle targetHandle, bool checkValidity);
 
     /** Pops the final extensible group from the object, if possible. Returns the popped data if
      *  successful. Otherwise, the returned vector will be empty. */
@@ -311,9 +311,9 @@ namespace detail {
     /** Mechanics only exposed to Workspace_Impl for use in object removal. */
     void nullifyPointer(unsigned index);
 
-    void nullifyReversePointer(const Handle& sourceHandle, unsigned index);
+    void nullifyReversePointer(openstudio::Handle sourceHandle, unsigned index);
 
-    void setReversePointer(const Handle& sourceHandle, unsigned index);
+    void setReversePointer(openstudio::Handle sourceHandle, unsigned index);
 
     /** Called when restoring object because could not remove and retain validity. Double-checks
      *  that companion pointers are in place. May not be able to fix all if multiple objects are
@@ -344,7 +344,7 @@ namespace detail {
     // SETTER HELPERS
 
     /** Sets pointer at field index to targetHandle, and returns old target. */
-    Handle setPointerImpl(unsigned index, const Handle& targetHandle);
+    Handle setPointerImpl(unsigned index, openstudio::Handle targetHandle);
 
     boost::optional<Handle> convertToTargetHandle(const std::string& name, const std::set<std::string>& referenceLists, bool checkValidity) const;
 

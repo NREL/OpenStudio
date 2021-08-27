@@ -446,7 +446,7 @@ namespace model {
       return result;
     }
 
-    bool UtilityBill_Impl::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
+    bool UtilityBill_Impl::setMeterInstallLocation(openstudio::InstallLocationType meterInstallLocation) {
       bool result = setString(OS_UtilityBillFields::MeterInstallLocation, meterInstallLocation.valueName());
       return result;
     }
@@ -466,7 +466,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool UtilityBill_Impl::setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory) {
+    bool UtilityBill_Impl::setMeterEndUseCategory(openstudio::EndUseCategoryType meterEndUseCategory) {
       bool result = setString(OS_UtilityBillFields::MeterEndUseCategory, meterEndUseCategory.valueName());
       return result;
     }
@@ -1261,7 +1261,7 @@ namespace model {
 
   BillingPeriod::BillingPeriod(std::shared_ptr<detail::UtilityBill_Impl> impl, unsigned index) : ModelExtensibleGroup(impl, index) {}
 
-  UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model) : ModelObject(UtilityBill::iddObjectType(), model) {
+  UtilityBill::UtilityBill(openstudio::FuelType fuelType, const Model& model) : ModelObject(UtilityBill::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::UtilityBill_Impl>());
 
     bool test;
@@ -1386,7 +1386,7 @@ namespace model {
     return getImpl<detail::UtilityBill_Impl>()->minutesInPeakDemandWindow();
   }
 
-  bool UtilityBill::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
+  bool UtilityBill::setMeterInstallLocation(openstudio::InstallLocationType meterInstallLocation) {
     return getImpl<detail::UtilityBill_Impl>()->setMeterInstallLocation(meterInstallLocation);
   }
 
@@ -1402,7 +1402,7 @@ namespace model {
     getImpl<detail::UtilityBill_Impl>()->resetMeterSpecificInstallLocation();
   }
 
-  bool UtilityBill::setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory) {
+  bool UtilityBill::setMeterEndUseCategory(openstudio::EndUseCategoryType meterEndUseCategory) {
     return getImpl<detail::UtilityBill_Impl>()->setMeterEndUseCategory(meterEndUseCategory);
   }
 

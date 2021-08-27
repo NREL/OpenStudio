@@ -92,7 +92,7 @@ namespace model {
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneMixer");
 
-    AirLoopHVACZoneMixer(const Handle& handle, const Model& model);
+    AirLoopHVACZoneMixer(openstudio::Handle handle, const Model& model);
 
     /// @endcond
   };

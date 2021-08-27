@@ -98,7 +98,7 @@ namespace model {
     // Recursive depth first search
     // start algorithm with one source node in the visited vector
     // searches all paths of nodes between the source and sink until a handle match is found
-    boost::optional<ModelObject> findModelObject(const openstudio::Handle& handle, const HVACComponent& sink, std::vector<HVACComponent>& visited,
+    boost::optional<ModelObject> findModelObject(openstudio::Handle handle, const HVACComponent& sink, std::vector<HVACComponent>& visited,
                                                  bool isDemandComponents) {
       HVACComponent hvacComponent = visited.back();
       if (handle == hvacComponent.handle()) {

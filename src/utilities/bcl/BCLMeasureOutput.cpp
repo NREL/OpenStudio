@@ -35,7 +35,7 @@
 
 namespace openstudio {
 
-BCLMeasureOutput::BCLMeasureOutput(const pugi::xml_node& element) {
+BCLMeasureOutput::BCLMeasureOutput(pugi::xml_node element) {
   // TODO: escape name
   // cppcheck-suppress useInitializationList
   m_name = element.child("name").text().as_string();

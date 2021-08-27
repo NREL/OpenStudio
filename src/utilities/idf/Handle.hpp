@@ -56,7 +56,7 @@ typedef boost::optional<HandleVector> OptionalHandleVector;
 /** Returns the handle that corresponds to original, where original is a handleMap key and the
  *  returned value is the corresponding value. If original is not a handleMap key, then the return
  *  value .isNull(). */
-UTILITIES_API Handle applyHandleMap(const Handle& original, const HandleMap& handleMap);
+UTILITIES_API Handle applyHandleMap(openstudio::Handle original, const HandleMap& handleMap);
 
 /** Returns the HandleVector equivalent to original, where original is a vector of handleMap keys,
  *  and the return vector consists of the corresponding handleMap values. Handles in original that

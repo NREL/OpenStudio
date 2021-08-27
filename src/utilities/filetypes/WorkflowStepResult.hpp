@@ -256,7 +256,7 @@ class UTILITIES_API WorkflowStepResult
   void setCompletedAt(const DateTime& dateTime);
   void resetCompletedAt();
 
-  bool setMeasureType(const MeasureType& measureType);
+  bool setMeasureType(openstudio::MeasureType measureType);
   void resetMeasureType();
 
   bool setMeasureName(const std::string& name);
@@ -265,13 +265,13 @@ class UTILITIES_API WorkflowStepResult
   bool setMeasureId(const std::string& id);
   void resetMeasureId();
 
-  bool setMeasureUUID(const UUID& uuid);
+  bool setMeasureUUID(openstudio::UUID uuid);
   void resetMeasureUUID();
 
   bool setMeasureVersionId(const std::string& id);
   void resetMeasureVersionId();
 
-  bool setMeasureVersionUUID(const UUID& uuid);
+  bool setMeasureVersionUUID(openstudio::UUID uuid);
   void resetMeasureVersionUUID();
 
   bool setMeasureVersionModified(const DateTime& versionModified);
@@ -289,7 +289,7 @@ class UTILITIES_API WorkflowStepResult
   bool setMeasureTaxonomy(const std::string& taxonomy);
   void resetMeasureTaxonomy();
 
-  void setStepResult(const StepResult& result);
+  void setStepResult(openstudio::StepResult result);
   void resetStepResult();
 
   void setStepInitialCondition(const std::string& initialCondition);

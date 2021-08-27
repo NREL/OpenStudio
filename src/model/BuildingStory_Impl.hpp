@@ -119,7 +119,7 @@ namespace model {
       /// Resets the default schedule set for this space.
       void resetDefaultScheduleSet();
 
-      boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+      boost::optional<Schedule> getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const;
 
       /// Returns the rendering color.
       boost::optional<RenderingColor> renderingColor() const;

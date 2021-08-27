@@ -58,7 +58,7 @@ namespace openstudio {
 namespace gbxml {
 
   boost::optional<openstudio::model::ModelObject>
-    ReverseTranslator::translateConstruction(const pugi::xml_node& element, const std::unordered_map<std::string, pugi::xml_node>& layerElements,
+    ReverseTranslator::translateConstruction(pugi::xml_node element, const std::unordered_map<std::string, pugi::xml_node>& layerElements,
                                              openstudio::model::Model& model) {
     // Krishnan, this constructor should only be used for unique objects like Building and Site
     //openstudio::model::Construction construction = model.getUniqueModelObject<openstudio::model::Construction>();
@@ -115,8 +115,7 @@ namespace gbxml {
     return construction;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const pugi::xml_node& element,
-                                                                                         openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(pugi::xml_node element, openstudio::model::Model& model) {
     openstudio::model::Construction construction(model);
     std::string windowTypeId = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
@@ -164,8 +163,7 @@ namespace gbxml {
     return construction;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const pugi::xml_node& element,
-                                                                                       openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(pugi::xml_node element, openstudio::model::Model& model) {
     boost::optional<openstudio::model::ModelObject> result;
 
     auto rvalueElement = element.child("R-value");

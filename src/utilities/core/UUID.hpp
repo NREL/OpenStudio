@@ -49,20 +49,20 @@ UTILITIES_API UUID createUUID();
 UTILITIES_API UUID toUUID(const std::string& str);
 
 /// create a std::string from a UUID
-UTILITIES_API std::string toString(const UUID& uuid);
+UTILITIES_API std::string toString(openstudio::UUID uuid);
 
 /// create a unique name, prefix << " " << UUID.
 UTILITIES_API std::string createUniqueName(const std::string& prefix);
 
 /// create a std::string without curly brackets from a UUID
-UTILITIES_API std::string removeBraces(const UUID& uuid);
+UTILITIES_API std::string removeBraces(openstudio::UUID uuid);
 
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const UUID& uuid);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, openstudio::UUID uuid);
 
-UTILITIES_API bool operator!=(const UUID& lhs, const UUID& rhs);
-UTILITIES_API bool operator<(const UUID& lhs, const UUID& rhs);
-UTILITIES_API bool operator==(const UUID& lhs, const UUID& rhs);
-UTILITIES_API bool operator>(const UUID& lhs, const UUID& rhs);
+UTILITIES_API bool operator!=(openstudio::UUID lhs, openstudio::UUID rhs);
+UTILITIES_API bool operator<(openstudio::UUID lhs, openstudio::UUID rhs);
+UTILITIES_API bool operator==(openstudio::UUID lhs, openstudio::UUID rhs);
+UTILITIES_API bool operator>(openstudio::UUID lhs, openstudio::UUID rhs);
 
 /// Universally Unique Identifier
 class UTILITIES_API UUID : public boost::uuids::uuid
@@ -74,7 +74,7 @@ class UTILITIES_API UUID : public boost::uuids::uuid
     return is_nil();
   }
 
-  bool isEqual(const UUID& other) const {
+  bool isEqual(openstudio::UUID other) const {
     return (*this == other);
   }
 
@@ -84,17 +84,17 @@ class UTILITIES_API UUID : public boost::uuids::uuid
   using boost::uuids::uuid::end;
 
  private:
-  explicit UUID(const boost::uuids::uuid&);
+  explicit UUID(boost::uuids::uuid);
 
   UTILITIES_API friend UUID openstudio::createUUID();
   UTILITIES_API friend UUID openstudio::toUUID(const std::string& str);
-  UTILITIES_API friend std::string openstudio::toString(const UUID& uuid);
+  UTILITIES_API friend std::string openstudio::toString(openstudio::UUID uuid);
   UTILITIES_API friend std::string openstudio::createUniqueName(const std::string& prefix);
-  UTILITIES_API friend std::string openstudio::removeBraces(const UUID& uuid);
-  UTILITIES_API friend bool openstudio::operator!=(const UUID& lhs, const UUID& rhs);
-  UTILITIES_API friend bool openstudio::operator<(const UUID& lhs, const UUID& rhs);
-  UTILITIES_API friend bool openstudio::operator==(const UUID& lhs, const UUID& rhs);
-  UTILITIES_API friend bool openstudio::operator>(const UUID& lhs, const UUID& rhs);
+  UTILITIES_API friend std::string openstudio::removeBraces(openstudio::UUID uuid);
+  UTILITIES_API friend bool openstudio::operator!=(openstudio::UUID lhs, openstudio::UUID rhs);
+  UTILITIES_API friend bool openstudio::operator<(openstudio::UUID lhs, openstudio::UUID rhs);
+  UTILITIES_API friend bool openstudio::operator==(openstudio::UUID lhs, openstudio::UUID rhs);
+  UTILITIES_API friend bool openstudio::operator>(openstudio::UUID lhs, openstudio::UUID rhs);
 
   static UUID random_generate();
   static UUID string_generate(const std::string&);

@@ -58,7 +58,7 @@ namespace detail {
 
 UUID::UUID() : boost::uuids::uuid(boost::uuids::nil_uuid()) {}
 
-UUID::UUID(const boost::uuids::uuid& t_other) : boost::uuids::uuid(t_other) {}
+UUID::UUID(boost::uuids::uuid t_other) : boost::uuids::uuid(t_other) {}
 
 UUID UUID::random_generate() {
   static boost::thread_specific_ptr<boost::uuids::random_generator> gen;
@@ -98,23 +98,23 @@ const boost::regex& uuidInString() {
   return result;
 }
 
-bool operator!=(const UUID& lhs, const UUID& rhs) {
+bool operator!=(openstudio::UUID lhs, openstudio::UUID rhs) {
   return static_cast<const boost::uuids::uuid&>(lhs) != static_cast<const boost::uuids::uuid&>(rhs);
 }
 
-bool operator<(const UUID& lhs, const UUID& rhs) {
+bool operator<(openstudio::UUID lhs, openstudio::UUID rhs) {
   return static_cast<const boost::uuids::uuid&>(lhs) < static_cast<const boost::uuids::uuid&>(rhs);
 }
 
-bool operator==(const UUID& lhs, const UUID& rhs) {
+bool operator==(openstudio::UUID lhs, openstudio::UUID rhs) {
   return static_cast<const boost::uuids::uuid&>(lhs) == static_cast<const boost::uuids::uuid&>(rhs);
 }
 
-bool operator>(const UUID& lhs, const UUID& rhs) {
+bool operator>(openstudio::UUID lhs, openstudio::UUID rhs) {
   return static_cast<const boost::uuids::uuid&>(lhs) > static_cast<const boost::uuids::uuid&>(rhs);
 }
 
-std::string toString(const UUID& uuid) {
+std::string toString(openstudio::UUID uuid) {
   std::stringstream ss;
   ss << '{';
   boost::uuids::operator<<(ss, uuid);
@@ -131,13 +131,13 @@ std::string createUniqueName(const std::string& prefix) {
   return ss.str();
 }
 
-std::string removeBraces(const UUID& uuid) {
+std::string removeBraces(openstudio::UUID uuid) {
   std::stringstream ss;
   boost::uuids::operator<<(ss, uuid);
   return ss.str();
 }
 
-std::ostream& operator<<(std::ostream& os, const UUID& uuid) {
+std::ostream& operator<<(std::ostream& os, openstudio::UUID uuid) {
   os << toString(uuid);
   return os;
 }

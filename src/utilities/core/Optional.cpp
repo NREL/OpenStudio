@@ -31,21 +31,21 @@
 
 namespace openstudio {
 
-std::ostream& operator<<(std::ostream& os, const boost::optional<double>& x) {
+std::ostream& operator<<(std::ostream& os, boost::optional<double> x) {
   if (x) {
     os << x.get();
   }
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const boost::optional<unsigned>& x) {
+std::ostream& operator<<(std::ostream& os, boost::optional<unsigned int> x) {
   if (x) {
     os << x.get();
   }
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const boost::optional<int>& x) {
+std::ostream& operator<<(std::ostream& os, boost::optional<int> x) {
   if (x) {
     os << x.get();
   }

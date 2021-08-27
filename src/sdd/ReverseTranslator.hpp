@@ -86,90 +86,89 @@ namespace sdd {
     std::string escapeName(std::string name);
 
     // listed in translation order
-    boost::optional<openstudio::model::Model> convert(const pugi::xml_node& root);
-    boost::optional<openstudio::model::Model> translateSDD(const pugi::xml_node& root);
+    boost::optional<openstudio::model::Model> convert(pugi::xml_node root);
+    boost::optional<openstudio::model::Model> translateSDD(pugi::xml_node root);
 
-    boost::optional<openstudio::model::ModelObject> translateRunPeriod(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSite(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateWaterMainsTemperature(const pugi::xml_node& element, openstudio::model::Model& model);
-    std::vector<openstudio::WorkspaceObject> translateDesignDays(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateWeatherFile(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateRunPeriod(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateSite(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateWaterMainsTemperature(pugi::xml_node element, openstudio::model::Model& model);
+    std::vector<openstudio::WorkspaceObject> translateDesignDays(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateWeatherFile(pugi::xml_node element, openstudio::model::Model& model);
 
-    boost::optional<openstudio::model::ModelObject> translateMaterial(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateConstructAssembly(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateScheduleDay(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateScheduleWeek(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSchedule(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateHoliday(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateDoorConstruction(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateFenestrationConstruction(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCrvCubic(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCrvDblQuad(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCrvQuad(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCrvLin(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCrvMapSglVar(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCrvMapDblVar(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCoilCoolingDXVariableRefrigerantFlow(const pugi::xml_node& element,
+    boost::optional<openstudio::model::ModelObject> translateMaterial(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateConstructAssembly(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateScheduleDay(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateScheduleWeek(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateSchedule(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateHoliday(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateDoorConstruction(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateFenestrationConstruction(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCrvCubic(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCrvDblQuad(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCrvQuad(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCrvLin(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCrvMapSglVar(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCrvMapDblVar(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCoilCoolingDXVariableRefrigerantFlow(pugi::xml_node element,
                                                                                                   openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCoilHeatingDXVariableRefrigerantFlow(const pugi::xml_node& element,
+    boost::optional<openstudio::model::ModelObject> translateCoilHeatingDXVariableRefrigerantFlow(pugi::xml_node element,
                                                                                                   openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateFluidSys(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translatePump(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateBoiler(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateChiller(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateThrmlEngyStor(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateWtrHtr(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateHtRej(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateHX(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> createSpace(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> createThermalZone(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSpace(const pugi::xml_node& element, openstudio::model::BuildingStory& buildingStory);
-    boost::optional<openstudio::model::ModelObject> translateLoads(const pugi::xml_node& element, openstudio::model::Space& space);
-    boost::optional<openstudio::model::ModelObject> translateConvectionCoefficients(const pugi::xml_node& element,
+    boost::optional<openstudio::model::ModelObject> translateFluidSys(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translatePump(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateBoiler(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateChiller(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateThrmlEngyStor(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateWtrHtr(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateHtRej(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateHX(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateBuilding(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> createSpace(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> createThermalZone(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateBuildingStory(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateSpace(pugi::xml_node element, openstudio::model::BuildingStory& buildingStory);
+    boost::optional<openstudio::model::ModelObject> translateLoads(pugi::xml_node element, openstudio::model::Space& space);
+    boost::optional<openstudio::model::ModelObject> translateConvectionCoefficients(pugi::xml_node element,
                                                                                     openstudio::model::PlanarSurface& surface);
-    boost::optional<openstudio::model::ModelObject> translateSurface(const pugi::xml_node& element, openstudio::model::Space& space);
-    boost::optional<openstudio::model::ModelObject> translateSubSurface(const pugi::xml_node& element, openstudio::model::Surface& surface);
-    boost::optional<openstudio::model::ModelObject> translateShadingSurface(const pugi::xml_node& element,
+    boost::optional<openstudio::model::ModelObject> translateSurface(pugi::xml_node element, openstudio::model::Space& space);
+    boost::optional<openstudio::model::ModelObject> translateSubSurface(pugi::xml_node element, openstudio::model::Surface& surface);
+    boost::optional<openstudio::model::ModelObject> translateShadingSurface(pugi::xml_node element,
                                                                             openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup);
-    boost::optional<openstudio::model::ModelObject> translateAirSystem(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCoilCooling(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateCoilHeating(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateEvapClr(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateFan(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateHtRcvry(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateTrmlUnit(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateVRFSys(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateAirSystem(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCoilCooling(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateCoilHeating(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateEvapClr(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateFan(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateHtRcvry(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateThermalZone(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateTrmlUnit(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateVRFSys(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateZnSys(pugi::xml_node element, openstudio::model::Model& model);
 
     // Looks for a loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
     // fluidSegInRefElement must correspond to the primary/secondary SUPPLY segment. If the object is supposed to be in the demand side
     // it's usually the 'FluidSegInRef' key (demand means the inlet is the supply, the outlet is the return)
     // If found then looks for a model::Loop with that name and returns it
     // This is useful for hooking water coils up to their plant and maybe other things.
-    boost::optional<model::PlantLoop> loopForSupplySegment(const pugi::xml_node& fluidSegInRefElement, openstudio::model::Model& model);
+    boost::optional<model::PlantLoop> loopForSupplySegment(pugi::xml_node fluidSegInRefElement, openstudio::model::Model& model);
 
     // Return the supply segment by the fluidSegInRefElement's text
-    pugi::xml_node supplySegment(const pugi::xml_node& fluidSegInRefElement);
+    pugi::xml_node supplySegment(pugi::xml_node fluidSegInRefElement);
 
     // Returns the ServiceHotWater loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
     // // If the loop is not found in the model, this function will attempt to translate it out of the SDD.
     // If the loop is found in the model it will simply be returned.
-    boost::optional<model::PlantLoop> serviceHotWaterLoopForSupplySegment(const pugi::xml_node& fluidSegInRefElement,
-                                                                          openstudio::model::Model& model);
+    boost::optional<model::PlantLoop> serviceHotWaterLoopForSupplySegment(pugi::xml_node fluidSegInRefElement, openstudio::model::Model& model);
 
     // Return the "ZnSys" element with the name matching the znSysRefElement.text().as_string()
-    pugi::xml_node findZnSysElement(const pugi::xml_node& znSysRefElement);
+    pugi::xml_node findZnSysElement(pugi::xml_node znSysRefElement);
 
     // Find the AirSys element that is named like the airSyRefElement.text().as_string()
-    pugi::xml_node findAirSysElement(const pugi::xml_node& airSyRefElement);
+    pugi::xml_node findAirSysElement(pugi::xml_node airSyRefElement);
     // projectElement has to be the 'Proj' one
-    pugi::xml_node findAirSysElement(const std::string& airSysName, const pugi::xml_node& projectElement);
+    pugi::xml_node findAirSysElement(const std::string& airSysName, pugi::xml_node projectElement);
 
     // Return the "TrmlUnit" element serving a zone named znNameElement.text().as_string()
-    pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement);
+    pugi::xml_node findTrmlUnitElementForZone(pugi::xml_node znNameElement);
 
     model::Schedule defaultDeckTempSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_defaultDeckTempSchedule;

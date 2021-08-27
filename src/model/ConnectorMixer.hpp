@@ -82,7 +82,7 @@ namespace model {
    private:
     REGISTER_LOGGER("openstudio.model.ConnectorMixer");
 
-    ConnectorMixer(const Handle& handle, const Model& model);
+    ConnectorMixer(openstudio::Handle handle, const Model& model);
   };
 
   /** \relates ConnectorMixer */

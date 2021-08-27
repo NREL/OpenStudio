@@ -44,9 +44,9 @@ typedef boost::optional<unsigned> OptionalUnsigned;
 typedef boost::optional<int> OptionalInt;
 typedef boost::optional<std::string> OptionalString;
 
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<double>& x);
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<unsigned>& x);
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<int>& x);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, boost::optional<double> x);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, boost::optional<unsigned int> x);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, boost::optional<int> x);
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<std::string>& x);
 }  // namespace openstudio
 

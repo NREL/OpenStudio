@@ -83,7 +83,7 @@ namespace model {
     /// @cond
     typedef detail::AirflowNetworkOutdoorAirflow_Impl ImplType;
 
-    AirflowNetworkOutdoorAirflow(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle);
+    AirflowNetworkOutdoorAirflow(const Model& model, const AirflowNetworkCrack& crack, openstudio::Handle handle);
 
     explicit AirflowNetworkOutdoorAirflow(std::shared_ptr<detail::AirflowNetworkOutdoorAirflow_Impl> impl);
 

@@ -105,7 +105,7 @@ class UTILITIES_API IdfFile
   boost::optional<IdfObject> getObject(unsigned index) const;
 
   /** Returns the object with .handle() == handle, if such an object exists in this file. */
-  boost::optional<IdfObject> getObject(const Handle& handle) const;
+  boost::optional<IdfObject> getObject(openstudio::Handle handle) const;
 
   /** Returns all the objects in this file, excluding versionObject(). */
   std::vector<IdfObject> objects() const;
@@ -176,7 +176,7 @@ class UTILITIES_API IdfFile
 
   /** Load an IdfFile from std::istream using the IDD defined by IddFactory and iddFileType, if
    *  possible. */
-  static boost::optional<IdfFile> load(std::istream& is, const IddFileType& iddFileType, ProgressBar* progressBar = nullptr);
+  static boost::optional<IdfFile> load(std::istream& is, openstudio::IddFileType iddFileType, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from std::istream using iddFile, if possible. */
   static boost::optional<IdfFile> load(std::istream& is, const IddFile& iddFile, ProgressBar* progressBar = nullptr);
@@ -188,7 +188,7 @@ class UTILITIES_API IdfFile
 
   /** Load an IdfFile from path using the IddFactory and iddFileType, if possible. Will attempt to
    *  complete the path by tacking on .osm or .idf as appropriate. */
-  static boost::optional<IdfFile> load(const path& p, const IddFileType& iddFileType, ProgressBar* progressBar = nullptr);
+  static boost::optional<IdfFile> load(const path& p, openstudio::IddFileType iddFileType, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from path using iddFile, if possible. If no file extension is provided, will
    *  try "idf". */

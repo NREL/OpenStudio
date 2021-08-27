@@ -203,7 +203,7 @@ Date::Date() : m_assumedBaseYear(YearDescription().assumedYear()) {
 }
 
 /// from impl
-Date::Date(const Date::ImplType& impl) : m_impl(impl), m_assumedBaseYear(impl.year()) {}
+Date::Date(Date::ImplType impl) : m_impl(impl), m_assumedBaseYear(impl.year()) {}
 
 /// Date from month, day of month
 Date::Date(MonthOfYear monthOfYear, unsigned dayOfMonth) : m_assumedBaseYear(YearDescription().assumedYear()) {

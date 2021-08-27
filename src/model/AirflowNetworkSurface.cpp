@@ -345,7 +345,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const Handle& compHandle, const Handle& surfHandle)
+  AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, openstudio::Handle compHandle, openstudio::Handle surfHandle)
     : AirflowNetworkLinkage(AirflowNetworkSurface::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkSurface_Impl>());
     bool ok = getImpl<detail::AirflowNetworkSurface_Impl>()->setPointer(OS_AirflowNetworkSurfaceFields::LeakageComponentName, compHandle);

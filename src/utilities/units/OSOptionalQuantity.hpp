@@ -50,7 +50,7 @@ class UTILITIES_API OSOptionalQuantity
   /** @name Constructors and Destructors */
   //@{
 
-  explicit OSOptionalQuantity(const UnitSystem& sys = UnitSystem::Mixed);
+  explicit OSOptionalQuantity(openstudio::UnitSystem sys = UnitSystem::Mixed);
 
   explicit OSOptionalQuantity(const Unit& units);
 

@@ -118,7 +118,7 @@ class UTILITIES_API UpdateManager
   void processReply(const std::string& reply);
 
   // returns true if release being checked is newer than current release
-  bool checkRelease(const pugi::xml_node& release);
+  bool checkRelease(pugi::xml_node release);
 
   // url used for checking updates
   static std::string updateUrl(const std::string& appName);

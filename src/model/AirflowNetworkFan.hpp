@@ -88,7 +88,7 @@ namespace model {
 
     explicit AirflowNetworkFan(std::shared_ptr<detail::AirflowNetworkFan_Impl> impl);
 
-    AirflowNetworkFan(const Model& model, const Handle& handle);
+    AirflowNetworkFan(const Model& model, openstudio::Handle handle);
 
     friend class detail::FanConstantVolume_Impl;
     friend class detail::FanVariableVolume_Impl;

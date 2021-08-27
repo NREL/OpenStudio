@@ -81,7 +81,7 @@ class UTILITIES_API BCLXML
   //@{
 
   /// Constructor for a new XML
-  explicit BCLXML(const BCLXMLType& bclXMLType);
+  explicit BCLXML(openstudio::BCLXMLType bclXMLType);
 
   /// Constructor from file path, will throw exception if file does not exist or is incorrect.
   explicit BCLXML(const openstudio::path& xmlPath);

@@ -65,7 +65,7 @@ class UTILITIES_API FloorplanObject
  public:
   /// pass empty string for any null values
   FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString);
-  FloorplanObject(const std::string& id, const std::string& name, const UUID& handle);
+  FloorplanObject(const std::string& id, const std::string& name, openstudio::UUID handle);
 
   /// id in FloorplanJS
   std::string id() const;

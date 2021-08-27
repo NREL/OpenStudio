@@ -280,7 +280,7 @@ namespace detail {
     return result;
   }
 
-  std::vector<unsigned> WorkspaceObject_Impl::getSourceIndices(const Handle& targetHandle) const {
+  std::vector<unsigned> WorkspaceObject_Impl::getSourceIndices(openstudio::Handle targetHandle) const {
     UnsignedVector result;
     if (m_sourceData) {
       for (const ForwardPointer& ptr : m_sourceData->pointers) {
@@ -496,7 +496,7 @@ namespace detail {
     return result;
   }
 
-  bool WorkspaceObject_Impl::setPointer(unsigned index, const Handle& targetHandle) {
+  bool WorkspaceObject_Impl::setPointer(unsigned index, openstudio::Handle targetHandle) {
     bool result = setPointer(index, targetHandle, true);
     if (result) {
       this->emitChangeSignals();
@@ -504,7 +504,7 @@ namespace detail {
     return result;
   }
 
-  bool WorkspaceObject_Impl::setPointer(unsigned index, const Handle& targetHandle, bool checkValidity) {
+  bool WorkspaceObject_Impl::setPointer(unsigned index, openstudio::Handle targetHandle, bool checkValidity) {
     if (m_handle.isNull()) {
       return false;
     }
@@ -631,7 +631,7 @@ namespace detail {
     return result;
   }
 
-  bool WorkspaceObject_Impl::pushPointer(const Handle& targetHandle) {
+  bool WorkspaceObject_Impl::pushPointer(openstudio::Handle targetHandle) {
     bool result = pushPointer(targetHandle, true);
     if (result) {
       this->emitChangeSignals();
@@ -639,7 +639,7 @@ namespace detail {
     return result;
   }
 
-  bool WorkspaceObject_Impl::pushPointer(const Handle& targetHandle, bool checkValidity) {
+  bool WorkspaceObject_Impl::pushPointer(openstudio::Handle targetHandle, bool checkValidity) {
     if (m_handle.isNull()) {
       return false;
     }
@@ -1041,7 +1041,7 @@ namespace detail {
   // Pre-condition:  Object sourceHandle points to this object from field index.
   // Post-condition: That information is removed from this object's m_targetData (in preparation for
   //                 a change to the source pointer).
-  void WorkspaceObject_Impl::nullifyReversePointer(const Handle& sourceHandle, unsigned index) {
+  void WorkspaceObject_Impl::nullifyReversePointer(openstudio::Handle sourceHandle, unsigned index) {
     OS_ASSERT(!m_handle.isNull());
     OS_ASSERT(m_targetData);
     auto it = m_targetData->reversePointers.find(ReversePointer(sourceHandle, index));
@@ -1052,7 +1052,7 @@ namespace detail {
   // Pre-condition:  ReversePointer(sourceHandle,index) is not in m_targetData.
   // Post-condition: m_targetData indicates that object sourceHandle points to this object from
   //                 field index.
-  void WorkspaceObject_Impl::setReversePointer(const Handle& sourceHandle, unsigned index) {
+  void WorkspaceObject_Impl::setReversePointer(openstudio::Handle sourceHandle, unsigned index) {
     OS_ASSERT(!m_handle.isNull());
     if (!m_targetData) {
       m_targetData = TargetData();
@@ -1102,7 +1102,7 @@ namespace detail {
 
   // Pre-condition:  targetHandle is null or in m_workspace. index is an object-list field.
   // Post-condition: Field index points to object targetHandle.
-  Handle WorkspaceObject_Impl::setPointerImpl(unsigned index, const Handle& targetHandle) {
+  Handle WorkspaceObject_Impl::setPointerImpl(unsigned index, openstudio::Handle targetHandle) {
     OS_ASSERT(!m_handle.isNull());
     Handle result;
     // check current status
@@ -1343,7 +1343,7 @@ WorkspaceObjectVector WorkspaceObject::targets() const {
   return getImpl<WorkspaceObject_Impl>()->targets();
 }
 
-std::vector<unsigned> WorkspaceObject::getSourceIndices(const Handle& targetHandle) const {
+std::vector<unsigned> WorkspaceObject::getSourceIndices(openstudio::Handle targetHandle) const {
   return getImpl<WorkspaceObject_Impl>()->getSourceIndices(targetHandle);
 }
 
@@ -1357,7 +1357,7 @@ std::vector<WorkspaceObject> WorkspaceObject::getSources(IddObjectType objectTyp
 
 // SETTERS
 
-bool WorkspaceObject::setPointer(unsigned index, const Handle& targetHandle) {
+bool WorkspaceObject::setPointer(unsigned index, openstudio::Handle targetHandle) {
   return getImpl<WorkspaceObject_Impl>()->setPointer(index, targetHandle);
 }
 

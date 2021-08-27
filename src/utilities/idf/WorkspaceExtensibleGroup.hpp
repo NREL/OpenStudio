@@ -64,7 +64,7 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup
 
   /** Returns the fieldIndex of the field in this extensible group that points to targetHandle,
    *  if possible. */
-  std::vector<unsigned> getSourceFieldIndices(const Handle& targetHandle) const;
+  std::vector<unsigned> getSourceFieldIndices(openstudio::Handle targetHandle) const;
 
   /** Like getString except for reference fields getString will return the
    *  name of the referenced object. This method, getField, will always return the string value
@@ -79,9 +79,9 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup
   /** Sets the pointer at fieldIndex to point to target, if possible. The field must be of
    *  object-list type, and target must be valid (in the containing Workspace, and if the strictness
    *  is greater than enums::None, of a proper type). */
-  bool setPointer(unsigned fieldIndex, const Handle& targetHandle);
+  bool setPointer(unsigned fieldIndex, openstudio::Handle targetHandle);
 
-  bool setPointer(unsigned fieldIndex, const Handle& targetHandle, bool checkValidity);
+  bool setPointer(unsigned fieldIndex, openstudio::Handle targetHandle, bool checkValidity);
 
   //@}
   /** @name Queries */

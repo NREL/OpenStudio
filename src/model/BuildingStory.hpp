@@ -122,7 +122,7 @@ namespace model {
     /// This object
     /// The building's default schedule set
     /// The building's space type's default schedule set
-    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+    boost::optional<Schedule> getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const;
 
     /// Returns the rendering color.
     boost::optional<RenderingColor> renderingColor() const;

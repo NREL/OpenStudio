@@ -606,7 +606,7 @@ namespace model {
     return getImpl<detail::OutputMeter_Impl>()->remove();
   }
 
-  bool MeterFuelTypeEquals(const OutputMeter& meter, const FuelType& ft) {
+  bool MeterFuelTypeEquals(const OutputMeter& meter, openstudio::FuelType ft) {
     OptionalFuelType oft = meter.fuelType();
     if (oft && (oft.get() == ft)) {
       return true;

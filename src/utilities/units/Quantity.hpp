@@ -46,9 +46,9 @@ class UTILITIES_API Quantity
   /** @name Constructors */
   //@{
 
-  explicit Quantity(const UnitSystem& system = UnitSystem::Mixed);
+  explicit Quantity(openstudio::UnitSystem system = UnitSystem::Mixed);
 
-  explicit Quantity(double value, const UnitSystem& system = UnitSystem::Mixed);
+  explicit Quantity(double value, openstudio::UnitSystem system = UnitSystem::Mixed);
 
   Quantity(double value, const Unit& units);
 

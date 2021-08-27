@@ -55,37 +55,32 @@ namespace detail {
 
     /// constructors
     Attribute_Impl(const std::string& name, bool value, const boost::optional<std::string>& units);
-    Attribute_Impl(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-                   const boost::optional<std::string>& displayName, bool value, const boost::optional<std::string>& units,
-                   const std::string& source = std::string());
+    Attribute_Impl(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+                   bool value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
     Attribute_Impl(const std::string& name, double value, const boost::optional<std::string>& units);
-    Attribute_Impl(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-                   const boost::optional<std::string>& displayName, double value, const boost::optional<std::string>& units,
-                   const std::string& source = std::string());
+    Attribute_Impl(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+                   double value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
     Attribute_Impl(const std::string& name, int value, const boost::optional<std::string>& units);
-    Attribute_Impl(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-                   const boost::optional<std::string>& displayName, int value, const boost::optional<std::string>& units,
-                   const std::string& source = std::string());
+    Attribute_Impl(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+                   int value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
     Attribute_Impl(const std::string& name, unsigned value, const boost::optional<std::string>& units);
-    Attribute_Impl(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-                   const boost::optional<std::string>& displayName, unsigned value, const boost::optional<std::string>& units,
-                   const std::string& source = std::string());
+    Attribute_Impl(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+                   unsigned value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
     Attribute_Impl(const std::string& name, const std::string& value, const boost::optional<std::string>& units);
-    Attribute_Impl(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-                   const boost::optional<std::string>& displayName, const std::string& value, const boost::optional<std::string>& units,
-                   const std::string& source = std::string());
+    Attribute_Impl(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+                   const std::string& value, const boost::optional<std::string>& units, const std::string& source = std::string());
 
     Attribute_Impl(const std::string& name, const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units);
-    Attribute_Impl(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
-                   const boost::optional<std::string>& displayName, const std::vector<openstudio::Attribute>& value,
-                   const boost::optional<std::string>& units, const std::string& source = std::string());
+    Attribute_Impl(openstudio::UUID uuid, openstudio::UUID versionUUID, const std::string& name, const boost::optional<std::string>& displayName,
+                   const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units,
+                   const std::string& source = std::string());
 
     // constructor from xml, throws if required arguments are missing
-    Attribute_Impl(const pugi::xml_node& element);
+    Attribute_Impl(pugi::xml_node element);
 
     Attribute_Impl(const Attribute_Impl& other);
 

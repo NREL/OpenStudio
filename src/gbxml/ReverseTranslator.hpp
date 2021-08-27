@@ -89,30 +89,29 @@ namespace gbxml {
     std::map<std::string, openstudio::model::ModelObject> m_idToObjectMap;
 
     // In ReverseTranslator.cpp
-    boost::optional<openstudio::model::Model> convert(const pugi::xml_node& root);
-    boost::optional<openstudio::model::Model> translateGBXML(const pugi::xml_node& root);
-    boost::optional<openstudio::model::ModelObject> translateCampus(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSpace(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSurface(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSubSurface(const pugi::xml_node& element, openstudio::model::Surface& surface);
-    boost::optional<openstudio::model::ModelObject> translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject);
+    boost::optional<openstudio::model::Model> convert(pugi::xml_node root);
+    boost::optional<openstudio::model::Model> translateGBXML(pugi::xml_node root);
+    boost::optional<openstudio::model::ModelObject> translateCampus(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateBuilding(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateBuildingStory(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateThermalZone(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateSpace(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateSurface(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateSubSurface(pugi::xml_node element, openstudio::model::Surface& surface);
+    boost::optional<openstudio::model::ModelObject> translateCADObjectId(pugi::xml_node element, openstudio::model::ModelObject& modelObject);
 
     // In MapSchedules.cpp
-    boost::optional<openstudio::model::ModelObject> translateScheduleDay(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateScheduleWeek(const pugi::xml_node& element, const pugi::xml_node& root,
+    boost::optional<openstudio::model::ModelObject> translateScheduleDay(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateScheduleWeek(pugi::xml_node element, pugi::xml_node root,
                                                                           openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSchedule(const pugi::xml_node& element, const pugi::xml_node& root,
-                                                                      openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateSchedule(pugi::xml_node element, pugi::xml_node root, openstudio::model::Model& model);
 
     // In MapEnvelope.cpp
-    boost::optional<openstudio::model::ModelObject> translateConstruction(const pugi::xml_node& element,
+    boost::optional<openstudio::model::ModelObject> translateConstruction(pugi::xml_node element,
                                                                           const std::unordered_map<std::string, pugi::xml_node>& layerElements,
                                                                           openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateWindowType(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateMaterial(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateWindowType(pugi::xml_node element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateMaterial(pugi::xml_node element, openstudio::model::Model& model);
 
     StringStreamLogSink m_logSink;
 

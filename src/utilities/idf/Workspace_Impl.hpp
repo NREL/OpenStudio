@@ -140,13 +140,13 @@ namespace detail {
     IddFileType iddFileType() const;
 
     /** Returns the IddObject if .isInIddFile(type). Otherwise return value evaluates to false. */
-    boost::optional<IddObject> getIddObject(const IddObjectType& type) const;
+    boost::optional<IddObject> getIddObject(openstudio::IddObjectType type) const;
 
     /** True if has an operable name field. */
-    boost::optional<std::string> name(const Handle& handle) const;
+    boost::optional<std::string> name(openstudio::Handle handle) const;
 
     /** Get object from its handle. */
-    boost::optional<WorkspaceObject> getObject(const Handle& handle) const;
+    boost::optional<WorkspaceObject> getObject(openstudio::Handle handle) const;
 
     /** Get all objects in this workspace. The returned objects' data is shared with the workspace.
      *  If sorted, then the objects are returned in the preferred order. */
@@ -309,7 +309,7 @@ namespace detail {
      *  This function removes only the object specified by handle it is not overridden
      *  to "do the right thing" for ModelObject.
      */
-    virtual bool removeObject(const Handle& handle);
+    virtual bool removeObject(openstudio::Handle handle);
 
     /** Remove objects from Workspace with the expectation that they will be destructed.
      *  This function removes only the objects specified by handles it is not overridden
@@ -319,12 +319,12 @@ namespace detail {
 
     /** Add forwarded references. Field index of sourceObject is an object list field that also
      *  defines references. Make sure targetHandle is listed under those reference lists. */
-    void forwardReferences(const Handle& sourceHandle, unsigned index, const Handle& targetHandle);
+    void forwardReferences(openstudio::Handle sourceHandle, unsigned index, openstudio::Handle targetHandle);
 
     /** Remove forwarded references. Field index of sourceObject is an object list field that also
      *  defines references. That field did point to targetObject. If no other source places
      *  targetObject in those reference lists, remove the association. */
-    void removeForwardedReferences(const Handle& sourceHandle, unsigned index, const WorkspaceObject& targetObject);
+    void removeForwardedReferences(openstudio::Handle sourceHandle, unsigned index, const WorkspaceObject& targetObject);
 
     /** Setting fast naming to true reduces the time taken to create names by using a UUID as the name.
      *   This UUID is not the same as the object's handle.
@@ -368,10 +368,10 @@ namespace detail {
     unsigned numObjectsOfType(const IddObject& objectType) const;
 
     /** True if handle corresponds to an object in this workspace. */
-    bool isMember(const Handle& handle) const;
+    bool isMember(openstudio::Handle handle) const;
 
     /** True if an \\object-list field referencing the given names can point to this object. */
-    bool canBeTarget(const Handle& handle, const std::set<std::string>& referenceListNames) const;
+    bool canBeTarget(openstudio::Handle handle, const std::set<std::string>& referenceListNames) const;
 
     /** True if the IddObject of type is in iddFile(). */
     bool isInIddFile(IddObjectType type) const;
@@ -382,7 +382,7 @@ namespace detail {
 
     /** Returns the next name in the pattern 'iddObject().name() << " " << int' for iddObjectType.
      *  If fillIn, will use unused integer values smaller than the largest one. */
-    std::string nextName(const IddObjectType& iddObjectType, bool fillIn) const;
+    std::string nextName(openstudio::IddObjectType iddObjectType, bool fillIn) const;
 
     /** Returns true if this Workspace is valid at strictnessLevel(). */
     bool isValid() const;
@@ -501,7 +501,7 @@ namespace detail {
       Handle handle;
       std::shared_ptr<WorkspaceObject_Impl> objectImplPtr;
       OptionalUnsigned orderIndex;
-      SavedWorkspaceObject(const Handle& h, const std::shared_ptr<WorkspaceObject_Impl>& o) : handle(h), objectImplPtr(o) {}
+      SavedWorkspaceObject(openstudio::Handle h, const std::shared_ptr<WorkspaceObject_Impl>& o) : handle(h), objectImplPtr(o) {}
     };
     typedef boost::optional<SavedWorkspaceObject> OptionalSavedWorkspaceObject;
     typedef std::vector<SavedWorkspaceObject> SavedWorkspaceObjectVector;
@@ -530,7 +530,7 @@ namespace detail {
     // Helper function to start the process of adding an object to the workspace.
     bool nominallyAddObject(std::shared_ptr<WorkspaceObject_Impl>& ptr);
 
-    void insertIntoObjectMap(const Handle& handle, const std::shared_ptr<WorkspaceObject_Impl>& object);
+    void insertIntoObjectMap(openstudio::Handle handle, const std::shared_ptr<WorkspaceObject_Impl>& object);
 
     void insertIntoIddObjectTypeMap(const std::shared_ptr<WorkspaceObject_Impl>& object);
 
@@ -552,9 +552,9 @@ namespace detail {
                                                      const std::vector<unsigned>& notFoundObjectIndices,
                                                      std::vector<WorkspaceObject>& equivalentObjects);
 
-    OptionalSavedWorkspaceObject savedWorkspaceObject(const Handle& handle);
+    OptionalSavedWorkspaceObject savedWorkspaceObject(openstudio::Handle handle);
 
-    std::vector<WorkspaceObject> nominallyRemoveObject(const Handle& handle);
+    std::vector<WorkspaceObject> nominallyRemoveObject(openstudio::Handle handle);
 
     std::vector<std::vector<WorkspaceObject>> nominallyRemoveObjects(const std::vector<Handle>& handles);
 

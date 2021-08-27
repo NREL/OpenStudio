@@ -212,7 +212,7 @@ namespace model {
     return result;
   }
 
-  boost::optional<UUID> ModelMerger::getNewModelHandle(const UUID& currentHandle) {
+  boost::optional<UUID> ModelMerger::getNewModelHandle(openstudio::UUID currentHandle) {
     auto it = m_currentToNewHandleMapping.find(currentHandle);
     if (it != m_currentToNewHandleMapping.end()) {
       return it->second;
@@ -220,7 +220,7 @@ namespace model {
     return boost::none;
   }
 
-  boost::optional<UUID> ModelMerger::getCurrentModelHandle(const UUID& newHandle) {
+  boost::optional<UUID> ModelMerger::getCurrentModelHandle(openstudio::UUID newHandle) {
     auto it = m_newToCurrentHandleMapping.find(newHandle);
     if (it != m_newToCurrentHandleMapping.end()) {
       return it->second;

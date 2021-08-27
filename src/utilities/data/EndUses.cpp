@@ -61,7 +61,7 @@ std::string EndUses::attributeName() {
   return "EndUses";
 }
 
-std::string EndUses::getUnitsForFuelType(const EndUseFuelType& fuelType) {
+std::string EndUses::getUnitsForFuelType(openstudio::EndUseFuelType fuelType) {
   if (fuelType == EndUseFuelType::Water) {
     return "m3";
   }
@@ -162,7 +162,7 @@ Attribute EndUses::attribute() const {
   return m_attribute;
 }
 
-void EndUses::addEndUse(double value, const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory) {
+void EndUses::addEndUse(double value, openstudio::EndUseFuelType fuelType, openstudio::EndUseCategoryType category, const std::string& subCategory) {
   std::string units = this->getUnitsForFuelType(fuelType);
 
   // Try to find an existing fuelType attribute
@@ -210,7 +210,7 @@ void EndUses::addEndUse(double value, const EndUseFuelType& fuelType, const EndU
   categoryAttribute->setValue(newSubCategories);
 }
 
-double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory) const {
+double EndUses::getEndUse(openstudio::EndUseFuelType fuelType, openstudio::EndUseCategoryType category, const std::string& subCategory) const {
   double result = 0;
 
   boost::optional<Attribute> fuelTypeAttribute = m_attribute.findChildByName(fuelType.valueName());
@@ -230,7 +230,7 @@ double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryTy
   return result;
 }
 
-double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category) const {
+double EndUses::getEndUse(openstudio::EndUseFuelType fuelType, openstudio::EndUseCategoryType category) const {
   double result = 0;
 
   boost::optional<Attribute> fuelTypeAttribute = m_attribute.findChildByName(fuelType.valueName());
@@ -247,7 +247,7 @@ double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryTy
   return result;
 }
 
-double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory) const {
+double EndUses::getEndUseByCategory(openstudio::EndUseCategoryType category, const std::string& subCategory) const {
   double result = 0;
   std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
   std::map<int, std::string>::const_iterator endUseFuelTypesIt = endUseFuelTypes.begin();
@@ -260,7 +260,7 @@ double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const st
   return result;
 }
 
-double EndUses::getEndUseByCategory(const EndUseCategoryType& category) const {
+double EndUses::getEndUseByCategory(openstudio::EndUseCategoryType category) const {
   double result = 0;
   std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
   std::map<int, std::string>::const_iterator endUseFuelTypesIt = endUseFuelTypes.begin();
@@ -273,7 +273,7 @@ double EndUses::getEndUseByCategory(const EndUseCategoryType& category) const {
   return result;
 }
 
-double EndUses::getEndUseByFuelType(const EndUseFuelType& fuelType) const {
+double EndUses::getEndUseByFuelType(openstudio::EndUseFuelType fuelType) const {
   double result = 0;
   std::map<int, std::string> endUseCategoryTypes = EndUseCategoryType::getNames();
   std::map<int, std::string>::const_iterator endUseCategoryTypesIt = endUseCategoryTypes.begin();

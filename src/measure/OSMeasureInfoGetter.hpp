@@ -60,7 +60,7 @@ namespace measure {
     OSMeasureInfo(const std::string& error);
 
     /// Constructor used when Ruby interpreter succeeds to get information about the script
-    OSMeasureInfo(const MeasureType& measureType, const std::string& className, const std::string& name, const std::string& description,
+    OSMeasureInfo(openstudio::MeasureType measureType, const std::string& className, const std::string& name, const std::string& description,
                   const std::string& taxonomy, const std::string& modelerDescription, const std::vector<OSArgument>& arguments,
                   const std::vector<OSOutput>& outputs);
 

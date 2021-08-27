@@ -78,13 +78,13 @@ class WorkspaceReciever
   boost::optional<Handle> m_handle;
 
  public:
-  void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) {
+  void removeWorkspaceObject(const WorkspaceObject& object, openstudio::IddObjectType iddObjectType, openstudio::UUID handle) {
     m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
 
-  void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) {
+  void addWorkspaceObject(const WorkspaceObject& object, openstudio::IddObjectType iddObjectType, openstudio::UUID handle) {
     m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;

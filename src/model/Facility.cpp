@@ -148,7 +148,7 @@ namespace model {
       return result;
     }
 
-    boost::optional<OutputMeter> Facility_Impl::getMeterByFuelType(const FuelType& fuelType, const std::string& reportingFrequency,
+    boost::optional<OutputMeter> Facility_Impl::getMeterByFuelType(openstudio::FuelType fuelType, const std::string& reportingFrequency,
                                                                    const boost::optional<EndUseType>& endUseType,
                                                                    const boost::optional<std::string>& specificEndUse) const {
       OptionalOutputMeter result;
@@ -218,7 +218,7 @@ namespace model {
     }
 
     // pass in "Electric", "NaturalGas", or "Other"
-    OptionalDouble Facility_Impl::annualTotalCost(const FuelType& fuel) const {
+    OptionalDouble Facility_Impl::annualTotalCost(openstudio::FuelType fuel) const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalCost(fuel);
@@ -226,7 +226,7 @@ namespace model {
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::annualTotalCostPerBldgArea(const FuelType& fuel) const {
+    OptionalDouble Facility_Impl::annualTotalCostPerBldgArea(openstudio::FuelType fuel) const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalCostPerBldgArea(fuel);
@@ -234,7 +234,7 @@ namespace model {
       return OptionalDouble();
     }
 
-    OptionalDouble Facility_Impl::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const {
+    OptionalDouble Facility_Impl::annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalCostPerNetConditionedBldgArea(fuel);
@@ -1175,13 +1175,13 @@ namespace model {
   OptionalDouble Facility::netSourceEnergy() const {
     return getImpl<detail::Facility_Impl>()->netSourceEnergy();
   }
-  OptionalDouble Facility::annualTotalCost(const FuelType& fuel) const {
+  OptionalDouble Facility::annualTotalCost(openstudio::FuelType fuel) const {
     return getImpl<detail::Facility_Impl>()->annualTotalCost(fuel);
   }
-  OptionalDouble Facility::annualTotalCostPerBldgArea(const FuelType& fuel) const {
+  OptionalDouble Facility::annualTotalCostPerBldgArea(openstudio::FuelType fuel) const {
     return getImpl<detail::Facility_Impl>()->annualTotalCostPerBldgArea(fuel);
   }
-  OptionalDouble Facility::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const {
+  OptionalDouble Facility::annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const {
     return getImpl<detail::Facility_Impl>()->annualTotalCostPerNetConditionedBldgArea(fuel);
   }
   OptionalDouble Facility::annualTotalUtilityCost() const {
@@ -1629,7 +1629,7 @@ namespace model {
     return getImpl<detail::Facility_Impl>()->meters();
   }
 
-  boost::optional<OutputMeter> Facility::getMeterByFuelType(const FuelType& fuelType, const std::string& reportingFrequency,
+  boost::optional<OutputMeter> Facility::getMeterByFuelType(openstudio::FuelType fuelType, const std::string& reportingFrequency,
                                                             const boost::optional<EndUseType>& endUseType,
                                                             const boost::optional<std::string>& specificEndUse) const {
     return getImpl<detail::Facility_Impl>()->getMeterByFuelType(fuelType, reportingFrequency, endUseType, specificEndUse);

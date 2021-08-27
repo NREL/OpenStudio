@@ -214,7 +214,7 @@ class UTILITIES_API Date
   ~Date() {}
 
   /// from impl
-  Date(const ImplType& impl);
+  Date(openstudio::Date::ImplType impl);
 
   /// Date from month, day of month
   Date(MonthOfYear monthOfYear, unsigned dayOfMonth);

@@ -471,7 +471,7 @@ namespace detail {
     m_completedAt.reset();
   }
 
-  bool WorkflowStepResult_Impl::setMeasureType(const MeasureType& measureType) {
+  bool WorkflowStepResult_Impl::setMeasureType(openstudio::MeasureType measureType) {
     m_measureType = measureType;
     return true;
   }
@@ -498,7 +498,7 @@ namespace detail {
     m_measureId.reset();
   }
 
-  bool WorkflowStepResult_Impl::setMeasureUUID(const UUID& uuid) {
+  bool WorkflowStepResult_Impl::setMeasureUUID(openstudio::UUID uuid) {
     m_measureId = removeBraces(uuid);
     return true;
   }
@@ -516,7 +516,7 @@ namespace detail {
     m_measureVersionId.reset();
   }
 
-  bool WorkflowStepResult_Impl::setMeasureVersionUUID(const UUID& uuid) {
+  bool WorkflowStepResult_Impl::setMeasureVersionUUID(openstudio::UUID uuid) {
     m_measureVersionId = removeBraces(uuid);
     return true;
   }
@@ -570,7 +570,7 @@ namespace detail {
     m_measureTaxonomy.reset();
   }
 
-  void WorkflowStepResult_Impl::setStepResult(const StepResult& result) {
+  void WorkflowStepResult_Impl::setStepResult(openstudio::StepResult result) {
     m_stepResult = result;
   }
 
@@ -1077,7 +1077,7 @@ void WorkflowStepResult::resetCompletedAt() {
   getImpl<detail::WorkflowStepResult_Impl>()->resetCompletedAt();
 }
 
-bool WorkflowStepResult::setMeasureType(const MeasureType& measureType) {
+bool WorkflowStepResult::setMeasureType(openstudio::MeasureType measureType) {
   return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureType(measureType);
 }
 
@@ -1101,7 +1101,7 @@ void WorkflowStepResult::resetMeasureId() {
   getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureId();
 }
 
-bool WorkflowStepResult::setMeasureUUID(const UUID& uuid) {
+bool WorkflowStepResult::setMeasureUUID(openstudio::UUID uuid) {
   return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureUUID(uuid);
 }
 
@@ -1117,7 +1117,7 @@ void WorkflowStepResult::resetMeasureVersionId() {
   getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureVersionId();
 }
 
-bool WorkflowStepResult::setMeasureVersionUUID(const UUID& uuid) {
+bool WorkflowStepResult::setMeasureVersionUUID(openstudio::UUID uuid) {
   return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureVersionUUID(uuid);
 }
 
@@ -1165,7 +1165,7 @@ void WorkflowStepResult::resetMeasureTaxonomy() {
   getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureTaxonomy();
 }
 
-void WorkflowStepResult::setStepResult(const StepResult& result) {
+void WorkflowStepResult::setStepResult(openstudio::StepResult result) {
   getImpl<detail::WorkflowStepResult_Impl>()->setStepResult(result);
 }
 

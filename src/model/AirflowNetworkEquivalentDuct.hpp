@@ -110,7 +110,7 @@ namespace model {
 
     explicit AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl);
 
-    AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, const Handle& handle);
+    AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, openstudio::Handle handle);
 
     void resetComponent();
 

@@ -115,7 +115,7 @@ namespace detail {
     OS_ASSERT(minimal);
   }
 
-  IdfObject_Impl::IdfObject_Impl(const Handle& handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
+  IdfObject_Impl::IdfObject_Impl(openstudio::Handle handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
                                  const StringVector& fieldComments)
     : m_handle(handle), m_comment(comment), m_iddObject(iddObject), m_fields(fields), m_fieldComments(fieldComments) {
     resizeToMinFields();
@@ -1667,7 +1667,7 @@ namespace detail {
     }  // end StrictnessLevel::Final
   }
 
-  std::vector<DataError> IdfObject_Impl::fieldDataIsValid(unsigned index, const StrictnessLevel& level) const {
+  std::vector<DataError> IdfObject_Impl::fieldDataIsValid(unsigned index, openstudio::StrictnessLevel level) const {
     DataErrorVector result;
 
     // StrictnessLevel::None

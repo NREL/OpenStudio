@@ -292,7 +292,7 @@ boost::optional<CalibrationUtilityBill> CalibrationUtilityBill::fromAttribute(co
 }
 
 CalibrationUtilityBill::CalibrationUtilityBill(
-  const std::string& name, const FuelType& fuelType, const InstallLocationType& meterInstallLocation,
+  const std::string& name, openstudio::FuelType fuelType, openstudio::InstallLocationType meterInstallLocation,
   boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
   boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
   boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,

@@ -156,7 +156,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_BuildingStoryFields::DefaultScheduleSetName);
     }
 
-    boost::optional<Schedule> BuildingStory_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+    boost::optional<Schedule> BuildingStory_Impl::getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const {
       boost::optional<Schedule> result;
       boost::optional<DefaultScheduleSet> defaultScheduleSet;
       boost::optional<Building> building;
@@ -359,7 +359,7 @@ namespace model {
     return getImpl<detail::BuildingStory_Impl>()->defaultScheduleSet();
   }
 
-  boost::optional<Schedule> BuildingStory::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  boost::optional<Schedule> BuildingStory::getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const {
     return getImpl<detail::BuildingStory_Impl>()->getDefaultSchedule(defaultScheduleType);
   }
 

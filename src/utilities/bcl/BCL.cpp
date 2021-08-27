@@ -39,7 +39,7 @@
 
 namespace openstudio {
 
-BCLFacet::BCLFacet(const pugi::xml_node& facetElement) {
+BCLFacet::BCLFacet(pugi::xml_node facetElement) {
   auto fieldElement = facetElement.child("field");
   auto labelElement = facetElement.child("label");
   auto itemElement = facetElement.child("item");
@@ -72,7 +72,7 @@ std::vector<std::pair<std::string, unsigned>> BCLFacet::items() const {
   return m_items;
 }
 
-BCLTaxonomyTerm::BCLTaxonomyTerm(const pugi::xml_node& taxonomyElement) {
+BCLTaxonomyTerm::BCLTaxonomyTerm(pugi::xml_node taxonomyElement) {
   auto nameElement = taxonomyElement.child("name");
   auto tidElement = taxonomyElement.child("tid");
   auto numResultsElement = taxonomyElement.child("count");
@@ -100,7 +100,7 @@ unsigned BCLTaxonomyTerm::numResults() const {
   return m_numResults;
 }
 
-BCLMetaSearchResult::BCLMetaSearchResult(const pugi::xml_node& resultElement) {
+BCLMetaSearchResult::BCLMetaSearchResult(pugi::xml_node resultElement) {
   auto numResultsElement = resultElement.child("result_count");
 
   OS_ASSERT(numResultsElement);
@@ -138,7 +138,7 @@ std::vector<BCLTaxonomyTerm> BCLMetaSearchResult::taxonomyTerms() const {
   return m_taxonomyTerms;
 }
 
-BCLFile::BCLFile(const pugi::xml_node& fileElement) {
+BCLFile::BCLFile(pugi::xml_node fileElement) {
   auto version = fileElement.child("version");
   auto softwareProgramElement = version.child("software_program");
   auto identifierElement = version.child("identifier");
@@ -213,7 +213,7 @@ std::string BCLFile::checksum() const {
   return m_checksum;
 }
 
-BCLProvenance::BCLProvenance(const pugi::xml_node& provenanceElement) {
+BCLProvenance::BCLProvenance(pugi::xml_node provenanceElement) {
   auto authorElement = provenanceElement.child("author");
   auto datetimeElement = provenanceElement.child("datetime");
   auto commentElement = provenanceElement.child("comment");
@@ -235,7 +235,7 @@ std::string BCLProvenance::comment() const {
   return m_comment;
 }
 
-BCLCost::BCLCost(const pugi::xml_node& costElement) {
+BCLCost::BCLCost(pugi::xml_node costElement) {
   auto instanceNameElement = costElement.child("instance_name");
   auto costTypeElement = costElement.child("cost_type");
   auto categoryElement = costElement.child("category");
@@ -320,7 +320,7 @@ std::string BCLCost::referenceComponentId() const {
   return m_referenceComponentId;
 }
 
-BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_componentType{componentElement.name()} {
+BCLSearchResult::BCLSearchResult(pugi::xml_node componentElement) : m_componentType{componentElement.name()} {
 
   auto uidElement = componentElement.child("uuid");
   auto versionIdElement = componentElement.child("vuuid");

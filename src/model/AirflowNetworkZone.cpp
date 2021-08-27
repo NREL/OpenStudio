@@ -331,7 +331,8 @@ namespace model {
 
   }  // namespace detail
 
-  AirflowNetworkZone::AirflowNetworkZone(const Model& model, const Handle& handle) : AirflowNetworkNode(AirflowNetworkZone::iddObjectType(), model) {
+  AirflowNetworkZone::AirflowNetworkZone(const Model& model, openstudio::Handle handle)
+    : AirflowNetworkNode(AirflowNetworkZone::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkZone_Impl>());
     bool ok = getImpl<detail::AirflowNetworkZone_Impl>()->setPointer(OS_AirflowNetworkZoneFields::ThermalZoneName, handle);
     OS_ASSERT(ok);

@@ -202,11 +202,11 @@ namespace detail {
     return m_iddFileAndFactoryWrapper.iddFileType();
   }
 
-  boost::optional<IddObject> Workspace_Impl::getIddObject(const IddObjectType& type) const {
+  boost::optional<IddObject> Workspace_Impl::getIddObject(openstudio::IddObjectType type) const {
     return m_iddFileAndFactoryWrapper.getObject(type);
   }
 
-  boost::optional<std::string> Workspace_Impl::name(const Handle& handle) const {
+  boost::optional<std::string> Workspace_Impl::name(openstudio::Handle handle) const {
     OptionalWorkspaceObject object = getObject(handle);
     if (object) {
       return object->name();
@@ -214,7 +214,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<WorkspaceObject> Workspace_Impl::getObject(const Handle& handle) const {
+  boost::optional<WorkspaceObject> Workspace_Impl::getObject(openstudio::Handle handle) const {
     auto womIt = m_workspaceObjectMap.find(handle);
     if (womIt != m_workspaceObjectMap.end()) {
       return WorkspaceObject(womIt->second);
@@ -1391,7 +1391,7 @@ namespace detail {
     return false;
   }
 
-  bool Workspace_Impl::removeObject(const Handle& handle) {
+  bool Workspace_Impl::removeObject(openstudio::Handle handle) {
 
     OptionalSavedWorkspaceObject objectData = savedWorkspaceObject(handle);
     if (!objectData) {
@@ -1450,7 +1450,7 @@ namespace detail {
     }
   }
 
-  void Workspace_Impl::forwardReferences(const Handle& sourceHandle, unsigned index, const Handle& targetHandle) {
+  void Workspace_Impl::forwardReferences(openstudio::Handle sourceHandle, unsigned index, openstudio::Handle targetHandle) {
 
     // get source object
     OptionalWorkspaceObject owo = getObject(sourceHandle);
@@ -1465,7 +1465,7 @@ namespace detail {
     }
   }
 
-  void Workspace_Impl::removeForwardedReferences(const Handle& sourceHandle, unsigned index, const WorkspaceObject& targetObject) {
+  void Workspace_Impl::removeForwardedReferences(openstudio::Handle sourceHandle, unsigned index, const WorkspaceObject& targetObject) {
     // get source object
     OptionalWorkspaceObject owo = getObject(sourceHandle);
     OS_ASSERT(owo);
@@ -1556,12 +1556,12 @@ namespace detail {
     return getObjectsByType(objectType).size();
   }
 
-  bool Workspace_Impl::isMember(const Handle& handle) const {
+  bool Workspace_Impl::isMember(openstudio::Handle handle) const {
     auto womIt = m_workspaceObjectMap.find(handle);
     return (womIt != m_workspaceObjectMap.end());
   }
 
-  bool Workspace_Impl::canBeTarget(const Handle& handle, const std::set<std::string>& referenceListNames) const {
+  bool Workspace_Impl::canBeTarget(openstudio::Handle handle, const std::set<std::string>& referenceListNames) const {
     for (const std::string& referenceName : referenceListNames) {
       if (istringEqual(referenceName, "AllObjects")) {
         return true;
@@ -1590,7 +1590,7 @@ namespace detail {
     return constructNextName(name, objectsInSeries, fillIn);
   }
 
-  std::string Workspace_Impl::nextName(const IddObjectType& iddObjectType, bool fillIn) const {
+  std::string Workspace_Impl::nextName(openstudio::IddObjectType iddObjectType, bool fillIn) const {
     if (m_fastNaming) {
       return toString(createUUID());
     }
@@ -1950,7 +1950,7 @@ namespace detail {
     return true;
   }
 
-  void Workspace_Impl::insertIntoObjectMap(const Handle& handle, const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr) {
+  void Workspace_Impl::insertIntoObjectMap(openstudio::Handle handle, const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr) {
     m_workspaceObjectMap[handle] = objectImplPtr;
   }
 
@@ -2090,7 +2090,7 @@ namespace detail {
     return result;
   }
 
-  Workspace_Impl::OptionalSavedWorkspaceObject Workspace_Impl::savedWorkspaceObject(const Handle& handle) {
+  Workspace_Impl::OptionalSavedWorkspaceObject Workspace_Impl::savedWorkspaceObject(openstudio::Handle handle) {
     OptionalWorkspaceObject oObject = getObject(handle);
     if (!oObject) {
       return boost::none;
@@ -2105,7 +2105,7 @@ namespace detail {
     return result;
   }
 
-  std::vector<WorkspaceObject> Workspace_Impl::nominallyRemoveObject(const Handle& handle) {
+  std::vector<WorkspaceObject> Workspace_Impl::nominallyRemoveObject(openstudio::Handle handle) {
     // get object. should exist since call came from within Workspace.
     OptionalWorkspaceObject oObject = getObject(handle);
     if (!oObject) {
@@ -2473,11 +2473,11 @@ IddFileType Workspace::iddFileType() const {
   return m_impl->iddFileType();
 }
 
-boost::optional<IddObject> Workspace::getIddObject(const IddObjectType& type) const {
+boost::optional<IddObject> Workspace::getIddObject(openstudio::IddObjectType type) const {
   return m_impl->getIddObject(type);
 }
 
-boost::optional<std::string> Workspace::name(const Handle& handle) const {
+boost::optional<std::string> Workspace::name(openstudio::Handle handle) const {
   return m_impl->name(handle);
 }
 
@@ -2594,7 +2594,7 @@ bool Workspace::swap(WorkspaceObject& currentObject, IdfObject& newObject, bool 
   return m_impl->swap(currentObject, newObject, keepTargets);
 }
 
-bool Workspace::removeObject(const Handle& handle) {
+bool Workspace::removeObject(openstudio::Handle handle) {
   return m_impl->removeObject(handle);
 }
 
@@ -2638,11 +2638,11 @@ unsigned Workspace::numObjectsOfType(const IddObject& objectType) const {
   return m_impl->numObjectsOfType(objectType);
 }
 
-bool Workspace::isMember(const Handle& handle) const {
+bool Workspace::isMember(openstudio::Handle handle) const {
   return m_impl->isMember(handle);
 }
 
-bool Workspace::canBeTarget(const Handle& handle, const StringSet& referenceListNames) const {
+bool Workspace::canBeTarget(openstudio::Handle handle, const StringSet& referenceListNames) const {
   return m_impl->canBeTarget(handle, referenceListNames);
 }
 
@@ -2654,7 +2654,7 @@ std::string Workspace::nextName(const std::string& name, bool fillIn) const {
   return m_impl->nextName(name, fillIn);
 }
 
-std::string Workspace::nextName(const IddObjectType& iddObjectType, bool fillIn) const {
+std::string Workspace::nextName(openstudio::IddObjectType iddObjectType, bool fillIn) const {
   return m_impl->nextName(iddObjectType, fillIn);
 }
 
@@ -2719,7 +2719,7 @@ boost::optional<Workspace> Workspace::load(const openstudio::path& p) {
   return boost::none;
 }
 
-boost::optional<Workspace> Workspace::load(const openstudio::path& p, const IddFileType& iddFileType) {
+boost::optional<Workspace> Workspace::load(const openstudio::path& p, openstudio::IddFileType iddFileType) {
   OptionalIdfFile oIdfFile = IdfFile::load(p, iddFileType);
   if (oIdfFile) {
     return Workspace(*oIdfFile);

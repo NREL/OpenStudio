@@ -486,7 +486,7 @@ namespace model {
       return result;
     }
 
-    bool LifeCycleCostParameters_Impl::setBaseDateMonth(const MonthOfYear& baseDateMonth) {
+    bool LifeCycleCostParameters_Impl::setBaseDateMonth(openstudio::MonthOfYear baseDateMonth) {
       return setString(OS_LifeCycleCost_ParametersFields::BaseDateMonth, baseDateMonth.valueDescription());
     }
 
@@ -504,7 +504,7 @@ namespace model {
       OS_ASSERT(test);
     }
 
-    bool LifeCycleCostParameters_Impl::setServiceDateMonth(const MonthOfYear& serviceDateMonth) {
+    bool LifeCycleCostParameters_Impl::setServiceDateMonth(openstudio::MonthOfYear serviceDateMonth) {
       return setString(OS_LifeCycleCost_ParametersFields::ServiceDateMonth, serviceDateMonth.valueDescription());
     }
 
@@ -1046,7 +1046,7 @@ namespace model {
     return getImpl<detail::LifeCycleCostParameters_Impl>()->setInflation(inflation);
   }
 
-  bool LifeCycleCostParameters::setBaseDateMonth(const MonthOfYear& baseDateMonth) {
+  bool LifeCycleCostParameters::setBaseDateMonth(openstudio::MonthOfYear baseDateMonth) {
     return getImpl<detail::LifeCycleCostParameters_Impl>()->setBaseDateMonth(baseDateMonth);
   }
 
@@ -1062,7 +1062,7 @@ namespace model {
     getImpl<detail::LifeCycleCostParameters_Impl>()->resetBaseDateYear();
   }
 
-  bool LifeCycleCostParameters::setServiceDateMonth(const MonthOfYear& serviceDateMonth) {
+  bool LifeCycleCostParameters::setServiceDateMonth(openstudio::MonthOfYear serviceDateMonth) {
     return getImpl<detail::LifeCycleCostParameters_Impl>()->setServiceDateMonth(serviceDateMonth);
   }
 

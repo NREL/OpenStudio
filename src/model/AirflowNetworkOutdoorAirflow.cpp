@@ -97,7 +97,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirflowNetworkOutdoorAirflow::AirflowNetworkOutdoorAirflow(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle)
+  AirflowNetworkOutdoorAirflow::AirflowNetworkOutdoorAirflow(const Model& model, const AirflowNetworkCrack& crack, openstudio::Handle handle)
     : ModelObject(AirflowNetworkOutdoorAirflow::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkOutdoorAirflow_Impl>());
     bool ok = setCrack(crack);

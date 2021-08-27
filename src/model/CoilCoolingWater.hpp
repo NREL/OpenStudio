@@ -232,7 +232,7 @@ namespace model {
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 
-    CoilCoolingWater(const Handle& handle, const Model& model);
+    CoilCoolingWater(openstudio::Handle handle, const Model& model);
 
     /// @endcond
 

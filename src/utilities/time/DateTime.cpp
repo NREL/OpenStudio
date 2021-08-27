@@ -279,7 +279,7 @@ boost::optional<DateTime> DateTime::fromXsdDateTime(const std::string& str) {
   return fromISO8601(str);
 }
 
-DateTime DateTime::fromEpoch(const std::time_t& time) {
+DateTime DateTime::fromEpoch(std::time_t time) {
   boost::posix_time::ptime pt = boost::posix_time::from_time_t(time);
   return DateTime(Date(pt.date()), Time(pt.time_of_day()), 0.0);
 }

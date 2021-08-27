@@ -45,7 +45,7 @@ class UTILITIES_API EndUses
   static std::string attributeName();
 
   /// get units for fuel type
-  static std::string getUnitsForFuelType(const EndUseFuelType& fuelType);
+  static std::string getUnitsForFuelType(openstudio::EndUseFuelType fuelType);
 
   /// get list of all fuel types
   static std::vector<EndUseFuelType> fuelTypes();
@@ -63,22 +63,23 @@ class UTILITIES_API EndUses
   Attribute attribute() const;
 
   /// add an end use
-  void addEndUse(double value, const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory = "General");
+  void addEndUse(double value, openstudio::EndUseFuelType fuelType, openstudio::EndUseCategoryType category,
+                 const std::string& subCategory = "General");
 
   /// get end use value
-  double getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory) const;
+  double getEndUse(openstudio::EndUseFuelType fuelType, openstudio::EndUseCategoryType category, const std::string& subCategory) const;
 
   /// get end use value across sub categories
-  double getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category) const;
+  double getEndUse(openstudio::EndUseFuelType fuelType, openstudio::EndUseCategoryType category) const;
 
   /// get end use value across fuel types
-  double getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory) const;
+  double getEndUseByCategory(openstudio::EndUseCategoryType category, const std::string& subCategory) const;
 
   /// get end use value across fuel types and sub categories
-  double getEndUseByCategory(const EndUseCategoryType& category) const;
+  double getEndUseByCategory(openstudio::EndUseCategoryType category) const;
 
   /// get end use value across categories and sub categories
-  double getEndUseByFuelType(const EndUseFuelType& fuelType) const;
+  double getEndUseByFuelType(openstudio::EndUseFuelType fuelType) const;
 
   /// get list of all sub cateogories
   std::vector<std::string> subCategories() const;

@@ -132,7 +132,7 @@ namespace sdd {
     return angle;
   }
 
-  pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node& root, const std::string& tagName, boost::optional<int> _index) {
+  pugi::xml_node elementByTagNameAndIndex(pugi::xml_node root, const std::string& tagName, boost::optional<int> _index) {
 
     pugi::xml_node result;
     if (_index) {
@@ -152,7 +152,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(pugi::xml_node element, openstudio::model::Model& model) {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
     pugi::xml_node nameElement = element.child("Name");
@@ -278,8 +278,7 @@ namespace sdd {
     return building;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::createThermalZone(const pugi::xml_node& element,
-                                                                                       openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::createThermalZone(pugi::xml_node element, openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
 
     model::ThermalZone thermalZone(model);
@@ -298,8 +297,7 @@ namespace sdd {
     return thermalZone;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element,
-                                                                                            openstudio::model::Model& model) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBuildingStory(pugi::xml_node element, openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
     std::vector<pugi::xml_node> spaceElements = makeVectorOfChildren(element, "Spc");
 
@@ -329,7 +327,7 @@ namespace sdd {
     return buildingStory;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::createSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::createSpace(pugi::xml_node element, openstudio::model::Model& model) {
     pugi::xml_node nameElement = element.child("Name");
 
     // TODO: move into block where we do set the name no?
@@ -349,8 +347,7 @@ namespace sdd {
     return space;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element,
-                                                                        openstudio::model::BuildingStory& buildingStory) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(pugi::xml_node element, openstudio::model::BuildingStory& buildingStory) {
     pugi::xml_node nameElement = element.child("Name");
     pugi::xml_node hotWtrHtgRtElement = element.child("HotWtrHtgRtSim");
     pugi::xml_node hotWtrHtgSchRefElement = element.child("HotWtrHtgSchRef");
@@ -541,7 +538,7 @@ namespace sdd {
     return boost::optional<model::ModelObject>(space);
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateLoads(const pugi::xml_node& element, openstudio::model::Space& space) {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateLoads(pugi::xml_node element, openstudio::model::Space& space) {
     // element is 'Spc' here
 
     UnitSystem siSys(UnitSystem::SI);
@@ -1211,7 +1208,7 @@ namespace sdd {
     return space;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConvectionCoefficients(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConvectionCoefficients(pugi::xml_node element,
                                                                                                      openstudio::model::PlanarSurface& surface) {
     boost::optional<std::string> convectionCoefficient1Location;
     boost::optional<std::string> convectionCoefficient1Type;
@@ -1273,7 +1270,7 @@ namespace sdd {
     return boost::none;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Space& space) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(pugi::xml_node element, openstudio::model::Space& space) {
     boost::optional<model::ModelObject> result;
 
     UnitSystem siSys(UnitSystem::SI);
@@ -1505,7 +1502,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const pugi::xml_node& element,
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(pugi::xml_node element,
                                                                                          openstudio::model::Surface& surface) {
     std::vector<openstudio::Point3d> vertices;
 
@@ -1631,7 +1628,7 @@ namespace sdd {
   }
 
   boost::optional<openstudio::model::ModelObject>
-    ReverseTranslator::translateShadingSurface(const pugi::xml_node& element, openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup) {
+    ReverseTranslator::translateShadingSurface(pugi::xml_node element, openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup) {
     std::vector<openstudio::Point3d> vertices;
 
     UnitSystem siSys(UnitSystem::SI);

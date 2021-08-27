@@ -80,9 +80,9 @@ namespace model {
 
       void relationshipChange(int index, Handle newHandle, Handle oldHandle);
 
-      void objectRemove(const Handle& handleOfRemovedObject);
+      void objectRemove(openstudio::Handle handleOfRemovedObject);
 
-      void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+      void objectAdd(const WorkspaceObject& addedObject, openstudio::IddObjectType type, openstudio::UUID uuid);
 
      private:
       ComponentData m_componentData;

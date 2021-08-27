@@ -191,7 +191,7 @@ bool ObjectOrderBase::less(boost::optional<IddObjectType> left, boost::optional<
 
 // STATE CHECKING
 
-bool ObjectOrderBase::inOrder(const IddObjectType& type) const {
+bool ObjectOrderBase::inOrder(openstudio::IddObjectType type) const {
   if (m_orderByIddEnum) {
     return true;
   }
@@ -204,7 +204,7 @@ bool ObjectOrderBase::inOrder(const IddObjectType& type) const {
   return false;
 }
 
-OptionalUnsigned ObjectOrderBase::indexInOrder(const IddObjectType& type) const {
+OptionalUnsigned ObjectOrderBase::indexInOrder(openstudio::IddObjectType type) const {
   if (m_orderByIddEnum) {
     return static_cast<unsigned>(type.value());
   }
@@ -218,12 +218,12 @@ OptionalUnsigned ObjectOrderBase::indexInOrder(const IddObjectType& type) const 
 // PRIVATE
 
 // assumes that m_iddOrder == true
-IddObjectTypeVector::iterator ObjectOrderBase::getIterator(const IddObjectType& type) {
+IddObjectTypeVector::iterator ObjectOrderBase::getIterator(openstudio::IddObjectType type) {
   OS_ASSERT(m_iddOrder);
   return std::find(m_iddOrder->begin(), m_iddOrder->end(), type);
 }
 
-IddObjectTypeVector::const_iterator ObjectOrderBase::getIterator(const IddObjectType& type) const {
+IddObjectTypeVector::const_iterator ObjectOrderBase::getIterator(openstudio::IddObjectType type) const {
   OS_ASSERT(m_iddOrder);
   return std::find(m_iddOrder->begin(), m_iddOrder->end(), type);
 }

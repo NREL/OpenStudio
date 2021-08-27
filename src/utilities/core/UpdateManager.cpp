@@ -159,7 +159,7 @@ void UpdateManager::processReply(const std::string& reply) {
   m_finished = true;
 }
 
-bool UpdateManager::checkRelease(const pugi::xml_node& release) {
+bool UpdateManager::checkRelease(pugi::xml_node release) {
   bool updateAvailable = false;
 
   try {

@@ -198,7 +198,7 @@ namespace model {
    private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingWater");
 
-    CoilHeatingWater(const Handle& handle, const Model& model);
+    CoilHeatingWater(openstudio::Handle handle, const Model& model);
 
     /// @endcond
   };  // detail

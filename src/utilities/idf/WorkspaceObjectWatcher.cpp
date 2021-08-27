@@ -75,7 +75,7 @@ void WorkspaceObjectWatcher::relationshipChange(int index, Handle newHandle, Han
   }
 }
 
-void WorkspaceObjectWatcher::removedFromWorkspace(const Handle& handle) {
+void WorkspaceObjectWatcher::removedFromWorkspace(openstudio::Handle handle) {
   m_removedFromWorkspace = true;
 
   if (enabled()) {

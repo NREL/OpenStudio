@@ -152,13 +152,13 @@ namespace detail {
 
     void resetWorkflowSteps();
 
-    std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
+    std::vector<MeasureStep> getMeasureSteps(openstudio::MeasureType measureType) const;
 
-    bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
+    bool setMeasureSteps(openstudio::MeasureType measureType, const std::vector<MeasureStep>& steps);
 
     boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;
 
-    boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id) const;
+    boost::optional<BCLMeasure> getBCLMeasureByUUID(openstudio::UUID id) const;
 
     boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
 

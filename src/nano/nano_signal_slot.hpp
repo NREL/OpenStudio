@@ -12,21 +12,21 @@ template <typename RT, typename... Args>
 class Signal<RT(Args...)> : private Observer
 {
   template <typename T>
-  void insert_sfinae(DelegateKey const& key, typename T::Observer* instance) {
+  void insert_sfinae(Nano::DelegateKey key, typename T::Observer* instance) {
     Observer::insert(key, instance);
     instance->insert(key, this);
   }
   template <typename T>
-  void remove_sfinae(DelegateKey const& key, typename T::Observer* instance) {
+  void remove_sfinae(Nano::DelegateKey key, typename T::Observer* instance) {
     Observer::remove(key, instance);
     instance->remove(key, this);
   }
   template <typename T>
-  void insert_sfinae(DelegateKey const& key, ...) {
+  void insert_sfinae(Nano::DelegateKey key, ...) {
     Observer::insert(key, this);
   }
   template <typename T>
-  void remove_sfinae(DelegateKey const& key, ...) {
+  void remove_sfinae(Nano::DelegateKey key, ...) {
     Observer::remove(key, this);
   }
 

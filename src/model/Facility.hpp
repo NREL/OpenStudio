@@ -92,7 +92,7 @@ namespace model {
     /// Returns all \link OutputMeter OutputMeters \endlink at the Facility level.
     std::vector<OutputMeter> meters() const;
 
-    boost::optional<OutputMeter> getMeterByFuelType(const FuelType& fuelType, const std::string& reportingFrequency = "Hourly",
+    boost::optional<OutputMeter> getMeterByFuelType(openstudio::FuelType fuelType, const std::string& reportingFrequency = "Hourly",
                                                     const boost::optional<EndUseType>& endUseType = boost::none,
                                                     const boost::optional<std::string>& specificEndUse = boost::none) const;
 
@@ -123,15 +123,15 @@ namespace model {
 
     /// Returns the annual total cost associated with the given fuel type in dollars.
     /// Requires EnergyPlus simulation output to calculate.
-    boost::optional<double> annualTotalCost(const FuelType& fuel) const;
+    boost::optional<double> annualTotalCost(openstudio::FuelType fuel) const;
 
     /// Returns the annual total cost per total building area associated with the given fuel type in dollars per square meter.
     /// Requires EnergyPlus simulation output to calculate.
-    boost::optional<double> annualTotalCostPerBldgArea(const FuelType& fuel) const;
+    boost::optional<double> annualTotalCostPerBldgArea(openstudio::FuelType fuel) const;
 
     /// Returns the annual total cost per net conditioned building area associated with the given fuel type in dollars per square meter.
     /// Requires EnergyPlus simulation output to calculate.
-    boost::optional<double> annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const;
+    boost::optional<double> annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const;
 
     /// Returns the annual total cost for all fuel types in dollars. Requires EnergyPlus simulation output to calculate.
     boost::optional<double> annualTotalUtilityCost() const;

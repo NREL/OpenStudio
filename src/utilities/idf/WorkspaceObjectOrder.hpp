@@ -69,19 +69,19 @@ namespace detail {
     /// deletes other ordering options and sets direct order
     void setDirectOrder(const std::vector<Handle>& order);
     /// returns false if not ordering directly
-    bool push_back(const Handle& handle);
+    bool push_back(openstudio::Handle handle);
     /// returns false if not ordering directly
-    bool insert(const Handle& handle, const Handle& insertBeforeHandle);
+    bool insert(openstudio::Handle handle, openstudio::Handle insertBeforeHandle);
     /// returns false if not ordering directly
-    bool insert(const Handle& handle, unsigned index);
+    bool insert(openstudio::Handle handle, unsigned index);
     /// returns false if not ordering directly, or request is otherwise invalid
-    bool move(const Handle& handle, const Handle& insertBeforeHandle);
+    bool move(openstudio::Handle handle, openstudio::Handle insertBeforeHandle);
     /// returns false if not ordering directly, or request is otherwise invalid
-    bool move(const Handle& handle, unsigned index);
+    bool move(openstudio::Handle handle, unsigned index);
     /// returns false if not ordering directly, or request is otherwise invalid
-    bool swap(const Handle& handle1, const Handle& handle2);
+    bool swap(openstudio::Handle handle1, openstudio::Handle handle2);
     /// returns false if not ordering directly, or request is otherwise invalid
-    bool erase(const Handle& handle);
+    bool erase(openstudio::Handle handle);
 
     /// deletes other ordering options and orders by IddObjectType
     virtual void setOrderByIddEnum() override;
@@ -91,7 +91,7 @@ namespace detail {
     // SORTING
 
     /** Predicate for external sorters (for instance, std::set). */
-    bool less(const Handle& left, const Handle& right) const;
+    bool less(openstudio::Handle left, openstudio::Handle right) const;
 
     /** Predicate for external sorters (for instance, std::set). */
     bool less(const WorkspaceObject& left, const WorkspaceObject& right) const;
@@ -112,10 +112,10 @@ namespace detail {
     // STATE CHECKING
 
     /** Returns whether order of handle is directly specified. */
-    bool inOrder(const Handle& handle) const;
+    bool inOrder(openstudio::Handle handle) const;
 
     /** Returns index of handle in order, if its order is directly specified. */
-    boost::optional<unsigned> indexInOrder(const Handle& handle) const;
+    boost::optional<unsigned> indexInOrder(openstudio::Handle handle) const;
 
    protected:
     friend class Workspace_Impl;
@@ -131,22 +131,22 @@ namespace detail {
     // HELPER FUNCTIONS
 
     // only call when m_directOrder == true
-    std::vector<Handle>::iterator getIterator(const Handle& handle);
+    std::vector<Handle>::iterator getIterator(openstudio::Handle handle);
     std::vector<Handle>::iterator getIterator(IddObjectType type);
     std::vector<Handle>::iterator getIterator(const WorkspaceObject& object);
 
-    std::vector<Handle>::const_iterator getIterator(const Handle& handle) const;
+    std::vector<Handle>::const_iterator getIterator(openstudio::Handle handle) const;
     std::vector<Handle>::const_iterator getIterator(IddObjectType type) const;
     std::vector<Handle>::const_iterator getIterator(const WorkspaceObject& object) const;
 
-    boost::optional<IddObjectType> getIddObjectType(const Handle& handle) const;
+    boost::optional<IddObjectType> getIddObjectType(openstudio::Handle handle) const;
 
     // returns empty vector if can't convert all.
     WorkspaceObjectVector getObjects(const std::vector<Handle>& handles) const;
 
     // ETH@20100409 boost::bind seems to need non-overloaded functions
     // These are (ugly) wrappers to accommodate.
-    bool less_Handle(const Handle& left, const Handle& right) const;
+    bool less_Handle(openstudio::Handle left, openstudio::Handle right) const;
     bool less_WorkspaceObject(const WorkspaceObject& left, const WorkspaceObject& right) const;
     virtual bool less_IddObjectType(IddObjectType left, IddObjectType right) const;
   };
@@ -217,19 +217,19 @@ class UTILITIES_API WorkspaceObjectOrder
   /// deletes other ordering options and sets direct order
   void setDirectOrder(const std::vector<Handle>& order);
   /// returns false if not ordering directly
-  bool push_back(const Handle& handle);
+  bool push_back(openstudio::Handle handle);
   /// returns false if not ordering directly
-  bool insert(const Handle& handle, const Handle& insertBeforeHandle);
+  bool insert(openstudio::Handle handle, openstudio::Handle insertBeforeHandle);
   /// returns false if not ordering directly
-  bool insert(const Handle& handle, unsigned index);
+  bool insert(openstudio::Handle handle, unsigned index);
   /// returns false if not ordering directly, or request is otherwise invalid
-  bool move(const Handle& handle, const Handle& insertBeforeHandle);
+  bool move(openstudio::Handle handle, openstudio::Handle insertBeforeHandle);
   /// returns false if not ordering directly, or request is otherwise invalid
-  bool move(const Handle& handle, unsigned index);
+  bool move(openstudio::Handle handle, unsigned index);
   /// returns false if not ordering directly, or request is otherwise invalid
-  bool swap(const Handle& handle1, const Handle& handle2);
+  bool swap(openstudio::Handle handle1, openstudio::Handle handle2);
   /// returns false if not ordering directly, or request is otherwise invalid
-  bool erase(const Handle& handle);
+  bool erase(openstudio::Handle handle);
 
   // SORTING
 
@@ -240,10 +240,10 @@ class UTILITIES_API WorkspaceObjectOrder
   // STATE CHECKING
 
   /** Returns whether order of handle is directly specified. */
-  bool inOrder(const Handle& handle) const;
+  bool inOrder(openstudio::Handle handle) const;
 
   /** Returns index of handle in order, if its order is directly specified. */
-  boost::optional<unsigned> indexInOrder(const Handle& handle) const;
+  boost::optional<unsigned> indexInOrder(openstudio::Handle handle) const;
 
  protected:
   friend class Workspace;

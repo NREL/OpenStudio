@@ -106,7 +106,7 @@ namespace model {
 
     explicit AirflowNetworkDistributionNode(std::shared_ptr<detail::AirflowNetworkDistributionNode_Impl> impl);
 
-    AirflowNetworkDistributionNode(const Model& model, const Handle& handle);
+    AirflowNetworkDistributionNode(const Model& model, openstudio::Handle handle);
 
     void resetComponent();
 

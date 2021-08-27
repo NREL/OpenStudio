@@ -79,7 +79,7 @@ namespace detail {
     explicit IdfObject_Impl(const IddObject& iddObject, bool fastName = false);
 
     /** Constructor from underlying data. Used by WorkspaceObject_Impl. */
-    IdfObject_Impl(const Handle& handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
+    IdfObject_Impl(openstudio::Handle handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
                    const StringVector& fieldComments);
 
     virtual ~IdfObject_Impl() {}
@@ -411,7 +411,7 @@ namespace detail {
 
     virtual void populateValidityReport(ValidityReport& report, bool checkNames) const;
 
-    virtual std::vector<DataError> fieldDataIsValid(unsigned index, const StrictnessLevel& level) const;
+    virtual std::vector<DataError> fieldDataIsValid(unsigned index, openstudio::StrictnessLevel level) const;
 
     /** Checks Integer, Real and Choice fields. */
     virtual bool fieldDataIsCorrectType(unsigned index) const;

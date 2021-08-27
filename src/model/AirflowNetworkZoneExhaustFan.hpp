@@ -85,7 +85,7 @@ namespace model {
     /// @cond
     typedef detail::AirflowNetworkZoneExhaustFan_Impl ImplType;
 
-    AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle);
+    AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack& crack, openstudio::Handle handle);
 
     explicit AirflowNetworkZoneExhaustFan(std::shared_ptr<detail::AirflowNetworkZoneExhaustFan_Impl> impl);
 

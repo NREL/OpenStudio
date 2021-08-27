@@ -77,7 +77,7 @@ struct UTILITIES_API IddFileType : public ::EnumBase<IddFileType>
   static VecType buildStringVec(bool isd);
 };
 
-inline std::ostream& operator<<(std::ostream& os, const IddFileType& e) {
+inline std::ostream& operator<<(std::ostream& os, openstudio::IddFileType e) {
   return os << e.valueName() << "(" << e.value() << ")";
 }
 
@@ -133,7 +133,7 @@ struct UTILITIES_API IddObjectType : public ::EnumBase<IddObjectType>
   static VecType buildStringVec(bool isd);
 };
 
-inline std::ostream& operator<<(std::ostream& os, const IddObjectType& e) {
+inline std::ostream& operator<<(std::ostream& os, openstudio::IddObjectType e) {
   return os << e.valueName() << "(" << e.value() << ")";
 }
 

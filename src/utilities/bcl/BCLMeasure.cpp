@@ -697,7 +697,7 @@ MeasureType BCLMeasure::measureType() const {
   return MeasureType(measureTypes[0].valueAsString());
 }
 
-void BCLMeasure::setMeasureType(const MeasureType& measureType) {
+void BCLMeasure::setMeasureType(openstudio::MeasureType measureType) {
   const std::string attributeName("Measure Type");
   Attribute attribute(attributeName, measureType.valueName());
   m_bclXML.removeAttributes(attributeName);
@@ -771,7 +771,7 @@ void BCLMeasure::incrementVersionId() {
   m_bclXML.incrementVersionId();
 }
 
-bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, const std::string& oldClassName,
+bool BCLMeasure::updateMeasureScript(openstudio::MeasureType oldMeasureType, openstudio::MeasureType newMeasureType, const std::string& oldClassName,
                                      const std::string& newClassName, const std::string& name, const std::string& description,
                                      const std::string& modelerDescription) {
   boost::optional<openstudio::path> path = primaryRubyScriptPath();
