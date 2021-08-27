@@ -1597,7 +1597,7 @@ namespace model {
     removeAllShadingControls();
   }
 
-  double SubSurface::totalArea() {
+  double SubSurface::totalArea() const {
 
     double area = grossArea();
     
@@ -1613,6 +1613,7 @@ namespace model {
       boost::optional<std::vector<Point3d>> offset = openstudio::buffer(faceVertices, fw, 0.01);
       if (!offset) {
           // If offset faile dit is because the points are in the wrong order
+          // If it fails again then something went awry with boost::buffer
         faceVertices = openstudio::reverse(faceVertices);
         offset = openstudio::buffer(faceVertices, fw, 0.01);
       }

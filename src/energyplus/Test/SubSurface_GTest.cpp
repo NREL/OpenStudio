@@ -149,6 +149,7 @@ TEST_F(EnergyPlusFixture, Issue_4361) {
   vertices.push_back(Point3d(2, 2, 0));
   Surface surface(vertices, model);
   surface.setSpace(space);
+  surface.setSurfaceType("Wall");
 
   vertices.clear();
   vertices.push_back(Point3d(0, 1, 0));
@@ -158,7 +159,7 @@ TEST_F(EnergyPlusFixture, Issue_4361) {
 
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
-  subSurface.assignDefaultSubSurfaceType();
+  subSurface.setSubSurfaceType("FixedWindow");
 
   double surfaceGrossArea = surface.grossArea();
   double surfaceNetArea = surface.netArea();
@@ -166,6 +167,8 @@ TEST_F(EnergyPlusFixture, Issue_4361) {
   double subSurfaceTotalArea = subSurface.totalArea();
 
   EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceGrossArea);
+  double windowWallRatio = surface.windowToWallRatio();
+  EXPECT_EQ(windowWallRatio, 0.25);
 
   // Then assign a frame and divider to the subsurface
   // then do the same thing with the areas
@@ -173,13 +176,13 @@ TEST_F(EnergyPlusFixture, Issue_4361) {
   WindowPropertyFrameAndDivider frame(model);
   frame.setFrameWidth(0.030);
   subSurface.setWindowPropertyFrameAndDivider(frame);
-  
-  auto ss = subSurface.windowPropertyFrameAndDivider();
-  WindowPropertyFrameAndDivider sss = *ss;
 
-  surfaceGrossArea = surface.grossArea();
   surfaceNetArea = surface.netArea();
   subSurfaceGrossArea = subSurface.grossArea();
   subSurfaceTotalArea = subSurface.totalArea();
   EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceTotalArea);
+
+  windowWallRatio = surface.windowToWallRatio();
+  EXPECT_NEAR(windowWallRatio, 0.28, 0.01);
+
 }

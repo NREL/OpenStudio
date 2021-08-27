@@ -1443,7 +1443,7 @@ namespace model {
       double windowArea = 0.0;
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          windowArea += subSurface.multiplier() * subSurface.netArea();
+          windowArea += subSurface.multiplier() * subSurface.totalArea();
         }
       }
 
