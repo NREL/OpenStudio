@@ -309,7 +309,7 @@ ValidityReport IdfFile::validityReport(StrictnessLevel level) const {
 
 // SERIALIZATON
 
-boost::optional<IdfFile> IdfFile::load(std::istream& is, const IddFileType& iddFileType, ProgressBar* progressBar) {
+boost::optional<IdfFile> IdfFile::load(std::istream& is, openstudio::IddFileType iddFileType, ProgressBar* progressBar) {
   IdfFile result(iddFileType);
   // remove initial version object
   if (OptionalIdfObject vo = result.versionObject()) {
@@ -354,7 +354,7 @@ OptionalIdfFile IdfFile::load(const path& p, ProgressBar* progressBar) {
   return load(p, iddType, progressBar);
 }
 
-OptionalIdfFile IdfFile::load(const path& p, const IddFileType& iddFileType, ProgressBar* progressBar) {
+OptionalIdfFile IdfFile::load(const path& p, openstudio::IddFileType iddFileType, ProgressBar* progressBar) {
   // complete path
   path wp(p);
 

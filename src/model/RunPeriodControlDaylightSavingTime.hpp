@@ -80,12 +80,12 @@ namespace model {
     //@{
 
     bool setStartDate(const std::string& startDate);
-    bool setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
-    bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
+    bool setStartDate(openstudio::MonthOfYear monthOfYear, unsigned day);
+    bool setStartDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
 
     bool setEndDate(const std::string& endDate);
-    bool setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
-    bool setEndDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
+    bool setEndDate(openstudio::MonthOfYear monthOfYear, unsigned day);
+    bool setEndDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
 
     // ensure that this object does not contain the date 2/29
     void ensureNoLeapDays();

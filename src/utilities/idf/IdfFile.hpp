@@ -176,7 +176,7 @@ class UTILITIES_API IdfFile
 
   /** Load an IdfFile from std::istream using the IDD defined by IddFactory and iddFileType, if
    *  possible. */
-  static boost::optional<IdfFile> load(std::istream& is, const IddFileType& iddFileType, ProgressBar* progressBar = nullptr);
+  static boost::optional<IdfFile> load(std::istream& is, openstudio::IddFileType iddFileType, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from std::istream using iddFile, if possible. */
   static boost::optional<IdfFile> load(std::istream& is, const IddFile& iddFile, ProgressBar* progressBar = nullptr);
@@ -188,7 +188,7 @@ class UTILITIES_API IdfFile
 
   /** Load an IdfFile from path using the IddFactory and iddFileType, if possible. Will attempt to
    *  complete the path by tacking on .osm or .idf as appropriate. */
-  static boost::optional<IdfFile> load(const path& p, const IddFileType& iddFileType, ProgressBar* progressBar = nullptr);
+  static boost::optional<IdfFile> load(const path& p, openstudio::IddFileType iddFileType, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from path using iddFile, if possible. If no file extension is provided, will
    *  try "idf". */

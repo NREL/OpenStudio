@@ -156,7 +156,7 @@ namespace model {
     //@{
 
     /// Returns the default schedule of a particular type.
-    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+    boost::optional<Schedule> getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const;
 
     /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
     void merge(const DefaultScheduleSet& other);

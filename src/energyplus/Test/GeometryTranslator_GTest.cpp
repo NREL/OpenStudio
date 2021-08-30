@@ -67,7 +67,8 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::energyplus;
 
-Workspace testWorkspace(const CoordinateSystem& system, const CoordinateSystem& daylightSystem, const CoordinateSystem& rectSystem) {
+Workspace testWorkspace(openstudio::energyplus::CoordinateSystem system, openstudio::energyplus::CoordinateSystem daylightSystem,
+                        openstudio::energyplus::CoordinateSystem rectSystem) {
 
   std::stringstream ss;
 

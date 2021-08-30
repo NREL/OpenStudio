@@ -202,7 +202,7 @@ namespace detail {
     return m_iddFileAndFactoryWrapper.iddFileType();
   }
 
-  boost::optional<IddObject> Workspace_Impl::getIddObject(const IddObjectType& type) const {
+  boost::optional<IddObject> Workspace_Impl::getIddObject(openstudio::IddObjectType type) const {
     return m_iddFileAndFactoryWrapper.getObject(type);
   }
 
@@ -1590,7 +1590,7 @@ namespace detail {
     return constructNextName(name, objectsInSeries, fillIn);
   }
 
-  std::string Workspace_Impl::nextName(const IddObjectType& iddObjectType, bool fillIn) const {
+  std::string Workspace_Impl::nextName(openstudio::IddObjectType iddObjectType, bool fillIn) const {
     if (m_fastNaming) {
       return toString(createUUID());
     }
@@ -2473,7 +2473,7 @@ IddFileType Workspace::iddFileType() const {
   return m_impl->iddFileType();
 }
 
-boost::optional<IddObject> Workspace::getIddObject(const IddObjectType& type) const {
+boost::optional<IddObject> Workspace::getIddObject(openstudio::IddObjectType type) const {
   return m_impl->getIddObject(type);
 }
 
@@ -2654,7 +2654,7 @@ std::string Workspace::nextName(const std::string& name, bool fillIn) const {
   return m_impl->nextName(name, fillIn);
 }
 
-std::string Workspace::nextName(const IddObjectType& iddObjectType, bool fillIn) const {
+std::string Workspace::nextName(openstudio::IddObjectType iddObjectType, bool fillIn) const {
   return m_impl->nextName(iddObjectType, fillIn);
 }
 
@@ -2719,7 +2719,7 @@ boost::optional<Workspace> Workspace::load(const openstudio::path& p) {
   return boost::none;
 }
 
-boost::optional<Workspace> Workspace::load(const openstudio::path& p, const IddFileType& iddFileType) {
+boost::optional<Workspace> Workspace::load(const openstudio::path& p, openstudio::IddFileType iddFileType) {
   OptionalIdfFile oIdfFile = IdfFile::load(p, iddFileType);
   if (oIdfFile) {
     return Workspace(*oIdfFile);

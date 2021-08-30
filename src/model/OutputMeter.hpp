@@ -213,7 +213,7 @@ namespace model {
   typedef std::vector<OutputMeter> OutputMeterVector;
 
   /** Predicate for finding \link OutputMeter OutputMeters \endlink with fuelType() ft. \relates OutputMeter */
-  MODEL_API bool MeterFuelTypeEquals(const OutputMeter& meter, const FuelType& ft);
+  MODEL_API bool MeterFuelTypeEquals(const OutputMeter& meter, openstudio::FuelType ft);
 
 }  // namespace model
 }  // namespace openstudio

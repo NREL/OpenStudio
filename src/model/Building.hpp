@@ -124,7 +124,7 @@ namespace model {
     /// Returns the default schedule set for the specified type if available by searching (in order):
     /// The building's default schedule set
     /// The building's space type's default schedule set
-    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+    boost::optional<Schedule> getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const;
 
     //@}
     /** @name Setters */

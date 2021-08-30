@@ -140,7 +140,7 @@ boost::optional<double> SqlFile::totalSourceEnergy() const {
   return result;
 }
 
-boost::optional<double> SqlFile::annualTotalCost(const FuelType& fuel) const {
+boost::optional<double> SqlFile::annualTotalCost(openstudio::FuelType fuel) const {
   boost::optional<double> result;
   if (m_impl) {
     result = m_impl->annualTotalCost(fuel);
@@ -148,7 +148,7 @@ boost::optional<double> SqlFile::annualTotalCost(const FuelType& fuel) const {
   return result;
 }
 
-boost::optional<double> SqlFile::annualTotalCostPerBldgArea(const FuelType& fuel) const {
+boost::optional<double> SqlFile::annualTotalCostPerBldgArea(openstudio::FuelType fuel) const {
   boost::optional<double> result;
   if (m_impl) {
     result = m_impl->annualTotalCostPerBldgArea(fuel);
@@ -156,7 +156,7 @@ boost::optional<double> SqlFile::annualTotalCostPerBldgArea(const FuelType& fuel
   return result;
 }
 
-boost::optional<double> SqlFile::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const {
+boost::optional<double> SqlFile::annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const {
   boost::optional<double> result;
   if (m_impl) {
     result = m_impl->annualTotalCostPerNetConditionedBldgArea(fuel);
@@ -204,9 +204,8 @@ boost::optional<double> SqlFile::getElecOrGasUse(bool t_getGas) const {
   }
 }
 
-boost::optional<double> SqlFile::energyConsumptionByMonth(const openstudio::EndUseFuelType& t_fuelType,
-                                                          const openstudio::EndUseCategoryType& t_categoryType,
-                                                          const openstudio::MonthOfYear& t_monthOfYear) const {
+boost::optional<double> SqlFile::energyConsumptionByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                          openstudio::MonthOfYear t_monthOfYear) const {
   if (m_impl) {
     return m_impl->energyConsumptionByMonth(t_fuelType, t_categoryType, t_monthOfYear);
   } else {
@@ -214,9 +213,8 @@ boost::optional<double> SqlFile::energyConsumptionByMonth(const openstudio::EndU
   }
 }
 
-boost::optional<double> SqlFile::peakEnergyDemandByMonth(const openstudio::EndUseFuelType& t_fuelType,
-                                                         const openstudio::EndUseCategoryType& t_categoryType,
-                                                         const openstudio::MonthOfYear& t_monthOfYear) const {
+boost::optional<double> SqlFile::peakEnergyDemandByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                         openstudio::MonthOfYear t_monthOfYear) const {
   if (m_impl) {
     return m_impl->peakEnergyDemandByMonth(t_fuelType, t_categoryType, t_monthOfYear);
   } else {
@@ -995,7 +993,7 @@ void SqlFile::insertIlluminanceMap(const std::string& t_zoneName, const std::str
 
 void SqlFile::insertTimeSeriesData(const std::string& t_variableType, const std::string& t_indexGroup, const std::string& t_timestepType,
                                    const std::string& t_keyValue, const std::string& t_variableName,
-                                   const openstudio::ReportingFrequency& t_reportingFrequency, const boost::optional<std::string>& t_scheduleName,
+                                   openstudio::ReportingFrequency t_reportingFrequency, const boost::optional<std::string>& t_scheduleName,
                                    const std::string& t_variableUnits, const openstudio::TimeSeries& t_timeSeries) {
   m_impl->insertTimeSeriesData(t_variableType, t_indexGroup, t_timestepType, t_keyValue, t_variableName, t_reportingFrequency, t_scheduleName,
                                t_variableUnits, t_timeSeries);

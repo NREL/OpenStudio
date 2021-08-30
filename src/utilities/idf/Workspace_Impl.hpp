@@ -140,7 +140,7 @@ namespace detail {
     IddFileType iddFileType() const;
 
     /** Returns the IddObject if .isInIddFile(type). Otherwise return value evaluates to false. */
-    boost::optional<IddObject> getIddObject(const IddObjectType& type) const;
+    boost::optional<IddObject> getIddObject(openstudio::IddObjectType type) const;
 
     /** True if has an operable name field. */
     boost::optional<std::string> name(const Handle& handle) const;
@@ -382,7 +382,7 @@ namespace detail {
 
     /** Returns the next name in the pattern 'iddObject().name() << " " << int' for iddObjectType.
      *  If fillIn, will use unused integer values smaller than the largest one. */
-    std::string nextName(const IddObjectType& iddObjectType, bool fillIn) const;
+    std::string nextName(openstudio::IddObjectType iddObjectType, bool fillIn) const;
 
     /** Returns true if this Workspace is valid at strictnessLevel(). */
     bool isValid() const;

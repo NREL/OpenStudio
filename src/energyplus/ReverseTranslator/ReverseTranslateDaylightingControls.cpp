@@ -103,7 +103,7 @@ namespace energyplus {
       idx += 1;
     }
     // sort indices by fraction in descending order
-    sort(indices.begin(), indices.end(), [&fractions](const size_t& i1, const size_t& i2) { return fractions[i1] > fractions[i2]; });
+    sort(indices.begin(), indices.end(), [&fractions](size_t i1, size_t i2) { return fractions[i1] > fractions[i2]; });
 
     if (sum > 1.0) {
       LOG(Warn, "Daylighting:Controls '" << workspaceObject.nameString() << "' specifies fraction controlled greater than one.")

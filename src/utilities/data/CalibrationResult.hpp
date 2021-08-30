@@ -109,7 +109,7 @@ class UTILITIES_API CalibrationUtilityBill
   static boost::optional<CalibrationUtilityBill> fromAttribute(const Attribute& attribute);
 
   /// Create attribute wrapper with all required information.
-  CalibrationUtilityBill(const std::string& name, const FuelType& fuelType, const InstallLocationType& meterInstallLocation,
+  CalibrationUtilityBill(const std::string& name, openstudio::FuelType fuelType, openstudio::InstallLocationType meterInstallLocation,
                          boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
                          boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
                          boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,

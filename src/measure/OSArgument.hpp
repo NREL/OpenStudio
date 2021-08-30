@@ -112,7 +112,7 @@ OPENSTUDIO_ENUM( OSDomainType,
     // to ProjectDatabase.
 
     OSArgument();
-    OSArgument(const std::string& name, const OSArgumentType& type, bool required, bool modelDependent);
+    OSArgument(const std::string& name, openstudio::measure::OSArgumentType type, bool required, bool modelDependent);
 
     /** Creates a copy with new UUIDs. */
     OSArgument clone() const;
@@ -345,7 +345,7 @@ OPENSTUDIO_ENUM( OSDomainType,
 
     /** Sets the domainType and returns true if domainType is consistent with type, otherwise returns
    *  false. If the domainType changes, the domain will be cleared before returning. */
-    bool setDomainType(const OSDomainType& domainType);
+    bool setDomainType(openstudio::measure::OSDomainType domainType);
 
     /** Sets the domain of this argument by passing in data of a particular type. The method will do
    *  nothing and return false if the data is of an incorrect type or size. A vector of size 2 is
@@ -463,8 +463,8 @@ OPENSTUDIO_ENUM( OSDomainType,
  *  The resulting argument does not attempt to preserve workspace, so the handles and
  *  names will only be valid if the workspace to which the argument is applied is the same
  *  or closely related to workspace. \relates OSArgument */
-  MEASURE_API OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name, const IddObjectType& iddObjectType, const Workspace& workspace,
-                                                              bool required = true);
+  MEASURE_API OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name, openstudio::IddObjectType iddObjectType,
+                                                              const Workspace& workspace, bool required = true);
 
   /** Creates a choice argument with object handles as its values and object names as
  *  its display names by querying workspace for all of its objects with reference

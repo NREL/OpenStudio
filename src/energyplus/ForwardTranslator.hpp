@@ -1520,9 +1520,9 @@ namespace energyplus {
 
     std::string stripOS2(const std::string& s);
 
-    IdfObject createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
+    IdfObject createAndRegisterIdfObject(openstudio::IddObjectType idfObjectType, const model::ModelObject& modelObject);
 
-    IdfObject createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
+    IdfObject createRegisterAndNameIdfObject(openstudio::IddObjectType idfObjectType, const model::ModelObject& modelObject);
 
     static std::vector<IddObjectType> iddObjectsToTranslate();
     static std::vector<IddObjectType> iddObjectsToTranslateInitializer();

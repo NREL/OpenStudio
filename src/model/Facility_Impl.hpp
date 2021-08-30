@@ -97,7 +97,7 @@ namespace model {
       // get meter requests for the facility
       std::vector<OutputMeter> meters() const;
 
-      boost::optional<OutputMeter> getMeterByFuelType(const FuelType& fuelType, const std::string& reportingFrequency,
+      boost::optional<OutputMeter> getMeterByFuelType(openstudio::FuelType fuelType, const std::string& reportingFrequency,
                                                       const boost::optional<EndUseType>& endUseType,
                                                       const boost::optional<std::string>& specificEndUse) const;
 
@@ -119,9 +119,9 @@ namespace model {
       boost::optional<double> totalSourceEnergy() const;
       boost::optional<double> netSourceEnergy() const;
 
-      boost::optional<double> annualTotalCost(const FuelType& fuel) const;
-      boost::optional<double> annualTotalCostPerBldgArea(const FuelType& fuel) const;
-      boost::optional<double> annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const;
+      boost::optional<double> annualTotalCost(openstudio::FuelType fuel) const;
+      boost::optional<double> annualTotalCostPerBldgArea(openstudio::FuelType fuel) const;
+      boost::optional<double> annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const;
 
       boost::optional<double> annualTotalUtilityCost() const;
       boost::optional<double> annualElectricTotalCost() const;

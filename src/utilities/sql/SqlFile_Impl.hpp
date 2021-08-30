@@ -115,15 +115,15 @@ namespace detail {
 
     /// Returns the annual total cost associated with the given fuel type in dollars.
     /// Requires EnergyPlus simulation output to calculate.
-    boost::optional<double> annualTotalCost(const FuelType& fuel) const;
+    boost::optional<double> annualTotalCost(openstudio::FuelType fuel) const;
 
     /// Returns the annual total cost per total building area associated with the given fuel type in dollars per square meter.
     /// Requires EnergyPlus simulation output to calculate.
-    boost::optional<double> annualTotalCostPerBldgArea(const FuelType& fuel) const;
+    boost::optional<double> annualTotalCostPerBldgArea(openstudio::FuelType fuel) const;
 
     /// Returns the annual total cost per net conditioned building area associated with the given fuel type in dollars per square meter.
     /// Requires EnergyPlus simulation output to calculate.
-    boost::optional<double> annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const;
+    boost::optional<double> annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const;
 
     /// Returns the annual total cost for all fuel types in dollars. Requires EnergyPlus simulation output to calculate.
     boost::optional<double> annualTotalUtilityCost() const;
@@ -136,15 +136,13 @@ namespace detail {
 
     /// Returns the energy consumption for the given fuel type, category and month
     /// Requires BUILDING ENERGY PERFORMANCE tabular report
-    boost::optional<double> energyConsumptionByMonth(const openstudio::EndUseFuelType& t_fuelType,
-                                                     const openstudio::EndUseCategoryType& t_categoryType,
-                                                     const openstudio::MonthOfYear& t_monthOfYear) const;
+    boost::optional<double> energyConsumptionByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                     openstudio::MonthOfYear t_monthOfYear) const;
 
     /// Returns the energy demand for the given fuel type, category and month.
     /// Requires BUILDING ENERGY PERFORMANCE tabular report. Value is energy use in W.
-    boost::optional<double> peakEnergyDemandByMonth(const openstudio::EndUseFuelType& t_fuelType,
-                                                    const openstudio::EndUseCategoryType& t_categoryType,
-                                                    const openstudio::MonthOfYear& t_monthOfYear) const;
+    boost::optional<double> peakEnergyDemandByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                    openstudio::MonthOfYear t_monthOfYear) const;
 
     /// Returns the total energy cost over the analysis period in dollars according to the discounting convention.
     /// Requires EnergyPlus simulation output and LifeCycleCost_Parameters input object to calculate.
@@ -733,9 +731,9 @@ namespace detail {
     // Insert a new report variable record into the database
     // This does not support meter data
     void insertTimeSeriesData(const std::string& t_variableType, const std::string& t_indexGroup, const std::string& t_timestepType,
-                              const std::string& t_keyValue, const std::string& t_variableName,
-                              const openstudio::ReportingFrequency& t_reportingFrequency, const boost::optional<std::string>& t_scheduleName,
-                              const std::string& t_variableUnits, const openstudio::TimeSeries& t_timeSeries);
+                              const std::string& t_keyValue, const std::string& t_variableName, openstudio::ReportingFrequency t_reportingFrequency,
+                              const boost::optional<std::string>& t_scheduleName, const std::string& t_variableUnits,
+                              const openstudio::TimeSeries& t_timeSeries);
 
     int insertZone(const std::string& t_name, double t_relNorth, double t_originX, double t_originY, double t_originZ, double t_centroidX,
                    double t_centroidY, double t_centroidZ, int t_ofType, double t_multiplier, double t_listMultiplier, double t_minimumX,

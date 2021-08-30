@@ -93,14 +93,14 @@ namespace model {
       return result;
     }
 
-    bool RunPeriodControlSpecialDays_Impl::setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day) {
+    bool RunPeriodControlSpecialDays_Impl::setStartDate(openstudio::MonthOfYear monthOfYear, unsigned day) {
       std::stringstream ss;
       ss << monthOfYear.value() << "/" << day;
       return setString(OS_RunPeriodControl_SpecialDaysFields::StartDate, ss.str());
     }
 
-    bool RunPeriodControlSpecialDays_Impl::setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                                        const openstudio::MonthOfYear& monthOfYear) {
+    bool RunPeriodControlSpecialDays_Impl::setStartDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek,
+                                                        openstudio::MonthOfYear monthOfYear) {
       std::stringstream ss;
       // Note: MonthOfYear::Jul =>  valueName() is "Jul", valueDescription is "July"
       switch (nth.value()) {
@@ -239,15 +239,15 @@ namespace model {
     }
   }
 
-  RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(const openstudio::MonthOfYear& monthOfYear, unsigned day, Model& model)
+  RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(openstudio::MonthOfYear monthOfYear, unsigned day, Model& model)
     : ModelObject(RunPeriodControlSpecialDays::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RunPeriodControlSpecialDays_Impl>());
     getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(monthOfYear, day);
     Date test = this->startDate();
   }
 
-  RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                                           const openstudio::MonthOfYear& monthOfYear, Model& model)
+  RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek,
+                                                           openstudio::MonthOfYear monthOfYear, Model& model)
     : ModelObject(RunPeriodControlSpecialDays::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RunPeriodControlSpecialDays_Impl>());
     getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(nth, dayOfWeek, monthOfYear);
@@ -278,12 +278,12 @@ namespace model {
     return getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(startDate);
   }
 
-  bool RunPeriodControlSpecialDays::setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day) {
+  bool RunPeriodControlSpecialDays::setStartDate(openstudio::MonthOfYear monthOfYear, unsigned day) {
     return getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(monthOfYear, day);
   }
 
-  bool RunPeriodControlSpecialDays::setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                                 const openstudio::MonthOfYear& monthOfYear) {
+  bool RunPeriodControlSpecialDays::setStartDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek,
+                                                 openstudio::MonthOfYear monthOfYear) {
     return getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(nth, dayOfWeek, monthOfYear);
   }
 

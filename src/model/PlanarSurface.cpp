@@ -880,7 +880,7 @@ namespace model {
     return result;
   }
 
-  double PlanarSurface::filmResistance(const FilmResistanceType& type) {
+  double PlanarSurface::filmResistance(openstudio::model::FilmResistanceType type) {
     // assumes suface emmittance of 0.90
     switch (type.value()) {
       case FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsUpward:

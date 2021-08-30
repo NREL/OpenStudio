@@ -162,7 +162,7 @@ namespace detail {
     void setCompletedAt(const DateTime& dateTime);
     void resetCompletedAt();
 
-    bool setMeasureType(const MeasureType& measureType);
+    bool setMeasureType(openstudio::MeasureType measureType);
     void resetMeasureType();
 
     bool setMeasureName(const std::string& name);
@@ -195,7 +195,7 @@ namespace detail {
     bool setMeasureTaxonomy(const std::string& taxonomy);
     void resetMeasureTaxonomy();
 
-    void setStepResult(const StepResult& result);
+    void setStepResult(openstudio::StepResult result);
     void resetStepResult();
 
     void setStepInitialCondition(const std::string& initialCondition);

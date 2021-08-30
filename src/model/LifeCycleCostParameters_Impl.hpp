@@ -197,7 +197,7 @@ namespace model {
       /// This cannot be set when analysis type is FEMP or when inflation approach is "ConstantDollar"
       bool setInflation(double inflation);
 
-      bool setBaseDateMonth(const MonthOfYear& baseDateMonth);
+      bool setBaseDateMonth(openstudio::MonthOfYear baseDateMonth);
 
       void resetBaseDateMonth();
 
@@ -205,7 +205,7 @@ namespace model {
 
       void resetBaseDateYear();
 
-      bool setServiceDateMonth(const MonthOfYear& serviceDateMonth);
+      bool setServiceDateMonth(openstudio::MonthOfYear serviceDateMonth);
 
       void resetServiceDateMonth();
 

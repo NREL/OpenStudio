@@ -141,15 +141,15 @@ class UTILITIES_API SqlFile
 
   /// Returns the annual total cost associated with the given fuel type in dollars.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> annualTotalCost(const FuelType& fuel) const;
+  boost::optional<double> annualTotalCost(openstudio::FuelType fuel) const;
 
   /// Returns the annual total cost per total building area associated with the given fuel type in dollars per square meter.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> annualTotalCostPerBldgArea(const FuelType& fuel) const;
+  boost::optional<double> annualTotalCostPerBldgArea(openstudio::FuelType fuel) const;
 
   /// Returns the annual total cost per net conditioned building area associated with the given fuel type in dollars per square meter.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const;
+  boost::optional<double> annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const;
 
   /// Returns the annual total cost for all fuel types in dollars. Requires EnergyPlus simulation output to calculate.
   boost::optional<double> annualTotalUtilityCost() const;
@@ -166,13 +166,13 @@ class UTILITIES_API SqlFile
 
   /// Returns the energy consumption for the given fuel type, category and month.
   /// Requires BUILDING ENERGY PERFORMANCE tabular report. Value is energy use in J.
-  boost::optional<double> energyConsumptionByMonth(const openstudio::EndUseFuelType& t_fuelType, const openstudio::EndUseCategoryType& t_categoryType,
-                                                   const openstudio::MonthOfYear& t_monthOfYear) const;
+  boost::optional<double> energyConsumptionByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                   openstudio::MonthOfYear t_monthOfYear) const;
 
   /// Returns the energy demand for the given fuel type, category and month.
   /// Requires BUILDING ENERGY PERFORMANCE tabular report. Value is energy use in W.
-  boost::optional<double> peakEnergyDemandByMonth(const openstudio::EndUseFuelType& t_fuelType, const openstudio::EndUseCategoryType& t_categoryType,
-                                                  const openstudio::MonthOfYear& t_monthOfYear) const;
+  boost::optional<double> peakEnergyDemandByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                  openstudio::MonthOfYear t_monthOfYear) const;
 
   /// Returns the electric energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
@@ -801,9 +801,9 @@ class UTILITIES_API SqlFile
   }
 
   void insertTimeSeriesData(const std::string& t_variableType, const std::string& t_indexGroup, const std::string& t_timestepType,
-                            const std::string& t_keyValue, const std::string& t_variableName,
-                            const openstudio::ReportingFrequency& t_reportingFrequency, const boost::optional<std::string>& t_scheduleName,
-                            const std::string& t_variableUnits, const openstudio::TimeSeries& t_timeSeries);
+                            const std::string& t_keyValue, const std::string& t_variableName, openstudio::ReportingFrequency t_reportingFrequency,
+                            const boost::optional<std::string>& t_scheduleName, const std::string& t_variableUnits,
+                            const openstudio::TimeSeries& t_timeSeries);
 
   //@}
   /** @name Operators */

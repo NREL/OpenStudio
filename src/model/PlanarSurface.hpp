@@ -136,7 +136,7 @@ namespace model {
 
     /** Film resistances from ASHRAE Fundamentals, Chapter 25, Table 1 for non-reflective surfaces.
    *  Units of m^2*K/W. */
-    static double filmResistance(const FilmResistanceType& type);
+    static double filmResistance(openstudio::model::FilmResistanceType type);
 
     /** Film resistance of still air on surface with tilt (rad). Horizontal roof has tilt of 0 rad;
    *  horizontal floor/slab has tilt of pi rad. */

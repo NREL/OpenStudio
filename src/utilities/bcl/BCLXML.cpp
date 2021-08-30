@@ -39,7 +39,7 @@
 
 namespace openstudio {
 
-BCLXML::BCLXML(const BCLXMLType& bclXMLType)
+BCLXML::BCLXML(openstudio::BCLXMLType bclXMLType)
   : m_bclXMLType(bclXMLType),
     m_uid{removeBraces(openstudio::createUUID())},
     m_versionId{removeBraces(openstudio::createUUID())},

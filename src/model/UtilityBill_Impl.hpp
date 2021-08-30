@@ -113,7 +113,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
+      bool setMeterInstallLocation(openstudio::InstallLocationType meterInstallLocation);
 
       void resetMeterInstallLocation();
 
@@ -121,7 +121,7 @@ namespace model {
 
       void resetMeterSpecificInstallLocation();
 
-      bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
+      bool setMeterEndUseCategory(openstudio::EndUseCategoryType meterEndUseCategory);
 
       void resetMeterEndUseCategory();
 

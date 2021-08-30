@@ -198,7 +198,7 @@ class UTILITIES_API BCLMeasure
   MeasureType measureType() const;
 
   /// Sets value of the "Measure Type" attribute
-  void setMeasureType(const MeasureType& measureType);
+  void setMeasureType(openstudio::MeasureType measureType);
 
   /// Returns values of any "Intended Software Tool" attributes
   std::vector<std::string> intendedSoftwareTools() const;
@@ -267,7 +267,7 @@ class UTILITIES_API BCLMeasure
 
   /// Update's the ruby measure script to have this new information
   // cppcheck-suppress functionConst
-  bool updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, const std::string& oldClassName,
+  bool updateMeasureScript(openstudio::MeasureType oldMeasureType, openstudio::MeasureType newMeasureType, const std::string& oldClassName,
                            const std::string& newClassName, const std::string& name, const std::string& description,
                            const std::string& modelerDescription);
 

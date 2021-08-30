@@ -101,7 +101,7 @@ namespace openstudio {
 namespace energyplus {
 
   /// test equality of coordinate systems
-  bool equal(const CoordinateSystem& left, const CoordinateSystem& right) {
+  bool equal(openstudio::energyplus::CoordinateSystem left, openstudio::energyplus::CoordinateSystem right) {
     bool result = false;
     switch (left.value()) {
       case CoordinateSystem::Absolute:
@@ -120,7 +120,8 @@ namespace energyplus {
   /// convert workspace to given coordinate systems
   /// all geometry will be converted to upper-left-corner, counterclockwise
   /// all simple geometry will be converted to detailed geometry
-  bool GeometryTranslator::convert(const CoordinateSystem& detailedSystem, const CoordinateSystem& daylightingSystem) {
+  bool GeometryTranslator::convert(openstudio::energyplus::CoordinateSystem detailedSystem,
+                                   openstudio::energyplus::CoordinateSystem daylightingSystem) {
     bool result = true;
 
     IddObjectTypeVector translatedTypes = {IddObjectType::Building,
@@ -308,9 +309,11 @@ namespace energyplus {
   }
 
   // set the GlobalGeometryRules, only changes the object does not transform geometry
-  bool GeometryTranslator::setGlobalGeometryRules(const StartingVertexPosition& svp, const VertexEntryDirection& ved,
-                                                  const CoordinateSystem& detailedSystem, const CoordinateSystem& daylightingSystem,
-                                                  const CoordinateSystem& rectangularSystem) {
+  bool GeometryTranslator::setGlobalGeometryRules(openstudio::energyplus::StartingVertexPosition svp,
+                                                  openstudio::energyplus::VertexEntryDirection ved,
+                                                  openstudio::energyplus::CoordinateSystem detailedSystem,
+                                                  openstudio::energyplus::CoordinateSystem daylightingSystem,
+                                                  openstudio::energyplus::CoordinateSystem rectangularSystem) {
     bool result = true;
 
     // get the GlobalGeometryRules
@@ -381,7 +384,7 @@ namespace energyplus {
   }
 
   // convert simple shading to detailed in the current system
-  bool GeometryTranslator::convertSimpleShading(const CoordinateChange& coordChange) {
+  bool GeometryTranslator::convertSimpleShading(openstudio::energyplus::CoordinateChange coordChange) {
     // building transformation
     Transformation buildingTransformation = this->buildingTransformation();
 
@@ -1374,7 +1377,7 @@ namespace energyplus {
   }
 
   // convert simple surfaces to detailed in the current system
-  bool GeometryTranslator::convertSimpleSurfaces(const CoordinateChange& coordChange) {
+  bool GeometryTranslator::convertSimpleSurfaces(openstudio::energyplus::CoordinateChange coordChange) {
 
     // building transformation
     Transformation buildingTransformation = this->buildingTransformation();
@@ -2303,7 +2306,7 @@ namespace energyplus {
   }
 
   // transform daylighting geometry from the current system to the new system
-  bool GeometryTranslator::convertDaylightingGeometry(const CoordinateChange& daylightingCoordChange) {
+  bool GeometryTranslator::convertDaylightingGeometry(openstudio::energyplus::CoordinateChange daylightingCoordChange) {
     bool result = true;
 
     Transformation buildingTransformation = this->buildingTransformation();
@@ -2399,7 +2402,7 @@ namespace energyplus {
   }
 
   // transform detailed geometry from the current system to the new system
-  bool GeometryTranslator::convertDetailedGeometry(const CoordinateChange& detailedCoordChange) {
+  bool GeometryTranslator::convertDetailedGeometry(openstudio::energyplus::CoordinateChange detailedCoordChange) {
     bool result = true;
 
     Transformation buildingTransformation = this->buildingTransformation();

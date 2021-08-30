@@ -115,11 +115,11 @@ namespace model {
 
     double getTemperatureByMonth(int month) const;
 
-    double getTemperatureByMonth(const openstudio::MonthOfYear& month) const;
+    double getTemperatureByMonth(openstudio::MonthOfYear month) const;
 
     bool isMonthDefaulted(int month) const;
 
-    bool isMonthDefaulted(const openstudio::MonthOfYear& month) const;
+    bool isMonthDefaulted(openstudio::MonthOfYear month) const;
 
     std::vector<double> getAllMonthlyTemperatures() const;
 
@@ -177,11 +177,11 @@ namespace model {
 
     bool setTemperatureByMonth(int month, double temperature);
 
-    bool setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature);
+    bool setTemperatureByMonth(openstudio::MonthOfYear month, double temperature);
 
     void resetTemperatureByMonth(int month);
 
-    void resetTemperatureByMonth(const openstudio::MonthOfYear& month);
+    void resetTemperatureByMonth(openstudio::MonthOfYear month);
 
     void resetAllMonths();
 

@@ -1667,7 +1667,7 @@ namespace detail {
     }  // end StrictnessLevel::Final
   }
 
-  std::vector<DataError> IdfObject_Impl::fieldDataIsValid(unsigned index, const StrictnessLevel& level) const {
+  std::vector<DataError> IdfObject_Impl::fieldDataIsValid(unsigned index, openstudio::StrictnessLevel level) const {
     DataErrorVector result;
 
     // StrictnessLevel::None

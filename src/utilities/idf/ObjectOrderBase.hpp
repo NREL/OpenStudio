@@ -119,19 +119,19 @@ class UTILITIES_API ObjectOrderBase
 
   /** Returns true if ordering by IddObjectType enum, or if ordering by user-specified
    *  IddObjectType order, and type is explicitly listed. */
-  bool inOrder(const IddObjectType& type) const;
+  bool inOrder(openstudio::IddObjectType type) const;
 
   /** Returns the index of type in IddObjectType order if ordering directly by enum, or by
    *  user-specified order. Otherwise, the return value evaluates to false. */
-  OptionalUnsigned indexInOrder(const IddObjectType& type) const;
+  OptionalUnsigned indexInOrder(openstudio::IddObjectType type) const;
 
  protected:
   bool m_orderByIddEnum;
   OptionalIddObjectTypeVector m_iddOrder;
 
   // HELPER FUNCTIONS
-  IddObjectTypeVector::iterator getIterator(const IddObjectType& type);
-  IddObjectTypeVector::const_iterator getIterator(const IddObjectType& type) const;
+  IddObjectTypeVector::iterator getIterator(openstudio::IddObjectType type);
+  IddObjectTypeVector::const_iterator getIterator(openstudio::IddObjectType type) const;
 
  private:
   REGISTER_LOGGER("utilities.idf.ObjectOrderBase");

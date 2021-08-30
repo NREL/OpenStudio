@@ -650,9 +650,8 @@ namespace detail {
 
   void SqlFile_Impl::insertTimeSeriesData(const std::string& t_variableType, const std::string& t_indexGroup, const std::string& t_timestepType,
                                           const std::string& t_keyValue, const std::string& t_variableName,
-                                          const openstudio::ReportingFrequency& t_reportingFrequency,
-                                          const boost::optional<std::string>& t_scheduleName, const std::string& t_variableUnits,
-                                          const openstudio::TimeSeries& t_timeSeries) {
+                                          openstudio::ReportingFrequency t_reportingFrequency, const boost::optional<std::string>& t_scheduleName,
+                                          const std::string& t_variableUnits, const openstudio::TimeSeries& t_timeSeries) {
     int datadicindex = getNextIndex("reportdatadictionary", "ReportDataDictionaryIndex");
 
     std::stringstream insertReportDataDictionary;
@@ -853,9 +852,8 @@ namespace detail {
     LOG(Debug, "Dictionary Built");
   }
 
-  boost::optional<double> SqlFile_Impl::energyConsumptionByMonth(const openstudio::EndUseFuelType& t_fuelType,
-                                                                 const openstudio::EndUseCategoryType& t_categoryType,
-                                                                 const openstudio::MonthOfYear& t_monthOfYear) const {
+  boost::optional<double> SqlFile_Impl::energyConsumptionByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                                 openstudio::MonthOfYear t_monthOfYear) const {
     // For backward compatibilty, we had to preserve enum valueNames (first param in enum, ((valueName)(valueDescription))
     // You need to be careful about what you are passing here... valueName or valueDescription
     const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription());
@@ -875,9 +873,8 @@ namespace detail {
     return execAndReturnFirstDouble(s, reportName, rowName, columnName);
   }
 
-  boost::optional<double> SqlFile_Impl::peakEnergyDemandByMonth(const openstudio::EndUseFuelType& t_fuelType,
-                                                                const openstudio::EndUseCategoryType& t_categoryType,
-                                                                const openstudio::MonthOfYear& t_monthOfYear) const {
+  boost::optional<double> SqlFile_Impl::peakEnergyDemandByMonth(openstudio::EndUseFuelType t_fuelType, openstudio::EndUseCategoryType t_categoryType,
+                                                                openstudio::MonthOfYear t_monthOfYear) const {
     const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription()) + " PEAK DEMAND";
     const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":"
                                    + boost::algorithm::to_upper_copy(boost::algorithm::erase_all_copy(t_fuelType.valueDescription(), " "))
@@ -998,7 +995,7 @@ namespace detail {
     return execAndReturnFirstDouble(s);
   }
 
-  OptionalDouble SqlFile_Impl::annualTotalCost(const FuelType& fuel) const {
+  OptionalDouble SqlFile_Impl::annualTotalCost(openstudio::FuelType fuel) const {
     if (fuel == FuelType::Electricity) {
       return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'Economics Results Summary Report') and "
                                       "(ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electricity') and "
@@ -1025,7 +1022,7 @@ namespace detail {
     }
   }
 
-  OptionalDouble SqlFile_Impl::annualTotalCostPerBldgArea(const FuelType& fuel) const {
+  OptionalDouble SqlFile_Impl::annualTotalCostPerBldgArea(openstudio::FuelType fuel) const {
     // Get the total building area
     boost::optional<double> totalBuildingArea = execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "
@@ -1043,7 +1040,7 @@ namespace detail {
     return costPerArea;
   }
 
-  OptionalDouble SqlFile_Impl::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const {
+  OptionalDouble SqlFile_Impl::annualTotalCostPerNetConditionedBldgArea(openstudio::FuelType fuel) const {
     // Get the total building area
     boost::optional<double> totalBuildingArea = execAndReturnFirstDouble(
       "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire "

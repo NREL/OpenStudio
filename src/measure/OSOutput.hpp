@@ -72,7 +72,7 @@ OPENSTUDIO_ENUM(OSOutputType,
     //@{
 
     OSOutput();
-    OSOutput(const std::string& name, const OSOutputType& type, bool modelDependent);
+    OSOutput(const std::string& name, openstudio::measure::OSOutputType type, bool modelDependent);
 
     //@}
 

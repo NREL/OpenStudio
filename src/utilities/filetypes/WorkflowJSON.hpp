@@ -230,10 +230,10 @@ class UTILITIES_API WorkflowJSON
   void resetWorkflowSteps();
 
   /** Gets measure steps by measure type. */
-  std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
+  std::vector<MeasureStep> getMeasureSteps(openstudio::MeasureType measureType) const;
 
   /** Sets measure steps of a given type. Does not change other measure steps. */
-  bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
+  bool setMeasureSteps(openstudio::MeasureType measureType, const std::vector<MeasureStep>& steps);
 
   /** Attempts to find the BCLMeasure for a given MeasureStep. */
   boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;

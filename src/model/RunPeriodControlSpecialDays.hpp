@@ -58,11 +58,11 @@ namespace model {
     RunPeriodControlSpecialDays(const std::string& startDate, Model& model);
 
     /** Constructor with month of year and day, e.g. Jan, 1. */
-    RunPeriodControlSpecialDays(const openstudio::MonthOfYear& monthOfYear, unsigned day, Model& model);
+    RunPeriodControlSpecialDays(openstudio::MonthOfYear monthOfYear, unsigned day, Model& model);
 
     /** Constructor from nth day in month, e.g. 1st Friday in January. */
-    RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                const openstudio::MonthOfYear& monthOfYear, Model& model);
+    RunPeriodControlSpecialDays(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear,
+                                Model& model);
 
     virtual ~RunPeriodControlSpecialDays() {}
 
@@ -87,8 +87,8 @@ namespace model {
     //@{
 
     bool setStartDate(const std::string& startDate);
-    bool setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
-    bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
+    bool setStartDate(openstudio::MonthOfYear monthOfYear, unsigned day);
+    bool setStartDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
     bool setDuration(unsigned duration);
     bool setSpecialDayType(const std::string& specialDayType);
 

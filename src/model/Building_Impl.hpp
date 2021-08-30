@@ -113,7 +113,7 @@ namespace model {
       bool relocatable() const;
       bool isRelocatableDefaulted() const;
 
-      boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+      boost::optional<Schedule> getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const;
 
       //@}
       /** @name Setters */

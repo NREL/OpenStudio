@@ -471,7 +471,7 @@ namespace detail {
     m_completedAt.reset();
   }
 
-  bool WorkflowStepResult_Impl::setMeasureType(const MeasureType& measureType) {
+  bool WorkflowStepResult_Impl::setMeasureType(openstudio::MeasureType measureType) {
     m_measureType = measureType;
     return true;
   }
@@ -570,7 +570,7 @@ namespace detail {
     m_measureTaxonomy.reset();
   }
 
-  void WorkflowStepResult_Impl::setStepResult(const StepResult& result) {
+  void WorkflowStepResult_Impl::setStepResult(openstudio::StepResult result) {
     m_stepResult = result;
   }
 
@@ -1077,7 +1077,7 @@ void WorkflowStepResult::resetCompletedAt() {
   getImpl<detail::WorkflowStepResult_Impl>()->resetCompletedAt();
 }
 
-bool WorkflowStepResult::setMeasureType(const MeasureType& measureType) {
+bool WorkflowStepResult::setMeasureType(openstudio::MeasureType measureType) {
   return getImpl<detail::WorkflowStepResult_Impl>()->setMeasureType(measureType);
 }
 
@@ -1165,7 +1165,7 @@ void WorkflowStepResult::resetMeasureTaxonomy() {
   getImpl<detail::WorkflowStepResult_Impl>()->resetMeasureTaxonomy();
 }
 
-void WorkflowStepResult::setStepResult(const StepResult& result) {
+void WorkflowStepResult::setStepResult(openstudio::StepResult result) {
   getImpl<detail::WorkflowStepResult_Impl>()->setStepResult(result);
 }
 

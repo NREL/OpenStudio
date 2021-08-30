@@ -411,7 +411,7 @@ namespace detail {
 
     virtual void populateValidityReport(ValidityReport& report, bool checkNames) const;
 
-    virtual std::vector<DataError> fieldDataIsValid(unsigned index, const StrictnessLevel& level) const;
+    virtual std::vector<DataError> fieldDataIsValid(unsigned index, openstudio::StrictnessLevel level) const;
 
     /** Checks Integer, Real and Choice fields. */
     virtual bool fieldDataIsCorrectType(unsigned index) const;

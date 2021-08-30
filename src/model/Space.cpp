@@ -614,7 +614,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_SpaceFields::DefaultScheduleSetName);
     }
 
-    boost::optional<Schedule> Space_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+    boost::optional<Schedule> Space_Impl::getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const {
       boost::optional<Schedule> result;
       boost::optional<DefaultScheduleSet> defaultScheduleSet;
       boost::optional<SpaceType> spaceType;
@@ -2903,7 +2903,7 @@ namespace model {
     return getImpl<detail::Space_Impl>()->defaultScheduleSet();
   }
 
-  boost::optional<Schedule> Space::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  boost::optional<Schedule> Space::getDefaultSchedule(openstudio::model::DefaultScheduleType defaultScheduleType) const {
     return getImpl<detail::Space_Impl>()->getDefaultSchedule(defaultScheduleType);
   }
 

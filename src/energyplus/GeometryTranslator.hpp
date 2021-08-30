@@ -81,7 +81,7 @@ namespace energyplus {
   // clang-format on
 
   /// test equality of coordinate systems
-  ENERGYPLUS_API bool equal(const CoordinateSystem& left, const CoordinateSystem& right);
+  ENERGYPLUS_API bool equal(openstudio::energyplus::CoordinateSystem left, openstudio::energyplus::CoordinateSystem right);
 
   /* Translates EnergyPlus simulation input geometry between various coordinate systems and
 *  changes simple geometry to detailed geometry.
@@ -99,7 +99,7 @@ namespace energyplus {
     /// convert workspace to given coordinate systems
     /// all geometry will be converted to upper-left-corner, counterclockwise
     /// all simple geometry will be converted to detailed geometry
-    bool convert(const CoordinateSystem& detailedSystem, const CoordinateSystem& daylightingSystem);
+    bool convert(openstudio::energyplus::CoordinateSystem detailedSystem, openstudio::energyplus::CoordinateSystem daylightingSystem);
 
    private:
     REGISTER_LOGGER("openstudio.energyplus.GeometryTranslator");
@@ -118,8 +118,9 @@ namespace energyplus {
     GlobalGeometryRules globalGeometryRules() const;
 
     // set the GlobalGeometryRules, only changes the object does not transform geometry
-    bool setGlobalGeometryRules(const StartingVertexPosition& svp, const VertexEntryDirection& ved, const CoordinateSystem& detailedSystem,
-                                const CoordinateSystem& daylightingSystem, const CoordinateSystem& rectangularSystem);
+    bool setGlobalGeometryRules(openstudio::energyplus::StartingVertexPosition svp, openstudio::energyplus::VertexEntryDirection ved,
+                                openstudio::energyplus::CoordinateSystem detailedSystem, openstudio::energyplus::CoordinateSystem daylightingSystem,
+                                openstudio::energyplus::CoordinateSystem rectangularSystem);
 
     // get the transformation from building to world
     Transformation buildingTransformation() const;
@@ -128,19 +129,19 @@ namespace energyplus {
     Transformation zoneTransformation(const WorkspaceObject& zone) const;
 
     // convert simple shading to detailed in the current system
-    bool convertSimpleShading(const CoordinateChange& coordChange);
+    bool convertSimpleShading(openstudio::energyplus::CoordinateChange coordChange);
 
     // convert simple subsurfaces to detailed in the current system
     bool convertSimpleSubSurfaces();
 
     // convert simple surfaces to detailed in the current system
-    bool convertSimpleSurfaces(const CoordinateChange& coordChange);
+    bool convertSimpleSurfaces(openstudio::energyplus::CoordinateChange coordChange);
 
     // convert daylighting geometry from the current system to the new system
-    bool convertDaylightingGeometry(const CoordinateChange& daylightingCoordChange);
+    bool convertDaylightingGeometry(openstudio::energyplus::CoordinateChange daylightingCoordChange);
 
     // convert detailed geometry from the current system to the new system
-    bool convertDetailedGeometry(const CoordinateChange& detailedCoordChange);
+    bool convertDetailedGeometry(openstudio::energyplus::CoordinateChange detailedCoordChange);
 
     // reverse all detailed vertices
     bool reverseAllDetailedVertices();

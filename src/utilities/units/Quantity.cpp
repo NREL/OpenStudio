@@ -44,9 +44,9 @@
 
 namespace openstudio {
 
-Quantity::Quantity(const UnitSystem& system) : m_value(0.0), m_units(createDimensionlessUnit(system)) {}
+Quantity::Quantity(openstudio::UnitSystem system) : m_value(0.0), m_units(createDimensionlessUnit(system)) {}
 
-Quantity::Quantity(double value, const UnitSystem& system) : m_value(value), m_units(createDimensionlessUnit(system)) {}
+Quantity::Quantity(double value, openstudio::UnitSystem system) : m_value(value), m_units(createDimensionlessUnit(system)) {}
 
 Quantity::Quantity(double value, const Unit& units) : m_value(value), m_units(units.clone()) {}
 

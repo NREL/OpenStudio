@@ -124,14 +124,14 @@ namespace model {
       return result;
     }
 
-    bool RunPeriodControlDaylightSavingTime_Impl::setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day) {
+    bool RunPeriodControlDaylightSavingTime_Impl::setStartDate(openstudio::MonthOfYear monthOfYear, unsigned day) {
       std::stringstream ss;
       ss << monthOfYear.value() << "/" << day;
       return setString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate, ss.str());
     }
 
-    bool RunPeriodControlDaylightSavingTime_Impl::setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                                               const openstudio::MonthOfYear& monthOfYear) {
+    bool RunPeriodControlDaylightSavingTime_Impl::setStartDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek,
+                                                               openstudio::MonthOfYear monthOfYear) {
       std::stringstream ss;
       switch (nth.value()) {
         case NthDayOfWeekInMonth::first:
@@ -166,14 +166,14 @@ namespace model {
       return result;
     }
 
-    bool RunPeriodControlDaylightSavingTime_Impl::setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day) {
+    bool RunPeriodControlDaylightSavingTime_Impl::setEndDate(openstudio::MonthOfYear monthOfYear, unsigned day) {
       std::stringstream ss;
       ss << monthOfYear.value() << "/" << day;
       return setString(OS_RunPeriodControl_DaylightSavingTimeFields::EndDate, ss.str());
     }
 
-    bool RunPeriodControlDaylightSavingTime_Impl::setEndDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                                             const openstudio::MonthOfYear& monthOfYear) {
+    bool RunPeriodControlDaylightSavingTime_Impl::setEndDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek,
+                                                             openstudio::MonthOfYear monthOfYear) {
       std::stringstream ss;
       switch (nth.value()) {
         case NthDayOfWeekInMonth::first:
@@ -309,12 +309,12 @@ namespace model {
     return getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->setStartDate(startDate);
   }
 
-  bool RunPeriodControlDaylightSavingTime::setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day) {
+  bool RunPeriodControlDaylightSavingTime::setStartDate(openstudio::MonthOfYear monthOfYear, unsigned day) {
     return getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->setStartDate(monthOfYear, day);
   }
 
-  bool RunPeriodControlDaylightSavingTime::setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                                        const openstudio::MonthOfYear& monthOfYear) {
+  bool RunPeriodControlDaylightSavingTime::setStartDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek,
+                                                        openstudio::MonthOfYear monthOfYear) {
     return getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->setStartDate(nth, dayOfWeek, monthOfYear);
   }
 
@@ -322,12 +322,12 @@ namespace model {
     return getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->setEndDate(endDate);
   }
 
-  bool RunPeriodControlDaylightSavingTime::setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day) {
+  bool RunPeriodControlDaylightSavingTime::setEndDate(openstudio::MonthOfYear monthOfYear, unsigned day) {
     return getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->setEndDate(monthOfYear, day);
   }
 
-  bool RunPeriodControlDaylightSavingTime::setEndDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                                                      const openstudio::MonthOfYear& monthOfYear) {
+  bool RunPeriodControlDaylightSavingTime::setEndDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek,
+                                                      openstudio::MonthOfYear monthOfYear) {
     return getImpl<detail::RunPeriodControlDaylightSavingTime_Impl>()->setEndDate(nth, dayOfWeek, monthOfYear);
   }
 

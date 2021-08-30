@@ -46,14 +46,14 @@ void assertKey(const Json::Value& value, const std::string& key) {
 }
 
 // assert type is correct if key is present
-void assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType) {
+void assertType(const Json::Value& value, const std::string& key, Json::ValueType valueType) {
   if (!checkType(value, key, valueType)) {
     throw openstudio::Exception(std::string("Key '" + key + "' is of wrong type"));
   }
 }
 
 // assert key is present and type is correct
-void assertKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType) {
+void assertKeyAndType(const Json::Value& value, const std::string& key, Json::ValueType valueType) {
   assertKey(value, key);
   assertType(value, key, valueType);
 }
@@ -67,7 +67,7 @@ bool checkKey(const Json::Value& value, const std::string& key) {
 }
 
 /// check type is correct if key is present, return false if type is not correct
-bool checkType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType) {
+bool checkType(const Json::Value& value, const std::string& key, Json::ValueType valueType) {
   if (value.isMember(key)) {
     if (!value[key].isConvertibleTo(valueType)) {
       return false;
@@ -82,7 +82,7 @@ bool checkType(const Json::Value& value, const std::string& key, const Json::Val
 }
 
 /// check key is present and type is correct, return false if key not found or type is not correct
-bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType) {
+bool checkKeyAndType(const Json::Value& value, const std::string& key, Json::ValueType valueType) {
   if (value.isMember(key)) {
     if (value[key].isConvertibleTo(valueType)) {
       if (value[key].isNull()) {

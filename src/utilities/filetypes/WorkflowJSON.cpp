@@ -627,7 +627,7 @@ namespace detail {
     OS_ASSERT(test);
   }
 
-  std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(const MeasureType& measureType) const {
+  std::vector<MeasureStep> WorkflowJSON_Impl::getMeasureSteps(openstudio::MeasureType measureType) const {
     std::vector<MeasureStep> result;
     size_t n = m_steps.size();
     OS_ASSERT(m_measureTypes.size() == n);
@@ -641,7 +641,7 @@ namespace detail {
     return result;
   }
 
-  bool WorkflowJSON_Impl::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps) {
+  bool WorkflowJSON_Impl::setMeasureSteps(openstudio::MeasureType measureType, const std::vector<MeasureStep>& steps) {
 
     // verify steps
     for (const auto& step : steps) {
@@ -1109,11 +1109,11 @@ void WorkflowJSON::resetWorkflowSteps() {
   getImpl<detail::WorkflowJSON_Impl>()->resetWorkflowSteps();
 }
 
-std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(const MeasureType& measureType) const {
+std::vector<MeasureStep> WorkflowJSON::getMeasureSteps(openstudio::MeasureType measureType) const {
   return getImpl<detail::WorkflowJSON_Impl>()->getMeasureSteps(measureType);
 }
 
-bool WorkflowJSON::setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps) {
+bool WorkflowJSON::setMeasureSteps(openstudio::MeasureType measureType, const std::vector<MeasureStep>& steps) {
   return getImpl<detail::WorkflowJSON_Impl>()->setMeasureSteps(measureType, steps);
 }
 

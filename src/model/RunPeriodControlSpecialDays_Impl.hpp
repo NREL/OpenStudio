@@ -63,9 +63,8 @@ namespace model {
       std::string specialDayType() const;
 
       bool setStartDate(const std::string& startDate);
-      bool setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
-      bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
-                        const openstudio::MonthOfYear& monthOfYear);
+      bool setStartDate(openstudio::MonthOfYear monthOfYear, unsigned day);
+      bool setStartDate(openstudio::NthDayOfWeekInMonth nth, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
       bool setDuration(unsigned duration);
       bool setSpecialDayType(const std::string& specialDayType);
 

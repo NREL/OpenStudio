@@ -56,7 +56,7 @@ FileReference::FileReference(const openstudio::path& p)
 /** De-serialization constructor. Not for general use. */
 FileReference::FileReference(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
                              const std::string& displayName, const std::string& description, const openstudio::path& p,
-                             const FileReferenceType& fileType, const DateTime& timestampLast, const std::string& checksumCreate,
+                             openstudio::FileReferenceType fileType, const DateTime& timestampLast, const std::string& checksumCreate,
                              const std::string& checksumLast)
   : m_uuid(uuid),
     m_versionUUID(versionUUID),

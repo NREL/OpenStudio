@@ -564,7 +564,7 @@ namespace measure {
     return result;
   }
 
-  bool OSArgument::setDomainType(const OSDomainType& domainType) {
+  bool OSArgument::setDomainType(openstudio::measure::OSDomainType domainType) {
     if (domainType != this->domainType()) {
       // check whether domainType makes sense for type()
       switch (domainType.value()) {
@@ -993,7 +993,7 @@ namespace measure {
 
   OSArgument::OSArgument() : m_uuid(createUUID()), m_versionUUID(createUUID()) {}
 
-  OSArgument::OSArgument(const std::string& name, const OSArgumentType& type, bool required, bool modelDependent)
+  OSArgument::OSArgument(const std::string& name, openstudio::measure::OSArgumentType type, bool required, bool modelDependent)
     : m_uuid(createUUID()),
       m_versionUUID(createUUID()),
       m_name(name),
@@ -1007,7 +1007,7 @@ namespace measure {
     m_versionUUID = createUUID();
   }
 
-  OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name, const IddObjectType& iddObjectType, const Workspace& workspace,
+  OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name, openstudio::IddObjectType iddObjectType, const Workspace& workspace,
                                                   bool required) {
     std::vector<std::pair<std::string, std::string>> intermediate;
 

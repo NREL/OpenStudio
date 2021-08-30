@@ -42,9 +42,9 @@ namespace measure {
 
   OSMeasureInfo::OSMeasureInfo(const std::string& error) : m_error(error) {}
 
-  OSMeasureInfo::OSMeasureInfo(const MeasureType& measureType, const std::string& className, const std::string& name, const std::string& description,
-                               const std::string& taxonomy, const std::string& modelerDescription, const std::vector<OSArgument>& arguments,
-                               const std::vector<OSOutput>& outputs)
+  OSMeasureInfo::OSMeasureInfo(openstudio::MeasureType measureType, const std::string& className, const std::string& name,
+                               const std::string& description, const std::string& taxonomy, const std::string& modelerDescription,
+                               const std::vector<OSArgument>& arguments, const std::vector<OSOutput>& outputs)
     : m_measureType(measureType),
       m_className(className),
       m_name(name),

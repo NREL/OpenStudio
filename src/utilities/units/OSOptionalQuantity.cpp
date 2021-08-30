@@ -36,7 +36,7 @@
 
 namespace openstudio {
 
-OSOptionalQuantity::OSOptionalQuantity(const UnitSystem& sys) {
+OSOptionalQuantity::OSOptionalQuantity(openstudio::UnitSystem sys) {
   Quantity q(sys);
   m_units = q.units();
 }
