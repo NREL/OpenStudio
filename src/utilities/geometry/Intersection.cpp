@@ -505,6 +505,32 @@ std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double to
   return result;
 }
 
+bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& polygon, double tol) {
+
+  // convert vertices to boost rings
+  std::vector<Point3d> allPoints;
+
+  boost::optional<BoostRing> boostPolygon = nonIntersectingBoostRingFromVertices(polygon, allPoints, tol);
+  if (!boostPolygon) {
+    return false;
+  }
+
+  if (points.size() == 0) return false;
+  for (const Point3d& point : points) {
+    if (abs(point.z()) > tol) {
+      return false;
+    }
+  }
+
+  for (const Point3d& point : points) {
+    boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
+    BoostPoint boostPoint(p.get<0>(), p.get<1>());
+    double distance = boost::geometry::distance(boostPoint, *boostPolygon);
+    if (distance >= 0.0001) return false;
+  }
+  return true;
+}
+
 bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol) {
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;

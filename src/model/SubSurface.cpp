@@ -1597,38 +1597,35 @@ namespace model {
     removeAllShadingControls();
   }
 
-  double SubSurface::totalArea() const {
-
-    double area = grossArea();
-    
+  std::vector<Point3d> SubSurface::roughOpening() const {
     auto frameAndDivider = windowPropertyFrameAndDivider();
     if (frameAndDivider) {
-        // Get the frame width (the amount to osset by)
       double fw = frameAndDivider->frameWidth();
       // Get a transform to change the points to x/y
       Transformation faceTransform = Transformation::alignFace(this->vertices());
-      Transformation faceTransformInverse = faceTransform.inverse();
-      std::vector<Point3d> faceVertices = faceTransformInverse * this->vertices();
+      std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();
       // Offset the points by the framewidth
       boost::optional<std::vector<Point3d>> offset = openstudio::buffer(faceVertices, fw, 0.01);
       if (!offset) {
-          // If offset faile dit is because the points are in the wrong order
-          // If it fails again then something went awry with boost::buffer
+        // If offset failed it is because the points are in the wrong order
+        // If it fails again then something went awry with boost::buffer
         faceVertices = openstudio::reverse(faceVertices);
         offset = openstudio::buffer(faceVertices, fw, 0.01);
-      }
-
-      // If the offset worked get the offset area - this is the total area of the sub surface
-      // including the frame
-      if (offset) {
-        boost::optional<double> offsetArea = openstudio::getArea(*offset);
-        if (offsetArea) {
-          area = *offsetArea;
-        }
+        std::vector<Point3d>roughOpeningVertices = faceTransform * offset.get();
+        return roughOpeningVertices;
       }
     }
 
-    return area;
+    return this->vertices();
+  }
+
+  double SubSurface::roughOpeningArea() const {
+
+    boost::optional<double> area = openstudio::getArea(roughOpening());
+    if (area)
+      return *area;
+    else
+      return grossArea();
   }
   /// @endcond
 

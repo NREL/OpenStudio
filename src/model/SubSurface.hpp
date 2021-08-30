@@ -264,7 +264,10 @@ namespace model {
     boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
     /* Get the total area of the sub surface including frame and divider area */
-    double totalArea() const;
+    double roughOpeningArea() const;
+
+    /* Get the rough opening vertices for the subsurface */
+    std::vector<Point3d> roughOpening() const;
 
     // DLM: todo add methods to create light shelves by projection factor
 

@@ -1443,13 +1443,98 @@ namespace model {
       double windowArea = 0.0;
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          windowArea += subSurface.multiplier() * subSurface.totalArea();
+          windowArea += subSurface.multiplier() * subSurface.roughOpeningArea();
         }
       }
 
-      double wwr = windowArea / grossArea;
+      double roughOpeningArea = totalAreaOfSubSurfaces();
+      double wwr = roughOpeningArea / grossArea;
 
       return wwr;
+    }
+
+    // Calcuklates and returns the toital area of the subsurfaces
+    // If any subsrface extends outside the parent surface or overlaps an adjacent subsurface
+    // then that subsurface's vertices rather than rough opening vertioces are used to calculate the area
+    // NOTE: I'm starting to think a better way to do this would be to use polygon booleans
+    // 1 - Intersect the subsurface rough opening with the parent surface to get the area inside the parent surface
+    // 1 - Add all the subsurface rough openings together (so overlap areas dont count twice)
+    double Surface_Impl::totalAreaOfSubSurfaces() const {
+      double tol = 0.01;
+      // iterate over all sub surfaces
+      // make a map of sub surface/roughOpening vertices (flattened)
+      // iterate over map
+      // check each subsurface for overlap with parent and not overlap with sibling
+      // if either fails, replace roughOpening vertices with original vertices
+      // Add up all the openign areas
+
+      // Records the rough opening of each sub surface
+      std::map<SubSurface, Point3dVector> roughOpenings;
+      // Get the flattened parent surface vertices
+      Transformation parentToXY = Transformation::alignFace(this->vertices());
+      std::vector<Point3d> parentVertices = parentToXY.inverse() * this->vertices();
+      // Make sure the parent surface is oriented clockwise
+      auto norm = openstudio::getOutwardNormal(parentVertices);
+      if (norm && norm->z() > 0) {
+        std::reverse(parentVertices.begin(), parentVertices.end());
+      }
+
+      // Get the flattened sub surface vertices for windows
+      for (const SubSurface& subSurface : this->subSurfaces()) {
+        if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
+          auto opening = parentToXY.inverse() * subSurface.roughOpening();
+          auto norm = openstudio::getOutwardNormal(opening);
+          if (norm && norm->z() > 0) {
+            std::reverse(opening.begin(), opening.end());
+          }
+          roughOpenings[subSurface] = opening;
+        }
+      }
+
+      // Check each rough opening against the parent surface, if any vertices are outside
+      // the parent surfave then revert back to the original vertices
+      for (const auto& opening : roughOpenings) {
+        const SubSurface& subSurface = opening.first;
+        std::vector<Point3d> vertices = opening.second;
+
+        if (!openstudio::polygonInPolygon(vertices, parentVertices, tol)) {
+          // One or more vertices not within the parent surface so replace with the original vertices
+          auto vertices = parentToXY * subSurface.vertices();
+          auto norm = openstudio::getOutwardNormal(vertices);
+          if (norm && norm->z() > 0) {
+            std::reverse(vertices.begin(), vertices.end());
+          }
+          roughOpenings[subSurface] = vertices;
+          break;
+        }
+      }
+
+      // Check subsurfaces for overlaps
+      // (if I knew how I'd order themn left to right in x then we could test adjacent ones only)
+      for (const auto& opening1 : roughOpenings) {
+        for (const auto& opening2 : roughOpenings) {
+          if (opening1 == opening2) continue;
+
+          auto result = openstudio::intersect(opening1.second, opening2.second, tol);
+          if (result) {
+            //There's an overlap so swap out the overlapped vertices for the original
+            auto vertices = parentToXY * opening1.first.vertices();
+            auto norm = openstudio::getOutwardNormal(vertices);
+            if (norm && norm->z() > 0) {
+              std::reverse(vertices.begin(), vertices.end());
+            }
+            roughOpenings[opening1.first] = vertices;
+          }
+        }
+      }
+
+      // Accumulate the areas
+      double area = 0;
+      for (const auto& opening : roughOpenings) {
+        area += openstudio::getArea(opening.second).value();
+      }
+
+      return area;
     }
 
     double Surface_Impl::skylightToRoofRatio() const {
