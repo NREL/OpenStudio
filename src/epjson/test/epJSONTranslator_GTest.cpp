@@ -43,6 +43,8 @@
 
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/Filesystem.hpp"
+#include "../../utilities/core/Exception.hpp"
 
 #include <utilities/idd/GroundHeatExchanger_ResponseFactors_FieldEnums.hxx>
 #include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
@@ -64,12 +66,21 @@ openstudio::path setupIdftoEPJSONTest(const openstudio::path& location) {
 
 Json::Value translateIdfToEPJSONWithEP(const openstudio::path& location) {
 
-  [[maybe_unused]] auto result =
-    std::system(fmt::format("{} --output-directory {} --convert-only {}", openstudio::toString(openstudio::getEnergyPlusExecutable().native()),
-                            openstudio::toString(location.parent_path().native()), openstudio::toString(location.native()))
-                  .c_str());
-
+  // In case for some reason the energyplus CLI cannot do the conversion, we do not want to pick up an old artifact
   const auto epJSONFile = openstudio::setFileExtension(location, "epJSON", true);
+  if (openstudio::filesystem::exists(epJSONFile)) {
+    openstudio::filesystem::remove(epJSONFile);
+  }
+
+  std::string cmd = fmt::format("{} --output-directory {} --convert-only {}", openstudio::toString(openstudio::getEnergyPlusExecutable().native()),
+                                openstudio::toString(location.parent_path().native()), openstudio::toString(location.native()));
+
+  [[maybe_unused]] auto result = std::system(cmd.c_str());
+  if (!openstudio::filesystem::exists(epJSONFile)) {
+    throw openstudio::Exception(
+      fmt::format("Error during the E+ CLI call, epJSON wasn't created at {}\ncmd = '{}'\n", openstudio::toString(epJSONFile), cmd));
+  }
+
   const auto root = openstudio::epJSON::loadJSON(epJSONFile);
 
   const auto outputLocation = location.parent_path() / openstudio::toPath("eplus-rewritten.epJSON");
