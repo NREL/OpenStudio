@@ -107,7 +107,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingSystem) {
   EXPECT_EQ("Autosize", idf_ss.getString(Sizing_SystemFields::OccupantDiversity, false).get());
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_SizingSystem) {
+TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_SizingSystem) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   // air loop hvac
