@@ -56,6 +56,8 @@
 #include "../../model/SubSurface_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../../utilities/geometry/BoundingBox.hpp"
+#include "../../utilities/geometry/geometry.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
@@ -76,8 +78,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH) {
   //openstudio::Logger::instance().standardOutLogger().enable();
   //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
 
-  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
-  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/ZNETH2.xml");
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
+  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018_2.xml");
 
   openstudio::gbxml::ReverseTranslator reverseTranslator;
   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
@@ -95,6 +97,37 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH) {
         EXPECT_TRUE(object.additionalProperties().hasFeature("CADObjectId")) << object;
       }
       EXPECT_TRUE(object.additionalProperties().hasFeature("gbXMLId")) << object;
+    }
+  }
+
+   auto spaces = model->getConcreteModelObjects<model::Space>();
+  for (auto space : spaces) {
+     std::string name = *space.name();
+     if (*space.name() == "00 Plenum" || *space.name() == "316 LivingKitchen") {
+       int i = 1;
+     }
+    auto bounds = space.boundingBox();
+    double minz = bounds.minZ().value();
+    double maxz = bounds.maxZ().value();
+    auto surfaces = space.surfaces();
+    for (auto surface : surfaces) {
+      std::string surfName = *surface.name();
+      if (surfName == "T-00-316-I-F-32") {
+        int i = 1;
+      }
+      auto stype = surface.surfaceType();
+      auto surfaceZ = surface.vertices()[0].z();
+      if (stype == "Floor") {
+        double v1 = std::abs(surfaceZ - minz);
+        double v2 = std::abs(surfaceZ - maxz);
+        EXPECT_TRUE(std::abs(surfaceZ - minz) < std::abs(surfaceZ - maxz));
+        auto norm = openstudio::getOutwardNormal(surface.vertices());
+        EXPECT_TRUE(norm->z() > 0);
+      } else if (stype == "RoofCeiling") {
+        EXPECT_TRUE(std::abs(surfaceZ - maxz) < std::abs(surfaceZ - minz));
+        auto norm = openstudio::getOutwardNormal(surface.vertices());
+        EXPECT_TRUE(norm->z() < 0);
+      }
     }
   }
 
@@ -117,6 +150,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH) {
   openstudio::gbxml::ForwardTranslator forwardTranslator;
   bool test = forwardTranslator.modelToGbXML(*model, outputPath);
   EXPECT_TRUE(test);
+
 }
 
 TEST_F(gbXMLFixture, ReverseTranslator_Constructions) {
@@ -588,5 +622,48 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
     EXPECT_EQ("storey-1-space-1", _space->nameString());
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
+  }
+}
+
+TEST_F(gbXMLFixture, Issue_4375) {
+  //openstudio::Logger::instance().standardOutLogger().enable();
+  //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
+  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018_2.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  auto spaces = model->getConcreteModelObjects<model::Space>();
+  for (auto space : spaces) {
+    std::string name = *space.name();
+    if (*space.name() == "00 Plenum" || *space.name() == "316 LivingKitchen") {
+      int i = 1;
+    }
+    auto bounds = space.boundingBox();
+    double minz = bounds.minZ().value();
+    double maxz = bounds.maxZ().value();
+    auto surfaces = space.surfaces();
+    for (auto surface : surfaces) {
+      std::string surfName = *surface.name();
+      if (surfName == "T-00-316-I-F-32") {
+        int i = 1;
+      }
+      auto stype = surface.surfaceType();
+      auto surfaceZ = surface.vertices()[0].z();
+      if (stype == "Floor") {
+        double v1 = std::abs(surfaceZ - minz);
+        double v2 = std::abs(surfaceZ - maxz);
+        EXPECT_TRUE(std::abs(surfaceZ - minz) < std::abs(surfaceZ - maxz));
+        auto norm = openstudio::getOutwardNormal(surface.vertices());
+        EXPECT_TRUE(norm->z() > 0);
+      } else if (stype == "RoofCeiling") {
+        EXPECT_TRUE(std::abs(surfaceZ - maxz) < std::abs(surfaceZ - minz));
+        auto norm = openstudio::getOutwardNormal(surface.vertices());
+        EXPECT_TRUE(norm->z() < 0);
+      }
+    }
   }
 }

@@ -109,7 +109,7 @@ namespace gbxml {
     if (openstudio::filesystem::exists(path)) {
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
-      if (file.is_open()) {
+      if (file.is_open()) {  
         pugi::xml_document doc;
         auto load_result = doc.load(file);
         if (load_result) {
