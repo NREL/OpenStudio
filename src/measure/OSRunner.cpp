@@ -605,6 +605,20 @@ namespace measure {
     return false;
   }
 
+  boost::optional<bool> OSRunner::getOptionalBoolArgumentValue(const std::string& argument_name,
+                                                               const std::map<std::string, OSArgument>& user_arguments) {
+    auto it = user_arguments.find(argument_name);
+    if (it != user_arguments.end()) {
+      if (it->second.hasValue()) {
+        return it->second.valueAsBool();
+      } else if (it->second.hasDefaultValue()) {
+        return it->second.defaultValueAsBool();
+      }
+    }
+
+    return boost::none;
+  }
+
   double OSRunner::getDoubleArgumentValue(const std::string& argument_name, const std::map<std::string, OSArgument>& user_arguments) {
     std::stringstream ss;
 
