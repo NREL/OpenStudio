@@ -184,7 +184,6 @@ TEST_F(EnergyPlusFixture, Issue_4361) {
 
   windowWallRatio = surface.windowToWallRatio();
   EXPECT_NEAR(windowWallRatio, 0.28, 0.01);
-
 }
 TEST_F(EnergyPlusFixture, Issue_4361_Subsurface_Outside_Parent) {
   Model model;

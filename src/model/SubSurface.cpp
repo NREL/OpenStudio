@@ -1611,7 +1611,7 @@ namespace model {
         // If it fails again then something went awry with boost::buffer
         faceVertices = openstudio::reverse(faceVertices);
         offset = openstudio::buffer(faceVertices, fw, 0.01);
-        std::vector<Point3d>roughOpeningVertices = faceTransform * offset.get();
+        std::vector<Point3d> roughOpeningVertices = faceTransform * offset.get();
         return roughOpeningVertices;
       }
     }
