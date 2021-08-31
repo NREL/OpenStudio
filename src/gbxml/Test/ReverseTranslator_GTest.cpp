@@ -650,7 +650,7 @@ TEST_F(gbXMLFixture, Issue_4375) {
       std::string surfName = *surface.name();
       if (surfName == "T-00-316-I-F-32") {
         int i = 1;
-      }
+      } 
       auto stype = surface.surfaceType();
       auto surfaceZ = surface.vertices()[0].z();
       if (stype == "Floor") {
@@ -658,11 +658,11 @@ TEST_F(gbXMLFixture, Issue_4375) {
         double v2 = std::abs(surfaceZ - maxz);
         EXPECT_TRUE(std::abs(surfaceZ - minz) < std::abs(surfaceZ - maxz));
         auto norm = openstudio::getOutwardNormal(surface.vertices());
-        EXPECT_TRUE(norm->z() > 0);
+        EXPECT_TRUE(norm->z() < 0);
       } else if (stype == "RoofCeiling") {
         EXPECT_TRUE(std::abs(surfaceZ - maxz) < std::abs(surfaceZ - minz));
         auto norm = openstudio::getOutwardNormal(surface.vertices());
-        EXPECT_TRUE(norm->z() < 0);
+        EXPECT_TRUE(norm->z() > 0);
       }
     }
   }
