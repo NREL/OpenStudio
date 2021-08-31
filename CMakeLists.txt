@@ -279,6 +279,13 @@ endif()
 
 # Enable runtime checking features
 if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+
+  option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" OFF)
+  if(ENABLE_COVERAGE)
+    add_definitions(--coverage -O0 -g)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} --coverage")
+  endif()
+
   option(ENABLE_THREAD_SANITIZER "Enable thread sanitizer testing in gcc/clang" OFF)
   if(ENABLE_THREAD_SANITIZER)
     add_definitions(-fsanitize=thread -g)
@@ -302,7 +309,7 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
 
 
-  mark_as_advanced(ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER)
+  mark_as_advanced(ENABLE_COVERAGE ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER)
 
 endif()
 
