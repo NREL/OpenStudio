@@ -114,7 +114,6 @@ namespace model {
 
     bool CurveFunctionalPressureDrop_Impl::setDiameter(double diameter) {
       bool result = setDouble(OS_Curve_Functional_PressureDropFields::Diameter, diameter);
-      OS_ASSERT(result);
       return result;
     }
 
