@@ -118,10 +118,10 @@
   %ignore openstudio::Workspace::disconnectProgressBar(openstudio::ProgressBar&);
 
   // In all of these, progressBar is an optional argument, which translates to two overloads (one with the arg, one without) so we ignore that overload with the arg
-  %ignore openstudio::IdfFile::load(std::istream&, const IddFileType&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(std::istream&, openstudio::IddFileType, ProgressBar*);
   %ignore openstudio::IdfFile::load(std::istream&, const IddFile&, ProgressBar*);
   %ignore openstudio::IdfFile::load(const path&, ProgressBar*);
-  %ignore openstudio::IdfFile::load(const path&, const IddFileType&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(const path&, openstudio::IddFileType, ProgressBar*);
   %ignore openstudio::IdfFile::load(const path&, const IddFile&, ProgressBar*);
 
 #endif
