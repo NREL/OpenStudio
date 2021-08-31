@@ -124,7 +124,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::MinorLossCoefficient, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 
@@ -140,7 +139,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::Length, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 
@@ -156,7 +154,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::Roughness, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 
@@ -172,7 +169,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::FixedFrictionFactor, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 
