@@ -3746,12 +3746,12 @@ TEST_F(ModelFixture, Issue_4374) {
   // Subdiuvide the wall surface
   auto surfaces = wall.splitSurfaceForSubSurfaces();
   surfaces.push_back(wall);
-  
+
   // Result should be four new surfaces plus the original surface
   EXPECT_EQ(surfaces.size(), 5);
 
   // Chekc the surfaces
-  for (auto surface:surfaces) {
+  for (auto surface : surfaces) {
     std::string surfName = *surface.name();
     std::string surfType = surface.surfaceType();
     auto vertices = surface.vertices();

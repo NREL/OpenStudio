@@ -86,8 +86,6 @@
 
 #include "../utilities/sql/SqlFile.hpp"
 
-
-
 using boost::to_upper_copy;
 
 namespace openstudio {
