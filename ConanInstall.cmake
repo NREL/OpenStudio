@@ -102,7 +102,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right
     # Now that we pin dependencies, there is no point looking upstream really, so we'll save valuable configuration time by not doing it
-    #UPDATE
+    UPDATE
   )
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
