@@ -39,7 +39,6 @@ TEST_F(ModelFixture, CurveFunctionalPressureDrop_GettersSetters) {
   Model m;
 
   CurveFunctionalPressureDrop curveFunctionalPressureDrop(m);
-
   curveFunctionalPressureDrop.setName("My CurveFunctionalPressureDrop");
 
   // Diameter: Required Double
@@ -96,4 +95,7 @@ TEST_F(ModelFixture, CurveFunctionalPressureDrop_GettersSetters) {
   // reset
   curveFunctionalPressureDrop.resetFixedFrictionFactor();
   EXPECT_FALSE(curveFunctionalPressureDrop.fixedFrictionFactor());
+
+  EXPECT_ANY_THROW(curveFunctionalPressureDrop.numVariables());
+  EXPECT_ANY_THROW(curveFunctionalPressureDrop.evaluate(10));
 }
