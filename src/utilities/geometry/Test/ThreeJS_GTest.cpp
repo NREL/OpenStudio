@@ -58,11 +58,11 @@ TEST_F(GeometryFixture, ThreeJS) {
   }
 
   // checking metadata
-  bool alhvac_metadata_found = false;
-  for (const ThreeModelObjectMetadata metadata : scene->metadata().modelObjectMetadata()) {
-    alhvac_metadata_found |= istringEqual("OS:AirLoopHVAC", metadata.iddObjectType()) && istringEqual("Air Loop HVAC 1", metadata.name());
-  }
-  ASSERT_TRUE(alhvac_metadata_found);
+  std::vector<ThreeModelObjectMetadata> metadatas = scene->metadata().modelObjectMetadata();
+  EXPECT_TRUE(std::any_of(metadatas.cbegin(), metadatas.cend(), [](const auto& metadata) {
+      return istringEqual("OS:AirLoopHVAC", metadata.iddObjectType()) && istringEqual("Air Loop HVAC 1", metadata.name());
+    })
+  );
 
   scene = ThreeScene::load(toString(p));
   ASSERT_TRUE(scene);
