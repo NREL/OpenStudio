@@ -53,7 +53,7 @@ TEST_F(GeometryFixture, ThreeJS) {
 
   // checking user data
   std::vector<ThreeSceneChild> sceneChildren = scene->object().children();
-  for (const ThreeSceneChild sceneChild : sceneChildren) {
+  for (const ThreeSceneChild& sceneChild : sceneChildren) {
     EXPECT_DOUBLE_EQ(1, sceneChild.userData().airLoopHVACNames().size());
   }
 
