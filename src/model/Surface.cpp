@@ -86,6 +86,8 @@
 
 #include "../utilities/sql/SqlFile.hpp"
 
+
+
 using boost::to_upper_copy;
 
 namespace openstudio {
@@ -1761,9 +1763,10 @@ namespace model {
 
         std::vector<Point3dVector> tmpFaces;
         unsigned numIntersects = 0;
-        for (const Point3dVector& face : newFaces) {
+        for (const Point3dVector& newFace : newFaces) {
           // each mask should intersect one and only one newFace
-          boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, mask, tol);
+          boost::optional<IntersectionResult> intersection = openstudio::intersect(newFace, mask, tol);
+
           if (intersection) {
             numIntersects += 1;
             tmpFaces.push_back(intersection->polygon1());
@@ -1771,7 +1774,7 @@ namespace model {
               tmpFaces.push_back(tmpFace);
             }
           } else {
-            tmpFaces.push_back(face);
+            tmpFaces.push_back(newFace);
           }
         }
 
@@ -1787,7 +1790,7 @@ namespace model {
       // sort new faces in descending order by area
       std::sort(newFaces.begin(), newFaces.end(), PolygonAreaGreater());
 
-      // loop over all new faces
+      // loop over all new faces to create new Surfaces
       bool changedThis = false;
       unsigned numReparented = 0;
       Model model = this->model();
@@ -1795,9 +1798,11 @@ namespace model {
 
         boost::optional<Surface> surface;
         if (!changedThis) {
+          // Re-use the original surface
           changedThis = true;
           surface = getObject<Surface>();
         } else {
+          // Create new surfaces
           boost::optional<ModelObject> object = this->clone(model);
           OS_ASSERT(object);
           surface = object->optionalCast<Surface>();
