@@ -902,7 +902,7 @@ namespace model {
 
   }  // namespace detail
 
-  TableMultiVariableLookup::TableMultiVariableLookup(const Model& model, const int& numberofIndependentVariables)
+  TableMultiVariableLookup::TableMultiVariableLookup(const Model& model, int numberofIndependentVariables)
     : Curve(TableMultiVariableLookup::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableMultiVariableLookup_Impl>());
 

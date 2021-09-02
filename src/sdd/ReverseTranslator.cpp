@@ -1977,7 +1977,7 @@ namespace sdd {
 
   //TODO probably should be in OS proper
   //helper method to do unit conversions;
-  boost::optional<double> ReverseTranslator::unitToUnit(const double& val, const std::string& fstUnitString, const std::string& secUnitString) {
+  boost::optional<double> ReverseTranslator::unitToUnit(double val, const std::string& fstUnitString, const std::string& secUnitString) {
     //create the units from the strings
     boost::optional<Unit> fstUnit = UnitFactory::instance().createUnit(fstUnitString);
     boost::optional<Unit> secUnit = UnitFactory::instance().createUnit(secUnitString);
