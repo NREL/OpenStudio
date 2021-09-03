@@ -40,6 +40,7 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
+#include <utilities/idd/Space_FieldEnums.hxx>
 #include <utilities/idd/SpaceList_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
