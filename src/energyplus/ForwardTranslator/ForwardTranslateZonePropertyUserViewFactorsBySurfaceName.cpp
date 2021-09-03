@@ -77,6 +77,11 @@ namespace energyplus {
     m_idfObjects.push_back(spaceListIdf);
     std::vector<Space> spaces = zone.spaces();
     for (const Space& space : spaces) {
+      IdfObject spaceIdf(IddObjectType::Space);
+      spaceIdf.setName(space.name().get());
+      spaceIdf.setString(SpaceFields::ZoneName, zone.name().get());
+      m_idfObjects.push_back(spaceIdf);
+
       auto eg = spaceListIdf.pushExtensibleGroup();
       eg.setString(SpaceListExtensibleFields::SpaceName, space.name().get());
     }
