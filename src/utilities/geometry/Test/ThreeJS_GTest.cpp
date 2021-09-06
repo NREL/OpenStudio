@@ -54,7 +54,7 @@ TEST_F(GeometryFixture, ThreeJS) {
   // checking user data
   std::vector<ThreeSceneChild> sceneChildren = scene->object().children();
   for (const ThreeSceneChild& sceneChild : sceneChildren) {
-    EXPECT_DOUBLE_EQ(1, double(sceneChild.userData().airLoopHVACNames().size()));
+    EXPECT_EQ(1, sceneChild.userData().airLoopHVACNames().size());
   }
 
   // checking metadata
