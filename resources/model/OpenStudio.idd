@@ -532,6 +532,7 @@ OS:PerformancePrecisionTradeoffs,
       \key Mode05
       \key Mode06
       \key Mode07
+      \key Mode08
       \key Advanced
       \default Normal
   N1, \field MaxZoneTempDiff
@@ -19094,7 +19095,8 @@ OS:Controller:MechanicalVentilation,
   A5, \field System Outdoor Air Method
        \type choice
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedureWithLimit
        \key IndoorAirQualityProcedure
        \key ProportionalControl
        \key ProportionalControlBasedOnOccupancySchedule
