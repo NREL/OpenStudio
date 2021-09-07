@@ -75,7 +75,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space) {
   space2.setThermalZone(thermalZone);
 
   workspace = ft.translateModel(model);
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ComponentCost_LineItem).size());
+
+  WorkspaceObjectVector idf_spaces(workspace.getObjectsByType(IddObjectType::Spaces));
+  EXPECT_EQ(2u, idf_spaces.size());
+  WorkspaceObject idf_space1(idf_spaces[0]);
+  WorkspaceObject idf_space2(idf_spaces[1]);
+
+  boost::optional<WorkspaceObject> idf_zone1(idf_space1.getTarget(SpaceFields::ZoneName));
+  ASSERT_TRUE(idf_zone1);
+  EXPECT_EQ(idf_zone1->iddObject().type(), IddObjectType::Zone);
+  EXPECT_EQ(thermalZone.nameString(), idf_zone1->name().get());
+  boost::optional<WorkspaceObject> idf_zone2(idf_space2.getTarget(SpaceFields::ZoneName));
+  ASSERT_TRUE(idf_zone2);
+  EXPECT_EQ(idf_zone2->iddObject().type(), IddObjectType::Zone);
+  EXPECT_EQ(thermalZone.nameString(), idf_zone2->name().get());
+  EXPECT_EQ(idf_zone1, idf_zone2);
+
+  EXPECT_EQ(0, idf_space1.getDouble(SpaceFields::FloorArea, false).get());
+  EXPECT_EQ(0, idf_space2.getDouble(SpaceFields::FloorArea, false).get());
+
+  EXPECT_EQ("", idf_space1.getString(SpaceFields::SpaceType, false).get());
+  EXPECT_EQ("", idf_space2.getString(SpaceFields::SpaceType, false).get());
 }

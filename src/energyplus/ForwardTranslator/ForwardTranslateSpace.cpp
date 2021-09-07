@@ -62,12 +62,13 @@ namespace energyplus {
 
     idfObject.setDouble(openstudio::SpaceFields::FloorArea, modelObject.floorArea());
 
-    if (boost::optional<SpaceType> spaceType = modelObject.spaceType());
+    if (boost::optional<SpaceType> spaceType = modelObject.spaceType()) {
       idfObject.setString(openstudio::SpaceFields::SpaceType, spaceType->name().get());
+    }
   }
 
-    return boost::optional<IdfObject>(idfObject);
-  }
+  return boost::optional<IdfObject>(idfObject);
+}
 
 }  // namespace energyplus
 
