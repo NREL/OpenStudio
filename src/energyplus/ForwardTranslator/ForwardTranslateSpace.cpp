@@ -34,6 +34,8 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
 
+#include <utilities/idd/Space_FieldEnums.hxx>
+
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
@@ -47,24 +49,24 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSpace(model::Space& modelObject) {
 
+    // Space
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
+
     for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
     }
 
-    return boost::none;
+    if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
+      idfObject.setString(openstudio::SpaceFields::ZoneName, thermalZone->name().get());
+    }
 
-    /*
-  IdfObject idfObject(openstudio::IddObjectType::CommentOnly);
+    idfObject.setDouble(openstudio::SpaceFields::FloorArea, modelObject.floorArea());
 
-  idfObject.setComment(
-"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\
-! OS:Space, " + modelObject.name().get() + "\n\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+    if (boost::optional<SpaceType> spaceType = modelObject.spaceType());
+      idfObject.setString(openstudio::SpaceFields::SpaceType, spaceType->name().get());
+  }
 
-  m_idfObjects.push_back(idfObject);
-
-  return idfObject;
-  */
+    return boost::optional<IdfObject>(idfObject);
   }
 
 }  // namespace energyplus
