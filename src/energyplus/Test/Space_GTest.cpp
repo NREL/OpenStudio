@@ -38,7 +38,6 @@
 #include "../../model/LifeCycleCost.hpp"
 #include "../../model/ThermalZone.hpp"
 
-#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -58,24 +57,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space) {
 
   // space not translated when not in thermal zone
   Workspace workspace = ft.translateModel(model);
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Zone).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ComponentCost_LineItem).size());
 
-  // space not translated when not in thermal zone
-  workspace = ft.translateModel(model);
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ComponentCost_LineItem).size());
-
+  // space translated when in thermal zone
   ThermalZone thermalZone(model);
   space.setThermalZone(thermalZone);
 
   workspace = ft.translateModel(model);
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Space).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ComponentCost_LineItem).size());
 
-  // TODO: add another space to the thermal zone
+  // add another space to the thermal zone
   Space space2(model);
   space2.setThermalZone(thermalZone);
 
   workspace = ft.translateModel(model);
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ComponentCost_LineItem).size());
 }
