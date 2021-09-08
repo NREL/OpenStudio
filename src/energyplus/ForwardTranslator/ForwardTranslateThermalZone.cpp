@@ -191,12 +191,12 @@ namespace energyplus {
 
     if (modelObject.volume()) {
       idfObject.setDouble(openstudio::ZoneFields::Volume, modelObject.volume().get());
-    }
+    }  // FIXME: couldn't we set sum of space volume's here?
 
     // DLM: currently there is no setter for floorArea and the getter does not return the value from this field
-    if (modelObject.getDouble(openstudio::OS_ThermalZoneFields::FloorArea)) {
+    /*     if (modelObject.getDouble(openstudio::OS_ThermalZoneFields::FloorArea)) {
       idfObject.setDouble(openstudio::ZoneFields::FloorArea, modelObject.getDouble(openstudio::OS_ThermalZoneFields::FloorArea).get());
-    }
+    } */
 
     if (modelObject.zoneInsideConvectionAlgorithm()) {
       idfObject.setString(openstudio::ZoneFields::ZoneInsideConvectionAlgorithm, modelObject.zoneInsideConvectionAlgorithm().get());
@@ -213,115 +213,199 @@ namespace energyplus {
     if (spaces.empty()) {
       LOG(Warn, "ThermalZone " << modelObject.name().get() << " does not have any geometry or loads associated with it.");
     } else {
-      OS_ASSERT(spaces.size() == 1);
 
-      idfObject.setDouble(openstudio::ZoneFields::DirectionofRelativeNorth, spaces[0].directionofRelativeNorth());
+      // sort by space name
+      std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+      LOG(Warn, "TEST1");
+      boost::optional<double> directionofRelativeNorth;
+      if (!spaces[0].isDirectionofRelativeNorthDefaulted()) {
+        directionofRelativeNorth = spaces[0].directionofRelativeNorth();
+      }
+      double xOrigin = spaces[0].xOrigin();
+      double yOrigin = spaces[0].yOrigin();
+      double zOrigin = spaces[0].zOrigin();
+      double sumFloorArea = 0.0;
+      double sumNumberOfPeople = 0.0;
+      double sumVolume = 0.0;
+      double totalFloorArea = 0.0;  // only area included in total floor area
+      bool needToSetFloorArea = false;
+      bool anyNotPartofTotalFloorArea = false;
+      bool partofTotalFloorArea = spaces[0].partofTotalFloorArea();
 
-      idfObject.setDouble(openstudio::ZoneFields::XOrigin, spaces[0].xOrigin());
+      for (Space space : spaces) {
 
-      idfObject.setDouble(openstudio::ZoneFields::YOrigin, spaces[0].yOrigin());
+        // if all spaces have same directionOfRelativeNorth use that, otherwise clear it
+        if (!space.isDirectionofRelativeNorthDefaulted()) {
+          if (directionofRelativeNorth && (*directionofRelativeNorth == space.directionofRelativeNorth())) {
+            // no-op
+          } else {
+            directionofRelativeNorth.reset();
+          }
+        }
 
-      idfObject.setDouble(openstudio::ZoneFields::ZOrigin, spaces[0].zOrigin());
+        // pick the lower left corner if specified
+        xOrigin = std::min(xOrigin, space.xOrigin());
+        yOrigin = std::min(yOrigin, space.yOrigin());
+        zOrigin = std::min(zOrigin, space.zOrigin());
 
-      if (spaces[0].partofTotalFloorArea()) {
+        double floorArea = space.floorArea();
+        sumFloorArea += floorArea;
+
+        double numberOfPeople = space.numberOfPeople();
+        sumNumberOfPeople += numberOfPeople;
+
+        double volume = space.volume();
+        sumVolume += volume;
+
+        // space floor area is counted if any space is part of floor area
+        if (space.partofTotalFloorArea()) {
+          partofTotalFloorArea = true;
+          totalFloorArea += floorArea;
+
+          if (anyNotPartofTotalFloorArea) {
+            needToSetFloorArea = true;
+          }
+
+        } else {
+          anyNotPartofTotalFloorArea = true;
+
+          if (partofTotalFloorArea) {
+            needToSetFloorArea = true;
+          }
+        }
+      }
+
+      if (directionofRelativeNorth) {
+        idfObject.setDouble(openstudio::ZoneFields::DirectionofRelativeNorth, *directionofRelativeNorth);
+      }
+
+      idfObject.setDouble(openstudio::ZoneFields::XOrigin, xOrigin);
+      idfObject.setDouble(openstudio::ZoneFields::YOrigin, yOrigin);
+      idfObject.setDouble(openstudio::ZoneFields::ZOrigin, zOrigin);
+
+      if (partofTotalFloorArea) {
         idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea, "Yes");
       } else {
         idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea, "No");
       }
 
-      // translate the space now
-      translateAndMapModelObject(spaces[0]);
-
-      // translate shading groups
-      ShadingSurfaceGroupVector shadingSurfaceGroups = spaces[0].shadingSurfaceGroups();
-      std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-      for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
-        translateAndMapModelObject(shadingSurfaceGroup);
+      if (needToSetFloorArea) {  // FIXME: why do we only set floor area if 'Part of Total Floor Area' is mixed?
+        if (modelObject.getDouble(openstudio::OS_ThermalZoneFields::FloorArea)) {
+          LOG(Info, "ThermalZone " << modelObject.name().get() << " has a user-specified Floor Area, using this number");
+          idfObject.setDouble(openstudio::ZoneFields::FloorArea, modelObject.getDouble(openstudio::OS_ThermalZoneFields::FloorArea).get());
+        } else {
+          LOG(Info, "ThermalZone '" << modelObject.name().get() << "' has spaces with mis-matched 'Part of Total Floor Area' flags. "
+                                    << "Setting the flag to 'Yes', but hard-coding the total floor area to only take into account the spaces "
+                                    << "that are part of total Floor Area");
+          idfObject.setDouble(openstudio::ZoneFields::FloorArea, totalFloorArea);
+        }
       }
 
-      // translate interior surface partition groups
-      InteriorPartitionSurfaceGroupVector interiorPartitionSurfaceGroups = spaces[0].interiorPartitionSurfaceGroups();
-      std::sort(interiorPartitionSurfaceGroups.begin(), interiorPartitionSurfaceGroups.end(), WorkspaceObjectNameLess());
-      for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : interiorPartitionSurfaceGroups) {
-        translateAndMapModelObject(interiorPartitionSurfaceGroup);
-      }
+      for (Space space : spaces) {
 
-      // translate surfaces
-      SurfaceVector surfaces = spaces[0].surfaces();
-      std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
-      for (Surface& surface : surfaces) {
-        translateAndMapModelObject(surface);
-      }
+        if (!space.spaceType()) {
+          // create a new space type
+          SpaceType newSpaceType(modelObject.model());
 
-      // translate internal mass
-      InternalMassVector internalMasses = spaces[0].internalMass();
-      std::sort(internalMasses.begin(), internalMasses.end(), WorkspaceObjectNameLess());
-      for (InternalMass& internalMass : internalMasses) {
-        translateAndMapModelObject(internalMass);
-      }
+          // set space type to prevent picking up building level space type
+          space.setSpaceType(newSpaceType);
+        }
 
-      // translate lights
-      LightsVector lights = spaces[0].lights();
-      std::sort(lights.begin(), lights.end(), WorkspaceObjectNameLess());
-      for (Lights& light : lights) {
-        translateAndMapModelObject(light);
-      }
+        // translate the space now
+        translateAndMapModelObject(space);
 
-      // translate luminaires
-      LuminaireVector luminaires = spaces[0].luminaires();
-      std::sort(luminaires.begin(), luminaires.end(), WorkspaceObjectNameLess());
-      for (Luminaire& luminaire : luminaires) {
-        translateAndMapModelObject(luminaire);
-      }
+        // translate shading groups
+        ShadingSurfaceGroupVector shadingSurfaceGroups = space.shadingSurfaceGroups();
+        std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
+        for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
+          translateAndMapModelObject(shadingSurfaceGroup);
+        }
 
-      // translate people
-      PeopleVector people = spaces[0].people();
-      std::sort(people.begin(), people.end(), WorkspaceObjectNameLess());
-      for (People& person : people) {
-        translateAndMapModelObject(person);
-      }
+        // translate interior surface partition groups
+        InteriorPartitionSurfaceGroupVector interiorPartitionSurfaceGroups = space.interiorPartitionSurfaceGroups();
+        std::sort(interiorPartitionSurfaceGroups.begin(), interiorPartitionSurfaceGroups.end(), WorkspaceObjectNameLess());
+        for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : interiorPartitionSurfaceGroups) {
+          translateAndMapModelObject(interiorPartitionSurfaceGroup);
+        }
 
-      // translate electric equipment
-      ElectricEquipmentVector electricEquipment = spaces[0].electricEquipment();
-      std::sort(electricEquipment.begin(), electricEquipment.end(), WorkspaceObjectNameLess());
-      for (ElectricEquipment& equipment : electricEquipment) {
-        translateAndMapModelObject(equipment);
-      }
+        // translate surfaces
+        SurfaceVector surfaces = space.surfaces();
+        std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
+        for (Surface& surface : surfaces) {
+          translateAndMapModelObject(surface);
+        }
 
-      // translate IT electric equipment
-      ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = spaces[0].electricEquipmentITEAirCooled();
-      std::sort(electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end(), WorkspaceObjectNameLess());
-      for (ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled) {
-        translateAndMapModelObject(iTequipment);
-      }
+        // translate internal mass
+        InternalMassVector internalMasses = space.internalMass();
+        std::sort(internalMasses.begin(), internalMasses.end(), WorkspaceObjectNameLess());
+        for (InternalMass& internalMass : internalMasses) {
+          translateAndMapModelObject(internalMass);
+        }
 
-      // translate gas equipment
-      GasEquipmentVector gasEquipment = spaces[0].gasEquipment();
-      std::sort(gasEquipment.begin(), gasEquipment.end(), WorkspaceObjectNameLess());
-      for (GasEquipment& equipment : gasEquipment) {
-        translateAndMapModelObject(equipment);
-      }
+        // translate lights
+        LightsVector lights = space.lights();
+        std::sort(lights.begin(), lights.end(), WorkspaceObjectNameLess());
+        for (Lights& light : lights) {
+          translateAndMapModelObject(light);
+        }
 
-      // translate hot water equipment
-      HotWaterEquipmentVector hotWaterEquipment = spaces[0].hotWaterEquipment();
-      std::sort(hotWaterEquipment.begin(), hotWaterEquipment.end(), WorkspaceObjectNameLess());
-      for (HotWaterEquipment& equipment : hotWaterEquipment) {
-        translateAndMapModelObject(equipment);
-      }
+        // translate luminaires
+        LuminaireVector luminaires = space.luminaires();
+        std::sort(luminaires.begin(), luminaires.end(), WorkspaceObjectNameLess());
+        for (Luminaire& luminaire : luminaires) {
+          translateAndMapModelObject(luminaire);
+        }
 
-      // translate steam equipment
-      SteamEquipmentVector steamEquipment = spaces[0].steamEquipment();
-      std::sort(steamEquipment.begin(), steamEquipment.end(), WorkspaceObjectNameLess());
-      for (SteamEquipment& equipment : steamEquipment) {
-        translateAndMapModelObject(equipment);
-      }
+        // translate people
+        PeopleVector people = space.people();
+        std::sort(people.begin(), people.end(), WorkspaceObjectNameLess());
+        for (People& person : people) {
+          translateAndMapModelObject(person);
+        }
 
-      // translate other equipment
-      OtherEquipmentVector otherEquipment = spaces[0].otherEquipment();
-      std::sort(otherEquipment.begin(), otherEquipment.end(), WorkspaceObjectNameLess());
-      for (OtherEquipment& equipment : otherEquipment) {
-        translateAndMapModelObject(equipment);
-      }
+        // translate electric equipment
+        ElectricEquipmentVector electricEquipment = space.electricEquipment();
+        std::sort(electricEquipment.begin(), electricEquipment.end(), WorkspaceObjectNameLess());
+        for (ElectricEquipment& equipment : electricEquipment) {
+          translateAndMapModelObject(equipment);
+        }
+
+        // translate IT electric equipment
+        ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = space.electricEquipmentITEAirCooled();
+        std::sort(electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end(), WorkspaceObjectNameLess());
+        for (ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled) {
+          translateAndMapModelObject(iTequipment);
+        }
+
+        // translate gas equipment
+        GasEquipmentVector gasEquipment = space.gasEquipment();
+        std::sort(gasEquipment.begin(), gasEquipment.end(), WorkspaceObjectNameLess());
+        for (GasEquipment& equipment : gasEquipment) {
+          translateAndMapModelObject(equipment);
+        }
+
+        // translate hot water equipment
+        HotWaterEquipmentVector hotWaterEquipment = space.hotWaterEquipment();
+        std::sort(hotWaterEquipment.begin(), hotWaterEquipment.end(), WorkspaceObjectNameLess());
+        for (HotWaterEquipment& equipment : hotWaterEquipment) {
+          translateAndMapModelObject(equipment);
+        }
+
+        // translate steam equipment
+        SteamEquipmentVector steamEquipment = space.steamEquipment();
+        std::sort(steamEquipment.begin(), steamEquipment.end(), WorkspaceObjectNameLess());
+        for (SteamEquipment& equipment : steamEquipment) {
+          translateAndMapModelObject(equipment);
+        }
+
+        // translate other equipment
+        OtherEquipmentVector otherEquipment = space.otherEquipment();
+        std::sort(otherEquipment.begin(), otherEquipment.end(), WorkspaceObjectNameLess());
+        for (OtherEquipment& equipment : otherEquipment) {
+          translateAndMapModelObject(equipment);
+        }
+
+      }  // end spaces
 
       // translate daylighting controls
       boost::optional<DaylightingControl> primaryDaylightingControl = modelObject.primaryDaylightingControl();
@@ -552,25 +636,27 @@ namespace energyplus {
         }
       }
 
-      // translate SpaceInfiltration_DesignFlowRate
-      SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = spaces[0].spaceInfiltrationDesignFlowRates();
-      std::sort(spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end(), WorkspaceObjectNameLess());
-      for (SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : spaceInfiltrationDesignFlowRates) {
-        translateAndMapModelObject(spaceInfiltrationDesignFlowRate);
-      }
+      for (Space space : spaces) {
+        // translate SpaceInfiltration_DesignFlowRate
+        SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = space.spaceInfiltrationDesignFlowRates();
+        std::sort(spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end(), WorkspaceObjectNameLess());
+        for (SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : spaceInfiltrationDesignFlowRates) {
+          translateAndMapModelObject(spaceInfiltrationDesignFlowRate);
+        }
 
-      // translate SpaceInfiltration_EffectiveLeakageArea
-      SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = spaces[0].spaceInfiltrationEffectiveLeakageAreas();
-      std::sort(spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end(), WorkspaceObjectNameLess());
-      for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas) {
-        translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
-      }
+        // translate SpaceInfiltration_EffectiveLeakageArea
+        SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = space.spaceInfiltrationEffectiveLeakageAreas();
+        std::sort(spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end(), WorkspaceObjectNameLess());
+        for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas) {
+          translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
+        }
 
-      // translate SpaceInfiltration_FlowCoefficient
-      SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = spaces[0].spaceInfiltrationFlowCoefficients();
-      std::sort(spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end(), WorkspaceObjectNameLess());
-      for (SpaceInfiltrationFlowCoefficient& spaceInfiltrationFlowCoefficient : spaceInfiltrationFlowCoefficients) {
-        translateAndMapModelObject(spaceInfiltrationFlowCoefficient);
+        // translate SpaceInfiltration_FlowCoefficient
+        SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = space.spaceInfiltrationFlowCoefficients();
+        std::sort(spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end(), WorkspaceObjectNameLess());
+        for (SpaceInfiltrationFlowCoefficient& spaceInfiltrationFlowCoefficient : spaceInfiltrationFlowCoefficients) {
+          translateAndMapModelObject(spaceInfiltrationFlowCoefficient);
+        }
       }
     }
 
@@ -848,10 +934,16 @@ namespace energyplus {
             std::string outdoorAirMethod = designSpecificationOutdoorAir->outdoorAirMethod();
             if (istringEqual(outdoorAirMethod, "Max")) {
 
-              double rateForPeople = spaces[0].numberOfPeople() * outdoorAirFlowperPerson;
-              double rateForArea = spaces[0].floorArea() * outdoorAirFlowperFloorArea;
+              double rateForPeople =
+                spaces[0].numberOfPeople()
+                * outdoorAirFlowperPerson;  // FIXME: should this be the sum of people across spaces? i don't see it set in combineSpaces
+              double rateForArea =
+                spaces[0].floorArea()
+                * outdoorAirFlowperFloorArea;  // FIXME: should this be the sum of floor area across spaces? i don't see it set in combineSpacesi don't see it set in combineSpaces
               double rate = outdoorAirFlowRate;
-              double rateForVolume = spaces[0].volume() * outdoorAirFlowAirChangesperHour;
+              double rateForVolume =
+                spaces[0].volume()
+                * outdoorAirFlowAirChangesperHour;  // FIXME: should this be the sum of volume across spaces? i don't see it set in combineSpaces
 
               double biggestRate = std::max(rateForPeople, std::max(rateForArea, std::max(rate, rateForVolume)));
 

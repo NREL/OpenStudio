@@ -30,9 +30,11 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/LifeCycleCost.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
-#include "../../model/LifeCycleCost.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/SpaceType.hpp"
 
 #include <utilities/idd/Space_FieldEnums.hxx>
 
@@ -57,19 +59,17 @@ namespace energyplus {
     }
 
     if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
-      idfObject.setString(openstudio::SpaceFields::ZoneName, thermalZone->name().get());
+      idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
     }
 
-    idfObject.setDouble(openstudio::SpaceFields::FloorArea, modelObject.floorArea());
+    idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
 
     if (boost::optional<SpaceType> spaceType = modelObject.spaceType()) {
-      idfObject.setString(openstudio::SpaceFields::SpaceType, spaceType->name().get());
+      idfObject.setString(SpaceFields::SpaceType, spaceType->name().get());
     }
-  }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+    return boost::optional<IdfObject>(idfObject);
+  }  // translate function
 
 }  // namespace energyplus
-
 }  // namespace openstudio

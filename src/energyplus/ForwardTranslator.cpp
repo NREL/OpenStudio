@@ -270,7 +270,7 @@ namespace energyplus {
     // next thing to do is combine all spaces in each thermal zone
     // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
     for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
-      thermalZone.combineSpaces();
+      //thermalZone.combineSpaces();
     }
 
     // remove unused space types
@@ -341,7 +341,7 @@ namespace energyplus {
           // find lowest point in thermalZone and move space origin down to that point
           // lowest point will have z = 0 in relative coordinates
           std::vector<Space> spaces = thermalZone.spaces();
-          OS_ASSERT(spaces.size() == 1);
+          OS_ASSERT(spaces.size() == 1);  // FIXME: this will fail when thermal zone has secondary daylighting control
 
           double minZ = z;
           BoundingBox bb = spaces[0].boundingBox();
