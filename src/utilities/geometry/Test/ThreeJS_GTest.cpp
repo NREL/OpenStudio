@@ -51,6 +51,19 @@ TEST_F(GeometryFixture, ThreeJS) {
   boost::optional<ThreeScene> scene = ThreeScene::load(contents);
   ASSERT_TRUE(scene);
 
+  // checking user data
+  std::vector<ThreeSceneChild> sceneChildren = scene->object().children();
+  for (const ThreeSceneChild& sceneChild : sceneChildren) {
+    EXPECT_EQ(1, sceneChild.userData().airLoopHVACNames().size());
+  }
+
+  // checking metadata
+  std::vector<ThreeModelObjectMetadata> metadatas = scene->metadata().modelObjectMetadata();
+  EXPECT_TRUE(std::any_of(metadatas.cbegin(), metadatas.cend(), [](const auto& metadata) {
+      return istringEqual("OS:AirLoopHVAC", metadata.iddObjectType()) && istringEqual("Air Loop HVAC 1", metadata.name());
+    })
+  );
+
   scene = ThreeScene::load(toString(p));
   ASSERT_TRUE(scene);
 

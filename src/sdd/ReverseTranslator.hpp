@@ -190,7 +190,7 @@ namespace sdd {
     std::map<double, model::Schedule> m_shadingScheduleMap;
 
     //helper method to do unit conversions; probably should be in OS proper
-    boost::optional<double> unitToUnit(const double& val, const std::string& ipUnitString, const std::string& siUnitString);
+    boost::optional<double> unitToUnit(double val, const std::string& ipUnitString, const std::string& siUnitString);
 
     bool m_isInputXML;
 

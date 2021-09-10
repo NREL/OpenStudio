@@ -388,7 +388,7 @@ namespace measure {
 
   void OSRunner::createProgressBar(const std::string& text) const {}
 
-  void OSRunner::updateProgress(const double& value) const {}
+  void OSRunner::updateProgress(double value) const {}
 
   void OSRunner::destroyProgressBar() const {}
 
