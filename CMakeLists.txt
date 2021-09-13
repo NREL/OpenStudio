@@ -1264,7 +1264,6 @@ install(DIRECTORY "${ENERGYPLUS_DIR}/pyenergyplus" DESTINATION ./EnergyPlus/ COM
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
   foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
