@@ -768,11 +768,11 @@ namespace model {
         || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
         || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
         || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
-      return getImpl<detail::DesignDay_Impl>()->wetBulbOrDewPointAtMaximumDryBulb();
+      return getImpl<detail::DesignDay_Impl>()->wetBulbOrDewPointAtMaximumDryBulb().get();
     } else if (istringEqual(humidityConditionType, "HumidityRatio")) {
-      return getImpl<detail::DesignDay_Impl>()->humidityRatioAtMaximumDryBulb();
+      return getImpl<detail::DesignDay_Impl>()->humidityRatioAtMaximumDryBulb().get();
     } else if (istringEqual(humidityConditionType, "Enthalpy")) {
-      return getImpl<detail::DesignDay_Impl>()->enthalpyAtMaximumDryBulb();
+      return getImpl<detail::DesignDay_Impl>()->enthalpyAtMaximumDryBulb().get();
     }
     return false;
   }
