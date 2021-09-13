@@ -126,9 +126,6 @@ namespace energyplus {
     // Humidity Condition Type
     s = workspaceObject.getString(SizingPeriod_DesignDayFields::HumidityConditionType);
     if (s) {
-      if (istringEqual(*s, "RelativeHumiditySchedule")) {
-        s = "Schedule";
-      }
       designDay.setHumidityConditionType(s.get());
     }
     std::string humidityConditionType = designDay.humidityConditionType();

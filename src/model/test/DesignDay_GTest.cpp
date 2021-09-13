@@ -62,6 +62,8 @@ TEST_F(ModelFixture, DesignDay_DesignDay) {
   EXPECT_TRUE(designDay.isMaximumDryBulbTemperatureDefaulted());
   EXPECT_EQ(0, designDay.dailyDryBulbTemperatureRange());
   EXPECT_TRUE(designDay.isDailyDryBulbTemperatureRangeDefaulted());
+  EXPEC_EQ(23, designDay.humidityIndicatingConditionsAtMaximumDryBulb());
+  EXPECT_FALSE(designDay.isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted());
   EXPECT_EQ(31000, designDay.barometricPressure());
   EXPECT_TRUE(designDay.isBarometricPressureDefaulted());
   EXPECT_EQ(0, designDay.windSpeed());
@@ -160,6 +162,8 @@ TEST_F(ModelFixture, DesignDay_SetGetFields) {
   EXPECT_FALSE(designDay.isMaximumDryBulbTemperatureDefaulted());
   EXPECT_EQ(2, designDay.dailyDryBulbTemperatureRange());
   EXPECT_FALSE(designDay.isDailyDryBulbTemperatureRangeDefaulted());
+  EXPEC_EQ(9, designDay.humidityIndicatingConditionsAtMaximumDryBulb());
+  EXPECT_FALSE(designDay.isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted());
   EXPECT_EQ(100000, designDay.barometricPressure());
   EXPECT_FALSE(designDay.isBarometricPressureDefaulted());
   EXPECT_EQ(4, designDay.windSpeed());
@@ -255,6 +259,8 @@ TEST_F(ModelFixture, DesignDay_SetGetFields) {
   EXPECT_TRUE(designDay.isMaximumDryBulbTemperatureDefaulted());
   EXPECT_EQ(0, designDay.dailyDryBulbTemperatureRange());
   EXPECT_TRUE(designDay.isDailyDryBulbTemperatureRangeDefaulted());
+  EXPEC_EQ(23, designDay.humidityIndicatingConditionsAtMaximumDryBulb());
+  EXPECT_TRUE(designDay.isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted());
   EXPECT_EQ(31000, designDay.barometricPressure());
   EXPECT_TRUE(designDay.isBarometricPressureDefaulted());
   EXPECT_EQ(0, designDay.windSpeed());

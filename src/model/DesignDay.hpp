@@ -78,6 +78,10 @@ namespace model {
 
     bool isDailyDryBulbTemperatureRangeDefaulted() const;
 
+    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
+
+    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+
     double barometricPressure() const;
 
     bool isBarometricPressureDefaulted() const;
@@ -129,8 +133,6 @@ namespace model {
     OS_DEPRECATED boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
 
     boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
-
-    OS_DEPRECATED boost::optional<double> humidityIndicatingConditionsAtMaximumDryBulb() const;
 
     boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb() const;
 
@@ -251,9 +253,9 @@ namespace model {
 
     OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
 
-    bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
-
     OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+
+    bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
 
     void resetWetBulbOrDewPointAtMaximumDryBulb();
 

@@ -85,9 +85,6 @@ namespace energyplus {
 
     // Humidity Condition Type
     std::string humidityConditionType = modelObject.humidityConditionType();
-    if (istringEqual(humidityConditionType, "Schedule")) {
-      humidityConditionType = "RelativeHumiditySchedule";
-    }
     idfObject.setString(SizingPeriod_DesignDayFields::HumidityConditionType, humidityConditionType);
 
     // Humidity Condition Day Schedule Name

@@ -760,6 +760,33 @@ namespace model {
     return getImpl<detail::DesignDay_Impl>()->isDailyDryBulbTemperatureRangeDefaulted();
   }
 
+  double DesignDay::humidityIndicatingConditionsAtMaximumDryBulb() const {
+    boost::optional<std::string> value = getString(OS_SizingPeriod_DesignDayFields::HumidityConditionType, true);
+    OS_ASSERT(value);
+    std::string humidityConditionType = value.get();
+    if (istringEqual(humidityConditionType, "WetBulb") || istringEqual(humidityConditionType, "DewPoint")
+        || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
+      return getImpl<detail::DesignDay_Impl>()->wetBulbOrDewPointAtMaximumDryBulb();
+    } else if (istringEqual(humidityConditionType, "HumidityRatio")) {
+      return getImpl<detail::DesignDay_Impl>()->humidityRatioAtMaximumDryBulb();
+    } else if (istringEqual(humidityConditionType, "Enthalpy")) {
+      return getImpl<detail::DesignDay_Impl>()->enthalpyAtMaximumDryBulb();
+    }
+    return false;
+  }
+
+  bool DesignDay::isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const {
+    bool wetBulbOrDewPointAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb);
+    bool humidityRatioAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb);
+    bool enthalpyAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb);
+    if (wetBulbOrDewPointAtMaximumDryBulb & humidityRatioAtMaximumDryBulb & enthalpyAtMaximumDryBulb) {
+      return true;
+    }
+    return false;
+  }
+
   double DesignDay::barometricPressure() const {
     return getImpl<detail::DesignDay_Impl>()->barometricPressure();
   }
@@ -862,10 +889,6 @@ namespace model {
 
   boost::optional<ScheduleDay> DesignDay::humidityConditionDaySchedule() const {
     return getImpl<detail::DesignDay_Impl>()->humidityConditionDaySchedule();
-  }
-
-  boost::optional<double> DesignDay::humidityIndicatingConditionsAtMaximumDryBulb() const {
-    return getImpl<detail::DesignDay_Impl>()->wetBulbOrDewPointAtMaximumDryBulb();
   }
 
   boost::optional<double> DesignDay::wetBulbOrDewPointAtMaximumDryBulb() const {
@@ -1089,11 +1112,26 @@ namespace model {
   }
 
   bool DesignDay::setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb) {
-    return getImpl<detail::DesignDay_Impl>()->setWetBulbOrDewPointAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
+    boost::optional<std::string> value = getString(OS_SizingPeriod_DesignDayFields::HumidityConditionType, true);
+    OS_ASSERT(value);
+    std::string humidityConditionType = value.get();
+    if (istringEqual(humidityConditionType, "WetBulb") || istringEqual(humidityConditionType, "DewPoint")
+        || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
+      return getImpl<detail::DesignDay_Impl>()->setWetBulbOrDewPointAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
+    } else if (istringEqual(humidityConditionType, "HumidityRatio")) {
+      return getImpl<detail::DesignDay_Impl>()->setHumidityRatioAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
+    } else if (istringEqual(humidityConditionType, "Enthalpy")) {
+      return getImpl<detail::DesignDay_Impl>()->setEnthalpyAtMaximumDryBulb(humidityIndicatingConditionsAtMaximumDryBulb);
+    }
+    return false;
   }
 
   void DesignDay::resetHumidityIndicatingConditionsAtMaximumDryBulb() {
     getImpl<detail::DesignDay_Impl>()->resetWetBulbOrDewPointAtMaximumDryBulb();
+    getImpl<detail::DesignDay_Impl>()->resetHumidityRatioAtMaximumDryBulb();
+    getImpl<detail::DesignDay_Impl>()->resetEnthalpyAtMaximumDryBulb();
   }
 
   bool DesignDay::setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb) {
