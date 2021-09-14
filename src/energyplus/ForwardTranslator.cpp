@@ -348,7 +348,7 @@ namespace energyplus {
           // find lowest point in thermalZone and move space origin down to that point
           // lowest point will have z = 0 in relative coordinates
           std::vector<Space> spaces = thermalZone.spaces();
-          OS_ASSERT(spaces.size() == 1);  // FIXME: this will fail when thermal zone has secondary daylighting control
+          OS_ASSERT(spaces.size() == 1);
 
           double minZ = z;
           BoundingBox bb = spaces[0].boundingBox();

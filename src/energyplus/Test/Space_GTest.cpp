@@ -179,7 +179,3 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
 
   EXPECT_FALSE(idf_zone.getDouble(ZoneFields::FloorArea, false));
 }
-
-TEST_F(EnergyPlusFixture, ForwardTranslator_Space_SecondaryDaylightingControl) {
-  // TODO
-}
