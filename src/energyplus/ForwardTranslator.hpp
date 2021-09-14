@@ -540,6 +540,10 @@ namespace energyplus {
    *  Use this at your own risks */
     void setExcludeVariableDictionary(bool excludeVariableDictionary);
 
+    /** If excludeSpaceTranslation, do usual combineSpaces(), etc. Otherwise, translate space objects.
+   *  Use this at your own risks */
+    void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
 
@@ -1589,6 +1593,7 @@ namespace energyplus {
     bool m_excludeSQliteOutputReport;  // exclude Output:Sqlite
     bool m_excludeHTMLOutputReport;    // exclude Output:Table:SummaryReports
     bool m_excludeVariableDictionary;  // exclude Output:VariableDictionary
+    bool m_excludeSpaceTranslation;
   };
 
 }  // namespace energyplus

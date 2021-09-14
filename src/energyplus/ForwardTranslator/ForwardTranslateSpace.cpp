@@ -51,24 +51,28 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSpace(model::Space& modelObject) {
 
-    // Space
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
-
     for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
     }
 
-    if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
-      idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
+    if (m_excludeSpaceTranslation) {
+      return boost::none;
+    } else {
+      // Space
+      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
+
+      if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
+        idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
+      }
+
+      idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
+
+      if (boost::optional<SpaceType> spaceType = modelObject.spaceType()) {
+        idfObject.setString(SpaceFields::SpaceType, spaceType->name().get());
+      }
+
+      return boost::optional<IdfObject>(idfObject);
     }
-
-    idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
-
-    if (boost::optional<SpaceType> spaceType = modelObject.spaceType()) {
-      idfObject.setString(SpaceFields::SpaceType, spaceType->name().get());
-    }
-
-    return boost::optional<IdfObject>(idfObject);
   }  // translate function
 
 }  // namespace energyplus

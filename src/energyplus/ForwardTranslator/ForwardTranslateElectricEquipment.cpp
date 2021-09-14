@@ -38,6 +38,8 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/SpaceType.hpp"
 #include "../../model/SpaceType_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
@@ -69,7 +71,14 @@ namespace energyplus {
     boost::optional<Space> space = modelObject.space();
     boost::optional<SpaceType> spaceType = modelObject.spaceType();
     if (space) {
-      idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
+      if (m_excludeSpaceTranslation) {
+        boost::optional<ThermalZone> thermalZone = space->thermalZone();
+        if (thermalZone) {
+          idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
+        }
+      } else {
+        idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
+      }
     } else if (spaceType) {
       idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
     }

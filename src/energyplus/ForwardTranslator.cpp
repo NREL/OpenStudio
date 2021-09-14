@@ -108,6 +108,7 @@ namespace energyplus {
     m_excludeSQliteOutputReport = false;
     m_excludeHTMLOutputReport = false;
     m_excludeVariableDictionary = false;
+    m_excludeSpaceTranslation = true;
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
@@ -177,6 +178,10 @@ namespace energyplus {
 
   void ForwardTranslator::setExcludeVariableDictionary(bool excludeVariableDictionary) {
     m_excludeVariableDictionary = excludeVariableDictionary;
+  }
+
+  void ForwardTranslator::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
+    m_excludeSpaceTranslation = excludeSpaceTranslation;
   }
 
   Workspace ForwardTranslator::translateModelPrivate(model::Model& model, bool fullModelTranslation) {
@@ -267,10 +272,12 @@ namespace energyplus {
       }
     }
 
-    // next thing to do is combine all spaces in each thermal zone
-    // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
-    for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
-      //thermalZone.combineSpaces();
+    if (m_excludeSpaceTranslation) {
+      // next thing to do is combine all spaces in each thermal zone
+      // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
+      for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
+        thermalZone.combineSpaces();
+      }
     }
 
     // remove unused space types

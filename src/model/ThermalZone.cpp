@@ -1403,9 +1403,7 @@ namespace model {
           LOG(Info, "ThermalZone '" << this->name().get() << "' has spaces with mis-matched 'Part of Total Floor Area' flags. "
                                     << "Setting set the flag to 'Yes', but hard-coding the total floor area to only take into account the spaces "
                                     << "that are part of total Floor Area");
-          this->setDouble(
-            OS_ThermalZoneFields::FloorArea,
-            totalFloorArea);  // FIXME: is this a bug? shouldn't this be set on ZoneFields? (this method comes after ZoneFields in zone's ft)
+          this->setDouble(OS_ThermalZoneFields::FloorArea, totalFloorArea);
         } else {
           LOG(Info, "ThermalZone " << this->name().get() << " has a user-specified Floor Area, using this number");
         }

@@ -93,8 +93,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Desi
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
 
-  WorkspaceObjectVector spaces = workspace.getObjectsByType(IddObjectType::Space);
-  ASSERT_EQ(1u, spaces.size());
+  WorkspaceObjectVector zones = workspace.getObjectsByType(IddObjectType::Zone);
+  ASSERT_EQ(1u, zones.size());
 
   // does not translate absolute loads to a space type
   WorkspaceObjectVector zonelists = workspace.getObjectsByType(IddObjectType::ZoneList);
@@ -104,7 +104,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Desi
   ASSERT_EQ(2u, equips.size());
 
   for (const auto& equip : equips) {
-    EXPECT_EQ(spaces[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
+    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     EXPECT_EQ(100, equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get());
   }
