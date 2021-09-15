@@ -263,7 +263,7 @@ namespace model {
 
     boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
-    /* Get the total area of the sub surface including frame and divider area */
+    /* Get the total area of the sub surface rough area which includes the frame */
     double roughOpeningArea() const;
 
     /* Get the rough opening vertices for the subsurface */
