@@ -267,7 +267,7 @@ namespace model {
     double roughOpeningArea() const;
 
     /* Get the rough opening vertices for the subsurface */
-    std::vector<Point3d> roughOpening() const;
+    std::vector<Point3d> roughOpeningVertices() const;
 
     // DLM: todo add methods to create light shelves by projection factor
 
