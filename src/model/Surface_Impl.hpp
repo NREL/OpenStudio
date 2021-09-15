@@ -241,7 +241,7 @@ namespace model {
 
       double windowToWallRatio() const;
 
-      double Surface_Impl::totalAreaOfSubSurfaces() const;
+      double totalAreaOfSubSurfaces() const;
 
       double skylightToRoofRatio() const;
 
