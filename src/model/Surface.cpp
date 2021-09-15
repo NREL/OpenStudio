@@ -1440,12 +1440,12 @@ namespace model {
         return result;
       }
 
-      double windowArea = 0.0;
-      for (const SubSurface& subSurface : this->subSurfaces()) {
-        if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          windowArea += subSurface.multiplier() * subSurface.roughOpeningArea();
-        }
-      }
+      //double windowArea = 0.0;
+      //for (const SubSurface& subSurface : this->subSurfaces()) {
+      //  if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
+      //    windowArea += subSurface.multiplier() * subSurface.roughOpeningArea();
+      //  }
+      //}
 
       double roughOpeningArea = totalAreaOfSubSurfaces();
       double wwr = roughOpeningArea / grossArea;
@@ -1530,8 +1530,8 @@ namespace model {
 
       // Accumulate the areas
       double area = 0;
-      for (const auto& opening : roughOpenings) {
-        area += openstudio::getArea(opening.second).value();
+      for (const auto& roughOpening : roughOpenings) {
+        area += openstudio::getArea(roughOpening.second).value() * roughOpening.first.multiplier();
       }
 
       return area;
