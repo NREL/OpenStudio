@@ -1482,7 +1482,7 @@ namespace model {
       // Get the flattened sub surface vertices for windows
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          auto opening = parentToXY.inverse() * subSurface.roughOpening();
+          auto opening = parentToXY.inverse() * subSurface.roughOpeningVertices();
           auto norm = openstudio::getOutwardNormal(opening);
           if (norm && norm->z() > 0) {
             std::reverse(opening.begin(), opening.end());

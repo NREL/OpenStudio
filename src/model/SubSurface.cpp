@@ -1597,7 +1597,7 @@ namespace model {
     removeAllShadingControls();
   }
 
-  std::vector<Point3d> SubSurface::roughOpening() const {
+  std::vector<Point3d> SubSurface::roughOpeningVertices() const {
     auto frameAndDivider = windowPropertyFrameAndDivider();
     if (frameAndDivider) {
       double fw = frameAndDivider->frameWidth();
@@ -1621,7 +1621,7 @@ namespace model {
 
   double SubSurface::roughOpeningArea() const {
 
-    boost::optional<double> area = openstudio::getArea(roughOpening());
+    boost::optional<double> area = openstudio::getArea(roughOpeningVertices());
     if (area)
       return *area;
     else
