@@ -60,9 +60,8 @@ TEST_F(GeometryFixture, ThreeJS) {
   // checking metadata
   std::vector<ThreeModelObjectMetadata> metadatas = scene->metadata().modelObjectMetadata();
   EXPECT_TRUE(std::any_of(metadatas.cbegin(), metadatas.cend(), [](const auto& metadata) {
-      return istringEqual("OS:AirLoopHVAC", metadata.iddObjectType()) && istringEqual("Air Loop HVAC 1", metadata.name());
-    })
-  );
+    return istringEqual("OS:AirLoopHVAC", metadata.iddObjectType()) && istringEqual("Air Loop HVAC 1", metadata.name());
+  }));
 
   scene = ThreeScene::load(toString(p));
   ASSERT_TRUE(scene);
