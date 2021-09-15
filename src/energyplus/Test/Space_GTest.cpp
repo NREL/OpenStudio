@@ -130,6 +130,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
 
   WorkspaceObjectVector idf_spaces(workspace.getObjectsByType(IddObjectType::Space));
   EXPECT_EQ(2u, idf_spaces.size());
+  std::sort(idf_spaces.begin(), idf_spaces.end(), IdfObjectNameLess());
   WorkspaceObject idf_space1(idf_spaces[0]);
   WorkspaceObject idf_space2(idf_spaces[1]);
 
