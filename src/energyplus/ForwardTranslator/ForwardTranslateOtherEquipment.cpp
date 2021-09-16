@@ -77,7 +77,7 @@ namespace energyplus {
           idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
         }
       } else {
-        idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, name->name().get());
+        idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
       }
     } else if (spaceType) {
       idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());

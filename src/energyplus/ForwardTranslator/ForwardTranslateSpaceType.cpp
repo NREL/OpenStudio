@@ -109,9 +109,10 @@ namespace energyplus {
       return boost::none;
     }
 
+    OptionalIdfObject idfObject;
     if (m_excludeSpaceTranslation) {
 
-      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
+      idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
 
       std::set<std::string> zoneNames;
       for (const Space& space : spaces) {
@@ -121,25 +122,24 @@ namespace energyplus {
         }
       }
 
-      idfObject.clearExtensibleGroups();
+      idfObject->clearExtensibleGroups();
       for (const std::string& zoneName : zoneNames) {
-        idfObject.pushExtensibleGroup(std::vector<std::string>(1, zoneName));
+        idfObject->pushExtensibleGroup(std::vector<std::string>(1, zoneName));
       }
-      
+
     } else {
-      
-      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SpaceList, modelObject);
+
+      idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SpaceList, modelObject);
 
       std::set<std::string> spaceNames;
       for (const Space& space : spaces) {
         spaceNames.insert(space.name().get());
       }
 
-      idfObject.clearExtensibleGroups();
+      idfObject->clearExtensibleGroups();
       for (const std::string& spaceName : spaceNames) {
-        idfObject.pushExtensibleGroup(std::vector<std::string>(1, spaceName));
+        idfObject->pushExtensibleGroup(std::vector<std::string>(1, spaceName));
       }
-      
     }
 
     // translate internal mass
