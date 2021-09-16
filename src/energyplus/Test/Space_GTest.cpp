@@ -43,11 +43,19 @@
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/SpaceType.hpp"
 #include "../../model/SpaceType_Impl.hpp"
+#include "../../model/ElectricEquipmentDefinition.hpp"
+#include "../../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../../model/ElectricEquipment.hpp"
+#include "../../model/ElectricEquipment_Impl.hpp"
 
-#include <utilities/idd/Space_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
+#include <utilities/idd/Space_FieldEnums.hxx>
+#include <utilities/idd/SpaceList_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <resources.hxx>
 
@@ -124,12 +132,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   space1.setThermalZone(thermalZone);
   space2.setThermalZone(thermalZone);
 
+  ElectricEquipmentDefinition definition1(model);
+  ElectricEquipment electricEquipment1(definition1);
+  electricEquipment1.setSpaceType(spaceType1);
+
+  ElectricEquipmentDefinition definition2(model);
+  ElectricEquipment electricEquipment2(definition2);
+  electricEquipment2.setSpaceType(spaceType2);
+
   ForwardTranslator ft;
   ft.setExcludeSpaceTranslation(false);
+
   Workspace workspace = ft.translateModel(model);
 
   WorkspaceObjectVector idf_spaces(workspace.getObjectsByType(IddObjectType::Space));
-  EXPECT_EQ(2u, idf_spaces.size());
+  ASSERT_EQ(2u, idf_spaces.size());
   std::sort(idf_spaces.begin(), idf_spaces.end(), IdfObjectNameLess());
   WorkspaceObject idf_space1(idf_spaces[0]);
   WorkspaceObject idf_space2(idf_spaces[1]);
@@ -157,9 +174,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   EXPECT_NE("", idf_space1.getString(SpaceFields::SpaceType).get());
   EXPECT_NE("", idf_space2.getString(SpaceFields::SpaceType).get());
 
-  EXPECT_FALSE(idf_zone.getDouble(ZoneFields::FloorArea, false));
+  EXPECT_FALSE(idf_zone.getDouble(ZoneFields::FloorArea, false));  // 'Part of Total Floor Area' not mixed
 
-  // Check floor area
+  WorkspaceObjectVector idf_spaceLists(workspace.getObjectsByType(IddObjectType::SpaceList));
+  ASSERT_EQ(2u, idf_spaceLists.size());
+  std::sort(idf_spaceLists.begin(), idf_spaceLists.end(), IdfObjectNameLess());
+  WorkspaceObject idf_spaceList1(idf_spaceLists[0]);
+  WorkspaceObject idf_spaceList2(idf_spaceLists[1]);
+
+  EXPECT_EQ(spaceType1.name().get(), idf_spaceList1.name().get());
+  EXPECT_EQ(spaceType2.name().get(), idf_spaceList2.name().get());
+
+  ASSERT_EQ(1u, idf_spaceList1.extensibleGroups().size());
+  ASSERT_EQ(1u, idf_spaceList2.extensibleGroups().size());
+
+  WorkspaceExtensibleGroup eg_spaceList1 = idf_spaceList1.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_TRUE(eg_spaceList1.getString(SpaceListExtensibleFields::SpaceName));
+  EXPECT_EQ(space1.name().get(), eg_spaceList1.getString(SpaceListExtensibleFields::SpaceName).get());
+
+  WorkspaceExtensibleGroup eg_spaceList2 = idf_spaceList2.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_TRUE(eg_spaceList2.getString(SpaceListExtensibleFields::SpaceName));
+  EXPECT_EQ(space2.name().get(), eg_spaceList2.getString(SpaceListExtensibleFields::SpaceName).get());
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+
+  // Check floor area when space1 is not part of total floor area but space2 is
   EXPECT_TRUE(space1.setPartofTotalFloorArea(false));
 
   workspace = ft.translateModel(model);
@@ -168,8 +207,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   EXPECT_EQ(1u, idf_zones.size());
   idf_zone = idf_zones[0];
 
+  ASSERT_TRUE(idf_zone.getDouble(ZoneFields::FloorArea, false));  // 'Part of Total Floor Area' is mixed
   EXPECT_NEAR(space2_floorArea, idf_zone.getDouble(ZoneFields::FloorArea, false).get(), 0.0001);
 
+  // Check floor area when space1 and space2 are not part of total floor area
   EXPECT_TRUE(space2.setPartofTotalFloorArea(false));
 
   workspace = ft.translateModel(model);
@@ -178,5 +219,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   EXPECT_EQ(1u, idf_zones.size());
   idf_zone = idf_zones[0];
 
-  EXPECT_FALSE(idf_zone.getDouble(ZoneFields::FloorArea, false));
+  EXPECT_FALSE(idf_zone.getDouble(ZoneFields::FloorArea, false));  // 'Part of Total Floor Area' not mixed
 }
