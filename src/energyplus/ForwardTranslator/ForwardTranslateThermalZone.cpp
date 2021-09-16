@@ -1660,8 +1660,8 @@ namespace energyplus {
 
         // map the design specification outdoor air
         boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir;
-        if (!spaces.empty()) {
-          designSpecificationOutdoorAir = spaces[0].designSpecificationOutdoorAir();
+        for (Space space : spaces) {
+          designSpecificationOutdoorAir = space.designSpecificationOutdoorAir();
           if (designSpecificationOutdoorAir) {
 
             translateAndMapModelObject(*designSpecificationOutdoorAir);
@@ -1683,16 +1683,10 @@ namespace energyplus {
               std::string outdoorAirMethod = designSpecificationOutdoorAir->outdoorAirMethod();
               if (istringEqual(outdoorAirMethod, "Max")) {
 
-                double rateForPeople =
-                  spaces[0].numberOfPeople()
-                  * outdoorAirFlowperPerson;  // FIXME: should this be the sum of people across spaces? i don't see it set in combineSpaces
-                double rateForArea =
-                  spaces[0].floorArea()
-                  * outdoorAirFlowperFloorArea;  // FIXME: should this be the sum of floor area across spaces? i don't see it set in combineSpacesi don't see it set in combineSpaces
+                double rateForPeople = space.numberOfPeople() * outdoorAirFlowperPerson;
+                double rateForArea = space.floorArea() * outdoorAirFlowperFloorArea;
                 double rate = outdoorAirFlowRate;
-                double rateForVolume =
-                  spaces[0].volume()
-                  * outdoorAirFlowAirChangesperHour;  // FIXME: should this be the sum of volume across spaces? i don't see it set in combineSpaces
+                double rateForVolume = space.volume() * outdoorAirFlowAirChangesperHour;
 
                 double biggestRate = std::max(rateForPeople, std::max(rateForArea, std::max(rate, rateForVolume)));
 
@@ -1728,11 +1722,11 @@ namespace energyplus {
                 // TODO: improve this?
                 // find first people schedule
                 std::vector<People> allPeople;
-                for (People people : spaces[0].people()) {
+                for (People people : space.people()) {
                   allPeople.push_back(people);
                 }
-                if (spaces[0].spaceType()) {
-                  for (People people : spaces[0].spaceType()->people()) {
+                if (space.spaceType()) {
+                  for (People people : space.spaceType()->people()) {
                     allPeople.push_back(people);
                   }
                 }
@@ -1789,7 +1783,7 @@ namespace energyplus {
               }
             }
           }
-        }
+        }  // end of spaces
       }
     }  // end exclude space translation
 
