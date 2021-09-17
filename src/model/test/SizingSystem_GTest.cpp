@@ -296,7 +296,6 @@ TEST_F(ModelFixture, SizingSystem_remove2) {
   AirLoopHVAC airLoopHVAC(m);
   SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
 
-  auto size = m.modelObjects().size();
   EXPECT_FALSE(airLoopHVAC.remove().empty());
   EXPECT_EQ(2, m.modelObjects().size());
   EXPECT_EQ(0u, m.getConcreteModelObjects<AirLoopHVAC>().size());
