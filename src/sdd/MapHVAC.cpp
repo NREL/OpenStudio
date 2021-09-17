@@ -8007,14 +8007,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       tankDeadBandTempHtPump = tankDeadBandTempHtPump.get() * 5.0 / 9.0; // delta F to C
     }
 
-    if (dsgnSupWtrTemp && tankDeadBandTempHtPump) {
-      heatPump.compressorSetpointTemperatureSchedule().remove();
-      model::ScheduleConstant schedule(model);
-      schedule.setName(heatPump.name().get() + " Compressor Setpoint Temp");
-      schedule.setValue(dsgnSupWtrTemp.get() + tankDeadBandTempHtPump.get());
-      heatPump.setCompressorSetpointTemperatureSchedule(schedule);
-    }
-
     if (tankDeadBandTempHtPump) {
       heatPump.setDeadBandTemperatureDifference(tankDeadBandTempHtPump.get());
     }
@@ -8038,6 +8030,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     if (tankDeadBandTempInternal) {
       tankDeadBandTempInternal = tankDeadBandTempInternal.get() * 5.0 / 9.0; // delta F to C
       waterHeater.setDeadbandTemperatureDifference(tankDeadBandTempInternal.get());
+    } else {
+      tankDeadBandTempInternal = 0.0;
+    }
+
+    if (dsgnSupWtrTemp && tankDeadBandTempHtPump && tankDeadBandTempInternal) {
+      heatPump.compressorSetpointTemperatureSchedule().remove();
+      model::ScheduleConstant schedule(model);
+      schedule.setName(heatPump.name().get() + " Compressor Setpoint Temp");
+      schedule.setValue(dsgnSupWtrTemp.get() + tankDeadBandTempHtPump.get() + tankDeadBandTempInternal.get() + 0.5);
+      heatPump.setCompressorSetpointTemperatureSchedule(schedule);
     }
 
     auto capRtdSupp = lexicalCastToDouble(element.child("CapRtdSupp"));
@@ -8280,15 +8282,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     std::string name = nameElement.text().as_string();
     waterHeaterMixed.setName(name);
 
-    // ThrmlEff
-
-    pugi::xml_node thrmlEffElement = element.child("ThrmlEff");
-    boost::optional<double> _thrmlEff = lexicalCastToDouble(thrmlEffElement);
-    if( _thrmlEff )
-    {
-      waterHeaterMixed.setHeaterThermalEfficiency(_thrmlEff.get());
-    }
-
     // Ambient water temperature indicator
 
     waterHeaterMixed.setAmbientTemperatureIndicator("Schedule");
@@ -8407,8 +8400,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     }
 
     // FuelSrc
-    auto fuelSrcElement = element.child("FuelSrc");
-    waterHeaterMixed.setHeaterFuelType(fuelSrcElement.text().as_string());
+    auto fuelSrc = element.child("FuelSrc").text().as_string();
+    waterHeaterMixed.setHeaterFuelType(fuelSrc);
+
+    if(istringEqual(fuelSrc, "electricity")) {
+      // Default for electric water heaters
+      waterHeaterMixed.setHeaterThermalEfficiency(1.0);
+    }
 
     // OffCycleFuelSrc
     auto offCycleFuelSrcElement = element.child("OffCycleFuelSrc");
@@ -8417,6 +8415,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     // OnCycleFuelSrc
     auto onCycleFuelSrcElement = element.child("OnCycleFuelSrc");
     waterHeaterMixed.setOnCycleParasiticFuelType(onCycleFuelSrcElement.text().as_string());
+
+    // ThrmlEff
+    pugi::xml_node thrmlEffElement = element.child("ThrmlEff");
+    boost::optional<double> _thrmlEff = lexicalCastToDouble(thrmlEffElement);
+    if( _thrmlEff )
+    {
+      // XML file can override default ThrmlEff
+      waterHeaterMixed.setHeaterThermalEfficiency(_thrmlEff.get());
+    }
 
     return waterHeaterMixed;
   }
