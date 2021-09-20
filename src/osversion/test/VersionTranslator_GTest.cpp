@@ -1702,13 +1702,13 @@ TEST_F(OSVersionFixture, update_3_2_0_to_3_2_1_WaterHeaterSizing) {
   EXPECT_TRUE(foundStratified);
 }
 
-TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_AirTerminalSingleDuctInletSideMixer) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer.osm");
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_AirTerminalSingleDuctInletSideMixer) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_AirTerminalSingleDuctInletSideMixer.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_AirTerminalSingleDuctInletSideMixer_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> atus = model->getObjectsByType("OS:AirTerminal:SingleDuct:InletSideMixer");
@@ -1720,13 +1720,13 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_AirTerminalSingleDuctInletSideMix
   EXPECT_EQ("CurrentOccupancy", atu.getString(6).get());
 }
 
-TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_GroundHeatExchangerVertical) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_2_2/test_vt_GroundHeatExchangerVertical.osm");
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_GroundHeatExchangerVertical) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_GroundHeatExchangerVertical.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_GroundHeatExchangerVertical_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_GroundHeatExchangerVertical_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> ghes = model->getObjectsByType("OS:GroundHeatExchanger:Vertical");
