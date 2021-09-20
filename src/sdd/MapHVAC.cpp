@@ -8048,11 +8048,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       waterHeater.setHeaterMaximumCapacity(capRtdSupp.get());
     }
 
-    auto thrmlEff = lexicalCastToDouble(element.child("ThrmlEff"));
-    if (thrmlEff) {
-      waterHeater.setHeaterThermalEfficiency(thrmlEff.get());
-    }
-
     std::string storZn = element.child("StorZn").text().as_string();
     if( istringEqual(storZn,"Zone") ) {
       waterHeater.setAmbientTemperatureIndicator("ThermalZone");
@@ -8067,6 +8062,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     std::string fuelSrc = element.child("FuelSrc").text().as_string();
     waterHeater.setHeaterFuelType(fuelSrc);
+
+    if(istringEqual(fuelSrc, "electricity")) {
+      // Default for electric water heaters
+      waterHeater.setHeaterThermalEfficiency(1.0);
+    }
+
+    auto thrmlEff = lexicalCastToDouble(element.child("ThrmlEff"));
+    if (thrmlEff) {
+      waterHeater.setHeaterThermalEfficiency(thrmlEff.get());
+    }
 
     {
       auto curveRef = element.child("HIR_fPLRCrvRef").text().as_string();
