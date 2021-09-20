@@ -6730,6 +6730,39 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if ((iddname == "OS:Controller:MechanicalVentilation") || (iddname == "OS:Sizing:System")) {
+
+        // OS:Controller:MechanicalVentilation, Field 4: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+        // OS:Sizing:System, Field 20: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+        unsigned int changedIndex = 4;
+        if (iddname == "OS:Sizing:System") {
+          changedIndex = 20;
+        }
+        value = object.getString(changedIndex, false, true);
+        if (value && openstudio::istringEqual(value.get(), "VentilationRateProcedure")) {
+
+          auto iddObject = idd_3_3_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              if (i == changedIndex) {
+                // System Outdoor Air Method
+                newObject.setString(i, "Standard62.1VentilationRateProcedure");
+              } else {
+                newObject.setString(i, value.get());
+              }
+            }
+          }
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+
+        } else {
+          // Nothing to do since there's no rename to perform
+          ss << object;
+        }
+
         // No-op
       } else {
         ss << object;
