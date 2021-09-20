@@ -46,6 +46,12 @@
 #include "../../model/Building_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/ScheduleDay.hpp"
+#include "../../model/ScheduleDay_Impl.hpp"
+#include "../../model/ScheduleWeek.hpp"
+#include "../../model/ScheduleWeek_Impl.hpp"
+#include "../../model/ScheduleYear.hpp"
+#include "../../model/ScheduleYear_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
 #include "../../model/Surface.hpp"
@@ -67,6 +73,7 @@
 #include <resources.hxx>
 
 #include <sstream>
+#include <utility>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -265,7 +272,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces) {
   struct ExpectedSurfaceInfo
   {
     ExpectedSurfaceInfo(std::string t_name, std::string t_surfaceType, std::string t_spaceName)
-      : name(t_name), surfaceType(t_surfaceType), spaceName(t_spaceName){};
+      : name(std::move(t_name)), surfaceType(std::move(t_surfaceType)), spaceName(std::move(t_spaceName)){};
 
     const std::string name;
     const std::string surfaceType;
@@ -589,4 +596,18 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Basic) {
+
+  // Test for #4439 - Properly RT gbxml Schedules
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  EXPECT_EQ(2U, model->getConcreteModelObjects<ScheduleYear>().size());
+  EXPECT_EQ(2U, model->getConcreteModelObjects<ScheduleWeek>().size());
+  EXPECT_EQ(2U, model->getConcreteModelObjects<ScheduleDay>().size());
 }
