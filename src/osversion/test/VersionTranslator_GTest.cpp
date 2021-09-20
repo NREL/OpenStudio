@@ -1743,3 +1743,42 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_GroundHeatExchangerVertical) {
 
   EXPECT_EQ(35, ghe.numExtensibleGroups());
 }
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_ControllerMechanicalVentilation) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_ControllerMechanicalVentilation.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_ControllerMechanicalVentilation_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> cs = model->getObjectsByType("OS:Controller:MechanicalVentilation");
+  ASSERT_EQ(1u, cs.size());
+  WorkspaceObject c = cs[0];
+
+  // Field 4: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+  EXPECT_EQ("Standard62.1VentilationRateProcedure", c.getString(4, false, true).get());
+}
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_SizingSystem) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingSystem.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingSystem_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> szs = model->getObjectsByType("OS:Sizing:System");
+  ASSERT_EQ(1u, szs.size());
+  WorkspaceObject sz = szs[0];
+
+  // Field 20: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+  EXPECT_EQ("Standard62.1VentilationRateProcedure", sz.getString(20, false, true).get());
+
+  // Field before
+  EXPECT_EQ(1.2, sz.getDouble(19).get());  // Heating Design Air Flow Rate
+  // Field right after
+  EXPECT_EQ(1.0, sz.getDouble(21).get());  // Zone Maximum Outdoor Air Fraction
+}
