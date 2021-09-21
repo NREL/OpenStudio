@@ -29,7 +29,7 @@
 
 // These functions return via reference parameters - something we cannot support with SWIG out of the box
 %ignore openstudio::SqlFile::illuminanceMapMaxValue(const std::string&, double&, double&) const;
-%ignore openstudio::SqlFile::illuminanceMapMaxValue(const int&, double&, double&) const;
+%ignore openstudio::SqlFile::illuminanceMapMaxValue(int, double&, double&) const;
 
 // create an instantiation of the optional classes
 %template(OptionalSqlFile) boost::optional<openstudio::SqlFile>;

@@ -914,6 +914,7 @@ class Run
     options[:no_simulation] = false
     options[:osw_path] = './workflow.osw'
     options[:post_process] = false
+    options[:ep_json] = false
 
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio run [options]'
@@ -929,6 +930,9 @@ class Run
       end
       o.on('-p', '--postprocess_only', 'Only run the reporting measures') do
         options[:post_process] = true
+      end
+      o.on('--export-epJSON', 'export epJSON file format. The default is IDF') do
+        options[:ep_json] = true
       end
       o.on('-s', '--socket PORT', 'Pipe status messages to a socket on localhost PORT') do |port|
         options[:socket] = port
@@ -963,6 +967,10 @@ class Run
     if options[:debug]
       run_options[:debug] = true
       run_options[:cleanup] = false
+    end
+
+    if options[:ep_json]
+      run_options[:ep_json] = true
     end
 
     if options[:socket]

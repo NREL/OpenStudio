@@ -68,7 +68,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#5cc83469365344df986cd820cca4884d")
+    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#6eb6dc4e0a3af9651279d3dc6121945a")
   endif()
 
   if(BUILD_BENCHMARK)
@@ -102,7 +102,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right
     # Now that we pin dependencies, there is no point looking upstream really, so we'll save valuable configuration time by not doing it
-    #UPDATE
+    UPDATE
   )
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)

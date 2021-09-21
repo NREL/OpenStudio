@@ -584,23 +584,23 @@ namespace detail {
 
     /// get zone names of for specified illuminance map
     std::vector<std::string> illuminanceMapZoneNames(const std::string& name) const;
-    std::vector<std::string> illuminanceMapZoneNames(const int& mapIndex) const;
+    std::vector<std::string> illuminanceMapZoneNames(int mapIndex) const;
 
     /// reference point for map - form RefPtn=(x:y:illuminance)
-    boost::optional<std::string> illuminanceMapRefPt(const std::string& name, const int& ptNum) const;
-    boost::optional<std::string> illuminanceMapRefPt(const int& mapIndex, const int& ptNum) const;
+    boost::optional<std::string> illuminanceMapRefPt(const std::string& name, int ptNum) const;
+    boost::optional<std::string> illuminanceMapRefPt(int mapIndex, int ptNum) const;
 
     /// minimum value of map
     boost::optional<double> illuminanceMapMinValue(const std::string& name) const;
-    boost::optional<double> illuminanceMapMinValue(const int& mapIndex) const;
+    boost::optional<double> illuminanceMapMinValue(int mapIndex) const;
 
     /// maximum value of map
     boost::optional<double> illuminanceMapMaxValue(const std::string& name) const;
-    boost::optional<double> illuminanceMapMaxValue(const int& mapIndex) const;
+    boost::optional<double> illuminanceMapMaxValue(int mapIndex) const;
 
     /// minimum and maximum of map
     void illuminanceMapMaxValue(const std::string& name, double& minValue, double& maxValue) const;
-    void illuminanceMapMaxValue(const int& mapIndex, double& minValue, double& maxValue) const;
+    void illuminanceMapMaxValue(int mapIndex, double& minValue, double& maxValue) const;
 
     /// x position (m) of the illuminance map
     Vector illuminanceMapX(const std::string& name, const DateTime& dateTime) const;
@@ -609,31 +609,31 @@ namespace detail {
     Vector illuminanceMapY(const std::string& name, const DateTime& dateTime) const;
 
     /// x position (m) of the illuminance map
-    Vector illuminanceMapX(const int& hourlyReportIndex) const;
+    Vector illuminanceMapX(int hourlyReportIndex) const;
 
     /// y position (m) of the illuminance map
-    Vector illuminanceMapY(const int& hourlyReportIndex) const;
+    Vector illuminanceMapY(int hourlyReportIndex) const;
 
     /// hourly report index for mapIndex at date and time
-    boost::optional<int> illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const;
+    boost::optional<int> illuminanceMapHourlyReportIndex(int mapIndex, const DateTime& dateTime) const;
 
     // find the illuminance map index by name
     boost::optional<int> illuminanceMapIndex(const std::string& name) const;
 
     /// date time at hourly report index
-    boost::optional<DateTime> illuminanceMapDate(const int& hourlyReportIndex) const;
+    boost::optional<DateTime> illuminanceMapDate(int hourlyReportIndex) const;
 
     /// hourly report indices of the illuminance map
     std::vector<int> illuminanceMapHourlyReportIndices(const std::string& name) const;
 
     /// hourly report indices and dates of the illuminance map
-    std::vector<std::pair<int, DateTime>> illuminanceMapHourlyReportIndicesDates(const int& mapIndex) const;
+    std::vector<std::pair<int, DateTime>> illuminanceMapHourlyReportIndicesDates(int mapIndex) const;
 
     /// hourly report indices and dates of the illuminance map
     std::vector<std::pair<int, DateTime>> illuminanceMapHourlyReportIndicesDates(const std::string& name) const;
 
     /// hourly report indices of the illuminance map
-    std::vector<int> illuminanceMapHourlyReportIndices(const int& mapIndex) const;
+    std::vector<int> illuminanceMapHourlyReportIndices(int mapIndex) const;
 
     /// value (lux) of the illuminance map at date and time
     /// value(i,j) is the illuminance at x(i), y(j)
@@ -641,11 +641,11 @@ namespace detail {
 
     /// value (lux) of the illuminance map at hourlyReportIndex
     /// value(i,j) is the illuminance at x(i), y(j)
-    Matrix illuminanceMap(const int& hourlyReportIndex) const;
+    Matrix illuminanceMap(int hourlyReportIndex) const;
 
     /// value (lux) of the illuminance map at hourlyReportIndex
     /// value(i,j) is the illuminance at x(i), y(j) - returns x, y and illuminance
-    void illuminanceMap(const int& hourlyReportIndex, std::vector<double>& x, std::vector<double>& y, std::vector<double>& illuminance) const;
+    void illuminanceMap(int hourlyReportIndex, std::vector<double>& x, std::vector<double>& y, std::vector<double>& illuminance) const;
 
     // execute a statement and return the first (if any) value as a double.
     // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string

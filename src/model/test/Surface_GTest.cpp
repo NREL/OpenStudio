@@ -3666,3 +3666,21 @@ TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideConditionsModel) {
   Model model;
   SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
+
+TEST_F(ModelFixture, Surface_isXXXAutocalculated_4399) {
+  // Test for #4399
+  Model m;
+  std::vector<Point3d> points{
+    Point3d{0, 1, 0},
+    Point3d{0, 0, 0},
+    Point3d{1, 0, 0},
+    Point3d{1, 1, 0},
+  };
+
+  Surface surface(points, m);
+  surface.autocalculateViewFactortoGround();
+  EXPECT_TRUE(surface.isViewFactortoGroundAutocalculated());
+
+  surface.autocalculateNumberofVertices();
+  EXPECT_TRUE(surface.isNumberofVerticesAutocalculated());
+}

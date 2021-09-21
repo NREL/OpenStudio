@@ -1262,3 +1262,21 @@ TEST_F(ModelFixture, SubSurface_ShadingControls) {
   subSurface.resetShadingControl();
   EXPECT_EQ(0, subSurface.numberofShadingControls());
 }
+
+TEST_F(ModelFixture, SubSurface_isXXXAutocalculated_4399) {
+  // Test for #4399
+  Model m;
+  std::vector<Point3d> points{
+    Point3d{0, 1, 0},
+    Point3d{0, 0, 0},
+    Point3d{1, 0, 0},
+    Point3d{1, 1, 0},
+  };
+
+  SubSurface subSurface(points, m);
+  subSurface.autocalculateViewFactortoGround();
+  EXPECT_TRUE(subSurface.isViewFactortoGroundAutocalculated());
+
+  subSurface.autocalculateNumberofVertices();
+  EXPECT_TRUE(subSurface.isNumberofVerticesAutocalculated());
+}

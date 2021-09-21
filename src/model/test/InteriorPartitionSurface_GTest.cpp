@@ -53,3 +53,19 @@ TEST_F(ModelFixture, InteriorPartitionSurface) {
   InteriorPartitionSurface interiorPartitionSurface(points, model);
   EXPECT_FALSE(interiorPartitionSurface.interiorPartitionSurfaceGroup());
 }
+
+TEST_F(ModelFixture, InteriorPartitionSurface_isXXXAutocalculated_4399) {
+  // Test for #4399
+  Model m;
+  std::vector<Point3d> points{
+    Point3d{0, 1, 0},
+    Point3d{0, 0, 0},
+    Point3d{1, 0, 0},
+    Point3d{1, 1, 0},
+  };
+
+  InteriorPartitionSurface interiorPartitionSurface(points, m);
+
+  interiorPartitionSurface.autocalculateNumberofVertices();
+  EXPECT_TRUE(interiorPartitionSurface.isNumberofVerticesAutocalculated());
+}
