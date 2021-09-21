@@ -1,0 +1,27 @@
+<gbXML xmlns="http://www.gbxml.org/schema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" useSIUnitsForResults="true" SurfaceReferenceLocation="Centerline" temperatureUnit="F" lengthUnit="Feet" areaUnit="SquareFeet" volumeUnit="CubicFeet" version="6.01">
+  <Campus id="Facility">
+
+    <Description>A gbxml test file for Schedules in case we reference stuff that can't be found</Description>
+
+    <Building id="building-1">
+      <Area>200000</Area>
+      <BuildingStorey id="storey-1">
+        <Name>storey 1</Name>
+        <Level>0</Level>
+      </BuildingStorey>
+    </Building>
+  </Campus>
+
+  <Schedule type="Fraction" id="Simple_Schedule">
+    <YearSchedule id="Simple_Schedule_YearSchedule">
+      <BeginDate>2017-01-01</BeginDate>
+      <EndDate>2017-12-31</EndDate>
+      <WeekScheduleId weekScheduleIdRef="SOMETHING_THAT_CANT_BE_FOUND" />
+    </YearSchedule>
+    <Name>Simple Year Schedule</Name>
+  </Schedule>
+  <WeekSchedule type="Fraction" id="NOT_USED">
+    <Day dayScheduleIdRef="ANOTHER_THING_THAT_CANT_BE_FOUND" dayType="All" />
+    <Name>Simple Year Schedule - Typical Week</Name>
+  </WeekSchedule>
+</gbXML>

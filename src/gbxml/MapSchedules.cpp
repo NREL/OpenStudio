@@ -51,6 +51,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 
+#include <algorithm>
 #include <utilities/idd/OS_ScheduleTypeLimits_FieldEnums.hxx>
 
 #include <pugixml.hpp>
@@ -122,13 +123,13 @@ namespace gbxml {
 
     // don't need to translate type
 
-    for (auto& dayElement : element.children("Day")) {
+    for (const auto& dayElement : element.children("Day")) {
 
       std::string dayType = dayElement.attribute("dayType").value();
       std::string dayScheduleIdRef = dayElement.attribute("dayScheduleIdRef").value();
 
       // this can be made more efficient using QXPath in QXmlPatterns later
-      for (auto& dayScheduleElement : root.children("DaySchedule")) {
+      for (const auto& dayScheduleElement : root.children("DaySchedule")) {
         std::string thisId = dayScheduleElement.attribute("id").value();
         if (thisId == dayScheduleIdRef) {
 
@@ -182,14 +183,28 @@ namespace gbxml {
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(const pugi::xml_node& element, const pugi::xml_node& root,
                                                                                        openstudio::model::Model& model) {
+
     std::string id = element.attribute("id").value();
     std::string type = element.attribute("type").value();
+    std::string name = element.child("Name").text().as_string();
+
+    if (id.empty() || type.empty() || name.empty()) {
+      LOG(Error, "Schedule cannot have empty name, type or id (respectively '" << name << "', " << type << "', " << id << "') here. "
+                                                                               << "It will not be processed.");
+      return boost::none;
+    }
+
+    // Start by processing YearSchedule children because if none, it's useless
+    auto yearSchedules = element.children("YearSchedule");
+    if (yearSchedules.begin() == yearSchedules.end()) {
+      LOG(Error, "Schedule '" << name << "' has zero YearSchedule children so it will not be processed.");
+      return boost::none;
+    }
 
     openstudio::model::ScheduleYear result(model);
     m_idToObjectMap.insert(std::make_pair(id, result));
     result.additionalProperties().setFeature("gbXMLId", id);
 
-    std::string name = element.child("Name").text().as_string();
     result.setName(escapeName(id, name));
 
     openstudio::model::ScheduleTypeLimits scheduleTypeLimits = getScheduleTypeLimits(type, model);
@@ -197,19 +212,19 @@ namespace gbxml {
 
     openstudio::model::YearDescription yd = model.getUniqueModelObject<openstudio::model::YearDescription>();
 
-    auto first{true};
-    for (auto& scheduleYearElement : element.children("YearSchedule")) {
+    struct YearScheduleInfo
+    {
+      openstudio::Date beginDate;
+      openstudio::Date endDate;
+      std::string weekScheduleId;
+    };
+
+    auto makeYearScheduleInfo = [&yd](const pugi::xml_node& scheduleYearElement) -> YearScheduleInfo {
       std::string beginDateString = scheduleYearElement.child("BeginDate").text().as_string();
       auto beginDateParts = splitString(beginDateString, '-');  // 2011-01-01
       OS_ASSERT(beginDateParts.size() == 3);
       yd.setCalendarYear(std::stoi(beginDateParts.at(0)));
       openstudio::Date beginDate = yd.makeDate(std::stoi(beginDateParts.at(1)), std::stoi(beginDateParts.at(2)));
-
-      // handle case if schedule does not start on 1/1
-      if (first && (beginDate != yd.makeDate(1, 1))) {
-        OS_ASSERT(false);
-      }
-      first = false;
 
       std::string endDateString = scheduleYearElement.child("EndDate").text().as_string();
       auto endDateParts = splitString(endDateString, '-');  // 2011-12-31
@@ -220,23 +235,67 @@ namespace gbxml {
 
       std::string weekScheduleId = scheduleYearElement.child("WeekScheduleId").attribute("weekScheduleIdRef").value();
 
-      // this can be made more efficient using QXPath in QXmlPatterns later
-      for (auto& scheduleWeekElement : root.children("WeekSchedule")) {
-        std::string thisId = scheduleWeekElement.attribute("id").value();
-        if (thisId == weekScheduleId) {
+      return YearScheduleInfo{beginDate, endDate, weekScheduleId};
+    };
 
-          boost::optional<openstudio::model::ModelObject> modelObject = translateScheduleWeek(scheduleWeekElement, root, model);
-          if (modelObject) {
+    // Make a vector so we can sort by beginDate
+    std::vector<YearScheduleInfo> yearScheduleInfos;
+    std::transform(yearSchedules.begin(), yearSchedules.end(), std::back_inserter(yearScheduleInfos), makeYearScheduleInfo);
+    std::sort(yearScheduleInfos.begin(), yearScheduleInfos.end(), [](const auto& y1, const auto& y2) { return y1.beginDate < y2.beginDate; });
 
-            boost::optional<openstudio::model::ScheduleWeek> scheduleWeek = modelObject->cast<openstudio::model::ScheduleWeek>();
-            if (scheduleWeek) {
-              result.addScheduleWeek(endDate, *scheduleWeek);
-            }
-          }
+    // I can do front() safely since I know it's not empty here (I returned before if it was)
+    if (yearScheduleInfos.front().beginDate != yd.makeDate(1, 1)) {
+      LOG(Warn, "For Schedule '" << name << "', the first YearSchedule does not start on January 1.");
+    }
 
-          break;
-        }
+    {
+      auto it = std::adjacent_find(std::begin(yearScheduleInfos), std::end(yearScheduleInfos),
+                                   [](const auto& y1, const auto& y2) { return (y2.beginDate - y1.endDate).days() != 1; });
+
+      if (it != std::end(yearScheduleInfos)) {
+        LOG(Warn, "For Schedule '" << name
+                                   << "', there are more than one day apart between two consecutive YearSchedules. "
+                                      "First occurrence: previous stops at "
+                                   << it->endDate << " and following starts at " << std::next(it)->beginDate << ".");
       }
+    }
+
+    boost::optional<openstudio::Date> lastEndDate;
+
+    auto scheduleWeekElements = root.children("WeekSchedule");
+
+    for (const auto& yearScheduleInfo : yearScheduleInfos) {
+      const auto& beginDate = yearScheduleInfo.beginDate;
+      if (lastEndDate && ((beginDate - lastEndDate.get()).days() != 1)) {
+        LOG(Warn, "For Schedule '" << name << "', there are more than one day apart between two YearSchedule: previous stops at " << lastEndDate.get()
+                                   << " and following starts at " << beginDate);
+      }
+
+      const auto& weekScheduleId = yearScheduleInfo.weekScheduleId;
+
+      auto itWeek = std::find_if(scheduleWeekElements.begin(), scheduleWeekElements.end(), [&weekScheduleId](const auto& scheduleWeekElement) {
+        std::string thisId = scheduleWeekElement.attribute("id").value();
+        return thisId == weekScheduleId;
+      });
+      if (itWeek != scheduleWeekElements.end()) {
+        boost::optional<openstudio::model::ModelObject> modelObject = translateScheduleWeek(*itWeek, root, model);
+        if (modelObject) {
+
+          boost::optional<openstudio::model::ScheduleWeek> scheduleWeek = modelObject->cast<openstudio::model::ScheduleWeek>();
+          if (scheduleWeek) {
+            result.addScheduleWeek(yearScheduleInfo.endDate, *scheduleWeek);
+          } else {
+            // TODO: Allow? remove?
+          }
+        }
+      } else {
+        LOG(Error, "Schedule '" << name << "' references a weekScheduleId='" << weekScheduleId << " which cannot be found in the gbXML file");
+        // TODO: cleanup?
+        result.remove();
+        return boost::none;
+      }
+      // Don't forget to increment here
+      lastEndDate = yearScheduleInfo.endDate;
     }
 
     return result;

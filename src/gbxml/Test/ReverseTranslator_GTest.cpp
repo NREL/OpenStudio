@@ -762,3 +762,20 @@ TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Complex) {
     }
   }
 }
+
+TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Error) {
+
+  // In this file, a ScheduleYear references a weekScheduleIdRef that doesn't exist
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestSchedulesErrorHandling.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model_ = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model_);
+  auto m = model_.get();
+
+  m.save(resourcesPath() / openstudio::toPath("gbxml/TestSchedulesErrorHandling.osm"), true);
+
+  // One Schedule is simple: 1 YearSchedule, 1 WeekSchedule, 1 DaySchedule
+  // The other is complex: Two week schedules, one with a single day schedules, and one with two
+  EXPECT_EQ(0U, m.getConcreteModelObjects<ScheduleYear>().size());
+}

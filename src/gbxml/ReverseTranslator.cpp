@@ -301,8 +301,9 @@ namespace gbxml {
     }
 
     for (auto& scheduleElement : scheduleElements) {
-      boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, root, model);
-      OS_ASSERT(schedule);  // Krishnan, what type of error handling do you want?
+      // boost::optional<model::ModelObject> schedule =
+      translateSchedule(scheduleElement, root, model);
+      // OS_ASSERT(schedule);  // Krishnan, what type of error handling do you want?
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
