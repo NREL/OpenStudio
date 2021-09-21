@@ -7941,7 +7941,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     coil.setEvaporatorAirTemperatureTypeforCurveObjects("DryBulbTemperature");
 
     // Save coil so that a meter can be created later
-    if( istringEqual(fluidSysType, "ServiceHotWater") ) {
+    if( istringEqual(fluidSysType, "HotWater") ) {
       m_spaceHeatingAirToWaterHeatPumps.push_back(coil);
     }
 
