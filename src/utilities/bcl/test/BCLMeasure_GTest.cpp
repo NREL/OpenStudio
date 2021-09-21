@@ -75,6 +75,9 @@ TEST_F(BCLFixture, BCLMeasure) {
   }
 
   openstudio::path dir2 = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade2/");
+  openstudio::path dir2clean = dir2;
+  dir2clean.remove_trailing_separator();
+
   if (openstudio::filesystem::exists(dir2)) {
     ASSERT_TRUE(removeDirectory(dir2));
   }
@@ -87,8 +90,31 @@ TEST_F(BCLFixture, BCLMeasure) {
   EXPECT_FALSE(measure2->checkForUpdatesXML());
   EXPECT_TRUE(*measure == *measure2);
   EXPECT_FALSE(measure->directory() == measure2->directory());
-  EXPECT_TRUE(dir2 == measure2->directory());
-  EXPECT_EQ(6u, measure2->files().size());
+  // Trailing separators differ...
+  EXPECT_NE(dir2, measure2->directory());
+  EXPECT_EQ(dir2clean, measure2->directory());
+
+  EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
+    std::stringstream ss;
+    for (const auto& f : measure2->files()) {
+      ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
+    }
+    return ss.str();
+  }();
+
+  // Trailing separators differ...
+  EXPECT_NE(dir2, measure2->directory());
+  EXPECT_EQ(dir2clean, measure2->directory());
+  EXPECT_TRUE(openstudio::filesystem::is_directory(dir2));
+  EXPECT_TRUE(openstudio::filesystem::is_directory(dir2clean));
+
+  EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
+    std::stringstream ss;
+    for (const auto& f : measure2->files()) {
+      ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
+    }
+    return ss.str();
+  }();
 
   measure2->setName("New Measure");  // this would normally be initiated by a change from the measure
   EXPECT_FALSE(measure2->checkForUpdatesFiles());
@@ -133,7 +159,7 @@ TEST_F(BCLFixture, BCLMeasure) {
 
   measure2 = BCLMeasure::load(dir2);
   ASSERT_TRUE(measure2);
-  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_TRUE(measure2->checkForUpdatesFiles());  // Checksum updated
   EXPECT_TRUE(measure2->checkForUpdatesXML());
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
 }
