@@ -571,7 +571,7 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 0e08d2d8bf8d711f139300645eca4d7e)
+    set(ENERGYPLUS_EXPECTED_HASH 2b48a85e7af3b92ca4538d215f6058e0)
     set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
