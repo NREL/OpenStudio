@@ -173,6 +173,10 @@ void BCLMeasure::createDirectory(const openstudio::path& dir) {
 BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir, const std::string& taxonomyTag,
                        MeasureType measureType, const std::string& description, const std::string& modelerDescription)
   : m_directory(openstudio::filesystem::system_complete(dir)), m_bclXML(BCLXMLType::MeasureXML) {
+
+  // Avoid potential problems, since toPath("/path/to/dir/") != toPath("/path/to/dir")
+  m_directory.remove_trailing_separator();
+
   openstudio::path measureDocRelativeDir = toPath("docs");
   openstudio::path measureTestRelativeDir = toPath("tests");
   std::string lowerClassName = toUnderscoreCase(className);
@@ -352,6 +356,9 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
 }
 
 BCLMeasure::BCLMeasure(const openstudio::path& dir) : m_directory(openstudio::filesystem::system_complete(dir)), m_bclXML(BCLXMLType::MeasureXML) {
+  // Avoid potential problems, since toPath("/path/to/dir/") != toPath("/path/to/dir")
+  m_directory.remove_trailing_separator();
+
   openstudio::path xmlPath = m_directory / toPath("measure.xml");
   boost::optional<BCLXML> bclXML = BCLXML::load(xmlPath);
 
@@ -899,6 +906,7 @@ bool BCLMeasure::checkForUpdatesFiles() {
     openstudio::path filePath = file.path();
     // If the file has been deleted from disk, mark it for removal
     if (!openstudio::filesystem::exists(filePath)) {
+      LOG(Info, filePath << " has been deleted");
       result = true;
       // what if this is the measure.rb file?
       filesToRemove.push_back(file);
@@ -915,6 +923,7 @@ bool BCLMeasure::checkForUpdatesFiles() {
 
       // otherwise, compute new checksum, and if not the same: mark it for addition
     } else if (file.checkForUpdate()) {
+      LOG(Info, filePath << " has been updated");
       result = true;
       filesToAdd.push_back(file);
     }
