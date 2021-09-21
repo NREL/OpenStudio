@@ -50,6 +50,8 @@
 #include "../model/Facility_Impl.hpp"
 #include "../model/FanZoneExhaust.hpp"
 #include "../model/FanZoneExhaust_Impl.hpp"
+#include "../model/FanOnOff.hpp"
+#include "../model/FanOnOff_Impl.hpp"
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
 #include "../model/ThermalZone.hpp"
