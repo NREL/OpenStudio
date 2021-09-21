@@ -112,6 +112,7 @@ namespace gbxml {
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleWeek(const pugi::xml_node& element, const pugi::xml_node& root,
                                                                                            openstudio::model::Model& model) {
     std::string id = element.attribute("id").value();
+    // TODO: not correct, 6.01 says it's scheduleType
     std::string type = element.attribute("type").value();
 
     openstudio::model::ScheduleWeek result(model);
@@ -185,6 +186,7 @@ namespace gbxml {
                                                                                        openstudio::model::Model& model) {
 
     std::string id = element.attribute("id").value();
+    // TODO: not correct, 6.01 says it's scheduleType
     std::string type = element.attribute("type").value();
     std::string name = element.child("Name").text().as_string();
 
