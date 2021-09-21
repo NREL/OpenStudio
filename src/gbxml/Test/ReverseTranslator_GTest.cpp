@@ -62,10 +62,13 @@
 #include "../../model/SubSurface_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../../model/YearDescription.hpp"
+#include "../../model/YearDescription_Impl.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/geometry/Plane.hpp"
+#include "../../utilities/time/Date.hpp"
 
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
@@ -610,4 +613,152 @@ TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Basic) {
   EXPECT_EQ(2U, model->getConcreteModelObjects<ScheduleYear>().size());
   EXPECT_EQ(2U, model->getConcreteModelObjects<ScheduleWeek>().size());
   EXPECT_EQ(2U, model->getConcreteModelObjects<ScheduleDay>().size());
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Complex) {
+
+  // Test for #4439 - Properly RT gbxml Schedules
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model_ = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model_);
+  auto m = model_.get();
+
+  m.save(resourcesPath() / openstudio::toPath("gbxml/TestSchedules.osm"), true);
+
+  // One Schedule is simple: 1 YearSchedule, 1 WeekSchedule, 1 DaySchedule
+  // The other is complex: Two week schedules, one with a single day schedules, and one with two
+  EXPECT_EQ(2U, m.getConcreteModelObjects<ScheduleYear>().size());
+  EXPECT_EQ(3U, m.getConcreteModelObjects<ScheduleWeek>().size());
+  EXPECT_EQ(4U, m.getConcreteModelObjects<ScheduleDay>().size());
+
+  ASSERT_TRUE(m.yearDescription());
+  auto yd = m.getUniqueModelObject<model::YearDescription>();
+  ASSERT_TRUE(yd.calendarYear());
+  EXPECT_EQ(2017, yd.calendarYear().get());
+
+  // auto jan1 = yd.makeDate(1, 1);
+  auto june30 = yd.makeDate(6, 30);
+  // auto july1 = yd.makeDate(7, 1);
+  auto dec31 = yd.makeDate(12, 31);
+
+  // Test simple Schedule
+  {
+    auto schYear_ = m.getConcreteModelObjectByName<ScheduleYear>("Simple Year Schedule");
+    EXPECT_TRUE(schYear_);
+    ASSERT_EQ(1U, schYear_->dates().size());
+    EXPECT_EQ(dec31, schYear_->dates()[0]);
+    ASSERT_EQ(1U, schYear_->scheduleWeeks().size());
+    auto schWeek = schYear_->scheduleWeeks()[0];
+    EXPECT_EQ("Simple Year Schedule - Typical Week", schWeek.nameString());
+
+    auto schDay_ = m.getConcreteModelObjectByName<ScheduleDay>("Simple Year Schedule - Typical Day");
+    ASSERT_TRUE(schDay_);
+    auto schDay = schDay_.get();
+
+    ASSERT_TRUE(schWeek.sundaySchedule());
+    EXPECT_EQ(schDay, schWeek.sundaySchedule().get());
+    ASSERT_TRUE(schWeek.mondaySchedule());
+    EXPECT_EQ(schDay, schWeek.mondaySchedule().get());
+    ASSERT_TRUE(schWeek.tuesdaySchedule());
+    EXPECT_EQ(schDay, schWeek.tuesdaySchedule().get());
+    ASSERT_TRUE(schWeek.wednesdaySchedule());
+    EXPECT_EQ(schDay, schWeek.wednesdaySchedule().get());
+    ASSERT_TRUE(schWeek.thursdaySchedule());
+    EXPECT_EQ(schDay, schWeek.thursdaySchedule().get());
+    ASSERT_TRUE(schWeek.fridaySchedule());
+    EXPECT_EQ(schDay, schWeek.fridaySchedule().get());
+    ASSERT_TRUE(schWeek.saturdaySchedule());
+    EXPECT_EQ(schDay, schWeek.saturdaySchedule().get());
+    ASSERT_TRUE(schWeek.holidaySchedule());
+    EXPECT_EQ(schDay, schWeek.holidaySchedule().get());
+    ASSERT_TRUE(schWeek.summerDesignDaySchedule());
+    EXPECT_EQ(schDay, schWeek.summerDesignDaySchedule().get());
+    ASSERT_TRUE(schWeek.winterDesignDaySchedule());
+    EXPECT_EQ(schDay, schWeek.winterDesignDaySchedule().get());
+    ASSERT_TRUE(schWeek.customDay1Schedule());
+    EXPECT_EQ(schDay, schWeek.customDay1Schedule().get());
+    ASSERT_TRUE(schWeek.customDay2Schedule());
+    EXPECT_EQ(schDay, schWeek.customDay2Schedule().get());
+  }
+
+  // Test Complex Schedule
+  {
+    auto schYear_ = m.getConcreteModelObjectByName<ScheduleYear>("Complex Year Schedule");
+    EXPECT_TRUE(schYear_);
+    ASSERT_EQ(2U, schYear_->dates().size());
+    EXPECT_EQ(june30, schYear_->dates()[0]);
+    EXPECT_EQ(dec31, schYear_->dates()[1]);
+    ASSERT_EQ(2U, schYear_->scheduleWeeks().size());
+
+    {
+      auto schWeek = schYear_->scheduleWeeks()[0];
+      EXPECT_EQ("Complex Year Schedule - Typical Week January to June", schWeek.nameString());
+
+      auto schDay_ = m.getConcreteModelObjectByName<ScheduleDay>("Complex Year Schedule - Typical Day January to June");
+      ASSERT_TRUE(schDay_);
+      auto schDay = schDay_.get();
+
+      ASSERT_TRUE(schWeek.sundaySchedule());
+      EXPECT_EQ(schDay, schWeek.sundaySchedule().get());
+      ASSERT_TRUE(schWeek.mondaySchedule());
+      EXPECT_EQ(schDay, schWeek.mondaySchedule().get());
+      ASSERT_TRUE(schWeek.tuesdaySchedule());
+      EXPECT_EQ(schDay, schWeek.tuesdaySchedule().get());
+      ASSERT_TRUE(schWeek.wednesdaySchedule());
+      EXPECT_EQ(schDay, schWeek.wednesdaySchedule().get());
+      ASSERT_TRUE(schWeek.thursdaySchedule());
+      EXPECT_EQ(schDay, schWeek.thursdaySchedule().get());
+      ASSERT_TRUE(schWeek.fridaySchedule());
+      EXPECT_EQ(schDay, schWeek.fridaySchedule().get());
+      ASSERT_TRUE(schWeek.saturdaySchedule());
+      EXPECT_EQ(schDay, schWeek.saturdaySchedule().get());
+      ASSERT_TRUE(schWeek.holidaySchedule());
+      EXPECT_EQ(schDay, schWeek.holidaySchedule().get());
+      ASSERT_TRUE(schWeek.summerDesignDaySchedule());
+      EXPECT_EQ(schDay, schWeek.summerDesignDaySchedule().get());
+      ASSERT_TRUE(schWeek.winterDesignDaySchedule());
+      EXPECT_EQ(schDay, schWeek.winterDesignDaySchedule().get());
+      ASSERT_TRUE(schWeek.customDay1Schedule());
+      EXPECT_EQ(schDay, schWeek.customDay1Schedule().get());
+      ASSERT_TRUE(schWeek.customDay2Schedule());
+      EXPECT_EQ(schDay, schWeek.customDay2Schedule().get());
+    }
+
+    {
+      auto schWeek = schYear_->scheduleWeeks()[1];
+      EXPECT_EQ("Complex Year Schedule - Typical Week July to December", schWeek.nameString());
+
+      auto schDayWeekday_ = m.getConcreteModelObjectByName<ScheduleDay>("Complex Year Schedule - Typical Weekday July to December");
+      ASSERT_TRUE(schDayWeekday_);
+      auto schDayWeekday = schDayWeekday_.get();
+
+      auto schDayWeekend_ = m.getConcreteModelObjectByName<ScheduleDay>("Complex Year Schedule - Typical Weekend July to December");
+      ASSERT_TRUE(schDayWeekend_);
+      auto schDayWeekend = schDayWeekend_.get();
+
+      ASSERT_TRUE(schWeek.mondaySchedule());
+      EXPECT_EQ(schDayWeekday, schWeek.mondaySchedule().get());
+      ASSERT_TRUE(schWeek.tuesdaySchedule());
+      EXPECT_EQ(schDayWeekday, schWeek.tuesdaySchedule().get());
+      ASSERT_TRUE(schWeek.wednesdaySchedule());
+      EXPECT_EQ(schDayWeekday, schWeek.wednesdaySchedule().get());
+      ASSERT_TRUE(schWeek.thursdaySchedule());
+      EXPECT_EQ(schDayWeekday, schWeek.thursdaySchedule().get());
+      ASSERT_TRUE(schWeek.fridaySchedule());
+      EXPECT_EQ(schDayWeekday, schWeek.fridaySchedule().get());
+
+      ASSERT_TRUE(schWeek.saturdaySchedule());
+      EXPECT_EQ(schDayWeekend, schWeek.saturdaySchedule().get());
+      ASSERT_TRUE(schWeek.sundaySchedule());
+      EXPECT_EQ(schDayWeekend, schWeek.sundaySchedule().get());
+
+      EXPECT_FALSE(schWeek.holidaySchedule());
+      EXPECT_FALSE(schWeek.summerDesignDaySchedule());
+      EXPECT_FALSE(schWeek.winterDesignDaySchedule());
+      EXPECT_FALSE(schWeek.customDay1Schedule());
+      EXPECT_FALSE(schWeek.customDay2Schedule());
+    }
+  }
 }
