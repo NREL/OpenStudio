@@ -987,6 +987,9 @@ namespace sdd {
       for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
         customSpaceHeatingMeter.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
       }
+      for(const auto fan : m_spaceHeatingFans) {
+        customSpaceHeatingMeter.addKeyVarGroup(fan.nameString(), "Fan Electricity Energy");
+      }
       meter = model::OutputMeter(*result);
       //meter.setFuelType(FuelType::Electricity);
       meter.setName(customSpaceHeatingMeter.nameString());
@@ -999,6 +1002,9 @@ namespace sdd {
       customSpaceHeatingDecrement.setFuelType("Electricity");
       for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
         customSpaceHeatingDecrement.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
+      }
+      for(const auto fan : m_spaceHeatingFans) {
+        customSpaceHeatingDecrement.addKeyVarGroup(fan.nameString(), "Fan Electricity Energy");
       }
       meter = model::OutputMeter(*result);
       //meter.setFuelType(FuelType::Electricity);

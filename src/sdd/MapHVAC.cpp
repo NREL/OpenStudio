@@ -7940,17 +7940,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10.0);
     coil.setEvaporatorAirTemperatureTypeforCurveObjects("DryBulbTemperature");
 
-    // Save coil so that a meter can be created later
-    if( istringEqual(fluidSysType, "HotWater") ) {
-      m_spaceHeatingAirToWaterHeatPumps.push_back(coil);
-    }
-
     auto fan = heatPump.fan().cast<model::FanOnOff>();
     fan.setName(hpName + " Fan");
     fan.setFanEfficiency(0.5);
     fan.setMotorEfficiency(0.85);
     fan.setMotorInAirstreamFraction(1.0);
     fan.setEndUseSubcategory(" ");
+
+    // Save coil so that a meter can be created later
+    if( istringEqual(fluidSysType, "HotWater") ) {
+      m_spaceHeatingAirToWaterHeatPumps.push_back(coil);
+      m_spaceHeatingFans.push_back(fan)
+    }
 
     // Heat pump inputs
     auto minInletAirTempCprsrOper = lexicalCastToDouble(element.child("MinInletAirTempCprsrOper"));

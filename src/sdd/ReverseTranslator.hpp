@@ -63,6 +63,7 @@ namespace model {
   class Surface;
   class SubSurface;
   class PlantLoop;
+  class FanOnOff;
   class FanZoneExhaust;
   class HeatExchangerAirToAirSensibleAndLatent;
 }  // namespace model
@@ -244,6 +245,7 @@ namespace sdd {
     // As CoilWaterHeatingAirToWaterHeatPump objects are translated, this is used to record
     // those that are used for space heating. Custom meters will be setup to do accounting.
     std::vector<model::CoilWaterHeatingAirToWaterHeatPump> m_spaceHeatingAirToWaterHeatPumps;
+    std::vector<model::FanOnOff> m_spaceHeatingFans;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };
