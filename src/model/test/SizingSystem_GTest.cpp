@@ -76,10 +76,13 @@ TEST_F(ModelFixture, SizingSystem_SizingSystem) {
   EXPECT_EQ(16.7, sizingSystem.centralHeatingDesignSupplyAirTemperature());
   EXPECT_EQ("NonCoincident", sizingSystem.sizingOption());
   EXPECT_TRUE(sizingSystem.isSizingOptionDefaulted());
-  EXPECT_FALSE(sizingSystem.allOutdoorAirinCooling());
-  EXPECT_TRUE(sizingSystem.isAllOutdoorAirinCoolingDefaulted());
-  EXPECT_FALSE(sizingSystem.allOutdoorAirinHeating());
-  EXPECT_TRUE(sizingSystem.isAllOutdoorAirinHeatingDefaulted());
+
+  // Have to force these two to 'true' to preserve historical behavior, even though it was wrong
+  EXPECT_TRUE(sizingSystem.allOutdoorAirinCooling());
+  EXPECT_FALSE(sizingSystem.isAllOutdoorAirinCoolingDefaulted());
+  EXPECT_TRUE(sizingSystem.allOutdoorAirinHeating());
+  EXPECT_FALSE(sizingSystem.isAllOutdoorAirinHeatingDefaulted());
+
   EXPECT_EQ(0.0085, sizingSystem.centralCoolingDesignSupplyAirHumidityRatio());
   EXPECT_FALSE(sizingSystem.isCentralCoolingDesignSupplyAirHumidityRatioDefaulted());
   EXPECT_EQ(0.008, sizingSystem.centralHeatingDesignSupplyAirHumidityRatio());
