@@ -955,7 +955,12 @@ namespace model {
 
     boost::optional<double> SizingSystem_Impl::autosizedOccupantDiversity() const {
       boost::optional<double> result;
-      // TODO
+      // TODO: get these values (one for heating, one for cooling) from the following?
+      // View = TabularDataWithStrings
+      // TableName = System Ventilation Requirements for Heating
+      // TableName = System Ventilation Requirements for Cooling
+      // ReportName = Standard62.1Summary
+      // ColumnName = Occupant Diversity - D
       return result;
     }
 
