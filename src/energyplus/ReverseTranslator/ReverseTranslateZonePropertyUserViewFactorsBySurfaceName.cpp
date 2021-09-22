@@ -59,7 +59,8 @@ namespace energyplus {
       return boost::none;
     }
 
-    boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameFields::SpaceorSpaceListName);
+    boost::optional<WorkspaceObject> target =
+      workspaceObject.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListorSpaceorSpaceListName);
 
     std::vector<ThermalZone> thermalZones;
     if (target) {
