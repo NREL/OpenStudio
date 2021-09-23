@@ -43,6 +43,7 @@
 #include "../model/ConstructionBase.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
+#include "../model/FanOnOff.hpp"
 
 namespace pugi {
 class xml_node;
@@ -63,7 +64,6 @@ namespace model {
   class Surface;
   class SubSurface;
   class PlantLoop;
-  class FanOnOff;
   class FanZoneExhaust;
   class HeatExchangerAirToAirSensibleAndLatent;
 }  // namespace model
