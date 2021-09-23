@@ -78,8 +78,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingSystem) {
   EXPECT_EQ(12.8, idf_ss.getDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, false).get());
   EXPECT_EQ(16.7, idf_ss.getDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, false).get());
   EXPECT_EQ("NonCoincident", idf_ss.getString(Sizing_SystemFields::TypeofZoneSumtoUse, false).get());
-  EXPECT_EQ("No", idf_ss.getString(Sizing_SystemFields::AllOutdoorAirinCooling, false).get());
-  EXPECT_EQ("No", idf_ss.getString(Sizing_SystemFields::AllOutdoorAirinHeating, false).get());
+  EXPECT_EQ("Yes", idf_ss.getString(Sizing_SystemFields::AllOutdoorAirinCooling, false).get());
+  EXPECT_EQ("Yes", idf_ss.getString(Sizing_SystemFields::AllOutdoorAirinHeating, false).get());
   EXPECT_EQ(0.0085, idf_ss.getDouble(Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, false).get());
   EXPECT_EQ(0.008, idf_ss.getDouble(Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, false).get());
   EXPECT_EQ("DesignDay", idf_ss.getString(Sizing_SystemFields::CoolingSupplyAirFlowRateMethod, false).get());

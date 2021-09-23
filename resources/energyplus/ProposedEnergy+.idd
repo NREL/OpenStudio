@@ -9754,12 +9754,15 @@ ZoneProperty:UserViewFactors:BySurfaceName,
        \memo (Number of Surfaces)**2 are expected. Any omitted surface pairs will be assumed to have a view factor of zero.
        \extensible:3 - copy last three fields, remembering to remove ;
        \format ViewFactor
-  A1,  \field Space or SpaceList Name
-       \note View factors may be entered for a single space or for a group of spaces in the same enclosure
-       \note by way of Constructon:AirBoundary or open spaces within a zone.
+  A1,  \field Zone or ZoneList or Space or SpaceList Name
+       \note View factors may be entered for a space, zone, group of spaces, or group of zones in the same enclosure
+       \note by way of Constructon:AirBoundary or open spaces within a zone. This name must align with an enclosure
+       \note encompassing the same zones or spaces.
        \type object-list
        \object-list SpaceNames
        \object-list SpaceListNames
+       \object-list ZoneNames
+       \object-list ZoneListNames
   A2,  \field From Surface 1
        \begin-extensible
        \type object-list

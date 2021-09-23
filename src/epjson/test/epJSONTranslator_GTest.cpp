@@ -243,15 +243,15 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SchedSurfGains) {
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
 
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_ApartmentHighRise_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_ApartmentHighRise_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_ApartmentHighRise_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_ApartmentHighRise_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_OutPatientHealthCare_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_OutPatientHealthCare_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_OutPatientHealthCare_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_OutPatientHealthCare_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
@@ -264,16 +264,16 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgOutPatientNew2004_Chicago) {
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolSecondary_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_SchoolSecondary_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_SchoolSecondary_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_SchoolSecondary_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
 
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_Hospital_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_Hospital_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_Hospital_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_Hospital_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
@@ -312,30 +312,30 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgSecondarySchoolNew2004_Chicago
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
 
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolPrimary_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_SchoolPrimary_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_SchoolPrimary_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_SchoolPrimary_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
 
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_OfficeLarge_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_OfficeLarge_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_OfficeLarge_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_OfficeLarge_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_HotelLarge_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_HotelLarge_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_HotelLarge_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_HotelLarge_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_ApartmentMidRise_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_ApartmentMidRise_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_ApartmentMidRise_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_ApartmentMidRise_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 
@@ -369,8 +369,8 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgPrimarySchoolNew2004_Chicago) 
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
-TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_RetailStripmall_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_RetailStripmall_Denver.idf");
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_RetailStripmall_STD2019_Denver) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_RetailStripmall_STD2019_Denver.idf");
   ASSERT_TRUE(epTranslation);
   ASSERT_TRUE(osTranslation);
 

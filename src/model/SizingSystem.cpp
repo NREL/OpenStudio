@@ -693,11 +693,8 @@ namespace model {
       return result;
     }
 
-    bool SizingSystem_Impl::setOccupantDiversity(boost::optional<double> occupantDiversity) {
-      bool result(false);
-      if (occupantDiversity) {
-        result = setDouble(OS_Sizing_SystemFields::OccupantDiversity, occupantDiversity.get());
-      }
+    bool SizingSystem_Impl::setOccupantDiversity(double occupantDiversity) {
+      bool result = setDouble(OS_Sizing_SystemFields::OccupantDiversity, occupantDiversity);
       return result;
     }
 
@@ -958,7 +955,12 @@ namespace model {
 
     boost::optional<double> SizingSystem_Impl::autosizedOccupantDiversity() const {
       boost::optional<double> result;
-      // TODO
+      // TODO: get these values (one for heating, one for cooling) from the following?
+      // View = TabularDataWithStrings
+      // TableName = System Ventilation Requirements for Heating
+      // TableName = System Ventilation Requirements for Cooling
+      // ReportName = Standard62.1Summary
+      // ColumnName = Occupant Diversity - D
       return result;
     }
 
@@ -1043,6 +1045,9 @@ namespace model {
 
     setAirLoopHVAC(airLoopHVAC);
 
+    // setTypeofLoadtoSizeOn("Sensible");
+    // autosizeDesignOutdoorAirFlowRate();
+
     setCentralHeatingMaximumSystemAirFlowRatio(0.3);
     // TODO: should we autosize (E+ default) instead?
     // autosizeCentralHeatingMaximumSystemAirFlowRatio();
@@ -1053,7 +1058,24 @@ namespace model {
     setPrecoolDesignHumidityRatio(0.008);
     setCentralCoolingDesignSupplyAirTemperature(12.8);
     setCentralHeatingDesignSupplyAirTemperature(16.7);
+    // setSizingOption("NonCoincident");
+
+    // Note: Prior to OpenStudio 3.3.0, this was unfortunately done this way
+    // setAllOutdoorAirinCooling("No");
+    // setAllOutdoorAirinHeating("No");
+    // Both functions expect a boolean to be passed, so here you have an implicit `const char *` -> `bool` conversion
+    // which results in `true` being passed which is the exact opposite of the intent (and E+ default).
+    // In the name of API stability, we're sticking with it...
+    setAllOutdoorAirinCooling(true);
+    setAllOutdoorAirinHeating(true);
+
     setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
+    // setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
+    // setCoolingDesignAirFlowMethod("DesignDay");
+    // setCoolingDesignAirFlowRate(0.0);
+    // setHeatingDesignAirFlowMethod("DesignDay");
+    // setHeatingDesignAirFlowRate(0.0);
+    // setSystemOutdoorAirMethod("ZoneSum");
     setZoneMaximumOutdoorAirFraction(1.0);
     setCoolingSupplyAirFlowRatePerFloorArea(9.9676501E-3);
     setCoolingFractionofAutosizedCoolingSupplyAirFlowRate(1.0);

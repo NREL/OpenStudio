@@ -76,10 +76,13 @@ TEST_F(ModelFixture, SizingSystem_SizingSystem) {
   EXPECT_EQ(16.7, sizingSystem.centralHeatingDesignSupplyAirTemperature());
   EXPECT_EQ("NonCoincident", sizingSystem.sizingOption());
   EXPECT_TRUE(sizingSystem.isSizingOptionDefaulted());
-  EXPECT_FALSE(sizingSystem.allOutdoorAirinCooling());
-  EXPECT_TRUE(sizingSystem.isAllOutdoorAirinCoolingDefaulted());
-  EXPECT_FALSE(sizingSystem.allOutdoorAirinHeating());
-  EXPECT_TRUE(sizingSystem.isAllOutdoorAirinHeatingDefaulted());
+
+  // Have to force these two to 'true' to preserve historical behavior, even though it was wrong
+  EXPECT_TRUE(sizingSystem.allOutdoorAirinCooling());
+  EXPECT_FALSE(sizingSystem.isAllOutdoorAirinCoolingDefaulted());
+  EXPECT_TRUE(sizingSystem.allOutdoorAirinHeating());
+  EXPECT_FALSE(sizingSystem.isAllOutdoorAirinHeatingDefaulted());
+
   EXPECT_EQ(0.0085, sizingSystem.centralCoolingDesignSupplyAirHumidityRatio());
   EXPECT_FALSE(sizingSystem.isCentralCoolingDesignSupplyAirHumidityRatioDefaulted());
   EXPECT_EQ(0.008, sizingSystem.centralHeatingDesignSupplyAirHumidityRatio());
@@ -121,7 +124,6 @@ TEST_F(ModelFixture, SizingSystem_GettersSetters) {
   Model m;
   AirLoopHVAC airLoopHVAC(m);
   SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
-  EXPECT_EQ(sizingSystem.airLoopHVAC().handle(), airLoopHVAC.handle());
 
   EXPECT_TRUE(sizingSystem.setTypeofLoadtoSizeOn("VentilationRequirement"));
   EXPECT_TRUE(sizingSystem.setDesignOutdoorAirFlowRate(1));
@@ -283,16 +285,19 @@ TEST_F(ModelFixture, SizingSystem_remove) {
   Model m;
   AirLoopHVAC airLoopHVAC(m);
   SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
-  EXPECT_EQ(sizingSystem.airLoopHVAC().handle(), airLoopHVAC.handle());
 
   auto size = m.modelObjects().size();
   EXPECT_FALSE(sizingSystem.remove().empty());
-  EXPECT_EQ(size, m.modelObjects().size());
+  EXPECT_EQ(size - 1, m.modelObjects().size());  // SizingSystem
   EXPECT_EQ(1u, m.getConcreteModelObjects<AirLoopHVAC>().size());
-  EXPECT_EQ(1u,
-            m.getConcreteModelObjects<SizingSystem>().size());  // FIXME: should you be able to remove SizingSystem? doesn't the AirLoopHVAC need one?
-  SizingSystem sizingSystem2 = airLoopHVAC.sizingSystem();
-  EXPECT_EQ(sizingSystem.handle(), sizingSystem2.handle());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<SizingSystem>().size());
+  EXPECT_THROW(airLoopHVAC.sizingSystem(), openstudio::Exception);
+}
+
+TEST_F(ModelFixture, SizingSystem_remove2) {
+  Model m;
+  AirLoopHVAC airLoopHVAC(m);
+  SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
 
   EXPECT_FALSE(airLoopHVAC.remove().empty());
   EXPECT_EQ(2, m.modelObjects().size());
@@ -303,11 +308,30 @@ TEST_F(ModelFixture, SizingSystem_remove) {
 TEST_F(ModelFixture, SizingSystem_clone) {
   Model m;
   AirLoopHVAC airLoopHVAC(m);
-  SizingSystem sizingSystem(m, airLoopHVAC);  // FIXME: should this remove the original SizingSystem? otherwise doesn't it get orphaned?
+  SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
 
   EXPECT_EQ(1u, m.getConcreteModelObjects<SizingSystem>().size());
-  auto sizingSystemClone = sizingSystem.clone(m).cast<SizingSystem>();  // FIXME: should you be able to clone this? doesn't it need an AirLoopHVAC?
+  auto sizingSystemClone = sizingSystem.clone(m).cast<SizingSystem>();
   EXPECT_EQ(1u, m.getConcreteModelObjects<AirLoopHVAC>().size());
-  EXPECT_EQ(1u, m.getConcreteModelObjects<SizingSystem>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<SizingSystem>().size());
+
+  // SizingSystem and its clone referencing the same AirLoopHVAC
   EXPECT_EQ(sizingSystemClone.airLoopHVAC().handle(), airLoopHVAC.handle());
+  EXPECT_EQ(sizingSystem.airLoopHVAC().handle(), airLoopHVAC.handle());
+
+  // FIXME: AirLoopHVAC returns the original SizingSystem OR the cloned SizingSystem
+  // EXPECT_EQ(airLoopHVAC.sizingSystem().handle(), sizingSystem.handle());
+  // EXPECT_NE(airLoopHVAC.sizingSystem().handle(), sizingSystemClone.handle());
+}
+
+TEST_F(ModelFixture, SizingSystem_ctor) {
+  Model m;
+  AirLoopHVAC airLoopHVAC(m);
+  SizingSystem sizingSystem1 = airLoopHVAC.sizingSystem();
+  SizingSystem sizingSystem2(m, airLoopHVAC);
+  EXPECT_NE(sizingSystem1, sizingSystem2);
+
+  // FIXME: AirLoopHVAC returns the original SizingSystem OR the new SizingSystem
+  // EXPECT_EQ(airLoopHVAC.sizingSystem().handle(), sizingSystem1.handle());
+  // EXPECT_NE(airLoopHVAC.sizingSystem().handle(), sizingSystem2.handle());
 }

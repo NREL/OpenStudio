@@ -276,7 +276,7 @@ namespace model {
 
       bool setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod);
 
-      bool setOccupantDiversity(boost::optional<double> occupantDiversity);
+      bool setOccupantDiversity(double occupantDiversity);
 
       void autosizeOccupantDiversity();
 
