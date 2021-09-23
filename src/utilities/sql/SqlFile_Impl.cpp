@@ -36,6 +36,8 @@
 #include "../filetypes/EpwFile.hpp"
 #include "../core/Containers.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ASCIIStrings.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <sqlite3.h>
 
@@ -2860,21 +2862,37 @@ namespace detail {
   }
 
   boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(int mapIndex, int ptNum) const {
-    boost::optional<std::string> refPt;
+    if (ptNum <= 0) {
+      LOG(Error, "illuminanceMapRefPt: ptNum must be > 0 (1-indexed)");
+      return boost::none;
+    }
+
     std::stringstream s;
-    s << "select ReferencePt" << ptNum << " from daylightmaps where MapNumber=" << mapIndex;
+    s << "select ReferencePts FROM DaylightMaps WHERE MapNumber=" << mapIndex;
 
     sqlite3_stmt* sqlStmtPtr;
 
     int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
     code = sqlite3_step(sqlStmtPtr);
 
-    if (code == SQLITE_ROW) refPt = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+    if (code == SQLITE_ROW) {
+      std::string refPts = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+      auto refPtsVec = openstudio::splitString(refPts, ',');
+
+      // Annoying that the parameters aren't unsigned here... Anyway, I **know** ptNum is > 0 since I tested for it above
+      if (static_cast<size_t>(ptNum) > refPtsVec.size()) {
+        LOG(Error, "illuminanceMapRefPt: ptNum=" << ptNum << " is greater than the number of reference points: " << refPtsVec.size());
+      } else {
+        std::string refPt = refPtsVec[ptNum - 1];
+        openstudio::ascii_trim(refPt);
+        return refPt;
+      }
+    }
 
     /// must finalize to prevent memory leaks
     sqlite3_finalize(sqlStmtPtr);
 
-    return refPt;
+    return boost::none;
   }
 
   /// minimum value of map
