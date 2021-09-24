@@ -492,8 +492,7 @@ namespace model {
     std::vector<DefaultConstructionSet> defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
     double n = 0;
     std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
-                                              + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() 
-                                              + 1;
+                                              + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
 
     // loop over all surfaces
     for (const auto& planarSurface : planarSurfaces) {
@@ -631,7 +630,8 @@ namespace model {
     }
 
     for (const auto& airLoopHVAC : airLoopHVACs) {
-      ThreeModelObjectMetadata airLoopMetaData(airLoopHVAC.iddObjectType().valueDescription(), toString(airLoopHVAC.handle()), airLoopHVAC.nameString());
+      ThreeModelObjectMetadata airLoopMetaData(airLoopHVAC.iddObjectType().valueDescription(), toString(airLoopHVAC.handle()),
+                                               airLoopHVAC.nameString());
       modelObjectMetadata.push_back(airLoopMetaData);
 
       n += 1;

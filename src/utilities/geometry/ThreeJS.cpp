@@ -814,7 +814,7 @@ Json::Value ThreeUserData::toJsonValue() const {
   result["windExposure"] = m_windExposure;
   result["illuminanceSetpoint"] = m_illuminanceSetpoint;
   result["airWall"] = m_airWall;
-  
+
   Json::Value airLoopHVACNames(Json::arrayValue);
   for (const auto& airLoopName : m_airLoopHVACNames) {
     airLoopHVACNames.append(airLoopName);
@@ -826,13 +826,13 @@ Json::Value ThreeUserData::toJsonValue() const {
     airLoopHVACHandles.append(airLoopHandle);
   }
   result["airLoopHVACHandles"] = airLoopHVACHandles;
-  
+
   Json::Value airLoopHVACMaterialNames(Json::arrayValue);
   for (const auto& airLoopHVACMaterialName : m_airLoopHVACMaterialNames) {
     airLoopHVACMaterialNames.append(airLoopHVACMaterialName);
   }
   result["airLoopHVACMaterialNames"] = airLoopHVACMaterialNames;
-  
+
   //result["belowFloorPlenum"] = m_belowFloorPlenum;
   //result["aboveCeilingPlenum"] = m_aboveCeilingPlenum;
 

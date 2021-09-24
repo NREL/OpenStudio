@@ -266,7 +266,7 @@ class UTILITIES_API ThreeUserData
   std::vector<std::string> airLoopHVACNames() const;
   std::vector<std::string> airLoopHVACHandles() const;
   std::vector<std::string> airLoopHVACMaterialNames() const;
-  
+
   //bool plenum() const;
   //bool belowFloorPlenum() const;
   //bool aboveCeilingPlenum() const;
