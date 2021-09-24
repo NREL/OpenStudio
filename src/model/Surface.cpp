@@ -387,7 +387,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_SurfaceFields::ViewFactortoGround, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
       return result;
     }
@@ -404,7 +404,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_SurfaceFields::NumberofVertices, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
       return result;
     }

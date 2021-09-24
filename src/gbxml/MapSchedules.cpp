@@ -218,7 +218,7 @@ namespace gbxml {
       OS_ASSERT(yd.calendarYear().get() == std::stoi(endDateParts.at(0)));
       openstudio::Date endDate = yd.makeDate(std::stoi(endDateParts.at(1)), std::stoi(endDateParts.at(2)));
 
-      std::string weekScheduleId = element.child("WeekScheduleId").attribute("weekScheduleIdRef").value();
+      std::string weekScheduleId = scheduleYearElement.child("WeekScheduleId").attribute("weekScheduleIdRef").value();
 
       // this can be made more efficient using QXPath in QXmlPatterns later
       for (auto& scheduleWeekElement : root.children("WeekSchedule")) {

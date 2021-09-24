@@ -80,7 +80,7 @@ namespace model {
     /** Create a TableMultiVariableLookup object with the specified number
     * of independent variables.
     */
-    explicit TableMultiVariableLookup(const Model& model, const int& numberofIndependentVariables);
+    explicit TableMultiVariableLookup(const Model& model, int numberofIndependentVariables);
 
     virtual ~TableMultiVariableLookup() {}
 
