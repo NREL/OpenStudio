@@ -68,6 +68,7 @@
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -337,6 +338,76 @@ namespace gbxml {
     return model;
   }
 
+  
+  void ReverseTranslator::validateSpaceSurfaces(openstudio::model::Model& model) {
+
+    double tol = 0.001;
+
+    auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
+    for (auto& space : spaces) {
+      std::string spaceName = space.name().value();
+
+      auto& bounds = space.boundingBox();
+      auto& surfaces = space.surfaces();
+      for (auto& surface : surfaces) {
+        std::string surfType = surface.surfaceType();
+        std::string surfName = surface.name().value();
+        if (surfName == "T-00-316-I-F-32") {
+          int stop1 = -1;
+        }
+
+        boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
+        if (surfType == "RoofCeiling" || surfType == "Floor" && adjacentSurf) {
+          auto& vertices = surface.vertices();
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
+
+            // Log this because we cant do a face orientation check because the space
+            // isnt a prism (it has > 2 levels of horizontal surfaces)
+            continue;
+          }
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) <= tol) {
+
+            // Surface is at the top of the space bounding box so it should be a roof/ceiling
+            // and the normal should be up (z should be > 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "RoofCeiling") {
+              // Log changing surface type
+              LOG(Warn, "Changing surface type from " << surfType << " to RoofCeiling. Surface vertices elevation is above the space.");
+              surface.setSurfaceType("RoofCeiling");
+            }
+            auto& normal = surface.outwardNormal();
+            double z = normal.z();
+            if (normal.z() < 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a RoofCeiling but the surface is oriented down.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          } else if (std::abs(vertices[0].z() - bounds.minZ().value()) <= tol) {
+
+            // Surface is at the bottom of the space's bounding box and so should be a floor
+            // and the normal shuld be down (z < 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "Floor") {
+              // Log changing surface type
+              surface.setSurfaceType("Floor");
+            }
+            auto& normal = surface.outwardNormal();
+            double z = normal.z();
+            if (normal.z() > 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a Floor but the surface is oriented up.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          }
+        }
+      }
+    }
+  }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
@@ -366,6 +437,7 @@ namespace gbxml {
       }
     }
 
+    validateSpaceSurfaces(model);
     return facility;
   }
 
@@ -623,7 +695,9 @@ namespace gbxml {
 
       std::string surfaceName = element.child("Name").text().as_string();
       surface.setName(escapeName(surfaceId, surfaceName));
-
+      if (surfaceName == "T-00-316-I-F-32") {
+        int stop = 1;
+      }
       std::string exposedToSun = element.attribute("exposedToSun").value();
 
       // set surface type
