@@ -108,7 +108,7 @@ namespace energyplus {
     m_excludeSQliteOutputReport = false;
     m_excludeHTMLOutputReport = false;
     m_excludeVariableDictionary = false;
-    m_excludeSpaceTranslation = false;
+    m_excludeSpaceTranslation = true;
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
