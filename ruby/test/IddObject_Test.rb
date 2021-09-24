@@ -47,14 +47,14 @@ class IddObject_Test < MiniTest::Unit::TestCase
 
     extInd = OpenStudio::ExtensibleIndex.new(0,1)
     ind = iddObj.index(extInd)
-    assert_equal(11,ind)
+    assert_equal(12,ind)
 
     extInd.group = 2
     extInd.field = 2
     ind = iddObj.index(extInd)
-    assert_equal(18,ind)
+    assert_equal(19,ind)
 
-    ind = 26
+    ind = 27
     extInd = iddObj.extensibleIndex(ind)
     assert_equal(5,extInd.group)
     assert_equal(1,extInd.field)

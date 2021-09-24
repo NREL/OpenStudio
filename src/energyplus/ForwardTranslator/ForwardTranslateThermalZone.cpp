@@ -335,7 +335,7 @@ namespace energyplus {
         m_idfObjects.push_back(daylightingControlObject);
 
         // Zone Name
-        daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.nameString());
+        daylightingControlObject.setString(Daylighting_ControlsFields::ZoneorSpaceName, modelObject.nameString());
 
         // Availability Schedule Name
         if (boost::optional<Schedule> sched = modelObject.daylightingControlsAvailabilitySchedule()) {
@@ -354,7 +354,7 @@ namespace energyplus {
         if (refSpace) {
           OptionalThermalZone refThermalZone = refSpace->thermalZone();
           if (refThermalZone) {
-            primaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, refThermalZone->nameString());
+            primaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneorSpaceName, refThermalZone->nameString());
           }
         }
 
@@ -393,11 +393,11 @@ namespace energyplus {
           if (refSpace) {
             OptionalThermalZone refThermalZone = refSpace->thermalZone();
             if (refThermalZone) {
-              secondaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, refThermalZone->nameString());
+              secondaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneorSpaceName, refThermalZone->nameString());
             }
           }
 
-          secondaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneName, modelObject.nameString());
+          secondaryReferencePoint.setString(Daylighting_ReferencePointFields::ZoneorSpaceName, modelObject.nameString());
           secondaryReferencePoint.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
                                             secondaryDaylightingControl->positionXCoordinate());
           secondaryReferencePoint.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint,
@@ -497,7 +497,7 @@ namespace energyplus {
           IdfObject referencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
           referencePoint.setName(modelObject.nameString() + " Daylighting Reference Point");
           m_idfObjects.push_back(referencePoint);
-          referencePoint.setString(Daylighting_ReferencePointFields::ZoneName, modelObject.nameString());
+          referencePoint.setString(Daylighting_ReferencePointFields::ZoneorSpaceName, modelObject.nameString());
           referencePoint.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint,
                                    illuminanceMap->originXCoordinate() + 0.5 * illuminanceMap->xLength());
           referencePoint.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint,
@@ -509,7 +509,7 @@ namespace energyplus {
           daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
           m_idfObjects.push_back(daylightingControlObject);
 
-          daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.nameString());
+          daylightingControlObject.setString(Daylighting_ControlsFields::ZoneorSpaceName, modelObject.nameString());
           std::vector<std::string> group;
           group.push_back(referencePoint.nameString());  // ref point name
           group.push_back("0.0");                        // fraction controlled

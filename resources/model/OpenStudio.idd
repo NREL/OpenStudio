@@ -1,4 +1,4 @@
-!IDD_Version 3.2.2
+!IDD_Version 3.3.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -532,6 +532,7 @@ OS:PerformancePrecisionTradeoffs,
       \key Mode05
       \key Mode06
       \key Mode07
+      \key Mode08
       \key Advanced
       \default Normal
   N1, \field MaxZoneTempDiff
@@ -541,13 +542,19 @@ OS:PerformancePrecisionTradeoffs,
       \minimum 0.1
       \maximum 3.0
       \default 0.3
-  N2; \field MaxAllowedDelTemp
+  N2, \field MaxAllowedDelTemp
       \note Maximum surface temperature change before HVAC timestep is shortened.
       \note Only used when Override Mode is set to Advanced
       \type real
       \minimum 0.002
       \maximum 0.1
       \default 0.002
+  A5; \field Use Representative Surfaces for Calculations
+      \note Automatically group surfaces with similar characteristics and perform relevant calculations only once for each group.
+      \type choice
+      \key Yes
+      \key No
+      \default No
 
 OS:Sizing:Parameters,
        \unique-object
@@ -19115,7 +19122,8 @@ OS:Controller:MechanicalVentilation,
   A5, \field System Outdoor Air Method
        \type choice
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedureWithLimit
        \key IndoorAirQualityProcedure
        \key ProportionalControl
        \key ProportionalControlBasedOnOccupancySchedule
@@ -24791,7 +24799,8 @@ OS:Sizing:System,
        \type choice
        \default ZoneSum
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1SimplifiedProcedure
   N13, \field Zone Maximum Outdoor Air Fraction
        \type real
        \minimum> 0.0
@@ -24920,7 +24929,7 @@ OS:Sizing:System,
        \required-field
        \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
        \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
-  A12; \field Central Cooling Capacity Control Method
+  A12, \field Central Cooling Capacity Control Method
        \note Method used to control the coil's output
        \required-field
        \type choice
@@ -24928,6 +24937,15 @@ OS:Sizing:System,
        \key Bypass
        \key VT
        \key OnOff
+  N27; \field Occupant Diversity
+       \type real
+       \maximum 1.0
+       \minimum 0.0
+       \autosizable
+       \note The Occupant Diversity is used to determine a multi-zone system's outdoor air intake when the System Outdoor Air Method is 
+       \note Standard62.1VentilationRateProcedure or the Standard62.1SimplifiedProcedure. If set to be autosized, it will be calculated
+       \note using the information in the People objects assigned to each zone attached to this system/airloop.
+       \required-field
 
 OS:Sizing:Zone,
        \min-fields 20

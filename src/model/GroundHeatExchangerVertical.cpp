@@ -686,25 +686,6 @@ namespace model {
   GroundHeatExchangerVertical::GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl)
     : StraightComponent(std::move(impl)) {}
 
-  // DEPRECATED
-  boost::optional<double> GroundHeatExchangerVertical::maximumFlowRate() const {
-    LOG(Warn, "This method is deprecated and will be removed in OS 3.3.0. Use designFlowRate() instead");
-    return designFlowRate();
-  }
-
-  bool GroundHeatExchangerVertical::setMaximumFlowRate(double maximumFlowRate) {
-    LOG(Warn, "This method is deprecated and will be removed in OS 3.3.0. Use setDesignFlowRate(double) instead");
-    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setDesignFlowRate(maximumFlowRate);
-  }
-
-  void GroundHeatExchangerVertical::resetMaximumFlowRate() {
-    LOG(Warn, "This method is deprecated and will be removed in OS 3.3.0. It does nothing as this is a required-field");
-  }
-
-  void GroundHeatExchangerVertical::resetDesignFlowRate() {
-    LOG(Warn, "This method is deprecated and will be removed in OS 3.3.0. It does nothing as this is a required-field");
-  }
-
   /// @endcond
 
 }  // namespace model

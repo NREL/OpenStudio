@@ -67,7 +67,7 @@ namespace energyplus {
     OptionalModelObject result;
     OptionalThermalZone controlThermalZone;
     OptionalSpace controlSpace;
-    OptionalWorkspaceObject controlZone = workspaceObject.getTarget(Daylighting_ControlsFields::ZoneName);
+    OptionalWorkspaceObject controlZone = workspaceObject.getTarget(Daylighting_ControlsFields::ZoneorSpaceName);
     if (controlZone) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*controlZone);
       if (modelObject) {
@@ -84,7 +84,7 @@ namespace energyplus {
     std::vector<std::size_t> indices;
     std::size_t idx = 0;
     for (const auto& group : groups) {
-      boost::optional<double> fraction = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+      boost::optional<double> fraction = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofLightsControlledbyReferencePoint, true);
       OS_ASSERT(fraction);
 
       boost::optional<WorkspaceObject> referencePoint =
@@ -133,7 +133,7 @@ namespace energyplus {
 
       OptionalThermalZone refThermalZone;
       OptionalSpace refSpace;
-      OptionalWorkspaceObject refZone = referencePoint->getTarget(Daylighting_ReferencePointFields::ZoneName);
+      OptionalWorkspaceObject refZone = referencePoint->getTarget(Daylighting_ReferencePointFields::ZoneorSpaceName);
       if (refZone) {
         OptionalModelObject modelObject = translateAndMapWorkspaceObject(*refZone);
         if (modelObject) {
@@ -220,19 +220,19 @@ namespace energyplus {
       }
 
       if (isPrimary) {
-        d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+        d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofLightsControlledbyReferencePoint, true);
         if (d && controlThermalZone) {
           controlThermalZone->setPrimaryDaylightingControl(daylightingControl);
           controlThermalZone->setFractionofZoneControlledbyPrimaryDaylightingControl(*d);
         }
       } else if (isSecondary) {
-        d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+        d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofLightsControlledbyReferencePoint, true);
         if (d && controlThermalZone) {
           controlThermalZone->setSecondaryDaylightingControl(daylightingControl);
           controlThermalZone->setFractionofZoneControlledbyPrimaryDaylightingControl(*d);
         }
       } else {
-        d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofZoneControlledbyReferencePoint, true);
+        d = group.getDouble(Daylighting_ControlsExtensibleFields::FractionofLightsControlledbyReferencePoint, true);
         if (d && d.get() > 0) {
           LOG(Warn, "Daylighting:Controls '" << workspaceObject.nameString() << "' reference point " << index << ", fraction of zone controlled "
                                              << *d << " not translated.");

@@ -70,6 +70,12 @@ namespace model {
 
       bool isDesignOutdoorAirFlowRateAutosized() const;
 
+      boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
+
+      bool isCentralHeatingMaximumSystemAirFlowRatioDefaulted() const;
+
+      bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
+
       double preheatDesignTemperature() const;
 
       double preheatDesignHumidityRatio() const;
@@ -160,6 +166,10 @@ namespace model {
 
       std::string centralCoolingCapacityControlMethod() const;
 
+      boost::optional<double> occupantDiversity() const;
+
+      bool isOccupantDiversityAutosized() const;
+
       bool setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn);
 
       void resetTypeofLoadtoSizeOn();
@@ -169,6 +179,12 @@ namespace model {
       void resetDesignOutdoorAirFlowRate();
 
       void autosizeDesignOutdoorAirFlowRate();
+
+      bool setCentralHeatingMaximumSystemAirFlowRatio(boost::optional<double> centralHeatingMaximumSystemAirFlowRatio);
+
+      void resetCentralHeatingMaximumSystemAirFlowRatio();
+
+      void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
       bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
@@ -260,14 +276,13 @@ namespace model {
 
       bool setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod);
 
+      bool setOccupantDiversity(double occupantDiversity);
+
+      void autosizeOccupantDiversity();
+
       AirLoopHVAC airLoopHVAC() const;
 
       bool setAirLoopHVAC(const AirLoopHVAC& airLoopHVAC);
-
-      boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
-      bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
-      bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
-      void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
       boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
 
@@ -276,6 +291,8 @@ namespace model {
       boost::optional<double> autosizedCoolingDesignCapacity() const;
 
       boost::optional<double> autosizedHeatingDesignCapacity() const;
+
+      boost::optional<double> autosizedOccupantDiversity() const;
 
       void autosize();
 

@@ -65,12 +65,12 @@ namespace energyplus {
       if (thermalZone) {
         relatedIdfObject = translateAndMapModelObject(*thermalZone);
         OS_ASSERT(relatedIdfObject);
-        idfObject.setString(LightsFields::ZoneorZoneListName, relatedIdfObject->name().get());
+        idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, relatedIdfObject->name().get());
       }
     } else if (spaceType) {
       relatedIdfObject = translateAndMapModelObject(*spaceType);
       OS_ASSERT(relatedIdfObject);
-      idfObject.setString(LightsFields::ZoneorZoneListName, relatedIdfObject->name().get());
+      idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, relatedIdfObject->name().get());
     }
 
     boost::optional<Schedule> schedule = modelObject.schedule();

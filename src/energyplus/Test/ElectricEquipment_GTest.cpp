@@ -104,7 +104,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Desi
   ASSERT_EQ(2u, equips.size());
 
   for (const auto& equip : equips) {
-    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
+    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     EXPECT_EQ(100, equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get());
   }
@@ -164,7 +164,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
 
   double designLevelTotal = 0;
   for (const auto& equip : equips) {
-    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
+    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();
   }
@@ -226,7 +226,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
 
   double designLevelTotal = 0;
   for (const auto& equip : equips) {
-    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
+    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();
   }
@@ -279,7 +279,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Dens
   ASSERT_EQ(1u, equips.size());
 
   for (const auto& equip : equips) {
-    EXPECT_EQ(zonelists[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
+    EXPECT_EQ(zonelists[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
     EXPECT_EQ("Watts/Area", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     EXPECT_EQ(1, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
   }
@@ -339,7 +339,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
 
   double designLevelTotal = 0;
   for (const auto& equip : equips) {
-    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
+    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();
   }
@@ -401,7 +401,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
 
   double designLevelTotal = 0;
   for (const auto& equip : equips) {
-    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListName, true).get());
+    EXPECT_EQ(zones[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
     EXPECT_EQ("EquipmentLevel", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
     designLevelTotal += equip.getDouble(ElectricEquipmentFields::DesignLevel, true).get();
   }

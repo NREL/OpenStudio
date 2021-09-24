@@ -143,11 +143,6 @@ namespace energyplus {
     Schedule alwaysOn = modelObject.model().alwaysOnDiscreteSchedule();
     IdfObject alwaysOnIdf = translateAndMapModelObject(alwaysOn).get();
 
-    s = availabilityManagerListIdf.getString(openstudio::AvailabilityManagerAssignmentListFields::Name);
-    if (s) {
-      idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::AvailabilityManagerListName, *s);
-    }
-
     availabilityManagerListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,
                                          availabilityManagerScheduledIdf.iddObject().name());
     availabilityManagerListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,

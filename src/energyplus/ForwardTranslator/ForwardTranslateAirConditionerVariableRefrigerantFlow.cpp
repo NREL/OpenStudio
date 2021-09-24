@@ -96,16 +96,16 @@ namespace energyplus {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedCoolingCOP, value.get());
     }
 
-    // MinimumOutdoorTemperatureinCoolingMode
+    // MinimumCondenserInletNodeTemperatureinCoolingMode
 
     if ((value = modelObject.minimumOutdoorTemperatureinCoolingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinCoolingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumCondenserInletNodeTemperatureinCoolingMode, value.get());
     }
 
-    // MaximumOutdoorTemperatureinCoolingMode
+    // MaximumCondenserInletNodeTemperatureinCoolingMode
 
     if ((value = modelObject.maximumOutdoorTemperatureinCoolingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinCoolingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinCoolingMode, value.get());
     }
 
     // CoolingCapacityRatioModifierFunctionofLowTemperatureCurveName
@@ -214,16 +214,16 @@ namespace energyplus {
       idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCOP, value.get());
     }
 
-    // MinimumOutdoorTemperatureinHeatingMode
+    // MinimumCondenserInletNodeTemperatureinHeatingMode
 
     if ((value = modelObject.minimumOutdoorTemperatureinHeatingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumCondenserInletNodeTemperatureinHeatingMode, value.get());
     }
 
-    // MaximumOutdoorTemperatureinHeatingMode
+    // MaximumCondenserInletNodeTemperatureinHeatingMode
 
     if ((value = modelObject.maximumOutdoorTemperatureinHeatingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatingMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinHeatingMode, value.get());
     }
 
     // HeatingCapacityRatioModifierFunctionofLowTemperatureCurveName
@@ -568,16 +568,16 @@ namespace energyplus {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::FuelType, s.get());
     }
 
-    // MinimumOutdoorTemperatureinHeatRecoveryMode
+    // MinimumCondenserInletNodeTemperatureinHeatRecoveryMode
 
     if ((value = modelObject.minimumOutdoorTemperatureinHeatRecoveryMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatRecoveryMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumCondenserInletNodeTemperatureinHeatRecoveryMode, value.get());
     }
 
-    // MaximumOutdoorTemperatureinHeatRecoveryMode
+    // MaximumCondenserInletNodeTemperatureinHeatRecoveryMode
 
     if ((value = modelObject.maximumOutdoorTemperatureinHeatingMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatRecoveryMode, value.get());
+      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumCondenserInletNodeTemperatureinHeatRecoveryMode, value.get());
     }
 
     // HeatRecoveryCoolingCapacityModifierCurveName
@@ -682,154 +682,6 @@ namespace energyplus {
       IdfExtensibleGroup eg = _zoneTerminalUnitList.pushExtensibleGroup();
 
       eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName, _terminal->name().get());
-    }
-
-    // WaterCondenserVolumeFlowRate
-
-    if (modelObject.isWaterCondenserVolumeFlowRateAutosized()) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::WaterCondenserVolumeFlowRate, "Autosize");
-    } else if ((value = modelObject.waterCondenserVolumeFlowRate())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::WaterCondenserVolumeFlowRate, value.get());
-    }
-
-    // EvaporativeCondenserEffectiveness
-
-    if ((value = modelObject.evaporativeCondenserEffectiveness())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::EvaporativeCondenserEffectiveness, value.get());
-    }
-
-    // EvaporativeCondenserAirFlowRate
-
-    if (modelObject.isEvaporativeCondenserAirFlowRateAutosized()) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::EvaporativeCondenserAirFlowRate, "Autosize");
-    } else if ((value = modelObject.evaporativeCondenserAirFlowRate())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::EvaporativeCondenserAirFlowRate, value.get());
-    }
-
-    // EvaporativeCondenserPumpRatedPowerConsumption
-
-    if (modelObject.isEvaporativeCondenserPumpRatedPowerConsumptionAutosized()) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::EvaporativeCondenserPumpRatedPowerConsumption, "Autosize");
-    } else if ((value = modelObject.evaporativeCondenserPumpRatedPowerConsumption())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::EvaporativeCondenserPumpRatedPowerConsumption, value.get());
-    }
-
-    // BasinHeaterCapacity
-
-    if ((value = modelObject.basinHeaterCapacity())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::BasinHeaterCapacity, value.get());
-    }
-
-    // BasinHeaterSetpointTemperature
-
-    if ((value = modelObject.basinHeaterSetpointTemperature())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::BasinHeaterSetpointTemperature, value.get());
-    }
-
-    // BasinHeaterOperatingScheduleName
-
-    if (boost::optional<model::Schedule> schedule = modelObject.basinHeaterOperatingSchedule()) {
-      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-        idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::BasinHeaterOperatingScheduleName, _schedule->name().get());
-      }
-    }
-
-    // FuelType
-
-    if ((s = modelObject.fuelType())) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::FuelType, s.get());
-    }
-
-    // MinimumOutdoorTemperatureinHeatRecoveryMode
-
-    if ((value = modelObject.minimumOutdoorTemperatureinHeatRecoveryMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatRecoveryMode, value.get());
-    }
-
-    // MaximumOutdoorTemperatureinHeatRecoveryMode
-
-    if ((value = modelObject.maximumOutdoorTemperatureinHeatRecoveryMode())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatRecoveryMode, value.get());
-    }
-
-    // HeatRecoveryCoolingCapacityModifierCurveName
-
-    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryCoolingCapacityModifierCurve()) {
-      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingCapacityModifierCurveName, _curve->name().get());
-      }
-    }
-
-    // InitialHeatRecoveryCoolingCapacityFraction
-
-    if ((value = modelObject.initialHeatRecoveryCoolingCapacityFraction())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingCapacityFraction, value.get());
-    }
-
-    // HeatRecoveryCoolingCapacityTimeConstant
-
-    if ((value = modelObject.heatRecoveryCoolingCapacityTimeConstant())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingCapacityTimeConstant, value.get());
-    }
-
-    // HeatRecoveryCoolingEnergyModifierCurveName
-
-    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryCoolingEnergyModifierCurve()) {
-      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingEnergyModifierCurveName, _curve->name().get());
-      }
-    }
-
-    // InitialHeatRecoveryCoolingEnergyFraction
-
-    if ((value = modelObject.initialHeatRecoveryCoolingEnergyFraction())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingEnergyFraction, value.get());
-    }
-
-    // HeatRecoveryCoolingEnergyTimeConstant
-
-    if ((value = modelObject.heatRecoveryCoolingEnergyTimeConstant())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingEnergyTimeConstant, value.get());
-    }
-
-    // HeatRecoveryHeatingCapacityModifierCurveName
-
-    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryHeatingCapacityModifierCurve()) {
-      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingCapacityModifierCurveName, _curve->name().get());
-      }
-    }
-
-    // InitialHeatRecoveryHeatingCapacityFraction
-
-    if ((value = modelObject.initialHeatRecoveryHeatingCapacityFraction())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryHeatingCapacityFraction, value.get());
-    }
-
-    // HeatRecoveryHeatingCapacityTimeConstant
-
-    if ((value = modelObject.heatRecoveryHeatingCapacityTimeConstant())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingCapacityTimeConstant, value.get());
-    }
-
-    // HeatRecoveryHeatingEnergyModifierCurveName
-
-    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryHeatingEnergyModifierCurve()) {
-      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingEnergyModifierCurveName, _curve->name().get());
-      }
-    }
-
-    // InitialHeatRecoveryHeatingEnergyFraction
-
-    if ((value = modelObject.initialHeatRecoveryHeatingEnergyFraction())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryHeatingEnergyFraction, value.get());
-    }
-
-    // HeatRecoveryHeatingEnergyTimeConstant
-
-    if ((value = modelObject.heatRecoveryHeatingEnergyTimeConstant())) {
-      idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingEnergyTimeConstant, value.get());
     }
 
     return idfObject;

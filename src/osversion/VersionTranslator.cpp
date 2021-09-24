@@ -143,7 +143,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::update_3_0_1_to_3_1_0;
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
-    m_updateMethods[VersionString("3.2.2")] = &VersionTranslator::update_3_2_1_to_3_2_2;
+    m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
     //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
@@ -300,6 +300,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.1.0"));
     m_startVersions.push_back(VersionString("3.2.0"));
     m_startVersions.push_back(VersionString("3.2.1"));
+    //m_startVersions.push_back(VersionString("3.3.0"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -6670,12 +6671,12 @@ namespace osversion {
 
   }  // end update_3_2_0_to_3_2_1
 
-  std::string VersionTranslator::update_3_2_1_to_3_2_2(const IdfFile& idf_3_2_1, const IddFileAndFactoryWrapper& idd_3_2_2) {
+  std::string VersionTranslator::update_3_2_1_to_3_3_0(const IdfFile& idf_3_2_1, const IddFileAndFactoryWrapper& idd_3_3_0) {
     std::stringstream ss;
     boost::optional<std::string> value;
 
     ss << idf_3_2_1.header() << '\n' << '\n';
-    IdfFile targetIdf(idd_3_2_2.iddFile());
+    IdfFile targetIdf(idd_3_3_0.iddFile());
     ss << targetIdf.versionObject().get();
 
     for (const IdfObject& object : idf_3_2_1.objects()) {
@@ -6683,12 +6684,12 @@ namespace osversion {
 
       if (iddname == "OS:AirTerminal:SingleDuct:InletSideMixer") {
 
-        // Fields that have been added from 3.2.1 to 3.2.2:
+        // Fields that have been added from 3.2.1 to 3.3.0:
         // ------------------------------------------------
         // * Control For Outdoor Air * 5
         // * Per Person Ventilation Rate Mode * 6
 
-        auto iddObject = idd_3_2_2.getObject(iddname);
+        auto iddObject = idd_3_3_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -6711,7 +6712,7 @@ namespace osversion {
         // I moved it to the field 4, previously maximumFlowRate. I'm discarding the previous Design Flow Rate version as that's what the comments in
         // GroundHeatExchangerVertical.hpp were saying (maximumFlowRate was used instead of designFlowRate which was unused...)
 
-        auto iddObject = idd_3_2_2.getObject(iddname);
+        auto iddObject = idd_3_3_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -6729,9 +6730,42 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if ((iddname == "OS:Controller:MechanicalVentilation") || (iddname == "OS:Sizing:System")) {
+
+        // OS:Controller:MechanicalVentilation, Field 4: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+        // OS:Sizing:System, Field 20: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+        unsigned int changedIndex = 4;
+        if (iddname == "OS:Sizing:System") {
+          changedIndex = 20;
+        }
+        value = object.getString(changedIndex, false, true);
+        if (value && openstudio::istringEqual(value.get(), "VentilationRateProcedure")) {
+
+          auto iddObject = idd_3_3_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              if (i == changedIndex) {
+                // System Outdoor Air Method
+                newObject.setString(i, "Standard62.1VentilationRateProcedure");
+              } else {
+                newObject.setString(i, value.get());
+              }
+            }
+          }
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+
+        } else {
+          // Nothing to do since there's no rename to perform
+          ss << object;
+        }
+
       } else if (iddname == "OS:SizingPeriod:DesignDay") {
 
-        auto iddObject = idd_3_2_2.getObject(iddname);
+        auto iddObject = idd_3_3_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         std::string humidityIndicatingType;
@@ -6781,7 +6815,7 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_2_1_to_3_2_2
+  }  // end update_3_2_1_to_3_3_0
 
 }  // namespace osversion
 }  // namespace openstudio
