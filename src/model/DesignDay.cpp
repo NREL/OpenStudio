@@ -781,7 +781,7 @@ namespace model {
     bool wetBulbOrDewPointAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb);
     bool humidityRatioAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb);
     bool enthalpyAtMaximumDryBulb = isEmpty(OS_SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb);
-    if (wetBulbOrDewPointAtMaximumDryBulb & humidityRatioAtMaximumDryBulb & enthalpyAtMaximumDryBulb) {
+    if (wetBulbOrDewPointAtMaximumDryBulb && humidityRatioAtMaximumDryBulb && enthalpyAtMaximumDryBulb) {
       return true;
     }
     return false;
