@@ -353,7 +353,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State) {
 // If the fix worked then when we check the orientation of all the surfaces we should not
 // find any errors
 TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
-  
+
   // Load the file with known issues
   path p = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
   ReverseTranslator reverseTranslator;
