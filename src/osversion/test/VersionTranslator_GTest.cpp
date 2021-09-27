@@ -1782,3 +1782,24 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_SizingSystem) {
   // Field right after
   EXPECT_EQ(1.0, sz.getDouble(21).get());  // Zone Maximum Outdoor Air Fraction
 }
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_DesignDay) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_DesignDay.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_DesignDay_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> dds = model->getObjectsByType("OS:SizingPeriod:DesignDay");
+  ASSERT_EQ(1u, dds.size());
+  WorkspaceObject dd = dds[0];
+
+  EXPECT_EQ("", dd.getString(8).get());          // Rain Indicator
+  EXPECT_EQ("No", dd.getString(9).get());        // Snow Indicator
+  EXPECT_EQ("WetBulb", dd.getString(14).get());  // Humidity Condition Type
+  EXPECT_EQ(23, dd.getDouble(16).get());         // Wetbulb or DewPoint at Maximum Dry-Bulb
+  EXPECT_EQ("", dd.getString(17).get());         // Humidity Ratio at Maximum Dry-Bulb
+  EXPECT_EQ("", dd.getString(18).get());         // Enthalpy at Maximum Dry-Bulb
+}

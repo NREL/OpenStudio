@@ -292,8 +292,6 @@ namespace model {
 
       boost::optional<double> autosizedHeatingDesignCapacity() const;
 
-      boost::optional<double> autosizedOccupantDiversity() const;
-
       void autosize();
 
       void applySizingValues();

@@ -6763,6 +6763,50 @@ namespace osversion {
           ss << object;
         }
 
+      } else if (iddname == "OS:SizingPeriod:DesignDay") {
+
+        auto iddObject = idd_3_3_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        std::string humidityIndicatingType;
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 4) {
+              newObject.setString(i, value.get());
+            } else if (i == 4) {
+              humidityIndicatingType = object.getString(15).get();  // Humidity Indicating Type
+              if (istringEqual(humidityIndicatingType, "WetBulb") || istringEqual(humidityIndicatingType, "DewPoint")
+                  || istringEqual(humidityIndicatingType, "WetBulbProfileMultiplierSchedule")
+                  || istringEqual(humidityIndicatingType, "WetBulbProfileDifferenceSchedule")
+                  || istringEqual(humidityIndicatingType, "WetBulbProfileDefaultMultipliers")) {
+                newObject.setString(16, value.get());  // Wetbulb or DewPoint at Maximum Dry-Bulb
+              } else if (istringEqual(humidityIndicatingType, "HumidityRatio")) {
+                newObject.setString(17, value.get());  // Humidity Ratio at Maximum Dry-Bulb
+              } else if (istringEqual(humidityIndicatingType, "Enthalpy")) {
+                newObject.setString(18, value.get());  // Enthalpy at Maximum Dry-Bulb
+              }
+            } else if (i == 9 || i == 10 || i == 14) {
+              if (value.get() == "0") {
+                newObject.setString(i - 1, "No");
+              } else if (value.get() == "1") {
+                newObject.setString(i - 1, "Yes");
+              }
+            } else if (i < 15) {
+              newObject.setString(i - 1, value.get());
+            } else if (i == 15) {
+              newObject.setString(i - 1, humidityIndicatingType);
+            } else if (i == 16) {
+              newObject.setString(i - 1, value.get());
+            } else if (i < 25) {
+              newObject.setString(i + 2, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;

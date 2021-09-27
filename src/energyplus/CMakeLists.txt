@@ -659,6 +659,7 @@ set(${target_name}_test_src
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DaylightingDeviceTubular_GTest.cpp
   Test/DaylightingDeviceLightWell_GTest.cpp
+  Test/DesignDay_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
