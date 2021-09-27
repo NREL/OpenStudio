@@ -338,7 +338,12 @@ namespace gbxml {
     return model;
   }
 
-  
+  // A 'quick and dirty' method to find and correct surfaces that have incorrect orientations
+  // Checks the surface against the space bounding box
+  // If the surface is at or near the upper bound of the bounding box it should be a Roof/Ceiling
+  // If the surface is at or near the lower bound of the bounding box it should be a Floor
+  // Works only for spaces with 3D shapes that are prisms in the sense that they have only two
+  // levels where there are horizontal surfaces.
   void ReverseTranslator::validateSpaceSurfaces(openstudio::model::Model& model) {
 
     double tol = 0.001;
@@ -352,10 +357,9 @@ namespace gbxml {
       for (auto& surface : surfaces) {
         std::string surfType = surface.surfaceType();
         std::string surfName = surface.name().value();
-        if (surfName == "T-00-316-I-F-32") {
-          int stop1 = -1;
-        }
 
+        // Look for Roof or Floor surfaces that have adjacent surface (if there's no adjacwent surface
+        // then the spaces cannot be in the wrong order and the orientation would have already been fixed)
         boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
         if (surfType == "RoofCeiling" || surfType == "Floor" && adjacentSurf) {
           auto& vertices = surface.vertices();
@@ -364,6 +368,7 @@ namespace gbxml {
 
             // Log this because we cant do a face orientation check because the space
             // isnt a prism (it has > 2 levels of horizontal surfaces)
+            LOG(Warn, "Skipping surface " << surfName << " of type " << surfType << " because it is not a prism");
             continue;
           }
 

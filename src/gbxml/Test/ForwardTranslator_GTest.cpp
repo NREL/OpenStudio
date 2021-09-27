@@ -361,9 +361,6 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
 
   ASSERT_TRUE(model2);
 
-  path p2 = resourcesPath() / openstudio::toPath("TropicBird_BEM_4_2018.osm");
-  model2->save(p2, true);
-
   // Chck the surfaces
   auto& spaces = model2->getConcreteModelObjects<Space>();
   for (auto& space : spaces) {
@@ -374,9 +371,6 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
     for (auto& surface : surfaces) {
       std::string surfType = surface.surfaceType();
       std::string surfName = surface.name().value();
-      if (surfName == "T-00-316-I-F-32") {
-        int stop1 = -1;
-      }
 
       double tol = 0.01;
       boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
