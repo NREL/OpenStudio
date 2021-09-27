@@ -305,7 +305,6 @@ namespace model {
     boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
     boost::optional<double> autosizedCoolingDesignCapacity() const;
     boost::optional<double> autosizedHeatingDesignCapacity() const;
-    boost::optional<double> autosizedOccupantDiversity() const;
 
     void autosize();
 

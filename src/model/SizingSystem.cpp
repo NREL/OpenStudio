@@ -953,17 +953,6 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> SizingSystem_Impl::autosizedOccupantDiversity() const {
-      boost::optional<double> result;
-      // TODO: get these values (one for heating, one for cooling) from the following?
-      // View = TabularDataWithStrings
-      // TableName = System Ventilation Requirements for Heating
-      // TableName = System Ventilation Requirements for Cooling
-      // ReportName = Standard62.1Summary
-      // ColumnName = Occupant Diversity - D
-      return result;
-    }
-
     void SizingSystem_Impl::autosize() {
       autosizeDesignOutdoorAirFlowRate();
       autosizeCoolingDesignCapacity();
@@ -992,11 +981,6 @@ namespace model {
       val = autosizedCentralHeatingMaximumSystemAirFlowRatio();
       if (val) {
         setCentralHeatingMaximumSystemAirFlowRatio(val.get());
-      }
-
-      val = autosizedOccupantDiversity();
-      if (val) {
-        setOccupantDiversity(val.get());
       }
     }
 
@@ -1586,10 +1570,6 @@ namespace model {
 
   boost::optional<double> SizingSystem::autosizedHeatingDesignCapacity() const {
     return getImpl<detail::SizingSystem_Impl>()->autosizedHeatingDesignCapacity();
-  }
-
-  boost::optional<double> SizingSystem::autosizedOccupantDiversity() const {
-    return getImpl<detail::SizingSystem_Impl>()->autosizedOccupantDiversity();
   }
 
   void SizingSystem::autosize() {
