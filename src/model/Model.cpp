@@ -1431,7 +1431,7 @@ namespace model {
     DesignDay designDay1(model);
     designDay1.setMaximumDryBulbTemperature(-20.6);
     designDay1.setDailyDryBulbTemperatureRange(0.0);
-    designDay1.setHumidityIndicatingConditionsAtMaximumDryBulb(-20.6);
+    designDay1.setWetBulbOrDewPointAtMaximumDryBulb(-20.6);
     designDay1.setBarometricPressure(99063.0);
     designDay1.setWindSpeed(4.9);
     designDay1.setWindDirection(270);
@@ -1442,12 +1442,12 @@ namespace model {
     designDay1.setMonth(1);
     designDay1.setDayType("WinterDesignDay");
     designDay1.setDaylightSavingTimeIndicator(false);
-    designDay1.setHumidityIndicatingType("WetBulb");
+    designDay1.setHumidityConditionType("WetBulb");
 
     DesignDay designDay2(model);
     designDay2.setMaximumDryBulbTemperature(33.2);
     designDay2.setDailyDryBulbTemperatureRange(10.7);
-    designDay2.setHumidityIndicatingConditionsAtMaximumDryBulb(23.8);
+    designDay2.setWetBulbOrDewPointAtMaximumDryBulb(23.8);
     designDay2.setBarometricPressure(99063.0);
     designDay2.setWindSpeed(5.3);
     designDay2.setWindDirection(230);
@@ -1458,7 +1458,7 @@ namespace model {
     designDay2.setMonth(7);
     designDay2.setDayType("SummerDesignDay");
     designDay2.setDaylightSavingTimeIndicator(false);
-    designDay2.setHumidityIndicatingType("WetBulb");
+    designDay2.setHumidityConditionType("WetBulb");
 
     // add schedules
     addExampleSchedules(model);

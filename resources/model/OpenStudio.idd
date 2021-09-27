@@ -1302,24 +1302,25 @@ OS:Site:WaterMainsTemperature,
        \units deltaC
        \minimum 0
 
-! TODO: way out of line with E+
 OS:SizingPeriod:DesignDay,
-       \min-fields 16
-  A1, \field Handle
+       \min-fields 20
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference DesignDays
        \reference RunPeriodsAndDesignDays
-  N1, \field Maximum Dry-Bulb Temperature
+  N1,  \field Maximum Dry-Bulb Temperature
+       \note This field is required when field "Dry-Bulb Temperature Range Modifier Type"
+       \note is not "TemperatureProfileSchedule".
        \type real
        \units C
-       \minimum -70
+       \minimum -90
        \maximum 70
        \default 23.0
-  N2, \field Daily Dry-Bulb Temperature Range
+  N2,  \field Daily Dry-Bulb Temperature Range
        \note Must still produce appropriate maximum dry bulb (within range)
        \note This field is not needed if Dry-Bulb Temperature Range Modifier Type
        \note is "delta".
@@ -1327,13 +1328,7 @@ OS:SizingPeriod:DesignDay,
        \units deltaC
        \minimum 0
        \default 0.0
-  N3, \field Humidity Indicating Conditions at Maximum Dry-Bulb
-       \note this will be a wet-bulb, dewpoint, humidity ratio, or enthalpy coincident with the
-       \note maximum temperature depending on the value of the field
-       \note Humidity Indicating Type
-       \note required-field if Humidity Indicating Day Schedule is not used
-       \type real
-  N4, \field Barometric Pressure
+  N3,  \field Barometric Pressure
        \note This field's value is also checked against the calculated "standard barometric pressure"
        \note for the location.  If out of range (>10%), then is replaced by standard value.
        \type real
@@ -1342,14 +1337,14 @@ OS:SizingPeriod:DesignDay,
        \minimum 31000
        \maximum 120000
        \default 31000.0
-  N5, \field Wind Speed
+  N4,  \field Wind Speed
        \type real
        \units m/s
        \ip-units miles/hr
        \minimum 0
        \maximum 40
        \default 0.0
-  N6, \field Wind Direction
+  N5,  \field Wind Direction
        \note North=0.0 East=90.0
        \note 0 and 360 are the same direction.
        \type real
@@ -1357,37 +1352,37 @@ OS:SizingPeriod:DesignDay,
        \minimum 0
        \maximum 360
        \default 0.0
-  N7, \field Sky Clearness
+  N6,  \field Sky Clearness
        \note Only used if Sky Model Indicator = ASHRAEClearSky
        \note 0.0 is totally unclear, 1.0 is totally clear
        \type real
        \minimum 0
        \maximum 1.2
        \default 0.0
-  N8, \field Rain Indicator
-       \note 1 is raining, 0 is not
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  N9, \field Snow Indicator
-       \note 1 is Snow on Ground, 0 is no Snow on Ground
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  N10, \field Day of Month
+  A3,  \field Rain Indicator
+       \note Yes is raining (all day), No is not raining
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A4,  \field Snow Indicator
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note Yes is Snow on Ground, No is no Snow on Grou
+  N7,  \field Day of Month
        \note must be valid for Month field
        \type integer
        \minimum 1
        \maximum 31
        \default 1
-  N11, \field Month
+  N8,  \field Month
        \type integer
        \minimum 1
        \maximum 12
        \default 1
-  A3, \field Day Type
+  A5,  \field Day Type
        \note Day Type selects the schedules appropriate for this design day
        \type choice
        \default SummerDesignDay
@@ -1403,57 +1398,78 @@ OS:SizingPeriod:DesignDay,
        \key WinterDesignDay
        \key CustomDay1
        \key CustomDay2
-  N12, \field Daylight Saving Time Indicator
-       \note 1=Yes, 0=No
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  A4, \field Humidity Indicating Type
-       \note What Field "Humidity Indicating Conditions at Maximum Dry-Bulb" is.
-       \note Units for WetBulb, DewPoint, WetBulbProfilexxx [C]
-       \note Units for Humidity-Ratio []
-       \note Units for Enthalpy [kJ/kg]
+  A6,  \field Daylight Saving Time Indicator
+       \note Yes -- use schedules modified for Daylight Saving Time Schedules.
+       \note No - do not use schedules modified for Daylight Saving Time Schedules
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A7,  \field Humidity Condition Type
+       \note values/schedules indicated here and in subsequent fields create the humidity
+       \note values in the 24 hour design day conditions profile.
        \type choice
        \default WetBulb
        \key WetBulb
        \key DewPoint
        \key HumidityRatio
        \key Enthalpy
-       \key Schedule
+       \key RelativeHumiditySchedule
        \key WetBulbProfileMultiplierSchedule
        \key WetBulbProfileDifferenceSchedule
        \key WetBulbProfileDefaultMultipliers
-  A5, \field Humidity Indicating Day Schedule Name
-       \note only used when previous field is "Schedule", "WetBulbProfileMultiplierSchedule", or "WetBulbProfileDifferenceSchedule"
-       \note For type "Schedule", the hour/time interval values should specify
-       \note relative humidity (percent) from 0.0 to 100.0.
+  A8,  \field Humidity Condition Day Schedule Name
+       \note Only used when Humidity Condition Type is "RelativeHumiditySchedule",
+       \note  "WetBulbProfileMultiplierSchedule", or "WetBulbProfileDifferenceSchedule"
+       \note For type "RelativeHumiditySchedule", the hour/time interval values should specify
+       \note   relative humidity (percent) from 0.0 to 100.0.
        \note For type "WetBulbProfileMultiplierSchedule" the hour/time interval values should specify
-       \note the fraction (0-1) of the wet-bulb temperature range to be subtracted from the
-       \note maximum wet-bulb temperature for each timestep in the day
+       \note   the fraction (0-1) of the wet-bulb temperature range to be subtracted from the
+       \note   maximum wet-bulb temperature for each timestep in the day (units = Fraction)
        \note For type "WetBulbProfileDifferenceSchedule" the values should specify a number to be subtracted
-       \note from the maximum wet-bulb temperature for each timestep in the day.
+       \note   from the maximum wet-bulb temperature for each timestep in the day. (units = deltaC)
        \type object-list
        \object-list DayScheduleNames
-  A6, \field Dry-Bulb Temperature Range Modifier Type
+  N9,  \field Wetbulb or DewPoint at Maximum Dry-Bulb
+       \note Wetbulb or dewpoint temperature coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Wetbulb", "Dewpoint",
+       \note "WetBulbProfileMultiplierSchedule", "WetBulbProfileDifferenceSchedule",
+       \note or "WetBulbProfileDefaultMultipliers"
+       \type real
+       \units C
+  N10, \field Humidity Ratio at Maximum Dry-Bulb
+       \note Humidity ratio coincident with the maximum temperature (constant humidity ratio throughout day).
+       \note Required only if field Humidity Condition Type is "HumidityRatio".
+       \type real
+       \units kgWater/kgDryAir
+  N11, \field Enthalpy at Maximum Dry-Bulb
+       \note Enthalpy coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Enthalpy".
+       \type real
+       \units J/kg
+  A9,  \field Dry-Bulb Temperature Range Modifier Type
        \note Type of modifier to the dry-bulb temperature calculated for the timestep
        \type choice
        \default DefaultMultipliers
        \key MultiplierSchedule
        \key DifferenceSchedule
+       \key TemperatureProfileSchedule
        \key DefaultMultipliers
-  A7, \field Dry-Bulb Temperature Range Modifier Schedule Name
-       \note Only used when previous field is "MultiplierSchedule" or "DifferenceSchedule".
+  A10, \field Dry-Bulb Temperature Range Modifier Day Schedule Name
+       \note Only used when previous field is "MultiplierSchedule", "DifferenceSchedule" or
+       \note   "TemperatureProfileSchedule".
        \note For type "MultiplierSchedule"  the hour/time interval values should specify
-       \note the fraction (0-1) of the dry-bulb temperature range to be subtracted
-       \note from the maximum dry-bulb temperature for each timestep in the day
+       \note   the fraction (0-1) of the dry-bulb temperature range to be subtracted
+       \note   from the maximum dry-bulb temperature for each timestep in the day
        \note For type "DifferenceSchedule" the values should specify a number to be subtracted
-       \note from the maximum dry-bulb temperature for each timestep in the day.
+       \note   from the maximum dry-bulb temperature for each timestep in the day.
        \note Note that numbers in the difference schedule cannot be negative as that
-       \note would result in a higher maximum than the maximum previously specified.
+       \note   would result in a higher maximum than the maximum previously specified.
+       \note For type "TemperatureProfileSchedule" the values should specify the actual dry-bulb
+       \note   temperature for each timestep in the day.
        \type object-list
        \object-list DayScheduleNames
-  A8, \field Solar Model Indicator
+  A11, \field Solar Model Indicator
        \type choice
        \default ASHRAEClearSky
        \key ASHRAEClearSky
@@ -1461,32 +1477,43 @@ OS:SizingPeriod:DesignDay,
        \key Schedule
        \key ASHRAETau
        \key ASHRAETau2017
-  A9, \field Beam Solar Day Schedule Name
+  A12, \field Beam Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then beam schedule name (for day)
        \type object-list
        \object-list DayScheduleNames
-  A10, \field Diffuse Solar Day Schedule Name
+  A13, \field Diffuse Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then diffuse schedule name (for day)
        \type object-list
        \object-list DayScheduleNames
-  N13, \field ASHRAE Taub
+  N12, \field ASHRAE Clear Sky Optical Depth for Beam Irradiance
        \units dimensionless
        \note Required if Solar Model Indicator = ASHRAETau or ASHRAETau2017
        \note ASHRAETau2017 solar model can be used with 2013 and 2017 HOF matching taub
        \minimum 0
        \maximum 1.2
        \default 0
-  N14, \field ASHRAE Taud
+  N13, \field ASHRAE Clear Sky Optical Depth for Diffuse Irradiance
        \units dimensionless
        \note required if solar model indicator = ashraetau or ashraetau2017
        \note ashraetau2017 solar model can be used with 2013 and 2017 hof matching taud
        \minimum 0
        \maximum 3
        \default 0
-  N15; \field Daily Wet-Bulb Temperature Range
+  N14, \field Daily Wet-Bulb Temperature Range
        \note Required only if Humidity Indicating Type = "WetbulbProfileMultiplierSchedule" or "WetBulbProfileDefaultMultipliers"
        \type real
        \units deltaC
+  N15, \field Maximum Number Warmup Days
+       \note If used this design day will be run with a custom limit on the maximum number of days that are repeated for warmup.
+       \note Limiting the number of warmup days can improve run time.
+       \type integer
+  A14; \field Begin Environment Reset Mode
+       \note If used this can control if you want the thermal history to be reset at the beginning of the design day.
+       \note When using a series of similiar design days, this field can be used to retain warmup state from the previous design day.
+       \type choice
+       \key FullResetAtBeginEnvironment
+       \key SuppressAllBeginEnvironmentResets
+       \default FullResetAtBeginEnvironment
 
 OS:SizingPeriod:WeatherFileConditionType,
        \memo Use a weather file period for design sizing calculations.
