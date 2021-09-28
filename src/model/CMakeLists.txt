@@ -1924,6 +1924,8 @@ set(${target_name}_test_src
   test/CurveQuadLinear_GTest.cpp
   # n == 5
   test/CurveQuintLinear_GTest.cpp
+  # n == ?
+  test/CurveFunctionalPressureDrop_GTest.cpp
 
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
