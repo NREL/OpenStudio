@@ -79,6 +79,17 @@ namespace energyplus {
       performancePrecisionTradeoffs.setMaxAllowedDelTemp(optD.get());
     }
 
+    optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        performancePrecisionTradeoffs.setUseRepresentativeSurfacesforCalculations(false);
+      } else {
+        performancePrecisionTradeoffs.setUseRepresentativeSurfacesforCalculations(true);
+      }
+    }
+
     return performancePrecisionTradeoffs;
   }
 

@@ -121,7 +121,7 @@ namespace energyplus {
       hotWaterEquipment.setName(*s);
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::HotWaterEquipmentFields::ZoneorZoneListName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::HotWaterEquipmentFields::ZoneorZoneListorSpaceorSpaceListName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

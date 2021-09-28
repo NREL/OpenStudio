@@ -190,7 +190,7 @@ TEST_F(IdfFixture, WorkspaceObjectWatcher_RelationshipFieldChanges_TargetDeleted
   OptionalWorkspaceObject oZone = workspace.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oZone);
 
-  EXPECT_TRUE(workspaceObject.setPointer(LightsFields::ZoneorZoneListName, oZone->handle()));
+  EXPECT_TRUE(workspaceObject.setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, oZone->handle()));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_FALSE(watcher.nameChanged());

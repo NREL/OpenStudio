@@ -234,7 +234,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_Zone) {
   ASSERT_TRUE(zoneObject);
   OptionalWorkspaceObject lightsObject = inWorkspace.addObject(IdfObject(IddObjectType::Lights));
   ASSERT_TRUE(lightsObject);
-  EXPECT_TRUE(lightsObject->setPointer(openstudio::LightsFields::ZoneorZoneListName, zoneObject->handle()));
+  EXPECT_TRUE(lightsObject->setPointer(openstudio::LightsFields::ZoneorZoneListorSpaceorSpaceListName, zoneObject->handle()));
 
   ReverseTranslator reverseTranslator;
   ASSERT_NO_THROW(reverseTranslator.translateWorkspace(inWorkspace));
@@ -708,6 +708,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
   idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
+  idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "Yes");
 
   openstudio::WorkspaceObject epPerformancePrecisionTradeoffs = workspace.addObject(idfObject).get();
 
@@ -725,6 +726,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.useRepresentativeSurfacesforCalculations());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
@@ -734,6 +737,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   idf_zone.setName("Thermal Zone 1");
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
+  openstudio::IdfObject idf_space(openstudio::IddObjectType::Space);
+  idf_space.setName("Space 1");
+  idf_space.setString(1, "Thermal Zone 1");  // Zone Name
+
+  openstudio::WorkspaceObject epSpace = workspace.addObject(idf_space).get();
 
   openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
   {
@@ -798,7 +807,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed2 = workspace.addObject(idf_surface2).get();
 
   openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
-  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList Name
+  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList or Space or SpaceList Name
   idf_zoneProp.setString(1, "Surface 1");       // From Surface 1
   idf_zoneProp.setString(2, "Surface 2");       // To Surface 2
   idf_zoneProp.setDouble(3, 0.25);              // View Factor 1
@@ -836,6 +845,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
 
+  openstudio::IdfObject idf_space(openstudio::IddObjectType::Space);
+  idf_space.setName("Space 1");
+  idf_space.setString(1, "Thermal Zone 1");  // Zone Name
+
+  openstudio::WorkspaceObject epSpace = workspace.addObject(idf_space).get();
+
   openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
   {
     idf_surface.setName("Surface 1");                                            // Name
@@ -868,7 +883,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
 
   openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
-  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList Name
+  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList or Space or SpaceList Name
   idf_zoneProp.setString(1, "Surface 1");       // From Surface 1
   idf_zoneProp.setString(2, "Surface 1");       // To Surface 1
   idf_zoneProp.setDouble(3, 0.25);              // View Factor 1
@@ -1110,8 +1125,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idfObject2).get();
 
-  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneName, epZone.handle()));
-  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneorSpaceName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneorSpaceName, epZone.handle()));
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));

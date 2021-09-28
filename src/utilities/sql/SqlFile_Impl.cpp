@@ -36,6 +36,8 @@
 #include "../filetypes/EpwFile.hpp"
 #include "../core/Containers.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ASCIIStrings.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <sqlite3.h>
 
@@ -52,11 +54,19 @@ namespace openstudio {
 namespace detail {
 
   std::string columnText(const unsigned char* column) {
+    if (column == nullptr) {
+      return std::string();
+    }
     return std::string(reinterpret_cast<const char*>(column));
   }
 
   SqlFile_Impl::SqlFile_Impl(const openstudio::path& path, const bool createIndexes)
-    : m_path(path), m_connectionOpen(false), m_supportedVersion(false), m_hasYear(true), m_hasIlluminanceMapYear(true) {
+    : m_path(path),
+      m_connectionOpen(false),
+      m_supportedVersion(false),
+      m_hasYear(true),
+      m_hasIlluminanceMapYear(true),
+      m_illuminanceMapHasOnly2RefPts(false) {
     if (openstudio::filesystem::exists(m_path)) {
       m_path = openstudio::filesystem::canonical(m_path);
     }
@@ -74,6 +84,7 @@ namespace detail {
     std::string fileName = m_sqliteFilename;
     m_hasYear = true;
     m_hasIlluminanceMapYear = true;
+    m_illuminanceMapHasOnly2RefPts = false;
 
     bool initschema = false;
 
@@ -507,6 +518,8 @@ namespace detail {
     // m_hasYear & m_hasIlluminanceMapYear are both default initialized to true
     if (version < VersionString(9, 2)) {
       m_hasIlluminanceMapYear = false;
+    } else if (version < VersionString(9, 6)) {
+      m_illuminanceMapHasOnly2RefPts = true;
     }
 
     if (version < VersionString(8, 9)) {
@@ -2857,16 +2870,47 @@ namespace detail {
   }
 
   boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(int mapIndex, int ptNum) const {
-    boost::optional<std::string> refPt;
-    std::stringstream s;
-    s << "select ReferencePt" << ptNum << " from daylightmaps where MapNumber=" << mapIndex;
+    if (ptNum <= 0) {
+      LOG(Error, "illuminanceMapRefPt: ptNum must be > 0 (1-indexed)");
+      return boost::none;
+    }
 
+    boost::optional<std::string> refPt;
     sqlite3_stmt* sqlStmtPtr;
 
-    int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
-    code = sqlite3_step(sqlStmtPtr);
+    if (m_illuminanceMapHasOnly2RefPts) {
+      std::stringstream s;
+      s << "SELECT ReferencePt" << ptNum << " FROM DaylightMaps WHERE MapNumber=" << mapIndex;
 
-    if (code == SQLITE_ROW) refPt = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
+      code = sqlite3_step(sqlStmtPtr);
+
+      if (code == SQLITE_ROW) {
+        refPt = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+      }
+
+    } else {
+
+      std::stringstream s;
+      s << "SELECT ReferencePts FROM DaylightMaps WHERE MapNumber=" << mapIndex;
+
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
+      code = sqlite3_step(sqlStmtPtr);
+
+      if (code == SQLITE_ROW) {
+        std::string refPts = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+        auto refPtsVec = openstudio::splitString(refPts, ',');
+
+        // Annoying that the parameters aren't unsigned here... Anyway, I **know** ptNum is > 0 since I tested for it above
+        if (static_cast<size_t>(ptNum) > refPtsVec.size()) {
+          LOG(Error, "illuminanceMapRefPt: ptNum=" << ptNum << " is greater than the number of reference points: " << refPtsVec.size());
+        } else {
+          std::string refPtTrim = refPtsVec[ptNum - 1];
+          openstudio::ascii_trim(refPtTrim);
+          refPt = refPtTrim;
+        }
+      }
+    }
 
     /// must finalize to prevent memory leaks
     sqlite3_finalize(sqlStmtPtr);
@@ -2891,7 +2935,8 @@ namespace detail {
   boost::optional<double> SqlFile_Impl::illuminanceMapMinValue(int mapIndex) const {
     boost::optional<double> minValue;
     std::stringstream s;
-    s << "select min(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = r.HourlyReportIndex "
+    s << "select min(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = "
+         "r.HourlyReportIndex "
          "where r.MapNumber="
       << mapIndex;
 
@@ -2925,7 +2970,8 @@ namespace detail {
   boost::optional<double> SqlFile_Impl::illuminanceMapMaxValue(int mapIndex) const {
     boost::optional<double> maxValue;
     std::stringstream s;
-    s << "select max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = r.HourlyReportIndex "
+    s << "select max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = "
+         "r.HourlyReportIndex "
          "where r.MapNumber="
       << mapIndex;
 
@@ -2954,7 +3000,8 @@ namespace detail {
   /// minimum and maximum of map
   void SqlFile_Impl::illuminanceMapMaxValue(int mapIndex, double& minValue, double& maxValue) const {
     std::stringstream s;
-    s << "select min(d.Illuminance), max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = "
+    s << "select min(d.Illuminance), max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex "
+         "= "
          "r.HourlyReportIndex where r.MapNumber="
       << mapIndex;
 

@@ -810,6 +810,8 @@ namespace detail {
 
     bool m_hasIlluminanceMapYear;
 
+    bool m_illuminanceMapHasOnly2RefPts;
+
     REGISTER_LOGGER("openstudio.energyplus.SqlFile");
   };
 

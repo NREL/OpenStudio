@@ -80,6 +80,9 @@ namespace model {
     double maxAllowedDelTemp() const;
     bool isMaxAllowedDelTempDefaulted() const;
 
+    bool useRepresentativeSurfacesforCalculations() const;
+    bool isUseRepresentativeSurfacesforCalculationsDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -98,6 +101,9 @@ namespace model {
 
     bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
     void resetMaxAllowedDelTemp();
+
+    bool setUseRepresentativeSurfacesforCalculations(bool useRepresentativeSurfacesforCalculations);
+    void resetUseRepresentativeSurfacesforCalculations();
 
     //@}
     /** @name Other */

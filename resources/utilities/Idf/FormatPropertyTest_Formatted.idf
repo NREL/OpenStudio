@@ -5,7 +5,7 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 ! \format singleLine
 
-  Version,9.5;
+  Version,9.6;
 
 !-   ===========  ALL OBJECTS IN CLASS: HEATBALANCEALGORITHM ===========
 ! \format singleLine
@@ -77,6 +77,7 @@
     Floor,                   !- Surface Type
     ,                        !- Construction Name
     MyZone,                  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure

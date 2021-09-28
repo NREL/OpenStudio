@@ -164,16 +164,16 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone) {
   Model m;
   //make an object to clone, and edit some property to make sure the clone worked
   GroundHeatExchangerVertical testObject(m);
-  testObject.setMaximumFlowRate(3.14);
+  testObject.setDesignFlowRate(3.14);
 
   //clone into the same model
   GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14, testObjectClone.maximumFlowRate());
+  EXPECT_EQ(3.14, testObjectClone.designFlowRate());
 
   //clone into another model
   Model m2;
   GroundHeatExchangerVertical testObjectClone2 = testObject.clone(m2).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14, testObjectClone2.maximumFlowRate());
+  EXPECT_EQ(3.14, testObjectClone2.designFlowRate());
 
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
@@ -211,11 +211,4 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions) {
   gFunctions = testObject.gFunctions();
   EXPECT_EQ(100, gFunctions.size());
   EXPECT_THROW(testObject.addGFunction(1.0, 1.5), openstudio::Exception);
-}
-
-TEST_F(ModelFixture, GroundHeatExchangerVertical_Deprecated) {
-  VersionString thisVersion(openStudioVersion());
-  VersionString removeInVersion(3, 3, 0);
-  ASSERT_LT(thisVersion, removeInVersion)
-    << "Please go delete the OS_DEPRECATED functions in GroundHeatExchangerVertical class then delete this test";
 }

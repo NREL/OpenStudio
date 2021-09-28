@@ -114,20 +114,29 @@ namespace model {
       if (value && !value->empty()) {
         result = value;
       } else {
-        // if there is no value set then look for a related SizingSystem object
-        // and use the SizingSystem::SystemOutdoorAirMethod field as the default value
-        const auto oaSystem = controllerOutdoorAir().airLoopHVACOutdoorAirSystem();
-        if (oaSystem) {
-          const auto airLoop = oaSystem->airLoopHVAC();
-          if (airLoop) {
-            const auto sizingSystem = airLoop->sizingSystem();
-            result = sizingSystem.systemOutdoorAirMethod();
+        boost::optional<ControllerOutdoorAir> controllerOA_;
+
+        // TODO: this should be returning an optional really...
+        try {
+          controllerOA_ = controllerOutdoorAir();
+        } catch (openstudio::Exception&) {
+        }
+        if (controllerOA_) {
+          // if there is no value set then look for a related SizingSystem object
+          // and use the SizingSystem::SystemOutdoorAirMethod field as the default value
+          const auto oaSystem = controllerOA_->airLoopHVACOutdoorAirSystem();
+          if (oaSystem) {
+            const auto airLoop = oaSystem->airLoopHVAC();
+            if (airLoop) {
+              const auto sizingSystem = airLoop->sizingSystem();
+              result = sizingSystem.systemOutdoorAirMethod();
+            }
           }
         }
       }
 
       if (!result) {
-        result = "VentilationRateProcedure";
+        result = "Standard62.1VentilationRateProcedure";
       }
 
       return result.get();
@@ -192,19 +201,16 @@ namespace model {
     }
 
     ControllerOutdoorAir ControllerMechanicalVentilation_Impl::controllerOutdoorAir() const {
-      boost::optional<ControllerOutdoorAir> result;
 
       std::vector<ControllerOutdoorAir> controllers = model().getConcreteModelObjects<ControllerOutdoorAir>();
 
-      for (std::vector<ControllerOutdoorAir>::const_iterator it = controllers.begin(); it != controllers.end(); ++it) {
-        if (it->controllerMechanicalVentilation().handle() == handle()) {
-          result = *it;
+      for (const auto& controller : controllers) {
+        if (controller.controllerMechanicalVentilation().handle() == handle()) {
+          return controller;
         }
       }
 
-      OS_ASSERT(result);
-
-      return result.get();
+      LOG_AND_THROW(briefDescription() << " does not have a ControllerOutdoorAir assigned");
     }
 
   }  // namespace detail
