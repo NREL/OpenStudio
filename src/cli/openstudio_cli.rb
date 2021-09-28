@@ -915,6 +915,17 @@ class Run
     options[:osw_path] = './workflow.osw'
     options[:post_process] = false
     options[:ep_json] = false
+    options[:ft_options] = {}
+    # TODO: I don't know if there's any value harcoding a default here really
+    # options[:ft_options] = {
+    #   :runcontrolspecialdays => true,
+    #   :ip_tabular_output => false,
+    #   :no_lifecyclecosts => false,
+    #   :no_sqlite_output => false,
+    #   :no_html_output => false,
+    #   :no_variable_dictionary => false,
+    #   :no_space_translation => false,
+    # }
 
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio run [options]'
@@ -940,6 +951,34 @@ class Run
       o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
         options[:debug] = f
       end
+
+      o.separator ""
+      o.separator "Forward Translator Options:"
+
+      o.on('--[no-]runcontrolspecialdays', "Include RunControlSpecialDays (Holidays) [Default: True]") do |b|
+        options[:ft_options][:runcontrolspecialdays] = b
+      end
+
+      o.on('--set-ip-tabular-output', "Request IP units from E+ Tabular (HTML) Report [Default: False]") do |b|
+        options[:ft_options][:ip_tabular_output] = b
+      end
+
+      o.on('--[no-]lifecyclecosts', "Include LifeCycleCosts [Default: True]") do |b|
+        options[:ft_options][:no_lifecyclecosts] = !b
+      end
+
+      o.on('--[no-]sqlite-output', "Request Output:SQLite from E+ [Default: True]") do |b|
+        options[:ft_options][:no_sqlite_output] = !b
+      end
+
+      o.on('--[no-]html-output', "Request Output:Table:SummaryReports report from E+ [Default: True]") do |b|
+        options[:ft_options][:no_html_output] = !b
+      end
+
+      o.on('--[no-]space-translation', "Add individual E+ Space [Default: True]") do |b|
+        options[:ft_options][:no_space_translation] = !b
+      end
+
     end
 
     # Parse the options
