@@ -1005,9 +1005,6 @@ namespace sdd {
       for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
         customSpaceHeatingDecrement.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
       }
-      for(const auto fan : m_spaceHeatingFans) {
-        customSpaceHeatingDecrement.addKeyVarGroup(fan.nameString(), "Fan Electricity Energy");
-      }
       meter = model::OutputMeter(*result);
       //meter.setFuelType(FuelType::Electricity);
       meter.setName(customSpaceHeatingDecrement.nameString());
