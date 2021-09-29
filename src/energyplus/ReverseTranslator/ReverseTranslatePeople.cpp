@@ -80,14 +80,14 @@ namespace energyplus {
         LOG(Error, "People value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("People/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::PeopleFields::PeopleperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::PeopleFields::PeopleperFloorArea);
       if (d) {
         definition.setPeopleperSpaceFloorArea(*d);
       } else {
         LOG(Error, "People/Area value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Area/Person", *s)) {
-      d = workspaceObject.getDouble(openstudio::PeopleFields::ZoneFloorAreaperPerson);
+      d = workspaceObject.getDouble(openstudio::PeopleFields::FloorAreaperPerson);
       if (d) {
         definition.setSpaceFloorAreaperPerson(*d);
       } else {
@@ -148,7 +148,7 @@ namespace energyplus {
       people.setName(*s);
     }
 
-    target = workspaceObject.getTarget(openstudio::PeopleFields::ZoneorZoneListName);
+    target = workspaceObject.getTarget(openstudio::PeopleFields::ZoneorZoneListorSpaceorSpaceListName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

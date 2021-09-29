@@ -1936,6 +1936,7 @@ set(${target_name}_test_src
   test/DefaultScheduleSet_GTest.cpp
   test/DefaultSubSurfaceConstructions_GTest.cpp
   test/DefaultSurfaceConstructions_GTest.cpp
+  test/DesignDay_GTest.cpp
   test/DesignSpecificationOutdoorAir_GTest.cpp
   test/DesignSpecificationZoneAirDistribution_GTest.cpp
   test/DistrictCooling_GTest.cpp

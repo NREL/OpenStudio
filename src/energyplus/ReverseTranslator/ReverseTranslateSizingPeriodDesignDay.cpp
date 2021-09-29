@@ -113,12 +113,12 @@ namespace energyplus {
         boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
         if (mo) {
           if (boost::optional<ScheduleDay> schedule = mo->optionalCast<ScheduleDay>()) {
-            designDay.setDryBulbTemperatureRangeModifierSchedule(*schedule);
+            designDay.setDryBulbTemperatureRangeModifierDaySchedule(*schedule);
           }
         }
       }
 
-      if (!designDay.dryBulbTemperatureRangeModifierSchedule()) {
+      if (!designDay.dryBulbTemperatureRangeModifierDaySchedule()) {
         LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Maximum Dry Bulb Temperature");
       }
     }
@@ -126,31 +126,28 @@ namespace energyplus {
     // Humidity Condition Type
     s = workspaceObject.getString(SizingPeriod_DesignDayFields::HumidityConditionType);
     if (s) {
-      if (istringEqual(*s, "RelativeHumiditySchedule")) {
-        s = "Schedule";
-      }
-      designDay.setHumidityIndicatingType(s.get());
+      designDay.setHumidityConditionType(s.get());
     }
-    std::string humidityIndicatingType = designDay.humidityIndicatingType();
+    std::string humidityConditionType = designDay.humidityConditionType();
 
     // Wetbulb or DewPoint at Maximum Dry-Bulb
-    if (istringEqual(humidityIndicatingType, "Wetbulb") || istringEqual(humidityIndicatingType, "Dewpoint")
-        || istringEqual(humidityIndicatingType, "WetBulbProfileMultiplierSchedule")
-        || istringEqual(humidityIndicatingType, "WetBulbProfileDifferenceSchedule")
-        || istringEqual(humidityIndicatingType, "WetBulbProfileDefaultMultipliers")) {
+    if (istringEqual(humidityConditionType, "WetBulb") || istringEqual(humidityConditionType, "DewPoint")
+        || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
       value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::WetbulborDewPointatMaximumDryBulb);
       if (value) {
         // units for this field are C
-        designDay.setHumidityIndicatingConditionsAtMaximumDryBulb(value.get());
+        designDay.setWetBulbOrDewPointAtMaximumDryBulb(value.get());
       } else {
         LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Wetbulb or Dew Point at Maximum Dry Bulb");
       }
     }
 
     // Humidity Condition Day Schedule Name
-    if (istringEqual(humidityIndicatingType, "RelativeHumiditySchedule") || istringEqual(humidityIndicatingType, "WetBulbProfileMultiplierSchedule")
-        || istringEqual(humidityIndicatingType, "WetBulbProfileDifferenceSchedule")
-        || istringEqual(humidityIndicatingType, "RelativeHumiditySchedule")) {
+    if (istringEqual(humidityConditionType, "RelativeHumiditySchedule") || istringEqual(humidityConditionType, "WetBulbProfileMultiplierSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDifferenceSchedule")
+        || istringEqual(humidityConditionType, "RelativeHumiditySchedule")) {
 
       boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(SizingPeriod_DesignDayFields::HumidityConditionDayScheduleName);
       if (wo) {
@@ -158,41 +155,41 @@ namespace energyplus {
         if (mo) {
           boost::optional<ScheduleDay> schedule = mo->optionalCast<ScheduleDay>();
           if (schedule) {
-            designDay.setHumidityIndicatingDaySchedule(schedule.get());
+            designDay.setHumidityConditionDaySchedule(schedule.get());
           }
         }
       }
 
-      if (!designDay.humidityIndicatingDaySchedule()) {
-        LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Humidity Indicating Day Schedule Name");
+      if (!designDay.humidityConditionDaySchedule()) {
+        LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Humidity Condition Day Schedule Name");
       }
     }
 
     // Humidity Ratio at Maximum Dry-Bulb
-    if (istringEqual(humidityIndicatingType, "HumidityRatio")) {
+    if (istringEqual(humidityConditionType, "HumidityRatio")) {
       // units for this field are kgWater/kgDryAir
       value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::HumidityRatioatMaximumDryBulb);
       if (value) {
-        designDay.setHumidityIndicatingConditionsAtMaximumDryBulb(value.get());
+        designDay.setHumidityRatioAtMaximumDryBulb(value.get());
       } else {
         LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Humidity Ratio at Maximum Dry Bulb");
       }
     }
 
     // Enthalpy at Maximum Dry-Bulb
-    if (istringEqual(humidityIndicatingType, "Enthalpy")) {
+    if (istringEqual(humidityConditionType, "Enthalpy")) {
       // units for this field are J/kg
       value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::EnthalpyatMaximumDryBulb);
       if (value) {
-        designDay.setHumidityIndicatingConditionsAtMaximumDryBulb(value.get());
+        designDay.setEnthalpyAtMaximumDryBulb(value.get());
       } else {
         LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Enthalpy at Maximum Dry Bulb");
       }
     }
 
     // Daily Wet-Bulb Temperature Range
-    if (istringEqual(humidityIndicatingType, "WetbulbProfileMultiplierSchedule")
-        || istringEqual(humidityIndicatingType, "WetBulbProfileDefaultMultipliers")) {
+    if (istringEqual(humidityConditionType, "WetbulbProfileMultiplierSchedule")
+        || istringEqual(humidityConditionType, "WetBulbProfileDefaultMultipliers")) {
       value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::DailyWetBulbTemperatureRange);
       if (value) {
         designDay.setDailyWetBulbTemperatureRange(*value);
@@ -298,13 +295,13 @@ namespace energyplus {
       //  ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub)
       value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforBeamIrradiance_taub_);
       if (value) {
-        designDay.setAshraeTaub(*value);
+        designDay.setAshraeClearSkyOpticalDepthForBeamIrradiance(*value);
       }
 
       // ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud)
       value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::ASHRAEClearSkyOpticalDepthforDiffuseIrradiance_taud_);
       if (value) {
-        designDay.setAshraeTaud(*value);
+        designDay.setAshraeClearSkyOpticalDepthForDiffuseIrradiance(*value);
       }
     }
 
@@ -314,6 +311,18 @@ namespace energyplus {
       if (value) {
         designDay.setSkyClearness(value.get());
       }
+    }
+
+    // Maximum Number Warmup Days
+    i = workspaceObject.getInt(SizingPeriod_DesignDayFields::MaximumNumberWarmupDays);
+    if (i) {
+      designDay.setMaximumNumberWarmupDays(i.get());
+    }
+
+    // Begin Environment Reset Mode
+    s = workspaceObject.getString(SizingPeriod_DesignDayFields::BeginEnvironmentResetMode);
+    if (s) {
+      designDay.setBeginEnvironmentResetMode(s.get());
     }
 
     return designDay;

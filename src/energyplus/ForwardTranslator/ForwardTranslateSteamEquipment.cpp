@@ -73,10 +73,10 @@ namespace energyplus {
     if (space) {
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
-        idfObject.setString(SteamEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
+        idfObject.setString(SteamEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
       }
     } else if (spaceType) {
-      idfObject.setString(SteamEquipmentFields::ZoneorZoneListName, spaceType->name().get());
+      idfObject.setString(SteamEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
     }
 
     boost::optional<Schedule> schedule = modelObject.schedule();

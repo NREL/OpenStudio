@@ -75,10 +75,10 @@ namespace energyplus {
     if (space) {
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
-        idfObject.setString(PeopleFields::ZoneorZoneListName, thermalZone->name().get());
+        idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
       }
     } else if (spaceType) {
-      idfObject.setString(PeopleFields::ZoneorZoneListName, spaceType->name().get());
+      idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
     }
 
     boost::optional<Schedule> schedule = modelObject.numberofPeopleSchedule();
@@ -97,12 +97,12 @@ namespace energyplus {
 
     d = definition.peopleperSpaceFloorArea();
     if (d) {
-      idfObject.setDouble(PeopleFields::PeopleperZoneFloorArea, (*d) * multiplier);
+      idfObject.setDouble(PeopleFields::PeopleperFloorArea, (*d) * multiplier);
     }
 
     d = definition.spaceFloorAreaperPerson();
     if (d) {
-      idfObject.setDouble(PeopleFields::ZoneFloorAreaperPerson, (*d) * multiplier);
+      idfObject.setDouble(PeopleFields::FloorAreaperPerson, (*d) * multiplier);
     }
 
     d = definition.fractionRadiant();

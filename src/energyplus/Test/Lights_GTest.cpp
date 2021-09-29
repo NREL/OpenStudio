@@ -126,8 +126,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
   WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
 
-  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zoneObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
+  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(zoneObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName)->handle());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
@@ -155,8 +155,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
   WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
 
-  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zoneListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
+  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(zoneListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName)->handle());
 
   ASSERT_EQ(1u, zoneListObject.extensibleGroups().size());
   ASSERT_TRUE(zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0));
@@ -215,8 +215,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) 
   ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false));
   EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false).get());
 
-  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zoneListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
+  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(zoneListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName)->handle());
 
   ASSERT_EQ(1u, zoneListObject.extensibleGroups().size());
   ASSERT_TRUE(zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0));
