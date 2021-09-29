@@ -956,8 +956,9 @@ namespace model {
     boost::optional<double> SizingSystem_Impl::autosizedOccupantDiversity() const {
       boost::optional<double> result;
 
-      // TODO: as of 9.6.0, for some reason, it returns one entry for cooling and one for heating...
+      // Note: as of 9.6.0, for some reason, it returns one entry for cooling and one for heating...
       // And it's only present in the tabular report 'Standard62.1Summary'
+      // Both the Heating and Cooling are actually the same underlying value. Cf https://github.com/NREL/OpenStudio/pull/4450#issue-1011104323
       std::string tableName = "System Ventilation Requirements for Cooling";
 
       // Get the parent AirLoopHVAC
