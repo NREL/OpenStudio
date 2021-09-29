@@ -120,7 +120,13 @@ TEST_F(BCLFixture, BCLMeasure) {
   EXPECT_FALSE(*measure == *measure2);
   EXPECT_EQ("New Measure", measure2->name());
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
-  EXPECT_EQ(6u, measure2->files().size());
+  EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
+    std::stringstream ss;
+    for (const auto& f : measure2->files()) {
+      ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
+    }
+    return ss.str();
+  }();
 
   openstudio::filesystem::ofstream file(measure2->primaryRubyScriptPath().get());
   ASSERT_TRUE(file.is_open());
@@ -148,8 +154,8 @@ TEST_F(BCLFixture, BCLMeasure) {
 
   measure2 = BCLMeasure::load(dir2);
   ASSERT_TRUE(measure2);
-  EXPECT_TRUE(measure2->checkForUpdatesFiles());  // Checksum updated
-  EXPECT_TRUE(measure2->checkForUpdatesXML());
+  EXPECT_FALSE(measure2->checkForUpdatesFiles());
+  EXPECT_TRUE(measure2->checkForUpdatesXML());  // Checksum is reset in Ctor (to 00000000) to trigger update even if nothing has changed
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
 }
 

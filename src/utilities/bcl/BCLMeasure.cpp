@@ -29,6 +29,7 @@
 
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
+#include "BCLFileReference.hpp"
 
 #include "../core/Filesystem.hpp"
 #include "../core/PathHelpers.hpp"
@@ -334,7 +335,7 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   }
 
   if (!resourceFileString.empty()) {
-    writeFile(resourceFileRelativePath, "test", resourceFileString);
+    writeFile(resourceFileRelativePath, "resource", resourceFileString);
   }
 
   // set rest of measure fields
