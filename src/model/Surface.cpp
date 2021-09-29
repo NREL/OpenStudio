@@ -1665,6 +1665,46 @@ namespace model {
       }
     };
 
+    class SubSurfaceMap
+    {
+     public:
+      SubSurfaceMap(const std::vector<Point3d>& vertices, const SubSurface& subSurface) : _vertices(vertices), _subSurface(subSurface) {
+       
+      }
+      std::vector<Point3d> vertices() const {
+        return _vertices;
+      }
+      double minX() const {
+        double xmin = std::numeric_limits<double>::max();
+        for (auto& vertex : _vertices) {
+          xmin = std::min(xmin, vertex.x());
+        }
+        return xmin;
+      }
+      double maxX() const {
+        double xmax = std::numeric_limits<double>::min();
+        for (auto& vertex : _vertices) {
+          xmax = std::max(xmax, vertex.x());
+        }
+        return xmax;
+      }
+      std::string name() {
+        return _subSurface.name().value();
+      }
+
+      SubSurface& subSurface() {
+        return _subSurface;
+      }
+
+      private:
+      std::vector<Point3d> _vertices;
+       SubSurface _subSurface;
+    };
+
+    bool compareSubSurfaces(SubSurfaceMap subSurface1, SubSurfaceMap subSurface2) {
+      return subSurface1.minX() < subSurface2.minX();
+    }
+
     std::vector<Surface> Surface_Impl::splitSurfaceForSubSurfaces() {
       std::vector<Surface> result;
 
@@ -1700,23 +1740,24 @@ namespace model {
       std::reverse(faceVertices.begin(), faceVertices.end());
 
       // new coordinate system has z' in direction of outward normal, y' is up
-      //double xmin = std::numeric_limits<double>::max();
-      //double xmax = std::numeric_limits<double>::min();
-      double ymin = std::numeric_limits<double>::max();
-      double ymax = std::numeric_limits<double>::min();
+      double surfacexmin = std::numeric_limits<double>::max();
+      double surfacexmax = std::numeric_limits<double>::min();
+      double surfaceymin = std::numeric_limits<double>::max();
+      double surfaceymax = std::numeric_limits<double>::min();
       for (const Point3d& faceVertex : faceVertices) {
-        //xmin = std::min(xmin, faceVertex.x());
-        //xmax = std::max(xmax, faceVertex.x());
-        ymin = std::min(ymin, faceVertex.y());
-        ymax = std::max(ymax, faceVertex.y());
+        surfacexmin = std::min(surfacexmin, faceVertex.x());
+        surfacexmax = std::max(surfacexmax, faceVertex.x());
+        surfaceymin = std::min(surfaceymin, faceVertex.y());
+        surfaceymax = std::max(surfaceymax, faceVertex.y());
       }
-      if (ymin > ymax) {
+      if (surfaceymin > surfaceymax) {
         return result;
       }
 
-      // create a mask for each sub surface
-      std::vector<Point3dVector> masks;
+      // Flatten all the sub surfaces
       std::map<Handle, Point3dVector> handleToFaceVertexMap;
+      std::vector<SubSurfaceMap> subSurfaceList;
+
       for (const SubSurface& subSurface : subSurfaces) {
 
         Point3dVector subSurfaceFaceVertices = inverseTransformation * subSurface.vertices();
@@ -1726,38 +1767,46 @@ namespace model {
 
         // boost polygon wants vertices in clockwise order, subSurfaceFaceVertices must be reversed
         std::reverse(subSurfaceFaceVertices.begin(), subSurfaceFaceVertices.end());
-
+        SubSurfaceMap mapper(subSurfaceFaceVertices, subSurface);
+        subSurfaceList.push_back(mapper);
         handleToFaceVertexMap[subSurface.handle()] = subSurfaceFaceVertices;
 
-        double xmin = std::numeric_limits<double>::max();
-        double xmax = std::numeric_limits<double>::min();
-        //double ymin = std::numeric_limits<double>::max();
-        //double ymax = std::numeric_limits<double>::min();
-        for (const Point3d& faceVertex : subSurfaceFaceVertices) {
-          xmin = std::min(xmin, faceVertex.x());
-          xmax = std::max(xmax, faceVertex.x());
-          //ymin = std::min(ymin, faceVertex.y());
-          //ymax = std::max(ymax, faceVertex.y());
-        }
-        if (xmin > xmax) {
-          continue;
+      }
+
+      // Order the sub surfaces left to right (ascending x)
+      std::sort(subSurfaceList.begin(), subSurfaceList.end(), compareSubSurfaces);
+
+      // create a mask for each sub surface
+      std::vector<Point3dVector> masks;
+
+      int i = 0;
+      double xmin = surfacexmin;
+      for (const SubSurfaceMap& subsurface : subSurfaceList) {
+
+        double xmax = 0;
+        if (i < subSurfaceList.size() - 1) {
+          double x1 = subsurface.maxX();
+          double x2 = subSurfaceList[i + 1].minX();
+          xmax = (subsurface.maxX() + subSurfaceList[i + 1].minX()) / 2.0;
+        } else {
+          xmax = surfacexmax;
         }
 
         Point3dVector mask;
-        mask.push_back(Point3d(xmax + expand, ymax + expand, 0));
-        mask.push_back(Point3d(xmax + expand, ymin - expand, 0));
-        mask.push_back(Point3d(xmin - expand, ymin - expand, 0));
-        mask.push_back(Point3d(xmin - expand, ymax + expand, 0));
+        mask.push_back(Point3d(xmax, surfaceymax + expand, 0));
+        mask.push_back(Point3d(xmax, surfaceymin - expand, 0));
+        mask.push_back(Point3d(xmin, surfaceymin - expand, 0));
+        mask.push_back(Point3d(xmin, surfaceymax + expand, 0));
         masks.push_back(mask);
-      }
 
-      // join masks
-      std::vector<Point3dVector> joinedMasks = joinAll(masks, tol);
+        i++;
+        xmin = xmax;
+      }
 
       // intersect masks with surface
       std::vector<Point3dVector> newFaces;
       newFaces.push_back(faceVertices);
-      for (const Point3dVector& mask : joinedMasks) {
+      for (const Point3dVector& mask : masks) {
 
         std::vector<Point3dVector> tmpFaces;
         unsigned numIntersects = 0;
@@ -2417,5 +2466,7 @@ namespace model {
   double Surface::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
     return getImpl<detail::Surface_Impl>()->exposedPerimeter(buildingPerimeter);
   }
+
+
 }  // namespace model
 }  // namespace openstudio
