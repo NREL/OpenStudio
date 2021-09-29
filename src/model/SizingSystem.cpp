@@ -953,6 +953,44 @@ namespace model {
       return result;
     }
 
+    boost::optional<double> SizingSystem_Impl::autosizedOccupantDiversity() const {
+      boost::optional<double> result;
+
+      // TODO: as of 9.6.0, for some reason, it returns one entry for cooling and one for heating...
+      // And it's only present in the tabular report 'Standard62.1Summary'
+      std::string tableName = "System Ventilation Requirements for Cooling";
+
+      // Get the parent AirLoopHVAC
+      AirLoopHVAC parAirLoop = airLoopHVAC();
+
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string sqlName = parAirLoop.nameString();
+      boost::to_upper(sqlName);
+
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the autosized " + tableName + " - 'Occupant Diversity - D'.");
+        return result;
+      }
+
+      // Query the Initialization Summary -> System Sizing table to get
+      // the row names that contains information for this component.
+      std::string rowsQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Standard62.1Summary'
+          AND ReportForString = 'Entire Facility'
+          AND ColumnName = 'Occupant Diversity - D'
+          AND TableName = ?
+          AND RowName = ?;
+      )";
+
+      result = model().sqlFile().get().execAndReturnFirstDouble(rowsQuery,
+                                                                // Bind args
+                                                                tableName, sqlName);
+      return result;
+    }
+
     void SizingSystem_Impl::autosize() {
       autosizeDesignOutdoorAirFlowRate();
       autosizeCoolingDesignCapacity();
@@ -981,6 +1019,11 @@ namespace model {
       val = autosizedCentralHeatingMaximumSystemAirFlowRatio();
       if (val) {
         setCentralHeatingMaximumSystemAirFlowRatio(val.get());
+      }
+
+      val = autosizedOccupantDiversity();
+      if (val) {
+        setOccupantDiversity(val.get());
       }
     }
 
@@ -1582,6 +1625,10 @@ namespace model {
 
   boost::optional<double> SizingSystem::autosizedCentralHeatingMaximumSystemAirFlowRatio() const {
     return getImpl<detail::SizingSystem_Impl>()->autosizedCentralHeatingMaximumSystemAirFlowRatio();
+  }
+
+  boost::optional<double> SizingSystem::autosizedOccupantDiversity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedOccupantDiversity();
   }
 
   // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
