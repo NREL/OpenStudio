@@ -1012,6 +1012,13 @@ class Run
       run_options[:ep_json] = true
     end
 
+    if !options[:ft_options].empty?
+      run_options[:ft_options] = {}
+      options[:ft_options].each do |opt_flag_name, opt_flag|
+        run_options[:ft_options][opt_flag_name] = opt_flag
+      end
+    end
+
     if options[:socket]
       require 'openstudio/workflow/adapters/input/local'
       require 'openstudio/workflow/adapters/output/socket'
