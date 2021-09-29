@@ -3807,7 +3807,6 @@ TEST_F(ModelFixture, Issue_4374) {
   EXPECT_NEAR(max(surfaces[3].vertices()), 36.0613, 0.001);
   EXPECT_NEAR(min(surfaces[1].vertices()), 36.0613, 0.001);
   EXPECT_NEAR(max(surfaces[1].vertices()), 53, 0.001);
-
 }
 
 // Disable this because it was just used to verify splitSurfaceForSubSurfaces visually

@@ -1668,9 +1668,7 @@ namespace model {
     class SubSurfaceMap
     {
      public:
-      SubSurfaceMap(const std::vector<Point3d>& vertices, const SubSurface& subSurface) : _vertices(vertices), _subSurface(subSurface) {
-       
-      }
+      SubSurfaceMap(const std::vector<Point3d>& vertices, const SubSurface& subSurface) : _vertices(vertices), _subSurface(subSurface) {}
       std::vector<Point3d> vertices() const {
         return _vertices;
       }
@@ -1696,9 +1694,9 @@ namespace model {
         return _subSurface;
       }
 
-      private:
+     private:
       std::vector<Point3d> _vertices;
-       SubSurface _subSurface;
+      SubSurface _subSurface;
     };
 
     bool compareSubSurfaces(SubSurfaceMap subSurface1, SubSurfaceMap subSurface2) {
@@ -1770,7 +1768,6 @@ namespace model {
         SubSurfaceMap mapper(subSurfaceFaceVertices, subSurface);
         subSurfaceList.push_back(mapper);
         handleToFaceVertexMap[subSurface.handle()] = subSurfaceFaceVertices;
-
       }
 
       // Order the sub surfaces left to right (ascending x)
@@ -2466,7 +2463,6 @@ namespace model {
   double Surface::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
     return getImpl<detail::Surface_Impl>()->exposedPerimeter(buildingPerimeter);
   }
-
 
 }  // namespace model
 }  // namespace openstudio
