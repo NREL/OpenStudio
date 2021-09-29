@@ -90,17 +90,6 @@ TEST_F(BCLFixture, BCLMeasure) {
   EXPECT_FALSE(measure2->checkForUpdatesXML());
   EXPECT_TRUE(*measure == *measure2);
   EXPECT_FALSE(measure->directory() == measure2->directory());
-  // Trailing separators differ...
-  EXPECT_NE(dir2, measure2->directory());
-  EXPECT_EQ(dir2clean, measure2->directory());
-
-  EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
-    std::stringstream ss;
-    for (const auto& f : measure2->files()) {
-      ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
-    }
-    return ss.str();
-  }();
 
   // Trailing separators differ...
   EXPECT_NE(dir2, measure2->directory());
