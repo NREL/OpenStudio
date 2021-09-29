@@ -41,8 +41,14 @@
 #include <pugixml.hpp>
 
 using namespace openstudio;
-
 namespace fs = openstudio::filesystem;
+
+struct TestFile
+{
+  std::string fileName;
+  std::string usageType;
+  openstudio::path relativePath;
+};
 
 TEST_F(BCLFixture, BCLMeasure) {
   openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/");
@@ -69,94 +75,186 @@ TEST_F(BCLFixture, BCLMeasure) {
   EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 
   EXPECT_EQ(6u, measure->files().size());
+
+  std::vector<TestFile> expectedFiles{
+    {"measure.rb", "script", openstudio::toPath("measure.rb")},
+    {"SetWindowToWallRatioByFacade_Test.rb", "test", openstudio::toPath("tests") / openstudio::toPath("SetWindowToWallRatioByFacade_Test.rb")},
+    {"EnvelopeAndLoadTestModel_01.osm", "test", openstudio::toPath("tests") / openstudio::toPath("EnvelopeAndLoadTestModel_01.osm")},
+    {"EnvelopeAndLoadTestModel_02_Rotated.osm", "test", openstudio::toPath("tests") / openstudio::toPath("EnvelopeAndLoadTestModel_02_Rotated.osm")},
+    {"ReverseTranslatedModel.osm", "test", openstudio::toPath("tests") / openstudio::toPath("ReverseTranslatedModel.osm")},
+    {"test.osm", "test", openstudio::toPath("tests") / openstudio::toPath("test.osm")},
+  };
+
   for (BCLFileReference& file : measure->files()) {
     EXPECT_TRUE(exists(file.path()));
     EXPECT_FALSE(file.checkForUpdate());
+    auto it =
+      std::find_if(expectedFiles.cbegin(), expectedFiles.cend(), [&file](const auto& testFile) { return file.fileName() == testFile.fileName; });
+    ASSERT_NE(it, expectedFiles.cend()) << "Can't find " << file.fileName();
+    EXPECT_EQ(file.usageType(), it->usageType);
+    EXPECT_EQ(file.relativePath(), it->relativePath);
   }
 
-  openstudio::path dir2 = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade2/");
-  openstudio::path dir2clean = dir2;
-  dir2clean.remove_trailing_separator();
+  // Test Clone
+  {
+    openstudio::path dir2 = resourcesPath() / toPath("/utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade2/");
+    openstudio::path dir2clean = dir2;
+    dir2clean.remove_trailing_separator();
 
-  if (openstudio::filesystem::exists(dir2)) {
+    if (openstudio::filesystem::exists(dir2)) {
+      ASSERT_TRUE(removeDirectory(dir2));
+    }
+    // If this assertion fails, check that you don't have an Explorer window opened to the SetWindowToWallRatioByFacade2 directory
+    ASSERT_FALSE(openstudio::filesystem::exists(dir2));
+
+    boost::optional<BCLMeasure> measure2 = measure->clone(dir2);
+    ASSERT_TRUE(measure2);
+    EXPECT_FALSE(measure2->checkForUpdatesFiles());
+    EXPECT_FALSE(measure2->checkForUpdatesXML());
+    EXPECT_TRUE(*measure == *measure2);
+    EXPECT_FALSE(measure->directory() == measure2->directory());
+
+    // Trailing separators differ...
+    EXPECT_NE(dir2, measure2->directory());
+    EXPECT_EQ(dir2clean, measure2->directory());
+    EXPECT_TRUE(openstudio::filesystem::is_directory(dir2));
+    EXPECT_TRUE(openstudio::filesystem::is_directory(dir2clean));
+
+    EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
+      std::stringstream ss;
+      for (const auto& f : measure2->files()) {
+        ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
+      }
+      return ss.str();
+    }();
+
+    for (BCLFileReference& file : measure2->files()) {
+      EXPECT_TRUE(exists(file.path()));
+      EXPECT_FALSE(file.checkForUpdate());
+      auto it =
+        std::find_if(expectedFiles.cbegin(), expectedFiles.cend(), [&file](const auto& testFile) { return file.fileName() == testFile.fileName; });
+      ASSERT_NE(it, expectedFiles.cend());
+      EXPECT_EQ(file.usageType(), it->usageType);
+      EXPECT_EQ(file.relativePath(), it->relativePath);
+    }
+
+    measure2->setName("New Measure");  // this would normally be initiated by a change from the measure
+    EXPECT_FALSE(measure2->checkForUpdatesFiles());
+    EXPECT_FALSE(measure2->checkForUpdatesXML());  // name change does not trigger xml update
+    EXPECT_FALSE(*measure == *measure2);
+    measure2->save();
+    EXPECT_FALSE(measure2->checkForUpdatesFiles());
+    EXPECT_FALSE(measure2->checkForUpdatesXML());
+
+    measure2 = BCLMeasure::load(dir2);
+    ASSERT_TRUE(measure2);
+    EXPECT_FALSE(measure2->checkForUpdatesFiles());
+    EXPECT_FALSE(measure2->checkForUpdatesXML());
+    EXPECT_FALSE(*measure == *measure2);
+    EXPECT_EQ("New Measure", measure2->name());
+    ASSERT_TRUE(measure2->primaryRubyScriptPath());
+    EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
+      std::stringstream ss;
+      for (const auto& f : measure2->files()) {
+        ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
+      }
+      return ss.str();
+    }();
+
+    for (BCLFileReference& file : measure2->files()) {
+      EXPECT_TRUE(exists(file.path()));
+      EXPECT_FALSE(file.checkForUpdate());
+      auto it =
+        std::find_if(expectedFiles.cbegin(), expectedFiles.cend(), [&file](const auto& testFile) { return file.fileName() == testFile.fileName; });
+      ASSERT_NE(it, expectedFiles.cend());
+      EXPECT_EQ(file.usageType(), it->usageType);
+      EXPECT_EQ(file.relativePath(), it->relativePath);
+    }
+
+    openstudio::filesystem::ofstream file(measure2->primaryRubyScriptPath().get());
+    ASSERT_TRUE(file.is_open());
+    file << "Hi";
+    file.close();
+    EXPECT_FALSE(measure2->checkForUpdatesXML());
+    EXPECT_TRUE(measure2->checkForUpdatesFiles());
+
+    measure2.reset();
+    ASSERT_TRUE(exists(dir2));
     ASSERT_TRUE(removeDirectory(dir2));
+    ASSERT_FALSE(exists(dir2));
   }
-  // If this assertion fails, check that you don't have an Explorer window opened to the SetWindowToWallRatioByFacade2 directory
-  ASSERT_FALSE(openstudio::filesystem::exists(dir2));
+}
 
-  boost::optional<BCLMeasure> measure2 = measure->clone(dir2);
-  ASSERT_TRUE(measure2);
-  EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_FALSE(measure2->checkForUpdatesXML());
-  EXPECT_TRUE(*measure == *measure2);
-  EXPECT_FALSE(measure->directory() == measure2->directory());
+TEST_F(BCLFixture, BCLMeasure_NewReportingMeasure) {
 
-  // Trailing separators differ...
-  EXPECT_NE(dir2, measure2->directory());
-  EXPECT_EQ(dir2clean, measure2->directory());
-  EXPECT_TRUE(openstudio::filesystem::is_directory(dir2));
-  EXPECT_TRUE(openstudio::filesystem::is_directory(dir2clean));
+  openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/AnotherReportingMeasure/");
 
-  EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
-    std::stringstream ss;
-    for (const auto& f : measure2->files()) {
-      ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
-    }
-    return ss.str();
-  }();
+  // In case cleanup didn't happen in the previous run
+  if (openstudio::filesystem::exists(dir)) {
+    ASSERT_TRUE(removeDirectory(dir));
+  }
 
-  measure2->setName("New Measure");  // this would normally be initiated by a change from the measure
-  EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_FALSE(measure2->checkForUpdatesXML());  // name change does not trigger xml update
-  EXPECT_FALSE(*measure == *measure2);
-  measure2->save();
-  EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_FALSE(measure2->checkForUpdatesXML());
-
-  measure2 = BCLMeasure::load(dir2);
-  ASSERT_TRUE(measure2);
-  EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_FALSE(measure2->checkForUpdatesXML());
-  EXPECT_FALSE(*measure == *measure2);
-  EXPECT_EQ("New Measure", measure2->name());
-  ASSERT_TRUE(measure2->primaryRubyScriptPath());
-  EXPECT_EQ(6u, measure2->files().size()) << [&measure2]() {
-    std::stringstream ss;
-    for (const auto& f : measure2->files()) {
-      ss << "filename=" << f.fileName() << ", path=" << f.path() << '\n';
-    }
-    return ss.str();
-  }();
-
-  openstudio::filesystem::ofstream file(measure2->primaryRubyScriptPath().get());
-  ASSERT_TRUE(file.is_open());
-  file << "Hi";
-  file.close();
-  EXPECT_FALSE(measure2->checkForUpdatesXML());
-  EXPECT_TRUE(measure2->checkForUpdatesFiles());
-
-  measure2.reset();
-  ASSERT_TRUE(exists(dir2));
-  ASSERT_TRUE(removeDirectory(dir2));
-  ASSERT_FALSE(exists(dir2));
+  boost::optional<BCLMeasure> measure;
 
   std::string className = BCLMeasure::makeClassName("Another Measure");
   EXPECT_EQ("AnotherMeasure", className);
 
-  EXPECT_NO_THROW(measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration", MeasureType::ReportingMeasure, "Description",
-                                        "Modeler Description"));
-  ASSERT_TRUE(measure2);
-  ASSERT_TRUE(exists(dir2));
-  EXPECT_EQ("another_measure", measure2->name());
-  EXPECT_EQ("Another Measure", measure2->displayName());
-  EXPECT_EQ("AnotherMeasure", measure2->className());
-  EXPECT_TRUE(measure2->primaryRubyScriptPath());
+  measure =
+    BCLMeasure("Another Measure", className, dir, "Envelope.Fenestration", MeasureType::ReportingMeasure, "Description", "Modeler Description");
+  ASSERT_TRUE(measure);
+  ASSERT_TRUE(exists(dir));
+  EXPECT_EQ("another_measure", measure->name());
+  EXPECT_EQ("Another Measure", measure->displayName());
+  EXPECT_EQ("AnotherMeasure", measure->className());
+  EXPECT_EQ(MeasureType::ReportingMeasure, measure->measureType().value());
+  EXPECT_TRUE(measure->primaryRubyScriptPath());
+  EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 
-  measure2 = BCLMeasure::load(dir2);
-  ASSERT_TRUE(measure2);
-  EXPECT_FALSE(measure2->checkForUpdatesFiles());
-  EXPECT_TRUE(measure2->checkForUpdatesXML());  // Checksum is reset in Ctor (to 00000000) to trigger update even if nothing has changed
-  ASSERT_TRUE(measure2->primaryRubyScriptPath());
+  EXPECT_EQ(8u, measure->files().size());
+
+  std::vector<TestFile> expectedFiles{
+    {"measure.rb", "script", openstudio::toPath("measure.rb")},
+    {"LICENSE.md", "license", openstudio::toPath("LICENSE.md")},
+    {"README.md.erb", "readmeerb", openstudio::toPath("README.md.erb")},
+    {".gitkeep", "doc", openstudio::toPath("docs") / openstudio::toPath(".gitkeep")},
+    {"another_measure_test.rb", "test", openstudio::toPath("tests") / openstudio::toPath("another_measure_test.rb")},
+    {"example_model.osm", "test", openstudio::toPath("tests") / openstudio::toPath("example_model.osm")},
+    {"USA_CO_Golden-NREL.724666_TMY3.epw", "test", openstudio::toPath("tests") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw")},
+    {"report.html.in", "resource", openstudio::toPath("resources") / openstudio::toPath("report.html.in")},
+  };
+
+  for (BCLFileReference& file : measure->files()) {
+    EXPECT_TRUE(exists(file.path()));
+    EXPECT_FALSE(file.checkForUpdate());
+    auto it =
+      std::find_if(expectedFiles.cbegin(), expectedFiles.cend(), [&file](const auto& testFile) { return file.fileName() == testFile.fileName; });
+    ASSERT_NE(it, expectedFiles.cend());
+    EXPECT_EQ(file.usageType(), it->usageType);
+    EXPECT_EQ(file.relativePath(), it->relativePath);
+  }
+
+  // Reload
+  measure = BCLMeasure::load(dir);
+  ASSERT_TRUE(measure);
+  EXPECT_FALSE(measure->checkForUpdatesFiles());
+  EXPECT_TRUE(measure->checkForUpdatesXML());  // Checksum is reset in Ctor (to 00000000) to trigger update even if nothing has changed
+  ASSERT_TRUE(measure->primaryRubyScriptPath());
+
+  for (BCLFileReference& file : measure->files()) {
+    EXPECT_TRUE(exists(file.path()));
+    EXPECT_FALSE(file.checkForUpdate());
+    auto it =
+      std::find_if(expectedFiles.cbegin(), expectedFiles.cend(), [&file](const auto& testFile) { return file.fileName() == testFile.fileName; });
+    ASSERT_NE(it, expectedFiles.cend());
+    EXPECT_EQ(file.usageType(), it->usageType);
+    EXPECT_EQ(file.relativePath(), it->relativePath);
+  }
+
+  // Cleanup
+  measure.reset();
+  ASSERT_TRUE(exists(dir));
+  ASSERT_TRUE(removeDirectory(dir));
+  ASSERT_FALSE(exists(dir));
 }
 
 TEST_F(BCLFixture, BCLMeasure_CTor) {
