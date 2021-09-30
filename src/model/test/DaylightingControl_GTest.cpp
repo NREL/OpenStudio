@@ -40,7 +40,13 @@
 #include "../GlareSensor.hpp"
 #include "../GlareSensor_Impl.hpp"
 
+#include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+#include "../../utilities/data/Matrix.hpp"
+
+#include <cmath>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -232,4 +238,117 @@ TEST_F(ModelFixture, DaylightingControl_Basic) {
   EXPECT_TRUE(daylightingControl.isPrimaryDaylightingControl());
 }
 
+TEST_F(ModelFixture, DaylightingControl_Geometry) {
+
+  Model m;
+
+  constexpr double width = 3.0;
+  // Position of the sensor
+  constexpr double xPos = 2.0;
+  constexpr double yPos = 1.0;
+  constexpr double zPos = 1.5;  // Eye level
+
+  // Counterclockwise
+  std::vector<Point3d> floorPoints{{0.0, 0.0, 0.0}, {0.0, width, 0.0}, {width, width, 0.0}, {width, 0.0, 0.0}};
+  auto space_ = Space::fromFloorPrint(floorPoints, 3, m);  // Space is a cube of 3m side
+  ASSERT_TRUE(space_);
+
+  Point3d origin(0, 0, 0);
+  Point3d position(xPos, yPos, zPos);
+
+  // Point3d target(xTarget, yTarget, zTarget);
+
+  //auto identityMatrix = Matrix(boost::numeric::ublas::identity_matrix<double>(4));
+
+  DaylightingControl d(m);
+  EXPECT_EQ(origin, d.position());
+  EXPECT_EQ(0.0, d.positionXCoordinate());
+  EXPECT_EQ(0.0, d.positionYCoordinate());
+  EXPECT_EQ(0.0, d.positionZCoordinate());
+  EXPECT_EQ(origin, d.position());
+
+  EXPECT_EQ(0.0, d.psiRotationAroundXAxis());
+  EXPECT_EQ(0.0, d.thetaRotationAroundYAxis());
+  EXPECT_EQ(0.0, d.phiRotationAroundZAxis());
+  Transformation t = d.transformation();
+  //EXPECT_EQ(identityMatrix, t.matrix());
+
+  EXPECT_TRUE(d.setPosition(position));
+  EXPECT_EQ(position, d.position());
+  EXPECT_EQ(xPos, d.positionXCoordinate());
+  EXPECT_EQ(yPos, d.positionYCoordinate());
+  EXPECT_EQ(zPos, d.positionZCoordinate());
+  EXPECT_EQ(position, d.position());
+
+  // Horizontal plane
+  //   y
+  //   ▲
+  //   │
+  //   │          t3                        t2
+  // 3 ├───────────x───────────┬───────────x
+  //   │           │\          │          /│
+  //   │           │ \         │         / │
+  //   │           │  \        │        /  │
+  //   │           │   \       │       /   │
+  //   │           │    \      │      /    │
+  // 2 ├───────────┼──── \─────┼─────/─────┤
+  //   │           │      \    │    /      │
+  //   │           │       \   │   /       │
+  //   │           │        \  │  /        │
+  //   │           │         \ │ /         │
+  //   │           │           │/          │
+  // 1 ├───────────┼───────────O───────────x t1
+  //   │           │           │           │
+  //   │           │           │           │
+  //   │           │           │           │
+  //   │           │           │           │
+  //   │           │           │           │
+  //   └───────────┴───────────┴───────────┴────► x
+  // O             1           2           3
+
+  {
+    // translation positive on the x axis, expect a -90° rotation from y axis, around z
+    Point3d target1(xPos + 1.0, yPos, zPos);
+    EXPECT_TRUE(d.aimAt(target1));
+    EXPECT_EQ(0.0, d.psiRotationAroundXAxis());
+    EXPECT_EQ(0.0, d.thetaRotationAroundYAxis());
+    EXPECT_EQ(-90.0, d.phiRotationAroundZAxis());
+
+    // Horizontal plane. Going from (x, y) = (2,1) to (3,3). angle from y axis, around z
+    Point3d target2(xPos + 1.0, yPos + 2.0, zPos);
+    EXPECT_TRUE(d.aimAt(target2));
+    EXPECT_EQ(0.0, d.psiRotationAroundXAxis());
+    EXPECT_EQ(0.0, d.thetaRotationAroundYAxis());
+    // Phi is counterclockwise (right-hand rule), so result is negative here
+    EXPECT_DOUBLE_EQ(std::atan(-1.0 / 2.0), degToRad(d.phiRotationAroundZAxis()));
+    EXPECT_DOUBLE_EQ(-26.56505117707799, d.phiRotationAroundZAxis());  // -atan (1/2), converted to deg. Python: math.degrees(math.atan2(-1,2))
+
+    // Horizontal plane. Going from (x, y) = (2,1) to (1,3). angle from y axis, around z
+    Point3d target3(xPos - 1.0, yPos + 2.0, zPos);
+    EXPECT_TRUE(d.aimAt(target3));
+    EXPECT_EQ(0.0, d.psiRotationAroundXAxis());
+    EXPECT_EQ(0.0, d.thetaRotationAroundYAxis());
+    // Phi is counterclockwise (right-hand rule), so result is negative here
+    EXPECT_DOUBLE_EQ(std::atan(1.0 / 2.0), degToRad(d.phiRotationAroundZAxis()));
+    EXPECT_DOUBLE_EQ(26.56505117707799, d.phiRotationAroundZAxis());  // -atan (1/2), converted to deg. Python: math.degrees(math.atan2(-1,2))
+  }
+
+  // Vertical plane, going up. Expect a rotation from y axis of +90°, around x axis
+  {
+    Point3d target(xPos, yPos, zPos + 1.0);
+    EXPECT_TRUE(d.aimAt(target));
+
+    EXPECT_EQ(90.0, d.psiRotationAroundXAxis());
+    EXPECT_EQ(0.0, d.thetaRotationAroundYAxis());
+    EXPECT_EQ(0.0, d.phiRotationAroundZAxis());
+  }
+
+  {
+    Point3d target(xPos + 1.0, yPos + 2.0, zPos + 3.0);
+    EXPECT_TRUE(d.aimAt(target));
+
+    EXPECT_DOUBLE_EQ(54.068333240158303, d.psiRotationAroundXAxis());
+    EXPECT_DOUBLE_EQ(8.0272034759063704, d.thetaRotationAroundYAxis());
+    EXPECT_DOUBLE_EQ(-15.658662176743, d.phiRotationAroundZAxis());
+  }
 }
