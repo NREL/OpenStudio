@@ -505,6 +505,12 @@ namespace energyplus {
         //
 
         double glareAngle = -primaryDaylightingControl->phiRotationAroundZAxis();
+        while (glareAngle >= 360.0) {
+          glareAngle -= 360.0;
+        }
+        while (glareAngle < 0.0) {
+          glareAngle += 360.0;
+        }
         daylightingControlObject.setDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis, glareAngle);
 
         if (OptionalDouble d = primaryDaylightingControl->maximumAllowableDiscomfortGlareIndex()) {

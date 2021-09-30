@@ -117,14 +117,28 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
   EXPECT_TRUE(thermalZone.setPrimaryDaylightingControl(daylightingControl));
 
   ForwardTranslator ft;
-  Workspace w = ft.translateModel(model);
+  {
+    Workspace w = ft.translateModel(model);
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
-  ASSERT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_d(idfObjs[0]);
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_d(idfObjs[0]);
 
-  EXPECT_EQ(-daylightingControl.phiRotationAroundZAxis(),
-            idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
+    EXPECT_EQ(-daylightingControl.phiRotationAroundZAxis(),
+              idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
+  }
+
+  daylightingControl.setPhiRotationAroundZAxis(45.0);
+  {
+    Workspace w = ft.translateModel(model);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_d(idfObjs[0]);
+
+    // -45, so +360 to end up with a positive value => 315
+    EXPECT_EQ(315, idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySchedule) {
