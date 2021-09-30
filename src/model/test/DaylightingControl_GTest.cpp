@@ -34,10 +34,13 @@
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 #include "../Space.hpp"
+#include "../ThermalZone.hpp"
 #include "../DaylightingControl.hpp"
 #include "../DaylightingControl_Impl.hpp"
 #include "../GlareSensor.hpp"
 #include "../GlareSensor_Impl.hpp"
+
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -65,4 +68,168 @@ TEST_F(ModelFixture, DaylightingControl_Clone) {
   EXPECT_EQ(space.handle(), control.space()->handle());
   EXPECT_EQ(space.handle(), object.cast<DaylightingControl>().space()->handle());
   EXPECT_EQ(2u, space.daylightingControls().size());
+}
+
+TEST_F(ModelFixture, DaylightingControl_Basic) {
+
+  Model m;
+  DaylightingControl daylightingControl(m);
+
+  // Space Name: Optional Object
+  EXPECT_FALSE(daylightingControl.space());
+  // Counterclockwise
+  std::vector<Point3d> floorPoints{{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}};
+  auto space_ = Space::fromFloorPrint(floorPoints, 3, m);
+  ASSERT_TRUE(space_);
+  EXPECT_TRUE(daylightingControl.setSpace(space_.get()));
+  ASSERT_TRUE(daylightingControl.space());
+  EXPECT_EQ(space_.get(), daylightingControl.space().get());
+
+  // Position X-Coordinate: Optional Double
+  EXPECT_TRUE(daylightingControl.setPositionXCoordinate(1.0));
+  EXPECT_EQ(1.0, daylightingControl.positionXCoordinate());
+
+  // Position Y-Coordinate: Optional Double
+  EXPECT_TRUE(daylightingControl.setPositionYCoordinate(2.0));
+  EXPECT_EQ(2.0, daylightingControl.positionYCoordinate());
+
+  // Position Z-Coordinate: Optional Double
+  EXPECT_TRUE(daylightingControl.setPositionZCoordinate(3.0));
+  EXPECT_EQ(3.0, daylightingControl.positionZCoordinate());
+
+  // Psi Rotation Around X-Axis: Optional Double
+  EXPECT_EQ(0.0, daylightingControl.psiRotationAroundXAxis());
+  EXPECT_TRUE(daylightingControl.isPsiRotationAroundXAxisDefaulted());
+  EXPECT_TRUE(daylightingControl.setPsiRotationAroundXAxis(4.0));
+  EXPECT_EQ(4.0, daylightingControl.psiRotationAroundXAxis());
+  EXPECT_FALSE(daylightingControl.isPsiRotationAroundXAxisDefaulted());
+  daylightingControl.resetPsiRotationAroundXAxis();
+  EXPECT_EQ(0.0, daylightingControl.psiRotationAroundXAxis());
+  EXPECT_TRUE(daylightingControl.isPsiRotationAroundXAxisDefaulted());
+
+  // Theta Rotation Around Y-Axis: Optional Double
+  EXPECT_EQ(0.0, daylightingControl.thetaRotationAroundYAxis());
+  EXPECT_TRUE(daylightingControl.isThetaRotationAroundYAxisDefaulted());
+  EXPECT_TRUE(daylightingControl.setThetaRotationAroundYAxis(5.0));
+  EXPECT_EQ(5.0, daylightingControl.thetaRotationAroundYAxis());
+  EXPECT_FALSE(daylightingControl.isThetaRotationAroundYAxisDefaulted());
+  daylightingControl.resetThetaRotationAroundYAxis();
+  EXPECT_EQ(0.0, daylightingControl.thetaRotationAroundYAxis());
+  EXPECT_TRUE(daylightingControl.isThetaRotationAroundYAxisDefaulted());
+
+  // Phi Rotation Around Z-Axis: Optional Double
+  EXPECT_EQ(0.0, daylightingControl.phiRotationAroundZAxis());
+  EXPECT_TRUE(daylightingControl.isPhiRotationAroundZAxisDefaulted());
+  EXPECT_TRUE(daylightingControl.setPhiRotationAroundZAxis(6.0));
+  EXPECT_EQ(6.0, daylightingControl.phiRotationAroundZAxis());
+  EXPECT_FALSE(daylightingControl.isPhiRotationAroundZAxisDefaulted());
+  daylightingControl.resetPhiRotationAroundZAxis();
+  EXPECT_EQ(0.0, daylightingControl.phiRotationAroundZAxis());
+  EXPECT_TRUE(daylightingControl.isPhiRotationAroundZAxisDefaulted());
+
+  // Illuminance Setpoint: Optional Double
+  EXPECT_TRUE(daylightingControl.isIlluminanceSetpointDefaulted());
+  EXPECT_EQ(500.0, daylightingControl.illuminanceSetpoint());
+  EXPECT_TRUE(daylightingControl.setIlluminanceSetpoint(300.0));
+  EXPECT_EQ(300.0, daylightingControl.illuminanceSetpoint());
+  EXPECT_FALSE(daylightingControl.isIlluminanceSetpointDefaulted());
+  // Bad Value
+  EXPECT_FALSE(daylightingControl.setIlluminanceSetpoint(-10.0));
+  EXPECT_EQ(300.0, daylightingControl.illuminanceSetpoint());
+  daylightingControl.resetIlluminanceSetpoint();
+  EXPECT_TRUE(daylightingControl.isIlluminanceSetpointDefaulted());
+  EXPECT_EQ(500.0, daylightingControl.illuminanceSetpoint());
+
+  // Lighting Control Type: Optional String
+  EXPECT_TRUE(daylightingControl.isLightingControlTypeDefaulted());
+  EXPECT_EQ("Continuous", daylightingControl.lightingControlType());
+  EXPECT_TRUE(daylightingControl.setLightingControlType("None"));
+  EXPECT_EQ("None", daylightingControl.lightingControlType());
+  EXPECT_FALSE(daylightingControl.isLightingControlTypeDefaulted());
+  // Bad Value
+  EXPECT_FALSE(daylightingControl.setLightingControlType("BADENUM"));
+  EXPECT_EQ("None", daylightingControl.lightingControlType());
+  daylightingControl.resetLightingControlType();
+  EXPECT_TRUE(daylightingControl.isLightingControlTypeDefaulted());
+  EXPECT_EQ("Continuous", daylightingControl.lightingControlType());
+
+  // Minimum Input Power Fraction for Continuous Dimming Control: Optional Double
+  EXPECT_TRUE(daylightingControl.isMinimumInputPowerFractionforContinuousDimmingControlDefaulted());
+  EXPECT_EQ(0.3, daylightingControl.minimumInputPowerFractionforContinuousDimmingControl());
+  EXPECT_TRUE(daylightingControl.setMinimumInputPowerFractionforContinuousDimmingControl(0.58));
+  EXPECT_EQ(0.58, daylightingControl.minimumInputPowerFractionforContinuousDimmingControl());
+  EXPECT_FALSE(daylightingControl.isMinimumInputPowerFractionforContinuousDimmingControlDefaulted());
+  // Bad Value
+  EXPECT_FALSE(daylightingControl.setMinimumInputPowerFractionforContinuousDimmingControl(-10.0));
+  EXPECT_EQ(0.58, daylightingControl.minimumInputPowerFractionforContinuousDimmingControl());
+  daylightingControl.resetMinimumInputPowerFractionforContinuousDimmingControl();
+  EXPECT_TRUE(daylightingControl.isMinimumInputPowerFractionforContinuousDimmingControlDefaulted());
+  EXPECT_EQ(0.3, daylightingControl.minimumInputPowerFractionforContinuousDimmingControl());
+
+  // Minimum Light Output Fraction for Continuous Dimming Control: Optional Double
+  EXPECT_TRUE(daylightingControl.isMinimumLightOutputFractionforContinuousDimmingControlDefaulted());
+  EXPECT_EQ(0.2, daylightingControl.minimumLightOutputFractionforContinuousDimmingControl());
+  EXPECT_TRUE(daylightingControl.setMinimumLightOutputFractionforContinuousDimmingControl(0.35));
+  EXPECT_EQ(0.35, daylightingControl.minimumLightOutputFractionforContinuousDimmingControl());
+  EXPECT_FALSE(daylightingControl.isMinimumLightOutputFractionforContinuousDimmingControlDefaulted());
+  // Bad Value
+  EXPECT_FALSE(daylightingControl.setMinimumLightOutputFractionforContinuousDimmingControl(-10.0));
+  EXPECT_EQ(0.35, daylightingControl.minimumLightOutputFractionforContinuousDimmingControl());
+  daylightingControl.resetMinimumLightOutputFractionforContinuousDimmingControl();
+  EXPECT_TRUE(daylightingControl.isMinimumLightOutputFractionforContinuousDimmingControlDefaulted());
+  EXPECT_EQ(0.2, daylightingControl.minimumLightOutputFractionforContinuousDimmingControl());
+
+  // Number of Stepped Control Steps: Optional Integer
+  EXPECT_TRUE(daylightingControl.isNumberofSteppedControlStepsDefaulted());
+  EXPECT_EQ(1, daylightingControl.numberofSteppedControlSteps());
+  EXPECT_TRUE(daylightingControl.setNumberofSteppedControlSteps(3));
+  EXPECT_EQ(3, daylightingControl.numberofSteppedControlSteps());
+  EXPECT_FALSE(daylightingControl.isNumberofSteppedControlStepsDefaulted());
+  daylightingControl.resetNumberofSteppedControlSteps();
+  EXPECT_TRUE(daylightingControl.isNumberofSteppedControlStepsDefaulted());
+  EXPECT_EQ(1, daylightingControl.numberofSteppedControlSteps());
+
+  // Probability Lighting will be Reset When Needed in Manual Stepped Control: Optional Double
+  EXPECT_TRUE(daylightingControl.isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted());
+  EXPECT_EQ(1.0, daylightingControl.probabilityLightingwillbeResetWhenNeededinManualSteppedControl());
+  EXPECT_TRUE(daylightingControl.setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(0.55));
+  EXPECT_EQ(0.55, daylightingControl.probabilityLightingwillbeResetWhenNeededinManualSteppedControl());
+  EXPECT_FALSE(daylightingControl.isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted());
+  // Bad Value
+  EXPECT_FALSE(daylightingControl.setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(-10.0));
+  EXPECT_EQ(0.55, daylightingControl.probabilityLightingwillbeResetWhenNeededinManualSteppedControl());
+  daylightingControl.resetProbabilityLightingwillbeResetWhenNeededinManualSteppedControl();
+  EXPECT_TRUE(daylightingControl.isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted());
+  EXPECT_EQ(1.0, daylightingControl.probabilityLightingwillbeResetWhenNeededinManualSteppedControl());
+
+  // Number of Daylighting Views: Optional Integer
+  EXPECT_TRUE(daylightingControl.isNumberofDaylightingViewsDefaulted());
+  EXPECT_EQ(1, daylightingControl.numberofDaylightingViews());
+  EXPECT_TRUE(daylightingControl.setNumberofDaylightingViews(3));
+  EXPECT_EQ(3, daylightingControl.numberofDaylightingViews());
+  // Bad Value
+  EXPECT_FALSE(daylightingControl.setNumberofDaylightingViews(-10));
+  EXPECT_EQ(3, daylightingControl.numberofDaylightingViews());
+  daylightingControl.resetNumberofDaylightingViews();
+  EXPECT_TRUE(daylightingControl.isNumberofDaylightingViewsDefaulted());
+  EXPECT_EQ(1, daylightingControl.numberofDaylightingViews());
+
+  // Maximum Allowable Discomfort Glare Index: Optional Double
+  EXPECT_FALSE(daylightingControl.maximumAllowableDiscomfortGlareIndex());
+  EXPECT_TRUE(daylightingControl.setMaximumAllowableDiscomfortGlareIndex(1.1));
+  ASSERT_TRUE(daylightingControl.maximumAllowableDiscomfortGlareIndex());
+  EXPECT_EQ(1.1, daylightingControl.maximumAllowableDiscomfortGlareIndex().get());
+  // Bad Value
+  EXPECT_FALSE(daylightingControl.setMaximumAllowableDiscomfortGlareIndex(-9.0));
+  ASSERT_TRUE(daylightingControl.maximumAllowableDiscomfortGlareIndex());
+  EXPECT_EQ(1.1, daylightingControl.maximumAllowableDiscomfortGlareIndex().get());
+
+  EXPECT_FALSE(daylightingControl.isPrimaryDaylightingControl());
+  EXPECT_FALSE(daylightingControl.isSecondaryDaylightingControl());
+  ThermalZone z(m);
+  space_->setThermalZone(z);
+  EXPECT_TRUE(z.setPrimaryDaylightingControl(daylightingControl));
+  EXPECT_TRUE(daylightingControl.isPrimaryDaylightingControl());
+}
+
 }
