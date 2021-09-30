@@ -112,7 +112,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
 
   DaylightingControl daylightingControl(model);
   daylightingControl.setThetaRotationAroundYAxis(90.0);
-  daylightingControl.setPhiRotationAroundZAxis(180.0);
+  daylightingControl.setPhiRotationAroundZAxis(-180.0);
 
   EXPECT_TRUE(thermalZone.setPrimaryDaylightingControl(daylightingControl));
 
@@ -123,7 +123,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
   ASSERT_EQ(1u, idfObjs.size());
   WorkspaceObject idf_d(idfObjs[0]);
 
-  EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(),
+  EXPECT_EQ(-daylightingControl.phiRotationAroundZAxis(),
             idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
 }
 
