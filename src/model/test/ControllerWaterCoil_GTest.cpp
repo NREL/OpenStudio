@@ -183,3 +183,36 @@ TEST_F(ModelFixture, ControllerWaterCoil_onLoopAdd) {
   EXPECT_EQ(controllerWaterCoil, controllerWaterCoil2);
   EXPECT_EQ("TemperatureAndHumidityRatio", controllerWaterCoil2.controlVariable().get());
 }
+
+TEST_F(ModelFixture, ControllerWaterCoil_onLoopAdd_HC) {
+
+  Model m;
+
+  CoilHeatingWater c(m);
+  EXPECT_FALSE(c.controllerWaterCoil());
+
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(c));
+  ASSERT_TRUE(c.controllerWaterCoil());
+  ControllerWaterCoil controllerWaterCoil = c.controllerWaterCoil().get();
+
+  // This is from a coil **heating** water, so Normal
+  ASSERT_TRUE(controllerWaterCoil.action());
+  EXPECT_EQ("Normal", controllerWaterCoil.action().get());
+
+  EXPECT_TRUE(controllerWaterCoil.setControlVariable("TemperatureAndHumidityRatio"));
+  EXPECT_EQ("TemperatureAndHumidityRatio", controllerWaterCoil.controlVariable().get());
+
+  AirLoopHVAC a(m);
+  Node supplyOutletNode = a.supplyOutletNode();
+  EXPECT_TRUE(c.addToNode(supplyOutletNode));
+  ASSERT_TRUE(c.controllerWaterCoil());
+  ControllerWaterCoil controllerWaterCoil2 = c.controllerWaterCoil().get();
+  EXPECT_EQ(controllerWaterCoil, controllerWaterCoil2);
+  EXPECT_EQ("TemperatureAndHumidityRatio", controllerWaterCoil2.controlVariable().get());
+
+  PlantLoop p2(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(c));
+  EXPECT_EQ(controllerWaterCoil, controllerWaterCoil2);
+  EXPECT_EQ("TemperatureAndHumidityRatio", controllerWaterCoil2.controlVariable().get());
+}
