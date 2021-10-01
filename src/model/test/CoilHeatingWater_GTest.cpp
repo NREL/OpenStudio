@@ -161,8 +161,8 @@ TEST_F(ModelFixture, CoilHeatingWater_controller) {
   ScheduleCompact s(m);
   CoilHeatingWater coil(m, s);
 
-  ControllerWaterCoil controller(m);
-  controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(coil);
+  PlantLoop p(m);
 
-  EXPECT_TRUE(coil.controllerWaterCoil());
+  EXPECT_TRUE(p.addDemandBranchForComponent(coil));
+  ASSERT_TRUE(coil.controllerWaterCoil());
 }

@@ -32,6 +32,7 @@
 #include "ModelFixture.hpp"
 
 #include "../ControllerWaterCoil.hpp"
+#include "../ControllerWaterCoil_Impl.hpp"
 #include "../Model.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
@@ -215,4 +216,18 @@ TEST_F(ModelFixture, ControllerWaterCoil_onLoopAdd_HC) {
   EXPECT_TRUE(p.addDemandBranchForComponent(c));
   EXPECT_EQ(controllerWaterCoil, controllerWaterCoil2);
   EXPECT_EQ("TemperatureAndHumidityRatio", controllerWaterCoil2.controlVariable().get());
+}
+
+TEST_F(ModelFixture, ControllerWaterCoil_removeCoil) {
+  Model m;
+
+  CoilCoolingWater c(m);
+  EXPECT_FALSE(c.controllerWaterCoil());
+
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(c));
+  EXPECT_EQ(1U, m.getConcreteModelObjects<ControllerWaterCoil>().size());
+
+  c.remove();
+  EXPECT_EQ(0U, m.getConcreteModelObjects<ControllerWaterCoil>().size());
 }
