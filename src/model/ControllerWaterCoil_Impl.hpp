@@ -70,11 +70,13 @@ namespace model {
 
       boost::optional<HVACComponent> waterCoil() const;
 
-      boost::optional<std::string> controlVariable() const;
+      std::string controlVariable() const;
+      bool isControlVariableDefaulted() const;
 
       boost::optional<std::string> action() const;
 
-      boost::optional<std::string> actuatorVariable() const;
+      std::string actuatorVariable() const;
+      bool isActuatorVariableDefaulted() const;
 
       boost::optional<Node> sensorNode() const;
 
@@ -100,15 +102,15 @@ namespace model {
 
       bool setWaterCoil(const HVACComponent& comp);
 
-      bool setControlVariable(boost::optional<std::string> controlVariable);
+      bool setControlVariable(const std::string& controlVariable);
 
       void resetControlVariable();
 
-      bool setAction(boost::optional<std::string> action);
+      bool setAction(const std::string& action);
 
       void resetAction();
 
-      bool setActuatorVariable(boost::optional<std::string> actuatorVariable);
+      bool setActuatorVariable(const std::string& actuatorVariable);
 
       void resetActuatorVariable();
 
@@ -116,13 +118,13 @@ namespace model {
 
       bool setActuatorNode(const Node& node);
 
-      bool setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
+      bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
 
       void resetControllerConvergenceTolerance();
 
       void autosizeControllerConvergenceTolerance();
 
-      bool setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow);
+      bool setMaximumActuatedFlow(double maximumActuatedFlow);
 
       void resetMaximumActuatedFlow();
 

@@ -73,11 +73,15 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> controlVariable() const;
+    boost::optional<HVACComponent> waterCoil() const;
 
-    boost::optional<std::string> action() const;
+    boost::optional<std::string> controlVariable() const;  // Shouldn't return an optional, has a default
+    bool isControlVariableDefaulted() const;
 
-    boost::optional<std::string> actuatorVariable() const;
+    boost::optional<std::string> action() const;  // Has no default and is required...
+
+    boost::optional<std::string> actuatorVariable() const;  // Shouldn't return an optional, has a default
+    bool isActuatorVariableDefaulted() const;
 
     boost::optional<Node> sensorNode() const;
 
@@ -101,15 +105,15 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(std::string controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
     void resetControlVariable();
 
-    bool setAction(std::string action);
+    bool setAction(const std::string& action);
 
     void resetAction();
 
-    bool setActuatorVariable(std::string actuatorVariable);
+    bool setActuatorVariable(const std::string& actuatorVariable);
 
     void resetActuatorVariable();
 
