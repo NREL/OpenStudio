@@ -1039,8 +1039,8 @@ boost::optional<BCLMeasure> BCLMeasure::clone(const openstudio::path& newDir) co
 
         // BCLFileReference::path() is absolute
         openstudio::path oriPath = file.path();
-        openstudio::path relativePath = openstudio::filesystem::relative(oriPath, m_directory);
-        openstudio::path destination = newDir / relativePath;
+        openstudio::path relPath = openstudio::filesystem::relative(oriPath, m_directory);
+        openstudio::path destination = newDir / relPath;
         // Create parent directories in destination if need be
         openstudio::filesystem::create_directories(destination.parent_path());
         openstudio::filesystem::copy_file_no_throw(oriPath, destination);
