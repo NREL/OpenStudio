@@ -133,6 +133,10 @@ namespace model {
 
     void resetMinimumActuatedFlow();
 
+    //@}
+    /** @name Other */
+    //@{
+
     boost::optional<double> autosizedControllerConvergenceTolerance() const;
 
     boost::optional<double> autosizedMaximumActuatedFlow() const;

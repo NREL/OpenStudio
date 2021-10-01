@@ -60,14 +60,25 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      //@}
       /** @name Getters */
       //@{
+
+      boost::optional<HVACComponent> waterCoil() const;
 
       boost::optional<std::string> controlVariable() const;
 
       boost::optional<std::string> action() const;
 
       boost::optional<std::string> actuatorVariable() const;
+
+      boost::optional<Node> sensorNode() const;
+
+      boost::optional<Node> actuatorNode() const;
 
       boost::optional<double> controllerConvergenceTolerance() const;
 
@@ -83,17 +94,11 @@ namespace model {
 
       bool isMinimumActuatedFlowDefaulted() const;
 
-      boost::optional<double> autosizedControllerConvergenceTolerance() const;
-
-      boost::optional<double> autosizedMaximumActuatedFlow() const;
-
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
       //@}
       /** @name Setters */
       //@{
+
+      bool setWaterCoil(const HVACComponent& comp);
 
       bool setControlVariable(boost::optional<std::string> controlVariable);
 
@@ -106,6 +111,10 @@ namespace model {
       bool setActuatorVariable(boost::optional<std::string> actuatorVariable);
 
       void resetActuatorVariable();
+
+      bool setSensorNode(const Node& node);
+
+      bool setActuatorNode(const Node& node);
 
       bool setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
 
@@ -124,18 +133,14 @@ namespace model {
       void resetMinimumActuatedFlow();
 
       //@}
+      /** @name Other */
+      //@{
 
-      boost::optional<Node> sensorNode() const;
+      boost::optional<double> autosizedControllerConvergenceTolerance() const;
 
-      boost::optional<Node> actuatorNode() const;
+      boost::optional<double> autosizedMaximumActuatedFlow() const;
 
-      bool setSensorNode(const Node& node);
-
-      bool setActuatorNode(const Node& node);
-
-      bool setWaterCoil(const HVACComponent& comp);
-
-      boost::optional<HVACComponent> waterCoil() const;
+      //@}
 
      protected:
      private:
