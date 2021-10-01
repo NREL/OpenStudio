@@ -178,7 +178,6 @@ namespace model {
 
     bool ControllerWaterCoil_Impl::setMaximumActuatedFlow(double maximumActuatedFlow) {
       bool result = setDouble(OS_Controller_WaterCoilFields::MaximumActuatedFlow, maximumActuatedFlow);
-      OS_ASSERT(result);
       return result;
     }
 
@@ -194,7 +193,6 @@ namespace model {
 
     bool ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
       bool result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
-      OS_ASSERT(result);
       return result;
     }
 
@@ -259,7 +257,7 @@ namespace model {
 
   ControllerWaterCoil::ControllerWaterCoil(const Model& model) : HVACComponent(ControllerWaterCoil::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ControllerWaterCoil_Impl>());
-    setMinimumActuatedFlow(0.0);
+    resetMinimumActuatedFlow();
   }
 
   IddObjectType ControllerWaterCoil::iddObjectType() {
