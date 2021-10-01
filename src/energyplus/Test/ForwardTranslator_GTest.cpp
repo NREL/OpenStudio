@@ -758,3 +758,124 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
   }
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslation_Options) {
+
+  Model m;
+  ForwardTranslator ft;
+
+  // Defaults
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(5u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeLCCObjects(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeVariableDictionary(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeSQliteOutputReport(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setIPTabularOutput(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("InchPound", obj.getString(1, false, true).get());
+  }
+
+  ft.setExcludeHTMLOutputReport(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_RecurringCosts));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    // This also turns off the OutputControl:Table:Style
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::OutputControl_Table_Style));
+  }
+}
