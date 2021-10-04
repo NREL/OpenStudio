@@ -62,6 +62,7 @@ namespace energyplus {
     boost::optional<Space> space = modelObject.space();
     boost::optional<SpaceType> spaceType = modelObject.spaceType();
     if (space) {
+      // Note: this can't be mapped to a Space, in E+ it's ZoneInfiltration:FlowCoefficient
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
         idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneName, thermalZone->nameString());
