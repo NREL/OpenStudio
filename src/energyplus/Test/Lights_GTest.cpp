@@ -106,7 +106,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_NoSpace) {
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Lights).size());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space_SpaceTranslationOff) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -118,6 +118,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
   lights.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
@@ -128,6 +129,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
 
   ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
   EXPECT_EQ(zoneObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName)->handle());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space_SpaceTranslationOn) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  LightsDefinition definition(model);
+  Lights lights(definition);
+  lights.setSpace(space);
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+
+  WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
+  WorkspaceObject spaceListObject = workspace.getObjectsByType(IddObjectType::SpaceList)[0];
+
+  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(spaceListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName)->handle());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
