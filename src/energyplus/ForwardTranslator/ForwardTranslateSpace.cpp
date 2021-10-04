@@ -36,6 +36,25 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/SpaceType.hpp"
 
+// Loads
+#include "../../model/InternalMass.hpp"
+#include "../../model/People.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/Luminaire.hpp"
+#include "../../model/ElectricEquipment.hpp"
+#include "../../model/ElectricEquipmentITEAirCooled.hpp"
+#include "../../model/GasEquipment.hpp"
+#include "../../model/HotWaterEquipment.hpp"
+#include "../../model/SteamEquipment.hpp"
+#include "../../model/OtherEquipment.hpp"
+#include "../../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
+// Geometry children
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../../model/Surface.hpp"
+
 #include <utilities/idd/Space_FieldEnums.hxx>
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -70,6 +89,33 @@ namespace energyplus {
       if (boost::optional<SpaceType> spaceType = modelObject.spaceType()) {
         idfObject.setString(SpaceFields::SpaceType, spaceType->name().get());
       }
+
+      // Translate all Space-specific loads (and geometry children)
+      auto translateSpaceLoads = [this](auto loads) {
+        std::sort(loads.begin(), loads.end(), WorkspaceObjectNameLess());
+        for (auto& load : loads) {
+          translateAndMapModelObject(load);
+        }
+      };
+
+      translateSpaceLoads(modelObject.shadingSurfaceGroups());
+      translateSpaceLoads(modelObject.interiorPartitionSurfaceGroups());
+      translateSpaceLoads(modelObject.surfaces());
+
+      translateSpaceLoads(modelObject.internalMass());
+      translateSpaceLoads(modelObject.lights());
+      translateSpaceLoads(modelObject.luminaires());
+      translateSpaceLoads(modelObject.people());
+      translateSpaceLoads(modelObject.electricEquipment());
+      translateSpaceLoads(modelObject.electricEquipmentITEAirCooled());
+      translateSpaceLoads(modelObject.gasEquipment());
+      translateSpaceLoads(modelObject.hotWaterEquipment());
+      translateSpaceLoads(modelObject.steamEquipment());
+      translateSpaceLoads(modelObject.otherEquipment());
+
+      translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
+      translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
+      translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
 
       return boost::optional<IdfObject>(idfObject);
     }

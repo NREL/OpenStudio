@@ -1382,6 +1382,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateThermalStorageChilledWaterStratified(model::ThermalStorageChilledWaterStratified& modelObject);
 
     boost::optional<IdfObject> translateThermalZone(model::ThermalZone& modelObject);
+    void translateThermalZoneSpacesWhenCombinedSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
+    void translateThermalZoneSpacesToEnergyPlusSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
 
     boost::optional<IdfObject> translateThermostatSetpointDualSetpoint(model::ThermostatSetpointDualSetpoint& tsds);
 
