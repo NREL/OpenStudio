@@ -113,6 +113,7 @@ namespace energyplus {
       translateSpaceLoads(modelObject.steamEquipment());
       translateSpaceLoads(modelObject.otherEquipment());
 
+      // TODO: Technically this stuff maps to a thermal zone, always (can't map to a Space/SpaceList)
       translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
       translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
       translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());

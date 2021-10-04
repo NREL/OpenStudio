@@ -206,7 +206,7 @@ namespace energyplus {
         }
       };
 
-      // translate interior surface partition groups
+      // TODO: THIS SHOULD HAPPEN. The translateSpace should do it!
       translateSpaceLoads(space.shadingSurfaceGroups());
       translateSpaceLoads(space.interiorPartitionSurfaceGroups());
       translateSpaceLoads(space.surfaces());
@@ -221,6 +221,7 @@ namespace energyplus {
       translateSpaceLoads(space.hotWaterEquipment());
       translateSpaceLoads(space.steamEquipment());
       translateSpaceLoads(space.otherEquipment());
+      // END TODO
 
       // Technically this stuff maps to a thermal zone, always (can't map to a Space/SpaceList), so it's perfectly appropriate here
       translateSpaceLoads(space.spaceInfiltrationDesignFlowRates());
