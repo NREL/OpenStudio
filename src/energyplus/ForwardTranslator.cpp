@@ -112,6 +112,9 @@ namespace energyplus {
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
+
+    // When m_excludeSpaceTranslation is false, could we skip the (expensive) clone since we aren't combining spaces?
+    // No, we are still doing stuff like removing orphan loads, spaces not part of a thermal zone, etc
     Model modelCopy = model.clone(true).cast<Model>();
 
     m_progressBar = progressBar;
@@ -3080,6 +3083,7 @@ namespace energyplus {
   }
 
   std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslate() {
+    // TODO: avoid the call to iddObjectsToTranslateInitializer with the ton of push_backs
     static const std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
     return result;
   }

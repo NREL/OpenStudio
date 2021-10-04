@@ -62,9 +62,9 @@ namespace energyplus {
     boost::optional<SpaceType> spaceType = modelObject.spaceType();
     if (space) {
       if (m_excludeSpaceTranslation) {
-        boost::optional<ThermalZone> thermalZone = space->thermalZone();
-        if (thermalZone) {
-          relatedIdfObject = translateAndMapModelObject(*thermalZone);
+        if (auto thermalZone_ = space->thermalZone()) {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
+          relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
           OS_ASSERT(relatedIdfObject);
           idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, relatedIdfObject->name().get());
         }

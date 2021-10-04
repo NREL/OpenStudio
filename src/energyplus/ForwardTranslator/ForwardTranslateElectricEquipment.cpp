@@ -57,8 +57,8 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateElectricEquipment(ElectricEquipment& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::ElectricEquipment);
-    m_idfObjects.push_back(idfObject);
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricEquipment, modelObject);
 
     for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
@@ -66,15 +66,13 @@ namespace energyplus {
 
     ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
 
-    idfObject.setString(ElectricEquipmentFields::Name, modelObject.name().get());
-
     boost::optional<Space> space = modelObject.space();
     boost::optional<SpaceType> spaceType = modelObject.spaceType();
     if (space) {
       if (m_excludeSpaceTranslation) {
-        boost::optional<ThermalZone> thermalZone = space->thermalZone();
-        if (thermalZone) {
-          idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
+        if (auto thermalZone_ = space->thermalZone()) {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
+          idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone_->name().get());
         }
       } else {
         idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
