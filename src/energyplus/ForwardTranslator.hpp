@@ -392,6 +392,7 @@ namespace model {
   class SizingPlant;
   class SizingSystem;
   class SizingZone;
+  class SpaceLoadInstance;
   class StandardGlazing;
   class StandardOpaqueMaterial;
   class SimpleGlazing;
@@ -563,6 +564,10 @@ namespace energyplus {
    *  translateAndMapModelObject() interface as opposed to the type specific translators.
    */
     Workspace translateModelPrivate(model::Model& model, bool fullModelTranslation);
+
+    // TODO: restrict to SpaceLoadInstance or SpaceLoad?
+    // Pick up the Zone, ZoneList, Space or SpaceList object for a given SpaceLoad
+    IdfObject getSpaceLoadParent(model::SpaceLoadInstance& sp);
 
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 

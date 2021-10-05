@@ -68,24 +68,13 @@ namespace energyplus {
 
     idfObject.setString(GasEquipmentFields::Name, modelObject.name().get());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      if (m_excludeSpaceTranslation) {
-        boost::optional<ThermalZone> thermalZone = space->thermalZone();
-        if (thermalZone) {
-          idfObject.setString(GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
-        }
-      } else {
-        idfObject.setString(GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(GasEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(GasEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(GasEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());

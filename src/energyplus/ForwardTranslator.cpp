@@ -58,6 +58,7 @@
 #include "../model/ShadingControl_Impl.hpp"
 #include "../model/AdditionalProperties.hpp"
 #include "../model/ConcreteModelObjects.hpp"
+#include "../model/SpaceLoadInstance.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -186,6 +187,34 @@ namespace energyplus {
   void ForwardTranslator::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
     m_excludeSpaceTranslation = excludeSpaceTranslation;
   }
+
+  // Figure out which object
+  // * If the load is assigned to a space,
+  //     * m_excludeSpaceTranslation = true: translate and return the IdfObject for the Zone
+  //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
+  // * If the load is assigned to a spaceType:
+  //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
+  IdfObject ForwardTranslator::getSpaceLoadParent(model::SpaceLoadInstance& sp) {
+
+    OptionalIdfObject relatedIdfObject;
+
+    if (boost::optional<Space> space = sp.space()) {
+      if (m_excludeSpaceTranslation) {
+        if (auto thermalZone_ = space->thermalZone()) {
+          relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
+        } else {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
+        }
+      } else {
+        relatedIdfObject = translateAndMapModelObject(*space);
+      }
+    } else if (boost::optional<SpaceType> spaceType = sp.spaceType()) {
+      relatedIdfObject = translateAndMapModelObject(*spaceType);
+    }
+
+    OS_ASSERT(relatedIdfObject);
+    return relatedIdfObject.get();
+  };
 
   Workspace ForwardTranslator::translateModelPrivate(model::Model& model, bool fullModelTranslation) {
     reset();

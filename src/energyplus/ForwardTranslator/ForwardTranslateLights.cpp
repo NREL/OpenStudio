@@ -56,35 +56,13 @@ namespace energyplus {
 
     LightsDefinition definition = modelObject.lightsDefinition();
 
-    OptionalIdfObject relatedIdfObject;
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      if (m_excludeSpaceTranslation) {
-        if (auto thermalZone_ = space->thermalZone()) {
-          relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
-          OS_ASSERT(relatedIdfObject);
-          idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, relatedIdfObject->name().get());
-        } else {
-          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
-        }
-      } else {
-        relatedIdfObject = translateAndMapModelObject(*space);
-        OS_ASSERT(relatedIdfObject);
-        idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, relatedIdfObject->name().get());
-      }
-    } else if (spaceType) {
-      relatedIdfObject = translateAndMapModelObject(*spaceType);
-      OS_ASSERT(relatedIdfObject);
-      idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, relatedIdfObject->name().get());
-    }
-
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      relatedIdfObject = translateAndMapModelObject(*schedule);
-      OS_ASSERT(relatedIdfObject);
-      idfObject.setString(LightsFields::ScheduleName, relatedIdfObject->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(LightsFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(LightsFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());

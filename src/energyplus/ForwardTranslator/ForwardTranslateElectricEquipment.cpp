@@ -66,25 +66,13 @@ namespace energyplus {
 
     ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      if (m_excludeSpaceTranslation) {
-        if (auto thermalZone_ = space->thermalZone()) {
-          idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone_->name().get());
-        } else {
-          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
-        }
-      } else {
-        idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(ElectricEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(ElectricEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(ElectricEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
