@@ -1518,6 +1518,24 @@ namespace model {
     buildingStory.setNominalFloortoFloorHeight(3);
 
     // create spaces from floor print
+
+    //            y (=North)
+    //  Site      ▲
+    //  Shading   │                  building height = 3m
+    //   ║      20├────────┬────────┐
+    //   ║        │        │        │
+    //   ║        │        │        │
+    //   ║        │ Space 3│ Space 4│
+    //   ║        │        │        │
+    //   ║      10├────────┼────────┤
+    //   ║        │        │        │
+    //   ║        │        │        ├
+    //   ║        │ Space 1│ Space 2│◄─── window + space shading
+    //   ║        │        │        ├
+    //   ║        └──┬─┬───┴────────┴──────► x
+    //           0    ▲    10       20
+    //                └─ door+building shading
+
     std::vector<Point3d> floorPrint;
     floorPrint.push_back(Point3d(0, 0, 0));
     floorPrint.push_back(Point3d(0, 10, 0));

@@ -57,22 +57,30 @@
 #include "../../model/PeopleDefinition_Impl.hpp"
 #include "../../model/Schedule.hpp"
 
+#include "../../model/InternalMass.hpp"
+#include "../../model/InternalMass_Impl.hpp"
+#include "../../model/InteriorPartitionSurface.hpp"
+#include "../../model/InteriorPartitionSurface_Impl.hpp"
+
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/Space_FieldEnums.hxx>
 #include <utilities/idd/SpaceList_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/People_FieldEnums.hxx>
 #include <utilities/idd/ElectricEquipment_FieldEnums.hxx>
+#include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "utilities/core/Compare.hpp"
 
 #include <resources.hxx>
 
 #include <algorithm>
 #include <iterator>
+#include <map>
 #include <vector>
 
 using namespace openstudio::energyplus;
@@ -433,6 +441,175 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::FractionLost));
 
       EXPECT_EQ(eqSpaceType.endUseSubcategory(), i_eqSpaceType_->getString(ElectricEquipmentFields::EndUseSubcategory).get());
+    }
+  }
+}
+
+TEST_F(EnergyPlusFixture, Space_exampleModel_Geometry) {
+
+  //            y (=North)
+  //  Site      ▲
+  //  Shading   │                  building height = 3m
+  //   ║      20├────────┬────────┐
+  //   ║        │        │        │
+  //   ║        │        │        │
+  //   ║        │ Space 3│ Space 4│
+  //   ║        │        │        │
+  //   ║      10├────────┼────────┤
+  //   ║        │        │        │
+  //   ║        │        │        ├
+  //   ║        │ Space 1│ Space 2│◄─── window + space shading
+  //   ║        │        │        ├
+  //   ║        └──┬─┬───┴────────┴──────► x
+  //           0    ▲    10       20
+  //                └─ door+building shading
+
+  Model m = model::exampleModel();
+
+  ASSERT_EQ(1U, m.getModelObjects<SpaceType>().size());
+  SpaceType spaceType = m.getModelObjects<SpaceType>()[0];
+
+  ASSERT_EQ(1U, m.getConcreteModelObjects<ThermalZone>().size());
+  ThermalZone thermalZone = m.getConcreteModelObjects<ThermalZone>()[0];
+
+  auto spaces = m.getConcreteModelObjects<Space>();
+  EXPECT_EQ(4U, spaces.size());
+  for (const auto& space : m.getConcreteModelObjects<Space>()) {
+    ASSERT_TRUE(space.spaceType());
+    EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
+    ASSERT_TRUE(space.thermalZone());
+    EXPECT_EQ(thermalZone.handle(), space.thermalZone()->handle());
+  }
+
+  auto allSurfaces = m.getConcreteModelObjects<Surface>();
+
+  std::vector<Surface> adjacentSurfaces;
+  std::copy_if(allSurfaces.cbegin(), allSurfaces.cend(), std::back_inserter(adjacentSurfaces),
+               [](const auto& s) { return s.adjacentSurface().has_value(); });
+  EXPECT_EQ(8, adjacentSurfaces.size());
+
+  unsigned nWalls = 0;
+  unsigned nRoofs = 0;
+  unsigned nFloors = 0;
+  unsigned nExtWalls = 0;
+  unsigned nAdjacentSurfaces = 0;
+  for (const auto& surface : allSurfaces) {
+    std::string surfaceType = surface.surfaceType();
+    if (surface.adjacentSurface()) {
+      ++nAdjacentSurfaces;
+    }
+    if (openstudio::istringEqual("RoofCeiling", surfaceType)) {
+      ++nRoofs;
+      EXPECT_EQ(10.0 * 10.0, surface.grossArea());
+      EXPECT_TRUE(openstudio::istringEqual("Outdoors", surface.outsideBoundaryCondition()));
+    } else if (openstudio::istringEqual("Floor", surfaceType)) {
+      ++nFloors;
+      EXPECT_EQ(10.0 * 10.0, surface.grossArea());
+      EXPECT_TRUE(openstudio::istringEqual("Ground", surface.outsideBoundaryCondition()));
+    } else if (openstudio::istringEqual("Wall", surfaceType)) {
+      EXPECT_EQ(3.0 * 10.0, surface.grossArea());
+      ++nWalls;
+      if (openstudio::istringEqual("Outdoors", surface.outsideBoundaryCondition())) {
+        ++nExtWalls;
+      } else {
+        ASSERT_TRUE(openstudio::istringEqual("Surface", surface.outsideBoundaryCondition()));
+        ASSERT_TRUE(surface.adjacentSurface());
+      }
+    } else {
+      ASSERT_TRUE(false) << "Unknown surfaceType '" << surfaceType << "'.";
+    }
+  }
+
+  EXPECT_EQ(4 * 6, m.getConcreteModelObjects<Surface>().size());
+
+  EXPECT_EQ(4, nRoofs);
+  EXPECT_EQ(4, nFloors);
+  EXPECT_EQ(4 * 4, nWalls);
+  EXPECT_EQ(8, nAdjacentSurfaces);
+  EXPECT_EQ(8, nWalls - nExtWalls);
+  EXPECT_EQ(8, nExtWalls);
+
+  // Model has no explicit InternalMass, but it has one explicit InteriorPartitionSurfaces (which maps to InternalMass)
+  EXPECT_EQ(0, m.getConcreteModelObjects<InternalMass>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<InteriorPartitionSurface>().size());
+
+  ForwardTranslator ft;
+
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    // In this case, the surface between the two spaces does exist. Each space is its own enclosure
+    Workspace w = ft.translateModel(m);
+
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::SpaceList).size());
+    ASSERT_EQ(4, w.getObjectsByType(IddObjectType::Space).size());
+
+    EXPECT_EQ(24, w.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::InternalMass).size());  // One explicit
+    ASSERT_EQ(10, w.getObjectsByType(IddObjectType::Construction).size());
+
+    struct SurfaceCountForSpace
+    {
+      int nWalls = 0;
+      int nExtWalls = 0;
+      int nRoofs = 0;
+      int nFloors = 0;
+      int nAdjacentSurfaces = 0;
+    };
+
+    std::map<std::string, SurfaceCountForSpace> countMap{{"Space 1", SurfaceCountForSpace{}},
+                                                         {"Space 2", SurfaceCountForSpace{}},
+                                                         {"Space 3", SurfaceCountForSpace{}},
+                                                         {"Space 4", SurfaceCountForSpace{}}};
+
+    for (const auto& s : w.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
+      auto sfName = s.nameString();
+
+      // All in the same ThermalZone
+      EXPECT_EQ(thermalZone.nameString(), s.getString(BuildingSurface_DetailedFields::ZoneName).get());
+
+      // The Space Name field is filled out too
+      ASSERT_TRUE(s.getString(BuildingSurface_DetailedFields::SpaceName));
+      auto spaceName = s.getString(BuildingSurface_DetailedFields::SpaceName).get();
+
+      auto& sfCount = countMap.at(spaceName);
+
+      auto surfaceType = s.getString(BuildingSurface_DetailedFields::SurfaceType).get();
+      auto outsideBoundaryCondition = s.getString(BuildingSurface_DetailedFields::OutsideBoundaryCondition).get();
+
+      if (openstudio::istringEqual("Roof", surfaceType)) {
+        ++sfCount.nRoofs;
+        EXPECT_TRUE(openstudio::istringEqual("Outdoors", outsideBoundaryCondition));
+      } else if (openstudio::istringEqual("Floor", surfaceType)) {
+        ++sfCount.nFloors;
+        EXPECT_TRUE(openstudio::istringEqual("Ground", outsideBoundaryCondition));
+      } else if (openstudio::istringEqual("Wall", surfaceType)) {
+        ++sfCount.nWalls;
+        if (openstudio::istringEqual("Outdoors", outsideBoundaryCondition)) {
+          ++sfCount.nExtWalls;
+        } else {
+          ASSERT_TRUE(openstudio::istringEqual("Surface", outsideBoundaryCondition));
+          EXPECT_TRUE(s.getTarget(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+
+          auto it = std::find_if(adjacentSurfaces.cbegin(), adjacentSurfaces.cend(),
+                                 [&sfName](const auto& s) { return openstudio::istringEqual(sfName, s.nameString()); });
+          EXPECT_NE(adjacentSurfaces.cend(), it);
+
+          ++sfCount.nAdjacentSurfaces;
+        }
+
+      } else {
+        ASSERT_TRUE(false) << "Unknown surfaceType '" << surfaceType << "'.";
+      }
+    }
+
+    for (auto& [key, sfCount] : countMap) {
+      EXPECT_EQ(1, sfCount.nRoofs) << "Failed for " << key;
+      EXPECT_EQ(4, sfCount.nWalls) << "Failed for " << key;
+      EXPECT_EQ(2, sfCount.nExtWalls) << "Failed for " << key;
+      EXPECT_EQ(1, sfCount.nFloors) << "Failed for " << key;
+      EXPECT_EQ(2, sfCount.nAdjacentSurfaces) << "Failed for " << key;
     }
   }
 }
