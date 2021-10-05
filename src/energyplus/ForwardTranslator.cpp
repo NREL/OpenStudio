@@ -84,9 +84,9 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
-#include <thread>
-
+#include <algorithm>
 #include <sstream>
+#include <thread>
 
 using namespace openstudio::model;
 
@@ -474,22 +474,25 @@ namespace energyplus {
       translateAndMapModelObject(*runPeriod);
 
       // ensure that output table summary reports exists
-      boost::optional<model::OutputTableSummaryReports> optOutputTableSummaryReports =
-        model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
-      if (!optOutputTableSummaryReports) {
-        OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
-        outputTableSummaryReports.addSummaryReport("AllSummary");
-        translateAndMapModelObject(outputTableSummaryReports);
+      // If the user manually added an OutputTableSummaryReports, but he also opted-in to exclude it on the FT, which decision do we keep?
+      // Given that it's a much harder to set the option on the FT, I'll respect that one
+      if (!m_excludeHTMLOutputReport) {
+        auto optOutputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
+        // Add default one if none explicitly specified
+        if (!optOutputTableSummaryReports) {
+          auto outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
+          outputTableSummaryReports.addSummaryReport("AllSummary");
+          translateAndMapModelObject(outputTableSummaryReports);
+        }
       }
 
       // add a global geometry rules object
-      IdfObject globalGeometryRules(openstudio::IddObjectType::GlobalGeometryRules);
+      auto& globalGeometryRules = m_idfObjects.emplace_back(openstudio::IddObjectType::GlobalGeometryRules);
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::VertexEntryDirection, "Counterclockwise");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::CoordinateSystem, "Relative");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
-      m_idfObjects.push_back(globalGeometryRules);
 
       // create meters for utility bill objects
       std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
@@ -4209,23 +4212,21 @@ namespace energyplus {
     }
 
     // ensure at least one life cycle cost exists to prevent crash in E+ 8
-    unsigned numCosts = 0;
-    for (const IdfObject& object : m_idfObjects) {
-      if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost) {
-        numCosts += 1;
-      } else if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_RecurringCosts) {
-        numCosts += 1;
-      }
-    }
-    if (numCosts == 0) {
-      // add default cost
-      IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
-      m_idfObjects.push_back(idfObject);
+    if (!m_excludeLCCObjects) {
+      bool hasAtLeastOneCost = std::any_of(m_idfObjects.cbegin(), m_idfObjects.cend(), [](const auto& obj) {
+        auto iddObjType = obj.iddObject().type();
+        return (iddObjType == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost)
+               || (iddObjType == openstudio::IddObjectType::LifeCycleCost_RecurringCosts);
+      });
 
-      idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
-      idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
-      idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
-      idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+      if (!hasAtLeastOneCost) {
+        // add default cost
+        auto& idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
+        idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
+        idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
+        idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
+        idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+      }
     }
   }
 

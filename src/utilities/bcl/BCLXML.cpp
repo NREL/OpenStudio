@@ -204,21 +204,21 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
         std::string usageType = fileElement.child("usage_type").text().as_string();
         std::string checkSum = fileElement.child("checksum").text().as_string();
 
-        openstudio::path path;
-        ;
+        openstudio::path relativePath;
+
         if (usageType == "script") {
-          path = m_path.parent_path() / toPath(fileName);
+          relativePath = toPath(fileName);
         } else if (usageType == "doc") {
-          path = m_path.parent_path() / toPath("docs") / toPath(fileName);
+          relativePath = toPath("docs") / toPath(fileName);
         } else if (usageType == "test") {
-          path = m_path.parent_path() / toPath("tests") / toPath(fileName);
+          relativePath = toPath("tests") / toPath(fileName);
         } else if (usageType == "resource") {
-          path = m_path.parent_path() / toPath("resources") / toPath(fileName);
+          relativePath = toPath("resources") / toPath(fileName);
         } else {
-          path = m_path.parent_path() / toPath(fileName);
+          relativePath = toPath(fileName);
         }
 
-        BCLFileReference fileref(path);
+        BCLFileReference fileref(m_path.parent_path(), relativePath);
         fileref.setSoftwareProgram(softwareProgram);
         fileref.setSoftwareProgramVersion(softwareProgramVersion);
         if (minCompatibleVersion) {
