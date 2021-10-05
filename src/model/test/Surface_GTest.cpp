@@ -77,7 +77,6 @@
 #include "../ShadingSurfaceGroup.hpp"
 #include "../SurfacePropertyOtherSideCoefficients.hpp"
 #include "../SurfacePropertyOtherSideConditionsModel.hpp"
-#include "../../osversion/VersionTranslator.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceWatcher.hpp"
@@ -3687,31 +3686,15 @@ TEST_F(ModelFixture, Surface_isXXXAutocalculated_4399) {
   EXPECT_TRUE(surface.isNumberofVerticesAutocalculated());
 }
 
-double min(std::vector<Point3d> vertices) {
-  double xmin = std::numeric_limits<double>::max();
-  for (auto& point : vertices) {
-    xmin = std::min(xmin, point.x());
-  }
-  return xmin;
-}
-
-double max(std::vector<Point3d> vertices) {
-  double xmax = std::numeric_limits<double>::min();
-  for (auto& point : vertices) {
-    xmax = std::max(xmax, point.x());
-  }
-  return xmax;
-}
 TEST_F(ModelFixture, Issue_4374) {
-  openstudio::path componentDirectory = resourcesPath() / toPath("model");
-
   Model model;
   Space space(model);
   //ThermalZone zone(model);
   //space.setThermalZone(zone);
 
-  // These coordinates were taken from the ASHRAESecondarySchool Mult_Class_1_Pod_1_ZN_1_FLR_1_Wall_1 surface
-  // Note surfaces are deliberately out of order to verify that the sorting ascending x works correctly
+  // Lets say we create a surface and add three subsurfaces to it and then call the
+  // split surface for sub surfaces method to see what happens, eh!
+  // We could even repro one of the surfaces form the school ref building
   Point3dVector vertices;
   vertices.push_back(Point3d(0, 0, 4));
   vertices.push_back(Point3d(0, 0, 0));
@@ -3721,58 +3704,44 @@ TEST_F(ModelFixture, Issue_4374) {
   wall.setParent(space);
   wall.setSurfaceType("Wall");
 
-  vertices.clear();
-  vertices.push_back(Point3d(0.05, 0, 2.50266));
-  vertices.push_back(Point3d(0.05, 0, 1.0322328));
-  vertices.push_back(Point3d(16.870642, 0, 1.0322328));
-  vertices.push_back(Point3d(16.870642, 0, 2.50266));
-  SubSurface window1 = SubSurface(vertices, model);
-  window1.setName("Window1");
-  window1.setSubSurfaceType("FixedWindow");
-  window1.setSurface(wall);
+  //vertices.clear();
+  //vertices.push_back(Point3d(17.0, 0, 2.512845));
+  //vertices.push_back(Point3d(0.05, 0, 0.922073));
+  //vertices.push_back(Point3d(1.2692, 0, 0.922073));
+  //vertices.push_back(Point3d(1.2692, 0, 2.512845));
+  //SubSurface window1 = SubSurface(vertices, model);
+  //window1.setSubSurfaceType("Door");
+  //window1.setSurface(wall);
+
+  //vertices.clear();
+  //vertices.push_back(Point3d(2.4884, 0, 2.512845));
+  //vertices.push_back(Point3d(2.4884, 0, 0.922073));
+  //vertices.push_back(Point3d(10.95, 0, 0.922073));
+  //vertices.push_back(Point3d(10.95, 0, 2.512845));
+  //SubSurface window2 = SubSurface(vertices, model);
+  //window2.setSubSurfaceType("FixedWindow");
+  //window2.setSurface(wall);
 
   vertices.clear();
-  vertices.push_back(Point3d(18.089842, 0, 2.50266));
-  vertices.push_back(Point3d(18.089842, 0, 1.0322328));
-  vertices.push_back(Point3d(34.910484, 0, 1.0322328));
-  vertices.push_back(Point3d(34.910484, 0, 2.50266));
-  SubSurface window2 = SubSurface(vertices, model);
-  window2.setName("Window2");
-  window2.setSubSurfaceType("FixedWindow");
-  window2.setSurface(wall);
+  vertices.push_back(Point3d(17.0462, 0, 2.1336));
+  vertices.push_back(Point3d(17.0462, 0, 0));
+  vertices.push_back(Point3d(17.9606, 0, 0));
+  vertices.push_back(Point3d(17.9606, 0, 2.1336));
+  SubSurface door = SubSurface(vertices, model);
+  door.setSubSurfaceType("Door");
+  door.setSurface(wall);
 
   vertices.clear();
-  vertices.push_back(Point3d(36.129684, 0, 2.50266));
-  vertices.push_back(Point3d(36.129684, 0, 1.0322328));
-  vertices.push_back(Point3d(52.95, 0, 1.0322328));
-  vertices.push_back(Point3d(52.95, 0, 2.50266));
-  SubSurface window3 = SubSurface(vertices, model);
-  window3.setName("Window3");
-  window3.setSubSurfaceType("FixedWindow");
-  window3.setSurface(wall);
-
-  vertices.clear();
-  vertices.push_back(Point3d(17.046287185038, 0, 2.1336));
-  vertices.push_back(Point3d(17.046287185038, 0, 0));
-  vertices.push_back(Point3d(17.960687185038, 0, 0));
-  vertices.push_back(Point3d(17.960687185038, 0, 2.1336));
+  vertices.push_back(Point3d(35.0787, 0, 2.1336));
+  vertices.push_back(Point3d(35.0787, 0, 0));
+  vertices.push_back(Point3d(35.9931, 0, 0));
+  vertices.push_back(Point3d(35.9931, 0, 2.1336));
   SubSurface door1 = SubSurface(vertices, model);
-  door1.setName("Door1");
   door1.setSubSurfaceType("Door");
   door1.setSurface(wall);
 
-  vertices.clear();
-  vertices.push_back(Point3d(35.078713404626, 0, 2.1336));
-  vertices.push_back(Point3d(35.078713404626, 0, 0));
-  vertices.push_back(Point3d(35.993113404626, 0, 0));
-  vertices.push_back(Point3d(35.993113404626, 0, 2.1336));
-  SubSurface door2 = SubSurface(vertices, model);
-  door2.setName("Door2");
-  door2.setSubSurfaceType("Door");
-  door2.setSurface(wall);
-
   // Wall will have two sub surfaces
-  EXPECT_EQ(wall.subSurfaces().size(), 5);
+  EXPECT_EQ(wall.subSurfaces().size(), 2);
 
   // Subdiuvide the wall surface
   auto surfaces = wall.splitSurfaceForSubSurfaces();
@@ -3781,7 +3750,7 @@ TEST_F(ModelFixture, Issue_4374) {
   // Result should be four new surfaces plus the original surface
   EXPECT_EQ(surfaces.size(), 5);
 
-  // Check the surfaces
+  // Chekc the surfaces
   for (auto surface : surfaces) {
     std::string surfName = *surface.name();
     std::string surfType = surface.surfaceType();
@@ -3790,42 +3759,4 @@ TEST_F(ModelFixture, Issue_4374) {
     // Each surface should have no more than one sub surface
     EXPECT_TRUE(surface.subSurfaces().size() <= 1);
   }
-
-  double x1 = min(surfaces[0].vertices());
-  double x2 = min(surfaces[1].vertices());
-  double x3 = min(surfaces[2].vertices());
-  double x4 = min(surfaces[3].vertices());
-  double x5 = min(surfaces[4].vertices());
-
-  EXPECT_NEAR(min(surfaces[0].vertices()), 0, 0.001);
-  EXPECT_NEAR(max(surfaces[0].vertices()), 16.9584, 0.001);
-  EXPECT_NEAR(min(surfaces[2].vertices()), 16.9584, 0.001);
-  EXPECT_NEAR(max(surfaces[2].vertices()), 18.0252, 0.001);
-  EXPECT_NEAR(min(surfaces[4].vertices()), 18.0253, 0.001);
-  EXPECT_NEAR(max(surfaces[4].vertices()), 34.9945, 0.001);
-  EXPECT_NEAR(min(surfaces[3].vertices()), 34.9945, 0.001);
-  EXPECT_NEAR(max(surfaces[3].vertices()), 36.0613, 0.001);
-  EXPECT_NEAR(min(surfaces[1].vertices()), 36.0613, 0.001);
-  EXPECT_NEAR(max(surfaces[1].vertices()), 53, 0.001);
-}
-
-// Disable this because it was just used to verify splitSurfaceForSubSurfaces visually
-TEST_F(ModelFixture, DISABLED_Issue_4374_SecondarySchoolTest) {
-  openstudio::path modelDir = resourcesPath() / toPath("model");
-  openstudio::path inputPath = modelDir / toPath("ASHRAESecondarySchool.osm");
-  openstudio::path outputPath = modelDir / toPath("ASHRAESecondarySchoolModified.osm");
-
-  osversion::VersionTranslator translator;
-  model::OptionalModel optionalModel = translator.loadModel(inputPath);
-
-  ASSERT_TRUE(optionalModel);
-
-  auto& surfaces = optionalModel->getConcreteModelObjects<Surface>();
-  for (auto& surface : surfaces) {
-    if (surface.surfaceType() == "Wall") {
-      surface.splitSurfaceForSubSurfaces();
-    }
-  }
-
-  ASSERT_TRUE(optionalModel->save(outputPath, true));
 }
