@@ -79,6 +79,7 @@ namespace energyplus {
 
     idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
 
+    // TODO: when m_excludeSpaceTranslation is false, should we write the `Space or SpaceList Name` field? (cf InternalMass too)
     double multiplier = 1.0;
     boost::optional<InteriorPartitionSurfaceGroup> group = modelObject.interiorPartitionSurfaceGroup();
     if (group) {
