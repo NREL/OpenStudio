@@ -71,8 +71,9 @@ namespace energyplus {
     if (space) {
       if (m_excludeSpaceTranslation) {
         if (auto thermalZone_ = space->thermalZone()) {
-          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
           idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone_->name().get());
+        } else {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
         }
       } else {
         idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());

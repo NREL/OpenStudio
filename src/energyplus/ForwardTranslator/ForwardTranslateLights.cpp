@@ -63,10 +63,11 @@ namespace energyplus {
     if (space) {
       if (m_excludeSpaceTranslation) {
         if (auto thermalZone_ = space->thermalZone()) {
-          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
           relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
           OS_ASSERT(relatedIdfObject);
           idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, relatedIdfObject->name().get());
+        } else {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
         }
       } else {
         relatedIdfObject = translateAndMapModelObject(*space);
