@@ -837,7 +837,6 @@ namespace energyplus {
 
       // sort by space name
       std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
-      LOG(Warn, "TEST1");
       boost::optional<double> directionofRelativeNorth;
       if (!spaces[0].isDirectionofRelativeNorthDefaulted()) {
         directionofRelativeNorth = spaces[0].directionofRelativeNorth();
