@@ -198,18 +198,18 @@ namespace energyplus {
 
     OptionalIdfObject relatedIdfObject;
 
-    if (boost::optional<Space> space = sp.space()) {
+    if (boost::optional<Space> space_ = sp.space()) {
       if (m_excludeSpaceTranslation) {
-        if (auto thermalZone_ = space->thermalZone()) {
+        if (auto thermalZone_ = space_->thermalZone()) {
           relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
         } else {
           OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
         }
       } else {
-        relatedIdfObject = translateAndMapModelObject(*space);
+        relatedIdfObject = translateAndMapModelObject(space_.get());
       }
-    } else if (boost::optional<SpaceType> spaceType = sp.spaceType()) {
-      relatedIdfObject = translateAndMapModelObject(*spaceType);
+    } else if (boost::optional<SpaceType> spaceType_ = sp.spaceType()) {
+      relatedIdfObject = translateAndMapModelObject(spaceType_.get());
     }
 
     OS_ASSERT(relatedIdfObject);
