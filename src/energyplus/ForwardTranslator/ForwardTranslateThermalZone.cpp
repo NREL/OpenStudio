@@ -552,7 +552,7 @@ namespace energyplus {
                                    << illuminanceMap.nameString());
         }
 
-        return illuminanceMap;
+        return illuminanceMapObject;
       };
 
       auto illuminanceMapObject = translateIlluminanceMap(illuminanceMap.get());
