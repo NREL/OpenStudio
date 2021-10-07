@@ -797,23 +797,30 @@ namespace energyplus {
         OS_ASSERT(sizingZoneIdf);
       }
 
+      boost::optional<IdfObject> dsoaList;
+      if (!m_excludeSpaceTranslation) {
+        dsoaList = IdfObject(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
+        dsoaList->setName(tzName + " DSOA Space List");
+        sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaList->nameString());
+      }
+
       // map the design specification outdoor air
       boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir;
       for (const Space& space : spaces) {
         designSpecificationOutdoorAir = space.designSpecificationOutdoorAir();
         if (designSpecificationOutdoorAir) {
 
-          translateAndMapModelObject(*designSpecificationOutdoorAir);
-
-          // point the sizing object to the outdoor air spec
-          if (sizingZoneIdf) {
+          // TODO: We definitely need to do something here...
+          boost::optional<IdfObject> thisDSOA = translateAndMapModelObject(*designSpecificationOutdoorAir);
+          if (m_excludeSpaceTranslation) {
             sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir->nameString());
+          } else {
+            dsoaList->pushExtensibleGroup(std::vector<std::string>{space.nameString(), thisDSOA->nameString()});
           }
 
           // create zone ventilation if needed
           // TODO: we could remove all this code if we used ZoneHVAC:IdealLoadsAirSystem instead of HVACTemplate:Zone:IdealLoadsAirSystem
           if (zoneEquipment.empty()) {
-
             double outdoorAirFlowperPerson = designSpecificationOutdoorAir->outdoorAirFlowperPerson();
             double outdoorAirFlowperFloorArea = designSpecificationOutdoorAir->outdoorAirFlowperFloorArea();
             double outdoorAirFlowRate = designSpecificationOutdoorAir->outdoorAirFlowRate();
