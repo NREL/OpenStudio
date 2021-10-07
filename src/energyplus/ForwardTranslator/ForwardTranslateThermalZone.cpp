@@ -798,7 +798,7 @@ namespace energyplus {
       }
 
       boost::optional<IdfObject> dsoaList;
-      if (!m_excludeSpaceTranslation) {
+      if (!m_excludeSpaceTranslation && sizingZoneIdf) {
         dsoaList = IdfObject(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
         dsoaList->setName(tzName + " DSOA Space List");
         sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaList->nameString());
@@ -811,11 +811,16 @@ namespace energyplus {
         if (designSpecificationOutdoorAir) {
 
           // TODO: We definitely need to do something here...
+          // TODO: this isn't good. We also need to check the SpaceType-level DSOA...
           boost::optional<IdfObject> thisDSOA = translateAndMapModelObject(*designSpecificationOutdoorAir);
-          if (m_excludeSpaceTranslation) {
-            sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir->nameString());
-          } else {
-            dsoaList->pushExtensibleGroup(std::vector<std::string>{space.nameString(), thisDSOA->nameString()});
+          if (sizingZoneIdf) {
+            if (m_excludeSpaceTranslation) {
+              // point the sizing object to the outdoor air spec
+              sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir->nameString());
+            } else {
+              // push an extensible group on the DSOA:SpaceList
+              dsoaList->pushExtensibleGroup(std::vector<std::string>{space.nameString(), thisDSOA->nameString()});
+            }
           }
 
           // create zone ventilation if needed
