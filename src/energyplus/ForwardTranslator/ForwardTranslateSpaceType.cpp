@@ -80,9 +80,15 @@ namespace energyplus {
     }
 
     OptionalIdfObject idfObject;
-    if (m_excludeSpaceTranslation) {
 
-      idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
+    auto makeZoneList = [this, &modelObject, &spaces](bool registerIt) -> IdfObject {
+      boost::optional<IdfObject> idfObject;
+      if (registerIt) {
+        idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SpaceList, modelObject);
+      } else {
+        idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::ZoneList);
+        idfObject->setName(modelObject.nameString() + " ZoneList");
+      }
 
       // Unique zone names
       std::set<std::string> zoneNames;
@@ -97,6 +103,13 @@ namespace energyplus {
         idfObject->pushExtensibleGroup(std::vector<std::string>(1, zoneName));
       }
 
+      return idfObject.get();
+    };
+
+    if (m_excludeSpaceTranslation) {
+
+      idfObject = makeZoneList(true);
+
     } else {
 
       idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SpaceList, modelObject);
@@ -105,6 +118,14 @@ namespace energyplus {
       idfObject->clearExtensibleGroups();
       for (const auto& s : spaces) {
         idfObject->pushExtensibleGroup(std::vector<std::string>(1, s.nameString()));
+      }
+
+      // Infiltration objects are Space-level in OS, but they are Zone-Level in E+, so we'll **ALSO** need a ZoneList for it...
+      bool hasAnyInfiltration = (!modelObject.spaceInfiltrationDesignFlowRates().empty() || !modelObject.spaceInfiltrationFlowCoefficients().empty()
+                                 || !modelObject.spaceInfiltrationEffectiveLeakageAreas().empty());
+
+      if (hasAnyInfiltration) {
+        makeZoneList(false);
       }
     }
 
