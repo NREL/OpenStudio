@@ -42,5 +42,5 @@ static void BM_Mod(benchmark::State& state) {
   }
 }
 
-BENCHMARK(BM_Current)->Iterations(5)->Unit(benchmark::kMillisecond)->Arg(32768);  // ->RangeMultiplier(2)->Range(1024, 8 << 13);
-BENCHMARK(BM_Mod)->Iterations(5)->Unit(benchmark::kMillisecond)->Arg(32768);      // RangeMultiplier(2)->Range(1024, 8 << 13);
+BENCHMARK(BM_Current)->Iterations(5)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(1024, 8 << 13);
+BENCHMARK(BM_Mod)->Iterations(5)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(1024, 8 << 13);
