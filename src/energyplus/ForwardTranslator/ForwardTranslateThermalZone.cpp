@@ -465,8 +465,51 @@ namespace energyplus {
                                    << " degrees about Y axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->nameString());
         }
 
-        // glare
-        double glareAngle = primaryDaylightingControl->phiRotationAroundZAxis();
+        // glare:
+        // * openstudio uses the right-hand rule, y points North and x points east.
+        //   So a positive rotation around the z-axis is counter-clockwise in the horizontal plane
+        // * E+ on the other hand is looking for something that is clockwise:
+        //   > Field: Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis
+        //   > It is the angle, measured clockwise in the horizontal plane, between the zone y-axis and the occupant view direction
+
+        // 3D View:
+        //          z
+        //          ▲
+        //          │
+        //          │
+        //        | │ ▲
+        //       +└►├─┘
+        //          │      . OS convention for ϕ
+        //          │    .
+        //          │  .<-◝
+        //          │.     ) ϕ
+        //          ○─────────────────► y
+        //         ╱  *     )
+        //        ╱     *<-◞ E+ Field
+        //       ╱        *
+        //      ╱
+        //     ╱
+        //    x
+        //
+        // 2D View, from the top:
+        //
+        //            y
+        //            ▲         Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y axis
+        //   \        │  E+    /
+        //    \  OS ϕ ├─────┐ /
+        //     \ ┌────┤     ▼/
+        //      \▼    │     /
+        //       \    │    /
+        //        \   │   /
+        //         \  │  /
+        //          \ | /
+        //           (◯)───────────────►x
+        //            z
+        //
+
+        double glareAngle = -primaryDaylightingControl->phiRotationAroundZAxis();
+        // Force [0,360[
+        glareAngle = normalizeAngle0to360(glareAngle);
         daylightingControlObject.setDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis, glareAngle);
 
         if (OptionalDouble d = primaryDaylightingControl->maximumAllowableDiscomfortGlareIndex()) {

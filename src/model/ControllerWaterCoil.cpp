@@ -66,16 +66,28 @@ namespace model {
       return ControllerWaterCoil::iddObjectType();
     }
 
-    boost::optional<std::string> ControllerWaterCoil_Impl::controlVariable() const {
-      return getString(OS_Controller_WaterCoilFields::ControlVariable, true);
+    std::string ControllerWaterCoil_Impl::controlVariable() const {
+      boost::optional<std::string> result = getString(OS_Controller_WaterCoilFields::ControlVariable, true);
+      OS_ASSERT(result);
+      return result.get();
+    }
+
+    bool ControllerWaterCoil_Impl::isControlVariableDefaulted() const {
+      return isEmpty(OS_Controller_WaterCoilFields::ControlVariable);
     }
 
     boost::optional<std::string> ControllerWaterCoil_Impl::action() const {
       return getString(OS_Controller_WaterCoilFields::Action, true);
     }
 
-    boost::optional<std::string> ControllerWaterCoil_Impl::actuatorVariable() const {
-      return getString(OS_Controller_WaterCoilFields::ActuatorVariable, true);
+    std::string ControllerWaterCoil_Impl::actuatorVariable() const {
+      boost::optional<std::string> result = getString(OS_Controller_WaterCoilFields::ActuatorVariable, true);
+      OS_ASSERT(result);
+      return result.get();
+    }
+
+    bool ControllerWaterCoil_Impl::isActuatorVariableDefaulted() const {
+      return isEmpty(OS_Controller_WaterCoilFields::ActuatorVariable);
     }
 
     boost::optional<double> ControllerWaterCoil_Impl::controllerConvergenceTolerance() const {
@@ -118,13 +130,8 @@ namespace model {
       return isEmpty(OS_Controller_WaterCoilFields::MinimumActuatedFlow);
     }
 
-    bool ControllerWaterCoil_Impl::setControlVariable(boost::optional<std::string> controlVariable) {
-      bool result = false;
-      if (controlVariable) {
-        result = setString(OS_Controller_WaterCoilFields::ControlVariable, controlVariable.get());
-      } else {
-        result = setString(OS_Controller_WaterCoilFields::ControlVariable, "");
-      }
+    bool ControllerWaterCoil_Impl::setControlVariable(const std::string& controlVariable) {
+      bool result = setString(OS_Controller_WaterCoilFields::ControlVariable, controlVariable);
       return result;
     }
 
@@ -133,13 +140,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ControllerWaterCoil_Impl::setAction(boost::optional<std::string> action) {
-      bool result = false;
-      if (action) {
-        result = setString(OS_Controller_WaterCoilFields::Action, action.get());
-      } else {
-        result = setString(OS_Controller_WaterCoilFields::Action, "");
-      }
+    bool ControllerWaterCoil_Impl::setAction(const std::string& action) {
+      bool result = setString(OS_Controller_WaterCoilFields::Action, action);
       return result;
     }
 
@@ -148,13 +150,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ControllerWaterCoil_Impl::setActuatorVariable(boost::optional<std::string> actuatorVariable) {
-      bool result = false;
-      if (actuatorVariable) {
-        result = setString(OS_Controller_WaterCoilFields::ActuatorVariable, actuatorVariable.get());
-      } else {
-        result = setString(OS_Controller_WaterCoilFields::ActuatorVariable, "");
-      }
+    bool ControllerWaterCoil_Impl::setActuatorVariable(const std::string& actuatorVariable) {
+      bool result = setString(OS_Controller_WaterCoilFields::ActuatorVariable, actuatorVariable);
       return result;
     }
 
@@ -163,13 +160,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ControllerWaterCoil_Impl::setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance) {
-      bool result = false;
-      if (controllerConvergenceTolerance) {
-        result = setDouble(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, controllerConvergenceTolerance.get());
-      } else {
-        result = setString(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, "");
-      }
+    bool ControllerWaterCoil_Impl::setControllerConvergenceTolerance(double controllerConvergenceTolerance) {
+      bool result = setDouble(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, controllerConvergenceTolerance);
       OS_ASSERT(result);
       return result;
     }
@@ -184,14 +176,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ControllerWaterCoil_Impl::setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow) {
-      bool result = false;
-      if (maximumActuatedFlow) {
-        result = setDouble(OS_Controller_WaterCoilFields::MaximumActuatedFlow, maximumActuatedFlow.get());
-      } else {
-        result = setString(OS_Controller_WaterCoilFields::MaximumActuatedFlow, "");
-      }
-      OS_ASSERT(result);
+    bool ControllerWaterCoil_Impl::setMaximumActuatedFlow(double maximumActuatedFlow) {
+      bool result = setDouble(OS_Controller_WaterCoilFields::MaximumActuatedFlow, maximumActuatedFlow);
       return result;
     }
 
@@ -207,7 +193,6 @@ namespace model {
 
     bool ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
       bool result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
-      OS_ASSERT(result);
       return result;
     }
 
@@ -272,7 +257,7 @@ namespace model {
 
   ControllerWaterCoil::ControllerWaterCoil(const Model& model) : HVACComponent(ControllerWaterCoil::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ControllerWaterCoil_Impl>());
-    setMinimumActuatedFlow(0.0);
+    resetMinimumActuatedFlow();
   }
 
   IddObjectType ControllerWaterCoil::iddObjectType() {
@@ -296,12 +281,24 @@ namespace model {
     return getImpl<detail::ControllerWaterCoil_Impl>()->controlVariable();
   }
 
+  boost::optional<HVACComponent> ControllerWaterCoil::waterCoil() const {
+    return getImpl<detail::ControllerWaterCoil_Impl>()->waterCoil();
+  }
+
+  bool ControllerWaterCoil::isControlVariableDefaulted() const {
+    return getImpl<detail::ControllerWaterCoil_Impl>()->isControlVariableDefaulted();
+  }
+
   boost::optional<std::string> ControllerWaterCoil::action() const {
     return getImpl<detail::ControllerWaterCoil_Impl>()->action();
   }
 
   boost::optional<std::string> ControllerWaterCoil::actuatorVariable() const {
     return getImpl<detail::ControllerWaterCoil_Impl>()->actuatorVariable();
+  }
+
+  bool ControllerWaterCoil::isActuatorVariableDefaulted() const {
+    return getImpl<detail::ControllerWaterCoil_Impl>()->isActuatorVariableDefaulted();
   }
 
   boost::optional<double> ControllerWaterCoil::controllerConvergenceTolerance() const {
@@ -332,7 +329,7 @@ namespace model {
     return getImpl<detail::ControllerWaterCoil_Impl>()->isMinimumActuatedFlowDefaulted();
   }
 
-  bool ControllerWaterCoil::setControlVariable(std::string controlVariable) {
+  bool ControllerWaterCoil::setControlVariable(const std::string& controlVariable) {
     return getImpl<detail::ControllerWaterCoil_Impl>()->setControlVariable(controlVariable);
   }
 
@@ -340,7 +337,7 @@ namespace model {
     getImpl<detail::ControllerWaterCoil_Impl>()->resetControlVariable();
   }
 
-  bool ControllerWaterCoil::setAction(std::string action) {
+  bool ControllerWaterCoil::setAction(const std::string& action) {
     return getImpl<detail::ControllerWaterCoil_Impl>()->setAction(action);
   }
 
@@ -348,7 +345,7 @@ namespace model {
     getImpl<detail::ControllerWaterCoil_Impl>()->resetAction();
   }
 
-  bool ControllerWaterCoil::setActuatorVariable(std::string actuatorVariable) {
+  bool ControllerWaterCoil::setActuatorVariable(const std::string& actuatorVariable) {
     return getImpl<detail::ControllerWaterCoil_Impl>()->setActuatorVariable(actuatorVariable);
   }
 
