@@ -889,7 +889,7 @@ namespace energyplus {
             double outdoorAirFlowAirChangesperHour = designSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
 
             std::string outdoorAirMethod = designSpecificationOutdoorAir->outdoorAirMethod();
-            if (istringEqual(outdoorAirMethod, "Max")) {
+            if (istringEqual(outdoorAirMethod, "Maximum")) {
 
               double rateForPeople = spaces[0].numberOfPeople() * outdoorAirFlowperPerson;
               double rateForArea = spaces[0].floorArea() * outdoorAirFlowperFloorArea;
