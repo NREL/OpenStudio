@@ -842,13 +842,22 @@ namespace energyplus {
 
       boost::optional<IdfObject> dsoaList;
       if (!m_excludeSpaceTranslation && sizingZoneIdf) {
-        dsoaList = IdfObject(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
+        dsoaList = m_idfObjects.emplace_back(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
         dsoaList->setName(tzName + " DSOA Space List");
         sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaList->nameString());
       }
 
       // map the design specification outdoor air
       boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir;
+
+      // For the ZoneVentilation workaround
+      bool createZvs = false;
+      double zvRateForPeople = 0.0;
+      double zvRateForArea = 0.0;
+      double zvRate = 0.0;
+      double zvRateForVolume = 0.0;
+      double totVolume = 0.0;
+
       for (const Space& space : spaces) {
         designSpecificationOutdoorAir = space.designSpecificationOutdoorAir();
         if (designSpecificationOutdoorAir) {
@@ -868,117 +877,126 @@ namespace energyplus {
 
           // create zone ventilation if needed
           // TODO: we could remove all this code if we used ZoneHVAC:IdealLoadsAirSystem instead of HVACTemplate:Zone:IdealLoadsAirSystem
+          // We have space level stuff, that we need to write at Zone-level. So we compute the rate for each component (per Person, Floor Area,
+          // absolute and ACH) by looping on spaces. Then we'll write that by dividing by the total zone number of people, floor area, 1, and volume
+          // This amount to computing a weighted average
           if (zoneEquipment.empty()) {
-            double outdoorAirFlowperPerson = designSpecificationOutdoorAir->outdoorAirFlowperPerson();
-            double outdoorAirFlowperFloorArea = designSpecificationOutdoorAir->outdoorAirFlowperFloorArea();
-            double outdoorAirFlowRate = designSpecificationOutdoorAir->outdoorAirFlowRate();
-            double outdoorAirFlowAirChangesperHour = designSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
+            createZvs = true;
+
+            totVolume += space.volume();
+
+            double rateForPeople = space.numberOfPeople() * designSpecificationOutdoorAir->outdoorAirFlowperPerson();
+            double rateForArea = space.floorArea() * designSpecificationOutdoorAir->outdoorAirFlowperFloorArea();
+            double rate = designSpecificationOutdoorAir->outdoorAirFlowRate();
+            // ACH * volume = m3/hour, divide by 3600 s/hr to get m3/s
+            double rateForVolume = space.volume() * designSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour() / 3600.0;
 
             std::string outdoorAirMethod = designSpecificationOutdoorAir->outdoorAirMethod();
-            if (istringEqual(outdoorAirMethod, "Max")) {
+            if (istringEqual(outdoorAirMethod, "Maximum")) {
 
-              double rateForPeople = space.numberOfPeople() * outdoorAirFlowperPerson;
-              double rateForArea = space.floorArea() * outdoorAirFlowperFloorArea;
-              double rate = outdoorAirFlowRate;
-              double rateForVolume = space.volume() * outdoorAirFlowAirChangesperHour;
-
-              double biggestRate = std::max(rateForPeople, std::max(rateForArea, std::max(rate, rateForVolume)));
+              double biggestRate = std::max({rateForPeople, rateForArea, rate, rateForVolume});
 
               if (rateForPeople == biggestRate) {
-                //outdoorAirFlowperPerson = 0;
-                outdoorAirFlowperFloorArea = 0;
-                outdoorAirFlowRate = 0;
-                outdoorAirFlowAirChangesperHour = 0;
+                //rateForPeople = 0.0;
+                rateForArea = 0.0;
+                rate = 0.0;
+                rateForVolume = 0.0;
               } else if (rateForArea == biggestRate) {
-                outdoorAirFlowperPerson = 0;
-                //outdoorAirFlowperFloorArea = 0;
-                outdoorAirFlowRate = 0;
-                outdoorAirFlowAirChangesperHour = 0;
+                rateForPeople = 0.0;
+                //rateForArea = 0.0;
+                rate = 0.0;
+                rateForVolume = 0.0;
               } else if (rate == biggestRate) {
-                outdoorAirFlowperPerson = 0;
-                outdoorAirFlowperFloorArea = 0;
-                //outdoorAirFlowRate = 0;
-                outdoorAirFlowAirChangesperHour = 0;
+                rateForPeople = 0.0;
+                rateForArea = 0.0;
+                //rate = 0.0;
+                rateForVolume = 0.0;
               } else {
                 //rateForVolume == biggestRate
-                outdoorAirFlowperPerson = 0;
-                outdoorAirFlowperFloorArea = 0;
-                outdoorAirFlowRate = 0;
-                //outdoorAirFlowAirChangesperHour = 0;
+                rateForPeople = 0.0;
+                rateForArea = 0.0;
+                rate = 0.0;
+                //rateForVolume = 0.0;
               }
 
             } else {
               // sum
             }
 
-            if (outdoorAirFlowperPerson > 0) {
+            zvRateForPeople += rateForPeople;
+            zvRateForArea += rateForArea;
+            zvRate += rate;
+            zvRateForVolume += rateForVolume;
+          }  // if zoneEquipment.empty()
+        }    // if dsoa
+      }      // loop on spaces
 
-              // TODO: improve this?
-              // find first people schedule
-              std::vector<People> allPeople;
-              for (const People& people : space.people()) {
+      if (createZvs) {
+        if (zvRateForPeople > 0) {
+          // TODO: improve this?
+          // find first people schedule
+          std::vector<People> allPeople;
+          for (const auto& space : spaces) {
+            for (const People& people : space.people()) {
+              allPeople.push_back(people);
+            }
+            if (space.spaceType()) {
+              for (const People& people : space.spaceType()->people()) {
                 allPeople.push_back(people);
               }
-              if (space.spaceType()) {
-                for (const People& people : space.spaceType()->people()) {
-                  allPeople.push_back(people);
-                }
-              }
-
-              boost::optional<Schedule> peopleSchedule;
-              for (const People& people : allPeople) {
-                peopleSchedule = people.numberofPeopleSchedule();
-                if (peopleSchedule) {
-                  break;
-                }
-              }
-
-              if (peopleSchedule) {
-                IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
-                zoneVentilation.setName(tzName + " Ventilation per Person");
-                zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
-                zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->nameString());
-                zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
-                zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, outdoorAirFlowperPerson);
-                m_idfObjects.push_back(zoneVentilation);
-              } else {
-                LOG(Warn, "No People found in ThermalZone '" << tzName << "', outdoor air per person will not be added");
-              }
-            }
-
-            if (outdoorAirFlowperFloorArea > 0) {
-              IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
-              zoneVentilation.setName(tzName + " Ventilation per Floor Area");
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
-              zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, outdoorAirFlowperFloorArea);
-              m_idfObjects.push_back(zoneVentilation);
-            }
-
-            if (outdoorAirFlowRate > 0) {
-              IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
-              zoneVentilation.setName(tzName + " Ventilation Rate");
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
-              zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::DesignFlowRate, outdoorAirFlowRate);
-              m_idfObjects.push_back(zoneVentilation);
-            }
-
-            if (outdoorAirFlowAirChangesperHour > 0) {
-              IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
-              zoneVentilation.setName(tzName + " Ventilation Air Changes per Hour");
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
-              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
-              zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::AirChangesperHour, outdoorAirFlowAirChangesperHour);
-              m_idfObjects.push_back(zoneVentilation);
             }
           }
+
+          boost::optional<Schedule> peopleSchedule;
+          for (const People& people : allPeople) {
+            peopleSchedule = people.numberofPeopleSchedule();
+            if (peopleSchedule) {
+              break;
+            }
+          }
+
+          if (!allPeople.empty()) {
+            auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
+            zoneVentilation.setName(tzName + " Ventilation per Person");
+            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+            if (peopleSchedule) {
+              zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->nameString());
+            }
+            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
+            zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, zvRateForPeople / modelObject.numberOfPeople());
+          } else {
+            LOG(Warn, "No People found in ThermalZone '" << tzName << "', outdoor air per person will not be added");
+          }
         }
-      }  // end of spaces
-    }
+
+        if (zvRateForArea > 0) {
+          auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
+          zoneVentilation.setName(tzName + " Ventilation per Floor Area");
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
+          zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, zvRateForArea / modelObject.floorArea());
+        }
+
+        if (zvRate > 0) {
+          auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
+          zoneVentilation.setName(tzName + " Ventilation Rate");
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
+          zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::DesignFlowRate, zvRate);
+        }
+
+        if (zvRateForVolume > 0) {
+          auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
+          zoneVentilation.setName(tzName + " Ventilation Air Changes per Hour");
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
+          zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 3600.0 * zvRateForVolume / totVolume);
+        }
+      }  // zone.equipment().emptpy()
+    }    // End Sizing:Zone / ZV block
 
     return idfObject;
   }
