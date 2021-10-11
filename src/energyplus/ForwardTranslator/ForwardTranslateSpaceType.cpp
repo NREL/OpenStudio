@@ -87,7 +87,7 @@ namespace energyplus {
     auto makeZoneList = [this, &modelObject, &spaces](bool registerIt) -> IdfObject {
       boost::optional<IdfObject> idfObject;
       if (registerIt) {
-        idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SpaceList, modelObject);
+        idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
       } else {
         idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::ZoneList);
         idfObject->setName(modelObject.nameString() + " ZoneList");
