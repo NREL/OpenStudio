@@ -42,6 +42,7 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/CurveCubic.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfObject_Impl.hpp"
@@ -124,6 +125,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
   // Motor Loss Zone Name: Optional Object
   ThermalZone z(m);
   z.setName("TZ");
+  Space space(m);
+  space.setThermalZone(z);
 
   EXPECT_TRUE(fan.setMotorLossZone(z));
 

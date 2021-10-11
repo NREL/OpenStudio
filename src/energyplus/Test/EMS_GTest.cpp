@@ -2217,7 +2217,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_EQ(0u, forwardTranslator.warnings().size()) << [&forwardTranslator]() {
+    std::stringstream ss;
+    for (const auto& warning : forwardTranslator.warnings()) {
+      ss << warning.logMessage() << '\n';
+    }
+    return ss.str();
+  }();
+
   //expect 2 actuators
   //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD
   EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());

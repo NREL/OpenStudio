@@ -89,15 +89,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACUnitHeater_FanConstantVolume
   EXPECT_TRUE(uh.setMinimumHotWaterFlowRate(0.0));
   EXPECT_TRUE(uh.setHeatingConvergenceTolerance(0.001));
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   uh.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
 
   WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_UnitHeater));
-  ASSERT_EQ(1u, idfObjs.size());
+  ASSERT_EQ(1, idfObjs.size());
   WorkspaceObject idf_uh = idfObjs[0];
 
   EXPECT_EQ(uh.nameString(), idf_uh.getString(ZoneHVAC_UnitHeaterFields::Name).get());
@@ -151,15 +153,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACUnitHeater_FanOnOff_CoilFuel
   EXPECT_TRUE(uh.setMinimumHotWaterFlowRate(0.0));
   EXPECT_TRUE(uh.setHeatingConvergenceTolerance(0.001));
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   uh.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
 
   WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_UnitHeater));
-  ASSERT_EQ(1u, idfObjs.size());
+  ASSERT_EQ(1, idfObjs.size());
   WorkspaceObject idf_uh = idfObjs[0];
 
   EXPECT_EQ(uh.nameString(), idf_uh.getString(ZoneHVAC_UnitHeaterFields::Name).get());
@@ -212,15 +216,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACUnitHeater_FanSystemModel_Co
   EXPECT_TRUE(uh.setMinimumHotWaterFlowRate(0.0));
   EXPECT_TRUE(uh.setHeatingConvergenceTolerance(0.001));
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   uh.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
 
   WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_UnitHeater));
-  ASSERT_EQ(1u, idfObjs.size());
+  ASSERT_EQ(1, idfObjs.size());
   WorkspaceObject idf_uh = idfObjs[0];
 
   EXPECT_EQ(uh.nameString(), idf_uh.getString(ZoneHVAC_UnitHeaterFields::Name).get());
@@ -275,15 +281,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACUnitHeater_FanVariableVolume
   EXPECT_TRUE(uh.setMinimumHotWaterFlowRate(0.0));
   EXPECT_TRUE(uh.setHeatingConvergenceTolerance(0.001));
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   uh.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
 
   WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_UnitHeater));
-  ASSERT_EQ(1u, idfObjs.size());
+  ASSERT_EQ(1, idfObjs.size());
   WorkspaceObject idf_uh = idfObjs[0];
 
   EXPECT_EQ(uh.nameString(), idf_uh.getString(ZoneHVAC_UnitHeaterFields::Name).get());
