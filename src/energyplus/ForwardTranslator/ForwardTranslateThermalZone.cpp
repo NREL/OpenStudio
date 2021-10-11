@@ -948,11 +948,13 @@ namespace energyplus {
                 }
               }
 
-              if (peopleSchedule) {
+              if (!allPeople.empty()) {
                 IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
                 zoneVentilation.setName(modelObject.name().get() + " Ventilation per Person");
                 zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, modelObject.name().get());
-                zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->name().get());
+                if (peopleSchedule) {
+                  zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->name().get());
+                }
                 zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
                 zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, outdoorAirFlowperPerson);
                 m_idfObjects.push_back(zoneVentilation);
