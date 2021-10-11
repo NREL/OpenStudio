@@ -894,9 +894,10 @@ namespace energyplus {
               double rateForPeople = spaces[0].numberOfPeople() * outdoorAirFlowperPerson;
               double rateForArea = spaces[0].floorArea() * outdoorAirFlowperFloorArea;
               double rate = outdoorAirFlowRate;
-              double rateForVolume = spaces[0].volume() * outdoorAirFlowAirChangesperHour;
+              // ACH * volume = m3/hour, divide by 3600 s/hr to get m3/s
+              double rateForVolume = spaces[0].volume() * outdoorAirFlowAirChangesperHour / 3600.0;
 
-              double biggestRate = std::max(rateForPeople, std::max(rateForArea, std::max(rate, rateForVolume)));
+              double biggestRate = std::max({rateForPeople, rateForArea, rate, rateForVolume});
 
               if (rateForPeople == biggestRate) {
                 //outdoorAirFlowperPerson = 0;
