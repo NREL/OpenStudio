@@ -40,6 +40,7 @@
 #include "../../model/CoilHeatingWater.hpp"
 #include "../../model/CoilHeatingWater_Impl.hpp"
 #include <utilities/idd/ZoneHVAC_UnitHeater_FieldEnums.hxx>
+#include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
@@ -145,6 +146,11 @@ namespace energyplus {
         } else if (_supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel) {
           _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName, *s);
           _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName, fanOutletNodeName);
+        } else if (_supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff) {
+          _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName, *s);
+          _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName, fanOutletNodeName);
+        } else {
+          OS_ASSERT(false);  // We're missing a fan type!
         }
       }
     }
@@ -201,6 +207,8 @@ namespace energyplus {
         } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water) {
           _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, fanOutletNodeName);
           _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, *s);
+        } else {
+          OS_ASSERT(false);  // We're missing a coil type!
         }
       }
     }

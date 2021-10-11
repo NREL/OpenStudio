@@ -60,14 +60,27 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      //@}
       /** @name Getters */
       //@{
 
-      boost::optional<std::string> controlVariable() const;
+      boost::optional<HVACComponent> waterCoil() const;
+
+      std::string controlVariable() const;
+      bool isControlVariableDefaulted() const;
 
       boost::optional<std::string> action() const;
 
-      boost::optional<std::string> actuatorVariable() const;
+      std::string actuatorVariable() const;
+      bool isActuatorVariableDefaulted() const;
+
+      boost::optional<Node> sensorNode() const;
+
+      boost::optional<Node> actuatorNode() const;
 
       boost::optional<double> controllerConvergenceTolerance() const;
 
@@ -83,37 +96,35 @@ namespace model {
 
       bool isMinimumActuatedFlowDefaulted() const;
 
-      boost::optional<double> autosizedControllerConvergenceTolerance() const;
-
-      boost::optional<double> autosizedMaximumActuatedFlow() const;
-
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
       //@}
       /** @name Setters */
       //@{
 
-      bool setControlVariable(boost::optional<std::string> controlVariable);
+      bool setWaterCoil(const HVACComponent& comp);
+
+      bool setControlVariable(const std::string& controlVariable);
 
       void resetControlVariable();
 
-      bool setAction(boost::optional<std::string> action);
+      bool setAction(const std::string& action);
 
       void resetAction();
 
-      bool setActuatorVariable(boost::optional<std::string> actuatorVariable);
+      bool setActuatorVariable(const std::string& actuatorVariable);
 
       void resetActuatorVariable();
 
-      bool setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
+      bool setSensorNode(const Node& node);
+
+      bool setActuatorNode(const Node& node);
+
+      bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
 
       void resetControllerConvergenceTolerance();
 
       void autosizeControllerConvergenceTolerance();
 
-      bool setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow);
+      bool setMaximumActuatedFlow(double maximumActuatedFlow);
 
       void resetMaximumActuatedFlow();
 
@@ -124,18 +135,14 @@ namespace model {
       void resetMinimumActuatedFlow();
 
       //@}
+      /** @name Other */
+      //@{
 
-      boost::optional<Node> sensorNode() const;
+      boost::optional<double> autosizedControllerConvergenceTolerance() const;
 
-      boost::optional<Node> actuatorNode() const;
+      boost::optional<double> autosizedMaximumActuatedFlow() const;
 
-      bool setSensorNode(const Node& node);
-
-      bool setActuatorNode(const Node& node);
-
-      bool setWaterCoil(const HVACComponent& comp);
-
-      boost::optional<HVACComponent> waterCoil() const;
+      //@}
 
      protected:
      private:

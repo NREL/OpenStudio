@@ -47,6 +47,19 @@ UTILITIES_API double degToRad(double degrees);
 /// convert radians to degrees
 UTILITIES_API double radToDeg(double radians);
 
+// Forces an angle in degrees to be in the [0,360[ range
+UTILITIES_API constexpr double normalizeAngle0to360(double angleDegrees) {
+  while (angleDegrees < 0.0) {
+    angleDegrees += 360.0;
+  }
+
+  // This is twice as fast as using std::fmod(angleDegrees, 360.0)
+  while (angleDegrees >= 360.0) {
+    angleDegrees -= 360.0;
+  }
+  return angleDegrees;
+}
+
 /// compute area from surface as Point3dVector
 UTILITIES_API boost::optional<double> getArea(const std::vector<Point3d>& points);
 

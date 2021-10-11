@@ -1077,8 +1077,51 @@ namespace energyplus {
                                    << " degrees about Y axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
         }
 
-        // glare
-        double glareAngle = primaryDaylightingControl->phiRotationAroundZAxis();
+        // glare:
+        // * openstudio uses the right-hand rule, y points North and x points east.
+        //   So a positive rotation around the z-axis is counter-clockwise in the horizontal plane
+        // * E+ on the other hand is looking for something that is clockwise:
+        //   > Field: Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis
+        //   > It is the angle, measured clockwise in the horizontal plane, between the zone y-axis and the occupant view direction
+
+        // 3D View:
+        //          z
+        //          ▲
+        //          │
+        //          │
+        //        | │ ▲
+        //       +└►├─┘
+        //          │      . OS convention for ϕ
+        //          │    .
+        //          │  .<-◝
+        //          │.     ) ϕ
+        //          ○─────────────────► y
+        //         ╱  *     )
+        //        ╱     *<-◞ E+ Field
+        //       ╱        *
+        //      ╱
+        //     ╱
+        //    x
+        //
+        // 2D View, from the top:
+        //
+        //            y
+        //            ▲         Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y axis
+        //   \        │  E+    /
+        //    \  OS ϕ ├─────┐ /
+        //     \ ┌────┤     ▼/
+        //      \▼    │     /
+        //       \    │    /
+        //        \   │   /
+        //         \  │  /
+        //          \ | /
+        //           (◯)───────────────►x
+        //            z
+        //
+
+        double glareAngle = -primaryDaylightingControl->phiRotationAroundZAxis();
+        // Force [0,360[
+        glareAngle = normalizeAngle0to360(glareAngle);
         daylightingControlObject.setDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis, glareAngle);
 
         if (OptionalDouble d = primaryDaylightingControl->maximumAllowableDiscomfortGlareIndex()) {
@@ -1429,14 +1472,15 @@ namespace energyplus {
             double outdoorAirFlowAirChangesperHour = designSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
 
             std::string outdoorAirMethod = designSpecificationOutdoorAir->outdoorAirMethod();
-            if (istringEqual(outdoorAirMethod, "Max")) {
+            if (istringEqual(outdoorAirMethod, "Maximum")) {
 
               double rateForPeople = space.numberOfPeople() * outdoorAirFlowperPerson;
               double rateForArea = space.floorArea() * outdoorAirFlowperFloorArea;
               double rate = outdoorAirFlowRate;
-              double rateForVolume = space.volume() * outdoorAirFlowAirChangesperHour;
+              // ACH * volume = m3/hour, divide by 3600 s/hr to get m3/s
+              double rateForVolume = space.volume() * outdoorAirFlowAirChangesperHour / 3600.0;
 
-              double biggestRate = std::max(rateForPeople, std::max(rateForArea, std::max(rate, rateForVolume)));
+              double biggestRate = std::max({rateForPeople, rateForArea, rate, rateForVolume});
 
               if (rateForPeople == biggestRate) {
                 //outdoorAirFlowperPerson = 0;
@@ -1487,11 +1531,13 @@ namespace energyplus {
                 }
               }
 
-              if (peopleSchedule) {
+              if (!allPeople.empty()) {
                 IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
                 zoneVentilation.setName(tzName + " Ventilation per Person");
                 zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
-                zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->name().get());
+                if (peopleSchedule) {
+                  zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->name().get());
+                }
                 zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
                 zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, outdoorAirFlowperPerson);
                 m_idfObjects.push_back(zoneVentilation);
