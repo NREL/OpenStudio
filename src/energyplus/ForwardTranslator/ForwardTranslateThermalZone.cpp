@@ -889,14 +889,15 @@ namespace energyplus {
             double outdoorAirFlowAirChangesperHour = designSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
 
             std::string outdoorAirMethod = designSpecificationOutdoorAir->outdoorAirMethod();
-            if (istringEqual(outdoorAirMethod, "Max")) {
+            if (istringEqual(outdoorAirMethod, "Maximum")) {
 
               double rateForPeople = spaces[0].numberOfPeople() * outdoorAirFlowperPerson;
               double rateForArea = spaces[0].floorArea() * outdoorAirFlowperFloorArea;
               double rate = outdoorAirFlowRate;
-              double rateForVolume = spaces[0].volume() * outdoorAirFlowAirChangesperHour;
+              // ACH * volume = m3/hour, divide by 3600 s/hr to get m3/s
+              double rateForVolume = spaces[0].volume() * outdoorAirFlowAirChangesperHour / 3600.0;
 
-              double biggestRate = std::max(rateForPeople, std::max(rateForArea, std::max(rate, rateForVolume)));
+              double biggestRate = std::max({rateForPeople, rateForArea, rate, rateForVolume});
 
               if (rateForPeople == biggestRate) {
                 //outdoorAirFlowperPerson = 0;
@@ -947,11 +948,13 @@ namespace energyplus {
                 }
               }
 
-              if (peopleSchedule) {
+              if (!allPeople.empty()) {
                 IdfObject zoneVentilation(IddObjectType::ZoneVentilation_DesignFlowRate);
                 zoneVentilation.setName(modelObject.name().get() + " Ventilation per Person");
                 zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, modelObject.name().get());
-                zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->name().get());
+                if (peopleSchedule) {
+                  zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->name().get());
+                }
                 zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
                 zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, outdoorAirFlowperPerson);
                 m_idfObjects.push_back(zoneVentilation);
