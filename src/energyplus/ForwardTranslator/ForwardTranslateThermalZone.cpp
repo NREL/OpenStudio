@@ -896,7 +896,6 @@ namespace energyplus {
 
               double biggestRate = std::max({rateForPeople, rateForArea, rate, rateForVolume});
 
-
               if (rateForPeople == biggestRate) {
                 //rateForPeople = 0.0;
                 rateForArea = 0.0;
