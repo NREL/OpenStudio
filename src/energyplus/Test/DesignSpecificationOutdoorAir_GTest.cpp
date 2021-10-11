@@ -185,9 +185,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
   // |     Name       |   Method    | (m3/s-person) |   (m3/s-m2)    |  (m3/s)  | (1/hr) | Total (m3/s) |
   // |----------------|-------------|---------------|----------------|----------|--------|--------------|
   // | dsoaSpace1     | Sum         | 0.015         | 0.004          |          |        | 0.55         |
-  // | dsoaSpace3     | Max         |               |                | 0.65     | 2.0    | 0.65         |
-  // | dsoaOffice     | Max         |               | 0.006          | 0.40     |        | 0.60         |
+  // | dsoaSpace3     | Maximum     |               |                | 0.65     | (2.0)* | 0.65         |
+  // | dsoaOffice     | Maximum     |               | 0.006          | (0.40)*  |        | 0.60         |
   // | dsoaBuilding   | Sum         |               |                | 0.10     | 0.5    | 0.15         |
+  //
+  // (val)* : this is ignored because method is Maximum and it amounts to a rate in m3/s that is lower than the maximum component
 
   // Which DSOA applies to which spaces?
   // ====================================
