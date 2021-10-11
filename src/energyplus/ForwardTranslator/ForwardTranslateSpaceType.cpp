@@ -73,10 +73,13 @@ namespace energyplus {
     std::vector<Space> spaces = modelObject.spaces();
 
     // check if this is a dummy space type meant to prevent inheriting building space type
-    std::vector<ModelObject> children = modelObject.children();
-    if (children.empty()) {
-      LOG(Info, "SpaceType " << modelObject.name().get() << " has no children, it will not be translated");
-      return boost::none;
+    // TODO: why is that needed in the first place? Also, children() doesn't include DesignSpecificationOutdoorAir!
+    if (m_excludeSpaceTranslation) {
+      std::vector<ModelObject> children = modelObject.children();
+      if (children.empty()) {
+        LOG(Info, "SpaceType " << modelObject.name().get() << " has no children, it will not be translated");
+        return boost::none;
+      }
     }
 
     OptionalIdfObject idfObject;
