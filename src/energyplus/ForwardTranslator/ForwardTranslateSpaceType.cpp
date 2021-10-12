@@ -159,10 +159,13 @@ namespace energyplus {
     translateSpaceLoads(modelObject.steamEquipment());
     translateSpaceLoads(modelObject.otherEquipment());
 
-    // TODO: Technically this stuff maps to a thermal zone, always (can't map to a Space/SpaceList)
-    translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
-    translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
-    translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
+    // in translateModelPrivate, we have hard assigned the infiltration objects to each Space.
+    // In E+ these objects are Zone objects, they do not accept Space
+    // Technically this one accepts a Zone or ZoneList
+    // translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
+    // These two DO NOT ACCEPT a ZoneList, only a Zone
+    // translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
+    // translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
 
     return idfObject;
   }

@@ -70,6 +70,7 @@ namespace energyplus {
     } else if (spaceType) {
       // TODO: This field is called 'ZoneName' and not 'ZoneorZoneListName'. It **DOES NOT** accept a Zone List
       idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneName, zoneListNameForSpaceType(spaceType.get()));
+      OS_ASSERT(false);
     } else {
       // Note: a warning will be issued higher up already
       // Object of type 'OS:SpaceInfiltration:FlowCoefficient' and named 'My Infiltration' is not associated with a Space or SpaceType, it will not be translated.

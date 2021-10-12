@@ -346,8 +346,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
   ForwardTranslator ft;
 
   // When excluding space translation (historical behavior)
+  //
   {
-    // ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeSpaceTranslation(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -357,6 +358,57 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
     EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneList).size());
     EXPECT_EQ(0, w.getObjectsByType(IddObjectType::Space).size());
     EXPECT_EQ(0, w.getObjectsByType(IddObjectType::SpaceList).size());
+
+    auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_FlowCoefficient);
+    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total
+    ASSERT_EQ(6, infils.size());
+
+    for (const auto& infil : infils) {
+      auto name = infil.nameString();
+      auto z_ = infil.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneName);
+      ASSERT_TRUE(z_);
+      EXPECT_EQ(zone, z_.get());
+      if (name.find(infilSpace1.nameString()) != std::string::npos) {
+        EXPECT_EQ(infilSpace1.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
+        EXPECT_EQ(infilSpace1.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
+        EXPECT_EQ(infilSpace1.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
+        EXPECT_EQ(infilSpace1.windCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient).get());
+        EXPECT_EQ(infilSpace1.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
+      } else if (name.find(infilSpace3.nameString()) != std::string::npos) {
+        EXPECT_EQ(infilSpace3.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
+        EXPECT_EQ(infilSpace3.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
+        EXPECT_EQ(infilSpace3.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
+        EXPECT_EQ(infilSpace3.windCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient).get());
+        EXPECT_EQ(infilSpace3.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
+      } else if (name.find(infilOffice.nameString()) != std::string::npos) {
+        EXPECT_EQ(infilOffice.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
+        EXPECT_EQ(infilOffice.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
+        EXPECT_EQ(infilOffice.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
+        EXPECT_EQ(infilOffice.windCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient).get());
+        EXPECT_EQ(infilOffice.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
+      } else if (name.find(infilBuilding.nameString()) != std::string::npos) {
+        EXPECT_EQ(infilBuilding.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
+        EXPECT_EQ(infilBuilding.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
+        EXPECT_EQ(infilBuilding.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
+        EXPECT_EQ(infilBuilding.windCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient).get());
+        EXPECT_EQ(infilBuilding.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
+      }
+    }
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  // same thing as before: we place them for the Zone itself. Note that this object DOES NOT ACCEPT a ZoneList, only a Zone!
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace w = ft.translateModel(m);
+
+    auto zones = w.getObjectsByType(IddObjectType::Zone);
+    ASSERT_EQ(1, zones.size());
+    auto zone = zones[0];
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
 
     auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_FlowCoefficient);
     // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total
