@@ -69,7 +69,8 @@ namespace energyplus {
         idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, thermalZone->name().get());
       }
     } else if (spaceType) {
-      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, spaceType->name().get() + " ZoneList");
+      // TODO: This field is called 'ZoneName' and not 'ZoneorZoneListName'. It **DOES NOT** accept a Zone List
+      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, zoneListNameForSpaceType(spaceType.get()));
     }
 
     boost::optional<Schedule> schedule = modelObject.schedule();

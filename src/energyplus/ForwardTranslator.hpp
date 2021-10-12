@@ -1352,6 +1352,7 @@ namespace energyplus {
     boost::optional<IdfObject> translateSpaceInfiltrationFlowCoefficient(model::SpaceInfiltrationFlowCoefficient& modelObject);
 
     boost::optional<IdfObject> translateSpaceType(model::SpaceType& modelObject);
+    std::string zoneListNameForSpaceType(const model::SpaceType& modelObject) const;  // helper function
 
     boost::optional<IdfObject> translateStandardGlazing(model::StandardGlazing& modelObject);
 

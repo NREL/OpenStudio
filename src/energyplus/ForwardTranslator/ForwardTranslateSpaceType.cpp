@@ -69,6 +69,14 @@ namespace openstudio {
 
 namespace energyplus {
 
+  std::string ForwardTranslator::zoneListNameForSpaceType(const SpaceType& modelObject) const {
+    if (m_excludeSpaceTranslation) {
+      return modelObject.nameString();
+    } else {
+      return modelObject.nameString() + " ZoneList";
+    }
+  }
+
   boost::optional<IdfObject> ForwardTranslator::translateSpaceType(SpaceType& modelObject) {
     std::vector<Space> spaces = modelObject.spaces();
 
@@ -87,11 +95,11 @@ namespace energyplus {
     auto makeZoneList = [this, &modelObject, &spaces](bool registerIt) -> IdfObject {
       boost::optional<IdfObject> idfObject;
       if (registerIt) {
-        idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
+        idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
       } else {
         idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::ZoneList);
-        idfObject->setName(modelObject.nameString() + " ZoneList");
       }
+      idfObject->setName(zoneListNameForSpaceType(modelObject));
 
       // Unique zone names
       std::set<std::string> zoneNames;

@@ -69,8 +69,8 @@ namespace energyplus {
         idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, thermalZone->name().get());
       }
     } else if (spaceType) {
-      // This is weird one... we need a ZoneList, not a SpaceList...
-      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, spaceType->name().get() + " ZoneList");
+      // This is a weird one... we need a ZoneList, not a SpaceList, even if we do translate to E+ spaces. Use the helper to figure the out right name
+      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, zoneListNameForSpaceType(spaceType.get()));
     }
 
     boost::optional<Schedule> schedule = modelObject.schedule();
