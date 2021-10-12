@@ -281,15 +281,28 @@ namespace energyplus {
             needToSetFloorArea = true;
           }
         }
-      }
+      }  // End loop on space
 
-      if (directionofRelativeNorth) {
-        idfObject.setDouble(openstudio::ZoneFields::DirectionofRelativeNorth, *directionofRelativeNorth);
-      }
-
+      // set the origin the Thermal Zone (lower-left corner of all spaces)
       idfObject.setDouble(openstudio::ZoneFields::XOrigin, xOrigin);
       idfObject.setDouble(openstudio::ZoneFields::YOrigin, yOrigin);
       idfObject.setDouble(openstudio::ZoneFields::ZOrigin, zOrigin);
+
+      // Important: we need to call Space::changeTransformation to align for the xOrigin, yOrigin, zOrigin (lower left corner) we identified above
+      // Because in E+ all coordinates are still relative to the Zone. The E+ 'Space' object has no specific origin x, y, z coordinates
+      auto newTranslation = Transformation::translation(Vector3d(xOrigin, yOrigin, zOrigin));
+      double degNorth = 0.0;
+      if (directionofRelativeNorth) {
+        idfObject.setDouble(openstudio::ZoneFields::DirectionofRelativeNorth, directionofRelativeNorth.get());
+        degNorth = directionofRelativeNorth.get();
+      }
+      // rotate negative amount around the z axis, EnergyPlus defines rotation clockwise
+      auto newRotation = Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(degNorth));
+      auto newTransformation = newTranslation * newRotation;
+      // This will also change the transformation for surfaces, daylighting controls, etc
+      for (auto& space : spaces) {
+        space.changeTransformation(newTransformation);
+      }
 
       if (partofTotalFloorArea) {
         idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea, "Yes");
@@ -313,12 +326,14 @@ namespace energyplus {
     for (Space& space : spaces) {
 
       if (!m_excludeSpaceTranslation) {
-        // TODO: Why would that be needed here?
         if (!space.spaceType()) {
           // create a new space type
           SpaceType newSpaceType(modelObject.model());
 
           // set space type to prevent picking up building level space type
+          // It's ThermalZone::combineSpaces, not Model::combineSpaces so we can't reset the building level SpaceType in there.
+          // So it's still there, while we did hard assign all the loads for the combineSpace,
+          // and we want to avoid picking up the building level SpaceType loads because those would be double counted
           space.setSpaceType(newSpaceType);
         }
       }
