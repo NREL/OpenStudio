@@ -233,7 +233,7 @@ namespace detail {
     onUpdate();
   }
 
-  bool RunOptions_Impl::forwardTranslateOptions() const {
+  std::string  RunOptions_Impl::forwardTranslateOptions() const {
     return m_forwardTranslateOptions;
   }
 
