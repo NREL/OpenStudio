@@ -320,13 +320,17 @@ namespace model {
         if (success && (!t_containingZoneHVACComponent)) {
           if (auto t_waterInletModelObject = waterInletModelObject()) {
             if (auto oldController = controllerWaterCoil()) {
-              oldController->remove();
+              if (!openstudio::istringEqual(oldController->action().get(), "Reverse")) {
+                LOG(Warn,
+                    briefDescription()
+                      << " has an existing ControllerWaterCoil with action set to something else than 'Reverse'. Make sure this is what you want");
+              }
+            } else {
+              Model t_model = model();
+              ControllerWaterCoil controller(t_model);
+              controller.getImpl<ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
+              controller.setAction("Reverse");
             }
-
-            Model t_model = model();
-            ControllerWaterCoil controller(t_model);
-            controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
-            controller.setAction("Reverse");
           }
         }
       }

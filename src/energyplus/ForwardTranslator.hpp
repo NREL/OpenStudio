@@ -392,6 +392,7 @@ namespace model {
   class SizingPlant;
   class SizingSystem;
   class SizingZone;
+  class SpaceLoadInstance;
   class StandardGlazing;
   class StandardOpaqueMaterial;
   class SimpleGlazing;
@@ -563,6 +564,10 @@ namespace energyplus {
    *  translateAndMapModelObject() interface as opposed to the type specific translators.
    */
     Workspace translateModelPrivate(model::Model& model, bool fullModelTranslation);
+
+    // TODO: restrict to SpaceLoadInstance or SpaceLoad?
+    // Pick up the Zone, ZoneList, Space or SpaceList object for a given SpaceLoad
+    IdfObject getSpaceLoadParent(model::SpaceLoadInstance& sp);
 
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 
@@ -1347,6 +1352,7 @@ namespace energyplus {
     boost::optional<IdfObject> translateSpaceInfiltrationFlowCoefficient(model::SpaceInfiltrationFlowCoefficient& modelObject);
 
     boost::optional<IdfObject> translateSpaceType(model::SpaceType& modelObject);
+    std::string zoneListNameForSpaceType(const model::SpaceType& modelObject) const;  // helper function
 
     boost::optional<IdfObject> translateStandardGlazing(model::StandardGlazing& modelObject);
 
@@ -1382,6 +1388,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateThermalStorageChilledWaterStratified(model::ThermalStorageChilledWaterStratified& modelObject);
 
     boost::optional<IdfObject> translateThermalZone(model::ThermalZone& modelObject);
+    void translateThermalZoneSpacesWhenCombinedSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
+    void translateThermalZoneSpacesToEnergyPlusSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
 
     boost::optional<IdfObject> translateThermostatSetpointDualSetpoint(model::ThermostatSetpointDualSetpoint& tsds);
 

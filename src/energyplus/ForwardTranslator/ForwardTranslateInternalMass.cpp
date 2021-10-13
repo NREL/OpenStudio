@@ -57,7 +57,12 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateInternalMass(model::InternalMass& modelObject) {
-    // EnergyPlus does not support internal mass objects referencing zone lists
+
+    // TODO: handle (m_excludeSpaceTranslation = false)
+    // Note: E+kept a ‘Zone or ZoneList name’ field and added a ‘Space or SpaceList’ field. If former is specified, later is omitted.
+    // It should have been a single ‘Zone or ZoneList or Space or SpaceList Name’ like it's done on many other objects
+
+    // EnergyPlus does not support internal mass objects referencing zone lists (TODO: <-- this is outdated)
 
     InternalMassDefinition definition = modelObject.internalMassDefinition();
 

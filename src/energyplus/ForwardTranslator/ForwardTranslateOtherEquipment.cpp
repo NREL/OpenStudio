@@ -68,26 +68,14 @@ namespace energyplus {
 
     idfObject.setString(OtherEquipmentFields::Name, modelObject.name().get());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      if (m_excludeSpaceTranslation) {
-        boost::optional<ThermalZone> thermalZone = space->thermalZone();
-        if (thermalZone) {
-          idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
-        }
-      } else {
-        idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(OtherEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(OtherEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
-
     idfObject.setString(OtherEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
 
     double multiplier = modelObject.multiplier();

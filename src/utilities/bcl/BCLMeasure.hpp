@@ -111,6 +111,10 @@ class UTILITIES_API BCLMeasure
   /// Suggested values for the second level taxonomy tag
   static std::vector<std::string> suggestedSecondLevelTaxonomyTerms(const std::string& firstLevelTaxonomyTerm);
 
+  static bool isIgnoredFileName(const std::string& fileName);
+
+  static bool isApprovedFile(const openstudio::path& absoluteFilePath, const openstudio::path& measureDir);
+
   //@}
   /** @name Destructor */
   //@{
@@ -284,9 +288,6 @@ class UTILITIES_API BCLMeasure
   REGISTER_LOGGER("utilities.bcl.BCLMeasure");
 
   static void createDirectory(const openstudio::path& dir);
-
-  // based on function in PathHelpers.hpp but checks if file is in this measure
-  bool copyDirectory(const path& source, const path& destination) const;
 
   std::string computeXMLChecksum() const;
 

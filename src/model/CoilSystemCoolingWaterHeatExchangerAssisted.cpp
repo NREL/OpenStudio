@@ -218,6 +218,7 @@ namespace model {
             auto t_coolingCoil = coolingCoil();
             if (auto waterInletModelObject = t_coolingCoil.waterInletModelObject()) {
 
+              // TODO: why aren't we setting the water coil in this case? @kbenne thoughts please
               if (auto coilCoolingWater = t_coolingCoil.optionalCast<CoilCoolingWater>()) {
                 if (auto oldController = coilCoolingWater->controllerWaterCoil()) {
                   oldController->remove();

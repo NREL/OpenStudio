@@ -70,24 +70,13 @@ namespace energyplus {
 
     idfObject.setString(PeopleFields::Name, modelObject.name().get());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      if (m_excludeSpaceTranslation) {
-        boost::optional<ThermalZone> thermalZone = space->thermalZone();
-        if (thermalZone) {
-          idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
-        }
-      } else {
-        idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.numberofPeopleSchedule();
-    if (schedule) {
-      idfObject.setString(PeopleFields::NumberofPeopleScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.numberofPeopleSchedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(PeopleFields::NumberofPeopleScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(PeopleFields::NumberofPeopleCalculationMethod, definition.numberofPeopleCalculationMethod());
@@ -119,9 +108,10 @@ namespace energyplus {
       idfObject.setDouble(PeopleFields::SensibleHeatFraction, *d);
     }
 
-    schedule = modelObject.activityLevelSchedule();
-    if (schedule) {
-      idfObject.setString(PeopleFields::ActivityLevelScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule_ = modelObject.activityLevelSchedule()) {
+      if (auto idf_schedule_ = translateAndMapModelObject(schedule_.get())) {
+        idfObject.setString(PeopleFields::ActivityLevelScheduleName, idf_schedule_->nameString());
+      }
     }
 
     if (!definition.isCarbonDioxideGenerationRateDefaulted()) {
@@ -142,25 +132,28 @@ namespace energyplus {
 
     // TODO: Surface Name/Angle Factor List Name
 
-    schedule = modelObject.workEfficiencySchedule();
-    if (schedule) {
-      idfObject.setString(PeopleFields::WorkEfficiencyScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule_ = modelObject.workEfficiencySchedule()) {
+      if (auto idf_schedule_ = translateAndMapModelObject(schedule_.get())) {
+        idfObject.setString(PeopleFields::WorkEfficiencyScheduleName, idf_schedule_->nameString());
+      }
     }
 
-    schedule = modelObject.clothingInsulationSchedule();
-    if (schedule) {
-      idfObject.setString(PeopleFields::ClothingInsulationScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule_ = modelObject.clothingInsulationSchedule()) {
+      if (auto idf_schedule_ = translateAndMapModelObject(schedule_.get())) {
+        idfObject.setString(PeopleFields::ClothingInsulationScheduleName, idf_schedule_->nameString());
+      }
     }
 
-    schedule = modelObject.airVelocitySchedule();
-    if (schedule) {
-      idfObject.setString(PeopleFields::AirVelocityScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule_ = modelObject.airVelocitySchedule()) {
+      if (auto idf_schedule_ = translateAndMapModelObject(schedule_.get())) {
+        idfObject.setString(PeopleFields::AirVelocityScheduleName, idf_schedule_->nameString());
+      }
     }
 
     for (int i = 0, n = definition.numThermalComfortModelTypes(); i < n; ++i) {
       OptionalString s = definition.getThermalComfortModelType(i);
       if (s) {
-        idfObject.pushExtensibleGroup(StringVector(1u, *s));
+        idfObject.pushExtensibleGroup(StringVector(1U, *s));
       }
     }
 

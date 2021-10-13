@@ -57,8 +57,8 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateElectricEquipment(ElectricEquipment& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::ElectricEquipment);
-    m_idfObjects.push_back(idfObject);
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricEquipment, modelObject);
 
     for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
@@ -66,26 +66,13 @@ namespace energyplus {
 
     ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
 
-    idfObject.setString(ElectricEquipmentFields::Name, modelObject.name().get());
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      if (m_excludeSpaceTranslation) {
-        boost::optional<ThermalZone> thermalZone = space->thermalZone();
-        if (thermalZone) {
-          idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
-        }
-      } else {
-        idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, space->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, spaceType->name().get());
-    }
-
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(ElectricEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(ElectricEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(ElectricEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());

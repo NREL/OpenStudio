@@ -58,6 +58,16 @@
 #include "../model/ShadingControl_Impl.hpp"
 #include "../model/AdditionalProperties.hpp"
 #include "../model/ConcreteModelObjects.hpp"
+#include "../model/SpaceLoad.hpp"
+#include "../model/SpaceLoad_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/SpaceInfiltrationFlowCoefficient.hpp"
+#include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -84,9 +94,9 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
-#include <thread>
-
+#include <algorithm>
 #include <sstream>
+#include <thread>
 
 using namespace openstudio::model;
 
@@ -112,6 +122,9 @@ namespace energyplus {
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
+
+    // When m_excludeSpaceTranslation is false, could we skip the (expensive) clone since we aren't combining spaces?
+    // No, we are still doing stuff like removing orphan loads, spaces not part of a thermal zone, etc
     Model modelCopy = model.clone(true).cast<Model>();
 
     m_progressBar = progressBar;
@@ -183,6 +196,34 @@ namespace energyplus {
   void ForwardTranslator::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
     m_excludeSpaceTranslation = excludeSpaceTranslation;
   }
+
+  // Figure out which object
+  // * If the load is assigned to a space,
+  //     * m_excludeSpaceTranslation = true: translate and return the IdfObject for the Zone
+  //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
+  // * If the load is assigned to a spaceType:
+  //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
+  IdfObject ForwardTranslator::getSpaceLoadParent(model::SpaceLoadInstance& sp) {
+
+    OptionalIdfObject relatedIdfObject;
+
+    if (boost::optional<Space> space_ = sp.space()) {
+      if (m_excludeSpaceTranslation) {
+        if (auto thermalZone_ = space_->thermalZone()) {
+          relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
+        } else {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
+        }
+      } else {
+        relatedIdfObject = translateAndMapModelObject(space_.get());
+      }
+    } else if (boost::optional<SpaceType> spaceType_ = sp.spaceType()) {
+      relatedIdfObject = translateAndMapModelObject(spaceType_.get());
+    }
+
+    OS_ASSERT(relatedIdfObject);
+    return relatedIdfObject.get();
+  };
 
   Workspace ForwardTranslator::translateModelPrivate(model::Model& model, bool fullModelTranslation) {
     reset();
@@ -277,6 +318,37 @@ namespace energyplus {
       // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
       for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
         thermalZone.combineSpaces();
+      }
+    } else {
+      // We're going to have a bunch of troubles with the SpaceInfiltration objects as they cannot live on a Space in E+, they are on the zone
+      // So we do the same as combineSpaces but only for those infiltration objects: we hard apply them to each individual space, then remove the
+      // spacetype ones to be safe (make 100% sure they won't get translated)
+      // TODO: Technically we could just find a smart way to convert the SpaceInfiltration:DesignFlowRate object to a Flow / Zone and use a ZoneList,
+      // but it gets complicated with little benefit, so not doing it for now
+      for (auto& sp : model.getConcreteModelObjects<SpaceType>()) {
+        auto spi = sp.spaceInfiltrationDesignFlowRates();
+        auto spiel = sp.spaceInfiltrationEffectiveLeakageAreas();
+        auto spifc = sp.spaceInfiltrationFlowCoefficients();
+        std::vector<SpaceLoad> infiltrations;
+        infiltrations.reserve(spi.size() + spiel.size() + spifc.size());
+        infiltrations.insert(infiltrations.end(), spi.begin(), spi.end());
+        infiltrations.insert(infiltrations.end(), spiel.begin(), spiel.end());
+        infiltrations.insert(infiltrations.end(), spifc.begin(), spifc.end());
+        for (auto& infil : infiltrations) {
+          for (auto& space : sp.spaces()) {
+            auto infilClone = infil.clone(model).cast<SpaceLoad>();
+            infilClone.setParent(space);
+            infilClone.hardSize();
+          }
+          infil.remove();
+        }
+      }
+
+      // We also convert all SpaceInfiltrationDesignFlowRate objects to Flow/Space (Flow/Zone) because these may not be absolute
+      for (auto& infil : model.getConcreteModelObjects<SpaceInfiltrationDesignFlowRate>()) {
+        // TODO: technically we only need to do that if the space it's assigned to is part of a thermalzone with more than one space
+        // Same reason as above: not doing it for now
+        infil.hardSize();
       }
     }
 
@@ -471,22 +543,25 @@ namespace energyplus {
       translateAndMapModelObject(*runPeriod);
 
       // ensure that output table summary reports exists
-      boost::optional<model::OutputTableSummaryReports> optOutputTableSummaryReports =
-        model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
-      if (!optOutputTableSummaryReports) {
-        OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
-        outputTableSummaryReports.addSummaryReport("AllSummary");
-        translateAndMapModelObject(outputTableSummaryReports);
+      // If the user manually added an OutputTableSummaryReports, but he also opted-in to exclude it on the FT, which decision do we keep?
+      // Given that it's a much harder to set the option on the FT, I'll respect that one
+      if (!m_excludeHTMLOutputReport) {
+        auto optOutputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
+        // Add default one if none explicitly specified
+        if (!optOutputTableSummaryReports) {
+          auto outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
+          outputTableSummaryReports.addSummaryReport("AllSummary");
+          translateAndMapModelObject(outputTableSummaryReports);
+        }
       }
 
       // add a global geometry rules object
-      IdfObject globalGeometryRules(openstudio::IddObjectType::GlobalGeometryRules);
+      auto& globalGeometryRules = m_idfObjects.emplace_back(openstudio::IddObjectType::GlobalGeometryRules);
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::VertexEntryDirection, "Counterclockwise");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::CoordinateSystem, "Relative");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
       globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
-      m_idfObjects.push_back(globalGeometryRules);
 
       // create meters for utility bill objects
       std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
@@ -3080,6 +3155,7 @@ namespace energyplus {
   }
 
   std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslate() {
+    // TODO: avoid the call to iddObjectsToTranslateInitializer with the ton of push_backs
     static const std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
     return result;
   }
@@ -4205,23 +4281,21 @@ namespace energyplus {
     }
 
     // ensure at least one life cycle cost exists to prevent crash in E+ 8
-    unsigned numCosts = 0;
-    for (const IdfObject& object : m_idfObjects) {
-      if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost) {
-        numCosts += 1;
-      } else if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_RecurringCosts) {
-        numCosts += 1;
-      }
-    }
-    if (numCosts == 0) {
-      // add default cost
-      IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
-      m_idfObjects.push_back(idfObject);
+    if (!m_excludeLCCObjects) {
+      bool hasAtLeastOneCost = std::any_of(m_idfObjects.cbegin(), m_idfObjects.cend(), [](const auto& obj) {
+        auto iddObjType = obj.iddObject().type();
+        return (iddObjType == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost)
+               || (iddObjType == openstudio::IddObjectType::LifeCycleCost_RecurringCosts);
+      });
 
-      idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
-      idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
-      idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
-      idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+      if (!hasAtLeastOneCost) {
+        // add default cost
+        auto& idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
+        idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
+        idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
+        idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
+        idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+      }
     }
   }
 

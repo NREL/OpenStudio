@@ -83,6 +83,13 @@ namespace energyplus {
     // Pre-process:
     // (1) assign to zone; (2) connect the supply air node (3) apply contraints
     // ITE object that is assigned to space type in OS has been switched to separate spaces in ForwardTranslator
+
+    // TODO: There might be work to be done in the case we translate to E+ Spaces (m_excludeSpaceTranslation = false)
+    // Per IDD for this ITE object: ZoneList and SpaceList names are not allowed.
+    // But Spaces are allowed. Currently in the ForwardTranslator::translateModelPrivate we have rules to "hard-apply" ITE equipment assigned at
+    // spacetype-level to each spaces (clone for each space, then remove the SpaceType one)
+    // cf https://github.com/NREL/OpenStudio/blob/bf4ffc49d5947f74b139efa5fb1dffec9b1fb013/src/energyplus/ForwardTranslator.cpp#L323-L341
+
     boost::optional<Space> space = modelObject.space();
     if (space) {
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
