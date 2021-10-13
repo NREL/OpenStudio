@@ -69,7 +69,14 @@ namespace energyplus {
         idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, thermalZone->name().get());
       }
     } else if (spaceType) {
-      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, spaceType->name().get());
+      // TODO: This field is called 'ZoneName' and not 'ZoneorZoneListName'. It **DOES NOT** accept a Zone List
+      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, zoneListNameForSpaceType(spaceType.get()));
+      OS_ASSERT(false);
+    } else {
+      // Note: a warning will be issued higher up already
+      // Object of type 'OS:SpaceInfiltration:EffectiveLeakageArea' and named 'My Infiltration' is not associated with a Space or SpaceType, it will not be translated.
+      LOG(Warn, modelObject.briefDescription() << " has neither a Space nor a SpaceType attached, it will not be translated.");
+      return boost::none;
     }
 
     boost::optional<Schedule> schedule = modelObject.schedule();

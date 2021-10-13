@@ -291,7 +291,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
 
   // When excluding space translation (historical behavior)
   {
-    // ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeSpaceTranslation(true);
 
     Workspace w = ft.translateModel(m);
     auto ds = w.getObjectsByType(IddObjectType::Daylighting_Controls);
@@ -348,6 +348,76 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
     {
       auto wRefSpace3_ = w.getObjectByTypeAndName(IddObjectType::Daylighting_ReferencePoint, dSpace3.nameString());
       ASSERT_TRUE(wRefSpace3_);
+      EXPECT_EQ(z.nameString(), wRefSpace3_->getString(Daylighting_ReferencePointFields::ZoneorSpaceName).get());
+      EXPECT_EQ(2 * width + xPosSpace3, wRefSpace3_->getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint).get());
+      EXPECT_EQ(yPosSpace3, wRefSpace3_->getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint).get());
+      EXPECT_EQ(zPosSpace3, wRefSpace3_->getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint).get());
+    }
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  // TODO: given the current API of DaylightingControls in OS, we cannot translate the DaylightingControls to individual Spaces, so we do exactly the
+  // same thing as before: we place them for the Zone itself
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace w = ft.translateModel(m);
+    auto ds = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+    ASSERT_EQ(1, ds.size());
+    auto d = ds[0];
+    // High level info is populated from the **Primary** control + fields on ThermalZone
+    EXPECT_EQ(z.nameString(), d.getString(Daylighting_ControlsFields::ZoneorSpaceName).get());  // TODO: this is the **Zone** name for now
+    EXPECT_TRUE(d.isEmpty(Daylighting_ControlsFields::DaylightingMethod));
+    EXPECT_EQ(alwaysOn.nameString(), d.getString(Daylighting_ControlsFields::AvailabilityScheduleName).get());
+    EXPECT_EQ(dSpace2.lightingControlType(), d.getString(Daylighting_ControlsFields::LightingControlType).get());
+    EXPECT_EQ(dSpace2.minimumInputPowerFractionforContinuousDimmingControl(),
+              d.getDouble(Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousorContinuousOffDimmingControl).get());
+    EXPECT_EQ(dSpace2.minimumLightOutputFractionforContinuousDimmingControl(),
+              d.getDouble(Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousorContinuousOffDimmingControl).get());
+    EXPECT_EQ(dSpace2.numberofSteppedControlSteps(), d.getInt(Daylighting_ControlsFields::NumberofSteppedControlSteps).get());
+    EXPECT_EQ(dSpace2.probabilityLightingwillbeResetWhenNeededinManualSteppedControl(),
+              d.getDouble(Daylighting_ControlsFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl).get());
+
+    EXPECT_EQ(dSpace2.nameString(), d.getString(Daylighting_ControlsFields::GlareCalculationDaylightingReferencePointName).get());
+
+    EXPECT_EQ(-dSpace2.phiRotationAroundZAxis(),
+              d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
+    EXPECT_EQ(dSpace2.maximumAllowableDiscomfortGlareIndex(), d.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex).get());
+    EXPECT_TRUE(d.isEmpty(Daylighting_ControlsFields::DaylightingMethod));
+    EXPECT_TRUE(d.isEmpty(Daylighting_ControlsFields::DElightGriddingResolution));
+
+    ASSERT_EQ(2, d.numExtensibleGroups());
+    {
+      auto eg1 = d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      EXPECT_EQ(dSpace2.nameString(), eg1.getString(Daylighting_ControlsExtensibleFields::DaylightingReferencePointName).get());
+      EXPECT_EQ(z.fractionofZoneControlledbyPrimaryDaylightingControl(),
+                eg1.getDouble(Daylighting_ControlsExtensibleFields::FractionofLightsControlledbyReferencePoint).get());
+      EXPECT_EQ(dSpace2.illuminanceSetpoint(), eg1.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint).get());
+    }
+
+    {
+      auto eg2 = d.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      EXPECT_EQ(dSpace3.nameString(), eg2.getString(Daylighting_ControlsExtensibleFields::DaylightingReferencePointName).get());
+      EXPECT_EQ(z.fractionofZoneControlledbySecondaryDaylightingControl(),
+                eg2.getDouble(Daylighting_ControlsExtensibleFields::FractionofLightsControlledbyReferencePoint).get());
+      EXPECT_EQ(dSpace3.illuminanceSetpoint(), eg2.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint).get());
+    }
+
+    EXPECT_EQ(2, w.getObjectsByType(IddObjectType::Daylighting_ReferencePoint).size());
+
+    {
+      auto wRefSpace2_ = w.getObjectByTypeAndName(IddObjectType::Daylighting_ReferencePoint, dSpace2.nameString());
+      ASSERT_TRUE(wRefSpace2_);
+      // TODO: this is the **Zone** name for now
+      EXPECT_EQ(z.nameString(), wRefSpace2_->getString(Daylighting_ReferencePointFields::ZoneorSpaceName).get());
+      EXPECT_EQ(width + xPosSpace2, wRefSpace2_->getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint).get());
+      EXPECT_EQ(yPosSpace2, wRefSpace2_->getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint).get());
+      EXPECT_EQ(zPosSpace2, wRefSpace2_->getDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint).get());
+    }
+    {
+      auto wRefSpace3_ = w.getObjectByTypeAndName(IddObjectType::Daylighting_ReferencePoint, dSpace3.nameString());
+      ASSERT_TRUE(wRefSpace3_);
+      // TODO: this is the **Zone** name for now
       EXPECT_EQ(z.nameString(), wRefSpace3_->getString(Daylighting_ReferencePointFields::ZoneorSpaceName).get());
       EXPECT_EQ(2 * width + xPosSpace3, wRefSpace3_->getDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint).get());
       EXPECT_EQ(yPosSpace3, wRefSpace3_->getDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint).get());

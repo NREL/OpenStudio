@@ -70,56 +70,58 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSpace(model::Space& modelObject) {
 
-    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+    for (LifeCycleCost& lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
     }
 
     if (m_excludeSpaceTranslation) {
       return boost::none;
-    } else {
-      // Space
-      IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
-
-      if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
-        idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
-      }
-
-      idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
-
-      if (boost::optional<SpaceType> spaceType = modelObject.spaceType()) {
-        idfObject.setString(SpaceFields::SpaceType, spaceType->name().get());
-      }
-
-      // Translate all Space-specific loads (and geometry children)
-      auto translateSpaceLoads = [this](auto loads) {
-        std::sort(loads.begin(), loads.end(), WorkspaceObjectNameLess());
-        for (auto& load : loads) {
-          translateAndMapModelObject(load);
-        }
-      };
-
-      translateSpaceLoads(modelObject.shadingSurfaceGroups());
-      translateSpaceLoads(modelObject.interiorPartitionSurfaceGroups());
-      translateSpaceLoads(modelObject.surfaces());
-
-      translateSpaceLoads(modelObject.internalMass());
-      translateSpaceLoads(modelObject.lights());
-      translateSpaceLoads(modelObject.luminaires());
-      translateSpaceLoads(modelObject.people());
-      translateSpaceLoads(modelObject.electricEquipment());
-      translateSpaceLoads(modelObject.electricEquipmentITEAirCooled());
-      translateSpaceLoads(modelObject.gasEquipment());
-      translateSpaceLoads(modelObject.hotWaterEquipment());
-      translateSpaceLoads(modelObject.steamEquipment());
-      translateSpaceLoads(modelObject.otherEquipment());
-
-      // TODO: Technically this stuff maps to a thermal zone, always (can't map to a Space/SpaceList)
-      translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
-      translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
-      translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
-
-      return boost::optional<IdfObject>(idfObject);
     }
+
+    // Space
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
+
+    if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
+      idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
+    }
+
+    idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
+
+    if (boost::optional<SpaceType> spaceType_ = modelObject.spaceType()) {
+      if (auto idf_spaceType_ = translateAndMapModelObject(spaceType_.get())) {
+        idfObject.setString(SpaceFields::SpaceType, idf_spaceType_->nameString());
+      }
+    }
+
+    // Translate all Space-specific loads (and geometry children)
+    auto translateSpaceLoads = [this](auto loads) {
+      std::sort(loads.begin(), loads.end(), WorkspaceObjectNameLess());
+      for (auto& load : loads) {
+        translateAndMapModelObject(load);
+      }
+    };
+
+    translateSpaceLoads(modelObject.shadingSurfaceGroups());
+    translateSpaceLoads(modelObject.interiorPartitionSurfaceGroups());
+    translateSpaceLoads(modelObject.surfaces());
+
+    translateSpaceLoads(modelObject.internalMass());
+    translateSpaceLoads(modelObject.lights());
+    translateSpaceLoads(modelObject.luminaires());
+    translateSpaceLoads(modelObject.people());
+    translateSpaceLoads(modelObject.electricEquipment());
+    translateSpaceLoads(modelObject.electricEquipmentITEAirCooled());
+    translateSpaceLoads(modelObject.gasEquipment());
+    translateSpaceLoads(modelObject.hotWaterEquipment());
+    translateSpaceLoads(modelObject.steamEquipment());
+    translateSpaceLoads(modelObject.otherEquipment());
+
+    // TODO: Technically this stuff maps to a thermal zone, always (can't map to a Space/SpaceList)
+    translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
+    translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
+    translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
+
+    return idfObject;
   }  // translate function
 
 }  // namespace energyplus

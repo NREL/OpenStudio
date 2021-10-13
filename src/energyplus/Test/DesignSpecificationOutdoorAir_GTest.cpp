@@ -60,9 +60,11 @@
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/DesignSpecification_OutdoorAir_FieldEnums.hxx>
+#include <utilities/idd/DesignSpecification_OutdoorAir_SpaceList_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/ZoneVentilation_DesignFlowRate_FieldEnums.hxx>
 #include <utilities/idd/People_FieldEnums.hxx>
+#include <utilities/idd/SpaceList_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -289,15 +291,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
   ForwardTranslator ft;
   // When excluding space translation (historical behavior)
   {
-    // ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeSpaceTranslation(true);
 
     Workspace w = ft.translateModel(m);
 
     ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Zone).size());
     ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Sizing_Zone).size());
-    //EXPECT_EQ(0, w.getObjectsByType(IddObjectType::Space).size());
-    //EXPECT_EQ(0, w.getObjectsByType(IddObjectType::SpaceList).size());
-    //EXPECT_EQ(0, w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir_SpaceList).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::SpaceList).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir_SpaceList).size());
 
     auto peoples = w.getObjectsByType(IddObjectType::People);
     ASSERT_EQ(3, peoples.size());
@@ -352,6 +354,173 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
       {"Flow/Zone", ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 1.35},
       {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.001},
       {"Flow/Person", ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.01}};
+    auto checkZv = [&zvs, zoneName = z.nameString()](const std::string& method, unsigned int index, double value) -> void {
+      auto it = std::find_if(zvs.cbegin(), zvs.cend(), [&method](const auto& zv) -> bool {
+        EXPECT_TRUE(zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, false, true));
+        return openstudio::istringEqual(method, zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+      });
+      ASSERT_NE(zvs.cend(), it) << "Cannot find the ZoneVentilation:DesignFlowRate object with method '" << method << "'.";
+      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName).get());
+      ASSERT_TRUE(it->getDouble(index));
+      EXPECT_DOUBLE_EQ(value, it->getDouble(index).get()) << "Failed for " << method;
+    };
+    for (auto& [method, index, value] : expectedZvs) {
+      checkZv(method, index, value);
+    }
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(1, w.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1, w.getObjectsByType(IddObjectType::Sizing_Zone).size());
+    EXPECT_EQ(4, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
+    EXPECT_EQ(4, w.getObjectsByType(IddObjectType::ZoneVentilation_DesignFlowRate).size());
+
+    auto space1_ = w.getObjectByTypeAndName(IddObjectType::Space, space1.nameString());
+    ASSERT_TRUE(space1_);
+    auto space2_ = w.getObjectByTypeAndName(IddObjectType::Space, space2.nameString());
+    ASSERT_TRUE(space2_);
+    auto space3_ = w.getObjectByTypeAndName(IddObjectType::Space, space3.nameString());
+    ASSERT_TRUE(space3_);
+    auto space4_ = w.getObjectByTypeAndName(IddObjectType::Space, space4.nameString());
+    ASSERT_TRUE(space4_);
+
+    auto officeSpaceType_ = w.getObjectByTypeAndName(IddObjectType::SpaceList, officeSpaceType.nameString());
+    ASSERT_TRUE(officeSpaceType_);
+    {
+      ASSERT_EQ(2, officeSpaceType_->numExtensibleGroups());
+      EXPECT_EQ(space1_.get(),
+                officeSpaceType_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
+      EXPECT_EQ(space2_.get(),
+                officeSpaceType_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
+    }
+
+    auto buildingSpaceType_ = w.getObjectByTypeAndName(IddObjectType::SpaceList, buildingSpaceType.nameString());
+    ASSERT_TRUE(buildingSpaceType_);
+    {
+      ASSERT_EQ(2, buildingSpaceType_->numExtensibleGroups());
+      EXPECT_EQ(space3_.get(),
+                buildingSpaceType_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
+      EXPECT_EQ(space4_.get(),
+                buildingSpaceType_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
+    }
+
+    auto peoples = w.getObjectsByType(IddObjectType::People);
+    ASSERT_EQ(2, peoples.size());
+
+    auto peopleSpace1_ = w.getObjectByTypeAndName(IddObjectType::People, space1P.nameString());
+    ASSERT_TRUE(peopleSpace1_);
+    ASSERT_TRUE(peopleSpace1_->getTarget(PeopleFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(space1_.get(), peopleSpace1_->getTarget(PeopleFields::ZoneorZoneListorSpaceorSpaceListName).get());
+    EXPECT_EQ("People", peopleSpace1_->getString(PeopleFields::NumberofPeopleCalculationMethod).get());
+    ASSERT_TRUE(peopleSpace1_->getDouble(PeopleFields::NumberofPeople));
+    EXPECT_EQ(10.0, peopleSpace1_->getDouble(PeopleFields::NumberofPeople).get());
+
+    auto peopleOffice_ = w.getObjectByTypeAndName(IddObjectType::People, officeP.nameString());
+    ASSERT_TRUE(peopleOffice_);
+    ASSERT_TRUE(peopleOffice_->getTarget(PeopleFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(officeSpaceType_.get(), peopleOffice_->getTarget(PeopleFields::ZoneorZoneListorSpaceorSpaceListName).get());
+    EXPECT_EQ("People/Area", peopleOffice_->getString(PeopleFields::NumberofPeopleCalculationMethod).get());
+    ASSERT_TRUE(peopleOffice_->getDouble(PeopleFields::PeopleperFloorArea));
+    EXPECT_EQ(0.1, peopleOffice_->getDouble(PeopleFields::PeopleperFloorArea).get());
+
+    double totPeople = 10.0 + spaceFloorArea * 2 * 0.1;
+    EXPECT_EQ(30.0, totPeople);
+
+    auto dsoa_spaceLists = w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
+    ASSERT_EQ(1, dsoa_spaceLists.size());
+    auto& dsoa_spaceList = dsoa_spaceLists[0];
+    ASSERT_EQ(4, dsoa_spaceList.numExtensibleGroups());
+
+    auto dsoas = w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir);
+    ASSERT_EQ(4, dsoas.size());
+    auto dsoaSpace1_ = w.getObjectByTypeAndName(IddObjectType::DesignSpecification_OutdoorAir, dsoaSpace1.nameString());
+    ASSERT_TRUE(dsoaSpace1_);
+    auto dsoaOffice_ = w.getObjectByTypeAndName(IddObjectType::DesignSpecification_OutdoorAir, dsoaOffice.nameString());
+    ASSERT_TRUE(dsoaOffice_);
+    auto dsoaSpace3_ = w.getObjectByTypeAndName(IddObjectType::DesignSpecification_OutdoorAir, dsoaSpace3.nameString());
+    ASSERT_TRUE(dsoaSpace3_);
+    auto dsoaBuilding_ = w.getObjectByTypeAndName(IddObjectType::DesignSpecification_OutdoorAir, dsoaBuilding.nameString());
+    ASSERT_TRUE(dsoaBuilding_);
+
+    {
+      auto eg = dsoa_spaceList.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName));
+      EXPECT_EQ(space1_.get(), eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName).get());
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName));
+      EXPECT_EQ(dsoaSpace1_.get(),
+                eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName).get());
+
+      auto dsoa = dsoaSpace1_.get();
+      EXPECT_EQ(dsoaSpace1.outdoorAirMethod(), dsoa.getString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod).get());
+      EXPECT_EQ(dsoaSpace1.outdoorAirFlowperPerson(), dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson).get());
+      EXPECT_EQ(dsoaSpace1.outdoorAirFlowperFloorArea(), dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea).get());
+      EXPECT_EQ(dsoaSpace1.outdoorAirFlowAirChangesperHour(),
+                dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour).get());
+    }
+    {
+      auto eg = dsoa_spaceList.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName));
+      EXPECT_EQ(space2_.get(), eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName).get());
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName));
+      EXPECT_EQ(dsoaOffice_.get(),
+                eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName).get());
+
+      auto dsoa = dsoaOffice_.get();
+      EXPECT_EQ(dsoaOffice.outdoorAirMethod(), dsoa.getString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod).get());
+      EXPECT_EQ(dsoaOffice.outdoorAirFlowperPerson(), dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson).get());
+      EXPECT_EQ(dsoaOffice.outdoorAirFlowperFloorArea(), dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea).get());
+      EXPECT_EQ(dsoaOffice.outdoorAirFlowAirChangesperHour(),
+                dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour).get());
+    }
+    {
+      auto eg = dsoa_spaceList.extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName));
+      EXPECT_EQ(space3_.get(), eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName).get());
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName));
+      EXPECT_EQ(dsoaSpace3_.get(),
+                eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName).get());
+
+      auto dsoa = dsoaSpace3_.get();
+      EXPECT_EQ(dsoaSpace3.outdoorAirMethod(), dsoa.getString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod).get());
+      EXPECT_EQ(dsoaSpace3.outdoorAirFlowperPerson(), dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson).get());
+      EXPECT_EQ(dsoaSpace3.outdoorAirFlowperFloorArea(), dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea).get());
+      EXPECT_EQ(dsoaSpace3.outdoorAirFlowAirChangesperHour(),
+                dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour).get());
+    }
+    {
+      auto eg = dsoa_spaceList.extensibleGroups()[3].cast<WorkspaceExtensibleGroup>();
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName));
+      EXPECT_EQ(space4_.get(), eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceName).get());
+      ASSERT_TRUE(eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName));
+      EXPECT_EQ(dsoaBuilding_.get(),
+                eg.getTarget(DesignSpecification_OutdoorAir_SpaceListExtensibleFields::SpaceDesignSpecificationOutdoorAirObjectName).get());
+
+      auto dsoa = dsoaBuilding_.get();
+      EXPECT_EQ(dsoaBuilding.outdoorAirMethod(), dsoa.getString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod).get());
+      EXPECT_EQ(dsoaBuilding.outdoorAirFlowperPerson(), dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson).get());
+      EXPECT_EQ(dsoaBuilding.outdoorAirFlowperFloorArea(),
+                dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea).get());
+      EXPECT_EQ(dsoaBuilding.outdoorAirFlowAirChangesperHour(),
+                dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour).get());
+    }
+
+    auto sizingZone = w.getObjectsByType(IddObjectType::Sizing_Zone)[0];
+    ASSERT_TRUE(sizingZone.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName));
+    EXPECT_EQ(dsoa_spaceList, sizingZone.getTarget(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName).get());
+
+    auto zvs = w.getObjectsByType(IddObjectType::ZoneVentilation_DesignFlowRate);
+    ASSERT_EQ(4, zvs.size());
+    std::vector<std::tuple<std::string, unsigned int, double>> expectedZvs{
+      {"AirChanges/Hour", ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.125},    // 0.5 * 360 / (4*360) = 0.125
+      {"Flow/Zone", ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.75},              // 0.65 + 0.1
+      {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0025},  // 0.004*100 + 0.006*100 / (4 * 100) = 0.0025
+      {"Flow/Person", ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.01}};        // 0.015 * 20 + 10*0.00/ 30 = 0.01
     auto checkZv = [&zvs, zoneName = z.nameString()](const std::string& method, unsigned int index, double value) -> void {
       auto it = std::find_if(zvs.cbegin(), zvs.cend(), [&method](const auto& zv) -> bool {
         EXPECT_TRUE(zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, false, true));

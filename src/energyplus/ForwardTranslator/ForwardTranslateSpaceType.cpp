@@ -69,20 +69,37 @@ namespace openstudio {
 
 namespace energyplus {
 
+  std::string ForwardTranslator::zoneListNameForSpaceType(const SpaceType& modelObject) const {
+    if (m_excludeSpaceTranslation) {
+      return modelObject.nameString();
+    } else {
+      return modelObject.nameString() + " ZoneList";
+    }
+  }
+
   boost::optional<IdfObject> ForwardTranslator::translateSpaceType(SpaceType& modelObject) {
     std::vector<Space> spaces = modelObject.spaces();
 
     // check if this is a dummy space type meant to prevent inheriting building space type
-    std::vector<ModelObject> children = modelObject.children();
-    if (children.empty()) {
-      LOG(Info, "SpaceType " << modelObject.name().get() << " has no children, it will not be translated");
-      return boost::none;
+    // TODO: why is that needed in the first place? Also, children() doesn't include DesignSpecificationOutdoorAir!
+    if (m_excludeSpaceTranslation) {
+      std::vector<ModelObject> children = modelObject.children();
+      if (children.empty()) {
+        LOG(Info, "SpaceType " << modelObject.name().get() << " has no children, it will not be translated");
+        return boost::none;
+      }
     }
 
     OptionalIdfObject idfObject;
-    if (m_excludeSpaceTranslation) {
 
-      idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
+    auto makeZoneList = [this, &modelObject, &spaces](bool registerIt) -> IdfObject {
+      boost::optional<IdfObject> idfObject;
+      if (registerIt) {
+        idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
+      } else {
+        idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::ZoneList);
+      }
+      idfObject->setName(zoneListNameForSpaceType(modelObject));
 
       // Unique zone names
       std::set<std::string> zoneNames;
@@ -97,6 +114,13 @@ namespace energyplus {
         idfObject->pushExtensibleGroup(std::vector<std::string>(1, zoneName));
       }
 
+      return idfObject.get();
+    };
+
+    if (m_excludeSpaceTranslation) {
+
+      idfObject = makeZoneList(true);
+
     } else {
 
       idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SpaceList, modelObject);
@@ -105,6 +129,14 @@ namespace energyplus {
       idfObject->clearExtensibleGroups();
       for (const auto& s : spaces) {
         idfObject->pushExtensibleGroup(std::vector<std::string>(1, s.nameString()));
+      }
+
+      // Infiltration objects are Space-level in OS, but they are Zone-Level in E+, so we'll **ALSO** need a ZoneList for it...
+      bool hasAnyInfiltration = (!modelObject.spaceInfiltrationDesignFlowRates().empty() || !modelObject.spaceInfiltrationFlowCoefficients().empty()
+                                 || !modelObject.spaceInfiltrationEffectiveLeakageAreas().empty());
+
+      if (hasAnyInfiltration) {
+        makeZoneList(false);
       }
     }
 
@@ -127,10 +159,13 @@ namespace energyplus {
     translateSpaceLoads(modelObject.steamEquipment());
     translateSpaceLoads(modelObject.otherEquipment());
 
-    // TODO: Technically this stuff maps to a thermal zone, always (can't map to a Space/SpaceList)
-    translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
-    translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
-    translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
+    // in translateModelPrivate, we have hard assigned the infiltration objects to each Space.
+    // In E+ these objects are Zone objects, they do not accept Space
+    // Technically this one accepts a Zone or ZoneList
+    // translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
+    // These two DO NOT ACCEPT a ZoneList, only a Zone
+    // translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
+    // translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
 
     return idfObject;
   }

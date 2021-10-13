@@ -58,7 +58,16 @@
 #include "../model/ShadingControl_Impl.hpp"
 #include "../model/AdditionalProperties.hpp"
 #include "../model/ConcreteModelObjects.hpp"
+#include "../model/SpaceLoad.hpp"
+#include "../model/SpaceLoad_Impl.hpp"
 #include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/SpaceInfiltrationFlowCoefficient.hpp"
+#include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -198,18 +207,18 @@ namespace energyplus {
 
     OptionalIdfObject relatedIdfObject;
 
-    if (boost::optional<Space> space = sp.space()) {
+    if (boost::optional<Space> space_ = sp.space()) {
       if (m_excludeSpaceTranslation) {
-        if (auto thermalZone_ = space->thermalZone()) {
+        if (auto thermalZone_ = space_->thermalZone()) {
           relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
         } else {
           OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
         }
       } else {
-        relatedIdfObject = translateAndMapModelObject(*space);
+        relatedIdfObject = translateAndMapModelObject(space_.get());
       }
-    } else if (boost::optional<SpaceType> spaceType = sp.spaceType()) {
-      relatedIdfObject = translateAndMapModelObject(*spaceType);
+    } else if (boost::optional<SpaceType> spaceType_ = sp.spaceType()) {
+      relatedIdfObject = translateAndMapModelObject(spaceType_.get());
     }
 
     OS_ASSERT(relatedIdfObject);
@@ -309,6 +318,37 @@ namespace energyplus {
       // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
       for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
         thermalZone.combineSpaces();
+      }
+    } else {
+      // We're going to have a bunch of troubles with the SpaceInfiltration objects as they cannot live on a Space in E+, they are on the zone
+      // So we do the same as combineSpaces but only for those infiltration objects: we hard apply them to each individual space, then remove the
+      // spacetype ones to be safe (make 100% sure they won't get translated)
+      // TODO: Technically we could just find a smart way to convert the SpaceInfiltration:DesignFlowRate object to a Flow / Zone and use a ZoneList,
+      // but it gets complicated with little benefit, so not doing it for now
+      for (auto& sp : model.getConcreteModelObjects<SpaceType>()) {
+        auto spi = sp.spaceInfiltrationDesignFlowRates();
+        auto spiel = sp.spaceInfiltrationEffectiveLeakageAreas();
+        auto spifc = sp.spaceInfiltrationFlowCoefficients();
+        std::vector<SpaceLoad> infiltrations;
+        infiltrations.reserve(spi.size() + spiel.size() + spifc.size());
+        infiltrations.insert(infiltrations.end(), spi.begin(), spi.end());
+        infiltrations.insert(infiltrations.end(), spiel.begin(), spiel.end());
+        infiltrations.insert(infiltrations.end(), spifc.begin(), spifc.end());
+        for (auto& infil : infiltrations) {
+          for (auto& space : sp.spaces()) {
+            auto infilClone = infil.clone(model).cast<SpaceLoad>();
+            infilClone.setParent(space);
+            infilClone.hardSize();
+          }
+          infil.remove();
+        }
+      }
+
+      // We also convert all SpaceInfiltrationDesignFlowRate objects to Flow/Space (Flow/Zone) because these may not be absolute
+      for (auto& infil : model.getConcreteModelObjects<SpaceInfiltrationDesignFlowRate>()) {
+        // TODO: technically we only need to do that if the space it's assigned to is part of a thermalzone with more than one space
+        // Same reason as above: not doing it for now
+        infil.hardSize();
       }
     }
 

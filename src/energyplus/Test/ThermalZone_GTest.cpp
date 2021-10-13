@@ -310,7 +310,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_Buildi
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
     EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_DifferentSpaceType) {
@@ -372,7 +371,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Differ
     EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
     EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Building_DifferentSpaceType) {
@@ -558,7 +556,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Space).size());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building_SameSpaceType) {
@@ -611,7 +608,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Space).size());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building) {
@@ -663,7 +659,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Space).size());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_3Zone_2Spaces) {
@@ -740,7 +735,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_3Zone_2Spaces) {
     EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::Lights).size());
     EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::Space).size());
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedules) {
@@ -936,7 +930,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSch
       EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName)) << workspaceObject;
     }
   }
-
 }
 
 /* Tests that the illuminance setpoint is set even if it is defaulted (ref #2849) */
@@ -1013,7 +1006,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_Daylighting) {
     forwardTranslator.setExcludeSpaceTranslation(false);
     translateAndAssert();
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_LoadDistributionScheme) {
@@ -1073,7 +1065,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LoadDistributionScheme) {
     forwardTranslator.setExcludeSpaceTranslation(false);
     translateAndAssert();
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneControlThermostat) {
