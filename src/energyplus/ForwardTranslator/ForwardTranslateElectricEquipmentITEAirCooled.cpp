@@ -132,25 +132,6 @@ namespace energyplus {
       }
     }
 
-    /*
-    // apply contraint #1: For multiple ITE objects defined for one zone, the same calculation method should apply.
-    ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = space.electricEquipmentITEAirCooled();
-    std::string thisMethod = definition.airFlowCalculationMethod();
-    std::sort(electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end(), WorkspaceObjectNameLess());
-    for (ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled) {
-      if (istringEqual(thisMethod, iTequipment.electricEquipmentITEAirCooledDefinition().airFlowCalculationMethod())) {
-        // do nothing
-      } else {
-        // if different calculation methods are assigned, all change to FlowControlWithApproachTemperatures
-        if (!istringEqual(thisMethod, "FlowControlWithApproachTemperatures")) {
-          definition.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures");
-          LOG(Warn, space.briefDescription() << " has multiple IT equipment with different air flow calculation methods, "
-                                             << modelObject.briefDescription() << " is re-assigned to 'FlowControlWithApproachTemperatures'");
-        }
-      }
-    }
-    */
-
     // (Note: I like the idea of having put the logic here, but it would be more efficient to do that in ForwardTranslateThermalZone (or
     // translateModelPrivate) to avoid doing it on every instance of a zone)
     // apply constraint #1: For multiple ITE objects defined for one zone, the same calculation method should apply.
