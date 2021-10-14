@@ -1099,3 +1099,51 @@ TEST(Filetypes, RunOptions) {
   EXPECT_EQ("my_ruby_file.rb", workflow2->runOptions()->customOutputAdapter()->customFileName());
   EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
 }
+
+
+ TEST(Filetypes, RunOptions_ForwardTranslate) {
+   WorkflowJSON workflow;
+
+   EXPECT_FALSE(workflow.runOptions());
+
+   CustomOutputAdapter adapter("my_ruby_file.rb", "MyOutputAdapter", "{}");
+
+   RunOptions options;
+   options.setDebug(true);
+   options.setEpjson(true);
+   options.setCustomOutputAdapter(adapter);
+
+   std::string ft_options = "\"ft_options\": {"
+         "\"runcontrolspecialdays\": true,"
+         "\"ip_tabular_output\": true,"
+         "\"lifecyclecosts\": true,"
+         "\"sqlite_output\": true,"
+         "\"html_output\": true,"
+         "\"variable_dictionary\": true,"
+         "\"space_translation\": true";
+
+   options.setForwardTranslateOptions(ft_options);
+
+   workflow.setRunOptions(options);
+
+   ASSERT_TRUE(workflow.runOptions());
+   EXPECT_TRUE(workflow.runOptions()->debug());
+   EXPECT_TRUE(workflow.runOptions()->epjson());
+   ASSERT_TRUE(workflow.runOptions()->customOutputAdapter());
+   EXPECT_EQ(ft_options, workflow.runOptions()->forwardTranslateOptions());
+   EXPECT_EQ("my_ruby_file.rb", workflow.runOptions()->customOutputAdapter()->customFileName());
+   EXPECT_EQ("MyOutputAdapter", workflow.runOptions()->customOutputAdapter()->className());
+
+   std::string s = workflow.string();
+
+   boost::optional<WorkflowJSON> workflow2 = WorkflowJSON::load(s);
+   ASSERT_TRUE(workflow2);
+
+   ASSERT_TRUE(workflow2->runOptions());
+   EXPECT_TRUE(workflow2->runOptions()->debug());
+   ASSERT_TRUE(workflow2->runOptions()->customOutputAdapter());
+   EXPECT_EQ("my_ruby_file.rb", workflow2->runOptions()->customOutputAdapter()->customFileName());
+   EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
+ }
+
+
