@@ -233,7 +233,7 @@ namespace detail {
     onUpdate();
   }
 
-  std::string  RunOptions_Impl::forwardTranslateOptions() const {
+  std::string RunOptions_Impl::forwardTranslateOptions() const {
     return m_forwardTranslateOptions;
   }
 
@@ -337,7 +337,6 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
     std::string optionString = Json::writeString(wbuilder, options);
 
     result->setForwardTranslateOptions(optionString);
-
   }
 
   return result;
@@ -364,12 +363,12 @@ bool RunOptions::epjson() const {
 }
 
 bool RunOptions::setEpjson(bool epjson) {
-   return getImpl<detail::RunOptions_Impl>()->setEpjson(epjson);
+  return getImpl<detail::RunOptions_Impl>()->setEpjson(epjson);
 }
 
 void RunOptions::resetEpjson() {
   getImpl<detail::RunOptions_Impl>()->resetEpjson();
- }
+}
 
 bool RunOptions::fast() const {
   return getImpl<detail::RunOptions_Impl>()->fast();
@@ -453,8 +452,6 @@ bool RunOptions::setForwardTranslateOptions(const std::string& options) {
 void RunOptions::resetForwardTranslateOptions() {
   getImpl<detail::RunOptions_Impl>()->resetForwardTranslateOptions();
 }
-
-
 
 std::ostream& operator<<(std::ostream& os, const RunOptions& runOptions) {
   os << runOptions.string();

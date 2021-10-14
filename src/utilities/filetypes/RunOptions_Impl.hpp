@@ -88,7 +88,6 @@ namespace detail {
     bool setForwardTranslateOptions(const std::string& options);
     void resetForwardTranslateOptions();
 
-
     // Emitted on any change
     Nano::Signal<void()> onChange;
 
