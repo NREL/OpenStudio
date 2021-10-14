@@ -70,7 +70,7 @@ namespace energyplus {
 
     idfObject.setString(PeopleFields::Name, modelObject.name().get());
 
-    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
     idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     if (boost::optional<Schedule> schedule = modelObject.numberofPeopleSchedule()) {

@@ -68,7 +68,7 @@ namespace energyplus {
 
     idfObject.setString(GasEquipmentFields::Name, modelObject.name().get());
 
-    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
     idfObject.setString(GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     if (boost::optional<Schedule> schedule = modelObject.schedule()) {
