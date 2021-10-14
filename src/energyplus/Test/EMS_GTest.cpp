@@ -859,6 +859,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   fanActuator.setName(actName);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   //expect a warning since there are 2 spaces with the same spaceType
