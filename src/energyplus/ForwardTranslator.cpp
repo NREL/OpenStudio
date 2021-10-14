@@ -203,7 +203,7 @@ namespace energyplus {
   //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
   // * If the load is assigned to a spaceType:
   //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
-  IdfObject ForwardTranslator::getSpaceLoadParent(model::SpaceLoadInstance& sp) {
+  IdfObject ForwardTranslator::getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType) {
 
     OptionalIdfObject relatedIdfObject;
 
@@ -218,7 +218,11 @@ namespace energyplus {
         relatedIdfObject = translateAndMapModelObject(space_.get());
       }
     } else if (boost::optional<SpaceType> spaceType_ = sp.spaceType()) {
-      relatedIdfObject = translateAndMapModelObject(spaceType_.get());
+      if (allowSpaceType) {
+        relatedIdfObject = translateAndMapModelObject(spaceType_.get());
+      } else {
+        OS_ASSERT(false);
+      }
     }
 
     OS_ASSERT(relatedIdfObject);
