@@ -856,10 +856,12 @@ namespace energyplus {
       }
 
       boost::optional<IdfObject> dsoaList;
+      bool needToRegisterDSOAList = false;
       if (!m_excludeSpaceTranslation && sizingZoneIdf) {
-        dsoaList = m_idfObjects.emplace_back(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
+        // DO not register it yet! E+ will crash if the DSOA Space List ends up empty
+        dsoaList = IdfObject(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
+        needToRegisterDSOAList = true;
         dsoaList->setName(tzName + " DSOA Space List");
-        sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaList->nameString());
       }
 
       // map the design specification outdoor air
@@ -885,6 +887,12 @@ namespace energyplus {
               // point the sizing object to the outdoor air spec
               sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir->nameString());
             } else {
+              if (needToRegisterDSOAList) {
+                m_idfObjects.emplace_back(dsoaList.get());
+                sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaList->nameString());
+                needToRegisterDSOAList = false;
+              }
+
               // push an extensible group on the DSOA:SpaceList
               dsoaList->pushExtensibleGroup(std::vector<std::string>{space.nameString(), thisDSOA->nameString()});
             }
