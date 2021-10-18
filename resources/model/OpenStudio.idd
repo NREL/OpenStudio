@@ -2010,6 +2010,7 @@ OS:SpaceType,
        \required-field
        \reference SpaceTypeNames
        \reference SpaceAndSpaceTypeNames
+       \reference SpaceAndSpaceGroupNames
   A3, \field Default Construction Set Name
        \type object-list
        \object-list DefaultConstructionSetNames
@@ -24942,7 +24943,7 @@ OS:Sizing:System,
        \maximum 1.0
        \minimum 0.0
        \autosizable
-       \note The Occupant Diversity is used to determine a multi-zone system's outdoor air intake when the System Outdoor Air Method is 
+       \note The Occupant Diversity is used to determine a multi-zone system's outdoor air intake when the System Outdoor Air Method is
        \note Standard62.1VentilationRateProcedure or the Standard62.1SimplifiedProcedure. If set to be autosized, it will be calculated
        \note using the information in the People objects assigned to each zone attached to this system/airloop.
        \required-field
@@ -25144,6 +25145,7 @@ OS:ThermalZone,
        \required-field
        \reference ThermalZoneNames
        \reference ConnectionObject
+       \reference SpaceAndSpaceGroupNames
   N1, \field Multiplier
        \type integer
        \minimum 1
