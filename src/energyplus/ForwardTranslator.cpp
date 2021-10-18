@@ -368,20 +368,6 @@ namespace energyplus {
         // Same reason as above: not doing it for now
         infil.hardSize();
       }
-
-      // TODO: temp workaround until we sort out the DaylightingControl situation: we just remove them
-      auto dayligthingControls = model.getConcreteModelObjects<DaylightingControl>();
-      auto illuminanceMaps = model.getConcreteModelObjects<IlluminanceMap>();
-      if (!dayligthingControls.empty() || !illuminanceMaps.empty()) {
-        LOG(Warn,
-            "You have opted-in to translate to E+ Spaces. Currently DaylightingControls and IlluminanceMaps are not supported and will be removed.");
-        for (auto& dayligthingControl : dayligthingControls) {
-          dayligthingControl.remove();
-        }
-        for (auto& illuminanceMap : illuminanceMaps) {
-          illuminanceMap.remove();
-        }
-      }
     }
 
     // remove unused space types

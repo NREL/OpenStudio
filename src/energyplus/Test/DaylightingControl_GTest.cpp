@@ -65,8 +65,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-constexpr static bool DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES = false;  // TODO!
-
 TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_NoZone) {
   Model model;
   ThermalZone thermalZone(model);
@@ -98,7 +96,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_OneControl) {
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
   }
 
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     forwardTranslator.setExcludeSpaceTranslation(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
@@ -126,7 +124,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_TwoControl) {
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
   }
 
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     forwardTranslator.setExcludeSpaceTranslation(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
@@ -161,7 +159,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
               idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
   }
 
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     ft.setExcludeSpaceTranslation(false);
 
     Workspace w = ft.translateModel(model);
@@ -188,7 +186,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
     EXPECT_EQ(315, idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
   }
 
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     ft.setExcludeSpaceTranslation(false);
 
     Workspace w = ft.translateModel(model);
@@ -227,7 +225,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
     EXPECT_EQ("", idf_d.getString(Daylighting_ControlsFields::AvailabilityScheduleName).get());
   }
 
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     forwardTranslator.setExcludeSpaceTranslation(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
@@ -253,7 +251,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
     EXPECT_EQ(schedule.nameString(), idf_d.getString(Daylighting_ControlsFields::AvailabilityScheduleName).get());
   }
 
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     forwardTranslator.setExcludeSpaceTranslation(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
@@ -435,7 +433,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
   // When including Space translation (new E+ 9.6.0)
   // TODO: given the current API of DaylightingControls in OS, we cannot translate the DaylightingControls to individual Spaces, so we do exactly the
   // same thing as before: we place them for the Zone itself
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     ft.setExcludeSpaceTranslation(false);
 
     Workspace w = ft.translateModel(m);
