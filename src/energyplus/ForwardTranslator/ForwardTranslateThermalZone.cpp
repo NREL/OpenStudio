@@ -955,7 +955,7 @@ namespace energyplus {
         auto& dsoaObject = m_idfObjects.emplace_back(IddObjectType::DesignSpecification_OutdoorAir);
 
         dsoaObject.setString(DesignSpecification_OutdoorAirFields::Name, modelObject.nameString() + " Zero air DSOA");
-        dsoaObject.setString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod, "Maximum");
+        dsoaObject.setString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod, "Sum");
         dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson, 0.0);
         dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea, 0.0);
         dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZone, 0.0);

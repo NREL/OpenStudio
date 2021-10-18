@@ -536,3 +536,102 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
     }
   }
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir_NoDSOA) {
+
+  // Controller:MechnicalVentilation: Design Specification Outdoor Air Object Name <x>
+  // > If this field is blank, the corresponding DesignSpecification:OutdoorAir object for the zone will come from
+  // > the DesignSpecification:OutdoorAir object referenced by the Sizing:Zone object for the same zone.
+  // > ***If no such zone match is found, default values from the IDD will be used for the DesignSpecification:OutdoorAir object
+  // > which is 0.0094 m3/s-person.***
+
+  Model m;
+
+  //            y (=North)
+  //   ▲
+  //   │                  building height = 3m
+  // 10├────────┼────────┤
+  //   │        │        │
+  //   │        │        │
+  //   │ Space 1│ Space 2│
+  //   │        │        │
+  //   └────────┴────────┴──► x
+  //  0        10       20
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.6;  // It's convenient for ACH, since 3600 s/hr
+  constexpr double spaceFloorArea = width * width;
+  constexpr double spaceVolume = spaceFloorArea * height;
+
+  // Counterclockwise points
+  std::vector<Point3d> floorPointsSpace1{{0.0, 0.0, 0.0}, {0.0, width, 0.0}, {width, width, 0.0}, {width, 0.0, 0.0}};
+
+  // 4 spaces in a zone
+  auto space1 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  auto space2 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  space2.setXOrigin(width);
+
+  EXPECT_EQ(spaceFloorArea, space1.floorArea());
+  EXPECT_EQ(spaceFloorArea, space2.floorArea());
+  EXPECT_EQ(spaceVolume, space1.volume());
+  EXPECT_EQ(spaceVolume, space2.volume());
+
+  ThermalZone z(m);
+  EXPECT_TRUE(space1.setThermalZone(z));
+  EXPECT_TRUE(space2.setThermalZone(z));
+
+  // We neeed at least one equipment (or useIdealAirLoads) AND a DesignDay, for the Sizing:Zone (and DSOA:SpaceList) to be translated
+  // Because we use IdealAirLoads, it also will create some ZoneVentilation:DesignFlowRate
+  // (because we use the HVACTemplate:Zone:IdealLoadsAirSystem and not the full IDF object)
+  EXPECT_TRUE(z.setUseIdealAirLoads(true));
+  DesignDay d(m);
+
+  ForwardTranslator ft;
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
+
+    Workspace w = ft.translateModel(m);
+
+    // In this case, ThermalZone::combineSpaces() already creates a DSOA with all zeroes
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Sizing_Zone).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::SpaceList).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir_SpaceList).size());
+
+    auto dsoas = w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir);
+    ASSERT_EQ(1, dsoas.size());
+    auto dsoa = dsoas[0];
+
+    EXPECT_EQ("Sum", dsoa.getString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZone).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace w = ft.translateModel(m);
+
+    // In this case, we manually still create an empty DSOA
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Sizing_Zone).size());
+    EXPECT_EQ(2, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::SpaceList).size());  // There are zero spaces types here!
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir_SpaceList).size());
+
+    auto dsoas = w.getObjectsByType(IddObjectType::DesignSpecification_OutdoorAir);
+    ASSERT_EQ(1, dsoas.size());
+    auto dsoa = dsoas[0];
+
+    EXPECT_EQ("Sum", dsoa.getString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZone).get());
+    EXPECT_EQ(0.0, dsoa.getDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour).get());
+  }
+}
