@@ -879,3 +879,42 @@ TEST_F(EnergyPlusFixture, ForwardTranslation_Options) {
     EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::OutputControl_Table_Style));
   }
 }
+
+TEST_F(EnergyPlusFixture, Ensure_Name_Unicity_ZoneAndZoneListAndSpaceAndSpaceListNames) {
+  // Starting in 9.6.0, Space and SpaceList are supported.
+  // Zone, ZoneList, Space, SpaceList all need to be unique names
+
+  Workspace w(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::Zone)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::ZoneList)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::Space)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::SpaceList)));
+
+  std::vector<WorkspaceObject> wos = w.objects();
+
+  EXPECT_EQ(4, wos.size());
+  EXPECT_EQ(4, w.getObjectsByReference("ZoneAndZoneListAndSpaceAndSpaceListNames").size());
+
+  std::vector<std::pair<size_t, size_t>> combinations{{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}};
+
+  auto resetNames = [&wos]() {
+    for (auto& wo : wos) {
+      wo.setName(wo.iddObject().name());
+    }
+  };
+
+  std::string name = "A Name";
+  for (auto& [i1, i2] : combinations) {
+    resetNames();  // Starting point: all names are unique
+    // We set two names: first one should work
+    auto s1_ = wos[i1].setName(name);
+    ASSERT_TRUE(s1_);
+    EXPECT_EQ(name, s1_.get());
+    // Second should be wodified to keep unicity of names
+    auto s2_ = wos[i2].setName(name);
+    ASSERT_TRUE(s2_);
+    EXPECT_NE(name, s2_.get());
+    EXPECT_NE(s1_.get(), s2_.get());
+    EXPECT_NE(wos[i1].nameString(), wos[i2].nameString());
+  }
+}
