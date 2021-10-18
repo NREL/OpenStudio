@@ -95,7 +95,7 @@ namespace energyplus {
       m_idfObjects.push_back(idfObject);
 
       if (construction) {
-        idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+        idfObject.setString(InternalMassFields::ConstructionName, construction->nameString());
       }
 
       double surfaceArea = 0;
@@ -123,25 +123,29 @@ namespace energyplus {
     } else {
 
       // create InternalMass object for each zone
-      for (Space space : spaces) {
+      for (const Space& space : spaces) {
 
         IdfObject idfObject(openstudio::IddObjectType::InternalMass);
 
         m_idfObjects.push_back(idfObject);
 
         if (prefixSpaceName) {
-          idfObject.setString(InternalMassFields::Name, space.name().get() + " " + modelObject.name().get());
+          idfObject.setString(InternalMassFields::Name, space.nameString() + " " + modelObject.nameString());
         } else {
-          idfObject.setString(InternalMassFields::Name, modelObject.name().get());
+          idfObject.setString(InternalMassFields::Name, modelObject.nameString());
         }
 
-        boost::optional<ThermalZone> thermalZone = space.thermalZone();
-        if (thermalZone) {
-          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
+        if (m_excludeSpaceTranslation) {
+          boost::optional<ThermalZone> thermalZone = space.thermalZone();
+          if (thermalZone) {
+            idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());
+          }
+        } else {
+          idfObject.setString(InternalMassFields::SpaceorSpaceListName, space.nameString());
         }
 
         if (construction) {
-          idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+          idfObject.setString(InternalMassFields::ConstructionName, construction->nameString());
         }
 
         double surfaceArea = 0;

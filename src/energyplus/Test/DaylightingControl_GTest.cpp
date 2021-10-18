@@ -311,6 +311,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
   EXPECT_TRUE(space2.setThermalZone(z));
   EXPECT_TRUE(space3.setThermalZone(z));
 
+  // NOTE: for this to work, we need to have matched surfaces! So we can replace the interior walls by ConstructionAirBoundary
+  space1.matchSurfaces(space2);
+  space2.matchSurfaces(space3);
+
   DaylightingControl dSpace2 = [&m, &space2, &z, &positionOfSensorInSpace2]() {
     DaylightingControl dSpace2(m);
     dSpace2.setName("Sensor Space 2");

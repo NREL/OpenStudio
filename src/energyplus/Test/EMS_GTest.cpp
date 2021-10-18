@@ -1894,7 +1894,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
   //expect no warning since we are using the zoneName API
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
 
   //expect 1 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
@@ -1981,7 +1983,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
 
     EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
     //expect no warning since we are using the zoneName API
-    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                                 {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                  "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
     //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
     EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -2231,7 +2235,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
   //expect no warning since we are using the zoneName API
-  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
 
   //expect 2 actuators
   //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD

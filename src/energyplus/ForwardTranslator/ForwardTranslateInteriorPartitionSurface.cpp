@@ -75,9 +75,9 @@ namespace energyplus {
 
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(InternalMassFields::Name, modelObject.name().get());
+    idfObject.setString(InternalMassFields::Name, modelObject.nameString());
 
-    idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+    idfObject.setString(InternalMassFields::ConstructionName, construction->nameString());
 
     // TODO: when m_excludeSpaceTranslation is false, should we write the `Space or SpaceList Name` field? (cf InternalMass too)
     double multiplier = 1.0;
@@ -86,9 +86,14 @@ namespace energyplus {
       multiplier = group->multiplier();
       boost::optional<Space> space = group->space();
       if (space) {
+
         boost::optional<ThermalZone> thermalZone = space->thermalZone();
         if (thermalZone) {
-          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
+          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());
+        }
+
+        if (!m_excludeSpaceTranslation) {
+          idfObject.setString(InternalMassFields::SpaceorSpaceListName, space->name().get());
         }
       }
     }
