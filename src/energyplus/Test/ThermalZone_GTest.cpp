@@ -1003,8 +1003,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_Daylighting) {
 
   // When including Space translation (new E+ 9.6.0)
   {
-    forwardTranslator.setExcludeSpaceTranslation(false);
-    translateAndAssert();
+    // TODO: DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES = false
+    // forwardTranslator.setExcludeSpaceTranslation(false);
+    // translateAndAssert();
   }
 }
 
