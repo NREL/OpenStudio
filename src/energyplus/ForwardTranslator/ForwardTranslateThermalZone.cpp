@@ -857,10 +857,13 @@ namespace energyplus {
 
       boost::optional<IdfObject> dsoaList;
       bool needToRegisterDSOAList = false;
+      bool atLeastOneDSOAWasWritten = true;
+
       if (!m_excludeSpaceTranslation && sizingZoneIdf) {
         // DO not register it yet! E+ will crash if the DSOA Space List ends up empty
         dsoaList = IdfObject(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
         needToRegisterDSOAList = true;
+        atLeastOneDSOAWasWritten = false;
         dsoaList->setName(tzName + " DSOA Space List");
       }
 
@@ -895,6 +898,7 @@ namespace energyplus {
 
               // push an extensible group on the DSOA:SpaceList
               dsoaList->pushExtensibleGroup(std::vector<std::string>{space.nameString(), thisDSOA->nameString()});
+              atLeastOneDSOAWasWritten = true;
             }
           }
 
@@ -953,6 +957,25 @@ namespace energyplus {
           }  // if zoneEquipment.empty()
         }    // if dsoa
       }      // loop on spaces
+
+      if (!atLeastOneDSOAWasWritten && sizingZoneIdf) {
+        // Controller:MechnicalVentilation: Design Specification Outdoor Air Object Name <x>
+        // > If this field is blank, the corresponding DesignSpecification:OutdoorAir object for the zone will come from
+        // > the DesignSpecification:OutdoorAir object referenced by the Sizing:Zone object for the same zone.
+        // > ***If no such zone match is found, default values from the IDD will be used for the DesignSpecification:OutdoorAir object
+        // > which is 0.0094 m3/s-person.***
+        // Apparently I need to set an empty one or something
+        auto& dsoaObject = m_idfObjects.emplace_back(IddObjectType::DesignSpecification_OutdoorAir);
+
+        dsoaObject.setString(DesignSpecification_OutdoorAirFields::Name, modelObject.nameString() + " Zero air DSOA");
+        dsoaObject.setString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod, "Maximum");
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson, 0.0);
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea, 0.0);
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZone, 0.0);
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour, 0.0);
+
+        sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaObject.nameString());
+      }
 
       if (createZvs) {
         if (zvRateForPeople > 0) {
