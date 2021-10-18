@@ -325,19 +325,6 @@ namespace energyplus {
 
     for (Space& space : spaces) {
 
-      if (!m_excludeSpaceTranslation) {
-        if (!space.spaceType()) {
-          // create a new space type
-          SpaceType newSpaceType(modelObject.model());
-
-          // set space type to prevent picking up building level space type
-          // It's ThermalZone::combineSpaces, not Model::combineSpaces so we can't reset the building level SpaceType in there.
-          // So it's still there, while we did hard assign all the loads for the combineSpace,
-          // and we want to avoid picking up the building level SpaceType loads because those would be double counted
-          space.setSpaceType(newSpaceType);
-        }
-      }
-
       // translate the space now: it will translate it's geometry children (ShadingSurface/InteriorPartition Groups + Surfaces)
       // and all SpaceLoad directly associated with the space
       translateAndMapModelObject(space);
