@@ -59,8 +59,10 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateInternalMass(model::InternalMass& modelObject) {
 
     // TODO: handle (m_excludeSpaceTranslation = false)
-    // Note: E+kept a ‘Zone or ZoneList name’ field and added a ‘Space or SpaceList’ field. If former is specified, later is omitted.
+    // Note: E+kept a ‘Zone or ZoneList name’ field and added a ‘Space or SpaceList’ field.
     // It should have been a single ‘Zone or ZoneList or Space or SpaceList Name’ like it's done on many other objects
+    // If former is specified as a **ZONELIST** name, later is omitted.
+    // Currently you do need to write BOTH the Zone Name (as its a required field) and Space Name when you want to bind it to a Space
 
     // EnergyPlus does not support internal mass objects referencing zone lists (TODO: <-- this is outdated)
 
@@ -135,12 +137,13 @@ namespace energyplus {
           idfObject.setString(InternalMassFields::Name, modelObject.nameString());
         }
 
-        if (m_excludeSpaceTranslation) {
-          boost::optional<ThermalZone> thermalZone = space.thermalZone();
-          if (thermalZone) {
-            idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());
-          }
-        } else {
+        // Even if we want to bind to a Space Name, we need to write the Zone Name as it's a required field
+        // cf https://github.com/NREL/EnergyPlus/issues/9141
+        boost::optional<ThermalZone> thermalZone = space.thermalZone();
+        if (thermalZone) {
+          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());
+        }
+        if (!m_excludeSpaceTranslation) {
           idfObject.setString(InternalMassFields::SpaceorSpaceListName, space.nameString());
         }
 

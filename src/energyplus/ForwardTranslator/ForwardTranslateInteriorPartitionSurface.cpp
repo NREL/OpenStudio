@@ -87,6 +87,8 @@ namespace energyplus {
       boost::optional<Space> space = group->space();
       if (space) {
 
+        // Even if we want to bind to a Space Name, we need to write the Zone Name as it's a required field
+        // cf https://github.com/NREL/EnergyPlus/issues/9141
         boost::optional<ThermalZone> thermalZone = space->thermalZone();
         if (thermalZone) {
           idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());
