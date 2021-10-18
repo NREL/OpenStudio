@@ -213,7 +213,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SpaceInfiltrationFlowCoefficient) {
     EXPECT_EQ("InfiltrationSchedule", infiltration.schedule()->nameString());
     ASSERT_TRUE(infiltration.space());
     EXPECT_FALSE(infiltration.spaceType());
-    EXPECT_EQ("Zone1", infiltration.space()->nameString());
+    EXPECT_EQ("Zone1 Space", infiltration.space()->nameString());
     EXPECT_EQ(0.1, infiltration.flowCoefficient());
     EXPECT_EQ(0.2, infiltration.stackCoefficient());
     EXPECT_EQ(0.3, infiltration.pressureExponent());
