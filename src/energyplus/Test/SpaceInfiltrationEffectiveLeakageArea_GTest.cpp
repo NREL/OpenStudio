@@ -195,7 +195,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageAre
 
   // When excluding space translation (historical behavior)
   {
-    // ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeSpaceTranslation(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -205,6 +205,50 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageAre
     EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneList).size());
     EXPECT_EQ(0, w.getObjectsByType(IddObjectType::Space).size());
     EXPECT_EQ(0, w.getObjectsByType(IddObjectType::SpaceList).size());
+
+    auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_EffectiveLeakageArea);
+    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total
+    ASSERT_EQ(6, infils.size());
+
+    double totalInfiltration = 0.0;  // cm2
+    for (const auto& infil : infils) {
+      auto name = infil.nameString();
+      auto z_ = infil.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName);
+      ASSERT_TRUE(z_);
+      EXPECT_EQ(zone, z_.get());
+      double i = infil.getDouble(ZoneInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea).get();
+      totalInfiltration += i;
+      if (name.find(infilSpace1.nameString()) != std::string::npos) {
+        EXPECT_EQ(0.1, i);
+        EXPECT_EQ(infilSpace1.effectiveAirLeakageArea(), i);
+      } else if (name.find(infilSpace3.nameString()) != std::string::npos) {
+        EXPECT_DOUBLE_EQ(0.2, i);
+        EXPECT_DOUBLE_EQ(infilSpace3.effectiveAirLeakageArea(), i);
+      } else if (name.find(infilOffice.nameString()) != std::string::npos) {
+        EXPECT_EQ(0.3, i);
+        EXPECT_EQ(infilOffice.effectiveAirLeakageArea(), i);
+      } else if (name.find(infilBuilding.nameString()) != std::string::npos) {
+        EXPECT_EQ(0.4, i);
+        EXPECT_EQ(infilBuilding.effectiveAirLeakageArea(), i);
+      }
+    }
+
+    EXPECT_DOUBLE_EQ(1.7, totalInfiltration);
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  // same thing as before: we place them for the Zone itself
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    Workspace w = ft.translateModel(m);
+
+    auto zones = w.getObjectsByType(IddObjectType::Zone);
+    ASSERT_EQ(1, zones.size());
+    auto zone = zones[0];
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
 
     auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_EffectiveLeakageArea);
     // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total

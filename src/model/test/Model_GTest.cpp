@@ -755,3 +755,38 @@ TEST_F(ModelFixture, Model_BadSwaps) {
   EXPECT_ANY_THROW(workspace.swap(model));
   EXPECT_ANY_THROW(model.swap(workspace));
 }
+
+TEST_F(ModelFixture, Ensure_Name_Unicity_SpaceAndSpaceGroupNames) {
+  // Starting in 9.6.0, Space and SpaceList are supported.
+  // Zone, ZoneList, Space, SpaceList all need to be unique names
+  Model m;
+
+  std::vector<ModelObject> mos{Space{m}, m.getUniqueModelObject<Building>(), BuildingStory{m}, SpaceType{m}, ThermalZone{m}};
+  EXPECT_EQ(5, m.getObjectsByReference("SpaceAndSpaceGroupNames").size());
+
+  std::string name = "A Name";
+
+  std::vector<std::pair<size_t, size_t>> combinations{
+    {0, 1}, {0, 2}, {0, 3}, {0, 4}, {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4},
+  };
+
+  auto resetNames = [&mos]() {
+    for (auto& mo : mos) {
+      mo.setName(mo.iddObject().name());
+    }
+  };
+
+  for (auto& [i1, i2] : combinations) {
+    resetNames();  // Starting point: all names are unique
+    // We set two names: first one should work
+    auto s1_ = mos[i1].setName(name);
+    ASSERT_TRUE(s1_);
+    EXPECT_EQ(name, s1_.get());
+    // Second should be modified to keep unicity of names
+    auto s2_ = mos[i2].setName(name);
+    ASSERT_TRUE(s2_);
+    EXPECT_NE(name, s2_.get());
+    EXPECT_NE(s1_.get(), s2_.get());
+    EXPECT_NE(mos[i1].nameString(), mos[i2].nameString());
+  }
+}

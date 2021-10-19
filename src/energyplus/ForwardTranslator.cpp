@@ -58,6 +58,18 @@
 #include "../model/ShadingControl_Impl.hpp"
 #include "../model/AdditionalProperties.hpp"
 #include "../model/ConcreteModelObjects.hpp"
+#include "../model/SpaceLoad.hpp"
+#include "../model/SpaceLoad_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/SpaceInfiltrationFlowCoefficient.hpp"
+#include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
+#include "../model/ElectricEquipmentITEAirCooled.hpp"
+#include "../model/ElectricEquipmentITEAirCooled_Impl.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -108,9 +120,13 @@ namespace energyplus {
     m_excludeSQliteOutputReport = false;
     m_excludeHTMLOutputReport = false;
     m_excludeVariableDictionary = false;
+    m_excludeSpaceTranslation = true;
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
+
+    // When m_excludeSpaceTranslation is false, could we skip the (expensive) clone since we aren't combining spaces?
+    // No, we are still doing stuff like removing orphan loads, spaces not part of a thermal zone, etc
     Model modelCopy = model.clone(true).cast<Model>();
 
     m_progressBar = progressBar;
@@ -178,6 +194,42 @@ namespace energyplus {
   void ForwardTranslator::setExcludeVariableDictionary(bool excludeVariableDictionary) {
     m_excludeVariableDictionary = excludeVariableDictionary;
   }
+
+  void ForwardTranslator::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
+    m_excludeSpaceTranslation = excludeSpaceTranslation;
+  }
+
+  // Figure out which object
+  // * If the load is assigned to a space,
+  //     * m_excludeSpaceTranslation = true: translate and return the IdfObject for the Zone
+  //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
+  // * If the load is assigned to a spaceType:
+  //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
+  IdfObject ForwardTranslator::getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType) {
+
+    OptionalIdfObject relatedIdfObject;
+
+    if (boost::optional<Space> space_ = sp.space()) {
+      if (m_excludeSpaceTranslation) {
+        if (auto thermalZone_ = space_->thermalZone()) {
+          relatedIdfObject = translateAndMapModelObject(thermalZone_.get());
+        } else {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
+        }
+      } else {
+        relatedIdfObject = translateAndMapModelObject(space_.get());
+      }
+    } else if (boost::optional<SpaceType> spaceType_ = sp.spaceType()) {
+      if (allowSpaceType) {
+        relatedIdfObject = translateAndMapModelObject(spaceType_.get());
+      } else {
+        OS_ASSERT(false);
+      }
+    }
+
+    OS_ASSERT(relatedIdfObject);
+    return relatedIdfObject.get();
+  };
 
   Workspace ForwardTranslator::translateModelPrivate(model::Model& model, bool fullModelTranslation) {
     reset();
@@ -267,10 +319,55 @@ namespace energyplus {
       }
     }
 
-    // next thing to do is combine all spaces in each thermal zone
-    // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
-    for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
-      thermalZone.combineSpaces();
+    if (m_excludeSpaceTranslation) {
+      // next thing to do is combine all spaces in each thermal zone
+      // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
+      for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
+        thermalZone.combineSpaces();
+      }
+    } else {
+      // We're going to have a bunch of troubles with the SpaceInfiltration objects as they cannot live on a Space in E+, they are on the zone
+      // So we do the same as combineSpaces but only for those infiltration objects: we hard apply them to each individual space, then remove the
+      // spacetype ones to be safe (make 100% sure they won't get translated)
+      // TODO: Technically we could just find a smart way to convert the SpaceInfiltration:DesignFlowRate object to a Flow / Zone and use a ZoneList,
+      // but it gets complicated with little benefit, so not doing it for now
+      for (auto& sp : model.getConcreteModelObjects<SpaceType>()) {
+        auto spi = sp.spaceInfiltrationDesignFlowRates();
+        auto spiel = sp.spaceInfiltrationEffectiveLeakageAreas();
+        auto spifc = sp.spaceInfiltrationFlowCoefficients();
+        std::vector<SpaceLoad> infiltrations;
+        infiltrations.reserve(spi.size() + spiel.size() + spifc.size());
+        infiltrations.insert(infiltrations.end(), spi.begin(), spi.end());
+        infiltrations.insert(infiltrations.end(), spiel.begin(), spiel.end());
+        infiltrations.insert(infiltrations.end(), spifc.begin(), spifc.end());
+        for (auto& infil : infiltrations) {
+          for (auto& space : sp.spaces()) {
+            auto infilClone = infil.clone(model).cast<SpaceLoad>();
+            infilClone.setParent(space);
+          }
+          infil.remove();
+        }
+
+        // The ElectricEquipment:ITE:AirCooled only accepts a Zone or a Space, not a ZoneList nor a SpaceList
+        // So similarly, we need to put them on the spaces to avoid problems. But we do not need to hardSize() them
+        for (auto& ite : sp.electricEquipmentITEAirCooled()) {
+          std::string name = ite.nameString();
+          for (auto& space : sp.spaces()) {
+            auto iteClone = ite.clone(model).cast<SpaceLoad>();
+            iteClone.setParent(space);
+          }
+          ite.remove();
+        }
+      }
+
+      // We also convert all SpaceInfiltrationDesignFlowRate objects to Flow/Space (Flow/Zone) because these may not be absolute
+      // That includes the Space ones too.
+      // SpaceInfiltrationEffectiveLeakageAreas and SpaceInfiltrationFlowCoefficients don't need it, they are always absolute
+      for (auto& infil : model.getConcreteModelObjects<SpaceInfiltrationDesignFlowRate>()) {
+        // TODO: technically we only need to do that if the space it's assigned to is part of a thermalzone with more than one space
+        // Same reason as above: not doing it for now
+        infil.hardSize();
+      }
     }
 
     // remove unused space types
@@ -291,6 +388,12 @@ namespace energyplus {
     //Fix for Bug 717 - Take any OtherEquipment objects that still point to a spacetype and make
     //a new instance of them for every space that that spacetype points to then delete the one
     //that pointed to a spacetype
+    //
+    // TODO JM 2021-10-14: combineSpaces already does that. The only reason this code block is here is because:
+    // 1. ThermalZone::combineSpaces doesn't touch the initial Space Types, it's just that they are unused
+    // 2. This object is part of iddObjectToTranslate() which is a mistake to begin with: spaces/spaceTypes should be responsible for translating
+    // their loads!
+    // 3. Removing the unused space types right above should have taken care of the problem
     std::vector<OtherEquipment> otherEquipments = model.getConcreteModelObjects<OtherEquipment>();
     for (OtherEquipment otherEquipment : otherEquipments) {
       boost::optional<SpaceType> spaceTypeOfOtherEquipment = otherEquipment.spaceType();
@@ -315,6 +418,12 @@ namespace energyplus {
     // then delete the one that pointed to a spacetype.
     // By doing this, we can solve the potential problem that if this load is applied to a space type,
     // the load gets copied to each space of the space type, which may cause conflict of supply air node.
+    //
+    // TODO JM 2021-10-14: combineSpaces already does that. The only reason this code block is here is because:
+    // 1. ThermalZone::combineSpaces doesn't touch the initial Space Types, it's just that they are unused
+    // 2. This object is part of iddObjectToTranslate() which is a mistake to begin with: spaces/spaceTypes should be responsible for translating
+    // their loads!
+    // 3. Removing the unused space types right above should have taken care of the problem
     std::vector<ElectricEquipmentITEAirCooled> iTEAirCooledEquipments = model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>();
     for (ElectricEquipmentITEAirCooled iTequipment : iTEAirCooledEquipments) {
       boost::optional<SpaceType> spaceTypeOfITEquipment = iTequipment.spaceType();
@@ -3076,6 +3185,7 @@ namespace energyplus {
   }
 
   std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslate() {
+    // TODO: avoid the call to iddObjectsToTranslateInitializer with the ton of push_backs
     static const std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
     return result;
   }

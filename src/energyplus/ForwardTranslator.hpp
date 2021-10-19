@@ -392,6 +392,7 @@ namespace model {
   class SizingPlant;
   class SizingSystem;
   class SizingZone;
+  class SpaceLoadInstance;
   class StandardGlazing;
   class StandardOpaqueMaterial;
   class SimpleGlazing;
@@ -540,6 +541,10 @@ namespace energyplus {
    *  Use this at your own risks */
     void setExcludeVariableDictionary(bool excludeVariableDictionary);
 
+    /** If excludeSpaceTranslation, do usual combineSpaces(), etc. Otherwise, translate space objects.
+   *  Use this at your own risks */
+    void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
 
@@ -559,6 +564,10 @@ namespace energyplus {
    *  translateAndMapModelObject() interface as opposed to the type specific translators.
    */
     Workspace translateModelPrivate(model::Model& model, bool fullModelTranslation);
+
+    // TODO: restrict to SpaceLoadInstance or SpaceLoad?
+    // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoadInstance
+    IdfObject getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType = true);
 
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 
@@ -1343,6 +1352,7 @@ namespace energyplus {
     boost::optional<IdfObject> translateSpaceInfiltrationFlowCoefficient(model::SpaceInfiltrationFlowCoefficient& modelObject);
 
     boost::optional<IdfObject> translateSpaceType(model::SpaceType& modelObject);
+    std::string zoneListNameForSpaceType(const model::SpaceType& modelObject) const;  // helper function
 
     boost::optional<IdfObject> translateStandardGlazing(model::StandardGlazing& modelObject);
 
@@ -1378,6 +1388,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateThermalStorageChilledWaterStratified(model::ThermalStorageChilledWaterStratified& modelObject);
 
     boost::optional<IdfObject> translateThermalZone(model::ThermalZone& modelObject);
+    void translateThermalZoneSpacesWhenCombinedSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
+    void translateThermalZoneSpacesToEnergyPlusSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
 
     boost::optional<IdfObject> translateThermostatSetpointDualSetpoint(model::ThermostatSetpointDualSetpoint& tsds);
 
@@ -1589,6 +1601,7 @@ namespace energyplus {
     bool m_excludeSQliteOutputReport;  // exclude Output:Sqlite
     bool m_excludeHTMLOutputReport;    // exclude Output:Table:SummaryReports
     bool m_excludeVariableDictionary;  // exclude Output:VariableDictionary
+    bool m_excludeSpaceTranslation;
   };
 
 }  // namespace energyplus

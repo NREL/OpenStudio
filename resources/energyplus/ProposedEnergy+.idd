@@ -5678,10 +5678,13 @@ Space,
        \min-fields 3
        \extensible:1
   A1,  \field Name
+       \note Name of the Space.
+       \note This name must be unique across Zone, Space, ZoneList, and SpaceList names.
        \required-field
        \type alpha
        \reference SpaceNames
        \reference SpaceAndSpaceListNames
+       \reference ZoneAndZoneListAndSpaceAndSpaceListNames
   A2,  \field Zone Name
        \required-field
        \type object-list
@@ -5711,11 +5714,13 @@ SpaceList,
        \min-fields 2
        \extensible:1
   A1 , \field Name
-       \note Name of the Space List
+       \note Name of the SpaceList.
+       \note This name must be unique across Zone, Space, ZoneList, and SpaceList names.
        \required-field
        \type alpha
        \reference SpaceListNames
        \reference SpaceAndSpaceListNames
+       \reference ZoneAndZoneListAndSpaceAndSpaceListNames
   A2 ; \field Space 1 Name
        \begin-extensible
        \required-field
@@ -5732,11 +5737,14 @@ Zone,
        \memo (default space names may not be referenced except in output variable keys).
        \format vertices
   A1 , \field Name
+       \note Name of the Zone.
+       \note This name must be unique across Zone, Space, ZoneList, and SpaceList names.
        \required-field
        \type alpha
        \reference ZoneNames
        \reference OutFaceEnvNames
        \reference ZoneAndZoneListNames
+       \reference ZoneAndZoneListAndSpaceAndSpaceListNames
        \reference AirflowNetworkNodeAndZoneNames
   N1 , \field Direction of Relative North
        \units deg
@@ -5835,11 +5843,13 @@ ZoneList,
        \min-fields 2
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
   A1 , \field Name
-       \note Name of the Zone List
+       \note Name of the ZoneList.
+       \note This name must be unique across Zone, Space, ZoneList, and SpaceList names.
        \required-field
        \type alpha
        \reference ZoneListNames
        \reference ZoneAndZoneListNames
+       \reference ZoneAndZoneListAndSpaceAndSpaceListNames
   A2 ; \field Zone 1 Name
        \begin-extensible
        \required-field

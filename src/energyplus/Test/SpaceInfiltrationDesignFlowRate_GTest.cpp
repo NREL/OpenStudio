@@ -75,6 +75,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate) {
   infiltration.setFlowperExteriorWallArea(1.0);
 
   ForwardTranslator ft;
+  ft.setExcludeSpaceTranslation(true);
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::ZoneInfiltration_DesignFlowRate);
@@ -202,7 +203,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
 
   // When excluding space translation (historical behavior)
   {
-    // ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeSpaceTranslation(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -242,5 +243,50 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
     }
 
     EXPECT_EQ(0.687, totalInfiltration);
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  // same thing as before: we place them for the Zone itself
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    // This object actually accepts a ZoneList as a target...
+    Workspace w = ft.translateModel(m);
+    auto zones = w.getObjectsByType(IddObjectType::Zone);
+    ASSERT_EQ(1, zones.size());
+    auto zone = zones[0];
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
+
+    auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_DesignFlowRate);
+    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total
+    ASSERT_EQ(6, infils.size());
+
+    double totalInfiltration = 0.0;  // m3/s
+    for (const auto& infil : infils) {
+      auto name = infil.nameString();
+      auto z_ = infil.getTarget(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName);
+      ASSERT_TRUE(z_);
+      EXPECT_EQ(zone, z_.get());
+      EXPECT_EQ("Flow/Zone", infil.getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+      double i = infil.getDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate).get();
+      totalInfiltration += i;
+      if (name.find(infilBuilding.nameString()) != std::string::npos) {
+        EXPECT_EQ(0.05, i);
+        EXPECT_EQ(infilBuilding.airChangesperHour().get() * spaceVolume / 3600.0, i);
+      } else if (name.find(infilOffice.nameString()) != std::string::npos) {
+        EXPECT_EQ(0.2, i);
+        EXPECT_EQ(infilOffice.flowperSpaceFloorArea().get() * spaceFloorArea, i);
+      } else if (name.find(infilSpace1.nameString()) != std::string::npos) {
+        EXPECT_EQ(0.015, i);
+        EXPECT_EQ(infilSpace1.designFlowRate().get(), i);
+      } else if (name.find(infilSpace3.nameString()) != std::string::npos) {
+        EXPECT_DOUBLE_EQ(0.172, i);
+        EXPECT_DOUBLE_EQ(infilSpace3.flowperExteriorSurfaceArea().get() * innerSpaceExteriorSurfaceArea, i);
+      }
+    }
+
+    EXPECT_DOUBLE_EQ(0.687, totalInfiltration);
   }
 }

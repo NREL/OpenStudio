@@ -41,6 +41,7 @@
 #include "../../model/CurveBiquadratic.hpp"
 #include "../../model/WaterHeaterHeatPump.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -60,6 +61,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   WaterHeaterHeatPump hpwh(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed(m);
   ThermalZone tz(m);
+  Space space(m);
+  space.setThermalZone(tz);
 
   hpwh.setDXCoil(coil);
   hpwh.addToThermalZone(tz);
