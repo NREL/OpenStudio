@@ -394,20 +394,28 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
     ASSERT_TRUE(officeSpaceType_);
     {
       ASSERT_EQ(2, officeSpaceType_->numExtensibleGroups());
-      EXPECT_EQ(space1_.get(),
-                officeSpaceType_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
-      EXPECT_EQ(space2_.get(),
-                officeSpaceType_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
+      auto wegs = openstudio::castVector<WorkspaceExtensibleGroup>(officeSpaceType_->extensibleGroups());
+      ASSERT_TRUE(std::all_of(wegs.begin(), wegs.end(), [](const auto& weg) { return weg.getTarget(SpaceListExtensibleFields::SpaceName); }));
+      EXPECT_NE(wegs.cend(), std::find_if(wegs.cbegin(), wegs.cend(), [&space1_](const auto& weg) {
+                  return weg.getTarget(SpaceListExtensibleFields::SpaceName).get() == space1_.get();
+                }));
+      EXPECT_NE(wegs.cend(), std::find_if(wegs.cbegin(), wegs.cend(), [&space2_](const auto& weg) {
+                  return weg.getTarget(SpaceListExtensibleFields::SpaceName).get() == space2_.get();
+                }));
     }
 
     auto buildingSpaceType_ = w.getObjectByTypeAndName(IddObjectType::SpaceList, buildingSpaceType.nameString());
     ASSERT_TRUE(buildingSpaceType_);
     {
       ASSERT_EQ(2, buildingSpaceType_->numExtensibleGroups());
-      EXPECT_EQ(space3_.get(),
-                buildingSpaceType_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
-      EXPECT_EQ(space4_.get(),
-                buildingSpaceType_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>().getTarget(SpaceListExtensibleFields::SpaceName).get());
+      auto wegs = openstudio::castVector<WorkspaceExtensibleGroup>(buildingSpaceType_->extensibleGroups());
+      ASSERT_TRUE(std::all_of(wegs.begin(), wegs.end(), [](const auto& weg) { return weg.getTarget(SpaceListExtensibleFields::SpaceName); }));
+      EXPECT_NE(wegs.cend(), std::find_if(wegs.cbegin(), wegs.cend(), [&space3_](const auto& weg) {
+                  return weg.getTarget(SpaceListExtensibleFields::SpaceName).get() == space3_.get();
+                }));
+      EXPECT_NE(wegs.cend(), std::find_if(wegs.cbegin(), wegs.cend(), [&space4_](const auto& weg) {
+                  return weg.getTarget(SpaceListExtensibleFields::SpaceName).get() == space4_.get();
+                }));
     }
 
     auto peoples = w.getObjectsByType(IddObjectType::People);
