@@ -59,8 +59,10 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateInternalMass(model::InternalMass& modelObject) {
 
     // TODO: handle (m_excludeSpaceTranslation = false)
-    // Note: E+kept a ‘Zone or ZoneList name’ field and added a ‘Space or SpaceList’ field. If former is specified, later is omitted.
+    // Note: E+kept a ‘Zone or ZoneList name’ field and added a ‘Space or SpaceList’ field.
     // It should have been a single ‘Zone or ZoneList or Space or SpaceList Name’ like it's done on many other objects
+    // If former is specified as a **ZONELIST** name, later is omitted.
+    // Currently you do need to write BOTH the Zone Name (as its a required field) and Space Name when you want to bind it to a Space
 
     // EnergyPlus does not support internal mass objects referencing zone lists (TODO: <-- this is outdated)
 
@@ -95,7 +97,7 @@ namespace energyplus {
       m_idfObjects.push_back(idfObject);
 
       if (construction) {
-        idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+        idfObject.setString(InternalMassFields::ConstructionName, construction->nameString());
       }
 
       double surfaceArea = 0;
@@ -123,25 +125,30 @@ namespace energyplus {
     } else {
 
       // create InternalMass object for each zone
-      for (Space space : spaces) {
+      for (const Space& space : spaces) {
 
         IdfObject idfObject(openstudio::IddObjectType::InternalMass);
 
         m_idfObjects.push_back(idfObject);
 
         if (prefixSpaceName) {
-          idfObject.setString(InternalMassFields::Name, space.name().get() + " " + modelObject.name().get());
+          idfObject.setString(InternalMassFields::Name, space.nameString() + " " + modelObject.nameString());
         } else {
-          idfObject.setString(InternalMassFields::Name, modelObject.name().get());
+          idfObject.setString(InternalMassFields::Name, modelObject.nameString());
         }
 
+        // Even if we want to bind to a Space Name, we need to write the Zone Name as it's a required field
+        // cf https://github.com/NREL/EnergyPlus/issues/9141
         boost::optional<ThermalZone> thermalZone = space.thermalZone();
         if (thermalZone) {
-          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
+          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());
+        }
+        if (!m_excludeSpaceTranslation) {
+          idfObject.setString(InternalMassFields::SpaceorSpaceListName, space.nameString());
         }
 
         if (construction) {
-          idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+          idfObject.setString(InternalMassFields::ConstructionName, construction->nameString());
         }
 
         double surfaceArea = 0;

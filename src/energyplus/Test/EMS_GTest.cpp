@@ -1892,9 +1892,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
   //expect no warning since we are using the zoneName API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+
   //expect 1 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -1952,15 +1955,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
     Workspace workspace = forwardTranslator.translateModel(model);
-    EXPECT_EQ(0u, forwardTranslator.errors().size());
-    //expect no warning
-    EXPECT_EQ(0u, forwardTranslator.warnings().size()) << [&forwardTranslator]() {
-      std::stringstream ss;
-      for (const auto& warning : forwardTranslator.warnings()) {
-        ss << warning.logMessage() << '\n';
-      }
-      return ss.str();
-    }();
+
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+    //expect no warning since we are using the zoneName API
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
     //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
     EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -1979,8 +1977,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
 
   // When including Space translation (new E+ 9.6.0)
   {
+    // TODO:
     forwardTranslator.setExcludeSpaceTranslation(false);
     Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+    //expect no warning since we are using the zoneName API
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                                 {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                  "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+    //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+    OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+    std::string test0 = "Printer";
+    std::string test1 = "Thermal Zone 1 Electric Equipment 1";
+
+    EXPECT_TRUE((name0.get() == test0) || (name0.get() == test1));
+    EXPECT_TRUE((name1.get() == test0) || (name1.get() == test1));
   }
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API_EMS) {
@@ -2043,9 +2059,10 @@ EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+  //expect no warning since we are using the zoneName API
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
+
   //expect 2 actuators
   EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -2124,9 +2141,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+  //expect no warning since we are using the zoneName API
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
   //expect 2 actuators
   EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -2216,15 +2233,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size()) << [&forwardTranslator]() {
-    std::stringstream ss;
-    for (const auto& warning : forwardTranslator.warnings()) {
-      ss << warning.logMessage() << '\n';
-    }
-    return ss.str();
-  }();
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+  //expect no warning since we are using the zoneName API
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
 
   //expect 2 actuators
   //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD

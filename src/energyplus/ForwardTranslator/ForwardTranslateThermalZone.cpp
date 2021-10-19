@@ -137,12 +137,14 @@
 #include "../../model/GlareSensor_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include "../../model/ZoneMixing.hpp"
+#include "../../model/ConstructionAirBoundary.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
+
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/HVACTemplate_Zone_IdealLoadsAirSystem_FieldEnums.hxx>
@@ -161,7 +163,9 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../../utilities/geometry/Geometry.hpp"
+
 #include <algorithm>
+#include <numeric>
 
 using namespace openstudio::model;
 
@@ -321,22 +325,111 @@ namespace energyplus {
           idfObject.setDouble(openstudio::ZoneFields::FloorArea, totalFloorArea);
         }
       }
+
+      // TODO: JM 2021-10-15: Aren't we having a lot of problems with DaylightingControls? Yes we are!
+      // Sooooo. Our API prevents us from effectively writing the daylightng objects to a Space because the ThermalZone itself bears the
+      // Primary/Secondary daylighting control + fraction of lights controlled.
+      // E+ will yell if you have space enclosures but the Daylighting objects are on Zone-level (also, it currently does not work, IlluminanceMap
+      // only accepts Zone level, and Daylighting:ReferencePoint should support Space Name but it doesn't)
+      // So here if the zone has daylighting control, we make an airwall between spaces and convert non airwalls to InternalMass
+
+      // another awesome thing is that z.primaryDaylightingControl() || z.secondaryDaylightingControl() || z.illuminanceMap() is probably not safe, since a
+      // DaylightingControl that isn't directly referenced to a zone might be translated too, because DaylightingControl does reference a space itself
+
+      int nDayligthingObjects = std::accumulate(spaces.cbegin(), spaces.cend(), 0, [](int sum, const Space& space) {
+        return sum + space.daylightingControls().size() + space.illuminanceMaps().size();
+      });
+      if (nDayligthingObjects > 0) {
+
+        boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup;
+        std::set<Surface> mergedSurfaces;
+
+        std::vector<Surface> zoneSurfaces;
+        for (const auto& space : spaces) {
+          for (const auto& surface : space.surfaces()) {
+            zoneSurfaces.emplace_back(surface);
+          }
+        }
+
+        // sort by surface name, for repeatability
+        std::sort(zoneSurfaces.begin(), zoneSurfaces.end(), WorkspaceObjectNameLess());
+
+        for (const auto& surface : zoneSurfaces) {
+
+          // Already processed?
+          auto it = mergedSurfaces.find(surface);
+          if (it != mergedSurfaces.end()) {
+            continue;
+          }
+
+          auto adjacentSurface_ = surface.adjacentSurface();
+          if (!adjacentSurface_) {
+            continue;
+          }
+
+          auto adjacentSpace_ = adjacentSurface_->space();
+          if (!adjacentSpace_) {
+            continue;
+          }
+
+          // Adjacent Space must be part of this thermalZone as well
+          if (std::find(spaces.cbegin(), spaces.cend(), adjacentSpace_.get()) == spaces.end()) {
+            continue;
+          }
+
+          // handling both the surface and the adjacentSurface
+          mergedSurfaces.insert(surface);
+          mergedSurfaces.insert(adjacentSurface_.get());
+
+          // don't make interior partitions for interior air walls
+          bool isAirWall = surface.isAirWall();
+          bool isAdjacentAirWall = adjacentSurface_->isAirWall();
+
+          if (isAirWall && isAdjacentAirWall) {
+            continue;
+          } else if (isAirWall) {
+            LOG(Warn, "Interior surface '" << surface.nameString() << "' is an air wall but adjacent surface '" << adjacentSurface_->nameString()
+                                           << "' is not, ignoring internal mass.")
+            continue;
+          } else if (isAdjacentAirWall) {
+            LOG(Warn, "Interior surface '" << adjacentSurface_->nameString() << "' is an air wall but adjacent surface '" << surface.nameString()
+                                           << "' is not, ignoring internal mass.")
+            continue;
+          }
+
+          if (!interiorPartitionSurfaceGroup) {
+            interiorPartitionSurfaceGroup = InteriorPartitionSurfaceGroup(modelObject.model());
+            // TODO: I don't think I care about which space I assign it to, since currently that's only written at Zone Level but this might change
+            interiorPartitionSurfaceGroup->setSpace(adjacentSpace_.get());
+          }
+
+          // is there a better way to pick which vertices to keep based on outward normal?
+          InteriorPartitionSurface interiorPartitionSurface(surface.vertices(), modelObject.model());
+          interiorPartitionSurface.setName("Merged " + surface.name().get() + " - " + adjacentSurface_->name().get());
+          interiorPartitionSurface.setInteriorPartitionSurfaceGroup(*interiorPartitionSurfaceGroup);
+
+          boost::optional<ConstructionBase> construction = surface.construction();
+          if (construction) {
+            interiorPartitionSurface.setConstruction(*construction);
+          }
+        }
+
+        if (!mergedSurfaces.empty()) {
+          LOG(Warn, modelObject.briefDescription() << " has DaylightingControl Objects assigned. The interior walls between Spaces will be merged. "
+                                                      "Make sure these are correctly Matched!");
+        }
+
+        ConstructionAirBoundary airWallConstruction(modelObject.model());
+
+        // std::set forces a const iterator, hence why I take a copy...
+        for (Surface mergedSurface : mergedSurfaces) {
+          mergedSurface.setConstruction(airWallConstruction);
+        }
+
+      }  // End Combine surfaces if daylighting
     }
 
     for (Space& space : spaces) {
-
-      if (!m_excludeSpaceTranslation) {
-        if (!space.spaceType()) {
-          // create a new space type
-          SpaceType newSpaceType(modelObject.model());
-
-          // set space type to prevent picking up building level space type
-          // It's ThermalZone::combineSpaces, not Model::combineSpaces so we can't reset the building level SpaceType in there.
-          // So it's still there, while we did hard assign all the loads for the combineSpace,
-          // and we want to avoid picking up the building level SpaceType loads because those would be double counted
-          space.setSpaceType(newSpaceType);
-        }
-      }
 
       // translate the space now: it will translate it's geometry children (ShadingSurface/InteriorPartition Groups + Surfaces)
       // and all SpaceLoad directly associated with the space
@@ -856,10 +949,15 @@ namespace energyplus {
       }
 
       boost::optional<IdfObject> dsoaList;
+      bool needToRegisterDSOAList = false;
+      bool atLeastOneDSOAWasWritten = true;
+
       if (!m_excludeSpaceTranslation && sizingZoneIdf) {
-        dsoaList = m_idfObjects.emplace_back(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
+        // DO not register it yet! E+ will crash if the DSOA Space List ends up empty
+        dsoaList = IdfObject(openstudio::IddObjectType::DesignSpecification_OutdoorAir_SpaceList);
+        needToRegisterDSOAList = true;
+        atLeastOneDSOAWasWritten = false;
         dsoaList->setName(tzName + " DSOA Space List");
-        sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaList->nameString());
       }
 
       // map the design specification outdoor air
@@ -885,8 +983,15 @@ namespace energyplus {
               // point the sizing object to the outdoor air spec
               sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, designSpecificationOutdoorAir->nameString());
             } else {
+              if (needToRegisterDSOAList) {
+                m_idfObjects.emplace_back(dsoaList.get());
+                sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaList->nameString());
+                needToRegisterDSOAList = false;
+              }
+
               // push an extensible group on the DSOA:SpaceList
               dsoaList->pushExtensibleGroup(std::vector<std::string>{space.nameString(), thisDSOA->nameString()});
+              atLeastOneDSOAWasWritten = true;
             }
           }
 
@@ -945,6 +1050,25 @@ namespace energyplus {
           }  // if zoneEquipment.empty()
         }    // if dsoa
       }      // loop on spaces
+
+      if (!atLeastOneDSOAWasWritten && sizingZoneIdf) {
+        // Controller:MechnicalVentilation: Design Specification Outdoor Air Object Name <x>
+        // > If this field is blank, the corresponding DesignSpecification:OutdoorAir object for the zone will come from
+        // > the DesignSpecification:OutdoorAir object referenced by the Sizing:Zone object for the same zone.
+        // > ***If no such zone match is found, default values from the IDD will be used for the DesignSpecification:OutdoorAir object
+        // > which is 0.0094 m3/s-person.***
+        // Apparently I need to set an empty one or something
+        auto& dsoaObject = m_idfObjects.emplace_back(IddObjectType::DesignSpecification_OutdoorAir);
+
+        dsoaObject.setString(DesignSpecification_OutdoorAirFields::Name, modelObject.nameString() + " Zero air DSOA");
+        dsoaObject.setString(DesignSpecification_OutdoorAirFields::OutdoorAirMethod, "Sum");
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson, 0.0);
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZoneFloorArea, 0.0);
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowperZone, 0.0);
+        dsoaObject.setDouble(DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour, 0.0);
+
+        sizingZoneIdf->setString(Sizing_ZoneFields::DesignSpecificationOutdoorAirObjectName, dsoaObject.nameString());
+      }
 
       if (createZvs) {
         if (zvRateForPeople > 0) {
