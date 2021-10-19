@@ -391,55 +391,54 @@ namespace openstudio {
 
 
 // DLM@20100101: demo purposes only, should be able to automatically convert a string input, delete when working
-%{
-  openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p)
-  {
-    openstudio::path copy(p);
-    return copy;
-  }
-  openstudio::path funcOnlyTakesAConstPath(const openstudio::path p)
-  {
-    openstudio::path copy(p);
-    return copy;
-  }
-  openstudio::path funcOnlyTakesAPath(openstudio::path p)
-  {
-    openstudio::path copy(p);
-    return copy;
-  }
-
-  openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true)
-  {
-    openstudio::path result;
-    if (copy){
-      result = p;
-    }
-    return result;
-  }
-  openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true)
-  {
-    openstudio::path result;
-    if (copy){
-      result = p;
-    }
-    return result;
-  }
-  openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true)
-  {
-    openstudio::path result;
-    if (copy){
-      result = p;
-    }
-    return result;
-  }
-%}
-openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p);
-openstudio::path funcOnlyTakesAConstPath(const openstudio::path p);
-openstudio::path funcOnlyTakesAPath(openstudio::path p);
-
-openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true);
-openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true);
-openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true);
-
+// %{
+//   openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p)
+//   {
+//     openstudio::path copy(p);
+//     return copy;
+//   }
+//   openstudio::path funcOnlyTakesAConstPath(const openstudio::path p)
+//   {
+//     openstudio::path copy(p);
+//     return copy;
+//   }
+//   openstudio::path funcOnlyTakesAPath(openstudio::path p)
+//   {
+//     openstudio::path copy(p);
+//     return copy;
+//   }
+//
+//   openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true)
+//   {
+//     openstudio::path result;
+//     if (copy){
+//       result = p;
+//     }
+//     return result;
+//   }
+//   openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true)
+//   {
+//     openstudio::path result;
+//     if (copy){
+//       result = p;
+//     }
+//     return result;
+//   }
+//   openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true)
+//   {
+//     openstudio::path result;
+//     if (copy){
+//       result = p;
+//     }
+//     return result;
+//   }
+// %}
+// openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p);
+// openstudio::path funcOnlyTakesAConstPath(const openstudio::path p);
+// openstudio::path funcOnlyTakesAPath(openstudio::path p);
+//
+// openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true);
+// openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true);
+// openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true);
 
 #endif // UTILITIES_CORE_PATH_I
