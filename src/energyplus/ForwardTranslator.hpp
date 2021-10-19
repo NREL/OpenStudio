@@ -566,8 +566,8 @@ namespace energyplus {
     Workspace translateModelPrivate(model::Model& model, bool fullModelTranslation);
 
     // TODO: restrict to SpaceLoadInstance or SpaceLoad?
-    // Pick up the Zone, ZoneList, Space or SpaceList object for a given SpaceLoad
-    IdfObject getSpaceLoadParent(model::SpaceLoadInstance& sp);
+    // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoadInstance
+    IdfObject getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType = true);
 
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 

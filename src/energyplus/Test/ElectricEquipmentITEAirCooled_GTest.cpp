@@ -90,6 +90,7 @@
 
 #include <resources.hxx>
 
+#include <numeric>  // std::accumulate
 #include <sstream>
 
 using namespace openstudio::energyplus;
@@ -150,6 +151,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Space)
   electricEquipmentITEAirCooled.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
+
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
@@ -183,20 +186,49 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
   electricEquipmentITEAirCooled.setSpaceType(spaceType);
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  {
+    // Translate to EnergyPlus Space
+    ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+    ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
 
-  WorkspaceObject electricEquipmentITEAirCooledObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
-  WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+    const auto electricEquipmentITEAirCooledObject1 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
+    const auto zoneOrSpaceTarget1 = electricEquipmentITEAirCooledObject1.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+    ASSERT_TRUE(zoneOrSpaceTarget1);
 
-  ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
-  //EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
+    const auto electricEquipmentITEAirCooledObject2 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[1];
+    const auto zoneOrSpaceTarget2 = electricEquipmentITEAirCooledObject2.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+    ASSERT_TRUE(zoneOrSpaceTarget2);
 
-  //model.save(toPath("./ITE_translator_SpaceType.osm"), true);
-  //workspace.save(toPath("./ITE_translator_SpaceType.idf"), true);
+    ASSERT_NE(zoneOrSpaceTarget1.get(), zoneOrSpaceTarget2.get());
+  }
+
+  {
+    // Historical method prior to EnergyPlus Space
+    ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+    ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+
+    const auto electricEquipmentITEAirCooledObject1 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
+    const auto zoneOrSpaceTarget1 = electricEquipmentITEAirCooledObject1.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+    ASSERT_TRUE(zoneOrSpaceTarget1);
+
+    const auto electricEquipmentITEAirCooledObject2 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[1];
+    const auto zoneOrSpaceTarget2 = electricEquipmentITEAirCooledObject2.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+    ASSERT_TRUE(zoneOrSpaceTarget2);
+
+    ASSERT_NE(zoneOrSpaceTarget1.get(), zoneOrSpaceTarget2.get());
+  }
 }
 
 //two spaces, one spaceType, one thermalZone => Expected: IT object associated with the spaceType in OS,
@@ -236,49 +268,63 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
   EXPECT_EQ(20.0, space2->electricEquipmentITEAirCooledPowerPerFloorArea());
   EXPECT_EQ(2000.0, space2->electricEquipmentITEAirCooledPower());
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  {
+    // Translate to EnergyPlus Space
+    ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
 
-  WorkspaceObject electricEquipmentITEAirCooledObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
-  WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
-  //WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
+    WorkspaceObject electricEquipmentITEAirCooledObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
+    WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
 
-  ASSERT_TRUE(electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
-  EXPECT_EQ("Watts/Area",
-            electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
+    EXPECT_EQ("Watts/Area",
+              electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
 
-  ASSERT_TRUE(electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
-  EXPECT_EQ(20.0, electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false).get());
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
+    EXPECT_EQ(20.0, electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false).get());
 
-  ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
-  EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
+    EXPECT_TRUE(electricEquipmentITEAirCooledObject.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperUnit));
 
-  //model.save(toPath("./ITE_translator_OneSpaceType_OneThermalZone.osm"), true);
-  //workspace.save(toPath("./ITE_translator_OneSpaceType_OneThermalZone.idf"), true);
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
+    EXPECT_NE(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
+    EXPECT_EQ(openstudio::IddObjectType("Space"),
+              electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->iddObject().type());
+  }
+
+  {
+    // Historical method prior to EnergyPlus Space
+    ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+
+    WorkspaceObject electricEquipmentITEAirCooledObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
+    WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
+    EXPECT_EQ("Watts/Area",
+              electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
+
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
+    EXPECT_EQ(20.0, electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false).get());
+
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
+    EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
+  }
 }
 
-// two spaces, two spaceTypes, one thermalZone => Expected: IT object associated with each spaceType in OS,
-// but associated with the thermal zone in E+ after two zones being combined.
-TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpaceTypes_OneThermalZone) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpaces_OneThermalZone) {
   Model model;
-
-  // 20 W/m^2
-  SpaceType spaceType1(model);
-  ElectricEquipmentITEAirCooledDefinition definition1(model);
-  definition1.setWattsperZoneFloorArea(20.0);
-  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled1(definition1);
-  electricEquipmentITEAirCooled1.setSpaceType(spaceType1);
-
-  // 30 W/m^2
-  SpaceType spaceType2(model);
-  ElectricEquipmentITEAirCooledDefinition definition2(model);
-  definition2.setWattsperZoneFloorArea(30.0);
-  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled2(definition2);
-  electricEquipmentITEAirCooled2.setSpaceType(spaceType2);
 
   ThermalZone thermalZone(model);
 
@@ -289,9 +335,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpa
   points.push_back(Point3d(10, 0, 0));
   points.push_back(Point3d(0, 0, 0));
 
+  // 20 W/m^2
+  ElectricEquipmentITEAirCooledDefinition definition(model);
+  definition.setWattsperZoneFloorArea(20.0);
+
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
-  space1->setSpaceType(spaceType1);
+  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled1(definition);
+  electricEquipmentITEAirCooled1.setSpace(*space1);
   space1->setThermalZone(thermalZone);
   EXPECT_EQ(100.0, space1->floorArea());
   EXPECT_EQ(20.0, space1->electricEquipmentITEAirCooledPowerPerFloorArea());
@@ -299,46 +350,41 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpa
 
   boost::optional<Space> space2 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space2);
-  space2->setSpaceType(spaceType2);
+  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled2(definition);
+  electricEquipmentITEAirCooled2.setSpace(*space2);
   space2->setThermalZone(thermalZone);
   EXPECT_EQ(100.0, space2->floorArea());
-  EXPECT_EQ(30.0, space2->electricEquipmentITEAirCooledPowerPerFloorArea());
-  EXPECT_EQ(3000.0, space2->electricEquipmentITEAirCooledPower());
+  EXPECT_EQ(20.0, space2->electricEquipmentITEAirCooledPowerPerFloorArea());
+  EXPECT_EQ(2000.0, space2->electricEquipmentITEAirCooledPower());
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  {
+    // Historical method prior to EnergyPlus Space
+    ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
 
-  bool foundITEquipmentPower2000 = false;
-  bool foundITEquipmentPower3000 = false;
-  for (int i = 0; i < 2; ++i) {
-    ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[i].getString(
-      ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
-    EXPECT_EQ("Watts/Unit", workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[i]
-                              .getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false)
-                              .get());
+    WorkspaceObject electricEquipmentITEAirCooledObject1 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
+    WorkspaceObject electricEquipmentITEAirCooledObject2 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
+    WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
 
-    ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[i].getDouble(
-      ElectricEquipment_ITE_AirCooledFields::WattsperUnit, false));
-    double wattsperUnit = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[i]
-                            .getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, false)
-                            .get();
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject1.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
+    EXPECT_EQ("Watts/Unit",
+              electricEquipmentITEAirCooledObject1.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
 
-    if (wattsperUnit == 2000.0) {
-      foundITEquipmentPower2000 = true;
-    } else if (wattsperUnit == 3000.0) {
-      foundITEquipmentPower3000 = true;
-    }
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject1.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, false));
+    EXPECT_EQ(2000.0, electricEquipmentITEAirCooledObject1.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, false).get());
+
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject1.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
+    EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject1.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
+
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject2.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
+    EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject2.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
   }
-
-  EXPECT_TRUE(foundITEquipmentPower2000);
-  EXPECT_TRUE(foundITEquipmentPower3000);
-
-  //model.save(toPath("./ITE_translator_TwoSpaceTypes_OneThermalZone.osm"), true);
-  //workspace.save(toPath("./ITE_translator_TwoSpaceTypes_OneThermalZone.idf"), true);
 }
 
 // test the connection of supply air node under default air flow calculation method "FlowFromSystem", no terminal => expect fail
@@ -362,6 +408,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Supply
   electricEquipmentITEAirCooled.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
+
   Workspace workspace = forwardTranslator.translateModel(model);
   // get the thermal zone inlet node
   ASSERT_TRUE(thermalZone.inletPortList().airLoopHVACModelObject()->optionalCast<Node>());
@@ -407,6 +455,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   electricEquipmentITEAirCooled2.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
@@ -416,10 +465,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   WorkspaceObject electricEquipmentITEAirCooledObject2 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[1];
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
 
-  ASSERT_TRUE(electricEquipmentITEAirCooledObject1.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
-  ASSERT_TRUE(electricEquipmentITEAirCooledObject2.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
-  EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject1.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
-  EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject2.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
+  boost::optional<WorkspaceObject> target1_ = electricEquipmentITEAirCooledObject1.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+  ASSERT_TRUE(target1_);
+  EXPECT_EQ(zoneObject, target1_.get()) << "Expected zoneObject '" << zoneObject.nameString() << "', but got '" << target1_->nameString() << "'";
+
+  boost::optional<WorkspaceObject> target2_ = electricEquipmentITEAirCooledObject2.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+  ASSERT_TRUE(target2_);
+  EXPECT_EQ(zoneObject, target2_.get()) << "Expected zoneObject '" << zoneObject.nameString() << "', but got '" << target2_->nameString() << "'";
 
   ASSERT_TRUE(electricEquipmentITEAirCooledObject1.getString(ElectricEquipment_ITE_AirCooledFields::AirFlowCalculationMethod, false));
   EXPECT_EQ("FlowControlWithApproachTemperatures",
@@ -491,4 +543,332 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
 
   //model.save(toPath("./ITE_translator_constraint2.osm"), true);
   //workspace.save(toPath("./ITE_translator_constraint2.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceTypes) {
+
+  Model m;
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.6;  // It's convenient for ACH, since 3600 s/hr
+  constexpr double spaceFloorArea = width * width;
+  // constexpr double spaceVolume = spaceFloorArea * height;
+  // constexpr double oneWallArea = width * height;
+
+  //            y (=North)
+  //   ▲
+  //   │                  building height = 3m
+  // 10├────────┼────────┼────────┼────────┤
+  //   │        │        │        │        │
+  //   │        │        │        │        │
+  //   │ Space 1│ Space 2│ Space 3│ Space 4│
+  //   │        │        │        │        │
+  //   └────────┴────────┴────────┴────────┴──► x
+  //  0        10       20        30       40
+
+  // Counterclockwise points
+  std::vector<Point3d> floorPointsSpace1{{0.0, 0.0, 0.0}, {0.0, width, 0.0}, {width, width, 0.0}, {width, 0.0, 0.0}};
+
+  auto space1 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  auto space2 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  space2.setXOrigin(width);
+  auto space3 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  space3.setXOrigin(width * 2);
+  auto space4 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  space4.setXOrigin(width * 3);
+
+  ThermalZone z(m);
+  EXPECT_TRUE(space1.setThermalZone(z));
+  EXPECT_TRUE(space2.setThermalZone(z));
+  EXPECT_TRUE(space3.setThermalZone(z));
+  EXPECT_TRUE(space4.setThermalZone(z));
+
+  AirLoopHVAC a(m);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m, alwaysOn);
+  // connect the thermal zone to airloopHVAC
+  EXPECT_TRUE(a.addBranchForZone(z, atu));
+  ASSERT_TRUE(atu.outletModelObject());
+  std::string nodeName = "ATU to Zone Node";
+  atu.outletModelObject()->setName(nodeName);
+
+  // Assign a default space type at building-level, with its own infiltration object
+  SpaceType buildingSpaceType(m);
+  buildingSpaceType.setName("buildingSpaceType");
+
+  ElectricEquipmentITEAirCooledDefinition iteBuildingDefinition(m);
+  ElectricEquipmentITEAirCooled iteBuilding(iteBuildingDefinition);
+  iteBuilding.setName("iteBuilding");
+  EXPECT_TRUE(iteBuilding.setSpaceType(buildingSpaceType));
+
+  auto building = m.getUniqueModelObject<Building>();
+  EXPECT_TRUE(building.setSpaceType(buildingSpaceType));
+
+  // Create an Office Space Type. Assign to Space 1 & 2 only (not 3 nor 4), it also has an infiltration object
+  SpaceType officeSpaceType(m);
+  officeSpaceType.setName("officeSpaceType");
+  ElectricEquipmentITEAirCooledDefinition iteOfficeDefinition(m);
+  ElectricEquipmentITEAirCooled iteOffice(iteOfficeDefinition);
+  iteOffice.setName("iteOffice");
+  EXPECT_TRUE(iteOffice.setSpaceType(officeSpaceType));
+  EXPECT_TRUE(space1.setSpaceType(officeSpaceType));
+  EXPECT_TRUE(space2.setSpaceType(officeSpaceType));
+
+  // Space 1 and 3 have a space-level infiltration
+  ElectricEquipmentITEAirCooledDefinition iteSpace1Definition(m);
+  ElectricEquipmentITEAirCooled iteSpace1(iteSpace1Definition);
+  iteSpace1.setName("iteSpace1");
+  EXPECT_TRUE(iteSpace1.setSpace(space1));
+
+  ElectricEquipmentITEAirCooledDefinition iteSpace3Definition(m);
+  ElectricEquipmentITEAirCooled iteSpace3(iteSpace3Definition);
+  iteSpace3.setName("iteSpace3");
+  EXPECT_TRUE(iteSpace3.setSpace(space3));
+
+  // ITEAirCooled Characteristics
+  // =============================
+  //
+  // |  ITEAirCooled | Watts/Area | Absolute W           | Calculated  Total    |
+  // |     Name      |   (W/s)    |   (W/Units, 1 Unit)  | For One Space (W)    |
+  // |---------------|------------|----------------------|----------------------|
+  // | iteSpace1     | 1.0        |                      | 100.0                |
+  // | iteSpace3     |            | 150.0                | 150.0                |
+  // | iteOffice     | 1.2        |                      | 120.0                |
+  // | iteBuilding   |            | 130.0                | 130.0                |
+
+  // Which ITEAirCooled object(s) apply to each space
+  // ================================================
+  //
+  // | Space    | Space Specific ITEAirCooled | Space specific W    ║ SpaceType                     | Additional ITEAirCooled | W     |
+  // |----------|-----------------------------|---------------------║-------------------------------|-------------------------|-------|
+  // | Space 1  | iteSpace1                   | 100.0               ║ officeSpaceType               | iteOffice               | 120.0 |
+  // | Space 2  |                             |                     ║ officeSpaceType               | iteOffice               | 120.0 |
+  // | Space 3  | iteSpace3                   | 150.0               ║ Inherited: buildingSpaceType  | iteBuilding             | 130.0 |
+  // | Space 4  |                             |                     ║ Inherited: buildingSpaceType  | iteBuilding             | 130.0 |
+  // |--------------------------------------------------------------------------------------------------------------------------------|
+  // | Subtotal |                               250.0               ║                                                           500.0 |
+  // |================================================================================================================================|
+  // | Total    |                                                 750.0                                                               |
+  // |================================================================================================================================|
+
+  EXPECT_TRUE(iteSpace1Definition.setWattsperZoneFloorArea(1.0));
+  EXPECT_TRUE(iteSpace3Definition.setWattsperUnit(150.0));
+  EXPECT_TRUE(iteOfficeDefinition.setWattsperZoneFloorArea(1.2));
+  EXPECT_TRUE(iteBuildingDefinition.setWattsperUnit(130.0));
+
+  auto spaces = z.spaces();
+  double modelWatts = std::accumulate(spaces.cbegin(), spaces.cend(), 0.0,
+                                      [](double sum, const Space& space) { return sum + space.electricEquipmentITEAirCooledPower(); });
+  EXPECT_EQ(750.0, modelWatts);
+
+  ForwardTranslator ft;
+
+  // When excluding space translation (historical behavior)
+  {
+    ft.setExcludeSpaceTranslation(true);
+
+    Workspace w = ft.translateModel(m);
+
+    auto zones = w.getObjectsByType(IddObjectType::Zone);
+    ASSERT_EQ(1, zones.size());
+    auto zone = zones[0];
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::SpaceList).size());
+
+    auto ites = w.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled);
+    // I expect iteSpace1, iteSpace3, two iteOffice and two iteBuilding, so 6 total
+    ASSERT_EQ(6, ites.size());
+
+    double totalWatts = 0.0;  // m3/s
+    for (const auto& ite : ites) {
+      auto name = ite.nameString();
+      auto z_ = ite.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+      ASSERT_TRUE(z_);
+      EXPECT_EQ(zone, z_.get());
+      // Everything is converted to Absolute Watts/Units
+      ASSERT_TRUE(ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
+      EXPECT_EQ("Watts/Unit", ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
+
+      EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea));
+
+      EXPECT_EQ(nodeName, ite.getString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName));
+
+      ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, false));
+      double w = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit).get();
+      totalWatts += w;
+
+      // These two are absolute, no issue whatsoever
+      if (name.find(iteBuilding.nameString()) != std::string::npos) {
+        EXPECT_EQ(130.0, w);
+        EXPECT_EQ(iteBuildingDefinition.wattsperUnit(), w);
+      } else if (name.find(iteSpace3.nameString()) != std::string::npos) {
+        EXPECT_EQ(150.0, w);
+        EXPECT_EQ(iteSpace3Definition.wattsperUnit(), w);
+        // These two are per floor area
+      } else if (name.find(iteOffice.nameString()) != std::string::npos) {
+        EXPECT_EQ(120.0, w);
+        EXPECT_EQ(iteOfficeDefinition.wattsperZoneFloorArea().get() * spaceFloorArea, w);
+        EXPECT_EQ(iteOffice.getWattsperUnit(spaceFloorArea), w);
+      } else if (name.find(iteSpace1.nameString()) != std::string::npos) {
+        EXPECT_EQ(100.0, w);
+        EXPECT_EQ(iteSpace1Definition.wattsperZoneFloorArea().get() * spaceFloorArea, w);
+        EXPECT_EQ(iteSpace1.getWattsperUnit(spaceFloorArea), w);
+      }
+    }
+
+    EXPECT_EQ(750.0, totalWatts);
+    EXPECT_EQ(modelWatts, totalWatts);
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    ft.setExcludeSpaceTranslation(false);
+
+    // This object actually accepts a Zone or Space as a target... But not ZoneList/SpaceList
+    Workspace w = ft.translateModel(m);
+
+    auto zones = w.getObjectsByType(IddObjectType::Zone);
+    ASSERT_EQ(1, zones.size());
+    auto zone = zones[0];
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4, w.getObjectsByType(IddObjectType::Space).size());
+    EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
+
+    auto idf_space1_ = w.getObjectByTypeAndName(IddObjectType::Space, space1.nameString());
+    ASSERT_TRUE(idf_space1_);
+    auto idf_space2_ = w.getObjectByTypeAndName(IddObjectType::Space, space2.nameString());
+    ASSERT_TRUE(idf_space2_);
+    auto idf_space3_ = w.getObjectByTypeAndName(IddObjectType::Space, space3.nameString());
+    ASSERT_TRUE(idf_space3_);
+    auto idf_space4_ = w.getObjectByTypeAndName(IddObjectType::Space, space4.nameString());
+    ASSERT_TRUE(idf_space4_);
+
+    auto ites = w.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled);
+    // I expect iteSpace1, iteSpace3, two iteOffice and two iteBuilding, so 6 total
+    ASSERT_EQ(6, ites.size());
+
+    bool foundSpace1 = false;
+    bool foundSpace3 = false;
+
+    bool foundSpace1OfficeSpaceType = false;
+    bool foundSpace2OfficeSpaceType = false;
+    bool foundSpace3BuildingSpaceType = false;
+    bool foundSpace4BuildingSpaceType = false;
+
+    double totalWatts = 0.0;
+    for (const auto& ite : ites) {
+      auto name = ite.nameString();
+      auto spaceTarget_ = ite.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName);
+      ASSERT_TRUE(spaceTarget_);
+
+      ASSERT_TRUE(ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
+
+      EXPECT_EQ(nodeName, ite.getString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName));
+
+      // These two are absolute, no issue whatsoever
+      if (name.find(iteBuilding.nameString()) != std::string::npos) {
+        EXPECT_EQ("Watts/Unit", ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get())
+          << "Failed for " << name << " pointing to " << spaceTarget_->briefDescription();
+
+        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, false));
+        double w = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit).get();
+
+        EXPECT_EQ(130.0, w);
+        EXPECT_EQ(iteBuildingDefinition.wattsperUnit(), w);
+
+        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea));
+
+        totalWatts += w;
+
+        if (spaceTarget_.get() == idf_space3_.get()) {
+          foundSpace3BuildingSpaceType = true;
+        } else if (spaceTarget_.get() == idf_space4_.get()) {
+          foundSpace4BuildingSpaceType = true;
+        } else {
+          EXPECT_TRUE(false) << iteBuilding.nameString() << " maps to an unexpected entity: " << spaceTarget_->briefDescription();
+        }
+      } else if (name.find(iteSpace3.nameString()) != std::string::npos) {
+
+        EXPECT_EQ("Watts/Unit", ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get())
+          << "Failed for " << name << " pointing to " << spaceTarget_->briefDescription();
+
+        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, false));
+        double w = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit).get();
+
+        EXPECT_EQ(150.0, w);
+        EXPECT_EQ(iteSpace3Definition.wattsperUnit(), w);
+
+        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea));
+
+        totalWatts += w;
+
+        if (spaceTarget_.get() == idf_space3_.get()) {
+          foundSpace3 = true;
+        } else {
+          EXPECT_TRUE(false) << iteBuilding.nameString() << " maps to an unexpected entity: " << spaceTarget_->briefDescription();
+        }
+
+        // These two are per floor area
+      } else if (name.find(iteOffice.nameString()) != std::string::npos) {
+
+        EXPECT_EQ("Watts/Area", ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get())
+          << "Failed for " << name << " pointing to " << spaceTarget_->briefDescription();
+
+        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperUnit));
+
+        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
+        double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea).get();
+
+        EXPECT_EQ(iteOffice.wattsperZoneFloorArea(), w_perArea);
+
+        double w = w_perArea * spaceFloorArea;
+
+        totalWatts += w;
+
+        EXPECT_EQ(120.0, w);
+
+        if (spaceTarget_.get() == idf_space1_.get()) {
+          foundSpace1OfficeSpaceType = true;
+        } else if (spaceTarget_.get() == idf_space2_.get()) {
+          foundSpace2OfficeSpaceType = true;
+        } else {
+          EXPECT_TRUE(false) << iteBuilding.nameString() << " maps to an unexpected entity: " << spaceTarget_->briefDescription();
+        }
+      } else if (name.find(iteSpace1.nameString()) != std::string::npos) {
+
+        EXPECT_EQ("Watts/Area", ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get())
+          << "Failed for " << name << " pointing to " << spaceTarget_->briefDescription();
+
+        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperUnit));
+
+        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
+        double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea).get();
+
+        EXPECT_EQ(iteSpace1.wattsperZoneFloorArea(), w_perArea);
+
+        double w = w_perArea * spaceFloorArea;
+
+        totalWatts += w;
+
+        EXPECT_EQ(100.0, w);
+
+        if (spaceTarget_.get() == idf_space1_.get()) {
+          foundSpace1 = true;
+        } else {
+          EXPECT_TRUE(false) << iteBuilding.nameString() << " maps to an unexpected entity: " << spaceTarget_->briefDescription();
+        }
+      }
+    }
+
+    EXPECT_TRUE(foundSpace1);
+    EXPECT_TRUE(foundSpace3);
+
+    EXPECT_TRUE(foundSpace1OfficeSpaceType);
+    EXPECT_TRUE(foundSpace2OfficeSpaceType);
+    EXPECT_TRUE(foundSpace3BuildingSpaceType);
+    EXPECT_TRUE(foundSpace4BuildingSpaceType);
+    EXPECT_EQ(750.0, totalWatts);
+    EXPECT_EQ(modelWatts, totalWatts);
+  }
 }

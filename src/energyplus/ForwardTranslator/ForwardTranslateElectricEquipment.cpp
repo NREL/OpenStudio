@@ -50,8 +50,6 @@
 
 using namespace openstudio::model;
 
-using namespace std;
-
 namespace openstudio {
 
 namespace energyplus {
@@ -66,7 +64,7 @@ namespace energyplus {
 
     ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
 
-    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
     idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     if (boost::optional<Schedule> schedule = modelObject.schedule()) {
