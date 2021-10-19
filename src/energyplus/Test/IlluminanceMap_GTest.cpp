@@ -52,8 +52,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-constexpr static bool DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES = false;  // TODO!
-
 TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap_NoZone) {
   Model model;
   ThermalZone thermalZone(model);
@@ -99,7 +97,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap) {
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
   }
 
-  if constexpr (DAYLIGHTING_CONTROL_SUPPORTED_WITH_SPACES) {
+  {
     forwardTranslator.setExcludeSpaceTranslation(false);
     Workspace workspace = forwardTranslator.translateModel(model);
 
