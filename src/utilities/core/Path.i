@@ -308,7 +308,12 @@ namespace openstudio {
         }else{
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &");
         }
+      } else if(PyUnicode_Check($input)) {
+        // Python 3
+        std::string s(PyUnicode_AsUTF8($input));
+        $1 = openstudio::toPath(s);
       } else if(PyString_Check($input)) {
+        // Python2, PyString_Check does PyBytes_Check
         std::string s(PyString_AsString($input));
         $1 = openstudio::toPath(s);
       } else {
@@ -317,7 +322,7 @@ namespace openstudio {
     }
 
     %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (path) {
-      bool stringType = PyString_Check($input);
+      bool stringType = PyString_Check($input) || PyUnicode_Check($input);
       bool pathType = false;
       if (!stringType){
         void *vptr = 0;
@@ -347,7 +352,12 @@ namespace openstudio {
         }else{
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &");
         }
+      } else if(PyUnicode_Check($input)) {
+        // Python 3
+        std::string s(PyUnicode_AsUTF8($input));
+        $1 = new openstudio::path(openstudio::toPath(s));
       } else if(PyString_Check($input)) {
+        // Python2, PyString_Check does PyBytes_Check
         std::string s(PyString_AsString($input));
         $1 = new openstudio::path(openstudio::toPath(s));
       } else {
@@ -356,7 +366,7 @@ namespace openstudio {
     }
 
     %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (const path&) {
-      bool stringType = PyString_Check($input);
+      bool stringType = PyString_Check($input) || PyUnicode_Check($input);
       bool pathType = false;
       if (!stringType){
         void *vptr = 0;
