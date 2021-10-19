@@ -331,10 +331,19 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
   if (value.isMember("ft_options")) {
     Json::Value options = value["ft_options"];
 
+    // Do some filtering to avoid passing bogus values to workflow-gem, and checking that it's correctly a boolean
+    Json::Value cleaned_options;
+    for (auto& known_opt : {"runcontrolspecialdays", "ip_tabular_output", "no_lifecyclecosts", "no_sqlite_output", "no_html_output",
+                            "no_variable_dictionary", "no_space_translation"}) {
+      if (options.isMember(known_opt) && options[known_opt].isBool()) {
+        cleaned_options[known_opt] = options[known_opt].asBool();
+      }
+    }
+
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string optionString = Json::writeString(wbuilder, options);
+    std::string optionString = Json::writeString(wbuilder, cleaned_options);
 
     result->setForwardTranslateOptions(optionString);
   }
