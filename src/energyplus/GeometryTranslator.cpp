@@ -789,14 +789,11 @@ namespace energyplus {
       IdfObject leftObject(IddObjectType::Shading_Zone_Detailed);
       IdfObject rightObject(IddObjectType::Shading_Zone_Detailed);
 
-      // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-
-      // TODO this isn't doing what this comment is saying! In fact this is doing absolutely NOTHING.
-      // It should call the version without 3d argument (fieldMap)
-      // copy fields over directly
-      mapFields(oldObject, leftObject, fieldMap);
-      mapFields(oldObject, rightObject, fieldMap);
+      // // fields which map directly
+      // std::vector<std::pair<unsigned, unsigned>> fieldMap;
+      // // copy fields over directly
+      // mapFields(oldObject, leftObject, fieldMap);
+      // mapFields(oldObject, rightObject, fieldMap);
 
       // set other fields
       leftObject.setString(Shading_Zone_DetailedFields::Name, oldObject.name().get() + " Left");
@@ -925,14 +922,11 @@ namespace energyplus {
       IdfObject leftObject(IddObjectType::Shading_Zone_Detailed);
       IdfObject rightObject(IddObjectType::Shading_Zone_Detailed);
 
-      // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-
-      // TODO this isn't doing what this comment is saying! In fact this is doing absolutely NOTHING.
-      // It should call the version without 3d argument (fieldMap) if it wanted to copy one to one, or more likely just do nothing
-      // copy fields over directly
-      mapFields(oldObject, leftObject, fieldMap);
-      mapFields(oldObject, rightObject, fieldMap);
+      // // fields which map directly
+      // std::vector<std::pair<unsigned, unsigned>> fieldMap;
+      // // copy fields over directly
+      // mapFields(oldObject, leftObject, fieldMap);
+      // mapFields(oldObject, rightObject, fieldMap);
 
       // set other fields
       leftObject.setString(Shading_Zone_DetailedFields::Name, oldObject.name().get() + " Left");
@@ -2306,7 +2300,7 @@ namespace energyplus {
     Transformation buildingTransformation = this->buildingTransformation();
 
     // Daylighting controls
-    // TODO : transform glare angle
+    // TODO: transform glare angle
     // for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)) {
     // }
 
