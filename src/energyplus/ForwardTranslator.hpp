@@ -634,7 +634,7 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateAirGap(model::AirGap& modelObject);
 
-    boost::optional<IdfObject> translateAirLoopHVAC(model::AirLoopHVAC& modelObject);
+    boost::optional<IdfObject> translateAirLoopHVAC(model::AirLoopHVAC& airLoopHVAC);
 
     boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem(model::AirLoopHVACOutdoorAirSystem& modelObject);
 

@@ -42,15 +42,12 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirGap(AirGap& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Material_AirGap);
 
-    m_idfObjects.push_back(idfObject);
-
-    idfObject.setString(Material_AirGapFields::Name, modelObject.name().get());
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Material_AirGap, modelObject);
 
     idfObject.setDouble(Material_AirGapFields::ThermalResistance, modelObject.thermalResistance());
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

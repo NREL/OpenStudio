@@ -59,8 +59,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath(AirLoopHVAC& airLoopHVAC) {
-    IdfObject returnPathIdf(openstudio::IddObjectType::AirLoopHVAC_ReturnPath);
-    m_idfObjects.push_back(returnPathIdf);
+    IdfObject& returnPathIdf = m_idfObjects.emplace_back(openstudio::IddObjectType::AirLoopHVAC_ReturnPath);
 
     returnPathIdf.setName(airLoopHVAC.name().get() + " Return Path");
 
@@ -83,7 +82,7 @@ namespace energyplus {
     eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentObjectType, _zoneMixer->iddObject().name());
     eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentName, _zoneMixer->name().get());
 
-    return boost::optional<IdfObject>(returnPathIdf);
+    return returnPathIdf;
   }
 
 }  // namespace energyplus

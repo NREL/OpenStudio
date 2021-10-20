@@ -57,8 +57,7 @@ namespace energyplus {
     boost::optional<IdfObject> supplyPathIdf;
 
     if (auto t_airLoopHVAC = demandInletNode.airLoopHVAC()) {
-      IdfObject supplyPathIdf(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
-      m_idfObjects.push_back(supplyPathIdf);
+      IdfObject& supplyPathIdf = m_idfObjects.emplace_back(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
 
       supplyPathIdf.setName(t_airLoopHVAC->name().get() + " " + demandInletNode.name().get() + " Supply Path");
 
@@ -66,7 +65,7 @@ namespace energyplus {
 
       auto t_comps = t_airLoopHVAC->demandComponents(demandInletNode, t_airLoopHVAC->demandOutletNode());
       auto splitters = subsetCastVector<model::AirLoopHVACZoneSplitter>(t_comps);
-      OS_ASSERT(splitters.size() == 1u);
+      OS_ASSERT(splitters.size() == 1U);
 
       boost::optional<IdfObject> _zoneSplitter = translateAndMapModelObject(splitters.front());
       OS_ASSERT(_zoneSplitter);
