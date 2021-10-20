@@ -72,6 +72,10 @@ class UTILITIES_API RunOptions
   bool setDebug(bool debug);
   void resetDebug();
 
+  bool epjson() const;
+  bool setEpjson(bool epjson);
+  void resetEpjson();
+
   bool fast() const;
   bool setFast(bool fast);
   void resetFast();
@@ -95,6 +99,10 @@ class UTILITIES_API RunOptions
   boost::optional<CustomOutputAdapter> customOutputAdapter() const;
   bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
   void resetCustomOutputAdapter();
+
+  std::string forwardTranslateOptions() const;
+  bool setForwardTranslateOptions(const std::string& options);
+  void resetForwardTranslateOptions();
 
  protected:
   // get the impl
