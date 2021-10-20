@@ -1112,14 +1112,18 @@ TEST(Filetypes, RunOptions_ForwardTranslate) {
   options.setEpjson(true);
   options.setCustomOutputAdapter(adapter);
 
-  std::string ft_options = "\"ft_options\": {"
-                           "\"runcontrolspecialdays\": true,"
-                           "\"ip_tabular_output\": true,"
-                           "\"lifecyclecosts\": true,"
-                           "\"sqlite_output\": true,"
-                           "\"html_output\": true,"
-                           "\"variable_dictionary\": true,"
-                           "\"space_translation\": true";
+  // return string is formated with wbuilder["indentation"] = "   ";
+  std::string ft_options = "{\n   \"no_space_translation\" : false\n}";
+
+  //std::string ft_options = "{\n"
+  //                         "   \"runcontrolspecialdays\" : true,\n"
+  //                         "   \"ip_tabular_output\" : true,\n"
+  //                         "   \"no_lifecyclecosts\" : true,\n"
+  //                         "   \"no_sqlite_output\" : true,\n"
+  //                         "   \"no_html_output\" : true,\n"
+  //                         "   \"no_variable_dictionary\" : true,\n"
+  //                         "   \"no_space_translation\" : true\n"
+  //                         "}";
 
   options.setForwardTranslateOptions(ft_options);
 
@@ -1141,6 +1145,7 @@ TEST(Filetypes, RunOptions_ForwardTranslate) {
   ASSERT_TRUE(workflow2->runOptions());
   EXPECT_TRUE(workflow2->runOptions()->debug());
   ASSERT_TRUE(workflow2->runOptions()->customOutputAdapter());
+  EXPECT_EQ(ft_options, workflow2->runOptions()->forwardTranslateOptions());
   EXPECT_EQ("my_ruby_file.rb", workflow2->runOptions()->customOutputAdapter()->customFileName());
   EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
 }
