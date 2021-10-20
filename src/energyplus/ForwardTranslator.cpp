@@ -532,6 +532,9 @@ namespace energyplus {
       }
     }
 
+    // Try to reserve some spaces in the vector
+    m_idfObjects.reserve(model.numObjects());
+
     if (fullModelTranslation) {
 
       // translate life cycle cost parameters

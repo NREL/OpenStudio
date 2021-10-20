@@ -1596,9 +1596,9 @@ namespace energyplus {
    *  Valid refrigerants are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
     void createFluidPropertiesMap();
 
-    typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;
+    using ModelObjectMap = std::map<const openstudio::Handle, const IdfObject>;
 
-    typedef std::map<const std::string, const std::string> FluidPropertiesMap;
+    using FluidPropertiesMap = std::map<const std::string, const std::string>;
 
     FluidPropertiesMap m_fluidPropertiesMap;
 
