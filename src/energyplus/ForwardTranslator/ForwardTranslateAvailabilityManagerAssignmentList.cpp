@@ -63,7 +63,7 @@ namespace energyplus {
     }
 
     // Create an AVM list
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AvailabilityManagerAssignmentList, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AvailabilityManagerAssignmentList, modelObject);
 
     for (auto& avm : avmVector) {
       // Skip the AVM:HybridVentilation

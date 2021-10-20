@@ -57,7 +57,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_WaterHeating_Desuperheater, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_WaterHeating_Desuperheater, modelObject);
 
     // AvailabilityScheduleName
     boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();

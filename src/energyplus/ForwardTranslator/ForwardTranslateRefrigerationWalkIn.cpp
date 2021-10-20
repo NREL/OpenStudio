@@ -56,7 +56,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject refrigerationWalkIn = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_WalkIn, modelObject);
+    IdfObject& refrigerationWalkIn = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_WalkIn, modelObject);
 
     //AvailabilityScheduleName
     boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();

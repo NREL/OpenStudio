@@ -56,7 +56,7 @@ namespace energyplus {
     boost::optional<double> value;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_Gas_MultiStage, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_Gas_MultiStage, modelObject);
 
     // AvailabilityScheduleName
     if (auto schedule = modelObject.availabilitySchedule()) {

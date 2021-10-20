@@ -58,7 +58,7 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateHeatPumpPlantLoopEIRCooling(HeatPumpPlantLoopEIRCooling& modelObject) {
     // createRegisterAndNameIdfObject will add it to m_map, m_idfObjects, and name it
     // The fact that it is added to m_map will avoid a recursion issue when it has a companion heating coil (both FT methods call each other)
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_PlantLoop_EIR_Cooling, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_PlantLoop_EIR_Cooling, modelObject);
 
     boost::optional<double> optvalue;
 

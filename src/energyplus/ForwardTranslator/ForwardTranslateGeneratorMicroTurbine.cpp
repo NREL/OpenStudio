@@ -59,7 +59,7 @@ namespace energyplus {
  to the EnergyPlus Generator:MicroTurbine object */
   boost::optional<IdfObject> ForwardTranslator::translateGeneratorMicroTurbine(GeneratorMicroTurbine& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_MicroTurbine, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_MicroTurbine, modelObject);
 
     boost::optional<GeneratorMicroTurbineHeatRecovery> generatorOptionalMicroTurbineHeatRecovery = modelObject.generatorMicroTurbineHeatRecovery();
     // If there is a Heat Recovery Object, we set the appropriate fields of the E+ object from the HR object

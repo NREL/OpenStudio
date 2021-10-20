@@ -68,7 +68,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_ConvectionCoefficients, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_ConvectionCoefficients, modelObject);
 
     if (convectionCoefficientSurface) {
       boost::optional<IdfObject> surface = translateAndMapModelObject(*convectionCoefficientSurface);

@@ -70,7 +70,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSurface(model::Surface& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::BuildingSurface_Detailed, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::BuildingSurface_Detailed, modelObject);
 
     std::string surfaceType = modelObject.surfaceType();
     if (istringEqual("RoofCeiling", surfaceType)) {

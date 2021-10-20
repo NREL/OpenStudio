@@ -61,7 +61,7 @@ namespace energyplus {
     }
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::CentralHeatPumpSystem, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::CentralHeatPumpSystem, modelObject);
 
     // ControlMethod
     if ((s = modelObject.controlMethod())) {

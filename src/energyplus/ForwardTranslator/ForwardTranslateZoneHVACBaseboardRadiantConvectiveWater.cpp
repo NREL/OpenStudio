@@ -68,7 +68,7 @@ namespace energyplus {
     boost::optional<ModelObject> temp;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water, modelObject);
 
     // E+ 9.5.0: This object got broken into two: a zonehvac object, and a design object
     IdfObject designObject(openstudio::IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water_Design);

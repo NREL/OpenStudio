@@ -73,7 +73,7 @@ namespace energyplus {
     auto const zoneInletNode = modelObject.outletNode();
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EnergyRecoveryVentilator, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EnergyRecoveryVentilator, modelObject);
 
     // AvailabilityScheduleName
     {

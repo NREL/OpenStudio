@@ -67,7 +67,7 @@ namespace energyplus {
     std::string name;
 
     // Name
-    IdfObject refrigerationSystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_System, modelObject);
+    IdfObject& refrigerationSystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_System, modelObject);
 
     //Refrigerated Case or Walkin or CaseAndWalkInList Name
     std::vector<RefrigerationCase> cases = modelObject.cases();

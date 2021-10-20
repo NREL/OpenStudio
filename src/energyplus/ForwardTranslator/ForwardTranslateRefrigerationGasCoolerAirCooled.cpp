@@ -51,7 +51,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_GasCooler_AirCooled, modelObject);
+    IdfObject& object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_GasCooler_AirCooled, modelObject);
 
     // Rated Total Heat Rejection Rate Curve Name
     boost::optional<CurveLinear> heatRejectCurve = modelObject.ratedTotalHeatRejectionRateCurve();

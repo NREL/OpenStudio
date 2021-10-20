@@ -127,7 +127,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSimulationControl(AirflowNetworkSimulationControl& modelObject) {
-    IdfObject idfObject = createAndRegisterIdfObject(IddObjectType::AirflowNetwork_SimulationControl, modelObject);
+    IdfObject& idfObject = createAndRegisterIdfObject(IddObjectType::AirflowNetwork_SimulationControl, modelObject);
 
     // Name
     if (!modelObject.nameString().empty()) {
@@ -195,7 +195,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkZone(AirflowNetworkZone& modelObject) {
 
-    IdfObject idfObject = createAndRegisterIdfObject(IddObjectType::AirflowNetwork_MultiZone_Zone, modelObject);
+    IdfObject& idfObject = createAndRegisterIdfObject(IddObjectType::AirflowNetwork_MultiZone_Zone, modelObject);
 
     // Name
     idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::ZoneName, modelObject.thermalZone().nameString());
@@ -231,7 +231,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSurface(AirflowNetworkSurface& modelObject) {
 
-    IdfObject idfObject = createAndRegisterIdfObject(IddObjectType::AirflowNetwork_MultiZone_Surface, modelObject);
+    IdfObject& idfObject = createAndRegisterIdfObject(IddObjectType::AirflowNetwork_MultiZone_Surface, modelObject);
 
     // Name
     idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, modelObject.surface().nameString());
@@ -276,7 +276,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkReferenceCrackConditions(AirflowNetworkReferenceCrackConditions& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_ReferenceCrackConditions, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_ReferenceCrackConditions, modelObject);
 
     idfObject.setDouble(AirflowNetwork_MultiZone_ReferenceCrackConditionsFields::ReferenceTemperature, modelObject.temperature());
     idfObject.setDouble(AirflowNetwork_MultiZone_ReferenceCrackConditionsFields::ReferenceBarometricPressure, modelObject.barometricPressure());
@@ -287,7 +287,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkCrack(AirflowNetworkCrack& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Surface_Crack, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Surface_Crack, modelObject);
 
     idfObject.setString(AirflowNetwork_MultiZone_Surface_CrackFields::Name, modelObject.nameString());
     idfObject.setDouble(AirflowNetwork_MultiZone_Surface_CrackFields::AirMassFlowCoefficientatReferenceConditions,
@@ -303,7 +303,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkEffectiveLeakageArea(AirflowNetworkEffectiveLeakageArea& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea, modelObject);
 
     idfObject.setDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::EffectiveLeakageArea, modelObject.effectiveLeakageArea());
     idfObject.setDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::DischargeCoefficient, modelObject.dischargeCoefficient());
@@ -316,7 +316,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDetailedOpening(AirflowNetworkDetailedOpening& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_DetailedOpening, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_DetailedOpening, modelObject);
 
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed,
                         modelObject.airMassFlowCoefficientWhenOpeningisClosed());
@@ -345,7 +345,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSimpleOpening(AirflowNetworkSimpleOpening& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_SimpleOpening, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_SimpleOpening, modelObject);
 
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed,
                         modelObject.airMassFlowCoefficientWhenOpeningisClosed());
@@ -360,7 +360,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkHorizontalOpening(AirflowNetworkHorizontalOpening& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_HorizontalOpening, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_HorizontalOpening, modelObject);
 
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed,
                         modelObject.airMassFlowCoefficientWhenOpeningisClosed());
@@ -390,7 +390,7 @@ namespace energyplus {
       return boost::none;  // issue warning?
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_ZoneExhaustFan, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_Component_ZoneExhaustFan, modelObject);
 
     idfObject.setDouble(
       AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowCoefficientWhentheZoneExhaustFanisOffatReferenceConditions,
@@ -405,7 +405,7 @@ namespace energyplus {
   }
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkExternalNode(AirflowNetworkExternalNode& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_ExternalNode, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_MultiZone_ExternalNode, modelObject);
 
     idfObject.setDouble(AirflowNetwork_MultiZone_ExternalNodeFields::ExternalNodeHeight, modelObject.externalNodeHeight());
     idfObject.setString(AirflowNetwork_MultiZone_ExternalNodeFields::WindPressureCoefficientCurveName,
@@ -420,7 +420,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributionNode(AirflowNetworkDistributionNode& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Node, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Node, modelObject);
 
     if (modelObject.node()) {
       idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.node().get().nameString());
@@ -445,7 +445,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkLeakageRatio(AirflowNetworkLeakageRatio& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_LeakageRatio, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_LeakageRatio, modelObject);
 
     if (modelObject.effectiveLeakageRatio()) {
       idfObject.setDouble(AirflowNetwork_Distribution_Component_LeakageRatioFields::EffectiveLeakageRatio, modelObject.effectiveLeakageRatio().get());
@@ -460,7 +460,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDuct(AirflowNetworkDuct& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_Duct, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_Duct, modelObject);
 
     idfObject.setDouble(AirflowNetwork_Distribution_Component_DuctFields::DuctLength, modelObject.ductLength());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_DuctFields::HydraulicDiameter, modelObject.hydraulicDiameter());
@@ -547,7 +547,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkConstantPressureDrop(AirflowNetworkConstantPressureDrop& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_ConstantPressureDrop, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_ConstantPressureDrop, modelObject);
 
     idfObject.setDouble(AirflowNetwork_Distribution_Component_ConstantPressureDropFields::PressureDifferenceAcrosstheComponent,
                         modelObject.pressureDrop());
@@ -561,7 +561,7 @@ namespace energyplus {
       return boost::none;  // issue warning?
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_OutdoorAirFlow, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Component_OutdoorAirFlow, modelObject);
 
     idfObject.setDouble(
       AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowCoefficientWhentheZoneExhaustFanisOffatReferenceConditions,
@@ -578,7 +578,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributionLinkage(AirflowNetworkDistributionLinkage& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Linkage, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_Distribution_Linkage, modelObject);
 
     boost::optional<IdfObject> obj;
 
@@ -657,7 +657,7 @@ namespace energyplus {
   boost::optional<IdfObject>
     ForwardTranslator::translateAirflowNetworkOccupantVentilationControl(AirflowNetworkOccupantVentilationControl& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_OccupantVentilationControl, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirflowNetwork_OccupantVentilationControl, modelObject);
 
     idfObject.setDouble(AirflowNetwork_OccupantVentilationControlFields::MinimumOpeningTime, modelObject.minimumOpeningTime());
     idfObject.setDouble(AirflowNetwork_OccupantVentilationControlFields::MinimumClosingTime, modelObject.minimumClosingTime());

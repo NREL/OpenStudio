@@ -50,7 +50,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject subcoolerMechanical = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Subcooler, modelObject);
+    IdfObject& subcoolerMechanical = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Subcooler, modelObject);
 
     subcoolerMechanical.setString(Refrigeration_SubcoolerFields::SubcoolerType, "Mechanical");
 

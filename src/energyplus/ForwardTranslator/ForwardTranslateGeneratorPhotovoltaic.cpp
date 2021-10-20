@@ -50,7 +50,7 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic& modelObject) {
 
     // We are going to check for required properties such as Surface before we register the object
-    // IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
+    // IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
     IdfObject idfObject(openstudio::IddObjectType::Generator_Photovoltaic);
     // Name
     idfObject.setName(modelObject.nameString());

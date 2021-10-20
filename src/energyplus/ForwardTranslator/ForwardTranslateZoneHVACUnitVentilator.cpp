@@ -72,7 +72,7 @@ namespace energyplus {
     std::string const oaNodeName = baseName + " OA Node";
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_UnitVentilator, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_UnitVentilator, modelObject);
 
     // AvailabilityScheduleName
     {

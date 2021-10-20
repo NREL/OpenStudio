@@ -49,7 +49,7 @@ namespace energyplus {
     boost::optional<Node> node;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_OneStageCooling, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_OneStageCooling, modelObject);
 
     // CoolingStageOnSupplyAirSetpointTemperature
     n = modelObject.coolingStageOnSupplyAirSetpointTemperature();

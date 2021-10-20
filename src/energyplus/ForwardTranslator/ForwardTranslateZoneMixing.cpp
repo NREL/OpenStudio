@@ -52,7 +52,7 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateZoneMixing(ZoneMixing& modelObject) {
     // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
     // the final file. Also set's the idfObject's name.
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneMixing, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneMixing, modelObject);
 
     boost::optional<double> value;
 

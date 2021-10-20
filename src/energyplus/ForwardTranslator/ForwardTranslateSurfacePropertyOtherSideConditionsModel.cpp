@@ -53,7 +53,7 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideConditionsModel, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideConditionsModel, modelObject);
 
     idfObject.setString(SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, modelObject.typeOfModeling());
 

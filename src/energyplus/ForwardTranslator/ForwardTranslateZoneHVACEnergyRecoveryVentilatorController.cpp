@@ -56,7 +56,7 @@ namespace energyplus {
     boost::optional<ModelObject> temp;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EnergyRecoveryVentilator_Controller, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EnergyRecoveryVentilator_Controller, modelObject);
 
     // TemperatureHighLimit
     if ((value = modelObject.temperatureHighLimit())) {

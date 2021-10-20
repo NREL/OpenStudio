@@ -54,7 +54,7 @@ namespace energyplus {
     boost::optional<ModelObject> temp;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_Dehumidifier_DX, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_Dehumidifier_DX, modelObject);
 
     // AvailabilityScheduleName
     {

@@ -47,7 +47,7 @@ namespace energyplus {
     std::string s;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_Coldest, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_Coldest, modelObject);
 
     // ControlVariable
     s = modelObject.controlVariable();

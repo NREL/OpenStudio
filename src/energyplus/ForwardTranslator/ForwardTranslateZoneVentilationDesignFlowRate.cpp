@@ -53,7 +53,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateZoneVentilationDesignFlowRate(ZoneVentilationDesignFlowRate& modelObject) {
-    auto idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneVentilation_DesignFlowRate, modelObject);
+    auto& idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneVentilation_DesignFlowRate, modelObject);
 
     if (auto value = modelObject.thermalZone()) {
       idfObject.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, value->name().get());

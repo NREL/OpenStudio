@@ -41,7 +41,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerScheduledOff(AvailabilityManagerScheduledOff& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AvailabilityManager_ScheduledOff, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AvailabilityManager_ScheduledOff, modelObject);
 
     // Schedule
     {

@@ -53,7 +53,7 @@ namespace energyplus {
     boost::optional<ModelObject> _mo;
 
     // Instantiate an IdfObject of the class to store the values,
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Fan_ComponentModel, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Fan_ComponentModel, modelObject);
     // If it doesn't have a name, or if you aren't sure you are going to want to return it
     // IdfObject idfObject( openstudio::IddObjectType::Fan_ComponentModel );
     // m_idfObjects.push_back(idfObject);

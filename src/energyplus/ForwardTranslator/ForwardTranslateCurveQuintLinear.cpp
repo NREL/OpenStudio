@@ -46,7 +46,7 @@ namespace energyplus {
     boost::optional<WorkspaceObject> result;
 
     // Instantiate an IdfObject of the class to store the values,
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Curve_QuintLinear, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Curve_QuintLinear, modelObject);
     // If it doesn't have a name, or if you aren't sure you are going to want to return it
     // IdfObject idfObject( openstudio::IddObjectType::Curve_QuintLinear );
     // m_idfObjects.push_back(idfObject);

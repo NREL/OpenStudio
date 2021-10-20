@@ -56,7 +56,7 @@ namespace energyplus {
     boost::optional<Node> node;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFit, modelObject);
 
     // WatertoRefrigerantHXWaterInletNodeName
     if (auto node = modelObject.waterInletModelObject()) {

@@ -65,7 +65,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX, modelObject);
 
     // PerformanceObjectName
     idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, s.get());

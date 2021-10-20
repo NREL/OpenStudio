@@ -73,7 +73,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters(model::LifeCycleCostParameters& modelObject) {
     // create, register, and name object
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::LifeCycleCost_Parameters, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::LifeCycleCost_Parameters, modelObject);
     // This is a unique model object
     idfObject.setName("Life Cycle Cost Parameters");
 

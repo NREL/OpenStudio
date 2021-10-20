@@ -1549,9 +1549,9 @@ namespace energyplus {
 
     static std::string stripOS2(const std::string& s);
 
-    IdfObject createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
+    IdfObject& createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
 
-    IdfObject createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
+    IdfObject& createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
 
     static std::vector<IddObjectType> iddObjectsToTranslate();
     static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
@@ -1596,9 +1596,11 @@ namespace energyplus {
    *  Valid refrigerants are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
     void createFluidPropertiesMap();
 
-    typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;
+    // TODO: change to using handles for IdfObject too, to avoid having to copy IdfObject everytime. This is used as a look up so avoid redoing work,
+    // so it's fine to check if it's in there, and ONLY IF so, call getObject(handle)
+    using ModelObjectMap = std::map<const openstudio::Handle, const IdfObject>;
 
-    typedef std::map<const std::string, const std::string> FluidPropertiesMap;
+    using FluidPropertiesMap = std::map<const std::string, const std::string>;
 
     FluidPropertiesMap m_fluidPropertiesMap;
 

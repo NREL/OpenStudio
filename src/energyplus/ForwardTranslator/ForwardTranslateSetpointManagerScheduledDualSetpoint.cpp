@@ -43,7 +43,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerScheduledDualSetpoint(SetpointManagerScheduledDualSetpoint& modelObject) {
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_Scheduled_DualSetpoint, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_Scheduled_DualSetpoint, modelObject);
 
     // ControlVariable
     std::string s = modelObject.controlVariable();

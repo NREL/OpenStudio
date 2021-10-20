@@ -122,7 +122,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject unitarySystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitarySystem, modelObject);
+    IdfObject& unitarySystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitarySystem, modelObject);
 
     // Control Type
     s = modelObject.controlType();

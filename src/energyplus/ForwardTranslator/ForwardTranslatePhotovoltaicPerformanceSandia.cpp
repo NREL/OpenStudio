@@ -46,7 +46,7 @@ namespace energyplus {
     boost::optional<IdfObject> result;
 
     // Instantiate an IdfObject of the class to store the values,
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_Sandia, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_Sandia, modelObject);
 
     if (boost::optional<std::string> moName = modelObject.name()) {
       idfObject.setName(*moName);

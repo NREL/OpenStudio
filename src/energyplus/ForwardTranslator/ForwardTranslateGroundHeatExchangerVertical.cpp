@@ -116,7 +116,7 @@ namespace energyplus {
     // 2  { GroundHeatExchanger_ResponseFactorsExtensibleFields::gFunctiongValue, "gFunctiongValue", "g-Function g Value"},
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::GroundHeatExchanger_System, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::GroundHeatExchanger_System, modelObject);
 
     // Inlet Node Name
     if ((temp = modelObject.inletModelObject())) {

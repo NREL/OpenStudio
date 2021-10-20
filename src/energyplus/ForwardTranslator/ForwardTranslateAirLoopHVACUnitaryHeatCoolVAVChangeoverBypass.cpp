@@ -90,7 +90,8 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject unitarySystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass, modelObject);
+    IdfObject& unitarySystem =
+      createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass, modelObject);
 
     // Availability Schedule Name
     if (boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule()) {

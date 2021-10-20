@@ -4334,15 +4334,14 @@ namespace energyplus {
     }
   }
 
-  IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
-    IdfObject idfObject(idfObjectType);
-    m_idfObjects.push_back(idfObject);
+  IdfObject& ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
+    IdfObject& idfObject = m_idfObjects.emplace_back(idfObjectType);
     m_map.insert(std::make_pair(modelObject.handle(), idfObject));
     return idfObject;
   }
 
-  IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
-    IdfObject idfObject = createAndRegisterIdfObject(idfObjectType, modelObject);
+  IdfObject& ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
+    IdfObject& idfObject = createAndRegisterIdfObject(idfObjectType, modelObject);
     if (OptionalString moName = modelObject.name()) {
       idfObject.setName(*moName);
     }

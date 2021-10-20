@@ -52,7 +52,7 @@ namespace energyplus {
     boost::optional<double> value;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_DX_VariableSpeed, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_DX_VariableSpeed, modelObject);
 
     // IndoorAirInletNodeName
     if (auto node = modelObject.inletModelObject()) {

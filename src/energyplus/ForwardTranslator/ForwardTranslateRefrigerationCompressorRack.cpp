@@ -59,7 +59,7 @@ namespace energyplus {
     std::string name;
 
     // Name
-    IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_CompressorRack, modelObject);
+    IdfObject& object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_CompressorRack, modelObject);
 
     // Heat Rejection Location
     s = modelObject.heatRejectionLocation();

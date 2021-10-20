@@ -54,7 +54,7 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideCoefficients, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideCoefficients, modelObject);
 
     boost::optional<double> combinedConvectiveRadiativeFilmCoefficient = modelObject.combinedConvectiveRadiativeFilmCoefficient();
 

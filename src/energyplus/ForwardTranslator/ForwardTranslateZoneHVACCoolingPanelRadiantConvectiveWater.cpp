@@ -66,7 +66,7 @@ namespace energyplus {
     boost::optional<ModelObject> temp;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_CoolingPanel_RadiantConvective_Water, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_CoolingPanel_RadiantConvective_Water, modelObject);
 
     // AvailabilityScheduleName
     {

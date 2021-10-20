@@ -47,7 +47,7 @@ namespace energyplus {
     OptionalModelObject temp;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::CoolingTower_TwoSpeed, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::CoolingTower_TwoSpeed, modelObject);
 
     // Water Inlet Node Name
     temp = modelObject.inletModelObject();

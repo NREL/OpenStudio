@@ -48,7 +48,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_Humidity_Minimum, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_Humidity_Minimum, modelObject);
 
     // ControlVariable \deprecated
     // ScheduleName \deprecated

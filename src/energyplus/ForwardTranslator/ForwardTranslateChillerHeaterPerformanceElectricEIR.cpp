@@ -57,7 +57,7 @@ namespace energyplus {
     OptionalModelObject temp;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ChillerHeaterPerformance_Electric_EIR, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ChillerHeaterPerformance_Electric_EIR, modelObject);
 
     // ReferenceCoolingModeEvaporatorCapacity
     if (modelObject.isReferenceCoolingModeEvaporatorCapacityAutosized()) {

@@ -65,7 +65,7 @@ namespace energyplus {
     // Make sure the modelObject gets ut into the map, and the new idfObject gets put into the final file.
     // Also sets the idfObjects name
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_SystemModel, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_SystemModel, modelObject);
 
     // Model Name
     //std::string baseName = modelObject.name().get();

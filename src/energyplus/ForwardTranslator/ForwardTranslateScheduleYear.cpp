@@ -57,7 +57,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateScheduleYear(ScheduleYear& modelObject) {
-    IdfObject scheduleYear = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Year, modelObject);
+    IdfObject& scheduleYear = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Year, modelObject);
 
     std::vector<ScheduleWeek> scheduleWeeks = modelObject.scheduleWeeks();
     std::vector<openstudio::Date> dates = modelObject.dates();

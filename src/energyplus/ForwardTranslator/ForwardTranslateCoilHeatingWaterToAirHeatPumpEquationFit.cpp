@@ -63,7 +63,7 @@ namespace energyplus {
     // Make sure the modelObject gets put into the map, and the new idfObject gets put into the final file.
     // Also sets the idfObjects name
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit, modelObject);
 
     // Object Name
     //std::string baseName = idfObject.name().get();

@@ -54,7 +54,7 @@ namespace energyplus {
     boost::optional<Schedule> schedule;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ThermalStorage_ChilledWater_Stratified, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ThermalStorage_ChilledWater_Stratified, modelObject);
 
     // Tank Volume
     value = modelObject.tankVolume();

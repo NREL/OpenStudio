@@ -46,7 +46,7 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateZoneAirMassFlowConservation(ZoneAirMassFlowConservation& modelObject) {
     // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
     // the final file. Also set's the idfObject's name.
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneAirMassFlowConservation, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneAirMassFlowConservation, modelObject);
 
     idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance,
                         modelObject.adjustZoneMixingandReturnForAirMassFlowBalance());

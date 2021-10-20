@@ -65,7 +65,7 @@ namespace energyplus {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirConditioner_VariableRefrigerantFlow, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirConditioner_VariableRefrigerantFlow, modelObject);
 
     // AvailabilityScheduleName
     if (boost::optional<model::Schedule> schedule = modelObject.availabilitySchedule()) {

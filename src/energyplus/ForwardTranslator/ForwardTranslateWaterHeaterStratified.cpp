@@ -66,7 +66,7 @@ namespace energyplus {
     }
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::WaterHeater_Stratified, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::WaterHeater_Stratified, modelObject);
 
     // Trigger translation of the WaterHeater:Sizing object, if any
     bool hasWaterHeaterSizing = true;

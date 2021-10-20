@@ -79,7 +79,7 @@ namespace energyplus {
     }
 
     // Space
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
 
     if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
       idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());

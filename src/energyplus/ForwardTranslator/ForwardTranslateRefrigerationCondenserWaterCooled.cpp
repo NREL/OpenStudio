@@ -50,7 +50,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject waterCooled = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Condenser_WaterCooled, modelObject);
+    IdfObject& waterCooled = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Condenser_WaterCooled, modelObject);
 
     // Rated Effective Total Heat Rejection Rate
     d = modelObject.ratedEffectiveTotalHeatRejectionRate();

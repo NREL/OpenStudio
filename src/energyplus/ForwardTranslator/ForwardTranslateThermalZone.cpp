@@ -187,7 +187,7 @@ namespace energyplus {
     // ThermalZone
 
     // create, register, and name object
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Zone, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Zone, modelObject);
 
     for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
@@ -674,7 +674,7 @@ namespace energyplus {
 
       // TODO: move this to its own file
       auto translateIlluminanceMap = [this](model::IlluminanceMap& illuminanceMap) -> IdfObject {
-        IdfObject illuminanceMapObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_IlluminanceMap, illuminanceMap);
+        IdfObject& illuminanceMapObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_IlluminanceMap, illuminanceMap);
 
         illuminanceMapObject.setDouble(Output_IlluminanceMapFields::Zheight, illuminanceMap.originZCoordinate());
 

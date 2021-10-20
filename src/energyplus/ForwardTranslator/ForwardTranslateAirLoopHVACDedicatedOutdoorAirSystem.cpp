@@ -57,7 +57,7 @@ namespace energyplus {
   boost::optional<IdfObject>
     ForwardTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem, modelObject);
 
     // Availability Schedule Name
     Schedule schedule = modelObject.availabilitySchedule();

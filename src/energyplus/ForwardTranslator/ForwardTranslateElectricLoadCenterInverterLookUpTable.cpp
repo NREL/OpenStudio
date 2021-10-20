@@ -51,7 +51,7 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateElectricLoadCenterInverterLookUpTable(model::ElectricLoadCenterInverterLookUpTable& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_LookUpTable, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_LookUpTable, modelObject);
 
     if (modelObject.name()) {
       idfObject.setString(ElectricLoadCenter_Inverter_LookUpTableFields::Name, modelObject.name().get());

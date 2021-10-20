@@ -54,7 +54,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_Table_SummaryReports, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_Table_SummaryReports, modelObject);
 
     for (const std::string& summaryReport : summaryReports) {
       auto eg = idfObject.pushExtensibleGroup();

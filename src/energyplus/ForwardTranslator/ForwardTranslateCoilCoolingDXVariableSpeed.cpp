@@ -55,7 +55,7 @@ namespace energyplus {
       // TODO: if it has zero speed data, Log and don't translate
     }
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_VariableSpeed, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_VariableSpeed, modelObject);
 
     // IndoorAirInletNodeName
     if (auto node = modelObject.inletModelObject()) {

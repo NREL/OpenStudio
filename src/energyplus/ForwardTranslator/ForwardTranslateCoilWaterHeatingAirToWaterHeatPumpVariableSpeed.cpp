@@ -59,7 +59,7 @@ namespace energyplus {
     }
 
     // Name and register
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed, modelObject);
 
     // Nominal Speed Level
     if (auto speedLevel = modelObject.nominalSpeedLevel()) {

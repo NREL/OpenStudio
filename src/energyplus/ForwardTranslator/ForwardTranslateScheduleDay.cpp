@@ -53,7 +53,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateScheduleDay(ScheduleDay& modelObject) {
-    IdfObject scheduleDay = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Day_Interval, modelObject);
+    IdfObject& scheduleDay = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Day_Interval, modelObject);
 
     boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
     if (scheduleTypeLimits) {

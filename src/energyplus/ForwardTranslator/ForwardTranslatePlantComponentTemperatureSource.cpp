@@ -49,7 +49,7 @@ namespace energyplus {
     OptionalModelObject temp;
 
     //Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PlantComponent_TemperatureSource, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PlantComponent_TemperatureSource, modelObject);
 
     // InletNode
     if (auto node = modelObject.inletModelObject()) {

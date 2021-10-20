@@ -47,7 +47,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateGeneratorPVWatts(model::GeneratorPVWatts& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_PVWatts, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_PVWatts, modelObject);
 
     idfObject.setString(Generator_PVWattsFields::PVWattsVersion, modelObject.pvWattsVersion());
 

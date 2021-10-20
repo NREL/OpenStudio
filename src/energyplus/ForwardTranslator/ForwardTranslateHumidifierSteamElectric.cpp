@@ -45,7 +45,7 @@ namespace energyplus {
     OptionalModelObject temp;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Humidifier_Steam_Electric, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Humidifier_Steam_Electric, modelObject);
 
     // Availability Schedule Name
     if ((temp = modelObject.availabilitySchedule())) {

@@ -46,7 +46,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateZoneVentilationWindandStackOpenArea(ZoneVentilationWindandStackOpenArea& modelObject) {
-    auto idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneVentilation_WindandStackOpenArea, modelObject);
+    auto& idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneVentilation_WindandStackOpenArea, modelObject);
 
     // Note: no need to really handle the case where it doesn't exist since ThermalZone is the one calling this translation to begin with
     if (boost::optional<ThermalZone> value = modelObject.thermalZone()) {

@@ -51,7 +51,7 @@ namespace energyplus {
     boost::optional<double> value;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_MultiSpeed, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_MultiSpeed, modelObject);
 
     // AvailabilityScheduleName
     if (auto schedule = modelObject.availabilitySchedule()) {

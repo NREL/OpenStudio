@@ -47,7 +47,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_FollowSystemNodeTemperature, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_FollowSystemNodeTemperature, modelObject);
 
     // ControlVariable
     s = modelObject.controlVariable();

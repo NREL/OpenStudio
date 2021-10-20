@@ -52,7 +52,7 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateElectricLoadCenterStorageLiIonNMCBattery(model::ElectricLoadCenterStorageLiIonNMCBattery& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery, modelObject);
 
     // Name
     if (modelObject.name()) {

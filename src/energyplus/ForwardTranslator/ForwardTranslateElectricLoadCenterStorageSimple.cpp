@@ -51,7 +51,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorageSimple(model::ElectricLoadCenterStorageSimple& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_Simple, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_Simple, modelObject);
 
     if (modelObject.name()) {
       idfObject.setString(ElectricLoadCenter_Storage_SimpleFields::Name, modelObject.name().get());

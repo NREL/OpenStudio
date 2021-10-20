@@ -63,7 +63,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatExchanger_Desiccant_BalancedFlow, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatExchanger_Desiccant_BalancedFlow, modelObject);
 
     // AvailabilityScheduleName
     Schedule sched = modelObject.availabilitySchedule();

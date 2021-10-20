@@ -60,7 +60,7 @@ namespace energyplus {
     }
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_OutdoorAirPretreat, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_OutdoorAirPretreat, modelObject);
 
     // ControlVariable
     s = modelObject.controlVariable();

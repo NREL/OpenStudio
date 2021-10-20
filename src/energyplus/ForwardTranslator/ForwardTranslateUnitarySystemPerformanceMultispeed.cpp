@@ -62,7 +62,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
+    IdfObject& sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
 
     // Find the associated AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();

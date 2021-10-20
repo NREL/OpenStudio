@@ -56,7 +56,7 @@ namespace energyplus {
     boost::optional<Schedule> schedule;
     boost::optional<ThermalZone> zone;
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Transformer, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Transformer, modelObject);
 
     schedule = modelObject.availabilitySchedule();
     if (schedule) {

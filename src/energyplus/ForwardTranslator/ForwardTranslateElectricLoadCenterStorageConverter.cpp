@@ -56,7 +56,7 @@ namespace energyplus {
 
     boost::optional<double> optD;
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_Converter, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_Converter, modelObject);
 
     if (modelObject.name()) {
       idfObject.setString(ElectricLoadCenter_Storage_ConverterFields::Name, modelObject.name().get());

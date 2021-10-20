@@ -48,7 +48,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Tubular, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Tubular, modelObject);
 
     SubSurface subSurfaceDome = modelObject.subSurfaceDome();
     if (boost::optional<IdfObject> subSurfDome = translateAndMapModelObject(subSurfaceDome)) {

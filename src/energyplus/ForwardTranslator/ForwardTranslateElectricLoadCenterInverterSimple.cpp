@@ -50,7 +50,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverterSimple(model::ElectricLoadCenterInverterSimple& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_Simple, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_Simple, modelObject);
 
     if (modelObject.name()) {
       idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::Name, modelObject.name().get());

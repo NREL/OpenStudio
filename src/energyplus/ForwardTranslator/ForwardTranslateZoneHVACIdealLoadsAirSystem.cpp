@@ -61,7 +61,7 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSystem(ZoneHVACIdealLoadsAirSystem& modelObject) {
-    IdfObject zoneHVACIdealLoadsAirSystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem, modelObject);
+    IdfObject& zoneHVACIdealLoadsAirSystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem, modelObject);
 
     std::vector<model::ZoneHVACIdealLoadsAirSystem> allIdealSystems;
     auto returnPlenum = modelObject.returnPlenum();

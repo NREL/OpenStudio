@@ -46,7 +46,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_MultiZone_MaximumHumidity_Average, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_MultiZone_MaximumHumidity_Average, modelObject);
 
     // HVACAirLoopName
     if (boost::optional<AirLoopHVAC> airloop = modelObject.airLoopHVAC()) {

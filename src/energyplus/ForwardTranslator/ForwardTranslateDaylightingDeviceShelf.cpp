@@ -68,7 +68,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Shelf, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Shelf, modelObject);
 
     if (boost::optional<IdfObject> w = translateAndMapModelObject(window)) {
       idfObject.setString(DaylightingDevice_ShelfFields::WindowName, w->name().get());

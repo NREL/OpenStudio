@@ -47,7 +47,7 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translatePhotovoltaicPerformanceEquivalentOneDiode(model::PhotovoltaicPerformanceEquivalentOneDiode& modelObject) {
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_EquivalentOneDiode, modelObject);
+    IdfObject& idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_EquivalentOneDiode, modelObject);
 
     if (modelObject.name()) {
       idfObject.setString(PhotovoltaicPerformance_EquivalentOneDiodeFields::Name, modelObject.name().get());
