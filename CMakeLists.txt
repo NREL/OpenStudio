@@ -604,7 +604,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz") # TODO: Temp: custom build on my fork
+    message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
 
     if(EXISTS "/etc/redhat-release")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"

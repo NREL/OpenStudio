@@ -86,16 +86,14 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 
+#include <algorithm>
+
 using openstudio::IddObjectType;
 using openstudio::GlobalGeometryRulesFields;
 using openstudio::OptionalString;
 using openstudio::OptionalDouble;
 using openstudio::WorkspaceObject;
 using openstudio::degToRad;
-using openstudio::model::Building;
-using openstudio::model::Space;
-using openstudio::model::Surface;
-using openstudio::model::SubSurface;
 
 namespace openstudio {
 namespace energyplus {
@@ -159,13 +157,8 @@ namespace energyplus {
                                            IddObjectType::Daylighting_ReferencePoint,
                                            IddObjectType::Output_IlluminanceMap};
 
-    bool skipConvert = true;
-    for (const auto& type : translatedTypes) {
-      if (m_workspace.getObjectsByType(type).size() > 0) {
-        skipConvert = false;
-        break;
-      }
-    }
+    bool skipConvert = !std::any_of(translatedTypes.cbegin(), translatedTypes.cend(),
+                                    [this](const auto& iddObjectType) { return !m_workspace.getObjectsByType(iddObjectType).empty(); });
 
     if (skipConvert) {
       return true;
@@ -386,7 +379,7 @@ namespace energyplus {
     Transformation buildingTransformation = this->buildingTransformation();
 
     // Shading::Site
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Site)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Site)) {
 
       // get simple params
       OptionalDouble azimuth = oldObject.getDouble(Shading_SiteFields::AzimuthAngle, true);
@@ -406,8 +399,9 @@ namespace energyplus {
       Point3dVector vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(*azimuth, *tilt, *x0, *y0, *z0, *length, *height);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_SiteFields::Name, Shading_Site_DetailedFields::Name));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Shading_SiteFields::Name, Shading_Site_DetailedFields::Name},
+      };
 
       // new object
       IdfObject newObject(IddObjectType::Shading_Site_Detailed);
@@ -434,7 +428,7 @@ namespace energyplus {
     }
 
     // Shading::Building
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Building)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Building)) {
 
       // get transformation
       Transformation t;
@@ -463,8 +457,9 @@ namespace energyplus {
       vertices = t * vertices;
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_BuildingFields::Name, Shading_Building_DetailedFields::Name));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Shading_BuildingFields::Name, Shading_Building_DetailedFields::Name},
+      };
 
       // new object
       IdfObject newObject(IddObjectType::Shading_Building_Detailed);
@@ -491,7 +486,7 @@ namespace energyplus {
     }
 
     // Shading:Overhang
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_OverhangFields::WindoworDoorName);
@@ -568,8 +563,9 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::Shading_Zone_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_OverhangFields::Name, Shading_Zone_DetailedFields::Name));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Shading_OverhangFields::Name, Shading_Zone_DetailedFields::Name},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -594,7 +590,7 @@ namespace energyplus {
     }
 
     // Shading:Overhang:Projection
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang_Projection)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang_Projection)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_Overhang_ProjectionFields::WindoworDoorName);
@@ -673,8 +669,9 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::Shading_Zone_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Shading_Overhang_ProjectionFields::Name, Shading_Zone_DetailedFields::Name));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Shading_Overhang_ProjectionFields::Name, Shading_Zone_DetailedFields::Name},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -696,7 +693,7 @@ namespace energyplus {
     }
 
     // Shading:Fin
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_FinFields::WindoworDoorName);
@@ -795,6 +792,8 @@ namespace energyplus {
       // fields which map directly
       std::vector<std::pair<unsigned, unsigned>> fieldMap;
 
+      // TODO this isn't doing what this comment is saying! In fact this is doing absolutely NOTHING.
+      // It should call the version without 3d argument (fieldMap)
       // copy fields over directly
       mapFields(oldObject, leftObject, fieldMap);
       mapFields(oldObject, rightObject, fieldMap);
@@ -829,7 +828,7 @@ namespace energyplus {
     }
 
     // Shading:Fin:Projection
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin_Projection)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin_Projection)) {
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_Fin_ProjectionFields::WindoworDoorName);
@@ -929,6 +928,8 @@ namespace energyplus {
       // fields which map directly
       std::vector<std::pair<unsigned, unsigned>> fieldMap;
 
+      // TODO this isn't doing what this comment is saying! In fact this is doing absolutely NOTHING.
+      // It should call the version without 3d argument (fieldMap) if it wanted to copy one to one, or more likely just do nothing
       // copy fields over directly
       mapFields(oldObject, leftObject, fieldMap);
       mapFields(oldObject, rightObject, fieldMap);
@@ -976,7 +977,7 @@ namespace energyplus {
   // convert simple subsurfaces to detailed in the current system
   bool GeometryTranslator::convertSimpleSubSurfaces() {
     // Window
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Window)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(WindowFields::BuildingSurfaceName);
@@ -1012,12 +1013,13 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {WindowFields::Name, FenestrationSurface_DetailedFields::Name},
+        {WindowFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName},
+        {WindowFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName},
+        {WindowFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName},
+        {WindowFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1041,7 +1043,7 @@ namespace energyplus {
     }
 
     // Door
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Door)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(DoorFields::BuildingSurfaceName);
@@ -1077,11 +1079,12 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(DoorFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(DoorFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(DoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(DoorFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {DoorFields::Name, FenestrationSurface_DetailedFields::Name},
+        {DoorFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName},
+        {DoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName},
+        {DoorFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1105,7 +1108,7 @@ namespace energyplus {
     }
 
     // GlazedDoor
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(GlazedDoorFields::BuildingSurfaceName);
@@ -1141,14 +1144,13 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(GlazedDoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(GlazedDoorFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {GlazedDoorFields::Name, FenestrationSurface_DetailedFields::Name},
+        {GlazedDoorFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName},
+        {GlazedDoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName},
+        {GlazedDoorFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName},
+        {GlazedDoorFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1172,7 +1174,7 @@ namespace energyplus {
     }
 
     // Window:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window_Interzone)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Window_Interzone)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(Window_InterzoneFields::BuildingSurfaceName);
@@ -1208,15 +1210,13 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(Window_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(Window_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::OutsideBoundaryConditionObject,
-                                                       FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Window_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Window_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name},
+        {Window_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName},
+        {Window_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName},
+        {Window_InterzoneFields::OutsideBoundaryConditionObject, FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject},
+        {Window_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1239,7 +1239,7 @@ namespace energyplus {
     }
 
     // Door:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door_Interzone)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Door_Interzone)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(Door_InterzoneFields::BuildingSurfaceName);
@@ -1275,14 +1275,13 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(Door_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::OutsideBoundaryConditionObject,
-                                                       FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Door_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Door_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name},
+        {Door_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName},
+        {Door_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName},
+        {Door_InterzoneFields::OutsideBoundaryConditionObject, FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject},
+        {Door_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1305,7 +1304,7 @@ namespace energyplus {
     }
 
     // GlazedDoor:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor_Interzone)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor_Interzone)) {
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(GlazedDoor_InterzoneFields::BuildingSurfaceName);
@@ -1341,15 +1340,13 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::FenestrationSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::OutsideBoundaryConditionObject,
-                                                       FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoor_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {GlazedDoor_InterzoneFields::Name, FenestrationSurface_DetailedFields::Name},
+        {GlazedDoor_InterzoneFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName},
+        {GlazedDoor_InterzoneFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName},
+        {GlazedDoor_InterzoneFields::OutsideBoundaryConditionObject, FenestrationSurface_DetailedFields::OutsideBoundaryConditionObject},
+        {GlazedDoor_InterzoneFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1380,7 +1377,7 @@ namespace energyplus {
     Transformation buildingTransformation = this->buildingTransformation();
 
     // Wall::Detailed
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_DetailedFields::ZoneName);
@@ -1406,18 +1403,17 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(Wall_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::OutsideBoundaryConditionObject,
-                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Wall_DetailedFields::Name, BuildingSurface_DetailedFields::Name},
+        {Wall_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Wall_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+        {Wall_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition},
+        {Wall_DetailedFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject},
+        {Wall_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure},
+        {Wall_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure},
+        {Wall_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround},
+        {Wall_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1441,7 +1437,7 @@ namespace energyplus {
     }
 
     // RoofCeiling::Detailed
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_DetailedFields::ZoneName);
@@ -1467,21 +1463,17 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::OutsideBoundaryCondition,
-                                                       BuildingSurface_DetailedFields::OutsideBoundaryCondition));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::OutsideBoundaryConditionObject,
-                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(RoofCeiling_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {RoofCeiling_DetailedFields::Name, BuildingSurface_DetailedFields::Name},
+        {RoofCeiling_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {RoofCeiling_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+        {RoofCeiling_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition},
+        {RoofCeiling_DetailedFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject},
+        {RoofCeiling_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure},
+        {RoofCeiling_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure},
+        {RoofCeiling_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround},
+        {RoofCeiling_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1505,7 +1497,7 @@ namespace energyplus {
     }
 
     // Floor::Detailed
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_DetailedFields::ZoneName);
@@ -1531,18 +1523,17 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(Floor_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::OutsideBoundaryConditionObject,
-                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Floor_DetailedFields::Name, BuildingSurface_DetailedFields::Name},
+        {Floor_DetailedFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Floor_DetailedFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+        {Floor_DetailedFields::OutsideBoundaryCondition, BuildingSurface_DetailedFields::OutsideBoundaryCondition},
+        {Floor_DetailedFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject},
+        {Floor_DetailedFields::SunExposure, BuildingSurface_DetailedFields::SunExposure},
+        {Floor_DetailedFields::WindExposure, BuildingSurface_DetailedFields::WindExposure},
+        {Floor_DetailedFields::ViewFactortoGround, BuildingSurface_DetailedFields::ViewFactortoGround},
+        {Floor_DetailedFields::NumberofVertices, BuildingSurface_DetailedFields::NumberofVertices},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1566,7 +1557,7 @@ namespace energyplus {
     }
 
     // Wall:Exterior
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Exterior)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Exterior)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_ExteriorFields::ZoneName);
@@ -1606,10 +1597,11 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_ExteriorFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_ExteriorFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_ExteriorFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Wall_ExteriorFields::Name, BuildingSurface_DetailedFields::Name},
+        {Wall_ExteriorFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Wall_ExteriorFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1639,7 +1631,7 @@ namespace energyplus {
     }
 
     // Wall:Adiabatic
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Adiabatic)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Adiabatic)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_AdiabaticFields::ZoneName);
@@ -1679,10 +1671,11 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Wall_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name},
+        {Wall_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Wall_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1712,7 +1705,7 @@ namespace energyplus {
     }
 
     // Wall:Underground
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Underground)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Underground)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_UndergroundFields::ZoneName);
@@ -1752,10 +1745,11 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_UndergroundFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_UndergroundFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_UndergroundFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Wall_UndergroundFields::Name, BuildingSurface_DetailedFields::Name},
+        {Wall_UndergroundFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Wall_UndergroundFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1785,7 +1779,7 @@ namespace energyplus {
     }
 
     // Wall:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Interzone)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Interzone)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_InterzoneFields::ZoneName);
@@ -1825,12 +1819,12 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Wall_InterzoneFields::OutsideBoundaryConditionObject,
-                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Wall_InterzoneFields::Name, BuildingSurface_DetailedFields::Name},
+        {Wall_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Wall_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+        {Wall_InterzoneFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1859,7 +1853,7 @@ namespace energyplus {
     }
 
     // Roof
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Roof)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Roof)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(RoofFields::ZoneName);
@@ -1899,10 +1893,11 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(RoofFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {RoofFields::Name, BuildingSurface_DetailedFields::Name},
+        {RoofFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {RoofFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -1932,7 +1927,7 @@ namespace energyplus {
     }
 
     // Ceiling:Adiabatic
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Adiabatic)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Adiabatic)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Ceiling_AdiabaticFields::ZoneName);
@@ -1972,10 +1967,11 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Ceiling_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name},
+        {Ceiling_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Ceiling_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -2005,7 +2001,7 @@ namespace energyplus {
     }
 
     // Ceiling:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Interzone)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Interzone)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Ceiling_InterzoneFields::ZoneName);
@@ -2045,12 +2041,12 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Ceiling_InterzoneFields::OutsideBoundaryConditionObject,
-                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Ceiling_InterzoneFields::Name, BuildingSurface_DetailedFields::Name},
+        {Ceiling_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Ceiling_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+        {Ceiling_InterzoneFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -2079,7 +2075,7 @@ namespace energyplus {
     }
 
     // Floor:GroundContact
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_GroundContact)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_GroundContact)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_GroundContactFields::ZoneName);
@@ -2119,11 +2115,11 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_GroundContactFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(
-        std::pair<unsigned, unsigned>(Floor_GroundContactFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_GroundContactFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Floor_GroundContactFields::Name, BuildingSurface_DetailedFields::Name},
+        {Floor_GroundContactFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Floor_GroundContactFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -2153,7 +2149,7 @@ namespace energyplus {
     }
 
     // Floor:Adiabatic
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Adiabatic)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Adiabatic)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_AdiabaticFields::ZoneName);
@@ -2193,10 +2189,11 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Floor_AdiabaticFields::Name, BuildingSurface_DetailedFields::Name},
+        {Floor_AdiabaticFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Floor_AdiabaticFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -2226,7 +2223,7 @@ namespace energyplus {
     }
 
     // Floor:Interzone
-    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Interzone)) {
+    for (WorkspaceObject& oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Interzone)) {
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_InterzoneFields::ZoneName);
@@ -2266,12 +2263,12 @@ namespace energyplus {
       IdfObject newObject(IddObjectType::BuildingSurface_Detailed);
 
       // fields which map directly
-      std::vector<std::pair<unsigned, unsigned>> fieldMap;
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::Name, BuildingSurface_DetailedFields::Name));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(Floor_InterzoneFields::OutsideBoundaryConditionObject,
-                                                       BuildingSurface_DetailedFields::OutsideBoundaryConditionObject));
+      std::vector<std::pair<unsigned, unsigned>> fieldMap{
+        {Floor_InterzoneFields::Name, BuildingSurface_DetailedFields::Name},
+        {Floor_InterzoneFields::ConstructionName, BuildingSurface_DetailedFields::ConstructionName},
+        {Floor_InterzoneFields::ZoneName, BuildingSurface_DetailedFields::ZoneName},
+        {Floor_InterzoneFields::OutsideBoundaryConditionObject, BuildingSurface_DetailedFields::OutsideBoundaryConditionObject},
+      };
 
       // copy fields over directly
       mapFields(oldObject, newObject, fieldMap);
@@ -2308,13 +2305,13 @@ namespace energyplus {
 
     Transformation buildingTransformation = this->buildingTransformation();
 
-    // daylighting controls
-    for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)) {
-      // todo: transform glare angle
-    }
+    // Daylighting controls
+    // TODO : transform glare angle
+    // for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)) {
+    // }
 
     // daylighting reference points
-    for (WorkspaceObject daylightingPoint : m_workspace.getObjectsByType(IddObjectType::Daylighting_ReferencePoint)) {
+    for (WorkspaceObject& daylightingPoint : m_workspace.getObjectsByType(IddObjectType::Daylighting_ReferencePoint)) {
       if (daylightingCoordChange != CoordinateChange::NoChange) {
         OptionalWorkspaceObject zone = daylightingPoint.getTarget(Daylighting_ReferencePointFields::ZoneorSpaceName);
         if (!zone) {
@@ -2346,7 +2343,7 @@ namespace energyplus {
     }
 
     // output illuminance map
-    for (WorkspaceObject illuminanceMap : m_workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap)) {
+    for (WorkspaceObject& illuminanceMap : m_workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap)) {
       if (daylightingCoordChange != CoordinateChange::NoChange) {
         OptionalWorkspaceObject zone = illuminanceMap.getTarget(Output_IlluminanceMapFields::ZoneName);
         if (!zone) {
@@ -2404,7 +2401,7 @@ namespace energyplus {
 
     Transformation buildingTransformation = this->buildingTransformation();
 
-    for (WorkspaceObject surface : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
+    for (WorkspaceObject& surface : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, surface);
       surface.setString(BuildingSurface_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange) {
@@ -2426,7 +2423,7 @@ namespace energyplus {
       }
     }
 
-    for (WorkspaceObject subsurface : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
+    for (WorkspaceObject& subsurface : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, subsurface);
       subsurface.setString(FenestrationSurface_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange) {
@@ -2451,7 +2448,7 @@ namespace energyplus {
       }
     }
 
-    for (WorkspaceObject zoneShading : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
+    for (WorkspaceObject& zoneShading : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, zoneShading);
       zoneShading.setString(Shading_Zone_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange) {
@@ -2478,7 +2475,7 @@ namespace energyplus {
       }
     }
 
-    for (WorkspaceObject buildingShading : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
+    for (WorkspaceObject& buildingShading : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, buildingShading);
       buildingShading.setString(Shading_Building_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange) {
@@ -2492,7 +2489,7 @@ namespace energyplus {
       }
     }
 
-    for (WorkspaceObject siteShading : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
+    for (WorkspaceObject& siteShading : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
       siteShading.setString(Shading_Site_DetailedFields::NumberofVertices, "Autocalculate");
     }
 
@@ -2503,11 +2500,8 @@ namespace energyplus {
   openstudio::Point3dVector getVertices(unsigned firstVertex, const IdfObject& surface) {
     Point3dVector result;
     unsigned numFields = surface.numFields();
-    unsigned numVertexFields;
-    unsigned numVertices;
-
-    numVertexFields = numFields - firstVertex;
-    numVertices = numVertexFields / 3;  // integer division
+    unsigned numVertexFields = numFields - firstVertex;
+    unsigned numVertices = numVertexFields / 3;  // integer division
 
     // check that at least three vertices
     if ((numVertexFields % 3) == 0 && numVertices >= 3) {
@@ -2570,56 +2564,56 @@ namespace energyplus {
   // reverse all detailed vertices
   bool GeometryTranslator::reverseAllDetailedVertices() {
     // BuildingSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Wall:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
       Point3dVector vertices = getVertices(Wall_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Wall_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // RoofCeiling:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
       Point3dVector vertices = getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Floor:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
       Point3dVector vertices = getVertices(Floor_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Floor_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // FenestrationSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Site:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Building:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Zone:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object, vertices);
@@ -2631,49 +2625,49 @@ namespace energyplus {
   // apply upper left corner rule to all detailed vertices
   bool GeometryTranslator::applyUpperLeftCornerRule() {
     // BuildingSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)) {
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object);
       setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Wall:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)) {
       Point3dVector vertices = getVertices(Wall_DetailedFields::NumberofVertices + 1, object);
       setVertices(Wall_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // RoofCeiling:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)) {
       Point3dVector vertices = getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object);
       setVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Floor:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)) {
       Point3dVector vertices = getVertices(Floor_DetailedFields::NumberofVertices + 1, object);
       setVertices(Floor_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // FenestrationSurface:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)) {
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object);
       setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Site:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Building:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Zone:Detailed
-    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
+    for (WorkspaceObject& object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)) {
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
