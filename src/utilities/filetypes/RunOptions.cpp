@@ -37,7 +37,13 @@ namespace openstudio {
 namespace detail {
 
   RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false), m_fast(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_skipEnergyPlusPreprocess(false), m_cleanup(true) {}
+    : m_debug(false),
+      m_epjson(false),
+      m_fast(false),
+      m_preserveRunDir(false),
+      m_skipExpandObjects(false),
+      m_skipEnergyPlusPreprocess(false),
+      m_cleanup(true) {}
 
   RunOptions_Impl::~RunOptions_Impl() {}
 
