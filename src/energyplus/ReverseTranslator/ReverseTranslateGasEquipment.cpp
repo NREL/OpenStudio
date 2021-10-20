@@ -123,7 +123,7 @@ namespace energyplus {
       gasEquipment.setName(*s);
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::GasEquipmentFields::ZoneorZoneListName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

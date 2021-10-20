@@ -53,7 +53,7 @@ class UTILITIES_API BCLFileReference
   //@{
 
   /// Constructor from file path.
-  explicit BCLFileReference(const openstudio::path& path, const bool setMembers = false);
+  explicit BCLFileReference(const openstudio::path& measureRootDir, const openstudio::path& relativePath, const bool setMembers = false);
 
   //@}
   /** @name Destructor */
@@ -66,8 +66,11 @@ class UTILITIES_API BCLFileReference
   /** @name Getters */
   //@{
 
-  /// Returns path to file.
+  /// Returns absolute path to file.
   openstudio::path path() const;
+
+  // Returns path to file, relative to measure root directory (including subdirectory, eg 'docs/subfolder/docs.rb')
+  openstudio::path relativePath() const;
 
   /// Returns the last recorded checksum.
   std::string checksum() const;
@@ -80,6 +83,8 @@ class UTILITIES_API BCLFileReference
 
   boost::optional<VersionString> maxCompatibleVersion() const;
 
+  // This returns filename to write to the XML. It omits the subdirectory based on usageType
+  // eg: a file at docs/subfolder/docs.rb has a usageType='doc' and filename() = 'subfolder/docs.rb'
   std::string fileName() const;
 
   std::string fileType() const;
@@ -121,6 +126,7 @@ class UTILITIES_API BCLFileReference
   // configure logging
   REGISTER_LOGGER("utilities.bcl.BCLFileReference");
 
+  openstudio::path m_measureRootDir;
   openstudio::path m_path;
   std::string m_checksum;
   std::string m_softwareProgram;

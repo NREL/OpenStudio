@@ -62,6 +62,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PerformancePrecisionTradeoffs) {
   EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
 
   Workspace workspace = ft.translateModel(model);
 
@@ -76,4 +77,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PerformancePrecisionTradeoffs) {
   EXPECT_TRUE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::OverrideMode));
   EXPECT_TRUE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff));
   EXPECT_TRUE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp));
+  EXPECT_FALSE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations));
 }

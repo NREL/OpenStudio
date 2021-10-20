@@ -118,7 +118,7 @@ namespace energyplus {
       electricEquipment.setName(*s);
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ElectricEquipmentFields::ZoneorZoneListName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

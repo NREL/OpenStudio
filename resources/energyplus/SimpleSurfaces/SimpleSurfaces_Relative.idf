@@ -1,7 +1,7 @@
 ! File to test the import of simple surfaces
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,9.5;
+  Version,9.6;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -362,6 +362,7 @@
     Zone1 Floor,             !- Name
     Exterior Floor,          !- Construction Name
     Zone1,                   !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -402,6 +403,7 @@
     Zone1 Front Wall,        !- Name
     Exterior Wall,           !- Construction Name
     Zone1,                   !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -442,6 +444,7 @@
     Zone1 Interior Wall,     !- Name
     Interior Wall,           !- Construction Name
     Zone1,                   !- Zone Name
+    ,                        !- Space Name
     Zone2 Interior Wall,     !- Outside Boundary Condition Object
     90,                      !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
@@ -456,6 +459,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     Zone1,                   !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -496,6 +500,7 @@
     Zone1 Roof,              !- Name
     Exterior Roof,           !- Construction Name
     Zone1,                   !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -547,6 +552,7 @@
     Zone1 Left Wall,         !- Name
     Exterior Wall,           !- Construction Name
     Zone1,                   !- Zone Name
+    ,                        !- Space Name
     270,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -557,7 +563,7 @@
 
   Lights,
     Zone1 Lights,            !- Name
-    Zone1,                   !- Zone or ZoneList Name
+    Zone1,                   !- Zone or ZoneList or Space or SpaceList Name
     Lighting Schedule,       !- Schedule Name
     LightingLevel,           !- Design Level Calculation Method
     1464.375,                !- Lighting Level {W}
@@ -571,7 +577,7 @@
 
   Daylighting:Controls,
     Zone1_DaylCtrl,          !- Name
-    Zone1,                   !- Zone Name
+    Zone1,                   !- Zone or Space Name
     SplitFlux,               !- Daylighting Method
     ,                        !- Availability Schedule Name
     Continuous,              !- Lighting Control Type
@@ -584,22 +590,22 @@
     20.0,                    !- Maximum Allowable Discomfort Glare Index
     ,                        !- DElight Gridding Resolution {m2}
     Zone1_DaylRefPt1,        !- Daylighting Reference Point 1 Name
-    0.5,                     !- Fraction of Zone Controlled by Reference Point 1
+    0.5,                     !- Fraction of Lights Controlled by Reference Point 1
     500.,                    !- Illuminance Setpoint at Reference Point 1 {lux}
     Zone1_DaylRefPt2,        !- Daylighting Reference Point 2 Name
-    0.5,                     !- Fraction of Zone Controlled by Reference Point 2
+    0.5,                     !- Fraction of Lights Controlled by Reference Point 2
     500.;                    !- Illuminance Setpoint at Reference Point 2 {lux}
 
   Daylighting:ReferencePoint,
     Zone1_DaylRefPt1,        !- Name
-    Zone1,                   !- Zone Name
+    Zone1,                   !- Zone or Space Name
     12.5,                    !- X-Coordinate of Reference Point {m}
     5.0,                     !- Y-Coordinate of Reference Point {m}
     0.9;                     !- Z-Coordinate of Reference Point {m}
 
   Daylighting:ReferencePoint,
     Zone1_DaylRefPt2,        !- Name
-    Zone1,                   !- Zone Name
+    Zone1,                   !- Zone or Space Name
     12.5,                    !- X-Coordinate of Reference Point {m}
     15.0,                    !- Y-Coordinate of Reference Point {m}
     0.9;                     !- Z-Coordinate of Reference Point {m}
@@ -653,6 +659,7 @@
     Zone2 Floor,             !- Name
     Exterior Floor,          !- Construction Name
     Zone2,                   !- Zone Name
+    ,                        !- Space Name
     0,                       !- Azimuth Angle {deg}
     180,                     !- Tilt Angle {deg}
     25,                      !- Starting X Coordinate {m}
@@ -666,6 +673,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     Zone2,                   !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -682,6 +690,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     Zone2,                   !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -722,6 +731,7 @@
     Zone2 Roof,              !- Name
     Exterior Roof,           !- Construction Name
     Zone2,                   !- Zone Name
+    ,                        !- Space Name
     0,                       !- Azimuth Angle {deg}
     0,                       !- Tilt Angle {deg}
     25,                      !- Starting X Coordinate {m}
@@ -769,6 +779,7 @@
     Zone2 Right Wall,        !- Name
     Exterior Wall,           !- Construction Name
     Zone2,                   !- Zone Name
+    ,                        !- Space Name
     90,                      !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     25,                      !- Starting X Coordinate {m}
@@ -781,6 +792,7 @@
     Zone2 Interior Wall,     !- Name
     Interior Wall,           !- Construction Name
     Zone2,                   !- Zone Name
+    ,                        !- Space Name
     Zone1 Interior Wall,     !- Outside Boundary Condition Object
     270,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}

@@ -93,6 +93,10 @@ namespace energyplus {
       if (thermalZone) {
         idfObject.setString(BuildingSurface_DetailedFields::ZoneName, thermalZone->name().get());
       }
+      // TODO: do we want that?
+      if (!m_excludeSpaceTranslation) {
+        idfObject.setString(BuildingSurface_DetailedFields::SpaceName, space->nameString());
+      }
     }
 
     boost::optional<Surface> adjacentSurface = modelObject.adjacentSurface();

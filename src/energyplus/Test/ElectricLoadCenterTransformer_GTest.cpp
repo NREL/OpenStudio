@@ -41,9 +41,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/OutputMeter.hpp"
 #include "../../model/OutputMeter_Impl.hpp"
-
 #include "../../model/ThermalZone.hpp"
-
+#include "../../model/Space.hpp"
 #include "../../model/ElectricLoadCenterTransformer.hpp"
 #include "../../model/ElectricLoadCenterTransformer_Impl.hpp"
 #include "../../model/ElectricLoadCenterDistribution.hpp"
@@ -130,6 +129,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer2) {
   Building building = model.getUniqueModelObject<Building>();
 
   ThermalZone zone1(model);
+  Space space(model);
+  space.setThermalZone(zone1);
 
   //add schedule
   Schedule s = model.alwaysOffDiscreteSchedule();

@@ -36,6 +36,7 @@
 
 #include "../../model/AvailabilityManagerNightCycle.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ScheduleConstant.hpp"
@@ -66,9 +67,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
 
   // Assign Thermal Zones to the AirLoopHVAC
   ThermalZone z1(m);
+  Space s1(m);
+  s1.setThermalZone(z1);
   ThermalZone z2(m);
+  Space s2(m);
+  s2.setThermalZone(z2);
   ThermalZone z3(m);
+  Space s3(m);
+  s3.setThermalZone(z3);
   ThermalZone z4(m);
+  Space s4(m);
+  s4.setThermalZone(z4);
 
   EXPECT_TRUE(a.addBranchForZone(z1));
   EXPECT_TRUE(a.addBranchForZone(z2));

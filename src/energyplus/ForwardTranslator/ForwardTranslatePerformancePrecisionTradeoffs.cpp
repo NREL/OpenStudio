@@ -72,6 +72,12 @@ namespace energyplus {
       idfObject.setDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp, modelObject.maxAllowedDelTemp());
     }
 
+    if (modelObject.useRepresentativeSurfacesforCalculations()) {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "Yes");
+    } else {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "No");
+    }
+
     return boost::optional<IdfObject>(idfObject);
   }
 

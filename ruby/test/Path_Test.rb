@@ -51,7 +51,13 @@ class Path_Test < MiniTest::Unit::TestCase
     assert_equal("./here", p.to_s())
   end
 
-  def test_funcOnlyTakesAPath
+  def test_function_accepting_path_takes_a_string
+    w = OpenStudio::Workspace::load('hello.idf')
+    assert w.empty?
+  end
+
+
+  def DISABLED_test_funcOnlyTakesAPath
 
     functions = []
     functions << OpenStudio.method("funcOnlyTakesAPath")
@@ -92,7 +98,7 @@ class Path_Test < MiniTest::Unit::TestCase
     end
   end
 
-  def test_defaultArgFuncTakesAPath
+  def DISABLED_test_defaultArgFuncTakesAPath
 
     functions = []
     functions << OpenStudio.method("defaultArgFuncTakesAPath")

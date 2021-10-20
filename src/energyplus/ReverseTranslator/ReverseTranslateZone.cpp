@@ -66,8 +66,8 @@ namespace energyplus {
 
     OptionalString s = workspaceObject.name();
     if (s) {
-      space.setName(*s);
       thermalZone.setName(*s);
+      space.setName(*s + " Space");
       _idfZoneName = *s;
     }
 

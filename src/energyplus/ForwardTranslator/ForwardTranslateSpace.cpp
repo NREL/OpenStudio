@@ -30,9 +30,32 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/LifeCycleCost.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
-#include "../../model/LifeCycleCost.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/SpaceType.hpp"
+
+// Loads
+#include "../../model/InternalMass.hpp"
+#include "../../model/People.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/Luminaire.hpp"
+#include "../../model/ElectricEquipment.hpp"
+#include "../../model/ElectricEquipmentITEAirCooled.hpp"
+#include "../../model/GasEquipment.hpp"
+#include "../../model/HotWaterEquipment.hpp"
+#include "../../model/SteamEquipment.hpp"
+#include "../../model/OtherEquipment.hpp"
+#include "../../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
+// Geometry children
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../../model/Surface.hpp"
+
+#include <utilities/idd/Space_FieldEnums.hxx>
 
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddFactory.hxx>
@@ -47,26 +70,59 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateSpace(model::Space& modelObject) {
 
-    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+    for (LifeCycleCost& lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
     }
 
-    return boost::none;
+    if (m_excludeSpaceTranslation) {
+      return boost::none;
+    }
 
-    /*
-  IdfObject idfObject(openstudio::IddObjectType::CommentOnly);
+    // Space
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
 
-  idfObject.setComment(
-"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\
-! OS:Space, " + modelObject.name().get() + "\n\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+    if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
+      idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
+    }
 
-  m_idfObjects.push_back(idfObject);
+    idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
 
-  return idfObject;
-  */
-  }
+    if (boost::optional<SpaceType> spaceType_ = modelObject.spaceType()) {
+      if (auto idf_spaceType_ = translateAndMapModelObject(spaceType_.get())) {
+        idfObject.setString(SpaceFields::SpaceType, idf_spaceType_->nameString());
+      }
+    }
+
+    // Translate all Space-specific loads (and geometry children)
+    auto translateSpaceLoads = [this](auto loads) {
+      std::sort(loads.begin(), loads.end(), WorkspaceObjectNameLess());
+      for (auto& load : loads) {
+        translateAndMapModelObject(load);
+      }
+    };
+
+    translateSpaceLoads(modelObject.shadingSurfaceGroups());
+    translateSpaceLoads(modelObject.interiorPartitionSurfaceGroups());
+    translateSpaceLoads(modelObject.surfaces());
+
+    translateSpaceLoads(modelObject.internalMass());
+    translateSpaceLoads(modelObject.lights());
+    translateSpaceLoads(modelObject.luminaires());
+    translateSpaceLoads(modelObject.people());
+    translateSpaceLoads(modelObject.electricEquipment());
+    translateSpaceLoads(modelObject.electricEquipmentITEAirCooled());
+    translateSpaceLoads(modelObject.gasEquipment());
+    translateSpaceLoads(modelObject.hotWaterEquipment());
+    translateSpaceLoads(modelObject.steamEquipment());
+    translateSpaceLoads(modelObject.otherEquipment());
+
+    // TODO: Technically this stuff maps to a thermal zone, always (can't map to a Space/SpaceList)
+    translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
+    translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
+    translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
+
+    return idfObject;
+  }  // translate function
 
 }  // namespace energyplus
-
 }  // namespace openstudio

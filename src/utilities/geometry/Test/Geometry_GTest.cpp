@@ -1194,3 +1194,13 @@ TEST_F(GeometryFixture, Polygon3d_WithHole) {
   EXPECT_NE(grossArea, netArea);
   EXPECT_EQ(netArea, 8400);
 }
+
+TEST_F(GeometryFixture, normalizeAngle0to360) {
+
+  constexpr std::array<std::pair<double, double>, 6> tests{
+    {{-3000.0, 240.0}, {-350.0, 10.0}, {-10.0, 350.0}, {10.0, 10.0}, {350.0, 350.0}, {3000.0, 120.0}}};
+
+  for (const auto& [angle, expectedNormalizedAngle] : tests) {
+    EXPECT_EQ(expectedNormalizedAngle, normalizeAngle0to360(angle));
+  }
+}

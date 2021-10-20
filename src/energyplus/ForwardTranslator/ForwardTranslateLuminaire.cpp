@@ -68,20 +68,13 @@ namespace energyplus {
 
     idfObject.setString(LightsFields::Name, modelObject.name().get());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone) {
-        idfObject.setString(LightsFields::ZoneorZoneListName, thermalZone->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(LightsFields::ZoneorZoneListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(LightsFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(LightsFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(LightsFields::DesignLevelCalculationMethod, "LightingLevel");

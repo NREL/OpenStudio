@@ -31,53 +31,22 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
 #include "../../model/SpaceType.hpp"
-#include "../../model/SpaceType_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
+// Loads
 #include "../../model/InternalMass.hpp"
-#include "../../model/InternalMass_Impl.hpp"
-#include "../../model/InternalMassDefinition.hpp"
-#include "../../model/InternalMassDefinition_Impl.hpp"
 #include "../../model/People.hpp"
-#include "../../model/People_Impl.hpp"
-#include "../../model/PeopleDefinition.hpp"
-#include "../../model/PeopleDefinition_Impl.hpp"
 #include "../../model/Lights.hpp"
-#include "../../model/Lights_Impl.hpp"
-#include "../../model/LightsDefinition.hpp"
-#include "../../model/LightsDefinition_Impl.hpp"
 #include "../../model/Luminaire.hpp"
-#include "../../model/Luminaire_Impl.hpp"
-#include "../../model/LuminaireDefinition.hpp"
-#include "../../model/LuminaireDefinition_Impl.hpp"
 #include "../../model/ElectricEquipment.hpp"
-#include "../../model/ElectricEquipment_Impl.hpp"
-#include "../../model/ElectricEquipmentDefinition.hpp"
-#include "../../model/ElectricEquipmentDefinition_Impl.hpp"
 #include "../../model/ElectricEquipmentITEAirCooled.hpp"
-#include "../../model/ElectricEquipmentITEAirCooled_Impl.hpp"
-#include "../../model/ElectricEquipmentITEAirCooledDefinition.hpp"
-#include "../../model/ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "../../model/GasEquipment.hpp"
-#include "../../model/GasEquipment_Impl.hpp"
-#include "../../model/GasEquipmentDefinition.hpp"
-#include "../../model/GasEquipmentDefinition_Impl.hpp"
 #include "../../model/HotWaterEquipment.hpp"
-#include "../../model/HotWaterEquipment_Impl.hpp"
 #include "../../model/SteamEquipment.hpp"
-#include "../../model/SteamEquipment_Impl.hpp"
 #include "../../model/OtherEquipment.hpp"
-#include "../../model/OtherEquipment_Impl.hpp"
 #include "../../model/SpaceInfiltrationDesignFlowRate.hpp"
-#include "../../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
-#include "../../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 #include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
-#include "../../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
-#include "../../model/DesignSpecificationOutdoorAir.hpp"
-#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -85,7 +54,9 @@
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 
+#include <iterator>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
+#include <utilities/idd/SpaceList_FieldEnums.hxx>
 
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -98,121 +69,103 @@ namespace openstudio {
 
 namespace energyplus {
 
+  std::string ForwardTranslator::zoneListNameForSpaceType(const SpaceType& modelObject) const {
+    if (m_excludeSpaceTranslation) {
+      return modelObject.nameString();
+    } else {
+      return modelObject.nameString() + " ZoneList";
+    }
+  }
+
   boost::optional<IdfObject> ForwardTranslator::translateSpaceType(SpaceType& modelObject) {
     std::vector<Space> spaces = modelObject.spaces();
 
     // check if this is a dummy space type meant to prevent inheriting building space type
-    std::vector<ModelObject> children = modelObject.children();
-    if (children.empty()) {
-      LOG(Info, "SpaceType " << modelObject.name().get() << " has no children, it will not be translated");
-      return boost::none;
-    }
-
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
-
-    std::set<std::string> zoneNames;
-    for (const Space& space : spaces) {
-      boost::optional<ThermalZone> thermalZone = space.thermalZone();
-      if (thermalZone) {
-        zoneNames.insert(thermalZone->name().get());
+    // TODO: why is that needed in the first place? Also, children() doesn't include DesignSpecificationOutdoorAir!
+    if (m_excludeSpaceTranslation) {
+      std::vector<ModelObject> children = modelObject.children();
+      if (children.empty()) {
+        LOG(Info, "SpaceType " << modelObject.name().get() << " has no children, it will not be translated");
+        return boost::none;
       }
     }
 
-    idfObject.clearExtensibleGroups();
-    for (const std::string& zoneName : zoneNames) {
-      idfObject.pushExtensibleGroup(std::vector<std::string>(1, zoneName));
+    OptionalIdfObject idfObject;
+
+    auto makeZoneList = [this, &modelObject, &spaces](bool registerIt) -> IdfObject {
+      boost::optional<IdfObject> idfObject;
+      if (registerIt) {
+        idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::ZoneList, modelObject);
+      } else {
+        idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::ZoneList);
+      }
+      idfObject->setName(zoneListNameForSpaceType(modelObject));
+
+      // Unique zone names
+      std::set<std::string> zoneNames;
+      for (const Space& space : spaces) {
+        if (auto thermalZone_ = space.thermalZone()) {
+          zoneNames.insert(thermalZone_->nameString());
+        }
+      }
+
+      idfObject->clearExtensibleGroups();
+      for (const std::string& zoneName : zoneNames) {
+        idfObject->pushExtensibleGroup(std::vector<std::string>(1, zoneName));
+      }
+
+      return idfObject.get();
+    };
+
+    if (m_excludeSpaceTranslation) {
+
+      idfObject = makeZoneList(true);
+
+    } else {
+
+      idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SpaceList, modelObject);
+
+      // Space names are already unique
+      idfObject->clearExtensibleGroups();
+      for (const auto& s : spaces) {
+        idfObject->pushExtensibleGroup(std::vector<std::string>(1, s.nameString()));
+      }
+
+      // Infiltration objects are Space-level in OS, but they are Zone-Level in E+, so we'll **ALSO** need a ZoneList for it...
+      bool hasAnyInfiltration = (!modelObject.spaceInfiltrationDesignFlowRates().empty() || !modelObject.spaceInfiltrationFlowCoefficients().empty()
+                                 || !modelObject.spaceInfiltrationEffectiveLeakageAreas().empty());
+
+      if (hasAnyInfiltration) {
+        makeZoneList(false);
+      }
     }
 
-    // translate internal mass
-    InternalMassVector internalMasses = modelObject.internalMass();
-    std::sort(internalMasses.begin(), internalMasses.end(), WorkspaceObjectNameLess());
-    for (InternalMass& internalMass : internalMasses) {
-      translateAndMapModelObject(internalMass);
-    }
+    // Translate all SpaceType loads
+    auto translateSpaceLoads = [this](auto loads) {
+      std::sort(loads.begin(), loads.end(), WorkspaceObjectNameLess());
+      for (auto& load : loads) {
+        translateAndMapModelObject(load);
+      }
+    };
 
-    // translate lights
-    LightsVector lights = modelObject.lights();
-    std::sort(lights.begin(), lights.end(), WorkspaceObjectNameLess());
-    for (Lights& light : lights) {
-      translateAndMapModelObject(light);
-    }
+    translateSpaceLoads(modelObject.internalMass());
+    translateSpaceLoads(modelObject.lights());
+    translateSpaceLoads(modelObject.luminaires());
+    translateSpaceLoads(modelObject.people());
+    translateSpaceLoads(modelObject.electricEquipment());
+    translateSpaceLoads(modelObject.electricEquipmentITEAirCooled());
+    translateSpaceLoads(modelObject.gasEquipment());
+    translateSpaceLoads(modelObject.hotWaterEquipment());
+    translateSpaceLoads(modelObject.steamEquipment());
+    translateSpaceLoads(modelObject.otherEquipment());
 
-    // translate luminaires
-    LuminaireVector luminaires = modelObject.luminaires();
-    std::sort(luminaires.begin(), luminaires.end(), WorkspaceObjectNameLess());
-    for (Luminaire& luminaire : luminaires) {
-      translateAndMapModelObject(luminaire);
-    }
-
-    // translate people
-    PeopleVector people = modelObject.people();
-    std::sort(people.begin(), people.end(), WorkspaceObjectNameLess());
-    for (People& person : people) {
-      translateAndMapModelObject(person);
-    }
-
-    // translate electric equipment
-    ElectricEquipmentVector electricEquipment = modelObject.electricEquipment();
-    std::sort(electricEquipment.begin(), electricEquipment.end(), WorkspaceObjectNameLess());
-    for (ElectricEquipment& equipment : electricEquipment) {
-      translateAndMapModelObject(equipment);
-    }
-
-    // translate IT electric equipment
-    ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = modelObject.electricEquipmentITEAirCooled();
-    std::sort(electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end(), WorkspaceObjectNameLess());
-    for (ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled) {
-      translateAndMapModelObject(iTequipment);
-    }
-
-    // translate gas equipment
-    GasEquipmentVector gasEquipment = modelObject.gasEquipment();
-    std::sort(gasEquipment.begin(), gasEquipment.end(), WorkspaceObjectNameLess());
-    for (GasEquipment& equipment : gasEquipment) {
-      translateAndMapModelObject(equipment);
-    }
-
-    // translate hot water equipment
-    HotWaterEquipmentVector hotWaterEquipment = modelObject.hotWaterEquipment();
-    std::sort(hotWaterEquipment.begin(), hotWaterEquipment.end(), WorkspaceObjectNameLess());
-    for (HotWaterEquipment& equipment : hotWaterEquipment) {
-      translateAndMapModelObject(equipment);
-    }
-
-    // translate steam equipment
-    SteamEquipmentVector steamEquipment = modelObject.steamEquipment();
-    std::sort(steamEquipment.begin(), steamEquipment.end(), WorkspaceObjectNameLess());
-    for (SteamEquipment& equipment : steamEquipment) {
-      translateAndMapModelObject(equipment);
-    }
-
-    // translate other equipment
-    OtherEquipmentVector otherEquipment = modelObject.otherEquipment();
-    std::sort(otherEquipment.begin(), otherEquipment.end(), WorkspaceObjectNameLess());
-    for (OtherEquipment& equipment : otherEquipment) {
-      translateAndMapModelObject(equipment);
-    }
-
-    // translate SpaceInfiltration_DesignFlowRate
-    SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = modelObject.spaceInfiltrationDesignFlowRates();
-    std::sort(spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end(), WorkspaceObjectNameLess());
-    for (SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : spaceInfiltrationDesignFlowRates) {
-      translateAndMapModelObject(spaceInfiltrationDesignFlowRate);
-    }
-
-    // translate SpaceInfiltration_EffectiveLeakageArea
-    SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = modelObject.spaceInfiltrationEffectiveLeakageAreas();
-    std::sort(spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end(), WorkspaceObjectNameLess());
-    for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas) {
-      translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
-    }
-
-    // translate SpaceInfiltration_FlowCoefficient
-    SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = modelObject.spaceInfiltrationFlowCoefficients();
-    std::sort(spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end(), WorkspaceObjectNameLess());
-    for (SpaceInfiltrationFlowCoefficient& spaceInfiltrationFlowCoefficient : spaceInfiltrationFlowCoefficients) {
-      translateAndMapModelObject(spaceInfiltrationFlowCoefficient);
-    }
+    // in translateModelPrivate, we have hard assigned the infiltration objects to each Space.
+    // In E+ these objects are Zone objects, they do not accept Space
+    // Technically this one accepts a Zone or ZoneList
+    // translateSpaceLoads(modelObject.spaceInfiltrationDesignFlowRates());
+    // These two DO NOT ACCEPT a ZoneList, only a Zone
+    // translateSpaceLoads(modelObject.spaceInfiltrationEffectiveLeakageAreas());
+    // translateSpaceLoads(modelObject.spaceInfiltrationFlowCoefficients());
 
     return idfObject;
   }

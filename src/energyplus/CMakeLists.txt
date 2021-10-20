@@ -659,6 +659,7 @@ set(${target_name}_test_src
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DaylightingDeviceTubular_GTest.cpp
   Test/DaylightingDeviceLightWell_GTest.cpp
+  Test/DesignDay_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
@@ -715,6 +716,7 @@ set(${target_name}_test_src
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
   Test/SimulationControl_GTest.cpp
+  Test/SizingSystem_GTest.cpp
   Test/SizingZone_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
@@ -742,6 +744,7 @@ set(${target_name}_test_src
   Test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   Test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
+  Test/ZoneHVACUnitHeater_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   Test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )

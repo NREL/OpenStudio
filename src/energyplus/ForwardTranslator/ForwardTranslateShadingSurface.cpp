@@ -134,7 +134,7 @@ namespace energyplus {
           idfObject->setString(Shading_Site_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
         }
 
-      } else {
+      } else if (istringEqual("Building", shadingSurfaceGroup->shadingSurfaceType())) {
         boost::optional<Building> building = modelObject.model().getUniqueModelObject<Building>();
         if (building) {
           transformation = building->transformation().inverse() * transformation;
@@ -146,6 +146,8 @@ namespace energyplus {
         if (transmittanceSchedule) {
           idfObject->setString(Shading_Building_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
         }
+      } else {
+        OS_ASSERT(false);
       }
 
     } else {

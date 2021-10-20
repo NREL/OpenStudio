@@ -68,20 +68,13 @@ namespace energyplus {
 
     idfObject.setString(HotWaterEquipmentFields::Name, modelObject.name().get());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone) {
-        idfObject.setString(HotWaterEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(HotWaterEquipmentFields::ZoneorZoneListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(HotWaterEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(HotWaterEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(HotWaterEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(HotWaterEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());

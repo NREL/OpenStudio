@@ -1288,7 +1288,7 @@ namespace model {
         double floorArea = space.floorArea();
         sumFloorArea += floorArea;
 
-        double numberOfPeople = space.numberOfPeople();
+        double numberOfPeople = space.numberOfPeople();  // Note: this takes Space-level and SpaceType-level people into account
         sumNumberOfPeople += numberOfPeople;
 
         double volume = space.volume();
@@ -1356,11 +1356,12 @@ namespace model {
             anyDesignSpecificationOutdoorAirSchedules = true;
           }
 
-          // compute outdoor air rates in case we need them
+          // compute outdoor air rates (m3/s) in case we need them
           double outdoorAirForPeople = numberOfPeople * thisDesignSpecificationOutdoorAir->outdoorAirFlowperPerson();
           double outdoorAirForFloorArea = floorArea * thisDesignSpecificationOutdoorAir->outdoorAirFlowperFloorArea();
           double outdoorAirRate = thisDesignSpecificationOutdoorAir->outdoorAirFlowRate();
-          double outdoorAirForVolume = volume * thisDesignSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
+          // ACH * volume = m3/h, divide by 3600 s/hr to get m3/s
+          double outdoorAirForVolume = volume * thisDesignSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour() / 3600.0;
 
           // First check if this space uses the Maximum method and other spaces do not
           if (istringEqual("Maximum", thisDesignSpecificationOutdoorAir->outdoorAirMethod()) && anySumOutdoorAirMethod) {
@@ -1591,7 +1592,7 @@ namespace model {
 
         double outdoorAirForVolume = 0.0;
         if (sumOutdoorAirForVolume > 0 && sumVolume > 0) {
-          outdoorAirForVolume = sumOutdoorAirForVolume / sumVolume;
+          outdoorAirForVolume = 3600.0 * sumOutdoorAirForVolume / sumVolume;  // convert back to ACH
         }
 
         // make a new designSpecificationOutdoorAir

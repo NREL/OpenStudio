@@ -642,25 +642,25 @@ TEST_F(IdfFixture, IdfObject_GroupPushingAndPopping) {
 
   // MINFIELDS INCLUDES AN EXTENSIBLE GROUP, BUT EXTENSIBLE GROUPS STILL INITIALIZED AS EMPTY
   object = IdfObject(IddObjectType::BuildingSurface_Detailed);
-  EXPECT_EQ(static_cast<unsigned>(10), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11), object.numFields());
   // push empty strings
   EXPECT_FALSE(object.pushExtensibleGroup().empty());
-  EXPECT_EQ(static_cast<unsigned>(13), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(14), object.numFields());
   // push non-empty strings (correct number)
   StringVector values;
   values.push_back("2.1");
   values.push_back("100.0");
   values.push_back("0.0");
   EXPECT_FALSE(object.pushExtensibleGroup(values).empty());
-  EXPECT_EQ(static_cast<unsigned>(16), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(17), object.numFields());
   // try to push incorrect number of non-empty strings
   values.pop_back();
   EXPECT_TRUE(object.pushExtensibleGroup(values).empty());
-  EXPECT_EQ(static_cast<unsigned>(16), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(17), object.numFields());
   // pop until false
   StringVector result;
   result.push_back("Fake entry.");
-  unsigned n = 16;
+  unsigned n = 17;
   while (!result.empty()) {
     result = object.popExtensibleGroup();
     if (!result.empty()) {
@@ -668,7 +668,7 @@ TEST_F(IdfFixture, IdfObject_GroupPushingAndPopping) {
     }
     EXPECT_EQ(n, object.numFields());
   }
-  EXPECT_EQ(static_cast<unsigned>(10), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11), object.numFields());
 }
 
 TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {

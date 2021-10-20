@@ -69,7 +69,7 @@ namespace energyplus {
     IdfObject idfObject(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListName, _zone->name().get());
+    idfObject.setString(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListorSpaceorSpaceListName, _zone->name().get());
 
     for (const ViewFactor& viewFactor : viewFactors) {
 

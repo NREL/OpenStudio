@@ -68,22 +68,14 @@ namespace energyplus {
 
     idfObject.setString(OtherEquipmentFields::Name, modelObject.name().get());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone) {
-        idfObject.setString(OtherEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(OtherEquipmentFields::ZoneorZoneListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(OtherEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(OtherEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
-
     idfObject.setString(OtherEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
 
     double multiplier = modelObject.multiplier();

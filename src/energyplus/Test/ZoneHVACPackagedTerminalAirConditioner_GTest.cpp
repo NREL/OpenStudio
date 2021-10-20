@@ -34,6 +34,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/CoilWaterHeatingDesuperheater.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
@@ -61,9 +62,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
 
   ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, and TZ needs at least one space
   ThermalZone z(m);
   ptac.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
@@ -90,9 +93,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
 
   ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, and TZ needs at least one space
   ThermalZone z(m);
   ptac.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
@@ -119,9 +124,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
 
   ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, and TZ needs at least one space
   ThermalZone z(m);
   ptac.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
