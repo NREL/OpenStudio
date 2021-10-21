@@ -515,7 +515,10 @@ bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& 
     return false;
   }
 
-  if (points.size() == 0) return false;
+  if (points.size() == 0) {
+    return false;
+  }
+
   for (const Point3d& point : points) {
     if (abs(point.z()) > tol) {
       return false;
@@ -526,7 +529,9 @@ bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& 
     boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
     BoostPoint boostPoint(p.get<0>(), p.get<1>());
     double distance = boost::geometry::distance(boostPoint, *boostPolygon);
-    if (distance >= 0.0001) return false;
+    if (distance >= 0.0001) {
+      return false;
+    }
   }
   return true;
 }

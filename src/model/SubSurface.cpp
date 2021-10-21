@@ -1598,8 +1598,7 @@ namespace model {
   }
 
   std::vector<Point3d> SubSurface::roughOpeningVertices() const {
-    auto frameAndDivider = windowPropertyFrameAndDivider();
-    if (frameAndDivider) {
+    if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
       double fw = frameAndDivider->frameWidth();
       // Get a transform to change the points to x/y
       Transformation faceTransform = Transformation::alignFace(this->vertices());
@@ -1620,12 +1619,11 @@ namespace model {
   }
 
   double SubSurface::roughOpeningArea() const {
+    if (boost::optional<double> area = openstudio::getArea(roughOpeningVertices())) {
+      return area.get();
+    }
 
-    boost::optional<double> area = openstudio::getArea(roughOpeningVertices());
-    if (area)
-      return *area;
-    else
-      return grossArea();
+    return grossArea();
   }
   /// @endcond
 

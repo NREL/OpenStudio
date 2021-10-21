@@ -86,6 +86,8 @@
 
 #include "../utilities/sql/SqlFile.hpp"
 
+#include <numeric>  // std::accumulate
+
 using boost::to_upper_copy;
 
 namespace openstudio {
@@ -1453,12 +1455,12 @@ namespace model {
       return wwr;
     }
 
-    // Calcuklates and returns the toital area of the subsurfaces
-    // If any subsrface extends outside the parent surface or overlaps an adjacent subsurface
-    // then that subsurface's vertices rather than rough opening vertioces are used to calculate the area
+    // Calculates and returns the toital area of the subsurfaces
+    // If any subsurface extends outside the parent surface or overlaps an adjacent subsurface
+    // then that subsurface's vertices rather than rough opening vertices are used to calculate the area
     // NOTE: I'm starting to think a better way to do this would be to use polygon booleans
     // 1 - Intersect the subsurface rough opening with the parent surface to get the area inside the parent surface
-    // 1 - Add all the subsurface rough openings together (so overlap areas dont count twice)
+    // 2 - Add all the subsurface rough openings together (so overlap areas don't count twice)
     double Surface_Impl::totalAreaOfSubSurfaces() const {
       double tol = 0.01;
       // iterate over all sub surfaces
@@ -1492,7 +1494,7 @@ namespace model {
       }
 
       // Check each rough opening against the parent surface, if any vertices are outside
-      // the parent surfave then revert back to the original vertices
+      // the parent surface then revert back to the original vertices
       for (const auto& opening : roughOpenings) {
         const SubSurface& subSurface = opening.first;
         std::vector<Point3d> vertices = opening.second;
@@ -1513,10 +1515,11 @@ namespace model {
       // (if I knew how I'd order themn left to right in x then we could test adjacent ones only)
       for (const auto& opening1 : roughOpenings) {
         for (const auto& opening2 : roughOpenings) {
-          if (opening1 == opening2) continue;
+          if (opening1 == opening2) {
+            continue;
+          }
 
-          auto result = openstudio::intersect(opening1.second, opening2.second, tol);
-          if (result) {
+          if (auto result = openstudio::intersect(opening1.second, opening2.second, tol)) {
             //There's an overlap so swap out the overlapped vertices for the original
             auto vertices = parentToXY * opening1.first.vertices();
             auto norm = openstudio::getOutwardNormal(vertices);
@@ -1529,10 +1532,9 @@ namespace model {
       }
 
       // Accumulate the areas
-      double area = 0;
-      for (const auto& roughOpening : roughOpenings) {
-        area += openstudio::getArea(roughOpening.second).value() * roughOpening.first.multiplier();
-      }
+      double area = std::accumulate(roughOpenings.cbegin(), roughOpenings.cend(), 0.0, [](double sum, auto& roughOpening) {
+        return sum + openstudio::getArea(roughOpening.second).value() * roughOpening.first.multiplier();
+      });
 
       return area;
     }

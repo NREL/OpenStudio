@@ -52,6 +52,7 @@
 #include "../Blind.hpp"
 #include "../ShadingControl.hpp"
 #include "../Model_Impl.hpp"
+#include "../ThermalZone.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
@@ -1295,20 +1296,23 @@ TEST_F(ModelFixture, Issue_4361) {
   // surface gross area == surface net area + subsurface gross area
   // That is before the subsurface is assigned a frame and divider
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 2));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(2, 0, 0));
-  vertices.push_back(Point3d(2, 0, 2));
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 0, 2},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
   surface.setSurfaceType("Wall");
 
   vertices.clear();
-  vertices.push_back(Point3d(0.5, 0, 1.5));
-  vertices.push_back(Point3d(0.5, 0, 0.5));
-  vertices.push_back(Point3d(1.5, 0, 0.5));
-  vertices.push_back(Point3d(1.5, 0, 1.5));
+  vertices = {
+    {0.5, 0, 1.5},
+    {0.5, 0, 0.5},
+    {1.5, 0, 0.5},
+    {1.5, 0, 1.5},
+  };
 
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
@@ -1351,20 +1355,24 @@ TEST_F(ModelFixture, Issue_4361_Subsurface_Outside_Parent) {
   // surface gross area == surface net area + subsurface gross area
   // That is before the subsurface is assigned a frame and divider
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 2));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(2, 0, 0));
-  vertices.push_back(Point3d(2, 0, 2));
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 0, 2},
+  };
+
   Surface surface(vertices, model);
   surface.setSpace(space);
   surface.setSurfaceType("Wall");
 
   vertices.clear();
-  vertices.push_back(Point3d(0.5, 0, 1.99));
-  vertices.push_back(Point3d(0.5, 0, 0.99));
-  vertices.push_back(Point3d(1.5, 0, 0.99));
-  vertices.push_back(Point3d(1.5, 0, 1.99));
+  vertices = {
+    {0.5, 0, 1.99},
+    {0.5, 0, 0.99},
+    {1.5, 0, 0.99},
+    {1.5, 0, 1.99},
+  };
 
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
@@ -1382,7 +1390,7 @@ TEST_F(ModelFixture, Issue_4361_Subsurface_Outside_Parent) {
   // Then assign a frame and divider to the subsurface
   // then do the same thing with the areas
   // The area should be unchanged because the subsurface is not enclosed
-  // by the parent serface after including the frame
+  // by the parent surface after including the frame
 
   WindowPropertyFrameAndDivider frame(model);
   frame.setFrameWidth(0.030);
@@ -1405,11 +1413,12 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Non_Overlapping) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 2));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(4, 0, 0));
-  vertices.push_back(Point3d(4, 0, 2));
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {4, 0, 0},
+    {4, 0, 2},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
   surface.setSurfaceType("Wall");
@@ -1425,10 +1434,12 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Non_Overlapping) {
   subSurface1.setSubSurfaceType("FixedWindow");
 
   vertices.clear();
-  vertices.push_back(Point3d(2.5, 0, 1.5));
-  vertices.push_back(Point3d(2.5, 0, 0.5));
-  vertices.push_back(Point3d(3.5, 0, 0.5));
-  vertices.push_back(Point3d(3.5, 0, 1.5));
+  vertices = {
+    {2.5, 0, 1.5},
+    {2.5, 0, 0.5},
+    {3.5, 0, 0.5},
+    {3.5, 0, 1.5},
+  };
 
   SubSurface subSurface2(vertices, model);
   subSurface2.setSurface(surface);
@@ -1457,30 +1468,35 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Overlapping) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 2));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(4, 0, 0));
-  vertices.push_back(Point3d(4, 0, 2));
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {4, 0, 0},
+    {4, 0, 2},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
   surface.setSurfaceType("Wall");
 
   vertices.clear();
-  vertices.push_back(Point3d(0.5, 0, 1.5));
-  vertices.push_back(Point3d(0.5, 0, 0.5));
-  vertices.push_back(Point3d(1.5, 0, 0.5));
-  vertices.push_back(Point3d(1.5, 0, 1.5));
+  vertices = {
+    {0.5, 0, 1.5},
+    {0.5, 0, 0.5},
+    {1.5, 0, 0.5},
+    {1.5, 0, 1.5},
+  };
 
   SubSurface subSurface1(vertices, model);
   subSurface1.setSurface(surface);
   subSurface1.setSubSurfaceType("FixedWindow");
 
   vertices.clear();
-  vertices.push_back(Point3d(1.51, 0, 1.5));
-  vertices.push_back(Point3d(1.51, 0, 0.5));
-  vertices.push_back(Point3d(2.51, 0, 0.5));
-  vertices.push_back(Point3d(2.51, 0, 1.5));
+  vertices = {
+    {1.51, 0, 1.5},
+    {1.51, 0, 0.5},
+    {2.51, 0, 0.5},
+    {2.51, 0, 1.5},
+  };
 
   SubSurface subSurface2(vertices, model);
   subSurface2.setSurface(surface);
