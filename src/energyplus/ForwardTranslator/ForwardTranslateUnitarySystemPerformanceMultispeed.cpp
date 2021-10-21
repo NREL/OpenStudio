@@ -68,7 +68,7 @@ namespace energyplus {
     std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
     if (unitarySystems.size() != 1) {
       LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem, "
-                   << modelObject.name() << " is referenced by " << unitarySystems.size() << ".")
+                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << ".")
       return boost::none;
     }
     AirLoopHVACUnitarySystem& unitarySystem = unitarySystems[0];
