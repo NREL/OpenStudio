@@ -34,6 +34,12 @@ set(${target_name}_src
   ThreeJSForwardTranslator.cpp
   ThreeJSReverseTranslator.hpp
   ThreeJSReverseTranslator.cpp
+  GltfForwardTranslator.hpp
+  GltfForwardTranslator.cpp
+  tiny_gltf.h
+  json.hpp
+  stb_image.h
+  stb_image_write.h
   ModelMerger.hpp
   ModelMerger.cpp
 
@@ -2192,6 +2198,7 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
+  test/GltfForwardTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
