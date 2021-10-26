@@ -70,6 +70,10 @@
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
+
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "tiny_gltf.h"
 
 #include <thread>
@@ -86,9 +90,6 @@ namespace model {
   bool GltfForwardTranslator::modelToGLTF(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage) {
     m_logSink.setThreadId(std::this_thread::get_id());
     m_logSink.resetStringStream();
-
-    tinygltf::Model tinyGLTF;
-    //new test start
 
     tinygltf::TinyGLTF loader;
     tinygltf::Model gltf_Model;
