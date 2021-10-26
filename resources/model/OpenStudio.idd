@@ -8277,6 +8277,7 @@ OS:Refrigeration:CompressorRack,
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
         \autocalculatable
         \note Design recirc water pump power for Condenser Type = EvaporativelyCooled.
@@ -15697,6 +15698,7 @@ OS:Coil:Cooling:DX:CurveFit:OperatingMode,
        \note Rated power consumed by the evaporative condenser's water pump
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -16543,6 +16545,7 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
   N13; \field Rated Evaporative Condenser Pump Power Consumption
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -28115,6 +28118,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   N9 , \field Condenser Water Pump Power
        \type real
        \units W
+       \ip-units W
        \minimum 0
        \required-field
        \note A warning message will be issued if the ratio of Condenser Water Pump Power to Rated
