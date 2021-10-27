@@ -352,10 +352,10 @@ TEST_F(gbXMLFixture, ForwardTranslator_4438_Deterministic) {
 
   EXPECT_TRUE(test1);
 
-    path ps1 = resourcesPath() / openstudio::toPath("gbxml/exampleModel1.osm");
+  path ps1 = resourcesPath() / openstudio::toPath("gbxml/exampleModel1.osm");
   model1.save(ps1, true);
 
-    Model model2 = exampleModel();
+  Model model2 = exampleModel();
 
   path p2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.xml");
 
@@ -364,7 +364,6 @@ TEST_F(gbXMLFixture, ForwardTranslator_4438_Deterministic) {
 
   EXPECT_TRUE(test2);
 
-      path ps2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.osm");
+  path ps2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.osm");
   model1.save(ps2, true);
 }
-

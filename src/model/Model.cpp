@@ -1524,7 +1524,7 @@ namespace model {
     // times a wall. To test for deterministic gbxml export I need to be sure that the model used is
     // idemntical every single time it this method is run. If these chanegs are aproblem I can refactor
     // so both Clone and fromFloorProint could be used
-    // 
+    //
     //            y (=North)
     //  Site      ▲
     //  Shading   │                  building height = 3m
