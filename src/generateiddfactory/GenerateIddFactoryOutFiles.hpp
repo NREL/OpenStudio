@@ -30,13 +30,15 @@
 #ifndef GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP
 #define GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP
 
-#include <map>
-#include <vector>
 #include "../utilities/core/Filesystem.hpp"
+
+#include <map>
+#include <memory>
+#include <vector>
 
 namespace openstudio {
 
-typedef openstudio::filesystem::path path;
+using path = openstudio::filesystem::path;
 
 class IddFileFactoryData;
 
