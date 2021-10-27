@@ -1518,7 +1518,13 @@ namespace model {
     buildingStory.setNominalFloortoFloorHeight(3);
 
     // create spaces from floor print
-
+    // GG 10/26/21 - Change the spac egeneration to use fromFloorPrint instead of using Clone
+    // don't know the underlying workins of Clone but each time this method was called in a different
+    // session the order and type of surfaces was different, sometimes a surface was a roof and other
+    // times a wall. To test for deterministic gbxml export I need to be sure that the model used is
+    // idemntical every single time it this method is run. If these chanegs are aproblem I can refactor
+    // so both Clone and fromFloorProint could be used
+    // 
     //            y (=North)
     //  Site      ▲
     //  Shading   │                  building height = 3m
@@ -1548,18 +1554,24 @@ namespace model {
     space1->setThermalZone(thermalZone);
     space1->setBuildingStory(buildingStory);
 
-    ModelObject clone = space1->clone(model);
-    Space space2 = clone.cast<Space>();
-    space2.setXOrigin(10);
+    boost::optional<Space> space2 = Space::fromFloorPrint(floorPrint, 3, model);
+    OS_ASSERT(space2);
+    space2->setXOrigin(10);
+    space2->setThermalZone(thermalZone);
+    space2->setBuildingStory(buildingStory);
 
-    clone = space1->clone(model);
-    Space space3 = clone.cast<Space>();
-    space3.setYOrigin(10);
+    boost::optional<Space> space3 = Space::fromFloorPrint(floorPrint, 3, model);
+    OS_ASSERT(space3);
+    space3->setYOrigin(10);
+    space3->setThermalZone(thermalZone);
+    space3->setBuildingStory(buildingStory);
 
-    clone = space1->clone(model);
-    Space space4 = clone.cast<Space>();
-    space4.setXOrigin(10);
-    space4.setYOrigin(10);
+    boost::optional<Space> space4 = Space::fromFloorPrint(floorPrint, 3, model);
+    OS_ASSERT(space4);
+    space4->setXOrigin(10);
+    space4->setYOrigin(10);
+    space4->setThermalZone(thermalZone);
+    space4->setBuildingStory(buildingStory);
 
     // add a door to south wall of space1
     std::vector<Point3d> doorPoints;
@@ -1584,7 +1596,7 @@ namespace model {
     windowPoints.push_back(Point3d(10, 8, 2));
 
     // find east wall
-    searchResults = space2.findSurfaces(90.0, 90.0, 90.0, 90.0);
+    searchResults = space2->findSurfaces(90.0, 90.0, 90.0, 90.0);
     OS_ASSERT(searchResults.size() >= 1);
 
     // add window
@@ -1597,7 +1609,7 @@ namespace model {
 
     // add daylighting control point to center of space2
     DaylightingControl daylightingControl(model);
-    daylightingControl.setSpace(space2);
+    daylightingControl.setSpace(*space2);
     daylightingControl.setPosition(Point3d(5, 5, 1.1));
 
     // hook daylighting control up to zone
@@ -1607,7 +1619,7 @@ namespace model {
 
     // add illuminance map to space2
     IlluminanceMap illuminanceMap(model);
-    illuminanceMap.setSpace(space2);
+    illuminanceMap.setSpace(*space2);
     illuminanceMap.setOriginXCoordinate(1);
     illuminanceMap.setXLength(8);
     illuminanceMap.setOriginYCoordinate(1);
@@ -1620,12 +1632,12 @@ namespace model {
 
     // add a glare sensor to center of space2
     GlareSensor glareSensor(model);
-    glareSensor.setSpace(space2);
+    glareSensor.setSpace(*space2);
     glareSensor.setPosition(Point3d(5, 5, 1.1));
 
     // add a desk to space 2
     InteriorPartitionSurfaceGroup deskGroup(model);
-    deskGroup.setSpace(space2);
+    deskGroup.setSpace(*space2);
 
     std::vector<Point3d> deskPoints;
     deskPoints.push_back(Point3d(5, 8, 1));
@@ -1641,7 +1653,7 @@ namespace model {
     printerDefinition.setDesignLevel(200.0);
     ElectricEquipment printer(printerDefinition);
     printer.setName("Printer");
-    printer.setSpace(space4);
+    printer.setSpace(*space4);
 
     // add a building shading device
     ShadingSurfaceGroup canopyGroup(model);

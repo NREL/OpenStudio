@@ -339,3 +339,32 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State) {
   EXPECT_EQ(gbXML_str1.length(), gbXML_str2.length());
   EXPECT_GT(gbXML_str1.length(), 50000);
 }
+
+// Create two gbxml models from two identical osm models should produce
+// gbxml models with surfaces in the same order. issue 4438
+TEST_F(gbXMLFixture, ForwardTranslator_4438_Deterministic) {
+  Model model1 = exampleModel();
+
+  path p1 = resourcesPath() / openstudio::toPath("gbxml/exampleModel1.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test1 = forwardTranslator.modelToGbXML(model1, p1);
+
+  EXPECT_TRUE(test1);
+
+    path ps1 = resourcesPath() / openstudio::toPath("gbxml/exampleModel1.osm");
+  model1.save(ps1, true);
+
+    Model model2 = exampleModel();
+
+  path p2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.xml");
+
+  //ForwardTranslator forwardTranslator;
+  bool test2 = forwardTranslator.modelToGbXML(model2, p2);
+
+  EXPECT_TRUE(test2);
+
+      path ps2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.osm");
+  model1.save(ps2, true);
+}
+
