@@ -1442,13 +1442,6 @@ namespace model {
         return result;
       }
 
-      //double windowArea = 0.0;
-      //for (const SubSurface& subSurface : this->subSurfaces()) {
-      //  if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-      //    windowArea += subSurface.multiplier() * subSurface.roughOpeningArea();
-      //  }
-      //}
-
       double roughOpeningArea = totalAreaOfSubSurfaces();
       double wwr = roughOpeningArea / grossArea;
 
@@ -1473,8 +1466,8 @@ namespace model {
       // Records the rough opening of each sub surface
       std::map<SubSurface, Point3dVector> roughOpenings;
       // Get the flattened parent surface vertices
-      Transformation parentToXY = Transformation::alignFace(this->vertices());
-      std::vector<Point3d> parentVertices = parentToXY.inverse() * this->vertices();
+      Transformation parentToXY = Transformation::alignFace(this->vertices()).inverse();
+      std::vector<Point3d> parentVertices = parentToXY * this->vertices();
       // Make sure the parent surface is oriented clockwise
       auto norm = openstudio::getOutwardNormal(parentVertices);
       if (norm && norm->z() > 0) {
@@ -1484,7 +1477,7 @@ namespace model {
       // Get the flattened sub surface vertices for windows
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          auto opening = parentToXY.inverse() * subSurface.roughOpeningVertices();
+          auto opening = parentToXY * subSurface.roughOpeningVertices();
           auto norm = openstudio::getOutwardNormal(opening);
           if (norm && norm->z() > 0) {
             std::reverse(opening.begin(), opening.end());
@@ -1497,9 +1490,9 @@ namespace model {
       // the parent surface then revert back to the original vertices
       for (const auto& opening : roughOpenings) {
         const SubSurface& subSurface = opening.first;
-        std::vector<Point3d> vertices = opening.second;
+        std::vector<Point3d> flattenedVertices = opening.second;
 
-        if (!openstudio::polygonInPolygon(vertices, parentVertices, tol)) {
+        if (!openstudio::polygonInPolygon(flattenedVertices, parentVertices, tol)) {
           // One or more vertices not within the parent surface so replace with the original vertices
           auto vertices = parentToXY * subSurface.vertices();
           auto norm = openstudio::getOutwardNormal(vertices);
@@ -1507,7 +1500,6 @@ namespace model {
             std::reverse(vertices.begin(), vertices.end());
           }
           roughOpenings[subSurface] = vertices;
-          break;
         }
       }
 
