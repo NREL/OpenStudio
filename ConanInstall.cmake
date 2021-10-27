@@ -81,7 +81,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     ${CONAN_RUBY}
     "openssl/1.1.0l#7f3fa5cfcfba31fffa344c71a9795176" # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
-    "boost/1.73.0#4129a76c9b83c300fc103e36d1908792"
+    "boost/1.77.0#bcb69db62356211f558b1dfd0967bae4" # TODO: this is on conan-center
     "pugixml/1.10#64b3ebc897bb9d9854c8a2443bf112a8"
     "jsoncpp/1.9.3#073a6d3cb40911d7c8027bddb6ae7dbf"
     "zlib/1.2.11#0df31fd24179543f5720ec7beb2a88d7"
