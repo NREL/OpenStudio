@@ -461,22 +461,21 @@ namespace gbxml {
     // translate building: needs to be done even if not explicitly instantiated since that's what translates Spaces in particular.
     translateBuilding(model, result);
 
+    // translate surfaces
+    // TODO: JM 2020-06-18 Why is translateSpace not responsible to call this one?
+    std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Surfaces"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum((int)surfaces.size());
+      m_progressBar->setValue(0);
+    }
+
     std::vector<model::Space> spaces = model.getConcreteModelObjects<model::Space>();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
     for (const model::Space& space : spaces) {
       std::vector<model::Surface> spaceSurfaces = space.surfaces();
       std::sort(spaceSurfaces.begin(), spaceSurfaces.end(), WorkspaceObjectNameLess());
-
-      // translate surfaces
-      // TODO: JM 2020-06-18 Why is translateSpace not responsible to call this one?
-      //std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();
-      ////std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
-      //if (m_progressBar) {
-      //  m_progressBar->setWindowTitle(toString("Translating Surfaces"));
-      //  m_progressBar->setMinimum(0);
-      //  m_progressBar->setMaximum((int)surfaces.size());
-      //  m_progressBar->setValue(0);
-      //}
 
       for (const model::Surface& surface : spaceSurfaces) {
         std::string name = surface.name().value();
