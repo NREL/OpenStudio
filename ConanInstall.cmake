@@ -35,6 +35,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_add_remote(NAME bincrafters
     URL https://bincrafters.jfrog.io/artifactory/api/conan/public-conan)
 
+  # TODO: temp force update the outdated CI remotes
+  conan_add_remote(NAME conancenter URL https://center.conan.io)
+  conan_add_remote(NAME conan-center URL https://center.conan.io)
+
   #conan_add_remote(NAME jmarrec
   #  URL https://api.bintray.com/conan/jmarrec/testing)
 
