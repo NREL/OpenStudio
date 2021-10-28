@@ -35,8 +35,9 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <cstdlib>
 #include <iomanip>
+#include <random>
+#include <string>
 
 namespace openstudio {
 namespace model {
@@ -49,7 +50,7 @@ namespace model {
 
       ColorRGB color = RenderingColor::randomColor();
 
-      bool test;
+      bool test = true;
       if (!getInt(OS_Rendering_ColorFields::RenderingRedValue, true)) {
         test = setRenderingRedValue(color.red(), false);
         OS_ASSERT(test);
@@ -392,7 +393,12 @@ namespace model {
       ColorRGB(255, 255, 0),    // Yellow
       ColorRGB(154, 205, 50)    // YellowGreen
     };
-    int index = rand() % colors.size();
+
+    std::random_device rd;   //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd());  //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<std::mt19937::result_type> distrib(0, colors.size() - 1);  // Generates an int in the closed interval [0, n-1]
+    int index = distrib(rd);
+
     return colors[index];
   }
 
