@@ -91,7 +91,7 @@ namespace energyplus {
       return true;
     }
 
-    bool operator==(const WeekScheduleStruct& other) {
+    bool operator==(const WeekScheduleStruct& other) const {
       return (sundaySchedule == other.sundaySchedule && mondaySchedule == other.mondaySchedule && tuesdaySchedule == other.tuesdaySchedule
               && wednesdaySchedule == other.wednesdaySchedule && thursdaySchedule == other.thursdaySchedule && fridaySchedule == other.fridaySchedule
               && saturdaySchedule == other.saturdaySchedule && holidaySchedule == other.holidaySchedule
