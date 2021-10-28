@@ -30,15 +30,17 @@
 #ifndef UTILITIES_CORE_ENUMBASE_HPP
 #define UTILITIES_CORE_ENUMBASE_HPP
 
-#include <set>
-#include <map>
-#include <vector>
 #include "StaticInitializer.hpp"
+
 #include <boost/preprocessor.hpp>
 #include <boost/optional.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+
+#include <map>
+#include <set>
 #include <stdexcept>
+#include <vector>
 
 /** Base class for OPENSTUDIO_ENUMs. Comparison operators use the underlying (integer) value. */
 template <typename Enum>
@@ -106,22 +108,22 @@ class EnumBase : public ::StaticInitializer<Enum>
     m_value = lookupValue(t_value);
   }
 
-  bool operator==(const Enum& other) const {
+  bool operator==(const EnumBase<Enum>& other) const {
     return (m_value == other.m_value);
   }
-  bool operator!=(const Enum& other) const {
+  bool operator!=(const EnumBase<Enum>& other) const {
     return (m_value != other.m_value);
   }
-  bool operator>(const Enum& other) const {
+  bool operator>(const EnumBase<Enum>& other) const {
     return (m_value > other.m_value);
   }
-  bool operator>=(const Enum& other) const {
+  bool operator>=(const EnumBase<Enum>& other) const {
     return (m_value >= other.m_value);
   }
-  bool operator<(const Enum& other) const {
+  bool operator<(const EnumBase<Enum>& other) const {
     return (m_value < other.m_value);
   }
-  bool operator<=(const Enum& other) const {
+  bool operator<=(const EnumBase<Enum>& other) const {
     return (m_value <= other.m_value);
   }
 
