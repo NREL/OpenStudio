@@ -186,4 +186,8 @@ bool BCLComponent::operator!=(const BCLComponent& other) const {
   return !(operator==(other));
 }
 
+bool BCLComponent::operator<(const BCLComponent& other) const {
+  return (uid() + versionId()) < (other.uid() + other.versionId());
+}
+
 }  // namespace openstudio

@@ -997,6 +997,10 @@ bool BCLMeasure::operator!=(const BCLMeasure& other) const {
   return !(operator==(other));
 }
 
+bool BCLMeasure::operator<(const BCLMeasure& other) const {
+  return (uid() + versionId()) < (other.uid() + other.versionId());
+}
+
 bool BCLMeasure::save() const {
   return m_bclXML.save();
 }

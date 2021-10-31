@@ -108,6 +108,9 @@ class UTILITIES_API BCLComponent
   /// Negation of ==.
   bool operator!=(const BCLComponent& other) const;
 
+  /// Less than
+  bool operator<(const BCLComponent& other) const;
+
   //@}
  private:
   REGISTER_LOGGER("openstudio.BCLComponent");
