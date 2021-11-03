@@ -255,6 +255,9 @@ class UTILITIES_API BCLMeasure
 
   bool operator!=(const BCLMeasure& other) const;
 
+  /// Less than
+  bool operator<(const BCLMeasure& other) const;
+
   /// Save the measure.xml back to the directory
   bool save() const;
 
