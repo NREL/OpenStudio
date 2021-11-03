@@ -127,7 +127,7 @@ As of OpenStudio SDK 3.2.0, Python bindings are offically supported and distrbut
 * [#4468](https://github.com/NREL/OpenStudio/pull/4468) - [developer] Add a full FT test for ElectricEquipmentITEAirCooled (backport Space PR) by @jmarrec
 * [#4467](https://github.com/NREL/OpenStudio/pull/4467) - Update unit tests for ElectricEquipmentITEAirCooled by @kbenne
 * [#4470](https://github.com/NREL/OpenStudio/pull/4470) - [developer] use a custom build of E+ with a Space DSOA Fx by @jmarrec
-* [#4473](https://github.com/NREL/OpenStudio/pull/4473) Fix #4472 - Modify Python in typemaps for `path` to accept string with Python 3 support by @jmarrec
+* [#4473](https://github.com/NREL/OpenStudio/pull/4473) - Fix #4472 - Modify Python in typemaps for `path` to accept string with Python 3 support by @jmarrec
 * [#4476](https://github.com/NREL/OpenStudio/pull/4476) - Update gems for workflow and extension gem updates by @tijcolem
 * [#4307](https://github.com/NREL/OpenStudio/pull/4307) - Standardize Curve IDD references like E+ does (Uni/Bi...variateFunctions) and remove hard check in model code by @jmarrec
 * [#4337](https://github.com/NREL/OpenStudio/pull/4337) - Fix Encode searchTerm in BCL (including spaces, not only "+" signs) by @jmarrec
