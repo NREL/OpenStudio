@@ -63,108 +63,114 @@ As of OpenStudio SDK 3.2.0, Python bindings are offically supported and distrbut
 
  Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for further instructions on how to install. Users can also visit the test channel at https://test.pypi.org/project/openstudio/ to install development bindings. 
 
-## GitHub auto-generated release notes between v3.3.0 and v3.2.0
+## New Features, Major Fixes and API-breaking changes
 
-* Addresses #3147, add HeatExchanger:Desiccant:BalancedFlow by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4317
-* Fix #3514 - Make strings returned from openstudio to ruby UTF8 by @jmarrec in https://github.com/NREL/OpenStudio/pull/4349
-* Addresses #4329 and #4330, issues with AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4346
-* Fix #4353 - Add a missing reference in E+ Idd for PythonPlugin:Instance (`ProgramNames`) by @jmarrec in https://github.com/NREL/OpenStudio/pull/4356
-* Fix #4354 - Issue in AirLoopHVACOutdoorAirSystem::reliefComponents with ZoneHVACComponents: wrong order by @jmarrec in https://github.com/NREL/OpenStudio/pull/4355
-* Fix #3599 - Add new fields to control outdoor air for AirTerminalSingleDuctInletMixer by @jmarrec in https://github.com/NREL/OpenStudio/pull/4350
-* Fix #2145 - Do not create an extra singlezone SPM humidity min created if humidifier downstream of fan by @jmarrec in https://github.com/NREL/OpenStudio/pull/4348
-* Fix #227 - Actually use the EPW start year or start day of week when "UseWeatherFile" is used in YearDescription for assumedYear by @jmarrec in https://github.com/NREL/OpenStudio/pull/4347
-* Fix #4335 - Should reset the air nodes when cloning a AirLoopHVACUnitarySystem by @jmarrec in https://github.com/NREL/OpenStudio/pull/4343
-* #4046 - Clarify the situation with output file in the ReportingMeasure Template by @jmarrec in https://github.com/NREL/OpenStudio/pull/4345
-* Fix #4338 - AirLoopHVAC_Impl::terminalForLastBranch doesn't handle Dual duct correctly by @jmarrec in https://github.com/NREL/OpenStudio/pull/4339
-* Addresses #4314, add ScheduleRuleset custom day methods by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4359
-* Github Actions to publish python bindings to pypi when it's a release and testing worked by @jmarrec in https://github.com/NREL/OpenStudio/pull/4371
-* #4214 Add in automated testing for 32/64 bit nuget package by @tijcolem in https://github.com/NREL/OpenStudio/pull/4369
-* Fix #1571 - building.clone breaks space surface matching by @jmarrec in https://github.com/NREL/OpenStudio/pull/4352
-* Addresses #1515, Reverse Translator should retain thermal zone name from IDF instead of re-naming it by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4378
-* #4177 Non-zero exit code for openstudio-cli by @tijcolem in https://github.com/NREL/OpenStudio/pull/4370
-* Addresses #4364, Availability Schedule for DaylightingControl by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4365
-* Fix #4327 - FanSystemModel electricPowerFraction should be optional by @jmarrec in https://github.com/NREL/OpenStudio/pull/4342
-* Fix #4309 - disable RUBYLIB env and use --include or -I using cli by @tijcolem in https://github.com/NREL/OpenStudio/pull/4376
-* Provide more options for installation of openstudio dlls by @macumber in https://github.com/NREL/OpenStudio/pull/4383
-* Fixes https://github.com/NREL/OpenStudio/issues/4384 by @macumber in https://github.com/NREL/OpenStudio/pull/4385
-* Development BCL Update by @axelstudios in https://github.com/NREL/OpenStudio/pull/4389
-* Addresses #4362, add support of HeatPump:PlantLoop:EIR:Heating to model air-to-water heat pump by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4368
-* Addresses #4380, completing SDK support of Tubular Daylighting Devices (TDDs) by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4382
-* ref #4397 - Fix some issues in our Init calls for embedded ruby by @jmarrec in https://github.com/NREL/OpenStudio/pull/4398
-* Fix #4304 - Minimal fix for GroundHeatExchanger:Vertical to avoid confusion between maximum and design flow rates by @jmarrec in https://github.com/NREL/OpenStudio/pull/4305
-* Addresses #3906, support new field 'Minimum Air Flow Turndown Schedule Name' for AirTerminals by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4381
-* #4399 - Surface fixes by @jmarrec in https://github.com/NREL/OpenStudio/pull/4400
-* Fix #4390 - add OSRunner::getOptionalBoolArgumentValue by @jmarrec in https://github.com/NREL/OpenStudio/pull/4392
-* Fix #4419 - custom mapping for LCC Use Price Escalation by @jmarrec in https://github.com/NREL/OpenStudio/pull/4420
-* Avoid issues with openstudio_ruby revision not matching  by @jmarrec in https://github.com/NREL/OpenStudio/pull/4428
-* Fix #4220 - Don't pass built in POD types by const ref& but by value by @jmarrec in https://github.com/NREL/OpenStudio/pull/4421
-* Update to new stable tag from Github Actions CI (includes CP720 fix) by @jmarrec in https://github.com/NREL/OpenStudio/pull/4401
-* Add AirLoopHVAC to ThreeJS user data by @antoine-galataud in https://github.com/NREL/OpenStudio/pull/4407
-* Fix #4423 - enable coverage on one of the linux runners by @jmarrec in https://github.com/NREL/OpenStudio/pull/4427
-* Resolves #4395 Add in CLI option to use epJSON by @tijcolem in https://github.com/NREL/OpenStudio/pull/4418
-* Fix #4439 - Correctly Reverse Translate gbXML Schedules by @jmarrec in https://github.com/NREL/OpenStudio/pull/4440
-* Addresses #3910, realign OS:SizingPeriod:DesignDay with E+ IDD by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4402
-* Update to v9.6.0-IOFreeze by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4406
-* Fix #4446 - add SizingSystem::autosizedOccupantDiversity. by @jmarrec in https://github.com/NREL/OpenStudio/pull/4450
-* Fix #4156 - Support nested subfolders in approved Measure directories by @jmarrec in https://github.com/NREL/OpenStudio/pull/4417
-* Fix #4404 #4453 - Fix issues with ForwardTranslator options by @jmarrec in https://github.com/NREL/OpenStudio/pull/4454
-* Fixed an issue in Surface splitSurfaceForSubSurfaces which caused the… by @ggartside in https://github.com/NREL/OpenStudio/pull/4431
-* Fix #3426 - ZoneHVACUnitHeater components missing air inlet/outlet node names when Fan:OnOff by @jmarrec in https://github.com/NREL/OpenStudio/pull/4459
-* Fix #4448 - Issues with angles in DaylightingControl by @jmarrec in https://github.com/NREL/OpenStudio/pull/4452
-* Fix #4445 - Fix API issues in Controller:WaterCoil by @jmarrec in https://github.com/NREL/OpenStudio/pull/4455
-* Fix #4461 - DesignSpecificationOutdoorAir: when combining, Outdoor Air Flow rate for ACH is off by 3600 when "Maximum" method is used by @jmarrec in https://github.com/NREL/OpenStudio/pull/4462
-* Add a full FT test for DaylightingControls (backport from Space PR) by @jmarrec in https://github.com/NREL/OpenStudio/pull/4463
-* [Developer] Add Full detailed tests for the FT of SpaceInfiltration objects (whether assigned to space or spacetype) by @jmarrec in https://github.com/NREL/OpenStudio/pull/4466
-* [Developer] Refactor Forward Translation of ThermalZone in particular for Space translation PR by @jmarrec in https://github.com/NREL/OpenStudio/pull/4465
-* [developer] Add a full FT test for ElectricEquipmentITEAirCooled (backport Space PR) by @jmarrec in https://github.com/NREL/OpenStudio/pull/4468
-* Update unit tests for ElectricEquipmentITEAirCooled by @kbenne in https://github.com/NREL/OpenStudio/pull/4467
-* [developer] Space PR: adjustements to make DaylightingControls work by @jmarrec in https://github.com/NREL/OpenStudio/pull/4471
-* [developer] use a custom build of E+ with a Space DSOA Fx by @jmarrec in https://github.com/NREL/OpenStudio/pull/4470
-* Addresses #4409, forward translate Space by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4434
-* Fix #4472 - Modify Python in typemaps for `path` to accept string with Python 3 support by @jmarrec in https://github.com/NREL/OpenStudio/pull/4473
-* Add ForwardTranslator options to the CLI `run` method by @jmarrec in https://github.com/NREL/OpenStudio/pull/4447
-* update gems for workflow and extension gem updates by @tijcolem in https://github.com/NREL/OpenStudio/pull/4476
+* Support for EnergyPlus 9.6 space concept. 
+  * [#4471](https://github.com/NREL/OpenStudio/pull/4471) Space PR: adjustments to make DaylightingControls work by @jmarrec 
+  * [#4434](https://github.com/NREL/OpenStudio/pull/4434) Addresses #4409, forward translate Space by @joseph-robertson 
+  * [#4447](https://github.com/NREL/OpenStudio/pull/4447) Add ForwardTranslator options to the CLI `run` method by @jmarrec 
+* [#4406](https://github.com/NREL/OpenStudio/pull/4406) Update to EnergyPlus v9.6.0 by @joseph-robertson 
+* [#4350](https://github.com/NREL/OpenStudio/pull/4350) Fix #3599 - Add new fields to control outdoor air for AirTerminalSingleDuctInletMixer by @jmarrec 
+* [#4365](https://github.com/NREL/OpenStudio/pull/4365) Addresses #4364 - Availability Schedule for DaylightingControl by @joseph-robertson 
+* [#4342](https://github.com/NREL/OpenStudio/pull/4342) Fix #4327 - FanSystemModel electricPowerFraction should be optional by @jmarrec 
+* [#4368](https://github.com/NREL/OpenStudio/pull/4368) Addresses #4362 - add support of HeatPump:PlantLoop:EIR:Heating to model air-to-water heat pump by @joseph-robertson 
+* [#4382](https://github.com/NREL/OpenStudio/pull/4382) Addresses #4380 - completing SDK support of Tubular Daylighting Devices (TDDs) by @joseph-robertson 
+* [#4381](https://github.com/NREL/OpenStudio/pull/4381) Addresses #3906 - support new field 'Minimum Air Flow Turndown Schedule Name' for AirTerminals by @joseph-robertson 
+* [#4407](https://github.com/NREL/OpenStudio/pull/4407) Add AirLoopHVAC to ThreeJS user data by @antoine-galataud 
+* [#4402](https://github.com/NREL/OpenStudio/pull/4402) Addresses #3910 - realign OS:SizingPeriod:DesignDay with E+ IDD by @joseph-robertson 
+* [#4417](https://github.com/NREL/OpenStudio/pull/4417) Fix #4156 - Support nested subfolders in approved Measure directories by @jmarrec 
+* [#4452](https://github.com/NREL/OpenStudio/pull/4452) Fix #4448 - Issues with angles in DaylightingControl by @jmarrec 
+* [#4465](https://github.com/NREL/OpenStudio/pull/4465) [Developer] Refactor Forward Translation of ThermalZone in particular for Space translation PR by @jmarrec 
+* [#4317](https://github.com/NREL/OpenStudio/pull/4317) Addresses #3147, add HeatExchanger:Desiccant:BalancedFlow by @joseph-robertson
 
+
+## Minor changes and bug fixes
+
+* [#4349](https://github.com/NREL/OpenStudio/pull/4349) Fix #3514 - Make strings returned from openstudio to ruby UTF8 by @jmarrec 
+* [#4346](https://github.com/NREL/OpenStudio/pull/4346) Addresses #4329 and #4330 - issues with AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass by @joseph-robertson
+* [#4356](https://github.com/NREL/OpenStudio/pull/4356) Fix #4353 - Add a missing reference in E+ Idd for PythonPlugin:Instance (`ProgramNames`) by @jmarrec 
+* [#4355](https://github.com/NREL/OpenStudio/pull/4355) Fix #4354 - Issue AirLoopHVACOutdoorAirSystem::reliefComponents with ZoneHVACComponents: wrong order by @jmarrec 
+* [#4348](https://github.com/NREL/OpenStudio/pull/4348) Fix #2145 - Do not create an extra singlezone SPM humidity min created if humidifier downstream of fan by @jmarrec 
+* [#4347](https://github.com/NREL/OpenStudio/pull/4347) Fix #227 - Actually use the EPW start year or start day of week when "UseWeatherFile" is used in YearDescription for assumedYear by @jmarrec 
+* [#4343](https://github.com/NREL/OpenStudio/pull/4343) Fix #4335 - Should reset the air nodes when cloning a AirLoopHVACUnitarySystem by @jmarrec  
+* [#4345](https://github.com/NREL/OpenStudio/pull/4345) #4046 - Clarify the situation with output file in the ReportingMeasure Template by @jmarrec 
+* [#4339](https://github.com/NREL/OpenStudio/pull/4339) Fix #4338 - AirLoopHVAC_Impl::terminalForLastBranch doesn't handle Dual duct correctly by @jmarrec 
+* [#4359](https://github.com/NREL/OpenStudio/pull/4359) Addresses #4314, add ScheduleRuleset custom day methods by @joseph-robertson 
+* [#4371](https://github.com/NREL/OpenStudio/pull/4371) Github Actions to publish python bindings to pypi when it's a release and testing worked by @jmarrec 
+* [#4369](https://github.com/NREL/OpenStudio/pull/4369) #4214 Add in automated testing for 32/64 bit nuget package by @tijcolem 
+* [#4352](https://github.com/NREL/OpenStudio/pull/4352) Fix #1571 - building.clone breaks space surface matching by @jmarrec 
+* [#4378](https://github.com/NREL/OpenStudio/pull/4378) Addresses #1515 - Reverse Translator should retain thermal zone name from IDF instead of re-naming it by @joseph-robertson 
+* [#4370](https://github.com/NREL/OpenStudio/pull/4370) #4177 Non-zero exit code for openstudio-cli by @tijcolem 
+* [#4376](https://github.com/NREL/OpenStudio/pull/4376) Fix #4309 - disable RUBYLIB env and use --include or -I using cli by @tijcolem 
+* [#4383](https://github.com/NREL/OpenStudio/pull/4383) Provide more options for installation of openstudio dlls by @macumber 
+* [#4385](https://github.com/NREL/OpenStudio/pull/4385) Fixes Crash in floorplanToThreeJS https://github.com/NREL/OpenStudio/issues/4384 by @macumber 
+* [#4389](https://github.com/NREL/OpenStudio/pull/4389)  BCL Update by @axelstudios
+* [#4398](https://github.com/NREL/OpenStudio/pull/4398) ref #4397 - Fix some issues in our Init calls for embedded ruby by @jmarrec 
+* [#4305](https://github.com/NREL/OpenStudio/pull/4305) Fix #4304 - Minimal fix for GroundHeatExchanger:Vertical to avoid confusion between maximum and design flow rates by @jmarrec 
+* [#4400](https://github.com/NREL/OpenStudio/pull/4400) #4399 - Surface fixes by @jmarrec 
+* [#4392](https://github.com/NREL/OpenStudio/pull/4392) Fix #4390 - add OSRunner::getOptionalBoolArgumentValue by @jmarrec 
+* [#4420](https://github.com/NREL/OpenStudio/pull/4420) Fix #4419 - custom mapping for LCC Use Price Escalation by @jmarrec 
+* [#4428](https://github.com/NREL/OpenStudio/pull/4428) Avoid issues with openstudio_ruby revision not matching  by @jmarrec 
+* [#4421](https://github.com/NREL/OpenStudio/pull/4421) Fix #4220 - Don't pass built in POD types by const ref& but by value by @jmarrec 
+* [#4401](https://github.com/NREL/OpenStudio/pull/4401) Update to new stable tag from Github Actions CI (includes CP720 fix) by @jmarrec 
+* [#4427](https://github.com/NREL/OpenStudio/pull/4427) Fix #4423 - enable coverage on one of the linux runners by @jmarrec 
+* [#4418](https://github.com/NREL/OpenStudio/pull/4418) Resolves #4395 Add in CLI option to use epJSON by @tijcolem 
+* [#4440](https://github.com/NREL/OpenStudio/pull/4440) Fix #4439 - Correctly Reverse Translate gbXML Schedules by @jmarrec 
+* [#4450](https://github.com/NREL/OpenStudio/pull/4450) Fix #4446 - add SizingSystem::autosizedOccupantDiversity. by @jmarrec 
+* [#4454](https://github.com/NREL/OpenStudio/pull/4454) Fix #4404 #4453 - Fix issues with ForwardTranslator options by @jmarrec 
+* [#4431](https://github.com/NREL/OpenStudio/pull/4431) Fixed an issue in Surface splitSurfaceForSubSurfaces @ggartside 
+* [#4459](https://github.com/NREL/OpenStudio/pull/4459) Fix #3426 - ZoneHVACUnitHeater components missing air inlet/outlet node names when Fan:OnOff by @jmarrec 
+* [#4455](https://github.com/NREL/OpenStudio/pull/4455) Fix #4445 - Fix API issues in Controller:WaterCoil by @jmarrec 
+* [#4462](https://github.com/NREL/OpenStudio/pull/4462) Fix #4461 - DesignSpecificationOutdoorAir: when combining, Outdoor Air Flow rate for ACH is off by 3600 when "Maximum" method is used by @jmarrec 
+* [#4463](https://github.com/NREL/OpenStudio/pull/4463) Add a full FT test for DaylightingControls (backport from Space PR) by @jmarrec 
+* [#4466](https://github.com/NREL/OpenStudio/pull/4466) [Developer] Add Full detailed tests for the FT of SpaceInfiltration objects (whether assigned to space or spacetype) by @jmarrec 
+* [#4468](https://github.com/NREL/OpenStudio/pull/4468) [developer] Add a full FT test for ElectricEquipmentITEAirCooled (backport Space PR) by @jmarrec 
+* [#4467](https://github.com/NREL/OpenStudio/pull/4467) Update unit tests for ElectricEquipmentITEAirCooled by @kbenne 
+* [#4470](https://github.com/NREL/OpenStudio/pull/4470) [developer] use a custom build of E+ with a Space DSOA Fx by @jmarrec 
+* [#4473](https://github.com/NREL/OpenStudio/pull/4473) Fix #4472 - Modify Python in typemaps for `path` to accept string with Python 3 support by @jmarrec 
+* [#4476](https://github.com/NREL/OpenStudio/pull/4476) update gems for workflow and extension gem updates by @tijcolem 
 * [#4307](https://github.com/NREL/OpenStudio/pull/4307) - Standardize Curve IDD references like E+ does (Uni/Bi...variateFunctions) and remove hard check in model code 
 * [4337](https://github.com/NREL/OpenStudio/pull/4337) - Fix Encode searchTerm in BCL (including spaces, not only "+" signs)
-* [#4344](https://github.com/NREL/OpenStudio/pull/4344) - Update openstudio-gems for new versions of measure-tester-gem (v0.3.1), openstudio-extension-gem (v0.4.3), openstudio-workflow-gem (v2.2.1) and openstudio-standards (v0.2.14). 
+* [#4344](https://github.com/NREL/OpenStudio/pull/4476) - Update openstudio-gems for new versionsopenstudio-extension-gem (v0.5.1), openstudio-workflow-gem (v2.3.1) and openstudio-standards (v0.2.15). 
 * [#4332](https://github.com/NREL/OpenStudio/pull/4332) -  Fix StringHelpers openstudio::replace
 * [#4326](https://github.com/NREL/OpenStudio/pull/4326) - Fix Wrap E+ WaterHeater:Sizing object
 * [#4324](https://github.com/NREL/OpenStudio/pull/4324) - FIx Do not Warn if Sql doesn't have a Year field
 * [#4319](https://github.com/NREL/OpenStudio/pull/4319) - Fix Wrap E+ FuelFactors object
 * [#4302](https://github.com/NREL/OpenStudio/pull/4302) - Fix Deprecation Warning of last argument as keyword parameters
 
-## New Contributors
-* @antoine-galataud made their first contribution in https://github.com/NREL/OpenStudio/pull/4407
-
-## New Features, Major Fixes and API-breaking changes
-
-TODO
-
-* **New objects**:
-
-TODO
-
-## Minor changes:
-
-TODO
-
-## Minor Bug Fixes
-TODO
 
 ### OpenStudio Standards v0.2.15
 
-* Added comstock 2016 and 2019 templates
-* Fixed a coil reference for radiant systems 
-* Fixed a method name compatibility issue for VAV terminals for OS v3.0.0 and earlier
-* Adjusted radiant fractions for lighting to better reflected lighting fractions in newer lighting technology
-* ...
-* Add full list TODO
 
+* [#1153](https://github.com/NREL/openstudio-standards/pull/1153) - Fix error handling in thermal zone occupancy schedule method
+* [#1160](https://github.com/NREL/openstudio-standards/pull/1160) - Fix HPWH capacity fix 
+* [#1123](https://github.com/NREL/openstudio-standards/pull/1123) Updated documentation to cover all methods #1123
+* [#1131](https://github.com/NREL/openstudio-standards/pull/1131) - Updated gem dependencies to resolve security issues #1131
+* [#1120](https://github.com/NREL/openstudio-standards/pull/1120) - Added college building prototype #1120
+* [#1117](https://github.com/NREL/openstudio-standards/pull/1117) - Fixed bug in schedule_compact_annual_min_max_value method #1117
+* [#1113](https://github.com/NREL/openstudio-standards/pull/1113) - Disable sizing run periods after sizing run #1113
+	
+* Added new requirements for ASHRAE Standard 90.1-2019:
+		
+	* Hotel guest room ventilation and thermostat control
+	* Update to freezer and reach-in refrigerator efficiency
+	* Multi-zone system temperature supply applied to warm and humid climate zones
+	* Update to computer room air-conditioning efficiency
+	* Update to walk-in cooler and freezer efficiency
+	* Update to damper leakage rate requirements
+	* Added clean water pumps requirements
+	* Update to boiler and furnace efficiency
+	* Added logic to implement occupant standby mode control requirements
+	* Updated daylighting control dimming requirements
+	* Added non-transient dwelling units energy recovery based on enthalpy recovery ratio
+	* Added ASHRAE Standard 62.1-2019 Simplified Procedure
 
 ### OpenStudio Server v3.3.0
 
-TODO
+* [#633](https://github.com/NREL/OpenStudio-server/pull/633) - Merge urbanopt/reopt by @brianlball in 
+* [#634](https://github.com/NREL/OpenStudio-server/pull/634) - Fix in.osm not downloadable by @kflemin in 
+* [#635](https://github.com/NREL/OpenStudio-server/pull/635) - Bump puma version for security by @nllong in 
+* [#636](https://github.com/NREL/OpenStudio-server/pull/636) - Add docker container scanning using Trivy by @nllong in 
 
 ## Issue Statistics Since Previous Release
 
