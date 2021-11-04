@@ -67,13 +67,13 @@ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for furthe
 
 * [#4406](https://github.com/NREL/OpenStudio/pull/4406) - Update to EnergyPlus [v9.6.0_PlusSpaceFix1](https://github.com/NREL/EnergyPlus/releases/tag/v9.6.0_PlusSpaceFix1)
     * Experimental Support for the EnergyPlus 9.6.0 [space concept](https://github.com/NREL/EnergyPlus/blob/develop/design/FY2021/NFP-Spaces.md) was added
-        * This feature is currently opt-in, either by manuallly calling `ForwardTranslator::setExcludeSpaceTranslation(false)` before calling `ForwardTranslator::translateModel(Model&)` or passsing the CLI argument `--space-translation` to the `run` method (eg: `openstudio run --space-translation -w workflow.osw`)
+        * This feature is currently opt-in, either by manually calling `ForwardTranslator::setExcludeSpaceTranslation(false)` before calling `ForwardTranslator::translateModel(Model&)` or passing the CLI argument `--space-translation` to the `run` method (eg: `openstudio run --space-translation -w workflow.osw`)
         * A few limitations due to DaylightingControls/IlluminanceMap exist: in case one of these objects is found in a ThermalZone, spaces will be combined for that ThermalZone (historical behavior)
         * [#4471](https://github.com/NREL/OpenStudio/pull/4471) - Space PR: adjustments to make DaylightingControls work
         * [#4434](https://github.com/NREL/OpenStudio/pull/4434) - Addresses #4409, forward translate Space
         * [#4447](https://github.com/NREL/OpenStudio/pull/4447) - Add ForwardTranslator options to the CLI `run` method
         * [#4465](https://github.com/NREL/OpenStudio/pull/4465) - [Developer] Refactor Forward Translation of ThermalZone in particular for Space translation PR
-    * **Note**: EnergyPlus due to the Space feature now enforces unicity of names within the `Zone`, `Space`, `ZoneList` and `SpaceList` objects. **As a result, we are now enforcing this in the `openstudio::model` namespace: the same name can no longer be used for objets of type `ThermalZone`, `Space`, `SpaceType`.**
+    * **Note**: EnergyPlus due to the Space feature now enforces unicity of names within the `Zone`, `Space`, `ZoneList` and `SpaceList` objects. **As a result, we are now enforcing this in the `openstudio::model` namespace: the same name can no longer be used for objects of type `ThermalZone`, `Space`, `SpaceType`.**
 * [#4350](https://github.com/NREL/OpenStudio/pull/4350) - Fix #3599 - Add new fields to control outdoor air for AirTerminalSingleDuctInletMixer
 * [#4365](https://github.com/NREL/OpenStudio/pull/4365) - Addresses #4364, Availability Schedule for DaylightingControl
 * [#4342](https://github.com/NREL/OpenStudio/pull/4342) - Fix #4327 - FanSystemModel electricPowerFraction should be optional
@@ -127,7 +127,7 @@ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for furthe
 * [#4324](https://github.com/NREL/OpenStudio/pull/4324) - Fix Do not Warn if Sql doesn't have a Year field
 * [#4376](https://github.com/NREL/OpenStudio/pull/4376) - Fix #4309 - disable RUBYLIB env and use --include or -I using cli
 
-**Developper changes**:
+**Developer changes**:
 
 * [#4401](https://github.com/NREL/OpenStudio/pull/4401) - Update to new stable tag from Github Actions CI (includes CP720 fix)
 * [#4476](https://github.com/NREL/OpenStudio/pull/4476) - Update gems for workflow and extension gem updates
@@ -137,8 +137,8 @@ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for furthe
 * [#4302](https://github.com/NREL/OpenStudio/pull/4302) - Fix Deprecation Warning of last argument as keyword parameters
 * [#4421](https://github.com/NREL/OpenStudio/pull/4421) - Fix #4220 - Don't pass built in POD types by const ref& but by value
 * [#4371](https://github.com/NREL/OpenStudio/pull/4371) - Github Actions to publish python bindings to pypi when it's a release and testing worked
-* [#4466](https://github.com/NREL/OpenStudio/pull/4466) - [Developer] Add Full detailed tests for the FT of SpaceInfiltration objects (whether assigned to space or spacetype)
-* [#4468](https://github.com/NREL/OpenStudio/pull/4468) - [developer] Add a full FT test for ElectricEquipmentITEAirCooled (backport Space PR)
+* [#4466](https://github.com/NREL/OpenStudio/pull/4466) - Add Full detailed tests for the FT of SpaceInfiltration objects (whether assigned to space or spacetype)
+* [#4468](https://github.com/NREL/OpenStudio/pull/4468) - Add a full FT test for ElectricEquipmentITEAirCooled (backport Space PR)
 * [#4427](https://github.com/NREL/OpenStudio/pull/4427) - Fix #4423 - enable coverage on one of the linux runners
 * [#4369](https://github.com/NREL/OpenStudio/pull/4369) - #4214 Add in automated testing for 32/64 bit nuget package
 
