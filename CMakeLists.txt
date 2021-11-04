@@ -757,7 +757,7 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-darwin.tar")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-darwin.tar.gz")
        set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c1031e9266ff084886422168ffef684d")
      else()
        set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-linux.tar.gz")
