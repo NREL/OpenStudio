@@ -91,11 +91,12 @@ std::vector<openstudio::path> UnzipFile::extractAllFilesMod(const openstudio::pa
     openstudio::path zippedFileRelPath = openstudio::toPath(fileName);
     openstudio::path createdFilePath = outputPath / zippedFileRelPath;
 
-    if (fileName.back() == '/') {
-      // Entry is a directory, create it
-      openstudio::filesystem::create_directories(createdFilePath);
+    if ((fileName.back() == '/') || (fileName == ".")) {
+      // This is a directory - skip it
     } else {
       // Entry is a file, so extract it.
+      // First we do need to create the parent directory(ies). The order is not necessarilly good so we can't do it in the other branch of if above
+      openstudio::filesystem::create_directories(createdFilePath.parent_path());
 
       // Open the zipped file
       if (unzOpenCurrentFile(m_unzFile) != UNZ_OK) {
