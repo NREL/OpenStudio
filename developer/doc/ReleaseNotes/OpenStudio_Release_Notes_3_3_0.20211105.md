@@ -89,7 +89,7 @@ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for furthe
 * [#4319](https://github.com/NREL/OpenStudio/pull/4319) - Fix Wrap E+ FuelFactors object
 * [#4418](https://github.com/NREL/OpenStudio/pull/4418) - Resolves #4395 Add in CLI option to use epJSON
 * [#4347](https://github.com/NREL/OpenStudio/pull/4347) - Fix #227 - Actually use the EPW start year or start day of week when "UseWeatherFile" is used in YearDescription for assumedYear
-    * Please note that before, while the IDD default was `UseWeatherFile`, it would typically use the Assumed Base Year instead (2009) which resulting in using `Thursday` as a start day. Depending on your weather file, you might experience a different Start Day of Week which could lead to slight EUI deviations. More information can be seen on [NREL/OpenStudio-resources#153](https://github.com/NREL/OpenStudio-resources/pull/153)
+    * Please note that before, while the IDD default was `UseWeatherFile`, it would typically use the Assumed Base Year instead (2009) which resulted in using `Thursday` as a Start Day of Week for simulation. Depending on your weather file, you might experience a different Start Day of Week which could lead to slight EUI deviations. More information can be seen on [NREL/OpenStudio-resources#153](https://github.com/NREL/OpenStudio-resources/pull/153)
 * [#4389](https://github.com/NREL/OpenStudio/pull/4389) - Update BCL to use BCL2 (https://bcl2.nrel.gov/)
 
 ## Minor changes and bug fixes
