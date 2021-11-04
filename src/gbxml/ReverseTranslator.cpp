@@ -348,12 +348,12 @@ namespace gbxml {
 
     double tol = 0.001;
 
-    auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
+    const auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
     for (auto& space : spaces) {
       std::string spaceName = space.name().value();
 
-      auto& bounds = space.boundingBox();
-      auto& surfaces = space.surfaces();
+      const auto& bounds = space.boundingBox();
+      auto surfaces = space.surfaces();
       for (auto& surface : surfaces) {
         std::string surfType = surface.surfaceType();
         std::string surfName = surface.name().value();
@@ -361,7 +361,7 @@ namespace gbxml {
         // Look for Roof or Floor surfaces that have adjacent surface (if there's no adjacwent surface
         // then the spaces cannot be in the wrong order and the orientation would have already been fixed)
         boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
-        if (surfType == "RoofCeiling" || surfType == "Floor" && adjacentSurf) {
+        if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
           auto& vertices = surface.vertices();
 
           if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
@@ -382,8 +382,7 @@ namespace gbxml {
               LOG(Warn, "Changing surface type from " << surfType << " to RoofCeiling. Surface vertices elevation is above the space.");
               surface.setSurfaceType("RoofCeiling");
             }
-            auto& normal = surface.outwardNormal();
-            double z = normal.z();
+            const auto& normal = surface.outwardNormal();
             if (normal.z() < 0) {
               // Log reversing surface
               LOG(Warn, "Reversing surface orientation because surface is a RoofCeiling but the surface is oriented down.");
@@ -399,8 +398,7 @@ namespace gbxml {
               // Log changing surface type
               surface.setSurfaceType("Floor");
             }
-            auto& normal = surface.outwardNormal();
-            double z = normal.z();
+            const auto& normal = surface.outwardNormal();
             if (normal.z() > 0) {
               // Log reversing surface
               LOG(Warn, "Reversing surface orientation because surface is a Floor but the surface is oriented up.");
@@ -700,9 +698,7 @@ namespace gbxml {
 
       std::string surfaceName = element.child("Name").text().as_string();
       surface.setName(escapeName(surfaceId, surfaceName));
-      if (surfaceName == "T-00-316-I-F-32") {
-        int stop = 1;
-      }
+
       std::string exposedToSun = element.attribute("exposedToSun").value();
 
       // set surface type
