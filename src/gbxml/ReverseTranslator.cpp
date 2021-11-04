@@ -362,7 +362,7 @@ namespace gbxml {
         // then the spaces cannot be in the wrong order and the orientation would have already been fixed)
         boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
         if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
-          const auto& vertices = surface.vertices();
+          auto vertices = surface.vertices();
 
           if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
 
