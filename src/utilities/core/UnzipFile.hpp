@@ -56,8 +56,6 @@ class UTILITIES_API UnzipFile
   /// Extracts all files in the archive to the given path, preserving relative paths.
   std::vector<openstudio::path> extractAllFiles(const openstudio::path& outputPath) const;
 
-  std::vector<openstudio::path> extractAllFilesMod(const openstudio::path& outputPath) const;
-
   unsigned long chunksize() const;
   void setChunksize(unsigned long chunksize);
 

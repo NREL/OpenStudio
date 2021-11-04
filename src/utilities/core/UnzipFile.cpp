@@ -32,7 +32,7 @@
 
 namespace openstudio {
 
-UnzipFile::UnzipFile(const openstudio::path& filename) : m_unzFile(unzOpen(openstudio::toString(filename).c_str())), m_chunksize(1024) {
+UnzipFile::UnzipFile(const openstudio::path& filename) : m_unzFile(unzOpen(openstudio::toString(filename).c_str())), m_chunksize(32768) {
   if (!m_unzFile) {
     if (!openstudio::filesystem::exists(filename)) {
       throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + " does not exist, could not be opened");
@@ -54,24 +54,10 @@ void UnzipFile::setChunksize(unsigned long chunksize) {
 }
 
 std::vector<openstudio::path> UnzipFile::extractAllFiles(const openstudio::path& outputPath) const {
-  std::vector<openstudio::path> files = listFiles();
 
-  std::vector<openstudio::path> retfiles;
+  // We do not call listFiles() then for each extractFile, for performance reasons (some of the work would be done twice). cf #4456
 
-  for (std::vector<openstudio::path>::const_iterator itr = files.begin(); itr != files.end(); ++itr) {
-    if (toString(itr->filename()) == "." || toString(itr->filename()) == "/") {
-      // This is a directory - skip it
-    } else {
-      retfiles.push_back(extractFile(*itr, outputPath));
-    }
-  }
-
-  return retfiles;
-}
-
-std::vector<openstudio::path> UnzipFile::extractAllFilesMod(const openstudio::path& outputPath) const {
-
-  bool cont = unzGoToFirstFile(m_unzFile) == UNZ_OK;
+  bool cont_files = unzGoToFirstFile(m_unzFile) == UNZ_OK;
 
   std::vector<openstudio::path> filesOnDisk;
 
@@ -104,16 +90,16 @@ std::vector<openstudio::path> UnzipFile::extractAllFilesMod(const openstudio::pa
       }
 
       try {
-        bool cont = true;
+        bool cont_read = true;
 
         // Open the target file on disk
         openstudio::filesystem::ofstream file(createdFilePath, std::ios_base::trunc | std::ios_base::binary);
-        while (cont) {
+        while (cont_read) {
 
           int bytesread = unzReadCurrentFile(m_unzFile, &buffer.front(), buffer.size());
 
           if (bytesread == 0) {
-            cont = false;
+            cont_read = false;
           } else if (bytesread < 0) {
             throw std::runtime_error("Unable to read from file: " + openstudio::toString(zippedFileRelPath));
           } else {
@@ -132,8 +118,8 @@ std::vector<openstudio::path> UnzipFile::extractAllFilesMod(const openstudio::pa
       }
     }
 
-    cont = unzGoToNextFile(m_unzFile) == UNZ_OK;
-  } while (cont);
+    cont_files = unzGoToNextFile(m_unzFile) == UNZ_OK;
+  } while (cont_files);
 
   return filesOnDisk;
 }
@@ -147,6 +133,8 @@ openstudio::path UnzipFile::extractFile(const openstudio::path& filename, const 
     throw std::runtime_error("Unable to open file in archive: " + openstudio::toString(filename));
   }
 
+  std::vector<char> buffer(m_chunksize);
+
   try {
     bool cont = true;
 
@@ -155,7 +143,6 @@ openstudio::path UnzipFile::extractFile(const openstudio::path& filename, const 
 
     openstudio::filesystem::ofstream file(createdFile, std::ios_base::trunc | std::ios_base::binary);
     while (cont) {
-      std::vector<char> buffer(m_chunksize);
       int bytesread = unzReadCurrentFile(m_unzFile, &buffer.front(), buffer.size());
 
       if (bytesread == 0) {
@@ -178,6 +165,7 @@ openstudio::path UnzipFile::extractFile(const openstudio::path& filename, const 
   }
 
   unzCloseCurrentFile(m_unzFile);
+  return openstudio::path{};
 }
 
 std::vector<openstudio::path> UnzipFile::listFiles() const {
@@ -185,9 +173,10 @@ std::vector<openstudio::path> UnzipFile::listFiles() const {
 
   std::vector<openstudio::path> paths;
 
+  std::vector<char> filename(300);
+
   do {
     unz_file_info file_info;
-    std::vector<char> filename(300);
 
     unzGetCurrentFileInfo(m_unzFile, &file_info, &filename.front(), filename.size(), nullptr, 0, nullptr, 0);
 
