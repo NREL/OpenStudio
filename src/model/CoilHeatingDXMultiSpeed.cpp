@@ -756,7 +756,6 @@ namespace model {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(index);
   }
 
-
   AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter) {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
   }
