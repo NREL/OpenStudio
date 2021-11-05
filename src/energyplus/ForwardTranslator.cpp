@@ -1129,8 +1129,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed_StageData: {
-        //DLM: is this a no-op?
-        break;
+        return retVal;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed: {
         model::CoilHeatingDXVariableSpeed coil = modelObject.cast<CoilHeatingDXVariableSpeed>();
