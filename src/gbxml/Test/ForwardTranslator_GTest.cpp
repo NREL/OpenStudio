@@ -51,7 +51,7 @@
 
 #include "../../model/Model.hpp"
 #include "utilities/core/Compare.hpp"
-#include "../../utilities/geometry/boundingbox.hpp"
+#include "utilities/geometry/boundingbox.hpp"
 #include <resources.hxx>
 
 #include <sstream>
