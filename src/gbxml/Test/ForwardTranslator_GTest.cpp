@@ -51,7 +51,7 @@
 
 #include "../../model/Model.hpp"
 #include "utilities/core/Compare.hpp"
-#include "utilities/geometry/boundingbox.hpp"
+#include "utilities/geometry/BoundingBox.hpp"
 #include <resources.hxx>
 
 #include <sstream>
@@ -362,8 +362,8 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
   ASSERT_TRUE(model2);
 
   // Chck the surfaces
-  auto& spaces = model2->getConcreteModelObjects<Space>();
-  for (auto& space : spaces) {
+  const auto& spaces = model2->getConcreteModelObjects<Space>();
+  for (const auto& space : spaces) {
     std::string spaceName = space.name().value();
 
     auto& bounds = space.boundingBox();
@@ -374,7 +374,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
 
       double tol = 0.01;
       boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
-      if (surfType == "RoofCeiling" || surfType == "Floor" && adjacentSurf) {
+      if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
         auto& vertices = surface.vertices();
 
         if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
@@ -391,7 +391,6 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
           auto surfType = surface.surfaceType();
           ASSERT_EQ(surfType, "RoofCeiling");
           auto& normal = surface.outwardNormal();
-          double z = normal.z();
           ASSERT_TRUE(normal.z() > 0);
 
         } else if (std::abs(vertices[0].z() - bounds.minZ().value()) <= tol) {
@@ -401,7 +400,6 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
           auto surfType = surface.surfaceType();
           ASSERT_EQ(surfType, "Floor");
           auto& normal = surface.outwardNormal();
-          double z = normal.z();
           ASSERT_TRUE(normal.z() < 0);
         }
       }
