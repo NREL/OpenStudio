@@ -148,7 +148,7 @@ namespace energyplus {
       idfObject.setInt(Coil_Heating_DX_MultiSpeedFields::NumberofSpeeds, num);
     }
 
-    for (auto const& stage : stages) {
+    for (auto stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
       // GrossRatedHeatingCapacity

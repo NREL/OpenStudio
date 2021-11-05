@@ -30,15 +30,10 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
-#include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
-#include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include "../../model/Curve.hpp"
-#include "../../model/Curve_Impl.hpp"
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -138,12 +133,14 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::FuelType, s.get());
     }
 
+    auto const stages = modelObject.stages();
+
     // NumberofSpeeds
-    if (auto num = modelObject.stages().size()) {
+    if (auto num = stages.size()) {
       idfObject.setInt(Coil_Cooling_DX_MultiSpeedFields::NumberofSpeeds, num);
     }
 
-    for (auto stage : modelObject.stages()) {
+    for (auto stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
       // SpeedGrossRatedTotalCoolingCapacity
