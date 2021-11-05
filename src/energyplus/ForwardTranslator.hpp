@@ -186,6 +186,8 @@ namespace model {
   class CurveTriquadratic;
   class DaylightingControl;
   class DaylightingDeviceShelf;
+  class DaylightingDeviceTubular;
+  class DaylightingDeviceLightWell;
   class DaylightRedirectionDevice;
   class DesignDay;
   class DesignSpecificationOutdoorAir;
@@ -268,9 +270,13 @@ namespace model {
   class HeaderedPumpsVariableSpeed;
   class HeatBalanceAlgorithm;
   class HeatExchangerAirToAirSensibleAndLatent;
+  class HeatExchangerDesiccantBalancedFlow;
+  class HeatExchangerDesiccantBalancedFlowPerformanceDataType1;
   class HeatExchangerFluidToFluid;
   class HeatPumpWaterToWaterEquationFitCooling;
   class HeatPumpWaterToWaterEquationFitHeating;
+  class HeatPumpPlantLoopEIRCooling;
+  class HeatPumpPlantLoopEIRHeating;
   class HotWaterEquipment;
   class HumidifierSteamElectric;
   class HumidifierSteamGas;
@@ -386,6 +392,7 @@ namespace model {
   class SizingPlant;
   class SizingSystem;
   class SizingZone;
+  class SpaceLoadInstance;
   class StandardGlazing;
   class StandardOpaqueMaterial;
   class SimpleGlazing;
@@ -483,7 +490,7 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
-#define ENERGYPLUS_VERSION "9.5"
+#define ENERGYPLUS_VERSION "9.6"
 
   class ENERGYPLUS_API ForwardTranslator
   {
@@ -534,6 +541,10 @@ namespace energyplus {
    *  Use this at your own risks */
     void setExcludeVariableDictionary(bool excludeVariableDictionary);
 
+    /** If excludeSpaceTranslation, do usual combineSpaces(), etc. Otherwise, translate space objects.
+   *  Use this at your own risks */
+    void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
 
@@ -553,6 +564,10 @@ namespace energyplus {
    *  translateAndMapModelObject() interface as opposed to the type specific translators.
    */
     Workspace translateModelPrivate(model::Model& model, bool fullModelTranslation);
+
+    // TODO: restrict to SpaceLoadInstance or SpaceLoad?
+    // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoadInstance
+    IdfObject getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType = true);
 
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 
@@ -858,6 +873,10 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateDaylightingDeviceShelf(model::DaylightingDeviceShelf& modelObject);
 
+    boost::optional<IdfObject> translateDaylightingDeviceTubular(model::DaylightingDeviceTubular& modelObject);
+
+    boost::optional<IdfObject> translateDaylightingDeviceLightWell(model::DaylightingDeviceLightWell& modelObject);
+
     boost::optional<IdfObject> translateDaylightRedirectionDevice(model::DaylightRedirectionDevice& modelObject);
 
     boost::optional<IdfObject> translateDesignDay(model::DesignDay& modelObject);
@@ -1024,11 +1043,20 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateHeatExchangerAirToAirSensibleAndLatent(model::HeatExchangerAirToAirSensibleAndLatent& modelObject);
 
+    boost::optional<IdfObject> translateHeatExchangerDesiccantBalancedFlow(model::HeatExchangerDesiccantBalancedFlow& modelObject);
+
+    boost::optional<IdfObject>
+      translateHeatExchangerDesiccantBalancedFlowPerformanceDataType1(model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& modelObject);
+
     boost::optional<IdfObject> translateHeatExchangerFluidToFluid(model::HeatExchangerFluidToFluid& modelObject);
 
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitCooling(model::HeatPumpWaterToWaterEquationFitCooling& modelObject);
 
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitHeating(model::HeatPumpWaterToWaterEquationFitHeating& modelObject);
+
+    boost::optional<IdfObject> translateHeatPumpPlantLoopEIRCooling(model::HeatPumpPlantLoopEIRCooling& modelObject);
+
+    boost::optional<IdfObject> translateHeatPumpPlantLoopEIRHeating(model::HeatPumpPlantLoopEIRHeating& modelObject);
 
     boost::optional<IdfObject> translateHumidifierSteamElectric(model::HumidifierSteamElectric& modelObject);
 
@@ -1324,6 +1352,7 @@ namespace energyplus {
     boost::optional<IdfObject> translateSpaceInfiltrationFlowCoefficient(model::SpaceInfiltrationFlowCoefficient& modelObject);
 
     boost::optional<IdfObject> translateSpaceType(model::SpaceType& modelObject);
+    std::string zoneListNameForSpaceType(const model::SpaceType& modelObject) const;  // helper function
 
     boost::optional<IdfObject> translateStandardGlazing(model::StandardGlazing& modelObject);
 
@@ -1359,6 +1388,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateThermalStorageChilledWaterStratified(model::ThermalStorageChilledWaterStratified& modelObject);
 
     boost::optional<IdfObject> translateThermalZone(model::ThermalZone& modelObject);
+    void translateThermalZoneSpacesWhenCombinedSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
+    void translateThermalZoneSpacesToEnergyPlusSpaces(model::ThermalZone& modelObject, IdfObject& idfObject);
 
     boost::optional<IdfObject> translateThermostatSetpointDualSetpoint(model::ThermostatSetpointDualSetpoint& tsds);
 
@@ -1570,6 +1601,7 @@ namespace energyplus {
     bool m_excludeSQliteOutputReport;  // exclude Output:Sqlite
     bool m_excludeHTMLOutputReport;    // exclude Output:Table:SummaryReports
     bool m_excludeVariableDictionary;  // exclude Output:VariableDictionary
+    bool m_excludeSpaceTranslation;
   };
 
 }  // namespace energyplus

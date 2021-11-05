@@ -104,6 +104,10 @@ path toPath(const std::string& s) {
   return path(s);
 }
 
+path toPath(std::string_view s) {
+  return toPath(std::string(s));
+}
+
 #ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/
 std::wstring toSystemFilename(const path& p) {

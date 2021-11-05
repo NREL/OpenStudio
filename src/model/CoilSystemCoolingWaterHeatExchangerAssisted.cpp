@@ -218,6 +218,7 @@ namespace model {
             auto t_coolingCoil = coolingCoil();
             if (auto waterInletModelObject = t_coolingCoil.waterInletModelObject()) {
 
+              // TODO: why aren't we setting the water coil in this case? @kbenne thoughts please
               if (auto coilCoolingWater = t_coolingCoil.optionalCast<CoilCoolingWater>()) {
                 if (auto oldController = coilCoolingWater->controllerWaterCoil()) {
                   oldController->remove();
@@ -255,6 +256,21 @@ namespace model {
 
     HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
     heatExchanger.setSupplyAirOutletTemperatureControl(false);
+    setHeatExchanger(heatExchanger);
+  }
+
+  CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger)
+    : StraightComponent(CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl>());
+
+    bool ok = setHeatExchanger(heatExchanger);
+    if (!ok) {
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heat Exchanger " << heatExchanger.briefDescription() << ".");
+    }
+
+    CoilCoolingWater coolingCoil(model);
+    setCoolingCoil(coolingCoil);
+
     setHeatExchanger(heatExchanger);
   }
 

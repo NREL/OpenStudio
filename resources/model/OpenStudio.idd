@@ -1,4 +1,4 @@
-!IDD_Version 3.2.1
+!IDD_Version 3.3.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.2.1
+       \default 3.2.2
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -532,6 +532,7 @@ OS:PerformancePrecisionTradeoffs,
       \key Mode05
       \key Mode06
       \key Mode07
+      \key Mode08
       \key Advanced
       \default Normal
   N1, \field MaxZoneTempDiff
@@ -541,13 +542,19 @@ OS:PerformancePrecisionTradeoffs,
       \minimum 0.1
       \maximum 3.0
       \default 0.3
-  N2; \field MaxAllowedDelTemp
+  N2, \field MaxAllowedDelTemp
       \note Maximum surface temperature change before HVAC timestep is shortened.
       \note Only used when Override Mode is set to Advanced
       \type real
       \minimum 0.002
       \maximum 0.1
       \default 0.002
+  A5; \field Use Representative Surfaces for Calculations
+      \note Automatically group surfaces with similar characteristics and perform relevant calculations only once for each group.
+      \type choice
+      \key Yes
+      \key No
+      \default No
 
 OS:Sizing:Parameters,
        \unique-object
@@ -1295,24 +1302,25 @@ OS:Site:WaterMainsTemperature,
        \units deltaC
        \minimum 0
 
-! TODO: way out of line with E+
 OS:SizingPeriod:DesignDay,
-       \min-fields 16
-  A1, \field Handle
+       \min-fields 20
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference DesignDays
        \reference RunPeriodsAndDesignDays
-  N1, \field Maximum Dry-Bulb Temperature
+  N1,  \field Maximum Dry-Bulb Temperature
+       \note This field is required when field "Dry-Bulb Temperature Range Modifier Type"
+       \note is not "TemperatureProfileSchedule".
        \type real
        \units C
-       \minimum -70
+       \minimum -90
        \maximum 70
        \default 23.0
-  N2, \field Daily Dry-Bulb Temperature Range
+  N2,  \field Daily Dry-Bulb Temperature Range
        \note Must still produce appropriate maximum dry bulb (within range)
        \note This field is not needed if Dry-Bulb Temperature Range Modifier Type
        \note is "delta".
@@ -1320,13 +1328,7 @@ OS:SizingPeriod:DesignDay,
        \units deltaC
        \minimum 0
        \default 0.0
-  N3, \field Humidity Indicating Conditions at Maximum Dry-Bulb
-       \note this will be a wet-bulb, dewpoint, humidity ratio, or enthalpy coincident with the
-       \note maximum temperature depending on the value of the field
-       \note Humidity Indicating Type
-       \note required-field if Humidity Indicating Day Schedule is not used
-       \type real
-  N4, \field Barometric Pressure
+  N3,  \field Barometric Pressure
        \note This field's value is also checked against the calculated "standard barometric pressure"
        \note for the location.  If out of range (>10%), then is replaced by standard value.
        \type real
@@ -1335,14 +1337,14 @@ OS:SizingPeriod:DesignDay,
        \minimum 31000
        \maximum 120000
        \default 31000.0
-  N5, \field Wind Speed
+  N4,  \field Wind Speed
        \type real
        \units m/s
        \ip-units miles/hr
        \minimum 0
        \maximum 40
        \default 0.0
-  N6, \field Wind Direction
+  N5,  \field Wind Direction
        \note North=0.0 East=90.0
        \note 0 and 360 are the same direction.
        \type real
@@ -1350,37 +1352,37 @@ OS:SizingPeriod:DesignDay,
        \minimum 0
        \maximum 360
        \default 0.0
-  N7, \field Sky Clearness
+  N6,  \field Sky Clearness
        \note Only used if Sky Model Indicator = ASHRAEClearSky
        \note 0.0 is totally unclear, 1.0 is totally clear
        \type real
        \minimum 0
        \maximum 1.2
        \default 0.0
-  N8, \field Rain Indicator
-       \note 1 is raining, 0 is not
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  N9, \field Snow Indicator
-       \note 1 is Snow on Ground, 0 is no Snow on Ground
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  N10, \field Day of Month
+  A3,  \field Rain Indicator
+       \note Yes is raining (all day), No is not raining
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A4,  \field Snow Indicator
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note Yes is Snow on Ground, No is no Snow on Grou
+  N7,  \field Day of Month
        \note must be valid for Month field
        \type integer
        \minimum 1
        \maximum 31
        \default 1
-  N11, \field Month
+  N8,  \field Month
        \type integer
        \minimum 1
        \maximum 12
        \default 1
-  A3, \field Day Type
+  A5,  \field Day Type
        \note Day Type selects the schedules appropriate for this design day
        \type choice
        \default SummerDesignDay
@@ -1396,57 +1398,78 @@ OS:SizingPeriod:DesignDay,
        \key WinterDesignDay
        \key CustomDay1
        \key CustomDay2
-  N12, \field Daylight Saving Time Indicator
-       \note 1=Yes, 0=No
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  A4, \field Humidity Indicating Type
-       \note What Field "Humidity Indicating Conditions at Maximum Dry-Bulb" is.
-       \note Units for WetBulb, DewPoint, WetBulbProfilexxx [C]
-       \note Units for Humidity-Ratio []
-       \note Units for Enthalpy [kJ/kg]
+  A6,  \field Daylight Saving Time Indicator
+       \note Yes -- use schedules modified for Daylight Saving Time Schedules.
+       \note No - do not use schedules modified for Daylight Saving Time Schedules
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A7,  \field Humidity Condition Type
+       \note values/schedules indicated here and in subsequent fields create the humidity
+       \note values in the 24 hour design day conditions profile.
        \type choice
        \default WetBulb
        \key WetBulb
        \key DewPoint
        \key HumidityRatio
        \key Enthalpy
-       \key Schedule
+       \key RelativeHumiditySchedule
        \key WetBulbProfileMultiplierSchedule
        \key WetBulbProfileDifferenceSchedule
        \key WetBulbProfileDefaultMultipliers
-  A5, \field Humidity Indicating Day Schedule Name
-       \note only used when previous field is "Schedule", "WetBulbProfileMultiplierSchedule", or "WetBulbProfileDifferenceSchedule"
-       \note For type "Schedule", the hour/time interval values should specify
-       \note relative humidity (percent) from 0.0 to 100.0.
+  A8,  \field Humidity Condition Day Schedule Name
+       \note Only used when Humidity Condition Type is "RelativeHumiditySchedule",
+       \note  "WetBulbProfileMultiplierSchedule", or "WetBulbProfileDifferenceSchedule"
+       \note For type "RelativeHumiditySchedule", the hour/time interval values should specify
+       \note   relative humidity (percent) from 0.0 to 100.0.
        \note For type "WetBulbProfileMultiplierSchedule" the hour/time interval values should specify
-       \note the fraction (0-1) of the wet-bulb temperature range to be subtracted from the
-       \note maximum wet-bulb temperature for each timestep in the day
+       \note   the fraction (0-1) of the wet-bulb temperature range to be subtracted from the
+       \note   maximum wet-bulb temperature for each timestep in the day (units = Fraction)
        \note For type "WetBulbProfileDifferenceSchedule" the values should specify a number to be subtracted
-       \note from the maximum wet-bulb temperature for each timestep in the day.
+       \note   from the maximum wet-bulb temperature for each timestep in the day. (units = deltaC)
        \type object-list
        \object-list DayScheduleNames
-  A6, \field Dry-Bulb Temperature Range Modifier Type
+  N9,  \field Wetbulb or DewPoint at Maximum Dry-Bulb
+       \note Wetbulb or dewpoint temperature coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Wetbulb", "Dewpoint",
+       \note "WetBulbProfileMultiplierSchedule", "WetBulbProfileDifferenceSchedule",
+       \note or "WetBulbProfileDefaultMultipliers"
+       \type real
+       \units C
+  N10, \field Humidity Ratio at Maximum Dry-Bulb
+       \note Humidity ratio coincident with the maximum temperature (constant humidity ratio throughout day).
+       \note Required only if field Humidity Condition Type is "HumidityRatio".
+       \type real
+       \units kgWater/kgDryAir
+  N11, \field Enthalpy at Maximum Dry-Bulb
+       \note Enthalpy coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Enthalpy".
+       \type real
+       \units J/kg
+  A9,  \field Dry-Bulb Temperature Range Modifier Type
        \note Type of modifier to the dry-bulb temperature calculated for the timestep
        \type choice
        \default DefaultMultipliers
        \key MultiplierSchedule
        \key DifferenceSchedule
+       \key TemperatureProfileSchedule
        \key DefaultMultipliers
-  A7, \field Dry-Bulb Temperature Range Modifier Schedule Name
-       \note Only used when previous field is "MultiplierSchedule" or "DifferenceSchedule".
+  A10, \field Dry-Bulb Temperature Range Modifier Day Schedule Name
+       \note Only used when previous field is "MultiplierSchedule", "DifferenceSchedule" or
+       \note   "TemperatureProfileSchedule".
        \note For type "MultiplierSchedule"  the hour/time interval values should specify
-       \note the fraction (0-1) of the dry-bulb temperature range to be subtracted
-       \note from the maximum dry-bulb temperature for each timestep in the day
+       \note   the fraction (0-1) of the dry-bulb temperature range to be subtracted
+       \note   from the maximum dry-bulb temperature for each timestep in the day
        \note For type "DifferenceSchedule" the values should specify a number to be subtracted
-       \note from the maximum dry-bulb temperature for each timestep in the day.
+       \note   from the maximum dry-bulb temperature for each timestep in the day.
        \note Note that numbers in the difference schedule cannot be negative as that
-       \note would result in a higher maximum than the maximum previously specified.
+       \note   would result in a higher maximum than the maximum previously specified.
+       \note For type "TemperatureProfileSchedule" the values should specify the actual dry-bulb
+       \note   temperature for each timestep in the day.
        \type object-list
        \object-list DayScheduleNames
-  A8, \field Solar Model Indicator
+  A11, \field Solar Model Indicator
        \type choice
        \default ASHRAEClearSky
        \key ASHRAEClearSky
@@ -1454,32 +1477,43 @@ OS:SizingPeriod:DesignDay,
        \key Schedule
        \key ASHRAETau
        \key ASHRAETau2017
-  A9, \field Beam Solar Day Schedule Name
+  A12, \field Beam Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then beam schedule name (for day)
        \type object-list
        \object-list DayScheduleNames
-  A10, \field Diffuse Solar Day Schedule Name
+  A13, \field Diffuse Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then diffuse schedule name (for day)
        \type object-list
        \object-list DayScheduleNames
-  N13, \field ASHRAE Taub
+  N12, \field ASHRAE Clear Sky Optical Depth for Beam Irradiance
        \units dimensionless
        \note Required if Solar Model Indicator = ASHRAETau or ASHRAETau2017
        \note ASHRAETau2017 solar model can be used with 2013 and 2017 HOF matching taub
        \minimum 0
        \maximum 1.2
        \default 0
-  N14, \field ASHRAE Taud
+  N13, \field ASHRAE Clear Sky Optical Depth for Diffuse Irradiance
        \units dimensionless
        \note required if solar model indicator = ashraetau or ashraetau2017
        \note ashraetau2017 solar model can be used with 2013 and 2017 hof matching taud
        \minimum 0
        \maximum 3
        \default 0
-  N15; \field Daily Wet-Bulb Temperature Range
+  N14, \field Daily Wet-Bulb Temperature Range
        \note Required only if Humidity Indicating Type = "WetbulbProfileMultiplierSchedule" or "WetBulbProfileDefaultMultipliers"
        \type real
        \units deltaC
+  N15, \field Maximum Number Warmup Days
+       \note If used this design day will be run with a custom limit on the maximum number of days that are repeated for warmup.
+       \note Limiting the number of warmup days can improve run time.
+       \type integer
+  A14; \field Begin Environment Reset Mode
+       \note If used this can control if you want the thermal history to be reset at the beginning of the design day.
+       \note When using a series of similiar design days, this field can be used to retain warmup state from the previous design day.
+       \type choice
+       \key FullResetAtBeginEnvironment
+       \key SuppressAllBeginEnvironmentResets
+       \default FullResetAtBeginEnvironment
 
 OS:SizingPeriod:WeatherFileConditionType,
        \memo Use a weather file period for design sizing calculations.
@@ -1669,8 +1703,19 @@ OS:WeatherFile,
   A7, \field Url
        \retaincase
        \type url
-  A8; \field Checksum
+  A8, \field Checksum
        \type alpha
+  A9, \field Start Date Actual Year
+      \type integer
+  A10; \field Start Day of Week
+       \type choice
+       \key Sunday
+       \key Monday
+       \key Tuesday
+       \key Wednesday
+       \key Thursday
+       \key Friday
+       \key Saturday
 
 OS:WeatherProperty:SkyTemperature,
        \memo This object is used to override internal sky temperature calculations.
@@ -1965,6 +2010,7 @@ OS:SpaceType,
        \required-field
        \reference SpaceTypeNames
        \reference SpaceAndSpaceTypeNames
+       \reference SpaceAndSpaceGroupNames
   A3, \field Default Construction Set Name
        \type object-list
        \object-list DefaultConstructionSetNames
@@ -4538,7 +4584,13 @@ OS:Schedule:Ruleset,
   A6, \field Winter Design Day Schedule Name
        \type object-list
        \object-list DayScheduleNames
-  A7; \field Holiday Schedule Name
+  A7, \field Holiday Schedule Name
+       \type object-list
+       \object-list DayScheduleNames
+  A8, \field Custom Day 1 Schedule Name
+       \type object-list
+       \object-list DayScheduleNames
+  A9; \field Custom Day 2 Schedule Name
        \type object-list
        \object-list DayScheduleNames
 
@@ -4895,6 +4947,61 @@ OS:Building,
        \units m
        \minimum> 0
 
+OS:DaylightingDevice:Tubular,
+       \memo Defines a tubular daylighting device (TDD) consisting of three components:
+       \memo a dome, a pipe, and a diffuser. The dome and diffuser are defined separately using the
+       \memo FenestrationSurface:Detailed object.
+       \extensible:2 Duplicate the last two fields Transition Zone Name and Transition Zone Length
+       \extensible:2
+       \min-fields 8
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference SpaceItemNames
+  A3 , \field Dome Name
+       \note This must refer to a subsurface object of type TubularDaylightDome
+       \required-field
+       \type object-list
+       \object-list SubSurfNames
+  A4 , \field Diffuser Name
+       \note This must refer to a subsurface object of type TubularDaylightDiffuser
+       \note Delivery zone is specified in the diffuser object
+       \required-field
+       \type object-list
+       \object-list SubSurfNames
+  A5 , \field Construction Name
+       \required-field
+       \type object-list
+       \object-list ConstructionNames
+  N1 , \field Diameter
+       \required-field
+       \units m
+       \type real
+       \minimum> 0
+  N2 , \field Total Length
+       \note The exterior exposed length is the difference between total and sum of zone lengths
+       \required-field
+       \units m
+       \type real
+       \minimum> 0
+  N3 , \field Effective Thermal Resistance
+       \note R value between TubularDaylightDome and TubularDaylightDiffuser
+       \units m2-K/W
+       \type real
+       \minimum> 0
+       \required-field
+  A6 , \field Transition Zone Name 1
+       \begin-extensible
+       \type object-list
+       \object-list ThermalZoneNames
+  N4 ; \field Transition Zone Length 1
+       \units m
+       \type real
+       \minimum 0.0
+
 OS:DaylightingDevice:Shelf,
        \min-fields 1
   A1, \field Handle
@@ -4919,6 +5026,45 @@ OS:DaylightingDevice:Shelf,
        \type real
        \minimum 0
        \maximum 1
+
+OS:DaylightingDevice:LightWell,
+       \min-fields 7
+       \memo Applies only to exterior windows in daylighting-controlled zones or
+       \memo in zones that share an interior window with a daylighting-controlled  zone.
+       \memo Generally used with skylights.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference SpaceItemNames
+  A3,  \field Exterior Window Name
+       \required-field
+       \type object-list
+       \object-list SubSurfNames
+  N1,  \field Height of Well
+       \note Distance from Bottom of Window to Bottom of Well
+       \required-field
+       \type real
+       \units m
+       \minimum 0.0
+  N2,  \field Perimeter of Bottom of Well
+       \required-field
+       \units m
+       \type real
+       \minimum> 0.0
+  N3,  \field Area of Bottom of Well
+       \required-field
+       \type real
+       \units m2
+       \minimum> 0.0
+  N4;  \field Visible Reflectance of Well Walls
+       \required-field
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
 
 OS:Facility,
        \unique-object
@@ -10392,10 +10538,13 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
    A13, \field Cooling Coil
         \type object-list
         \object-list CoolingCoilsDXMultiModeOrSingleSpeed
+        \object-list CoolingCoilsDXVariableSpeed
         \required-field
    A14, \field Heating Coil
         \type object-list
         \object-list HeatingCoilName
+        \object-list HeatingCoilsDXSingleSpeed
+        \object-list HeatingCoilsDXVariableSpeed
         \required-field
    A15, \field Priority Control Mode
         \type choice
@@ -10951,10 +11100,19 @@ OS:AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat,
        \units m3/s
        \minimum> 0.0
        \autosizable
-  N2;  \field Zone Minimum Air Flow Fraction
+  N2,  \field Zone Minimum Air Flow Fraction
        \required-field
        \minimum 0.0
        \maximum 1.0
+  A6;  \field Minimum Air Flow Turndown Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field adjusts the design minimum flow rate by multiplying it using this schedule of fraction
+       \note values. This field is used with "Zone Minimum Air Flow Fraction". Schedule values are fractions
+       \note 0.0 to 1.0. This field adjusts the minimum airflow turndown below the design minimum air flow
+       \note and is intended for use with ASHRAE Standard 170. If this field is left blank, then the turndown
+       \note minimum air flow fraction value is set to 1 and the model uses the fixed fraction specified in
+       \note in the field "Zone Minimum Air Flow Fraction".
 
 OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
   A1, \field Handle
@@ -11003,11 +11161,20 @@ OS:AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
        \type real
        \minimum> 0.0
        \required-field
-  N6; \field Maximum Reheat Air Temperature
-      \required-field
-      \type real
-      \units C
-      \minimum> 0.0
+  N6,  \field Maximum Reheat Air Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum> 0.0
+  A8;  \field Minimum Air Flow Turndown Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field adjusts the design minimum flow rate by multiplying it using this schedule of fraction
+       \note values. This field is used with "Zone Minimum Air Flow Fraction". Schedule values are fractions
+       \note 0.0 to 1.0. This field adjusts the minimum airflow turndown below the design minimum air flow
+       \note and is intended for use with ASHRAE Standard 170. If this field is left blank, then the turndown
+       \note minimum air flow fraction value is set to 1 and the model uses the fixed fraction specified in
+       \note in the field "Zone Minimum Air Flow Fraction".
 
 OS:AirTerminal:SingleDuct:InletSideMixer,
    A1, \field Handle
@@ -11024,10 +11191,24 @@ OS:AirTerminal:SingleDuct:InletSideMixer,
        \required-field
        \type object-list
        \object-list ConnectionNames
-   A5; \field Terminal Unit Secondary Air Inlet
+   A5, \field Terminal Unit Secondary Air Inlet
        \required-field
        \type object-list
        \object-list ConnectionNames
+   A6, \field Control For Outdoor Air
+       \note This field replaces the E+ field Design Specification Outdoor Air Object Name
+       \note Refer to OpenStudio API for details
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+   A7; \field Per Person Ventilation Rate Mode
+       \type choice
+       \key CurrentOccupancy
+       \key DesignOccupancy
+       \required-field
+       \note CurrentOccupancy models demand controlled ventilation using the current number of people
+       \note DesignOccupancy uses the total Number of People in the zone and is constant
 
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \min-fields 5
@@ -11568,13 +11749,21 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note minimum and maximum schedule values is used for sizing normal-action reheat coils.
        \type object-list
        \object-list ScheduleNames
-  A8 ; \field Control For Outdoor Air
+  A8 , \field Control For Outdoor Air
        \note This field replaces the E+ field Design Specification Outdoor Air Object Name
        \note Refer to OpenStudio API for details
        \type choice
        \key Yes
        \key No
        \required-field
+  A9 ; \field Minimum Air Flow Turndown Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field adjusts the design minimum flow rate by multiplying it using this schedule of fraction
+       \note values. This field can be used with any of the three "Zone Minimum Air Flow Input Method".
+       \note Schedule values are fractions, 0.0 to 1.0. This field adjusts the minimum airflow turndown
+       \note below the design minimum air flow and is intended for use with ASHRAE Standard 170.
+       \note If this field is left blank, then the turndown minimum air flow fraction value is set to 1.
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
@@ -11690,13 +11879,21 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \units C
        \minimum> 0
        \default 35.0
-  A12; \field Control For Outdoor Air
+  A12, \field Control For Outdoor Air
        \note This field replaces the E+ field Design Specification Outdoor Air Object Name
        \note Refer to OpenStudio API for details
        \type choice
        \key Yes
        \key No
        \required-field
+  A13; \field Minimum Air Flow Turndown Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field adjusts the design minimum flow rate by multiplying it using this schedule of fraction
+       \note values. This field can be used with any of the three "Zone Minimum Air Flow Input Method".
+       \note Schedule values are fractions, 0.0 to 1.0. This field adjusts the minimum airflow turndown
+       \note below the design minimum air flow and is intended for use with ASHRAE Standard 170.
+       \note If this field is left blank, then the turndown minimum air flow fraction value is set to 1.
 
 OS:AirTerminal:DualDuct:VAV:OutdoorAir,
        \memo Central air system terminal unit, dual duct, variable volume with special controls.
@@ -11814,7 +12011,7 @@ OS:AirTerminal:DualDuct:VAV,
        \maximum 1.0
        \minimum 0.0
        \required-field
-  A7 ; \field Design Specification Outdoor Air Object
+  A7 , \field Design Specification Outdoor Air Object
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
        \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
@@ -11823,6 +12020,15 @@ OS:AirTerminal:DualDuct:VAV,
        \note be computed based on the current number of occupants in the zone.
        \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
        \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
+  A8 ; \field Minimum Air Flow Turndown Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field adjusts the design minimum flow rate by multiplying it using this schedule of fraction
+       \note values. This field is used with "Zone Minimum Air Flow Fraction". Schedule values are fractions
+       \note 0.0 to 1.0. This field adjusts the minimum airflow turndown below the design minimum air flow
+       \note and is intended for use with ASHRAE Standard 170. If this field is left blank, then the turndown
+       \note minimum air flow fraction value is set to 1 and the VAV air terminal uses fixed fraction specified
+       \note in the field "Zone Minimum Air Flow Fraction".
 
 OS:AvailabilityManagerAssignmentList,
        \extensible:1
@@ -12631,6 +12837,200 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
         \type object-list
         \object-list WWHPHeatingNames
         \note This optional field is used to coordinate sizing calculations between heating and cooling modes.
+
+OS:HeatPump:PlantLoop:EIR:Heating,
+       \memo An EIR formulated water to water heat pump model, heating operation
+       \min-fields 16
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \type alpha
+       \reference PLHPHeatingNames
+       \required-field
+       \reference ConnectionObject
+   A3, \field Load Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A4, \field Load Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5, \field Condenser Type
+       \type choice
+       \key WaterSource
+       \key AirSource
+       \required-field
+   A6, \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A7, \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A8, \field Companion Heat Pump Name
+       \note This field allows the user to specify a companion cooling
+       \note object for this heating object. The companion is used in
+       \note sizing the heat pump as well as to allow checks for unexpected
+       \note simultaneous operation of the two objects.
+       \type object-list
+       \object-list PLHPCoolingNames
+   N1, \field Load Side Reference Flow Rate
+       \note This component is currently a constant-flow device, meaning it will always
+       \note try to request the full design flow from the central plant manager.
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N2, \field Source Side Reference Flow Rate
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N3, \field Reference Capacity
+       \type real
+       \minimum> 0.0
+       \units W
+       \autosizable
+       \required-field
+   N4, \field Reference Coefficient of Performance
+       \type real
+       \minimum> 0.0
+       \required-field
+       \units W/W
+   N5, \field Sizing Factor
+       \note Multiplies the autosized capacity and flow rates
+       \type real
+       \minimum> 0.0
+       \required-field
+   A9, \field Capacity Modifier Function of Temperature Curve Name
+       \note Heating capacity modifier as a function of CW supply temp and entering condenser temp
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) hot water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A10,\field Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of temperature
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) hot water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A11;\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of Part Load Ratio (PLR)
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+       \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
+       \note PLR = part load ratio (hot load/steady state capacity)
+
+OS:HeatPump:PlantLoop:EIR:Cooling,
+       \memo An EIR formulated water to water heat pump model, cooling operation.
+       \min-fields 16
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \type alpha
+       \reference PLHPCoolingNames
+       \required-field
+       \reference ConnectionObject
+   A3, \field Load Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A4, \field Load Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A5, \field Condenser Type
+       \type choice
+       \key WaterSource
+       \key AirSource
+       \required-field
+   A6, \field Source Side Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A7, \field Source Side Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+   A8, \field Companion Heat Pump Name
+       \note This field allows the user to specify a companion heating
+       \note object for this cooling object. The companion is used in
+       \note sizing the heat pump as well as to allow checks for unexpected
+       \note simultaneous operation of the two objects.
+       \type object-list
+       \object-list PLHPHeatingNames
+   N1, \field Load Side Reference Flow Rate
+       \note This component is currently a constant-flow device, meaning it will always
+       \note try to request the full design flow from the central plant manager.
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N2, \field Source Side Reference Flow Rate
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \required-field
+   N3, \field Reference Capacity
+       \type real
+       \minimum> 0.0
+       \units W
+       \autosizable
+       \required-field
+   N4, \field Reference Coefficient of Performance
+       \type real
+       \minimum> 0.0
+       \required-field
+       \units W/W
+   N5, \field Sizing Factor
+       \note Multiplies the autosized capacity and flow rates
+       \type real
+       \minimum> 0.0
+       \required-field
+   A9, \field Capacity Modifier Function of Temperature Curve Name
+       \note Cooling capacity modifier as a function of CW supply temp and entering condenser temp
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A10,\field Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of temperature
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A11;\field Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of Part Load Ratio (PLR)
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list UnivariateFunctions
+       \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
+       \note PLR = part load ratio (cooling load/steady state capacity)
 
 OS:Chiller:Electric:EIR,
        \memo This chiller model is the empirical model from the DOE-2 building Energy
@@ -14656,7 +15056,8 @@ OS:GroundHeatExchanger:Vertical,
         \required-field
         \type object-list
         \object-list ConnectionNames
-  N1,   \field Maximum Flow Rate
+  N1,   \field Design Flow Rate
+        \required-field
         \type real
         \units m3/s
         \minimum> 0.0
@@ -14685,47 +15086,42 @@ OS:GroundHeatExchanger:Vertical,
         \type real
         \units C
         \minimum> 0.0
-  N8,   \field Design Flow Rate
-        \type real
-        \units m3/s
-        \minimum> 0.0
-        \ip-units gal/min
-  N9,   \field Grout Thermal Conductivity
+  N8,   \field Grout Thermal Conductivity
         \type real
         \units W/m-K
         \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
-  N10,  \field Pipe Thermal Conductivity
+  N9,   \field Pipe Thermal Conductivity
         \type real
         \units W/m-K
         \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
-  N11,  \field Pipe Out Diameter
+  N10,  \field Pipe Out Diameter
         \type real
         \units m
         \minimum> 0.0
         \ip-units in
-  N12,  \field U-Tube Distance
+  N11,  \field U-Tube Distance
         \type real
         \units m
         \minimum> 0.0
-  N13,  \field Pipe Thickness
+  N12,  \field Pipe Thickness
         \type real
         \units m
         \minimum> 0.0
         \ip-units in
-  N14,  \field Maximum Length of Simulation
+  N13,  \field Maximum Length of Simulation
         \type real
         \minimum> 0.0
-  N15,  \field G-Function Reference Ratio
+  N14,  \field G-Function Reference Ratio
         \type real
         \units dimensionless
         \minimum> 0.0
         \default 0.0005
-  N16,  \field G-Function Ln(T/Ts) Value
+  N15,  \field G-Function Ln(T/Ts) Value
         \type real
         \begin-extensible
-  N17;  \field G-Function G Value
+  N16;  \field G-Function G Value
         \type real
 
 OS:GroundHeatExchanger:HorizontalTrench,
@@ -16404,7 +16800,7 @@ OS:CoilSystem:Cooling:Water:HeatExchangerAssisted,
   A5 , \field Heat Exchanger
        \required-field
        \type object-list
-       \object-list ConnectionObject
+       \object-list HXAirToAirSensibleAndLatentNames
   A6 ; \field Cooling Coil
        \required-field
        \type object-list
@@ -18727,7 +19123,8 @@ OS:Controller:MechanicalVentilation,
   A5, \field System Outdoor Air Method
        \type choice
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedureWithLimit
        \key IndoorAirQualityProcedure
        \key ProportionalControl
        \key ProportionalControlBasedOnOccupancySchedule
@@ -21860,8 +22257,8 @@ OS:Fan:ZoneExhaust,
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \min-fields 24
   A1, \field Handle
-       \type handle
-       \required-field
+      \type handle
+      \required-field
   A2, \field Name
       \required-field
       \type alpha
@@ -21990,11 +22387,315 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
 
-OS:HeatExchanger:FluidToFluid,
-        \min-fields 15
-   A1, \field Handle
+OS:HeatExchanger:Desiccant:BalancedFlow,
+      \memo This object models a balanced desiccant heat exchanger.
+      \memo The heat exchanger transfers both sensible and latent energy between the
+      \memo process and regeneration air streams. The air flow rate and face velocity
+      \memo are assumed to be the same on both the process and regeneration sides of the
+      \memo heat exchanger.
+      \min-fields 8
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference HXDesiccantBalanced
+      \reference HXAirToAirNames
+      \reference AFNHeatExchangerNames
+      \reference ConnectionObject
+  A3, \field Availability Schedule
+      \required-field
+      \type object-list
+      \object-list ScheduleNames
+  A4, \field Regeneration Air Inlet Node
+      \type object-list
+      \object-list ConnectionNames
+  A5, \field Regeneration Air Outlet Node
+      \type object-list
+      \object-list ConnectionNames
+  A6, \field Process Air Inlet Node
+      \type object-list
+      \object-list ConnectionNames
+  A7, \field Process Air Outlet Node
+      \type object-list
+      \object-list ConnectionNames
+  A8, \field Heat Exchanger Performance
+      \required-field
+      \type object-list
+      \object-list DesiccantHXPerfData
+  A9; \field Economizer Lockout
+      \type choice
+      \key Yes
+      \key No
+      \required-field
+      \note Yes means that the heat exchanger will be locked out (off)
+      \note when the economizer is operating or high humidity control is active
+
+OS:HeatExchanger:Desiccant:BalancedFlow:PerformanceDataType1,
+       \memo RTO = B1 + B2*RWI + B3*RTI + B4*(RWI/RTI) + B5*PWI + B6*PTI + B7*(PWI/PTI)
+       \memo       + B8*RFV
+       \memo RWO = C1 + C2*RWI + C3*RTI + C4*(RWI/RTI) + C5*PWI + C6*PTI + C7*(PWI/PTI)
+       \memo       + C8*RFV
+       \memo where,
+       \memo RTO = Dry-bulb temperature of the regeneration outlet air (C)
+       \memo RWO = Humidity ratio of the regeneration outlet air (kgWater/kgDryAir)
+       \memo RWI = Humidity ratio of the regeneration inlet air (kgWater/kgDryAir)
+       \memo RTI = Dry-bulb temperature of the regeneration inlet air (C)
+       \memo PWI = Humidity ratio of the process inlet air (kgWater/kgDryAir)
+       \memo PTI = Dry-bulb temperature of the process inlet air (C)
+       \memo RFV = Regeneration Face Velocity (m/s)
+       \min-fields 53
+  A1 , \field Handle
        \type handle
        \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference DesiccantHXPerfData
+  N1,  \field Nominal Air Flow Rate
+       \note Air flow rate at nominal conditions (assumed to be the same for both sides
+       \note of the heat exchanger).
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2 , \field Nominal Air Face Velocity
+       \required-field
+       \type real
+       \units m/s
+       \minimum> 0.0
+       \maximum 6.0
+       \autosizable
+  N3 , \field Nominal Electric Power
+       \note Parasitic electric power (e.g., desiccant wheel motor)
+       \type real
+       \units W
+       \ip-units W
+       \minimum 0.0
+       \required-field
+  N4 , \field Temperature Equation Coefficient 1
+       \required-field
+       \type real
+  N5 , \field Temperature Equation Coefficient 2
+       \required-field
+       \type real
+  N6 , \field Temperature Equation Coefficient 3
+       \required-field
+       \type real
+  N7 , \field Temperature Equation Coefficient 4
+       \required-field
+       \type real
+  N8 , \field Temperature Equation Coefficient 5
+       \required-field
+       \type real
+  N9 , \field Temperature Equation Coefficient 6
+       \required-field
+       \type real
+  N10, \field Temperature Equation Coefficient 7
+       \required-field
+       \type real
+  N11, \field Temperature Equation Coefficient 8
+       \required-field
+       \type real
+  N12, \field Minimum Regeneration Inlet Air Humidity Ratio for Temperature Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N13, \field Maximum Regeneration Inlet Air Humidity Ratio for Temperature Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N14, \field Minimum Regeneration Inlet Air Temperature for Temperature Equation
+       \required-field
+       \type real
+       \units C
+  N15, \field Maximum Regeneration Inlet Air Temperature for Temperature Equation
+       \required-field
+       \type real
+       \units C
+  N16, \field Minimum Process Inlet Air Humidity Ratio for Temperature Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N17, \field Maximum Process Inlet Air Humidity Ratio for Temperature Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N18, \field Minimum Process Inlet Air Temperature for Temperature Equation
+       \required-field
+       \type real
+       \units C
+  N19, \field Maximum Process Inlet Air Temperature for Temperature Equation
+       \required-field
+       \type real
+       \units C
+  N20, \field Minimum Regeneration Air Velocity for Temperature Equation
+       \required-field
+       \type real
+       \units m/s
+       \minimum> 0.0
+  N21, \field Maximum Regeneration Air Velocity for Temperature Equation
+       \required-field
+       \type real
+       \units m/s
+       \minimum> 0.0
+  N22, \field Minimum Regeneration Outlet Air Temperature for Temperature Equation
+       \required-field
+       \type real
+       \units C
+  N23, \field Maximum Regeneration Outlet Air Temperature for Temperature Equation
+       \required-field
+       \type real
+       \units C
+  N24, \field Minimum Regeneration Inlet Air Relative Humidity for Temperature Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+  N25, \field Maximum Regeneration Inlet Air Relative Humidity for Temperature Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+  N26, \field Minimum Process Inlet Air Relative Humidity for Temperature Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+  N27, \field Maximum Process Inlet Air Relative Humidity for Temperature Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+  N28, \field Humidity Ratio Equation Coefficient 1
+       \required-field
+       \type real
+  N29, \field Humidity Ratio Equation Coefficient 2
+       \required-field
+       \type real
+  N30, \field Humidity Ratio Equation Coefficient 3
+       \required-field
+       \type real
+  N31, \field Humidity Ratio Equation Coefficient 4
+       \required-field
+       \type real
+  N32, \field Humidity Ratio Equation Coefficient 5
+       \required-field
+       \type real
+  N33, \field Humidity Ratio Equation Coefficient 6
+       \required-field
+       \type real
+  N34, \field Humidity Ratio Equation Coefficient 7
+       \required-field
+       \type real
+  N35, \field Humidity Ratio Equation Coefficient 8
+       \required-field
+       \type real
+  N36, \field Minimum Regeneration Inlet Air Humidity Ratio for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N37, \field Maximum Regeneration Inlet Air Humidity Ratio for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N38, \field Minimum Regeneration Inlet Air Temperature for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units C
+  N39, \field Maximum Regeneration Inlet Air Temperature for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units C
+  N40, \field Minimum Process Inlet Air Humidity Ratio for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N41, \field Maximum Process Inlet Air Humidity Ratio for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N42, \field Minimum Process Inlet Air Temperature for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units C
+  N43, \field Maximum Process Inlet Air Temperature for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units C
+  N44, \field Minimum Regeneration Air Velocity for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units m/s
+       \minimum> 0.0
+  N45, \field Maximum Regeneration Air Velocity for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units m/s
+       \minimum> 0.0
+  N46, \field Minimum Regeneration Outlet Air Humidity Ratio for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N47, \field Maximum Regeneration Outlet Air Humidity Ratio for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+       \minimum 0.0
+       \maximum 1.0
+  N48, \field Minimum Regeneration Inlet Air Relative Humidity for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+  N49, \field Maximum Regeneration Inlet Air Relative Humidity for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+  N50, \field Minimum Process Inlet Air Relative Humidity for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+  N51; \field Maximum Process Inlet Air Relative Humidity for Humidity Ratio Equation
+       \required-field
+       \type real
+       \units percent
+       \minimum 0.0
+       \maximum 100.0
+
+OS:HeatExchanger:FluidToFluid,
+        \min-fields 15
+   A1 , \field Handle
+        \type handle
+        \required-field
    A2 , \field Name
         \required-field
         \reference ConnectionObject
@@ -24099,7 +24800,8 @@ OS:Sizing:System,
        \type choice
        \default ZoneSum
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1SimplifiedProcedure
   N13, \field Zone Maximum Outdoor Air Fraction
        \type real
        \minimum> 0.0
@@ -24228,7 +24930,7 @@ OS:Sizing:System,
        \required-field
        \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
        \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
-  A12; \field Central Cooling Capacity Control Method
+  A12, \field Central Cooling Capacity Control Method
        \note Method used to control the coil's output
        \required-field
        \type choice
@@ -24236,6 +24938,15 @@ OS:Sizing:System,
        \key Bypass
        \key VT
        \key OnOff
+  N27; \field Occupant Diversity
+       \type real
+       \maximum 1.0
+       \minimum 0.0
+       \autosizable
+       \note The Occupant Diversity is used to determine a multi-zone system's outdoor air intake when the System Outdoor Air Method is
+       \note Standard62.1VentilationRateProcedure or the Standard62.1SimplifiedProcedure. If set to be autosized, it will be calculated
+       \note using the information in the People objects assigned to each zone attached to this system/airloop.
+       \required-field
 
 OS:Sizing:Zone,
        \min-fields 20
@@ -24434,6 +25145,7 @@ OS:ThermalZone,
        \required-field
        \reference ThermalZoneNames
        \reference ConnectionObject
+       \reference SpaceAndSpaceGroupNames
   N1, \field Multiplier
        \type integer
        \minimum 1
@@ -24549,9 +25261,12 @@ OS:ThermalZone,
        \type choice
        \key Yes
        \key No
-  A16; \field Humidistat Name
+  A16, \field Humidistat Name
        \type object-list
        \object-list HumidistatNames
+  A17; \field Daylighting Controls Availability Schedule Name
+       \type object-list
+       \object-list ScheduleNames
 
 OS:ZoneControl:Humidistat,
        \memo Specifies zone relative humidity setpoint schedules for humidifying and dehumidifying.

@@ -564,6 +564,12 @@ set(${target_name}_src
   DaylightingDeviceShelf.hpp
   DaylightingDeviceShelf_Impl.hpp
   DaylightingDeviceShelf.cpp
+  DaylightingDeviceTubular.hpp
+  DaylightingDeviceTubular_Impl.hpp
+  DaylightingDeviceTubular.cpp
+  DaylightingDeviceLightWell.hpp
+  DaylightingDeviceLightWell_Impl.hpp
+  DaylightingDeviceLightWell.cpp
   DaylightRedirectionDevice.hpp
   DaylightRedirectionDevice_Impl.hpp
   DaylightRedirectionDevice.cpp
@@ -879,9 +885,21 @@ set(${target_name}_src
   HeatPumpWaterToWaterEquationFitHeating.hpp
   HeatPumpWaterToWaterEquationFitHeating_Impl.hpp
   HeatPumpWaterToWaterEquationFitHeating.cpp
+  HeatPumpPlantLoopEIRCooling.hpp
+  HeatPumpPlantLoopEIRCooling_Impl.hpp
+  HeatPumpPlantLoopEIRCooling.cpp
+  HeatPumpPlantLoopEIRHeating.hpp
+  HeatPumpPlantLoopEIRHeating_Impl.hpp
+  HeatPumpPlantLoopEIRHeating.cpp
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
+  HeatExchangerDesiccantBalancedFlow.hpp
+  HeatExchangerDesiccantBalancedFlow_Impl.hpp
+  HeatExchangerDesiccantBalancedFlow.cpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.cpp
   HeatExchangerFluidToFluid.hpp
   HeatExchangerFluidToFluid_Impl.hpp
   HeatExchangerFluidToFluid.cpp
@@ -1906,14 +1924,19 @@ set(${target_name}_test_src
   test/CurveQuadLinear_GTest.cpp
   # n == 5
   test/CurveQuintLinear_GTest.cpp
+  # n == ?
+  test/CurveFunctionalPressureDrop_GTest.cpp
 
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
+  test/DaylightingDeviceTubular_GTest.cpp
+  test/DaylightingDeviceLightWell_GTest.cpp
   test/DaylightRedirectionDevice_GTest.cpp
   test/DefaultConstructionSet_GTest.cpp
   test/DefaultScheduleSet_GTest.cpp
   test/DefaultSubSurfaceConstructions_GTest.cpp
   test/DefaultSurfaceConstructions_GTest.cpp
+  test/DesignDay_GTest.cpp
   test/DesignSpecificationOutdoorAir_GTest.cpp
   test/DesignSpecificationZoneAirDistribution_GTest.cpp
   test/DistrictCooling_GTest.cpp
@@ -1998,9 +2021,13 @@ set(${target_name}_test_src
   test/HeaderedPumpsConstantSpeed_GTest.cpp
   test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
+  test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
+  test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
+  test/HeatPumpPlantLoopEIRHeating_GTest.cpp
+  test/HeatPumpPlantLoopEIRCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
   test/HumidifierSteamGas_GTest.cpp
   test/IlluminanceMap_GTest.cpp

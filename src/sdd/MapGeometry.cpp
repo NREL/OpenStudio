@@ -122,16 +122,6 @@ namespace sdd {
   constexpr double footToMeter = 0.3048;
   constexpr double meterToFoot = 1.0 / 0.3048;
 
-  double fixAngle(double angle) {
-    while (angle >= 360) {
-      angle -= 360;
-    }
-    while (angle < 0) {
-      angle += 360;
-    }
-    return angle;
-  }
-
   pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node& root, const std::string& tagName, boost::optional<int> _index) {
 
     pugi::xml_node result;
@@ -176,11 +166,11 @@ namespace sdd {
     }
 
     if (buildingAzimuthElement) {
-      double buildingAzimuth = fixAngle(buildingAzimuthElement.text().as_double());
+      double buildingAzimuth = normalizeAngle0to360(buildingAzimuthElement.text().as_double());
       building.setNorthAxis(buildingAzimuth);
     } else if (northAngleElement) {
       // use NAng for backwards compatibility with SDD's only having NAng
-      double northAngle = fixAngle(northAngleElement.text().as_double());
+      double northAngle = normalizeAngle0to360(northAngleElement.text().as_double());
       double buildingAzimuth = 360.0 - northAngle;
       building.setNorthAxis(buildingAzimuth);
     }
@@ -1857,7 +1847,7 @@ namespace sdd {
     // CoilHtgCap - defaulted, ignore
 
     // building azimuth
-    double buildingAzimuth = fixAngle(building.northAxis());
+    double buildingAzimuth = normalizeAngle0to360(building.northAxis());
     pugi::xml_node buildingAzimuthElement = result.append_child("BldgAz");
     buildingAzimuthElement.text() = openstudio::string_conversions::number(buildingAzimuth).c_str();
 

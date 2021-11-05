@@ -99,6 +99,9 @@ namespace model {
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowFractionScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVReheat", "Minimum Air Flow Fraction"));
       }
+      if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVReheat", "Minimum Air Flow Turndown"));
+      }
       return result;
     }
 
@@ -352,6 +355,22 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    boost::optional<Schedule> AirTerminalSingleDuctVAVReheat_Impl::minimumAirFlowTurndownSchedule() const {
+      return this->getObject<AirTerminalSingleDuctVAVReheat>().getModelObjectTarget<Schedule>(
+        OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName);
+    }
+
+    bool AirTerminalSingleDuctVAVReheat_Impl::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName, "AirTerminalSingleDuctVAVReheat",
+                                "Minimum Air Flow Turndown", schedule);
+      return result;
+    }
+
+    void AirTerminalSingleDuctVAVReheat_Impl::resetMinimumAirFlowTurndownSchedule() {
+      bool result = setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::maximumHotWaterOrSteamFlowRate() {
       return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumHotWaterorSteamFlowRate);
     }
@@ -530,6 +549,15 @@ namespace model {
       return result;
     }
 
+    boost::optional<ModelObject> AirTerminalSingleDuctVAVReheat_Impl::minimumAirFlowTurndownScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = minimumAirFlowTurndownSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
     bool AirTerminalSingleDuctVAVReheat_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
       if (modelObject) {
         OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
@@ -552,6 +580,21 @@ namespace model {
         }
       } else {
         resetMinimumAirFlowFractionSchedule();
+      }
+      return true;
+    }
+
+    bool AirTerminalSingleDuctVAVReheat_Impl::setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setMinimumAirFlowTurndownSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetMinimumAirFlowTurndownSchedule();
       }
       return true;
     }
@@ -790,6 +833,18 @@ namespace model {
 
   void AirTerminalSingleDuctVAVReheat::resetMinimumAirFlowFractionSchedule() {
     getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->resetMinimumAirFlowFractionSchedule();
+  }
+
+  boost::optional<Schedule> AirTerminalSingleDuctVAVReheat::minimumAirFlowTurndownSchedule() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->minimumAirFlowTurndownSchedule();
+  }
+
+  bool AirTerminalSingleDuctVAVReheat::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMinimumAirFlowTurndownSchedule(schedule);
+  }
+
+  void AirTerminalSingleDuctVAVReheat::resetMinimumAirFlowTurndownSchedule() {
+    getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->resetMinimumAirFlowTurndownSchedule();
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVReheat::maximumHotWaterOrSteamFlowRate() {

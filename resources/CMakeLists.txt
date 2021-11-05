@@ -91,6 +91,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-3-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-4-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
   utilities/Zip/test1.zip
 )
 
@@ -269,6 +270,7 @@ SET(gbxml_resources_src
   gbxml/ZNETH.xml
   gbxml/3951_Geometry_bug.xml
   gbxml/3997_WindowScaling_bug.xml
+  gbxml/TestSchedules.xml
 )
 
 # update the resources

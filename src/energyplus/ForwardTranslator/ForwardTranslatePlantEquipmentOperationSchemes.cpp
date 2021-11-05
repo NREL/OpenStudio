@@ -105,6 +105,10 @@
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
+#include "../../model/HeatPumpPlantLoopEIRHeating.hpp"
+#include "../../model/HeatPumpPlantLoopEIRHeating_Impl.hpp"
+#include "../../model/HeatPumpPlantLoopEIRCooling.hpp"
+#include "../../model/HeatPumpPlantLoopEIRCooling_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
@@ -272,7 +276,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical: {
         auto hx = component.cast<GroundHeatExchangerVertical>();
-        result = hx.maximumFlowRate();
+        result = hx.designFlowRate();
         break;
       }
       case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench: {
@@ -319,6 +323,16 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Heating: {
         auto mo = component.cast<HeatPumpWaterToWaterEquationFitHeating>();
         result = mo.ratedLoadSideFlowRate();
+        break;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Cooling: {
+        auto mo = component.cast<HeatPumpPlantLoopEIRCooling>();
+        result = mo.loadSideReferenceFlowRate();
+        break;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating: {
+        auto mo = component.cast<HeatPumpPlantLoopEIRHeating>();
+        result = mo.loadSideReferenceFlowRate();
         break;
       }
       default: {
@@ -576,6 +590,12 @@ namespace energyplus {
         return ComponentType::HEATING;
       }
       case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling: {
+        return ComponentType::COOLING;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating: {
+        return ComponentType::HEATING;
+      }
+      case openstudio::IddObjectType::OS_HeatPump_PlantLoop_EIR_Cooling: {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery: {

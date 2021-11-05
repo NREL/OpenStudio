@@ -114,6 +114,12 @@ namespace model {
 
       void resetMinimumAirFlowFractionSchedule();
 
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+      void resetMinimumAirFlowTurndownSchedule();
+
       boost::optional<double> maximumHotWaterOrSteamFlowRate();
 
       bool setMaximumHotWaterOrSteamFlowRate(double value);
@@ -191,9 +197,11 @@ namespace model {
 
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
       boost::optional<ModelObject> minimumAirFlowFractionScheduleAsModelObject() const;
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
 
       bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
       bool setMinimumAirFlowFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

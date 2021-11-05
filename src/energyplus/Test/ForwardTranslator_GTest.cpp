@@ -758,3 +758,163 @@ TEST_F(EnergyPlusFixture, BadVariableName) {
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
   }
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslation_Options) {
+
+  Model m;
+  ForwardTranslator ft;
+
+  // Defaults
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(5u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeLCCObjects(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeVariableDictionary(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeSQliteOutputReport(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setIPTabularOutput(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("InchPound", obj.getString(1, false, true).get());
+  }
+
+  ft.setExcludeHTMLOutputReport(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_RecurringCosts));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    // This also turns off the OutputControl:Table:Style
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::OutputControl_Table_Style));
+  }
+}
+
+TEST_F(EnergyPlusFixture, Ensure_Name_Unicity_ZoneAndZoneListAndSpaceAndSpaceListNames) {
+  // Starting in 9.6.0, Space and SpaceList are supported.
+  // Zone, ZoneList, Space, SpaceList all need to be unique names
+
+  Workspace w(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::Zone)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::ZoneList)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::Space)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::SpaceList)));
+
+  std::vector<WorkspaceObject> wos = w.objects();
+
+  EXPECT_EQ(4, wos.size());
+  EXPECT_EQ(4, w.getObjectsByReference("ZoneAndZoneListAndSpaceAndSpaceListNames").size());
+
+  std::vector<std::pair<size_t, size_t>> combinations{{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}};
+
+  auto resetNames = [&wos]() {
+    for (auto& wo : wos) {
+      wo.setName(wo.iddObject().name());
+    }
+  };
+
+  std::string name = "A Name";
+  for (auto& [i1, i2] : combinations) {
+    resetNames();  // Starting point: all names are unique
+    // We set two names: first one should work
+    auto s1_ = wos[i1].setName(name);
+    ASSERT_TRUE(s1_);
+    EXPECT_EQ(name, s1_.get());
+    // Second should be wodified to keep unicity of names
+    auto s2_ = wos[i2].setName(name);
+    ASSERT_TRUE(s2_);
+    EXPECT_NE(name, s2_.get());
+    EXPECT_NE(s1_.get(), s2_.get());
+    EXPECT_NE(wos[i1].nameString(), wos[i2].nameString());
+  }
+}

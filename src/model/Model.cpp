@@ -992,6 +992,10 @@ namespace model {
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
           modelObj->autosize();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
+          modelObj->autosize();
         }
       }
       return;
@@ -1022,6 +1026,10 @@ namespace model {
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) {  // CoilHeatingDXMultiSpeedStageData
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
+          modelObj->applySizingValues();
+        } else if (auto modelObj =
+                     optModelObj.optionalCast<
+                       HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
           modelObj->applySizingValues();
         }
       }
@@ -1423,7 +1431,7 @@ namespace model {
     DesignDay designDay1(model);
     designDay1.setMaximumDryBulbTemperature(-20.6);
     designDay1.setDailyDryBulbTemperatureRange(0.0);
-    designDay1.setHumidityIndicatingConditionsAtMaximumDryBulb(-20.6);
+    designDay1.setWetBulbOrDewPointAtMaximumDryBulb(-20.6);
     designDay1.setBarometricPressure(99063.0);
     designDay1.setWindSpeed(4.9);
     designDay1.setWindDirection(270);
@@ -1434,12 +1442,12 @@ namespace model {
     designDay1.setMonth(1);
     designDay1.setDayType("WinterDesignDay");
     designDay1.setDaylightSavingTimeIndicator(false);
-    designDay1.setHumidityIndicatingType("WetBulb");
+    designDay1.setHumidityConditionType("WetBulb");
 
     DesignDay designDay2(model);
     designDay2.setMaximumDryBulbTemperature(33.2);
     designDay2.setDailyDryBulbTemperatureRange(10.7);
-    designDay2.setHumidityIndicatingConditionsAtMaximumDryBulb(23.8);
+    designDay2.setWetBulbOrDewPointAtMaximumDryBulb(23.8);
     designDay2.setBarometricPressure(99063.0);
     designDay2.setWindSpeed(5.3);
     designDay2.setWindDirection(230);
@@ -1450,7 +1458,7 @@ namespace model {
     designDay2.setMonth(7);
     designDay2.setDayType("SummerDesignDay");
     designDay2.setDaylightSavingTimeIndicator(false);
-    designDay2.setHumidityIndicatingType("WetBulb");
+    designDay2.setHumidityConditionType("WetBulb");
 
     // add schedules
     addExampleSchedules(model);
@@ -1510,6 +1518,24 @@ namespace model {
     buildingStory.setNominalFloortoFloorHeight(3);
 
     // create spaces from floor print
+
+    //            y (=North)
+    //  Site      ▲
+    //  Shading   │                  building height = 3m
+    //   ║      20├────────┬────────┐
+    //   ║        │        │        │
+    //   ║        │        │        │
+    //   ║        │ Space 3│ Space 4│
+    //   ║        │        │        │
+    //   ║      10├────────┼────────┤
+    //   ║        │        │        │
+    //   ║        │        │        ├
+    //   ║        │ Space 1│ Space 2│◄─── window + space shading
+    //   ║        │        │        ├
+    //   ║        └──┬─┬───┴────────┴──────► x
+    //           0    ▲    10       20
+    //                └─ door+building shading
+
     std::vector<Point3d> floorPrint;
     floorPrint.push_back(Point3d(0, 0, 0));
     floorPrint.push_back(Point3d(0, 10, 0));
@@ -2734,6 +2760,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CurveTriquadratic);
     REGISTER_CONSTRUCTOR(DaylightingControl);
     REGISTER_CONSTRUCTOR(DaylightingDeviceShelf);
+    REGISTER_CONSTRUCTOR(DaylightingDeviceTubular);
+    REGISTER_CONSTRUCTOR(DaylightingDeviceLightWell);
     REGISTER_CONSTRUCTOR(DaylightRedirectionDevice);
     REGISTER_CONSTRUCTOR(DefaultConstructionSet);
     REGISTER_CONSTRUCTOR(DefaultScheduleSet);
@@ -2831,9 +2859,13 @@ namespace model {
     REGISTER_CONSTRUCTOR(HeaderedPumpsVariableSpeed);
     REGISTER_CONSTRUCTOR(HeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(HeatExchangerAirToAirSensibleAndLatent);
+    REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_CONSTRUCTOR(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitHeating);
+    REGISTER_CONSTRUCTOR(HeatPumpPlantLoopEIRCooling);
+    REGISTER_CONSTRUCTOR(HeatPumpPlantLoopEIRHeating);
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
     REGISTER_CONSTRUCTOR(HotWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(HumidifierSteamElectric);
@@ -3254,6 +3286,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CurveTriquadratic);
     REGISTER_COPYCONSTRUCTORS(DaylightingControl);
     REGISTER_COPYCONSTRUCTORS(DaylightingDeviceShelf);
+    REGISTER_COPYCONSTRUCTORS(DaylightingDeviceTubular);
+    REGISTER_COPYCONSTRUCTORS(DaylightingDeviceLightWell);
     REGISTER_COPYCONSTRUCTORS(DaylightRedirectionDevice);
     REGISTER_COPYCONSTRUCTORS(DefaultConstructionSet);
     REGISTER_COPYCONSTRUCTORS(DefaultScheduleSet);
@@ -3351,9 +3385,13 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HeaderedPumpsVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(HeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerAirToAirSensibleAndLatent);
+    REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlow);
+    REGISTER_COPYCONSTRUCTORS(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitHeating);
+    REGISTER_COPYCONSTRUCTORS(HeatPumpPlantLoopEIRCooling);
+    REGISTER_COPYCONSTRUCTORS(HeatPumpPlantLoopEIRHeating);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(HumidifierSteamElectric);

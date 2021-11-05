@@ -45,6 +45,7 @@
 #include "../../model/CoilHeatingWater.hpp"
 
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
@@ -104,6 +105,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
   ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
 
   ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
+
   EXPECT_TRUE(vrf.addToThermalZone(z));
 
   ForwardTranslator ft;
@@ -325,6 +329,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
   ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
 
   ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
   EXPECT_TRUE(vrf.addToThermalZone(z));
 
   ForwardTranslator ft;
@@ -392,6 +398,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
   EXPECT_TRUE(spm.addToNode(supplyOutletNode));
 
   ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
   auto alwaysOn = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctConstantVolumeNoReheat atu(m, alwaysOn);
   EXPECT_TRUE(a.addBranchForZone(z, atu));
@@ -704,6 +712,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
   EXPECT_TRUE(loopFan.addToNode(supplyOutletNode));
 
   ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
   AirTerminalSingleDuctInletSideMixer atu(m);
   EXPECT_TRUE(a.addBranchForZone(z, atu));
 

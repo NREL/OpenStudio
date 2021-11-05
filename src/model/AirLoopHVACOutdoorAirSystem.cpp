@@ -355,7 +355,7 @@ namespace model {
           modelObjects.push_back(*comp);
           modelObject = comp->airOutletModelObject();
         } else if (auto comp = modelObject->optionalCast<ZoneHVACComponent>()) {
-          modelObjects.insert(modelObjects.begin(), *comp);
+          modelObjects.push_back(*comp);
           modelObject = comp->outletNode();
         } else {
           // log unhandled component

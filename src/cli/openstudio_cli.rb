@@ -914,6 +914,18 @@ class Run
     options[:no_simulation] = false
     options[:osw_path] = './workflow.osw'
     options[:post_process] = false
+    options[:ep_json] = false
+    options[:ft_options] = {}
+    # TODO: I don't know if there's any value harcoding a default here really
+    # options[:ft_options] = {
+    #   :runcontrolspecialdays => true,
+    #   :ip_tabular_output => false,
+    #   :no_lifecyclecosts => false,
+    #   :no_sqlite_output => false,
+    #   :no_html_output => false,
+    #   :no_variable_dictionary => false,
+    #   :no_space_translation => false,
+    # }
 
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio run [options]'
@@ -930,12 +942,43 @@ class Run
       o.on('-p', '--postprocess_only', 'Only run the reporting measures') do
         options[:post_process] = true
       end
+      o.on('--export-epJSON', 'export epJSON file format. The default is IDF') do
+        options[:ep_json] = true
+      end
       o.on('-s', '--socket PORT', 'Pipe status messages to a socket on localhost PORT') do |port|
         options[:socket] = port
       end
       o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
         options[:debug] = f
       end
+
+      o.separator ""
+      o.separator "Forward Translator Options:"
+
+      o.on('--[no-]runcontrolspecialdays', "Include RunControlSpecialDays (Holidays) [Default: True]") do |b|
+        options[:ft_options][:runcontrolspecialdays] = b
+      end
+
+      o.on('--set-ip-tabular-output', "Request IP units from E+ Tabular (HTML) Report [Default: False]") do |b|
+        options[:ft_options][:ip_tabular_output] = b
+      end
+
+      o.on('--[no-]lifecyclecosts', "Include LifeCycleCosts [Default: True]") do |b|
+        options[:ft_options][:no_lifecyclecosts] = !b
+      end
+
+      o.on('--[no-]sqlite-output', "Request Output:SQLite from E+ [Default: True]") do |b|
+        options[:ft_options][:no_sqlite_output] = !b
+      end
+
+      o.on('--[no-]html-output', "Request Output:Table:SummaryReports report from E+ [Default: True]") do |b|
+        options[:ft_options][:no_html_output] = !b
+      end
+
+      o.on('--[no-]space-translation', "Add individual E+ Space [Default: True]") do |b|
+        options[:ft_options][:no_space_translation] = !b
+      end
+
     end
 
     # Parse the options
@@ -963,6 +1006,17 @@ class Run
     if options[:debug]
       run_options[:debug] = true
       run_options[:cleanup] = false
+    end
+
+    if options[:ep_json]
+      run_options[:ep_json] = true
+    end
+
+    if !options[:ft_options].empty?
+      run_options[:ft_options] = {}
+      options[:ft_options].each do |opt_flag_name, opt_flag|
+        run_options[:ft_options][opt_flag_name] = opt_flag
+      end
     end
 
     if options[:socket]
@@ -1010,9 +1064,13 @@ class Run
     k = OpenStudio::Workflow::Run.new osw_path, run_options
 
     $logger.debug "Beginning run"
-    k.run
-
-    0
+    state = k.run
+    # check if state symbol is either :finished or :errored
+    if state == :finished
+      return 0
+    else
+      return 1
+    end
   end
 end
 

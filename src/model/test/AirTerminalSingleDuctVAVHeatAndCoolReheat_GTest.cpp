@@ -36,7 +36,8 @@
 #include "../CoilHeatingGas.hpp"
 #include "../CoilHeatingGas_Impl.hpp"
 #include "../Schedule.hpp"
-#include "../Schedule_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 
@@ -81,4 +82,25 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVHeatAndCoolReheat) {
     terminal.remove();
     ASSERT_TRUE(terminal.handle().isNull());
   }
+}
+
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVHeatAndCoolReheat_MinimumAirFlowTurndownSchedule) {
+  Model m;
+  Schedule schedule = m.alwaysOnDiscreteSchedule();
+  CoilHeatingGas coil(m, schedule);
+  AirTerminalSingleDuctVAVHeatAndCoolReheat terminal(m, coil);
+
+  ScheduleCompact alwaysOnSchedule(m);
+  alwaysOnSchedule.setName("ALWAYS_ON");
+  alwaysOnSchedule.setString(3, "Through: 12/31");
+  alwaysOnSchedule.setString(4, "For: AllDays");
+  alwaysOnSchedule.setString(5, "Until: 24:00");
+  alwaysOnSchedule.setString(6, "1");
+
+  EXPECT_FALSE(terminal.minimumAirFlowTurndownSchedule());
+  EXPECT_TRUE(terminal.setMinimumAirFlowTurndownSchedule(alwaysOnSchedule));
+  EXPECT_TRUE(terminal.minimumAirFlowTurndownSchedule());
+  EXPECT_EQ(alwaysOnSchedule, terminal.minimumAirFlowTurndownSchedule().get());
+  terminal.resetMinimumAirFlowTurndownSchedule();
+  EXPECT_FALSE(terminal.minimumAirFlowTurndownSchedule());
 }

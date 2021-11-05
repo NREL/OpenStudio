@@ -234,7 +234,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_Zone) {
   ASSERT_TRUE(zoneObject);
   OptionalWorkspaceObject lightsObject = inWorkspace.addObject(IdfObject(IddObjectType::Lights));
   ASSERT_TRUE(lightsObject);
-  EXPECT_TRUE(lightsObject->setPointer(openstudio::LightsFields::ZoneorZoneListName, zoneObject->handle()));
+  EXPECT_TRUE(lightsObject->setPointer(openstudio::LightsFields::ZoneorZoneListorSpaceorSpaceListName, zoneObject->handle()));
 
   ReverseTranslator reverseTranslator;
   ASSERT_NO_THROW(reverseTranslator.translateWorkspace(inWorkspace));
@@ -457,7 +457,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_ZoneBoundaryCondition) {
   ASSERT_TRUE(osurf_b);
   OptionalSpace ospace_b = osurf_b->space();
   ASSERT_TRUE(ospace_b);
-  EXPECT_EQ("8B02A8", ospace_b->name().get());
+  EXPECT_EQ("8B02A8 Space", ospace_b->name().get());
   // confirm that surf_b has surf_a  as outside boundary object
   ASSERT_TRUE(osurf_b->adjacentSurface());
   EXPECT_EQ(osurf_a->handle(), osurf_b->adjacentSurface()->handle());
@@ -708,6 +708,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
   idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
+  idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "Yes");
 
   openstudio::WorkspaceObject epPerformancePrecisionTradeoffs = workspace.addObject(idfObject).get();
 
@@ -725,6 +726,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.useRepresentativeSurfacesforCalculations());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
@@ -734,6 +737,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   idf_zone.setName("Thermal Zone 1");
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
+  openstudio::IdfObject idf_space(openstudio::IddObjectType::Space);
+  idf_space.setName("Space 1");
+  idf_space.setString(1, "Thermal Zone 1");  // Zone Name
+
+  openstudio::WorkspaceObject epSpace = workspace.addObject(idf_space).get();
 
   openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
   {
@@ -798,7 +807,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed2 = workspace.addObject(idf_surface2).get();
 
   openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
-  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList Name
+  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList or Space or SpaceList Name
   idf_zoneProp.setString(1, "Surface 1");       // From Surface 1
   idf_zoneProp.setString(2, "Surface 2");       // To Surface 2
   idf_zoneProp.setDouble(3, 0.25);              // View Factor 1
@@ -812,7 +821,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
   ASSERT_EQ(1u, thermalZones.size());
   ThermalZone thermalZone = thermalZones[0];
-  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1");
   std::vector<Surface> surfaces = model.getModelObjects<Surface>();
   EXPECT_EQ(2u, surfaces.size());
   std::sort(surfaces.begin(), surfaces.end(), openstudio::WorkspaceObjectNameLess());
@@ -822,7 +831,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   EXPECT_EQ(1u, zoneProp.numberofViewFactors());
   std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
   ViewFactor viewFactor = viewFactors[0];
-  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1");
   EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
   EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 2");
   EXPECT_EQ(0.25, viewFactor.viewFactor());
@@ -835,6 +844,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   idf_zone.setName("Thermal Zone 1");
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
+  openstudio::IdfObject idf_space(openstudio::IddObjectType::Space);
+  idf_space.setName("Space 1");
+  idf_space.setString(1, "Thermal Zone 1");  // Zone Name
+
+  openstudio::WorkspaceObject epSpace = workspace.addObject(idf_space).get();
 
   openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
   {
@@ -868,7 +883,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
 
   openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
-  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList Name
+  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList or Space or SpaceList Name
   idf_zoneProp.setString(1, "Surface 1");       // From Surface 1
   idf_zoneProp.setString(2, "Surface 1");       // To Surface 1
   idf_zoneProp.setDouble(3, 0.25);              // View Factor 1
@@ -882,13 +897,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
   ASSERT_EQ(1u, thermalZones.size());
   ThermalZone thermalZone = thermalZones[0];
-  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1");
   std::vector<Surface> surfaces = model.getModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
   EXPECT_EQ(surface.name().get(), "Surface 1");
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
-  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1");
 
   // We allow toSurface to be equal to fromSurface
   EXPECT_EQ(1u, zoneProp.numberofViewFactors());
@@ -939,18 +954,16 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
-    ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
-    ASSERT_TRUE(_zone2);
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_TRUE(_space1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::SpaceType>().size());
     openstudio::model::SpaceType spaceType1 = model.getModelObjects<openstudio::model::SpaceType>()[0];
@@ -982,22 +995,20 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     // This time we should have gotten one warning that the SpaceType is overriden
     EXPECT_EQ(1u, reverseTranslator.warnings().size());
-    EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2'", reverseTranslator.warnings()[0].logMessage());
+    EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2 Space'", reverseTranslator.warnings()[0].logMessage());
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 =
-      model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString() + " Thermal Zone");
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
-    ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
-    ASSERT_TRUE(_zone2);
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_TRUE(_space1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::SpaceType>().size());
     boost::optional<openstudio::model::SpaceType> _spaceType1 = model.getModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());
@@ -1114,8 +1125,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idfObject2).get();
 
-  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneName, epZone.handle()));
-  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneorSpaceName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneorSpaceName, epZone.handle()));
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));

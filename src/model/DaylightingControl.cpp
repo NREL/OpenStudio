@@ -418,9 +418,9 @@ namespace model {
       Transformation transformation = Transformation::rotation(rotationAxis, angle);
       EulerAngles eulerAngles = transformation.eulerAngles();
 
-      this->setPsiRotationAroundXAxis(eulerAngles.psi());
-      this->setThetaRotationAroundYAxis(eulerAngles.theta());
-      this->setPhiRotationAroundZAxis(eulerAngles.phi());
+      this->setPsiRotationAroundXAxis(radToDeg(eulerAngles.psi()));
+      this->setThetaRotationAroundYAxis(radToDeg(eulerAngles.theta()));
+      this->setPhiRotationAroundZAxis(radToDeg(eulerAngles.phi()));
 
       return true;
     }

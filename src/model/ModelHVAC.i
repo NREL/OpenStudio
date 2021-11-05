@@ -40,6 +40,8 @@
   %ignore openstudio::model::ControllerOutdoorAir::airflowNetworkOutdoorAirflow;
   %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct;
   %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::HeatExchangerDesiccantBalancedFlow::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::HeatExchangerDesiccantBalancedFlow::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::Node::getAirflowNetworkDistributionNode;
   %ignore openstudio::model::Node::airflowNetworkDistributionNode;
   %ignore openstudio::model::ThermalZone::getAirflowNetworkZone;
@@ -95,6 +97,15 @@ class CoilCoolingDXMultiSpeed;
 }
 }
 
+%extend openstudio::model::TransitionZone {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 %ignore std::vector<openstudio::model::SupplyAirflowRatioField>::vector(size_type);
 %ignore std::vector<openstudio::model::SupplyAirflowRatioField>::resize(size_type);
 %template(SupplyAirflowRatioFieldVector) std::vector<openstudio::model::SupplyAirflowRatioField>;
@@ -118,6 +129,7 @@ MODELOBJECT_TEMPLATES(Node);
 MODELOBJECT_TEMPLATES(SizingZone);
 MODELOBJECT_TEMPLATES(SizingSystem);
 MODELOBJECT_TEMPLATES(ThermalZone);
+MODELOBJECT_TEMPLATES(TransitionZone);
 MODELOBJECT_TEMPLATES(ThermostatSetpointDualSetpoint);
 MODELOBJECT_TEMPLATES(ZoneControlContaminantController);
 MODELOBJECT_TEMPLATES(ZoneControlHumidistat);
@@ -183,9 +195,12 @@ MODELOBJECT_TEMPLATES(WaterHeaterSizing);
 MODELOBJECT_TEMPLATES(WaterUseEquipmentDefinition);
 MODELOBJECT_TEMPLATES(WaterUseEquipment);
 MODELOBJECT_TEMPLATES(HeatExchangerAirToAirSensibleAndLatent);
+MODELOBJECT_TEMPLATES(HeatExchangerDesiccantBalancedFlow);
 MODELOBJECT_TEMPLATES(HeatExchangerFluidToFluid);
 MODELOBJECT_TEMPLATES(HeatPumpWaterToWaterEquationFitCooling);
 MODELOBJECT_TEMPLATES(HeatPumpWaterToWaterEquationFitHeating);
+MODELOBJECT_TEMPLATES(HeatPumpPlantLoopEIRCooling);
+MODELOBJECT_TEMPLATES(HeatPumpPlantLoopEIRHeating);
 MODELOBJECT_TEMPLATES(ThermalStorageChilledWaterStratified);
 MODELOBJECT_TEMPLATES(ChillerAbsorptionIndirect);
 MODELOBJECT_TEMPLATES(ChillerAbsorption);
@@ -299,9 +314,12 @@ SWIG_MODELOBJECT(WaterHeaterSizing, 1);
 SWIG_MODELOBJECT(WaterUseEquipmentDefinition, 1);
 SWIG_MODELOBJECT(WaterUseEquipment, 1);
 SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent, 1);
+SWIG_MODELOBJECT(HeatExchangerDesiccantBalancedFlow, 1);
 SWIG_MODELOBJECT(HeatExchangerFluidToFluid,1);
 SWIG_MODELOBJECT(HeatPumpWaterToWaterEquationFitCooling,1);
 SWIG_MODELOBJECT(HeatPumpWaterToWaterEquationFitHeating,1);
+SWIG_MODELOBJECT(HeatPumpPlantLoopEIRCooling,1);
+SWIG_MODELOBJECT(HeatPumpPlantLoopEIRHeating,1);
 SWIG_MODELOBJECT(ThermalStorageChilledWaterStratified, 1);
 SWIG_MODELOBJECT(ChillerAbsorptionIndirect, 1);
 SWIG_MODELOBJECT(ChillerAbsorption, 1);
@@ -369,9 +387,31 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
           return sc.addShadingZoneGroup(thermalZones);
         }
 
-      }
-    }
-  }
+        // Reimplemented from ModelResources.i
+        std::vector<openstudio::model::HeatExchangerDesiccantBalancedFlow> getHeatExchangerDesiccantBalancedFlows(
+            const openstudio::model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1& hxData)
+        {
+          return hxData.heatExchangerDesiccantBalancedFlows();
+        }
+
+        // DaylightingDeviceTubular, reimplemented from ModelGeometry.i
+        std::vector<TransitionZone> transitionZones(const openstudio::model::DaylightingDeviceTubular& tubular) {
+          return tubular.transitionZones();
+        }
+        bool addTransitionZone(openstudio::model::DaylightingDeviceTubular tubular, const TransitionZone& transitionZone) {
+          return tubular.addTransitionZone(transitionZone);
+        }
+
+        bool addTransitionZone(openstudio::model::DaylightingDeviceTubular tubular, const ThermalZone& zone, double length) {
+          return tubular.addTransitionZone(zone, length);
+        }
+        bool addTransitionZones(openstudio::model::DaylightingDeviceTubular tubular, const std::vector<TransitionZone>& transitionZones) {
+          return tubular.addTransitionZones(transitionZones);
+        }
+
+      } // namespace model
+    } // namespace openstudio
+  } // %inline
 #endif
 
 #if defined(SWIGCSHARP)
@@ -431,6 +471,31 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
       }
       public bool addShadingZoneGroup(ThermalZoneVector thermalZones) {
         return OpenStudio.OpenStudioModelHVAC.addShadingZoneGroup(this, thermalZones);
+      }
+    }
+
+    public partial class HeatExchangerDesiccantBalancedFlowPerformanceDataType1 : ResourceObject {
+      public HeatExchangerDesiccantBalancedFlowVector heatExchangerDesiccantBalancedFlows() {
+        return OpenStudio.OpenStudioModelHVAC.getHeatExchangerDesiccantBalancedFlows(this);
+      }
+    }
+
+    public partial class DaylightingDeviceTubular : ModelObject {
+
+      public TransitionZoneVector transitionZones(){
+        return OpenStudio.OpenStudioModelHVAC.transitionZones(this);
+      }
+
+      public bool addTransitionZone(OpenStudio.TransitionZone transitionZone) {
+        return OpenStudio.OpenStudioModelHVAC.addTransitionZone(this, transitionZone);
+      }
+
+      public bool addTransitionZone(OpenStudio.ThermalZone zone, double length) {
+        return OpenStudio.OpenStudioModelHVAC.addTransitionZone(this, zone, length);
+      }
+
+      public bool addTransitionZone(OpenStudio.TransitionZoneVector transitionZones) {
+        return OpenStudio.OpenStudioModelHVAC.addTransitionZones(this, transitionZones);
       }
     }
 

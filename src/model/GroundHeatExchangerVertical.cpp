@@ -74,10 +74,6 @@ namespace model {
       return GroundHeatExchangerVertical::iddObjectType();
     }
 
-    boost::optional<double> GroundHeatExchangerVertical_Impl::maximumFlowRate() const {
-      return getDouble(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate, true);
-    }
-
     boost::optional<int> GroundHeatExchangerVertical_Impl::numberofBoreHoles() const {
       return getInt(OS_GroundHeatExchanger_VerticalFields::NumberofBoreHoles, true);
     }
@@ -138,22 +134,6 @@ namespace model {
 
     bool GroundHeatExchangerVertical_Impl::isGFunctionReferenceRatioDefaulted() const {
       return isEmpty(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio);
-    }
-
-    bool GroundHeatExchangerVertical_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate) {
-      bool result(false);
-      if (maximumFlowRate) {
-        result = setDouble(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate, maximumFlowRate.get());
-      } else {
-        resetMaximumFlowRate();
-        result = true;
-      }
-      return result;
-    }
-
-    void GroundHeatExchangerVertical_Impl::resetMaximumFlowRate() {
-      bool result = setString(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate, "");
-      OS_ASSERT(result);
     }
 
     bool GroundHeatExchangerVertical_Impl::setNumberofBoreHoles(boost::optional<int> numberofBoreHoles) {
@@ -252,20 +232,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool GroundHeatExchangerVertical_Impl::setDesignFlowRate(boost::optional<double> designFlowRate) {
-      bool result(false);
-      if (designFlowRate) {
-        result = setDouble(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate, designFlowRate.get());
-      } else {
-        resetDesignFlowRate();
-        result = true;
-      }
+    bool GroundHeatExchangerVertical_Impl::setDesignFlowRate(double designFlowRate) {
+      bool result = setDouble(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate, designFlowRate);
       return result;
-    }
-
-    void GroundHeatExchangerVertical_Impl::resetDesignFlowRate() {
-      bool result = setString(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate, "");
-      OS_ASSERT(result);
     }
 
     bool GroundHeatExchangerVertical_Impl::setGroutThermalConductivity(boost::optional<double> groutThermalConductivity) {
@@ -465,7 +434,6 @@ namespace model {
     : StraightComponent(GroundHeatExchangerVertical::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::GroundHeatExchangerVertical_Impl>());
 
-    setMaximumFlowRate(0.0033);
     setNumberofBoreHoles(120);
     setBoreHoleLength(76.2);
     setBoreHoleRadius(0.635080E-01);
@@ -546,10 +514,6 @@ namespace model {
     return gFuncs;
   }
 
-  boost::optional<double> GroundHeatExchangerVertical::maximumFlowRate() const {
-    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->maximumFlowRate();
-  }
-
   boost::optional<int> GroundHeatExchangerVertical::numberofBoreHoles() const {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->numberofBoreHoles();
   }
@@ -610,14 +574,6 @@ namespace model {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->isGFunctionReferenceRatioDefaulted();
   }
 
-  bool GroundHeatExchangerVertical::setMaximumFlowRate(double maximumFlowRate) {
-    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setMaximumFlowRate(maximumFlowRate);
-  }
-
-  void GroundHeatExchangerVertical::resetMaximumFlowRate() {
-    getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetMaximumFlowRate();
-  }
-
   bool GroundHeatExchangerVertical::setNumberofBoreHoles(int numberofBoreHoles) {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setNumberofBoreHoles(numberofBoreHoles);
   }
@@ -668,10 +624,6 @@ namespace model {
 
   bool GroundHeatExchangerVertical::setDesignFlowRate(double designFlowRate) {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setDesignFlowRate(designFlowRate);
-  }
-
-  void GroundHeatExchangerVertical::resetDesignFlowRate() {
-    getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetDesignFlowRate();
   }
 
   bool GroundHeatExchangerVertical::setGroutThermalConductivity(double groutThermalConductivity) {
@@ -733,6 +685,7 @@ namespace model {
   /// @cond
   GroundHeatExchangerVertical::GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl)
     : StraightComponent(std::move(impl)) {}
+
   /// @endcond
 
 }  // namespace model

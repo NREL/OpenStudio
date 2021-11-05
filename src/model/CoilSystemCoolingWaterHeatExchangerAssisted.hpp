@@ -55,6 +55,8 @@ namespace model {
     // This constructor will also create the underlying objects CoilCoolingWater and HeatExchangerAirToAirSensibleAndLatent
     explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model);
 
+    explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger);
+
     virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() {}
 
     //@}

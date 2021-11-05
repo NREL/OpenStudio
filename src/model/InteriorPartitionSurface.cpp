@@ -172,7 +172,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_InteriorPartitionSurfaceFields::NumberofVertices, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
       return result;
     }

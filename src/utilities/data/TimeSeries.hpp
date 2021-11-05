@@ -74,15 +74,15 @@ namespace detail {
 
     openstudio::Vector daysFromFirstReport() const;
 
-    double daysFromFirstReport(const unsigned& i) const;
+    double daysFromFirstReport(unsigned int i) const;
 
     std::vector<long> secondsFromFirstReport() const;
 
-    long secondsFromFirstReport(const unsigned& i) const;
+    long secondsFromFirstReport(unsigned int i) const;
 
     openstudio::Vector values() const;
 
-    double values(const unsigned& i) const;
+    double values(unsigned int i) const;
 
     const std::string units() const;
 
@@ -233,19 +233,19 @@ class UTILITIES_API TimeSeries
   openstudio::Vector daysFromFirstReport() const;
 
   /// Returns the time in days from end of the first reporting interval at index i to prevent implicit vector copy for single value
-  double daysFromFirstReport(const unsigned& i) const;
+  double daysFromFirstReport(unsigned int i) const;
 
   /// Returns the time in seconds from end of the first reporting interval
   std::vector<long> secondsFromFirstReport() const;
 
   /// Return the time in seconds from end of the first reporting interval at index i to prevent implicit vector copy for single value
-  long secondsFromFirstReport(const unsigned& i) const;
+  long secondsFromFirstReport(unsigned int i) const;
 
   /// Returns the values vector
   openstudio::Vector values() const;
 
   /// Returns the value at index i to prevent implicit vector copy for single value
-  double values(const unsigned& i) const;
+  double values(unsigned int i) const;
 
   /// Returns the series units as a standard string
   const std::string units() const;

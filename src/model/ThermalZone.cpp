@@ -111,6 +111,8 @@
 #include "AirflowNetworkZone_Impl.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -454,6 +456,16 @@ namespace model {
       return edges;
     }
 
+    std::vector<ScheduleTypeKey> ThermalZone_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ThermalZone", "Daylighting Controls Availability"));
+      }
+      return result;
+    }
+
     int ThermalZone_Impl::multiplier() const {
       boost::optional<int> value = getInt(OS_ThermalZoneFields::Multiplier, true);
       OS_ASSERT(value);
@@ -777,6 +789,21 @@ namespace model {
 
     void ThermalZone_Impl::checkDaylightingControlsAndIlluminanceMaps() {
       setDaylightingControlsAndIlluminanceMaps(this->primaryDaylightingControl(), this->secondaryDaylightingControl(), this->illuminanceMap());
+    }
+
+    boost::optional<Schedule> ThermalZone_Impl::daylightingControlsAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName);
+    }
+
+    bool ThermalZone_Impl::setDaylightingControlsAvailabilitySchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName, "ThermalZone", "Daylighting Controls Availability", schedule);
+      return result;
+    }
+
+    void ThermalZone_Impl::resetDaylightingControlsAvailabilitySchedule() {
+      bool result = setString(OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<RenderingColor> ThermalZone_Impl::renderingColor() const {
@@ -1261,7 +1288,7 @@ namespace model {
         double floorArea = space.floorArea();
         sumFloorArea += floorArea;
 
-        double numberOfPeople = space.numberOfPeople();
+        double numberOfPeople = space.numberOfPeople();  // Note: this takes Space-level and SpaceType-level people into account
         sumNumberOfPeople += numberOfPeople;
 
         double volume = space.volume();
@@ -1329,11 +1356,12 @@ namespace model {
             anyDesignSpecificationOutdoorAirSchedules = true;
           }
 
-          // compute outdoor air rates in case we need them
+          // compute outdoor air rates (m3/s) in case we need them
           double outdoorAirForPeople = numberOfPeople * thisDesignSpecificationOutdoorAir->outdoorAirFlowperPerson();
           double outdoorAirForFloorArea = floorArea * thisDesignSpecificationOutdoorAir->outdoorAirFlowperFloorArea();
           double outdoorAirRate = thisDesignSpecificationOutdoorAir->outdoorAirFlowRate();
-          double outdoorAirForVolume = volume * thisDesignSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour();
+          // ACH * volume = m3/h, divide by 3600 s/hr to get m3/s
+          double outdoorAirForVolume = volume * thisDesignSpecificationOutdoorAir->outdoorAirFlowAirChangesperHour() / 3600.0;
 
           // First check if this space uses the Maximum method and other spaces do not
           if (istringEqual("Maximum", thisDesignSpecificationOutdoorAir->outdoorAirMethod()) && anySumOutdoorAirMethod) {
@@ -1564,7 +1592,7 @@ namespace model {
 
         double outdoorAirForVolume = 0.0;
         if (sumOutdoorAirForVolume > 0 && sumVolume > 0) {
-          outdoorAirForVolume = sumOutdoorAirForVolume / sumVolume;
+          outdoorAirForVolume = 3600.0 * sumOutdoorAirForVolume / sumVolume;  // convert back to ACH
         }
 
         // make a new designSpecificationOutdoorAir
@@ -2852,6 +2880,18 @@ namespace model {
     getImpl<detail::ThermalZone_Impl>()->checkDaylightingControlsAndIlluminanceMaps();
   }
 
+  boost::optional<Schedule> ThermalZone::daylightingControlsAvailabilitySchedule() const {
+    return getImpl<detail::ThermalZone_Impl>()->daylightingControlsAvailabilitySchedule();
+  }
+
+  bool ThermalZone::setDaylightingControlsAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::ThermalZone_Impl>()->setDaylightingControlsAvailabilitySchedule(schedule);
+  }
+
+  void ThermalZone::resetDaylightingControlsAvailabilitySchedule() {
+    getImpl<detail::ThermalZone_Impl>()->resetDaylightingControlsAvailabilitySchedule();
+  }
+
   boost::optional<RenderingColor> ThermalZone::renderingColor() const {
     return getImpl<detail::ThermalZone_Impl>()->renderingColor();
   }
@@ -3203,6 +3243,27 @@ namespace model {
   /// @cond
   ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl) : HVACComponent(std::move(impl)) {}
   /// @endcond
+
+  /** This class implements a transition zone, for DaylightingDeviceTubular */
+  TransitionZone::TransitionZone(const ThermalZone& zone, double length) : m_zone(zone), m_length(length) {
+
+    if (m_length < 0) {
+      LOG_AND_THROW("Unable to create transition zone, length of " << m_length << " less than 0");
+    }
+  }
+
+  ThermalZone TransitionZone::thermalZone() const {
+    return m_zone;
+  }
+
+  double TransitionZone::length() const {
+    return m_length;
+  }
+
+  std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone) {
+    out << "thermal zone name=" << transitionZone.thermalZone().name().get() << ", length=" << transitionZone.length();
+    return out;
+  }
 
 }  // namespace model
 }  // namespace openstudio

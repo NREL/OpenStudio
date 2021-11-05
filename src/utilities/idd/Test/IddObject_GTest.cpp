@@ -84,22 +84,22 @@ TEST_F(IddFixture, IddObject_ExtensibleIndex) {
 
   ExtensibleIndex extInd(0, 0);
   unsigned ind = iddObj.index(extInd);
-  EXPECT_EQ(static_cast<unsigned>(10), ind);
+  EXPECT_EQ(static_cast<unsigned>(11), ind);
 
   extInd.field = 2;
   ind = iddObj.index(extInd);
-  EXPECT_EQ(static_cast<unsigned>(12), ind);
+  EXPECT_EQ(static_cast<unsigned>(13), ind);
 
   extInd.group = 5;
   ind = iddObj.index(extInd);
-  EXPECT_EQ(static_cast<unsigned>(27), ind);
+  EXPECT_EQ(static_cast<unsigned>(28), ind);
 
-  ind = 19;
+  ind = 20;
   extInd = iddObj.extensibleIndex(ind);
   EXPECT_EQ(static_cast<unsigned>(3), extInd.group);
   EXPECT_EQ(static_cast<unsigned>(0), extInd.field);
 
-  ind = 26;
+  ind = 27;
   extInd = iddObj.extensibleIndex(ind);
   EXPECT_EQ(static_cast<unsigned>(5), extInd.group);
   EXPECT_EQ(static_cast<unsigned>(1), extInd.field);

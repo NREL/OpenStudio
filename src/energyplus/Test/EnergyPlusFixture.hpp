@@ -56,6 +56,9 @@ class EnergyPlusFixture : public ::testing::Test
 
   REGISTER_LOGGER("EnergyPlusFixture");
 
+  static ::testing::AssertionResult checkLogMessages(int size, const std::vector<openstudio::LogMessage>& logMessages,
+                                                     const std::vector<std::string>& exclusions = {}, bool use_regex = false);
+
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
 

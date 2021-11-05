@@ -34,6 +34,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
@@ -63,9 +64,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump) {
 
   ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   pthp.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
@@ -96,9 +99,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
 
   ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   pthp.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
@@ -129,9 +134,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
 
   ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   pthp.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);

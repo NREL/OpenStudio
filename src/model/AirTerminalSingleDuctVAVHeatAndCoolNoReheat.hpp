@@ -71,6 +71,8 @@ namespace model {
 
     double zoneMinimumAirFlowFraction() const;
 
+    boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -84,6 +86,10 @@ namespace model {
     void autosizeMaximumAirFlowRate();
 
     bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
+
+    bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+    void resetMinimumAirFlowTurndownSchedule();
 
     //@}
     /** @name Other */

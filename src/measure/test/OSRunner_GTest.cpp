@@ -33,6 +33,7 @@
 #include "../OSRunner.hpp"
 #include "../OSMeasure.hpp"
 #include "../ModelMeasure.hpp"
+#include "../OSArgument.hpp"
 
 #include "../../model/Model.hpp"
 
@@ -90,4 +91,38 @@ TEST_F(MeasureFixture, OSRunner_StdOut) {
   EXPECT_EQ("Standard Output\n", step.result()->stdOut().get());
   ASSERT_TRUE(step.result()->stdErr());
   EXPECT_EQ("Standard Error\n", step.result()->stdErr().get());
+}
+
+TEST_F(MeasureFixture, OSRunner_getOptionalBoolArgumentValue) {
+
+  WorkflowJSON workflow;
+  OSRunner runner(workflow);
+
+  constexpr bool required = false;
+  constexpr auto arg_name = "heat_pump_is_ducted";
+
+  std::vector<boost::optional<bool>> tests{
+    boost::optional<bool>(),
+    boost::optional<bool>(true),
+    boost::optional<bool>(false),
+  };
+
+  for (const auto& test : tests) {
+    std::vector<OSArgument> argumentVector;
+    OSArgument boolArgument = OSArgument::makeBoolArgument(arg_name, required);
+    if (test.has_value()) {
+      boolArgument.setValue(test.get());
+    }
+    argumentVector.push_back(boolArgument);
+
+    std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
+
+    boost::optional<bool> result_ = runner.getOptionalBoolArgumentValue(arg_name, argumentMap);
+    if (!test.has_value()) {
+      EXPECT_FALSE(result_.has_value());
+    } else {
+      ASSERT_TRUE(result_.has_value());
+      EXPECT_EQ(test.get(), result_.get());
+    }
+  }
 }

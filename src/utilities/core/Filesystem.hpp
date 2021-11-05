@@ -74,6 +74,7 @@ namespace filesystem {
   using boost::filesystem::is_regular_file;
   using boost::filesystem::is_symlink;
   using boost::filesystem::last_write_time;
+  using boost::filesystem::relative;
   using boost::filesystem::remove;
   using boost::filesystem::remove_all;
   using boost::filesystem::file_size;

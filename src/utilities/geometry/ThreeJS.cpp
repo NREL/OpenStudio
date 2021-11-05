@@ -75,6 +75,8 @@ std::string getObjectThreeMaterialName(const std::string& iddObjectType, const s
     result = "Construction_" + name;
   } else if (istringEqual(iddObjectType, "OS:ThermalZone")) {
     result = "ThermalZone_" + name;
+  } else if (istringEqual(iddObjectType, "OS:AirLoopHVAC")) {
+    result = "AirLoopHVAC_" + name;
   } else if (istringEqual(iddObjectType, "OS:SpaceType")) {
     result = "SpaceType_" + name;
   } else if (istringEqual(iddObjectType, "OS:BuildingStory")) {
@@ -712,6 +714,9 @@ ThreeUserData::ThreeUserData(const Json::Value& value) {
   assertType(value, "windExposure", Json::stringValue);
   assertType(value, "illuminanceSetpoint", Json::realValue);
   assertType(value, "airWall", Json::booleanValue);
+  assertType(value, "airLoopHVACNames", Json::arrayValue);
+  assertType(value, "airLoopHVACHandles", Json::arrayValue);
+  assertType(value, "airLoopHVACMaterialNames", Json::arrayValue);
   //assertType(value, "belowFloorPlenum", Json::booleanValue);
   //assertType(value, "aboveCeilingPlenum", Json::booleanValue);
 
@@ -754,6 +759,16 @@ ThreeUserData::ThreeUserData(const Json::Value& value) {
   m_windExposure = value.get("windExposure", "").asString();
   m_illuminanceSetpoint = value.get("illuminanceSetpoint", 0.0).asDouble();
   m_airWall = value.get("airWall", false).asBool();
+  Json::Value airLoopNames = value.get("airLoopHVACNames", Json::arrayValue);
+  Json::Value airLoopHandles = value.get("airLoopHVACHandles", Json::arrayValue);
+  Json::Value airLoopMaterialNames = value.get("airLoopHVACMaterialNames", Json::arrayValue);
+  // OS_ASSERT(airLoopNames.size() == airLoopHandles.size());
+  // OS_ASSERT(airLoopNames.size() == airLoopMaterialNames.size());
+  for (Json::ArrayIndex loopIdx = 0; loopIdx < airLoopNames.size(); ++loopIdx) {
+    m_airLoopHVACNames.push_back(airLoopNames[loopIdx].asString());
+    m_airLoopHVACHandles.push_back(airLoopHandles[loopIdx].asString());
+    m_airLoopHVACMaterialNames.push_back(airLoopMaterialNames[loopIdx].asString());
+  }
   //m_belowFloorPlenum = value.get("belowFloorPlenum", "").asBool();
   //m_aboveCeilingPlenum = value.get("aboveCeilingPlenum", "").asBool();
 }
@@ -799,6 +814,25 @@ Json::Value ThreeUserData::toJsonValue() const {
   result["windExposure"] = m_windExposure;
   result["illuminanceSetpoint"] = m_illuminanceSetpoint;
   result["airWall"] = m_airWall;
+
+  Json::Value airLoopHVACNames(Json::arrayValue);
+  for (const auto& airLoopName : m_airLoopHVACNames) {
+    airLoopHVACNames.append(airLoopName);
+  }
+  result["airLoopHVACNames"] = airLoopHVACNames;
+
+  Json::Value airLoopHVACHandles(Json::arrayValue);
+  for (const auto& airLoopHandle : m_airLoopHVACHandles) {
+    airLoopHVACHandles.append(airLoopHandle);
+  }
+  result["airLoopHVACHandles"] = airLoopHVACHandles;
+
+  Json::Value airLoopHVACMaterialNames(Json::arrayValue);
+  for (const auto& airLoopHVACMaterialName : m_airLoopHVACMaterialNames) {
+    airLoopHVACMaterialNames.append(airLoopHVACMaterialName);
+  }
+  result["airLoopHVACMaterialNames"] = airLoopHVACMaterialNames;
+
   //result["belowFloorPlenum"] = m_belowFloorPlenum;
   //result["aboveCeilingPlenum"] = m_aboveCeilingPlenum;
 
@@ -959,6 +993,18 @@ double ThreeUserData::illuminanceSetpoint() const {
 
 bool ThreeUserData::airWall() const {
   return m_airWall;
+}
+
+std::vector<std::string> ThreeUserData::airLoopHVACNames() const {
+  return m_airLoopHVACNames;
+}
+
+std::vector<std::string> ThreeUserData::airLoopHVACHandles() const {
+  return m_airLoopHVACHandles;
+}
+
+std::vector<std::string> ThreeUserData::airLoopHVACMaterialNames() const {
+  return m_airLoopHVACMaterialNames;
 }
 
 //bool ThreeUserData::plenum() const
@@ -1130,6 +1176,18 @@ void ThreeUserData::setIlluminanceSetpoint(double d) {
 
 void ThreeUserData::setAirWall(bool b) {
   m_airWall = b;
+}
+
+void ThreeUserData::addAirLoopHVACName(const std::string& s) {
+  m_airLoopHVACNames.push_back(s);
+}
+
+void ThreeUserData::addAirLoopHVACHandle(const std::string& s) {
+  m_airLoopHVACHandles.push_back(s);
+}
+
+void ThreeUserData::addAirLoopHVACMaterialName(const std::string& s) {
+  m_airLoopHVACMaterialNames.push_back(s);
 }
 
 //void ThreeUserData::setBelowFloorPlenum(bool v)

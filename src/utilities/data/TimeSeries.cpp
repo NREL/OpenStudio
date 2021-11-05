@@ -479,7 +479,7 @@ namespace detail {
   }
 
   /// time in days from end of the first reporting interval at index i
-  double TimeSeries_Impl::daysFromFirstReport(const unsigned& i) const {
+  double TimeSeries_Impl::daysFromFirstReport(unsigned int i) const {
     double value = m_outOfRangeValue;
     if (i < m_secondsFromFirstReport.size()) {
       value = Time(0, 0, 0, m_secondsFromFirstReport[i]).totalDays();
@@ -493,7 +493,7 @@ namespace detail {
   }
 
   /// time in seconds from end of the first reporting interval at index i
-  long TimeSeries_Impl::secondsFromFirstReport(const unsigned& i) const {
+  long TimeSeries_Impl::secondsFromFirstReport(unsigned int i) const {
     //double value = m_outOfRangeValue; // JWD: Shouldn't the out of range value be for values only?
     long value = 0;
     if (i < m_secondsFromFirstReport.size()) {
@@ -508,7 +508,7 @@ namespace detail {
   }
 
   /// values at index i
-  double TimeSeries_Impl::values(const unsigned& i) const {
+  double TimeSeries_Impl::values(unsigned int i) const {
     double value = m_outOfRangeValue;
     if (i < m_values.size()) {
       value = m_values[i];
@@ -865,7 +865,7 @@ openstudio::Vector TimeSeries::daysFromFirstReport() const {
   return m_impl->daysFromFirstReport();
 }
 
-double TimeSeries::daysFromFirstReport(const unsigned& i) const {
+double TimeSeries::daysFromFirstReport(unsigned int i) const {
   return m_impl->daysFromFirstReport(i);
 }
 
@@ -873,7 +873,7 @@ std::vector<long> TimeSeries::secondsFromFirstReport() const {
   return m_impl->secondsFromFirstReport();
 }
 
-long TimeSeries::secondsFromFirstReport(const unsigned& i) const {
+long TimeSeries::secondsFromFirstReport(unsigned int i) const {
   return m_impl->secondsFromFirstReport(i);
 }
 
@@ -881,7 +881,7 @@ openstudio::Vector TimeSeries::values() const {
   return m_impl->values();
 }
 
-double TimeSeries::values(const unsigned& i) const {
+double TimeSeries::values(unsigned int i) const {
   return m_impl->values(i);
 }
 

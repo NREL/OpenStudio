@@ -31,6 +31,8 @@
 
 #include <resources.hxx>
 
+#include <regex>
+
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
@@ -77,6 +79,36 @@ void EnergyPlusFixture::SetUpTestSuite() {
 
 void EnergyPlusFixture::TearDownTestSuite() {
   logFile->disable();
+}
+
+::testing::AssertionResult EnergyPlusFixture::checkLogMessages(int size, const std::vector<openstudio::LogMessage>& logMessages,
+                                                               const std::vector<std::string>& exclusions, bool use_regex) {
+  std::stringstream ss;
+  int filtered_size = 0;
+  for (const auto& logMessage : logMessages) {
+    auto logMessageStr = logMessage.logMessage();
+    bool match_found = false;
+    for (const std::string& exclusion : exclusions) {
+      if (use_regex) {
+        match_found = std::regex_match(logMessageStr, std::regex(exclusion));
+      } else {
+        match_found = logMessageStr.find(exclusion) != std::string::npos;
+      }
+      if (match_found) {
+        break;
+      }
+    }
+    if (!match_found) {
+      ++filtered_size;
+      ss << " * " << filtered_size << ": '" << logMessageStr << "'\n";
+    }
+  }
+
+  if (size == filtered_size) {
+    return ::testing::AssertionSuccess();
+  } else {
+    return ::testing::AssertionFailure() << "Expected " << size << " warnings but got " << filtered_size << ":\n" << ss.str();
+  }
 }
 
 // static variables

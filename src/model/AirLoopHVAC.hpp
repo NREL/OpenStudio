@@ -267,7 +267,7 @@ namespace model {
    *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,
    *  can be an air terminal, AirLoopHVACSupplyPlenum, or airLoopHVACReturnPlenum.
    **/
-    bool addBranchForHVACComponent(HVACComponent hvacComponent);
+    bool addBranchForHVACComponent(HVACComponent& hvacComponent);
 
     /** Removes the Zone identified by zoneLabel from the air loop and returns true
    * upon successful removal.

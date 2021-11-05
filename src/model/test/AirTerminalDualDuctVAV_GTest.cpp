@@ -39,6 +39,9 @@
 #include "../Node_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -60,7 +63,8 @@ TEST_F(ModelFixture, AirTerminalDualDuctVAV) {
     Model m;
     AirTerminalDualDuctVAV terminal(m);
 
-    AirLoopHVAC airLoopHVAC(m);
+    AirLoopHVAC airLoopHVAC(m, true);
+    ASSERT_TRUE(airLoopHVAC.isDualDuct());
     {
       auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
       EXPECT_EQ(1u, t_zoneSplitters.size());
@@ -80,7 +84,8 @@ TEST_F(ModelFixture, AirTerminalDualDuctVAV) {
     Model m;
     AirTerminalDualDuctVAV terminal(m);
 
-    AirLoopHVAC airLoopHVAC(m);
+    AirLoopHVAC airLoopHVAC(m, true);
+    ASSERT_TRUE(airLoopHVAC.isDualDuct());
     {
       auto t_zoneSplitters = airLoopHVAC.zoneSplitters();
       EXPECT_EQ(1u, t_zoneSplitters.size());
@@ -132,4 +137,23 @@ TEST_F(ModelFixture, AirTerminalDualDuctVAV) {
       EXPECT_EQ(2u, terminals.size());
     }
   }
+}
+
+TEST_F(ModelFixture, AirTerminalDualDuctVAV_MinimumAirFlowTurndownSchedule) {
+  Model m;
+  AirTerminalDualDuctVAV terminal(m);
+
+  ScheduleCompact alwaysOnSchedule(m);
+  alwaysOnSchedule.setName("ALWAYS_ON");
+  alwaysOnSchedule.setString(3, "Through: 12/31");
+  alwaysOnSchedule.setString(4, "For: AllDays");
+  alwaysOnSchedule.setString(5, "Until: 24:00");
+  alwaysOnSchedule.setString(6, "1");
+
+  EXPECT_FALSE(terminal.minimumAirFlowTurndownSchedule());
+  EXPECT_TRUE(terminal.setMinimumAirFlowTurndownSchedule(alwaysOnSchedule));
+  EXPECT_TRUE(terminal.minimumAirFlowTurndownSchedule());
+  EXPECT_EQ(alwaysOnSchedule, terminal.minimumAirFlowTurndownSchedule().get());
+  terminal.resetMinimumAirFlowTurndownSchedule();
+  EXPECT_FALSE(terminal.minimumAirFlowTurndownSchedule());
 }
