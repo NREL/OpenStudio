@@ -366,8 +366,8 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
   for (const auto& space : spaces) {
     std::string spaceName = space.name().value();
 
-    auto& bounds = space.boundingBox();
-    auto& surfaces = space.surfaces();
+    const auto& bounds = space.boundingBox();
+    const auto& surfaces = space.surfaces();
     for (auto& surface : surfaces) {
       std::string surfType = surface.surfaceType();
       std::string surfName = surface.name().value();
@@ -375,7 +375,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
       double tol = 0.01;
       boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
       if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
-        auto& vertices = surface.vertices();
+        const auto& vertices = surface.vertices();
 
         if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
 
@@ -390,7 +390,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
           // and the normal should be up (z should be > 0)
           auto surfType = surface.surfaceType();
           ASSERT_EQ(surfType, "RoofCeiling");
-          auto& normal = surface.outwardNormal();
+          auto normal = surface.outwardNormal();
           ASSERT_TRUE(normal.z() > 0);
 
         } else if (std::abs(vertices[0].z() - bounds.minZ().value()) <= tol) {
@@ -399,7 +399,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
           // and the normal shuld be down (z < 0)
           auto surfType = surface.surfaceType();
           ASSERT_EQ(surfType, "Floor");
-          auto& normal = surface.outwardNormal();
+          auto normal = surface.outwardNormal();
           ASSERT_TRUE(normal.z() < 0);
         }
       }
