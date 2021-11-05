@@ -18297,16 +18297,20 @@ OS:Coil:Heating:DX:MultiSpeed,
        \type integer
        \minimum 1
        \maximum 6
-  A11; \field Stage Data List
+  A11; \field Stage 1
+       \begin-extensible
        \type object-list
-       \object-list ModelObjectLists
+       \object-list CoilHeatingDXMultiSpeedStageData
 
 OS:Coil:Heating:DX:MultiSpeed:StageData,
-       \min-fields 12
+       \min-fields 13
   A1 , \field Handle
        \type handle
        \required-field
-  N1 , \field Gross Rated Heating Capacity
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference CoilHeatingDXMultiSpeedStageData
        \note Heating capacity not accounting for the effect of supply air fan heat
        \required-field
        \type real
