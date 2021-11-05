@@ -149,14 +149,53 @@ namespace model {
     /** Return the performance data for each stage. **/
     std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
 
-    /** Add a new stage after all of the existing stages **/
+    unsigned numberOfStages() const;
+
+    /*
+   * Get the index of a given CoilHeatingDXMultiSpeedStageData (1-indexed)
+   */
+    boost::optional<unsigned> stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const;
+
+    /*
+   * Add a new stage after all of the existing stages.
+   */
     bool addStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
-    /** Remove a stage **/
-    void removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
+    /*
+   * Add a new CoilHeatingDXMultiSpeedStageData to the list which a given index (1 to x).
+   * Internally calls addStage then setStageIndex, see remarks there
+   */
+    bool addStage(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index);
 
-    /** Remove all stages **/
+    /*
+   * You can shuffle the priority of a given CoilHeatingDXMultiSpeedStageData after having added it
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of stages, will reset to last
+   */
+    bool setStageIndex(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index);
+
+    /*
+   * Set all stages using a list of CoilHeatingDXMultiSpeedStageDatas
+   * Internally calls addStage, and will return the global status, but will continue trying if there are problems
+   * (eg: if you make a vector larger than the number of accepted stages, or a vector that has a stage from another model, the valid stages will be
+   * added indeed, but it'll eventually return false)
+   */
+    bool setStages(const std::vector<CoilHeatingDXMultiSpeedStageData>& stages);
+
+    /*
+   * Removes all CoilHeatingDXMultiSpeedStageDatas in this object
+   */
     void removeAllStages();
+
+    /*
+   * Remove the given CoilHeatingDXMultiSpeedStageData from this object's stages
+   */
+    bool removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
+
+    /*
+   * Remove the CoilHeatingDXMultiSpeedStageData at the given index (1-indexed)
+   */
+    bool removeStage(unsigned index);
 
     /** Creates a new equivalent duct object if an object is not already attached. */
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);

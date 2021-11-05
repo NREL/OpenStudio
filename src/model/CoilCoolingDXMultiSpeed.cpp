@@ -395,6 +395,7 @@ namespace model {
       ok = setStageIndex(stage, index);
       return ok;
     }
+
     bool CoilCoolingDXMultiSpeed_Impl::setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages) {
       // Clear the extensible groups, and redo them
       bool ok = true;
@@ -479,14 +480,23 @@ namespace model {
   CoilCoolingDXMultiSpeed::CoilCoolingDXMultiSpeed(const Model& model) : StraightComponent(CoilCoolingDXMultiSpeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilCoolingDXMultiSpeed_Impl>());
 
-    setCondenserType("AirCooled");
-    setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
-    setCrankcaseHeaterCapacity(0.0);
-    setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
-    setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
-    setBasinHeaterCapacity(0.0);
-    setBasinHeaterSetpointTemperature(2.0);
-    setFuelType("NaturalGas");
+    bool ok = true;
+    ok = setCondenserType("AirCooled");
+    OS_ASSERT(ok);
+    ok = setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
+    OS_ASSERT(ok);
+    ok = setCrankcaseHeaterCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+    OS_ASSERT(ok);
+    ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
+    OS_ASSERT(ok);
+    ok = setBasinHeaterCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setBasinHeaterSetpointTemperature(2.0);
+    OS_ASSERT(ok);
+    ok = setFuelType("NaturalGas");
+    OS_ASSERT(ok);
   }
 
   IddObjectType CoilCoolingDXMultiSpeed::iddObjectType() {
