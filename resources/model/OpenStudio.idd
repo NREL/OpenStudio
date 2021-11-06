@@ -18311,6 +18311,7 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \required-field
        \type alpha
        \reference CoilHeatingDXMultiSpeedStageData
+  N1 , \field Gross Rated Heating Capacity
        \note Heating capacity not accounting for the effect of supply air fan heat
        \required-field
        \type real
@@ -18334,25 +18335,25 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \units W/(m3/s)
        \minimum 0.0
        \maximum 1250.0
-  A2 , \field Heating Capacity Function of Temperature Curve Name
+  A3 , \field Heating Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A3 , \field Heating Capacity Function of Flow Fraction Curve Name
+  A4 , \field Heating Capacity Function of Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
-  A4 , \field Energy Input Ratio Function of Temperature Curve Name
+  A5 , \field Energy Input Ratio Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A5 , \field Energy Input Ratio Function of Flow Fraction Curve Name
+  A6 , \field Energy Input Ratio Function of Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
-  A6 , \field Part Load Fraction Correlation Curve Name
+  A7 , \field Part Load Fraction Correlation Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
@@ -18362,7 +18363,7 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \units dimensionless
        \minimum> 0.0
        \maximum 1.0
-  A7 ; \field Waste Heat Function of Temperature Curve Name
+  A8 ; \field Waste Heat Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list BivariateFunctions
