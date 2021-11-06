@@ -361,7 +361,7 @@ namespace model {
       return result;
     }
 
-    boost::optional<unsigned> CoilCoolingDXMultiSpeed_Impl::stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const {
+    boost::optional<unsigned> CoilHeatingDXMultiSpeed_Impl::stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const {
 
       boost::optional<unsigned> result;
 
@@ -402,7 +402,7 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::setStageIndex(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index) {
+    bool CoilHeatingDXMultiSpeed_Impl::setStageIndex(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index) {
       boost::optional<unsigned> idx = stageIndex(stage);
       if (!idx) {
         LOG(Warn, "For " << briefDescription() << " cannot set the index of stage " << stage.briefDescription() << " since it is not part of it.");
@@ -448,7 +448,7 @@ namespace model {
       return ok;
     }
 
-    void CoilCoolingDXMultiSpeed_Impl::removeAllStages() {
+    void CoilHeatingDXMultiSpeed_Impl::removeAllStages() {
       clearExtensibleGroups();
     }
 
@@ -462,7 +462,7 @@ namespace model {
       return removeStage(idx.get());
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::removeStage(unsigned index) {
+    bool CoilHeatingDXMultiSpeed_Impl::removeStage(unsigned index) {
       bool result = false;
       if ((index > 0) && (index <= numberOfStages())) {
         getObject<ModelObject>().eraseExtensibleGroup(index - 1);
@@ -717,7 +717,7 @@ namespace model {
   }
 
   unsigned CoilHeatingDXMultiSpeed::numberOfStages() const {
-    return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->numberOfStages();
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->numberOfStages();
   }
 
   boost::optional<unsigned> CoilHeatingDXMultiSpeed::stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const {
