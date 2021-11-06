@@ -100,7 +100,7 @@ CoilHeatingDXMultiSpeedStageData makeStage(Model& model) {
   cooling_curve_6.setMaximumValueofy(0.0);
 
   CoilHeatingDXMultiSpeedStageData stage(model, cooling_curve_1, cooling_curve_2, cooling_curve_3, cooling_curve_4, cooling_curve_5, cooling_curve_6);
-  
+
   return stage;
 }
 
