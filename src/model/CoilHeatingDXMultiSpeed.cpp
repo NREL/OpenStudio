@@ -452,7 +452,7 @@ namespace model {
       clearExtensibleGroups();
     }
 
-    void CoilHeatingDXMultiSpeed_Impl::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+    bool CoilHeatingDXMultiSpeed_Impl::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
       boost::optional<unsigned> idx = stageIndex(stage);
       if (!idx) {
         LOG(Warn, "For " << briefDescription() << " cannot remove stage " << stage.briefDescription() << " since it is not part of it.");
@@ -748,8 +748,8 @@ namespace model {
     getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeAllStages();
   }
 
-  void CoilHeatingDXMultiSpeed::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
-    getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(stage);
+  bool CoilHeatingDXMultiSpeed::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(stage);
   }
 
   bool CoilHeatingDXMultiSpeed::removeStage(unsigned index) {

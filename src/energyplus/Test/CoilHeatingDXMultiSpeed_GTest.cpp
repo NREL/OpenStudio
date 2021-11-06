@@ -81,7 +81,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_4Stages) {
   // The coil can only be wrapped in E+ in AirLoopHVAC:UnitaryHeatPump:AirToAir:Multispeed
   // In OpenStudio, you can use UnitarySystem, the FT does the job
   AirLoopHVACUnitarySystem unitary(m);
-  unitary.setCoolingCoil(coil);
+  unitary.setHeatingCoil(coil);
 
   UnitarySystemPerformanceMultispeed perf(m);
   unitary.setDesignSpecificationMultispeedObject(perf);
@@ -103,25 +103,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_4Stages) {
 
   // WorkspaceExtensibleGroup eg = idf_coil.extensibleGroups()[0] or getExtensibleGroup(0);
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(0)
-              .getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
-              .get(),
-            stage1.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
+  ASSERT_EQ(
+    idf_coil.getExtensibleGroup(0).getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName).get(),
+    stage1.heatingCapacityFunctionofTemperatureCurve().name().get());
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(1)
-              .getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
-              .get(),
-            stage2.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
+  ASSERT_EQ(
+    idf_coil.getExtensibleGroup(1).getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName).get(),
+    stage2.heatingCapacityFunctionofTemperatureCurve().name().get());
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(2)
-              .getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
-              .get(),
-            stage3.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
+  ASSERT_EQ(
+    idf_coil.getExtensibleGroup(2).getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName).get(),
+    stage3.heatingCapacityFunctionofTemperatureCurve().name().get());
 
-  ASSERT_EQ(idf_coil.getExtensibleGroup(3)
-              .getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName)
-              .get(),
-            stage4.totalCoolingCapacityFunctionofTemperatureCurve().name().get());
+  ASSERT_EQ(
+    idf_coil.getExtensibleGroup(3).getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedHeatingCapacityFunctionofTemperatureCurveName).get(),
+    stage4.heatingCapacityFunctionofTemperatureCurve().name().get());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_MinOATCompressor) {
