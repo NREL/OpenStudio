@@ -242,36 +242,46 @@ namespace energyplus {
       if ((optD = modelObject.designStorageControlChargePower())) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, optD.get());
       } else {
-        LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
-                                                  << " but you didn't specify the required 'Design Storage Control Charge Power'");
-        return boost::none;
+        if (openstudio::istringEqual("FacilityDemandLeveling", storageOperationScheme)
+            || openstudio::istringEqual("TrackChargeDischargeSchedules", storageOperationScheme)) {
+          LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+                                                    << " but you didn't specify the required 'Design Storage Control Charge Power'");
+          return boost::none;
+        }
       }
 
       // Design Storage Control Discharge Power
       if ((optD = modelObject.designStorageControlDischargePower())) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, optD.get());
       } else {
-        LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
-                                                  << " but you didn't specify the required 'Design Storage Control Discharge Power'");
-        return boost::none;
+        if (openstudio::istringEqual("FacilityDemandLeveling", storageOperationScheme)
+            || openstudio::istringEqual("TrackChargeDischargeSchedules", storageOperationScheme)) {
+          LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+                                                    << " but you didn't specify the required 'Design Storage Control Discharge Power'");
+          return boost::none;
+        }
       }
 
       // Storage Charge Power Fraction Schedule Name
       if ((schedule = modelObject.storageChargePowerFractionSchedule())) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::StorageChargePowerFractionScheduleName, schedule->name().get());
       } else {
-        LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
-                                                  << " but you didn't specify the required 'Storage Charge Power Fraction Schedule Name'");
-        return boost::none;
+        if (openstudio::istringEqual("TrackChargeDischargeSchedules", storageOperationScheme)) {
+          LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+                                                    << " but you didn't specify the required 'Storage Charge Power Fraction Schedule Name'");
+          return boost::none;
+        }
       }
 
       // Discharge Power Fraction Schedule Name
       if ((schedule = modelObject.storageDischargePowerFractionSchedule())) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::StorageDischargePowerFractionScheduleName, schedule->name().get());
       } else {
-        LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
-                                                  << " but you didn't specify the required 'Storage Discharge Power Fraction Schedule Name'");
-        return boost::none;
+        if (openstudio::istringEqual("TrackChargeDischargeSchedules", storageOperationScheme)) {
+          LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+                                                    << " but you didn't specify the required 'Storage Discharge Power Fraction Schedule Name'");
+          return boost::none;
+        }
       }
 
       /// Further testing based on storageOperationScheme
