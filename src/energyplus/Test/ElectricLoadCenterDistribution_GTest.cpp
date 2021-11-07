@@ -151,21 +151,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterDistribution_NoGen
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterDistribution_TrackFacilityElectricDemandStoreExcessOnSite) {
   // Test for #4495: ElectricLoadCenterDistribution FT has incomplete charge/discharge logic
-  
+
   Model model;
 
   ElectricLoadCenterDistribution elcd(model);
   elcd.setStorageOperationScheme("TrackFacilityElectricDemandStoreExcessOnSite");
   elcd.setDesignStorageControlChargePower(10000);
   elcd.setDesignStorageControlDischargePower(15000);
-  
+
   ElectricLoadCenterStorageLiIonNMCBattery elcs(model);
   elcd.setElectricalBussType("AlternatingCurrentWithStorage");
   elcd.setElectricalStorage(elcs);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  
+
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery).size());
 
   WorkspaceObjectVector idf_elcds(workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution));
