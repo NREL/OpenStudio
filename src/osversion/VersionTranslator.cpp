@@ -144,7 +144,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
-    m_updateMethods(VersionString("3.3.1")] = &VersionTranslator::update_3_3_0_to_3_3_1;
+    m_updateMethods[VersionString("3.3.1")] = &VersionTranslator::update_3_3_0_to_3_3_1;
     //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
@@ -6832,12 +6832,36 @@ namespace osversion {
 
       if (iddname == "OS:Coil:Heating:DX:MultiSpeed") {
 
-        // TODO: description
+        // Stage Data List becomes extensible list (Stage 1, Stage 2, etc.)
+        // ModelObjectList gets removed
 
         auto iddObject = idd_3_3_1.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
-        // TODO: translate
+        for (size_t i = 0; i < 18; ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        std::string stageDataList = object.getString(18).get();  // Stage Data List
+        std::vector<IdfObject> modelObjectLists = idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:ModelObjectList").get());
+        for (auto& modelObjectList : modelObjectLists) {
+          if (stageDataList == modelObjectList.getString(0).get()) {  // Handle
+            unsigned numStage = 1;
+            for (const IdfExtensibleGroup& eg : modelObjectList.extensibleGroups()) {
+              IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+              new_eg.setString(0, eg.getString(0).get());                     // Handle
+              new_eg.setString(1, "Coil Heating DX Multi Speed Stage Data");  // Name
+              numStage += 1;
+              for (size_t i = 1; i < eg.numFields(); ++i) {
+                new_eg.setString(i + 1, eg.getString(i).get());
+              }
+              //m_untranslated.push_back(eg);
+            }
+            m_untranslated.push_back(modelObjectList);
+          }
+        }
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
