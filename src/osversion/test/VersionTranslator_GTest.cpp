@@ -1803,3 +1803,19 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_DesignDay) {
   EXPECT_EQ("", dd.getString(17).get());         // Humidity Ratio at Maximum Dry-Bulb
   EXPECT_EQ("", dd.getString(18).get());         // Enthalpy at Maximum Dry-Bulb
 }
+
+TEST_F(OSVersionFixture, update_3_3_0_to_3_3_1_CoilHeatingDXMultiSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_1/test_vt_CoilHeatingDXMultiSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_1/test_vt_CoilHeatingDXMultiSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  // TODO
+}

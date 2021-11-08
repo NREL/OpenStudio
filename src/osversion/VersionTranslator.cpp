@@ -144,6 +144,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
+    m_updateMethods(VersionString("3.3.1")] = &VersionTranslator::update_3_3_0_to_3_3_1;
     //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
@@ -300,7 +301,8 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.1.0"));
     m_startVersions.push_back(VersionString("3.2.0"));
     m_startVersions.push_back(VersionString("3.2.1"));
-    //m_startVersions.push_back(VersionString("3.3.0"));
+    m_startVersions.push_back(VersionString("3.3.0"));
+    //m_startVersions.push_back(VersionString("3.3.1"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -6816,6 +6818,39 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_2_1_to_3_3_0
+
+  std::string VersionTranslator::update_3_3_0_to_3_3_1(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_3_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_3_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_3_1.iddFile());
+    ss << targetIdf.versionObject().get();
+    
+    for (const IdfObject& object : idf_3_3_0.objects()) {
+      auto iddname = object.iddObject().name();
+      
+      if (iddname == "OS:Coil:Heating:DX:MultiSpeed") {
+        
+        // TODO: description
+        
+        auto iddObject = idd_3_3_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+        
+        // TODO: translate
+        
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+        
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+    
+    return ss.str();
+    
+  }  // end update_3_3_0_to_3_3_1
 
 }  // namespace osversion
 }  // namespace openstudio
