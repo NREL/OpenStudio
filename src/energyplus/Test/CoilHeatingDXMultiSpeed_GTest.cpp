@@ -128,7 +128,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_MinOATCompre
 
   // Won't be translated unless assigned
   AirLoopHVACUnitarySystem unitary(m);
-  unitary.setCoolingCoil(coil);
+  unitary.setHeatingCoil(coil);
 
   UnitarySystemPerformanceMultispeed perf(m);
   unitary.setDesignSpecificationMultispeedObject(perf);
