@@ -6826,30 +6826,30 @@ namespace osversion {
     ss << idf_3_3_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_3_3_1.iddFile());
     ss << targetIdf.versionObject().get();
-    
+
     for (const IdfObject& object : idf_3_3_0.objects()) {
       auto iddname = object.iddObject().name();
-      
+
       if (iddname == "OS:Coil:Heating:DX:MultiSpeed") {
-        
+
         // TODO: description
-        
+
         auto iddObject = idd_3_3_1.getObject(iddname);
         IdfObject newObject(iddObject.get());
-        
+
         // TODO: translate
-        
+
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
-        
+
         // No-op
       } else {
         ss << object;
       }
     }
-    
+
     return ss.str();
-    
+
   }  // end update_3_3_0_to_3_3_1
 
 }  // namespace osversion
