@@ -1,4 +1,4 @@
-!IDD_Version 3.3.0
+!IDD_Version 3.3.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -18206,7 +18206,12 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \object-list QuadvariateFunctions
 
 OS:Coil:Heating:DX:MultiSpeed,
-       \min-fields 19
+       \extensible:1
+       \max-fields 22
+       \memo Direct expansion (DX) heating coil (air-to-air heat pump) and compressor unit
+       \memo (includes electric or engine-driven compressor and outdoor fan), multi-speed
+       \memo (or variable-speed), with defrost controls. Requires two to four sets
+       \memo of performance data and will interpolate between speeds.
   A1 , \field Handle
        \type handle
        \required-field
