@@ -131,7 +131,7 @@ TEST_F(ModelFixture, CoilHeatingDXMultiSpeed_Stages_API) {
 
   // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
   // IDD Default
-  EXPECT_EQ(-25.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  EXPECT_EQ(-8.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
   // There are no IDD limits, so everything should work
   EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
   EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
