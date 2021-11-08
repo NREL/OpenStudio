@@ -41,7 +41,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-CoilCoolingDXMultiSpeedStageData makeStage(Model& model) {
+CoilCoolingDXMultiSpeedStageData makeCoolingStage(Model& model) {
   CurveBiquadratic cooling_curve_1(model);
   cooling_curve_1.setCoefficient1Constant(0.766956);
   cooling_curve_1.setCoefficient2x(0.0107756);
@@ -121,10 +121,10 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API) {
   Model m;
   CoilCoolingDXMultiSpeed coil(m);
 
-  auto stage1 = makeStage(m);
+  auto stage1 = makeCoolingStage(m);
   coil.addStage(stage1);
 
-  auto stage2 = makeStage(m);
+  auto stage2 = makeCoolingStage(m);
   coil.addStage(stage2);
 
   ASSERT_EQ(2u, coil.stages().size());

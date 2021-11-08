@@ -6847,7 +6847,7 @@ namespace osversion {
         std::string stageDataList = object.getString(18).get();  // Stage Data List
         std::vector<IdfObject> modelObjectLists = idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:ModelObjectList").get());
         for (auto& modelObjectList : modelObjectLists) {
-          if (stageDataList == modelObjectList.getString(0).get()) {  // Handle
+          if (stageDataList == toString(modelObjectList.handle())) {  // Handle
             unsigned numStage = 1;
             for (const IdfExtensibleGroup& eg : modelObjectList.extensibleGroups()) {
               IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
