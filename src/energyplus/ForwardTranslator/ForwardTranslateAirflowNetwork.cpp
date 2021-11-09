@@ -403,6 +403,16 @@ namespace energyplus {
     return idfObject;
   }
 
+  boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSpecifiedFlowRate(AirflowNetworkSpecifiedFlowRate& modelObject) {
+    IdfObject idfObject(IddObjectType::AirflowNetwork_MultiZone_SpecifiedFlowRate);
+
+    m_idfObjects.push_back(idfObject);
+
+    idfObject.setString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::Name, modelObject.nameString());
+
+    return idfObject;
+  }
+
   boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkZoneExhaustFan(AirflowNetworkZoneExhaustFan& modelObject) {
     IdfObject idfObject(IddObjectType::AirflowNetwork_MultiZone_Component_ZoneExhaustFan);
 

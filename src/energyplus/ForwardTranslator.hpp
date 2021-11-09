@@ -56,6 +56,7 @@ namespace model {
   class AirflowNetworkDetailedOpening;
   class AirflowNetworkSimpleOpening;
   class AirflowNetworkHorizontalOpening;
+  class AirflowNetworkSpecifiedFlowRate;
   class AirflowNetworkZoneExhaustFan;
   class AirflowNetworkExternalNode;
   class AirflowNetworkDistributionNode;
@@ -590,6 +591,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateAirflowNetworkSimpleOpening(model::AirflowNetworkSimpleOpening& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkHorizontalOpening(model::AirflowNetworkHorizontalOpening& modelObject);
+
+    boost::optional<IdfObject> translateAirflowNetworkSpecifiedFlowRate(model::AirflowNetworkSpecifiedFlowRate& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkZoneExhaustFan(model::AirflowNetworkZoneExhaustFan& modelObject);
 
