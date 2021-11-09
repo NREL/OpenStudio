@@ -59,6 +59,8 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    static std::vector<std::string> validAirFlowUnitsValues();
+
     /** @name Getters */
     //@{
     /** Returns the air flow value. */

@@ -111,6 +111,10 @@ namespace model {
     return IddObjectType(IddObjectType::OS_AirflowNetworkSpecifiedFlowRate);
   }
 
+  std::vector<std::string> AirflowNetworkSpecifiedFlowRate::validAirFlowUnitsValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_AirFlowNetworkSpecifiedFlowRateFields::AirFlowUnits);
+  }
+
   double AirflowNetworkSpecifiedFlowrate::airFlowValue() const {
     return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->airFlowValue();
   }
