@@ -6824,5 +6824,9 @@ namespace osversion {
 
   }  // end update_3_2_1_to_3_3_0
 
+  /*   std::string VersionTranslator::update_3_3_0_to_3_3_1(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_3_1) {
+    
+  }  // end update_3_3_0_to_3_3_1 */
+
 }  // namespace osversion
 }  // namespace openstudio
