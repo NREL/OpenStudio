@@ -409,6 +409,8 @@ namespace energyplus {
     m_idfObjects.push_back(idfObject);
 
     idfObject.setString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::Name, modelObject.nameString());
+    idfObject.setDouble(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowValue, modelObject.airFlowValue());
+    idfObject.setString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowUnits, modelObject.airFlowUnits());
 
     return idfObject;
   }
