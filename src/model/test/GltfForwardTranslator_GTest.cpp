@@ -50,13 +50,34 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
-
   GltfForwardTranslator ft;
-  openstudio::path out;
-
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/exampleModel_3rd.gltf");
   Model model = exampleModel();
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
+  //model.save(resourcesPath() / toPath("model/example_updated.osm"), true);
+  bool result = ft.modelToGLTF(model, true,output);
+  ASSERT_TRUE(result);
+}
 
+TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
+  GltfForwardTranslator ft;
+  openstudio::path input;
+  input = resourcesPath() / toPath("utilities/Geometry/minimal_GLTF_File.gltf");
+  bool result = ft.loadGLTF(input);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  openstudio::path output_2;
+  output = resourcesPath() / toPath("utilities/Geometry/triangle.gltf");
+  output_2 = resourcesPath() / toPath("utilities/Geometry/triangle_2.gltf");
+  bool result = ft.CreateTriangleGLTF(output);
+  ASSERT_TRUE(result);
+  bool result_2 = ft.CreateTriangleGLTF_2(output_2);
+  ASSERT_TRUE(result_2);
 }
 
 
