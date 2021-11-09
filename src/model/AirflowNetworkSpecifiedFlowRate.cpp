@@ -48,13 +48,13 @@ namespace model {
     }
 
     AirflowNetworkSpecifiedFlowRate_Impl::AirflowNetworkSpecifiedFlowRate_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                     Model_Impl* model, bool keepHandle)
+                                                                               Model_Impl* model, bool keepHandle)
       : AirflowNetworkComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == AirflowNetworkSpecifiedFlowRate::iddObjectType());
     }
 
-    AirflowNetworkSpecifiedFlowRate_Impl::AirflowNetworkSpecifiedFlowRate_Impl(const AirflowNetworkSpecifiedFlowRate_Impl& other,
-                                                                                     Model_Impl* model, bool keepHandle)
+    AirflowNetworkSpecifiedFlowRate_Impl::AirflowNetworkSpecifiedFlowRate_Impl(const AirflowNetworkSpecifiedFlowRate_Impl& other, Model_Impl* model,
+                                                                               bool keepHandle)
       : AirflowNetworkComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& AirflowNetworkSpecifiedFlowRate_Impl::outputVariableNames() const {
@@ -66,24 +66,16 @@ namespace model {
       return AirflowNetworkSpecifiedFlowRate::iddObjectType();
     }
 
-
-
   }  // namespace detail
 
   AirflowNetworkSpecifiedFlowRate::AirflowNetworkSpecifiedFlowRate(const Model& model)
     : AirflowNetworkComponent(AirflowNetworkSpecifiedFlowRate::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>());
-
-
   }
-
-
 
   IddObjectType AirflowNetworkSpecifiedFlowRate::iddObjectType() {
     return IddObjectType(IddObjectType::OS_AirflowNetworkSpecifiedFlowRate);
   }
-
-
 
   /// @cond
   AirflowNetworkSpecifiedFlowRate::AirflowNetworkSpecifiedFlowRate(std::shared_ptr<detail::AirflowNetworkSpecifiedFlowRate_Impl> impl)

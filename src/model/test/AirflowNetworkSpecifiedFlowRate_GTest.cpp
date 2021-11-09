@@ -41,5 +41,4 @@ TEST_F(ModelFixture, AirflowNetwork_SpecifiedFlowRate) {
   Model model;
 
   AirflowNetworkSpecifiedFlowRate sfr0(model, 10.0);
-
 }

@@ -53,7 +53,6 @@ namespace model {
 
     AirflowNetworkSpecifiedFlowRate(const Model& model);
 
-
     virtual ~AirflowNetworkSpecifiedFlowRate() {}
 
     //@}
@@ -63,11 +62,9 @@ namespace model {
     /** @name Getters */
     //@{
 
-
     //@}
     /** @name Setters */
     //@{
-
 
     //@}
    protected:
