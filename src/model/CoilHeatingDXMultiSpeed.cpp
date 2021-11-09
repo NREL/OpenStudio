@@ -541,7 +541,8 @@ namespace model {
     auto always_on = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(always_on);
     OS_ASSERT(ok);
-    setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-8.0);
+    ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-8.0);
+    OS_ASSERT(ok);
     ok = setCrankcaseHeaterCapacity(0.0);
     OS_ASSERT(ok);
     ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
@@ -555,7 +556,8 @@ namespace model {
     ok = setDefrostTimePeriodFraction(0.058333);
     OS_ASSERT(ok);
     autosizeResistiveDefrostHeaterCapacity();
-    setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
+    ok = setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
+    OS_ASSERT(ok);
     ok = setFuelType("NaturalGas");
     OS_ASSERT(ok);
     ok = setRegionnumberforCalculatingHSPF(4);

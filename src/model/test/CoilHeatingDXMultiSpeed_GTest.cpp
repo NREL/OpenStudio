@@ -268,5 +268,5 @@ TEST_F(ModelFixture, CoilHeatingDXMultiSpeed_Remove) {
   coil.remove();
 
   auto curves = m.getModelObjects<model::Curve>();
-  EXPECT_EQ(2u + curves.size(), m.modelObjects().size());
+  EXPECT_EQ(2u + curves.size(), m.modelObjects().size());  // Always On Discrete, OnOff
 }
