@@ -35165,6 +35165,30 @@ OS:AirflowNetworkEffectiveLeakageArea,
       \maximum 1.0
       \note Enter the exponent used in the air mass flow equation.
 
+OS:AirflowNetworkSpecifiedFlowRate,
+      \min-fields 3
+      \memo This object is used to define specified flow through a linkage.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference SurfaceAirflowLeakageNames
+      \note Enter a unique name for this object.
+  N1, \field Air Flow Value
+      \required-field
+      \type real
+      \note Enter the specified flow rate.
+  A3; \field Air Flow Units
+      \type choice
+      \key VolumetricFlow
+      \key MassFlow
+      \default MassFlow
+      \note Enter the units of the air flow value.
+      \note VolumetricFlow (m3/s)
+      \note MassFlow (kg/s)
+
 OS:AirflowNetworkDetailedOpening,
       \min-fields 17
       \extensible:5
