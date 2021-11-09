@@ -65,9 +65,21 @@ namespace model {
       /** @name Getters */
       //@{
 
+      double airFlowValue() const;
+
+      std::string airFlowUnits() const;
+
+      bool isAirFlowUnitsDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
+
+      bool setAirFlowValue(double airFlowValue);
+
+      bool setAirFlowUnits(std::string airFlowUnits);
+
+      void resetAirFlowUnits();
 
       //@}
       /** @name Other */

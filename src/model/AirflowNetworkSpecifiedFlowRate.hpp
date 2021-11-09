@@ -50,8 +50,8 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-
-    AirflowNetworkSpecifiedFlowRate(const Model& model);
+    /** Construct a specified flow rate object with default values and a specified effective leakage area. */
+    AirflowNetworkSpecifiedFlowRate(const Model& model, double airFlowValue);
 
     virtual ~AirflowNetworkSpecifiedFlowRate() {}
 
@@ -61,10 +61,22 @@ namespace model {
 
     /** @name Getters */
     //@{
+    /** Returns the air flow value. */
+    double airFlowValue() const;
+    /** Returns the air flow units. */
+    std::string airFlowUnits() const;
+    /** Returns true if the air flow units is defaulted. */
+    bool isAirFlowUnitsDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
+    /** Sets the air flow value. */
+    bool setAirFlowValue(double airFlowValue);
+    /** Sets the air flow units. */
+    bool setAirFlowUnits(std::string airFlowUnits);
+    /** Returns the air flow units to the default value. */
+    void resetAirFlowUnits();
 
     //@}
    protected:

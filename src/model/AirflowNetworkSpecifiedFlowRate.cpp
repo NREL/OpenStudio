@@ -66,15 +66,73 @@ namespace model {
       return AirflowNetworkSpecifiedFlowRate::iddObjectType();
     }
 
+    double AirflowNetworkSpecifiedFlowrate_Impl::airFlowValue() const {
+      boost::optional<double> value = getDouble(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowValue, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string AirflowNetworkSpecifiedFlowrate_Impl::airFlowUnits() const {
+      boost::optional<std::string> value = getDouble(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkSpecifiedFlowrate_Impl::isAirFlowUnitsDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits);
+    }
+
+    bool AirflowNetworkSpecifiedFlowrate_Impl::setAirFlowValue(double airFlowValue) {
+      bool result = setDouble(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowValue, airFlowValue);
+      return result;
+    }
+
+    bool AirflowNetworkSpecifiedFlowrate_Impl::setAirFlowUnits(std::string airFlowUnits) {
+      bool result = setString(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, airFlowUnits);
+      return result;
+    }
+
+    void AirflowNetworkSpecifiedFlowrate_Impl::resetAirFlowUnits() {
+      bool result = setString(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
-  AirflowNetworkSpecifiedFlowRate::AirflowNetworkSpecifiedFlowRate(const Model& model)
+  AirflowNetworkSpecifiedFlowRate::AirflowNetworkSpecifiedFlowRate(const Model& model, double airFlowValue)
     : AirflowNetworkComponent(AirflowNetworkSpecifiedFlowRate::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>());
+
+    bool ok = setAirFlowValue(airFlowValue);
+    OS_ASSERT(ok);
   }
 
   IddObjectType AirflowNetworkSpecifiedFlowRate::iddObjectType() {
     return IddObjectType(IddObjectType::OS_AirflowNetworkSpecifiedFlowRate);
+  }
+
+  double AirflowNetworkSpecifiedFlowrate::airFlowValue() const {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->airFlowValue();
+  }
+
+  std::string AirflowNetworkSpecifiedFlowrate::airFlowUnits() const {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->airFlowUnits();
+  }
+
+  bool AirflowNetworkSpecifiedFlowrate::isAirFlowUnitsDefaulted() const {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->isAirFlowUnitsDefaulted();
+  }
+
+  bool AirflowNetworkSpecifiedFlowrate::setAirFlowValue(double airFlowValue) {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->setAirFlowValue(airFlowValue);
+  }
+
+  bool AirflowNetworkSpecifiedFlowrate::setAirFlowUnits(std::string airFlowUnits) {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->setAirFlowUnits(airFlowUnits);
+  }
+
+  void AirflowNetworkSpecifiedFlowrate::resetAirFlowUnits() {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->resetAirFlowUnits();
   }
 
   /// @cond
