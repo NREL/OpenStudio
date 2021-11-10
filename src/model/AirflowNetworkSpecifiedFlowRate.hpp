@@ -76,7 +76,7 @@ namespace model {
     /** Sets the air flow value. */
     bool setAirFlowValue(double airFlowValue);
     /** Sets the air flow units. */
-    bool setAirFlowUnits(std::string airFlowUnits);
+    bool setAirFlowUnits(const std::string& airFlowUnits);
     /** Returns the air flow units to the default value. */
     void resetAirFlowUnits();
 

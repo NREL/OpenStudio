@@ -89,7 +89,7 @@ namespace model {
       return result;
     }
 
-    bool AirflowNetworkSpecifiedFlowRate_Impl::setAirFlowUnits(std::string airFlowUnits) {
+    bool AirflowNetworkSpecifiedFlowRate_Impl::setAirFlowUnits(const std::string& airFlowUnits) {
       bool result = setString(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, airFlowUnits);
       return result;
     }
@@ -133,7 +133,7 @@ namespace model {
     return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->setAirFlowValue(airFlowValue);
   }
 
-  bool AirflowNetworkSpecifiedFlowRate::setAirFlowUnits(std::string airFlowUnits) {
+  bool AirflowNetworkSpecifiedFlowRate::setAirFlowUnits(const std::string& airFlowUnits) {
     return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->setAirFlowUnits(airFlowUnits);
   }
 

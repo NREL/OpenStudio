@@ -77,7 +77,7 @@ namespace model {
 
       bool setAirFlowValue(double airFlowValue);
 
-      bool setAirFlowUnits(std::string airFlowUnits);
+      bool setAirFlowUnits(const std::string& airFlowUnits);
 
       void resetAirFlowUnits();
 
