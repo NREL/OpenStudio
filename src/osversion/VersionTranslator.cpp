@@ -6849,20 +6849,26 @@ namespace osversion {
 
         std::string stageDataList = object.getString(18).get();  // Stage Data List
         std::vector<IdfObject> modelObjectLists = idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:ModelObjectList").get());
+        std::vector<IdfObject> stageDatas =
+          idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:Coil:Heating:DX:MultiSpeed:StageData").get());
         for (auto& modelObjectList : modelObjectLists) {
-          if (stageDataList == toString(modelObjectList.handle())) {  // Handle
+          if (stageDataList == modelObjectList.getString(0).get()) {  // Stage Data List == Handle
             unsigned numStage = 1;
             for (const IdfExtensibleGroup& eg : modelObjectList.extensibleGroups()) {
-              IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+              IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();    // new OS:Coil:Heating:DX:MultiSpeed:StageData
               new_eg.setString(0, eg.getString(0).get());                     // Handle
               new_eg.setString(1, "Coil Heating DX Multi Speed Stage Data");  // Name
               numStage += 1;
               for (size_t i = 1; i < eg.numFields(); ++i) {
                 new_eg.setString(i + 1, eg.getString(i).get());
               }
-              //m_untranslated.push_back(eg);
+              for (auto& stageData : stageDatas) {
+                if (stageData.getString(0).get() == eg.getString(0).get()) {
+                  m_untranslated.push_back(stageData);  // original OS:Coil:Heating:DX:MultiSpeed:StageData
+                }
+              }
             }
-            m_untranslated.push_back(modelObjectList);
+            m_untranslated.push_back(modelObjectList);  // original OS:ModelObjectList
           }
         }
 
