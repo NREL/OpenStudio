@@ -30,6 +30,8 @@
 #include "AirflowNetworkSpecifiedFlowRate.hpp"
 #include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
+
 #include <utilities/idd/OS_AirflowNetworkSpecifiedFlowRate_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -66,33 +68,33 @@ namespace model {
       return AirflowNetworkSpecifiedFlowRate::iddObjectType();
     }
 
-    double AirflowNetworkSpecifiedFlowrate_Impl::airFlowValue() const {
+    double AirflowNetworkSpecifiedFlowRate_Impl::airFlowValue() const {
       boost::optional<double> value = getDouble(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowValue, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    std::string AirflowNetworkSpecifiedFlowrate_Impl::airFlowUnits() const {
-      boost::optional<std::string> value = getDouble(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, true);
+    std::string AirflowNetworkSpecifiedFlowRate_Impl::airFlowUnits() const {
+      boost::optional<std::string> value = getString(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool AirflowNetworkSpecifiedFlowrate_Impl::isAirFlowUnitsDefaulted() const {
+    bool AirflowNetworkSpecifiedFlowRate_Impl::isAirFlowUnitsDefaulted() const {
       return isEmpty(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits);
     }
 
-    bool AirflowNetworkSpecifiedFlowrate_Impl::setAirFlowValue(double airFlowValue) {
+    bool AirflowNetworkSpecifiedFlowRate_Impl::setAirFlowValue(double airFlowValue) {
       bool result = setDouble(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowValue, airFlowValue);
       return result;
     }
 
-    bool AirflowNetworkSpecifiedFlowrate_Impl::setAirFlowUnits(std::string airFlowUnits) {
+    bool AirflowNetworkSpecifiedFlowRate_Impl::setAirFlowUnits(std::string airFlowUnits) {
       bool result = setString(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, airFlowUnits);
       return result;
     }
 
-    void AirflowNetworkSpecifiedFlowrate_Impl::resetAirFlowUnits() {
+    void AirflowNetworkSpecifiedFlowRate_Impl::resetAirFlowUnits() {
       bool result = setString(OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits, "");
       OS_ASSERT(result);
     }
@@ -112,31 +114,31 @@ namespace model {
   }
 
   std::vector<std::string> AirflowNetworkSpecifiedFlowRate::validAirFlowUnitsValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_AirFlowNetworkSpecifiedFlowRateFields::AirFlowUnits);
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits);
   }
 
-  double AirflowNetworkSpecifiedFlowrate::airFlowValue() const {
-    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->airFlowValue();
+  double AirflowNetworkSpecifiedFlowRate::airFlowValue() const {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->airFlowValue();
   }
 
-  std::string AirflowNetworkSpecifiedFlowrate::airFlowUnits() const {
-    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->airFlowUnits();
+  std::string AirflowNetworkSpecifiedFlowRate::airFlowUnits() const {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->airFlowUnits();
   }
 
-  bool AirflowNetworkSpecifiedFlowrate::isAirFlowUnitsDefaulted() const {
-    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->isAirFlowUnitsDefaulted();
+  bool AirflowNetworkSpecifiedFlowRate::isAirFlowUnitsDefaulted() const {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->isAirFlowUnitsDefaulted();
   }
 
-  bool AirflowNetworkSpecifiedFlowrate::setAirFlowValue(double airFlowValue) {
-    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->setAirFlowValue(airFlowValue);
+  bool AirflowNetworkSpecifiedFlowRate::setAirFlowValue(double airFlowValue) {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->setAirFlowValue(airFlowValue);
   }
 
-  bool AirflowNetworkSpecifiedFlowrate::setAirFlowUnits(std::string airFlowUnits) {
-    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->setAirFlowUnits(airFlowUnits);
+  bool AirflowNetworkSpecifiedFlowRate::setAirFlowUnits(std::string airFlowUnits) {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->setAirFlowUnits(airFlowUnits);
   }
 
-  void AirflowNetworkSpecifiedFlowrate::resetAirFlowUnits() {
-    return getImpl<detail::AirflowNetworkSpecifiedFlowrate_Impl>()->resetAirFlowUnits();
+  void AirflowNetworkSpecifiedFlowRate::resetAirFlowUnits() {
+    return getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>()->resetAirFlowUnits();
   }
 
   /// @cond

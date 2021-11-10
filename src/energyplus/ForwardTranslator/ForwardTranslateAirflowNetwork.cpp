@@ -44,6 +44,8 @@
 #include "../../model/AirflowNetworkCrack_Impl.hpp"
 #include "../../model/AirflowNetworkEffectiveLeakageArea.hpp"
 #include "../../model/AirflowNetworkEffectiveLeakageArea_Impl.hpp"
+#include "../../model/AirflowNetworkSpecifiedFlowRate.hpp"
+#include "../../model/AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 #include "../../model/AirflowNetworkDetailedOpening.hpp"
 #include "../../model/AirflowNetworkDetailedOpening_Impl.hpp"
 #include "../../model/AirflowNetworkSimpleOpening.hpp"
@@ -96,6 +98,7 @@
 #include <utilities/idd/AirflowNetwork_MultiZone_ReferenceCrackConditions_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_MultiZone_Surface_Crack_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea_FieldEnums.hxx>
+#include <utilities/idd/AirflowNetwork_MultiZone_SpecifiedFlowRate_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_MultiZone_Component_DetailedOpening_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_MultiZone_Component_SimpleOpening_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_MultiZone_Component_HorizontalOpening_FieldEnums.hxx>

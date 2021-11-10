@@ -44,7 +44,7 @@ TEST_F(ModelFixture, AirflowNetwork_SpecifiedFlowRate) {
 
   EXPECT_EQ(10.0, sfr0.airFlowValue());
   EXPECT_EQ("MassFlow", sfr0.airFlowUnits());
-  EXPECT_TRUE(sft0.isAirFlowUnitsDefaulted());
+  EXPECT_TRUE(sfr0.isAirFlowUnitsDefaulted());
 
   EXPECT_TRUE(sfr0.setAirFlowValue(5.0));
   EXPECT_TRUE(sfr0.setAirFlowUnits("VolumetricFlow"));
