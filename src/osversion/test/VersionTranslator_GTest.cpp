@@ -1817,8 +1817,9 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_3_1_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(1u, coils.size());
   WorkspaceObject coil = coils[0];
 
-  ASSERT_EQ(4u, coil.numExtensibleGroups());
   ASSERT_EQ(22u, coil.numFields());
+  ASSERT_EQ(4u, coil.numExtensibleGroups());
 
+  ASSERT_EQ(4u, model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData").size());
   ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
 }

@@ -6853,12 +6853,10 @@ namespace osversion {
           idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:Coil:Heating:DX:MultiSpeed:StageData").get());
         for (auto& modelObjectList : modelObjectLists) {
           if (stageDataList == modelObjectList.getString(0).get()) {  // Stage Data List == Handle
-            unsigned numStage = 1;
             for (const IdfExtensibleGroup& eg : modelObjectList.extensibleGroups()) {
               IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();    // new OS:Coil:Heating:DX:MultiSpeed:StageData
               new_eg.setString(0, eg.getString(0).get());                     // Handle
               new_eg.setString(1, "Coil Heating DX Multi Speed Stage Data");  // Name
-              numStage += 1;
               for (size_t i = 1; i < eg.numFields(); ++i) {
                 new_eg.setString(i + 1, eg.getString(i).get());
               }
@@ -6874,6 +6872,21 @@ namespace osversion {
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+
+      } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
+      } else if (iddname == "OS:ModelObjectList") {
+
+        bool isOnCoil = false;
+        std::vector<IdfObject> coils = idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:Coil:Heating:DX:MultiSpeed").get());
+        for (auto& coil : coils) {
+          if (object.getString(0).get() == coil.getString(18).get()) {  // Handle == Stage Data List
+            isOnCoil = true;
+          }
+        }
+
+        if (!isOnCoil) {
+          ss << object;
+        }
 
         // No-op
       } else {
