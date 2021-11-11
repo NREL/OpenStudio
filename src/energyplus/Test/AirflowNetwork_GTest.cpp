@@ -36,6 +36,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/AirflowNetworkSurface.hpp"
+#include "../../model/AirflowNetworkSurface_Impl.hpp"
 #include "../../model/AirflowNetworkSimulationControl.hpp"
 #include "../../model/AirflowNetworkSimulationControl_Impl.hpp"
 #include "../../model/AirflowNetworkDistributionNode.hpp"
@@ -44,6 +46,8 @@
 #include "../../model/AirflowNetworkDistributionLinkage_Impl.hpp"
 #include "../../model/AirflowNetworkEquivalentDuct.hpp"
 #include "../../model/AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "../../model/AirflowNetworkSpecifiedFlowRate.hpp"
+#include "../../model/AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 #include "../../model/AirflowNetworkFan.hpp"
 #include "../../model/AirflowNetworkFan_Impl.hpp"
 #include "../../model/FanConstantVolume.hpp"
@@ -54,6 +58,10 @@
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/SetpointManagerSingleZoneReheat.hpp"
 #include "../../model/SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
@@ -62,6 +70,9 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
+
+#include <utilities/idd/AirflowNetwork_MultiZone_Surface_FieldEnums.hxx>
+#include <utilities/idd/AirflowNetwork_MultiZone_SpecifiedFlowRate_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -199,4 +210,45 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct) {
   EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
 
   // workspace.save(toPath("./AirflowNetworkLinkage.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSpecifiedFlowRate) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(1, 1, 0));
+  Surface surface(points, model);
+  surface.setSpace(space);
+
+  AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+  AirflowNetworkSpecifiedFlowRate sfr0(model, 15.0);
+  AirflowNetworkSurface afnsurf = surface.getAirflowNetworkSurface(sfr0);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_SpecifiedFlowRate).size());
+
+  WorkspaceObject surfaceObject = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0];
+  WorkspaceObject afnObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface)[0];
+  WorkspaceObject sfrObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_SpecifiedFlowRate)[0];
+
+  EXPECT_EQ("Surface 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, false).get());
+  EXPECT_EQ("Airflow Network Specified Flow Rate 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, false).get());
+  EXPECT_EQ("", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, false).get());
+  EXPECT_EQ(1, afnObject.getDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, false).get());
+
+  EXPECT_EQ("Airflow Network Specified Flow Rate 1", sfrObject.getString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::Name, false).get());
+  EXPECT_EQ(15, sfrObject.getDouble(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowValue, false).get());
+  EXPECT_EQ("MassFlow", sfrObject.getString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowUnits, false).get());
 }
