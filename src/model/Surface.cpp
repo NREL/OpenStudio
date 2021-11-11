@@ -67,6 +67,8 @@
 #include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "AirflowNetworkHorizontalOpening.hpp"
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate.hpp"
+#include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
 #include "FoundationKivaSettings.hpp"
@@ -2407,6 +2409,10 @@ namespace model {
   }
 
   AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage) {
+    return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+  }
+
+  AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage) {
     return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
   }
 
