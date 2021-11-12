@@ -52,19 +52,20 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/exampleModel_3rd.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
   Model model = exampleModel();
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
-  //model.save(resourcesPath() / toPath("model/example_updated.osm"), true);
   bool result = ft.modelToGLTF(model, true,output);
   ASSERT_TRUE(result);
 }
 
 TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
   GltfForwardTranslator ft;
-  openstudio::path input;
-  input = resourcesPath() / toPath("utilities/Geometry/minimal_GLTF_File.gltf");
-  bool result = ft.loadGLTF(input);
+  openstudio::path inputPath;
+  openstudio::path inputNonEmbededPath;
+  inputPath = resourcesPath() / toPath("utilities/Geometry/minimal_GLTF_File.gltf");
+  inputNonEmbededPath = resourcesPath() / toPath("utilities/Geometry/input.gltf");
+  bool result = ft.loadGLTF(inputPath, inputNonEmbededPath);
   ASSERT_TRUE(result);
 }
 
@@ -73,9 +74,11 @@ TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
   openstudio::path output;
   openstudio::path output_2;
   output = resourcesPath() / toPath("utilities/Geometry/triangle.gltf");
-  output_2 = resourcesPath() / toPath("utilities/Geometry/triangle_2.gltf");
+  //Passed Raw buffer data
   bool result = ft.CreateTriangleGLTF(output);
   ASSERT_TRUE(result);
+  output_2 = resourcesPath() / toPath("utilities/Geometry/triangle_2.gltf");
+  //Created Raw buffer data from Point3dVector
   bool result_2 = ft.CreateTriangleGLTF_2(output_2);
   ASSERT_TRUE(result_2);
 }
