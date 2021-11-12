@@ -23,6 +23,7 @@
   #include <utilities/geometry/Intersection.hpp>
   #include <utilities/geometry/ThreeJS.hpp>
   #include <utilities/geometry/FloorplanJS.hpp>
+  #include <utilities/geometry/RoofGeometry.hpp>
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -108,6 +109,7 @@
 %include <utilities/geometry/Intersection.hpp>
 %include <utilities/geometry/ThreeJS.hpp>
 %include <utilities/geometry/FloorplanJS.hpp>
+%include <utilities/geometry/RoofGeometry.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {
