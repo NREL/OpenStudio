@@ -83,6 +83,7 @@
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Intersection.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/core/Assert.hpp"
 
 using boost::to_upper_copy;
@@ -1629,6 +1630,35 @@ namespace model {
 
     return grossArea();
   }
+
+  double SubSurface::frameArea() const {
+    double roughOpeningArea = this->roughOpeningArea();
+    return roughOpeningArea - grossArea();
+  }
+
+  double SubSurface::dividerArea() const {
+    double divArea = 0;
+    if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
+      double dividerWidth = frameAndDivider->dividerWidth();
+      if (dividerWidth == 0) return divArea;
+
+      Transformation faceTransform = Transformation::alignFace(this->vertices());
+      std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();
+      BoundingBox bb;
+      bb.addPoints(faceVertices);
+
+      double numHorizDividers = frameAndDivider->numberOfHorizontalDividers();
+      if (numHorizDividers != 0 && bb.maxX().has_value() && bb.minX().has_value()) {
+        divArea += numHorizDividers * dividerWidth * (*bb.maxX() - *bb.minX());
+      }
+      double numVertDividers = frameAndDivider->numberOfVerticalDividers();
+      if (numVertDividers != 0 && bb.maxY().has_value() && bb.minY().has_value()) {
+        divArea += numVertDividers * dividerWidth * (*bb.maxY() - *bb.minY());
+      }
+    }
+    return divArea;
+  }
+
   /// @endcond
 
   std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d>>& pattern, const std::vector<Space>& spaces,

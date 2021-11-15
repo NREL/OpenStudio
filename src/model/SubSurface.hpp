@@ -269,6 +269,12 @@ namespace model {
     /* Get the rough opening vertices for the sub surface including the frame */
     std::vector<Point3d> roughOpeningVertices() const;
 
+    // Gets the total area of the frame
+    double frameArea() const;
+
+    // Gets the total area of the divider
+    double dividerArea() const;
+
     // DLM: todo add methods to create light shelves by projection factor
 
    protected:
