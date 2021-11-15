@@ -1,4 +1,4 @@
-!IDD_Version 3.3.1
+!IDD_Version 3.3.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.3.1
+       \default 3.2.2
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -7677,22 +7677,18 @@ OS:Refrigeration:Case,
   N24,  \field Standard Case Fan Power per Door
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
   N25,  \field Operating Case Fan Power per Door
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
   N26,  \field Standard Case Lighting Power per Door
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
   N27,  \field Installed Case Lighting Power per Door
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
   N28,  \field Case Anti-Sweat Heater Power per Door
         \type real
@@ -7751,7 +7747,6 @@ OS:Refrigeration:Condenser:AirCooled,
   N2,   \field Rated Fan Power
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
         \default 250.0
         \note Power for condenser fan(s) corresponding to rated total heat rejection effect.
@@ -7823,7 +7818,6 @@ OS:Refrigeration:Condenser:EvaporativeCooled,
         \type real
         \required-field
         \units W
-        \ip-units W
         \minimum 0.0
         \note Power for condenser fan(s) corresponding to rated total heat rejection effect.
   N4,   \field Minimum Fan Air Flow Ratio
@@ -7901,7 +7895,6 @@ OS:Refrigeration:Condenser:EvaporativeCooled,
   N14,  \field Rated Water Pump Power
         \type real
         \units W
-        \ip-units W
         \autocalculatable
         \default 1000.0
         \note Design recirculating water pump power.
@@ -8191,7 +8184,6 @@ OS:Refrigeration:CompressorRack,
         \required-field
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
   A5,   \field Condenser Fan Power Function of Temperature Curve Name
         \type object-list
@@ -8285,7 +8277,6 @@ OS:Refrigeration:CompressorRack,
         \required-field
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
         \autocalculatable
         \note Design recirc water pump power for Condenser Type = EvaporativelyCooled.
@@ -8444,7 +8435,6 @@ OS:Refrigeration:GasCooler:AirCooled,
         \note Power for gas cooler fan(s) corresponding to rated total heat rejection effect.
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
         \default 5000.0
   N2,   \field Minimum Fan Air Flow Ratio
@@ -8821,7 +8811,6 @@ OS:Refrigeration:SecondarySystem,
         \type real
         \minimum 0.0
         \units W
-        \ip-units W
         \note Either the Total Pump Power or the Total Pump Head is required.
   N10,   \field Total Pump Head
         \type real
@@ -8938,20 +8927,17 @@ OS:Refrigeration:WalkIn,
   N5,   \field Rated Cooling Coil Fan Power
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
         \default 375.0
   N6,   \field Rated Circulation Fan Power
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
         \default 0.0
   N7,   \field Rated Total Lighting Power
         \type real
         \required-field
         \units W
-        \ip-units W
         \note Enter the total (display + task) installed lighting power.
   A5,   \field Lighting Schedule Name
         \type object-list
@@ -9263,7 +9249,6 @@ OS:Refrigeration:AirChiller,
   N11,  \field Rated Fan Power
         \type real
         \units W
-        \ip-units W
         \default 375.0
         \minimum 0.
   N12,  \field Rated Air Flow
@@ -9749,7 +9734,6 @@ OS:AirConditioner:VariableRefrigerantFlow,
   N26, \field Evaporative Condenser Pump Rated Power Consumption
        \type real
        \units W
-        \ip-units W
        \minimum 0.0
        \required-field
        \autosizable
@@ -10183,13 +10167,11 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
    N4 , \field Auxiliary On-Cycle Electric Power
         \type real
         \units W
-        \ip-units W
         \minimum 0
         \required-field
    N5 , \field Auxiliary Off-Cycle Electric Power
         \type real
         \units W
-        \ip-units W
         \minimum 0
         \required-field
    N6 , \field Design Heat Recovery Water Flow Rate
@@ -10968,14 +10950,12 @@ OS:AirLoopHVAC:UnitarySystem,
   N23, \field Ancilliary On-Cycle Electric Power
        \type real
        \units W
-        \ip-units W
        \minimum 0
        \default 0
        \note Enter the value of ancilliary electric power for controls or other devices consumed during the on cycle.
   N24, \field Ancilliary Off-Cycle Electric Power
        \type real
        \units W
-        \ip-units W
        \minimum 0
        \default 0
        \note Enter the value of ancilliary electric power for controls or other devices consumed during the off cycle.
@@ -12629,7 +12609,6 @@ OS:Boiler:HotWater,
   N8, \field Parasitic Electric Load
        \type real
        \units W
-        \ip-units W
        \minimum 0.0
        \default 0.0
   N9, \field Sizing Factor
@@ -15718,7 +15697,6 @@ OS:Coil:Cooling:DX:CurveFit:OperatingMode,
        \note Rated power consumed by the evaporative condenser's water pump
        \type real
        \units W
-       \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -16346,7 +16324,6 @@ OS:CoilPerformance:DX:Cooling,
   N12, \field Evaporative Condenser Pump Rated Power Consumption
        \type real
        \units W
-        \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -16566,7 +16543,6 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
   N13; \field Rated Evaporative Condenser Pump Power Consumption
        \type real
        \units W
-       \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -16749,7 +16725,6 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \autosizable
        \units W
-        \ip-units W
        \minimum 0
   N14, \field Low Speed Evaporative Condenser Effectiveness
        \type real
@@ -16768,7 +16743,6 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \autosizable
        \units W
-        \ip-units W
        \minimum 0
   A15, \field Supply Water Storage Tank Name
        \type object-list
@@ -17550,7 +17524,6 @@ OS:Coil:Heating:Electric,
        \type real
        \autosizable
        \units W
-        \ip-units W
        \default Autosize
   A4, \field Air Inlet Node Name
        \type object-list
@@ -17835,7 +17808,6 @@ OS:Coil:WaterHeating:Desuperheater,
   N7,  \field Water Pump Power
        \type real
        \units W
-        \ip-units W
        \minimum 0.0
        \default 0.0
        \note The water circulation pump electric power.
@@ -18072,6 +18044,7 @@ OS:Coil:Heating:Water:Baseboard,
        \minimum 0.0
        \autosizable
        \required-field
+       \ip-units W
        \note Enter the design heating capacity.Required field when the heating design capacity method
        \note HeatingDesignCapacity.
   N2 , \field Heating Design Capacity Per Floor Area
@@ -21145,7 +21118,6 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \type real
        \required-field
        \units W
-       \ip-units W
        \note This is the fan power at Secondary Design Air Flow Rate
        \note this is the nominal design power at full speed.
        \autosizable
@@ -21701,7 +21673,6 @@ OS:Fan:SystemModel,
   N6 , \field Design Electric Power Consumption
        \type real
        \units W
-       \ip-units W
        \autosizable
        \required-field
        \minimum> 0.0
@@ -22107,7 +22078,6 @@ OS:Fan:ComponentModel,
         \required-field
         \type real
         \units W
-        \ip-units W
         \minimum> 0.0
         \autosizable
         \note Maximum power input to drive belt by motor
@@ -22135,7 +22105,6 @@ OS:Fan:ComponentModel,
         \required-field
         \type real
         \units W
-        \ip-units W
         \minimum> 0.0
         \autosizable
         \note Maximum power input to motor by VFD
@@ -26831,13 +26800,11 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \required-field
         \type real
         \units W
-        \ip-units W
         \minimum 0
   N9 ,  \field Zone Terminal Unit Off Parasitic Electric Energy Use
         \required-field
         \type real
         \units W
-        \ip-units W
         \minimum 0
   N10,  \field Rated Total Heating Capacity Sizing Ratio
         \required-field
@@ -27175,7 +27142,6 @@ OS:ZoneHVAC:Dehumidifier:DX,
         \required-field
         \type real
         \units W
-        \ip-units W
         \minimum 0.0
    A9;  \field Condensate Collection Water Storage Tank Name
         \type object-list
@@ -28000,7 +27966,6 @@ OS:WaterHeater:HeatPump,
   N6 , \field On Cycle Parasitic Electric Load
        \type real
        \units W
-       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor operates.
@@ -28008,7 +27973,6 @@ OS:WaterHeater:HeatPump,
   N7 , \field Off Cycle Parasitic Electric Load
        \type real
        \units W
-       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor is off.
@@ -28151,7 +28115,6 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   N9 , \field Condenser Water Pump Power
        \type real
        \units W
-       \ip-units W
        \minimum 0
        \required-field
        \note A warning message will be issued if the ratio of Condenser Water Pump Power to Rated
@@ -28437,7 +28400,6 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
   N7 , \field On Cycle Parasitic Electric Load
        \type real
        \units W
-       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor operates.
@@ -28445,7 +28407,6 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
   N8 , \field Off Cycle Parasitic Electric Load
        \type real
        \units W
-       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor is off.
@@ -28702,7 +28663,6 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \required-field
   N6,  \field Reference Unit Water Pump Input Power At Rated Conditions
        \units W
-       \ip-units W
        \type real
        \minimum 0
        \required-field
@@ -30553,18 +30513,15 @@ OS:Generator:MicroTurbine,
       \required-field
       \type real
       \units W
-       \ip-units W
       \minimum> 0.0
   N2, \field Minimum Full Load Electrical Power Output
       \type real
       \units W
-       \ip-units W
       \minimum 0.0
       \default 0.0
   N3, \field Maximum Full Load Electrical Power Output
       \type real
       \units W
-       \ip-units W
       \minimum> 0.0
       \note If left blank, Maximum Full Load Electrical Power Output will be set
       \note equal to the Reference Electrical Power Output.
@@ -30636,7 +30593,6 @@ OS:Generator:MicroTurbine,
  N10, \field Standby Power
       \type real
       \units W
-       \ip-units W
       \default 0.0
       \minimum 0.0
       \note Electric power consumed when the generator is available but not being called
@@ -30644,7 +30600,6 @@ OS:Generator:MicroTurbine,
  N11, \field Ancillary Power
       \type real
       \units W
-       \ip-units W
       \default 0.0
       \minimum 0.0
       \note Electric power consumed by ancillary equipment (e.g., external fuel pressurization pump).
@@ -30855,7 +30810,6 @@ OS:Generator:Photovoltaic,
    N3 , \field Rated Electric Power Output
         \type real
         \units W
-        \ip-units W
    A6 ; \field Availability Schedule Name
         \note Availability schedule name for this generator. Schedule value > 0 means the generator is available.
         \note If this field is blank, the generator is always available.
@@ -31269,7 +31223,6 @@ OS:Generator:FuelCell:PowerModule,
   N2, \field Nominal Electrical Power
       \note This field is not used
       \units W
-      \ip-units W
   N3, \field Number of Stops at Start of Simulation
       \note this is Nstops in SOFC model specification
   N4, \field Cycling Performance Degradation Coefficient
@@ -31463,10 +31416,8 @@ OS:Generator:FuelCell:AuxiliaryHeater,
       \key kmol/s
   N5, \field Maximum Heating Capacity in Watts
       \units W
-      \ip-units W
   N6, \field Minimum Heating Capacity in Watts
       \units W
-      \ip-units W
   N7, \field Maximum Heating Capacity in Kmol per Second
       \units kmol/s
   N8; \field Minimum Heating Capacity in Kmol per Second
@@ -31545,10 +31496,8 @@ OS:Generator:FuelCell:ElectricalStorage,
       \units J
   N4, \field Simple Maximum Power Draw
       \units W
-      \ip-units W
   N5, \field Simple Maximum Power Store
       \units W
-      \ip-units W
   N6; \field Initial Charge State
       \units J
 
@@ -31612,7 +31561,6 @@ OS:Generator:FuelCell:Inverter,
   N13, \field Stack Cogeneration Exchanger Nominal Heat Transfer Coefficient Exponent
   N14, \field Stack Cooler Pump Power
        \units W
-       \ip-units W
   N15, \field Stack Cooler Pump Heat Loss Fraction
        \minimum 0.0
        \maximum 1.0
@@ -31742,7 +31690,6 @@ OS:Generator:WindTurbine,
       \type real
       \minimum> 0.0
       \units W
-      \ip-units W
   N6, \field Rated Wind Speed
       \required-field
       \type real
@@ -31854,7 +31801,6 @@ OS:Generator:PVWatts,
       \type real
       \required-field
       \units W
-      \ip-units W
       \minimum> 0
   A4, \field Module Type
       \type choice
@@ -31975,10 +31921,8 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \maximum 1.0
    N2 , \field Rated Maximum Continuous Output Power
         \units W
-        \ip-units W
    N3 , \field Night Tare Loss Power
         \units W
-        \ip-units W
    N4 , \field Nominal Voltage Input
         \units V
    N5 , \field Efficiency at 10% Power and Nominal Voltage
@@ -32044,12 +31988,10 @@ OS:ElectricLoadCenter:Storage:Simple,
   N5,  \field Maximum Power for Discharging
        \required-field
        \units W
-       \ip-units W
        \minimum 0.0
   N6,  \field Maximum Power for Charging
        \required-field
        \units W
-       \ip-units W
        \minimum 0.0
   N7;  \field Initial State of Charge
        \units J
@@ -32265,13 +32207,11 @@ OS:ElectricLoadCenter:Transformer,
   N6,  \field Rated No Load Loss
        \type real
        \units W
-       \ip-units W
        \minimum> 0
        \note Only required when RatedLosses is the performance input method
   N7,  \field Rated Load Loss
        \type real
        \units W
-       \ip-units W
        \minimum 0
        \note Only required when RatedLosses is the performance input method
   N8,  \field Nameplate Efficiency
@@ -32342,7 +32282,6 @@ OS:ElectricLoadCenter:Distribution,
   N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
        \type real
        \units W
-       \ip-units W
   A5 , \field Track Schedule Name Scheme Schedule Name
        \note required when Generator Operation Scheme Type=TrackSchedule
        \type object-list
@@ -32418,7 +32357,6 @@ OS:ElectricLoadCenter:Distribution,
        \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
        \type real
        \units W
-       \ip-units W
   A14, \field Storage Charge Power Fraction Schedule Name
        \note Controls timing and magnitude of charging storage.
        \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
@@ -32431,7 +32369,6 @@ OS:ElectricLoadCenter:Distribution,
        \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
        \type real
        \units W
-       \ip-units W
   A15, \field Storage Discharge Power Fraction Schedule Name
        \note Controls timing and magnitude of discharging storage
        \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
@@ -32443,7 +32380,6 @@ OS:ElectricLoadCenter:Distribution,
        \note Required field for FacilityDemandLeveling storage operation scheme
        \type real
        \units W
-       \ip-units W
   A16; \field Storage Control Utility Demand Target Fraction Schedule Name
        \note Modifies the target utility service demand power over time.
        \note Schedule values should be fractions from -1.0 to 1.0, inclusive.
@@ -32485,7 +32421,6 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
         \type real
         \units W
-        \ip-units W
    A5 , \field Efficiency Function of Power Curve Name
         \note Curve or table with a single independent variable that describes efficiency as a function of normalized power.
         \note The "x" input for curve or table is the ratio of current input power divided by design power in the previous field
@@ -32496,7 +32431,6 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note Optional standby power consumed when converter is available but no power is being conditioned.
         \type real
         \units W
-        \ip-units W
         \default 0.0
    A6 , \field Zone Name
         \note enter name of zone to receive converter losses as heat
