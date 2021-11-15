@@ -112,17 +112,17 @@ namespace model {
     int NormalsAccessorId;
   };
 
-   /// <summary>
-   /// Creates and returns a GLTF material 
-   /// </summary>
-   /// <param name="name"></param>
-   /// <param name="red"></param>
-   /// <param name="green"></param>
-   /// <param name="blue"></param>
-   /// <param name="alpha"></param>
-   /// <param name="isDoubleSided"></param>
-   /// <returns>GLTF Material</returns>
-   GLTF::Material CreateMaterial(const std::string& name, float red, float green, float blue, float alpha, bool isDoubleSided) {
+  /// <summary>
+  /// Creates and returns a GLTF material
+  /// </summary>
+  /// <param name="name"></param>
+  /// <param name="red"></param>
+  /// <param name="green"></param>
+  /// <param name="blue"></param>
+  /// <param name="alpha"></param>
+  /// <param name="isDoubleSided"></param>
+  /// <returns>GLTF Material</returns>
+  GLTF::Material CreateMaterial(const std::string& name, float red, float green, float blue, float alpha, bool isDoubleSided) {
 
     GLTF::Material m;
     m.name = name;
@@ -988,7 +988,7 @@ namespace model {
         //normal = buildingTransformation.rotationMatrix * r * z;
         if (triangulateSurfaces) {
           //faceIndices.push_back(0);
-        } 
+        }
         Point3dVector::reverse_iterator it = finalVerts.rbegin();
         Point3dVector::reverse_iterator itend = finalVerts.rend();
         for (; it != itend; ++it) {
@@ -1049,11 +1049,11 @@ namespace model {
       ShapeComponentIds shapeCompoentIds{
         AddIndices(faceIndices, _indicesBuffer, _accessors),          //IndicesAccessorId
         AddCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
-        AddNormals(normalVectors, _coordinatesBuffer, _accessors)  //NormalsAccessorId
+        AddNormals(normalVectors, _coordinatesBuffer, _accessors)     //NormalsAccessorId
       };
       GLTF::Primitive thisPrimitive;
       std::map<std::string, int> attrib;
-      attrib["NORMAL"] = shapeCompoentIds.NormalsAccessorId;  
+      attrib["NORMAL"] = shapeCompoentIds.NormalsAccessorId;
       attrib["POSITION"] = shapeCompoentIds.VerticesAccessorId;
 
       thisPrimitive.attributes = attrib;

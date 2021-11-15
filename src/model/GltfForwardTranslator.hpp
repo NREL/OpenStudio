@@ -33,7 +33,6 @@
 
 #include "Model.hpp"
 
-
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
 
@@ -54,10 +53,10 @@ namespace model {
     /// Convert an OpenStudio Model to Gltf format
     /// Triangulate surfaces if the Gltf representation will be used for display
     /// Do not triangulate surfaces if the Gltf representation will be translated back to a model
-    bool modelToGLTF(const Model& model, bool triangulateSurfaces,const path& outputPath);
+    bool modelToGLTF(const Model& model, bool triangulateSurfaces, const path& outputPath);
     bool modelToGLTF(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage, const path& outputpath);
 
-    //tinygltf::Model to json 
+    //tinygltf::Model to json
     bool toJSON();
 
     //Create Triangle gltf

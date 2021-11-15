@@ -55,7 +55,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   output = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
   Model model = exampleModel();
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
-  bool result = ft.modelToGLTF(model, true,output);
+  bool result = ft.modelToGLTF(model, true, output);
   ASSERT_TRUE(result);
 }
 
@@ -82,5 +82,3 @@ TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
   bool result_2 = ft.CreateTriangleGLTF_2(output_2);
   ASSERT_TRUE(result_2);
 }
-
-
