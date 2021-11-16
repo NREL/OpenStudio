@@ -641,7 +641,7 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32) == 4 ? 1 : -1];
 
 #    ifdef _MSC_VER
 
-#      if _MSC_VER >= 1400  // not VC6
+#      if _MSC_VER >= 1400   // not VC6
 #        include <intrin.h>  // __cpuid
 static int stbi__cpuid3(void) {
   int info[4];
@@ -5473,7 +5473,7 @@ static void* stbi__bmp_load(stbi__context* s, int* x, int* y, int* comp, int req
 
   if (flip_vertically) {
     stbi_uc t;
-    for (j = 0; j<(int)s->img_y> > 1; ++j) {
+    for (j = 0; j < (int)s->img_y >> 1; ++j) {
       stbi_uc* p1 = out + j * s->img_x * target;
       stbi_uc* p2 = out + (s->img_y - 1 - j) * s->img_x * target;
       for (i = 0; i < (int)s->img_x * target; ++i) {

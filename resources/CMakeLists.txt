@@ -120,6 +120,16 @@ set(model_resources_src
   model/floorplan_school.osm
   model/7-7_Windows_Complete.osm
   model/15023_Model12.osm
+  model/RefBldgFullServiceRestaurantNew2004_Chicago.osm
+  model/RefBldgHospitalNew2004_Chicago.osm
+  model/RefBldgLargeHotelNew2004_Chicago.osm
+  model/RefBldgLargeOfficeNew2004_Chicago.osm
+  model/RefBldgOutPatientNew2004_Chicago.osm
+  model/RefBldgSecondarySchoolNew2004_Chicago.osm
+  model/RefBldgSmallHotelNew2004_Chicago.osm
+  model/Space_SurfaceMatch_LargeTest.osm
+  model/split_level.osm
+  model/open_to_below.osm
 )
 
 

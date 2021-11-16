@@ -40,6 +40,7 @@
 #include "../SubSurface.hpp"
 #include "../SubSurface_Impl.hpp"
 #include "../ConstructionAirBoundary.hpp"
+#include "../../osversion/VersionTranslator.hpp"
 #include "../Construction.hpp"
 
 #include "../tiny_gltf.h"
@@ -56,6 +57,127 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   Model model = exampleModel();
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
   bool result = ft.modelToGLTF(model, true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/RefBldgSecondarySchoolNew2004_Chicago.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSecondarySchoolNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/RefBldgHospitalNew2004_Chicago.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgHospitalNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/RefBldgOutPatientNew2004_Chicago.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgOutPatientNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/RefBldgSmallHotelNew2004_Chicago.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSmallHotelNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_Chicago) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/RefBldgFullServiceRestaurantNew2004_Chicago.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgFullServiceRestaurantNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/RefBldgLargeHotelNew2004_Chicago.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgLargeHotelNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/RefBldgLargeOfficeNew2004_Chicago.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgLargeOfficeNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/Space_SurfaceMatch_LargeTest.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_15023_Model12) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/15023_Model12.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/15023_Model12.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_split_level) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/split_level.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/split_level.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_open_to_below) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/open_to_below.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/open_to_below.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), true, output);
   ASSERT_TRUE(result);
 }
 
