@@ -144,7 +144,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
-    //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.3.1")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -300,7 +300,8 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.1.0"));
     m_startVersions.push_back(VersionString("3.2.0"));
     m_startVersions.push_back(VersionString("3.2.1"));
-    //m_startVersions.push_back(VersionString("3.3.0"));
+    m_startVersions.push_back(VersionString("3.3.0"));
+    //m_startVersions.push_back(VersionString("3.3.1"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -493,6 +494,12 @@ namespace osversion {
     if (boost::optional<VersionString> candidate = IdfFile::loadVersionOnly(is)) {
       currentVersion = *candidate;
     }
+
+    // we didn't bump Version Identifier in 3.3.0's idd OS:Version object, so the following is necessary
+    if (currentVersion == VersionString("3.2.2")) {
+      currentVersion = VersionString("3.3.0");
+    }
+
     m_originalVersion = currentVersion;  // save for user
     is.seekg(std::ios_base::beg);        // prep to re-read file
 
@@ -6816,6 +6823,10 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_2_1_to_3_3_0
+
+  /*   std::string VersionTranslator::update_3_3_0_to_3_3_1(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_3_1) {
+    
+  }  // end update_3_3_0_to_3_3_1 */
 
 }  // namespace osversion
 }  // namespace openstudio
