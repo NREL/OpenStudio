@@ -1331,14 +1331,16 @@ TEST_F(ModelFixture, Issue_4361) {
   // then do the same thing with the areas
 
   WindowPropertyFrameAndDivider frame(model);
-  frame.setFrameWidth(0.030);
-
+  frame.setFrameWidth(0.03);
+  frame.setDividerWidth(0.05);
+  frame.setNumberOfHorizontalDividers(2);
+  frame.setNumberOfVerticalDividers(3);
   subSurface.setWindowPropertyFrameAndDivider(frame);
 
   double frameArea = subSurface.frameArea();
   EXPECT_NEAR(frameArea, 0.1236, 0.01);
   double divArea = subSurface.dividerArea();
-  EXPECT_DOUBLE_EQ(divArea, 0);
+  EXPECT_DOUBLE_EQ(divArea, 0.25);
 
   surfaceNetArea = surface.netArea();
   subSurfaceGrossArea = subSurface.grossArea();
