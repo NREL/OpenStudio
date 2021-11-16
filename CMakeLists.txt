@@ -753,20 +753,39 @@ include(FetchRubyMinGW.cmake)
 FetchRubyMinGW()
 
 if(BUILD_CLI)
-  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
+  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/openstudio-gems
   # need to  update the MD5sum for each platform and url below
+
+  set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
+
+  # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
+  set(USE_OPENSTUDIO_GEMS_PR TRUE)
+  if (USE_OPENSTUDIO_GEMS_PR)
+    set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-sdk-dependencies.s3.amazonaws.com/openstudio-gems")
+    set(OPENSTUDIO_GEMS_PR_NUMBER "PR-51")
+  endif()
+
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c1031e9266ff084886422168ffef684d")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4632f170bc0c10371c39f0d6250d18bc")
+       if (USE_OPENSTUDIO_GEMS_PR)
+         set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-osx/${OPENSTUDIO_GEMS_PR_NUMBER}")
+       endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "aa3b44b2efd3a6fed580a2a696b7286b")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8ace21f36c085a09f5382fe84a04eaec")
+       if (USE_OPENSTUDIO_GEMS_PR)
+         set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
+       endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "be012aaad33a089aca27dc99d306468d")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "ee43ab0ac693241b48181e0d4172313b")
+    if (USE_OPENSTUDIO_GEMS_PR)
+      set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
+    endif()
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -779,7 +798,8 @@ if(BUILD_CLI)
 
   if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
     message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+    file(
+      DOWNLOAD "${OPENSTUDIO_GEMS_BASEURL}/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
       ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 300 # 5 minute timeout
       SHOW_PROGRESS
