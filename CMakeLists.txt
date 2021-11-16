@@ -768,13 +768,13 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4632f170bc0c10371c39f0d6250d18bc")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2097fcef124aea0c0f4a20e32f98d382")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-osx/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      else()
        set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8ace21f36c085a09f5382fe84a04eaec")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0d7173678a6dc2ee28937c16a80b43e0")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
@@ -782,7 +782,7 @@ if(BUILD_CLI)
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "ee43ab0ac693241b48181e0d4172313b")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f81177b2babcdfd249523af1977451ae")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
@@ -796,6 +796,7 @@ if(BUILD_CLI)
     file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
   endif()
 
+  # If you do not have the right tar.gz: download, and remove extracted dir
   if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
     message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
     file(
@@ -806,6 +807,25 @@ if(BUILD_CLI)
       EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
     file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+  endif()
+
+  # If the extracted dir has a version.txt, it must match, otherwise remove it
+  if(EXISTS "${OPENSTUDIO_GEMS_DIR}/version.txt")
+    file(READ ${OPENSTUDIO_GEMS_DIR}/version.txt EXTRACTED_TAR_GZ_NAME)
+    string(STRIP ${EXTRACTED_TAR_GZ_NAME} EXTRACTED_TAR_GZ_NAME)
+    if(NOT EXTRACTED_TAR_GZ_NAME STREQUAL OPENSTUDIO_GEMS_ZIP_FILENAME)
+      message("Extracted gem dir ${OPENSTUDIO_GEMS_DIR} has the wrong version, removing it")
+      file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    endif()
+  else()
+    # Until the openstudio-gems package from my PR-51 goes onto develop, assume you want to remove it to avoid leaving it in place when you switch back to develop
+    if(EXISTS "${OPENSTUDIO_GEMS_DIR}" AND NOT USE_OPENSTUDIO_GEMS_PR)
+      file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    endif()
+  endif()
+
+  # If you do not have the extracted dir, then extract the tar.gz
+  if(NOT EXISTS "${OPENSTUDIO_GEMS_DIR}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
 
     file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
