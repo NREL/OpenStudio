@@ -83,8 +83,8 @@ module Kernel
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
     'pycall.so' => 'init_pycall',\
     'pycall.dll' => 'init_pycall',\
-    'cbor' => 'init_cbor',\
-    'msgpack' => 'init_msgpack'
+    'cbor/cbor' => 'init_cbor',\
+    'msgpack/msgpack' => 'init_msgpack'
   }
 
   def require_embedded_extension path
