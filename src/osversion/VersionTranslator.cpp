@@ -495,9 +495,12 @@ namespace osversion {
     if (boost::optional<VersionString> candidate = IdfFile::loadVersionOnly(is)) {
       currentVersion = *candidate;
     }
+
+    // we didn't bump Version Identifier in 3.3.0's idd OS:Version object, so the following is necessary
     if (currentVersion == VersionString("3.2.2")) {
       currentVersion = VersionString("3.3.0");
     }
+
     m_originalVersion = currentVersion;  // save for user
     is.seekg(std::ios_base::beg);        // prep to re-read file
 
