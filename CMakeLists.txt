@@ -767,21 +767,21 @@ if(BUILD_CLI)
 
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2097fcef124aea0c0f4a20e32f98d382")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cc9ecc1f64f8f168f9df8d64466c3a40")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-osx/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0d7173678a6dc2ee28937c16a80b43e0")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a2542f94c16d699818479c968751ef8c")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-windows.tar.gz")
     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2e33d4bd7a1b1380e4f9ae3fc54527aa")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
@@ -798,7 +798,7 @@ if(BUILD_CLI)
 
   # If you do not have the right tar.gz: download, and remove extracted dir
   if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_BASEURL}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
     file(
       DOWNLOAD "${OPENSTUDIO_GEMS_BASEURL}/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
       ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
