@@ -217,7 +217,7 @@ class EmbeddedRuby_Test < Minitest::Test
     assert(true)
   end
 
-  def test_embedded_cbor
+  def test_cbor
     require 'cbor'
     data = [1, 2, 33.5, 4]
     s = data.to_cbor
@@ -225,7 +225,7 @@ class EmbeddedRuby_Test < Minitest::Test
     assert(data == data2)
   end
 
-  def test_embedded_msgpack
+  def test_msgpack
     require 'msgpack'
     data = [1, 2, 33.5, 4]
     s = data.to_msgpack
