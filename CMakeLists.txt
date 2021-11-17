@@ -782,7 +782,7 @@ if(BUILD_CLI)
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211116-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f81177b2babcdfd249523af1977451ae")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2e33d4bd7a1b1380e4f9ae3fc54527aa")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
