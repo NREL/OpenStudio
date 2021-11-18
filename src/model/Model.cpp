@@ -1251,11 +1251,11 @@ namespace model {
   std::string Model::plenumSpaceTypeName() const {
     return getImpl<detail::Model_Impl>()->plenumSpaceTypeName();
   }
-  
+
   void Model::setCheckValidity(bool checkValidity) {
     m_checkValidity = checkValidity;
   }
-  
+
   openstudio::WorkflowJSON Model::workflowJSON() const {
     return getImpl<detail::Model_Impl>()->workflowJSON();
   }
