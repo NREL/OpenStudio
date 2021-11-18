@@ -488,7 +488,11 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setDouble(unsigned index, double value) {
-    bool result = setDouble(index, value, true);
+    if (m_checkValidity) {
+      bool result = setDouble(index, value, true);
+    else {
+      bool result = setDouble(index, value, false);
+    }
     if (result) {
       this->emitChangeSignals();
     }
