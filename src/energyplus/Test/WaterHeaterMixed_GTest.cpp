@@ -110,3 +110,42 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_Condition) {
     EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
   }
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
+  ForwardTranslator ft;
+  Model m;
+
+  WaterHeaterMixed wh(m);
+  PlantLoop p(m);
+  
+  double invalidEffValue = -0.5;
+  
+  {
+    EXPECT_FALSE(wh.setHeaterThermalEfficiency(invalidEffValue));
+    EXPECT_NE(invalidEffValue, wh.heaterThermalEfficiency());
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+    EXPECT_EQ(1u, idf_whs.size());
+    WorkspaceObject idf_wh(idf_whs[0]);
+
+    EXPECT_NE(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+  }
+  
+  {
+    // TODO: set some switch that enables option 3B (allow invalid values to persist in OSM/IDF)
+    m.setCheckValidity(false);
+    
+    EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
+    EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+    EXPECT_EQ(1u, idf_whs.size());
+    WorkspaceObject idf_wh(idf_whs[0]);
+
+    EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+  }
+}
