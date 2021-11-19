@@ -59,6 +59,7 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -6850,33 +6851,39 @@ namespace osversion {
           }
         }
 
-        std::string stageDataList = object.getString(18).get();  // Stage Data List
-        std::vector<IdfObject> modelObjectLists = idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:ModelObjectList").get());
-        std::vector<IdfObject> stageDatas =
-          idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:Coil:Heating:DX:MultiSpeed:StageData").get());
-        for (auto& modelObjectList : modelObjectLists) {
-          if (stageDataList == modelObjectList.getString(0).get()) {  // Stage Data List == Handle
-            for (const IdfExtensibleGroup& eg : modelObjectList.extensibleGroups()) {
-              IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();    // new OS:Coil:Heating:DX:MultiSpeed:StageData
-              new_eg.setString(0, eg.getString(0).get());                     // Handle
-              new_eg.setString(1, "Coil Heating DX Multi Speed Stage Data");  // Name
-              for (size_t i = 1; i < eg.numFields(); ++i) {
-                new_eg.setString(i + 1, eg.getString(i).get());
-              }
-              for (auto& stageData : stageDatas) {
-                if (stageData.getString(0).get() == eg.getString(0).get()) {
-                  m_untranslated.push_back(stageData);  // original OS:Coil:Heating:DX:MultiSpeed:StageData
-                }
-              }
+        // Before: There was a single modelObjectList, which extensible groups were the StageDatas
+        // Now: We move these directly onto extensible groups
+        std::string stageDataList = object.getString(18).get();  // Stage Data List: handle of the ModelObjectList
+        if (boost::optional<IdfObject> modelObjectList = idf_3_3_0.getObject(openstudio::toUUID(stageDataList))) {
+          m_untranslated.push_back(modelObjectList.get());  // original OS:ModelObjectList
+          for (const IdfExtensibleGroup& eg : modelObjectList->extensibleGroups()) {
+            std::string stageDataListHandleStr = eg.getString(0).get();
+            if (!stageDataListHandleStr.empty()) {
+              IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup({stageDataListHandleStr});  // new OS:Coil:Heating:DX:MultiSpeed:StageData
             }
-            m_untranslated.push_back(modelObjectList);  // original OS:ModelObjectList
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
+        auto iddObject = idd_3_3_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Inserted name at pos 1
+        newObject.setString(1, "Coil Heating DX Multi Speed Stage Data");
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if (i < 1) {
+            newObject.setString(i, value.get());
+          } else {
+            newObject.setString(i + 1, value.get());
           }
         }
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
-      } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
       } else if (iddname == "OS:ModelObjectList") {
 
         bool isOnCoil = false;
