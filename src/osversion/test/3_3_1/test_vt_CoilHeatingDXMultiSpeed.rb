@@ -18,18 +18,4 @@ coil.addStage(stage3)
 stage4 = CoilHeatingDXMultiSpeedStageData.new(m)
 coil.addStage(stage4)
 
-coil = CoilCoolingDXMultiSpeed.new(m)
-
-stage1 = CoilCoolingDXMultiSpeedStageData.new(m)
-coil.addStage(stage1)
-
-stage2 = CoilCoolingDXMultiSpeedStageData.new(m)
-coil.addStage(stage2)
-
-stage3 = CoilCoolingDXMultiSpeedStageData.new(m)
-coil.addStage(stage3)
-
-stage4 = CoilCoolingDXMultiSpeedStageData.new(m)
-coil.addStage(stage4)
-
 m.save('test_vt_CoilHeatingDXMultiSpeed.osm', true)
