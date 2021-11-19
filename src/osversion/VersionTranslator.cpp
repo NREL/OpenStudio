@@ -6874,10 +6874,12 @@ namespace osversion {
         newObject.setString(1, "Coil Heating DX Multi Speed Stage Data");
 
         for (size_t i = 0; i < object.numFields(); ++i) {
-          if (i < 1) {
-            newObject.setString(i, value.get());
-          } else {
-            newObject.setString(i + 1, value.get());
+          if ((value = object.getString(i))) {
+            if (i < 1) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
           }
         }
 
