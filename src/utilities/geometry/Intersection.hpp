@@ -77,6 +77,9 @@ UTILITIES_API std::vector<Point3d> removeSpikes(const std::vector<Point3d>& poly
 /// returns true if point is inside polygon, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
 UTILITIES_API bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol);
 
+/// returns true if any point is inside polygon, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
+UTILITIES_API bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& polygon, double tol);
+
 /// compute the union of two overlapping polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
 UTILITIES_API boost::optional<std::vector<Point3d>> join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
 
