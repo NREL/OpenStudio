@@ -135,4 +135,40 @@
   }
 }
 
+%extend openstudio::Transformation {
+
+  std::string __str__() const {
+    std::ostringstream os;
+
+    typedef Matrix::size_type size_type;
+    Matrix m = self->matrix();
+    size_type size1 = m.size1();
+    size_type size2 = m.size2();
+
+    // Always size (4, 4) really
+    os << "Transformation with Matrix";
+    if ((size1 == 0) || (size2 == 0)) {
+      os << ": Nothing to show, at least one dimension is zero";
+      return os.str();
+    } else {
+      os << ":\n[";
+      for (size_type i = 0; i < size1; ++i) {
+        os << '[';
+        for (size_type j = 0; j < size2; ++j) {
+          os << m(i, j);
+          if (j != size2 - 1) {
+            os << ", ";
+          }
+        }
+        os << ']';
+        if (i != size1 - 1) {
+          os << ",\n ";
+        }
+      }
+      os << ']';
+    }
+    return os.str();
+  }
+}
+
 #endif //UTILITIES_GEOMETRY_GEOMETRY_I
