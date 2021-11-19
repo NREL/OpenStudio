@@ -52,6 +52,7 @@
 #include "../Blind.hpp"
 #include "../ShadingControl.hpp"
 #include "../Model_Impl.hpp"
+#include "../ThermalZone.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
@@ -1279,4 +1280,247 @@ TEST_F(ModelFixture, SubSurface_isXXXAutocalculated_4399) {
 
   subSurface.autocalculateNumberofVertices();
   EXPECT_TRUE(subSurface.isNumberofVerticesAutocalculated());
+}
+
+// https://github.com/NREL/OpenStudio/issues/4361
+TEST_F(ModelFixture, Issue_4361) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  // Create a surface and subsurface
+  // get the surface net and gross area & subsurface gross area
+  // surface gross area == surface net area + subsurface gross area
+  // That is before the subsurface is assigned a frame and divider
+
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 0, 2},
+  };
+  Surface surface(vertices, model);
+  surface.setSpace(space);
+  surface.setSurfaceType("Wall");
+
+  vertices.clear();
+  vertices = {
+    {0.5, 0, 1.5},
+    {0.5, 0, 0.5},
+    {1.5, 0, 0.5},
+    {1.5, 0, 1.5},
+  };
+
+  SubSurface subSurface(vertices, model);
+  subSurface.setSurface(surface);
+  subSurface.setSubSurfaceType("FixedWindow");
+
+  double surfaceGrossArea = surface.grossArea();
+  double surfaceNetArea = surface.netArea();
+  double subSurfaceGrossArea = subSurface.grossArea();
+  double subSurfaceTotalArea = subSurface.roughOpeningArea();
+
+  EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceGrossArea);
+  double windowWallRatio = surface.windowToWallRatio();
+  EXPECT_EQ(windowWallRatio, 0.25);
+
+  // Then assign a frame and divider to the subsurface
+  // then do the same thing with the areas
+
+  WindowPropertyFrameAndDivider frame(model);
+  frame.setFrameWidth(0.03);
+  frame.setDividerWidth(0.05);
+  frame.setNumberOfHorizontalDividers(2);
+  frame.setNumberOfVerticalDividers(3);
+  subSurface.setWindowPropertyFrameAndDivider(frame);
+
+  double frameArea = subSurface.frameArea();
+  EXPECT_NEAR(frameArea, 0.1236, 0.01);
+  double divArea = subSurface.dividerArea();
+  EXPECT_DOUBLE_EQ(divArea, 0.25);
+
+  surfaceNetArea = surface.netArea();
+  subSurfaceGrossArea = subSurface.grossArea();
+  subSurfaceTotalArea = subSurface.roughOpeningArea();
+  EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceTotalArea);
+
+  windowWallRatio = surface.windowToWallRatio();
+  EXPECT_NEAR(windowWallRatio, 0.28, 0.01);
+}
+TEST_F(ModelFixture, Issue_4361_Subsurface_Outside_Parent) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  // Create a surface and subsurface
+  // get the surface net and gross area & subsurface gross area
+  // surface gross area == surface net area + subsurface gross area
+  // That is before the subsurface is assigned a frame and divider
+
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 0, 2},
+  };
+
+  Surface surface(vertices, model);
+  surface.setSpace(space);
+  surface.setSurfaceType("Wall");
+
+  vertices.clear();
+  vertices = {
+    {0.5, 0, 1.99},
+    {0.5, 0, 0.99},
+    {1.5, 0, 0.99},
+    {1.5, 0, 1.99},
+  };
+
+  SubSurface subSurface(vertices, model);
+  subSurface.setSurface(surface);
+  subSurface.setSubSurfaceType("FixedWindow");
+
+  double surfaceGrossArea = surface.grossArea();
+  double surfaceNetArea = surface.netArea();
+  double subSurfaceGrossArea = subSurface.grossArea();
+  double subSurfaceTotalArea = subSurface.roughOpeningArea();
+
+  EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceGrossArea);
+  double windowWallRatio = surface.windowToWallRatio();
+  EXPECT_EQ(windowWallRatio, 0.25);
+
+  // Then assign a frame and divider to the subsurface
+  // then do the same thing with the areas
+  // The area should be unchanged because the subsurface is not enclosed
+  // by the parent surface after including the frame
+
+  WindowPropertyFrameAndDivider frame(model);
+  frame.setFrameWidth(0.030);
+  subSurface.setWindowPropertyFrameAndDivider(frame);
+
+  surfaceNetArea = surface.netArea();
+  subSurfaceGrossArea = subSurface.grossArea();
+  subSurfaceTotalArea = subSurface.roughOpeningArea();
+  EXPECT_EQ(surfaceGrossArea, surfaceNetArea + subSurfaceTotalArea);
+
+  windowWallRatio = surface.windowToWallRatio();
+  EXPECT_NEAR(windowWallRatio, 0.25, 0.01);
+}
+
+TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Non_Overlapping) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {4, 0, 0},
+    {4, 0, 2},
+  };
+  Surface surface(vertices, model);
+  surface.setSpace(space);
+  surface.setSurfaceType("Wall");
+
+  vertices.clear();
+  vertices.push_back(Point3d(0.5, 0, 1.5));
+  vertices.push_back(Point3d(0.5, 0, 0.5));
+  vertices.push_back(Point3d(1.5, 0, 0.5));
+  vertices.push_back(Point3d(1.5, 0, 1.5));
+
+  SubSurface subSurface1(vertices, model);
+  subSurface1.setSurface(surface);
+  subSurface1.setSubSurfaceType("FixedWindow");
+
+  vertices.clear();
+  vertices = {
+    {2.5, 0, 1.5},
+    {2.5, 0, 0.5},
+    {3.5, 0, 0.5},
+    {3.5, 0, 1.5},
+  };
+
+  SubSurface subSurface2(vertices, model);
+  subSurface2.setSurface(surface);
+  subSurface2.setSubSurfaceType("FixedWindow");
+
+  double windowWallRatio = surface.windowToWallRatio();
+  EXPECT_NEAR(windowWallRatio, 0.25, 0.01);
+
+  WindowPropertyFrameAndDivider frame1(model);
+  frame1.setFrameWidth(0.030);
+  subSurface1.setWindowPropertyFrameAndDivider(frame1);
+
+  WindowPropertyFrameAndDivider frame2(model);
+  frame2.setFrameWidth(0.030);
+  subSurface2.setWindowPropertyFrameAndDivider(frame2);
+
+  windowWallRatio = surface.windowToWallRatio();
+  EXPECT_NEAR(windowWallRatio, 0.281, 0.01);
+}
+
+TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Overlapping) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  std::vector<Point3d> vertices{
+    {0, 0, 2},
+    {0, 0, 0},
+    {4, 0, 0},
+    {4, 0, 2},
+  };
+  Surface surface(vertices, model);
+  surface.setSpace(space);
+  surface.setSurfaceType("Wall");
+
+  vertices.clear();
+  vertices = {
+    {0.5, 0, 1.5},
+    {0.5, 0, 0.5},
+    {1.5, 0, 0.5},
+    {1.5, 0, 1.5},
+  };
+
+  SubSurface subSurface1(vertices, model);
+  subSurface1.setSurface(surface);
+  subSurface1.setSubSurfaceType("FixedWindow");
+
+  vertices.clear();
+  vertices = {
+    {1.51, 0, 1.5},
+    {1.51, 0, 0.5},
+    {2.51, 0, 0.5},
+    {2.51, 0, 1.5},
+  };
+
+  SubSurface subSurface2(vertices, model);
+  subSurface2.setSurface(surface);
+  subSurface2.setSubSurfaceType("FixedWindow");
+
+  double windowWallRatio = surface.windowToWallRatio();
+  EXPECT_NEAR(windowWallRatio, 0.25, 0.01);
+
+  WindowPropertyFrameAndDivider frame1(model);
+  frame1.setFrameWidth(0.030);
+  subSurface1.setWindowPropertyFrameAndDivider(frame1);
+
+  WindowPropertyFrameAndDivider frame2(model);
+  frame2.setFrameWidth(0.030);
+  subSurface2.setWindowPropertyFrameAndDivider(frame2);
+
+  windowWallRatio = surface.windowToWallRatio();
+  EXPECT_NEAR(windowWallRatio, 0.2654, 0.01);
 }
