@@ -241,6 +241,8 @@ namespace model {
 
       double windowToWallRatio() const;
 
+      double totalAreaOfSubSurfaces() const;
+
       double skylightToRoofRatio() const;
 
       double skylightToProjectedFloorRatio() const;
