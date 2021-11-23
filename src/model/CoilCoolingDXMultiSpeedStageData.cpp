@@ -637,7 +637,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setLatentCapacityTimeConstant(0.0);
     OS_ASSERT(ok);
-    ok = setRatedWasteHeatFractionofPowerInput(0.0);
+    ok = setRatedWasteHeatFractionofPowerInput(0.5);
     OS_ASSERT(ok);
     ok = setEvaporativeCondenserEffectiveness(0.9);
     OS_ASSERT(ok);
@@ -654,8 +654,6 @@ namespace model {
     ok = setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
     OS_ASSERT(ok);
     ok = setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
-    OS_ASSERT(ok);
-    ok = setRatedWasteHeatFractionofPowerInput(0.5);
     OS_ASSERT(ok);
     ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
     OS_ASSERT(ok);
@@ -676,18 +674,6 @@ namespace model {
     OS_ASSERT(ok);
     autosizeRatedAirFlowRate();
     autosizeRatedEvaporativeCondenserPumpPowerConsumption();
-    ok = setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
-    OS_ASSERT(ok);
-    ok = setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
-    OS_ASSERT(ok);
-    ok = setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
-    OS_ASSERT(ok);
-    ok = setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
-    OS_ASSERT(ok);
-    ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
-    OS_ASSERT(ok);
-    ok = setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
-    OS_ASSERT(ok);
     ok = setNominalTimeforCondensateRemovaltoBegin(0.0);
     OS_ASSERT(ok);
     ok = setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
@@ -696,7 +682,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setLatentCapacityTimeConstant(0.0);
     OS_ASSERT(ok);
-    ok = setRatedWasteHeatFractionofPowerInput(0.0);
+    ok = setRatedWasteHeatFractionofPowerInput(0.5);
     OS_ASSERT(ok);
     ok = setEvaporativeCondenserEffectiveness(0.9);
     OS_ASSERT(ok);
@@ -704,7 +690,17 @@ namespace model {
     autosizeRatedEvaporativeCondenserPumpPowerConsumption();
     ok = setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
     OS_ASSERT(ok);
-    ok = setRatedWasteHeatFractionofPowerInput(0.5);
+    ok = setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
+    OS_ASSERT(ok);
+    ok = setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
+    OS_ASSERT(ok);
+    ok = setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
+    OS_ASSERT(ok);
+    ok = setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
+    OS_ASSERT(ok);
+    ok = setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
+    OS_ASSERT(ok);
+    ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
     OS_ASSERT(ok);
   }
 
