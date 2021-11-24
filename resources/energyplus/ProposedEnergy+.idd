@@ -14155,6 +14155,7 @@ AirflowNetwork:MultiZone:SpecifiedFlowRate,
 
 AirflowNetwork:MultiZone:Component:DetailedOpening,
       \min-fields 16
+      \extensible:5
       \memo This object specifies the properties of airflow through windows and doors (window, door and
       \memo glass door heat transfer subsurfaces) when they are closed or open.
  A1 , \field Name
@@ -14213,6 +14214,7 @@ AirflowNetwork:MultiZone:Component:DetailedOpening,
       \maximum 0
       \default 0
       \note This value must be specified as 0.
+      \begin-extensible
  N6 , \field Discharge Coefficient for Opening Factor 1
       \type real
       \units dimensionless
