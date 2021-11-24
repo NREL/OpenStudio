@@ -46,6 +46,14 @@
 #include "../../model/AirflowNetworkDistributionLinkage_Impl.hpp"
 #include "../../model/AirflowNetworkEquivalentDuct.hpp"
 #include "../../model/AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "../../model/AirflowNetworkSimpleOpening.hpp"
+#include "../../model/AirflowNetworkSimpleOpening_Impl.hpp"
+#include "../../model/AirflowNetworkDetailedOpening.hpp"
+#include "../../model/AirflowNetworkDetailedOpening_Impl.hpp"
+#include "../../model/AirflowNetworkHorizontalOpening.hpp"
+#include "../../model/AirflowNetworkHorizontalOpening_Impl.hpp"
+#include "../../model/AirflowNetworkEffectiveLeakageArea.hpp"
+#include "../../model/AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "../../model/AirflowNetworkSpecifiedFlowRate.hpp"
 #include "../../model/AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 #include "../../model/AirflowNetworkFan.hpp"
@@ -71,7 +79,13 @@
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
 
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/AirflowNetwork_MultiZone_Surface_FieldEnums.hxx>
+#include <utilities/idd/AirflowNetwork_MultiZone_Component_SimpleOpening_FieldEnums.hxx>
+#include <utilities/idd/AirflowNetwork_MultiZone_Component_DetailedOpening_FieldEnums.hxx>
+#include <utilities/idd/AirflowNetwork_MultiZone_Component_HorizontalOpening_FieldEnums.hxx>
+#include <utilities/idd/AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_MultiZone_SpecifiedFlowRate_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
@@ -212,7 +226,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct) {
   // workspace.save(toPath("./AirflowNetworkLinkage.idf"), true);
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSpecifiedFlowRate) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -220,35 +234,201 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSpecifiedFlowRate) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
-  Surface surface(points, model);
-  surface.setSpace(space);
-
   AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
-  AirflowNetworkSpecifiedFlowRate sfr0(model, 15.0);
-  AirflowNetworkSurface afnsurf = surface.getAirflowNetworkSurface(sfr0);
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_SpecifiedFlowRate).size());
+  // SimpleOpening
+  {
+    Point3dVector points;
+    points.push_back(Point3d(0, 1, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(1, 0, 0));
+    points.push_back(Point3d(1, 1, 0));
+    Surface surface(points, model);
+    surface.setSpace(space);
 
-  WorkspaceObject surfaceObject = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0];
-  WorkspaceObject afnObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface)[0];
-  WorkspaceObject sfrObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_SpecifiedFlowRate)[0];
+    AirflowNetworkSimpleOpenting so0(model, 1, 0.65, 0.5);
+    AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(so0);
 
-  EXPECT_EQ("Surface 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, false).get());
-  EXPECT_EQ("Airflow Network Specified Flow Rate 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, false).get());
-  EXPECT_EQ("", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, false).get());
-  EXPECT_EQ(1, afnObject.getDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, false).get());
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  EXPECT_EQ("Airflow Network Specified Flow Rate 1", sfrObject.getString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::Name, false).get());
-  EXPECT_EQ(15, sfrObject.getDouble(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowValue, false).get());
-  EXPECT_EQ("MassFlow", sfrObject.getString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowUnits, false).get());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Component_SimpleOpening).size());
+
+    WorkspaceObject afnObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface)[0];
+    WorkspaceObject sfrObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Component_SimpleOpening)[0];
+
+    EXPECT_EQ("Surface 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, false).get());
+    EXPECT_EQ("Airflow Network Simple Opening 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, false).get());
+    EXPECT_EQ("", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, false).get());
+    EXPECT_EQ(1, afnObject.getDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, false).get());
+
+    EXPECT_EQ("Airflow Network Simple Opening 1", sfrObject.getString(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::Name, false).get());
+    EXPECT_EQ(1, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed, false).get());
+    EXPECT_EQ(0.65, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::AirMassFlowExponentWhenOpeningisClosed, false).get());
+    EXPECT_EQ(0.65, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::MinimumDensityDifferenceforTwoWayFlow, false).get());
+    EXPECT_EQ(0.5, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::DischageCoefficient, false).get());
+  }
+
+  // DetailedOpening
+  {
+    Point3dVector points;
+    points.push_back(Point3d(0, 1, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(1, 0, 0));
+    points.push_back(Point3d(1, 1, 0));
+    Surface surface(points, model);
+    surface.setSpace(space);
+
+    std::vector<DetailedOpeningFactorData> data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
+                                                   DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 1.0)};
+
+    AirflowNetworkDetailedOpening do0(model, 1.0, data);
+    AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(do0);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Component_DetailedOpening).size());
+
+    WorkspaceObject afnObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface)[0];
+    WorkspaceObject sfrObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Component_DetailedOpening)[0];
+
+    EXPECT_EQ("Surface 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, false).get());
+    EXPECT_EQ("Airflow Network Detailed Opening 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, false).get());
+    EXPECT_EQ("", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, false).get());
+    EXPECT_EQ(1, afnObject.getDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, false).get());
+
+    EXPECT_EQ("Airflow Network Detailed Opening 1", sfrObject.getString(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::Name, false).get());
+    EXPECT_EQ(1,
+              sfrObject.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed, false).get());
+    EXPECT_EQ(0.65,
+              sfrObject.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::AirMassFlowExponentWhenOpeningisClosed, false).get());
+    EXPECT_EQ("NonPivoted",
+              sfrObject.getString(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::TypeofRectangularLargeVerticalOpening, false).get());
+    EXPECT_EQ(0, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::ExtraCrackLengthorHeightofPivotingAxis, false).get());
+
+    ASSERT_EQ(2u, sfrObject.numExtensibleGroups());
+    IdfExtensibleGroup eg1 = sfrObject.extensibleGroups()[0];
+    EXPECT_EQ(0, eg1.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::OpeningFactor).get());
+    EXPECT_EQ(0.01, eg1.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::DischargeCoefficientforOpeningFactor).get());
+    EXPECT_EQ(0, eg1.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::WidthFactorforOpeningFactor).get());
+    EXPECT_EQ(0, eg1.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::HeightFactorforOpeningFactor).get());
+    EXPECT_EQ(0, eg1.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::StartHeightFactorforOpeningFactor).get());
+    IdfExtensibleGroup eg2 = sfrObject.extensibleGroups()[1];
+    EXPECT_EQ(1, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::OpeningFactor).get());
+    EXPECT_EQ(0.5, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::DischargeCoefficientforOpeningFactor).get());
+    EXPECT_EQ(1, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::WidthFactorforOpeningFactor).get());
+    EXPECT_EQ(1, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::HeightFactorforOpeningFactor).get());
+    EXPECT_EQ(1, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::StartHeightFactorforOpeningFactor).get());
+  }
+
+  // HorizontalOpening
+  {
+    Point3dVector points;
+    points.push_back(Point3d(0, 1, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(1, 0, 0));
+    points.push_back(Point3d(1, 1, 0));
+    Surface surface(points, model);
+    surface.setSpace(space);
+
+    AirflowNetworkHorizontalOpening ho0(model, 1.0, 0.5);
+    AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(ho0);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Component_HorizontalOpening).size());
+
+    WorkspaceObject afnObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface)[0];
+    WorkspaceObject sfrObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Component_HorizontalOpening)[0];
+
+    EXPECT_EQ("Surface 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, false).get());
+    EXPECT_EQ("Airflow Network Horizontal Opening 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, false).get());
+    EXPECT_EQ("", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, false).get());
+    EXPECT_EQ(1, afnObject.getDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, false).get());
+
+    EXPECT_EQ("Airflow Network Horizontal Opening 1",
+              sfrObject.getString(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::Name, false).get());
+    EXPECT_EQ(
+      1, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed, false).get());
+    EXPECT_EQ(0.65,
+              sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::AirMassFlowExponentWhenOpeningisClosed, false).get());
+    EXPECT_EQ(90, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::SlopingPlaneAngle, false).get());
+    EXPECT_EQ(0.5, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::DischageCoefficient, false).get());
+  }
+
+  // EffectiveLeakageArea
+  {
+    Point3dVector points;
+    points.push_back(Point3d(0, 1, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(1, 0, 0));
+    points.push_back(Point3d(1, 1, 0));
+    Surface surface(points, model);
+    surface.setSpace(space);
+
+    AirflowNetworkHorizontalOpening ela0(model, 10.0);
+    AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(ela0);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea).size());
+
+    WorkspaceObject afnObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface)[0];
+    WorkspaceObject sfrObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface_EffectiveLeakageArea)[0];
+
+    EXPECT_EQ("Surface 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, false).get());
+    EXPECT_EQ("Airflow Network Effective Leakage Area 1",
+              afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, false).get());
+    EXPECT_EQ("", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, false).get());
+    EXPECT_EQ(1, afnObject.getDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, false).get());
+
+    EXPECT_EQ("Airflow Network Horizontal Opening 1",
+              sfrObject.getString(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::Name, false).get());
+    EXPECT_EQ(10, sfrObject.getDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::EffectiveLeakageArea, false).get());
+    EXPECT_EQ(1, sfrObject.getDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::DischargeCoefficient, false).get());
+    EXPECT_EQ(4, sfrObject.getDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::ReferencePressureDifference, false).get());
+    EXPECT_EQ(0.65, sfrObject.getDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::AirMassFlowExponent, false).get());
+  }
+
+  // SpecifiedFlowRate
+  {
+    Point3dVector points;
+    points.push_back(Point3d(0, 1, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(1, 0, 0));
+    points.push_back(Point3d(1, 1, 0));
+    Surface surface(points, model);
+    surface.setSpace(space);
+
+    AirflowNetworkSpecifiedFlowRate sfr0(model, 10.0);
+    AirflowNetworkSurface afnsurf = surface.getAirflowNetworkSurface(sfr0);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_SpecifiedFlowRate).size());
+
+    WorkspaceObject afnObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_Surface)[0];
+    WorkspaceObject sfrObject = workspace.getObjectsByType(IddObjectType::AirflowNetwork_MultiZone_SpecifiedFlowRate)[0];
+
+    EXPECT_EQ("Surface 1", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, false).get());
+    EXPECT_EQ("Airflow Network Specified Flow Rate 1",
+              afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, false).get());
+    EXPECT_EQ("", afnObject.getString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, false).get());
+    EXPECT_EQ(1, afnObject.getDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, false).get());
+
+    EXPECT_EQ("Airflow Network Specified Flow Rate 1", sfrObject.getString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::Name, false).get());
+    EXPECT_EQ(15, sfrObject.getDouble(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowValue, false).get());
+    EXPECT_EQ("MassFlow", sfrObject.getString(AirflowNetwork_MultiZone_SpecifiedFlowRateFields::AirFlowUnits, false).get());
+  }
 }
