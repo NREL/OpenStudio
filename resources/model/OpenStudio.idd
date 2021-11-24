@@ -35310,9 +35310,22 @@ OS:AirflowNetworkDetailedOpening,
       \type real
       \units dimensionless
       \minimum 0
-      \maximum 0
+      \maximum 1
       \default 0
+      \note Opening Factor 1
       \note This value must be specified as 0.
+      \note Opening Factor 2
+      \note If Number of Sets of Opening Factor Data = 2, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 3, this value must be less than 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than the
+      \note value entered for Opening factor 3 and greater than the value entered
+      \note for Opening factor 1.
+      \note Opening Factor 3
+      \note If Number of Sets of Opening Factor Data = 3, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than 1.0,
+      \note and greater than value entered for Opening factor 2.
+      \note Opening Factor 4
+      \note If Number of Sets of Opening Factor Data = 4, this value must be 1.0
       \begin-extensible
   N5, \field Discharge Coefficient for Opening Factor 1
       \type real

@@ -283,7 +283,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     surface.setSpace(space);
 
     std::vector<DetailedOpeningFactorData> data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-                                                   DetailedOpeningFactorData(0.0, 0.5, 1.0, 1.0, 1.0)};
+                                                   DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 1.0)};
 
     AirflowNetworkDetailedOpening do0(model, 1.0, data);
     AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(do0);

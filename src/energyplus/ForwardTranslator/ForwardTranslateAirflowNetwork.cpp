@@ -116,7 +116,10 @@
 #include <utilities/idd/AirflowNetwork_Distribution_Linkage_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_Distribution_DuctViewFactors_FieldEnums.hxx>
 #include <utilities/idd/AirflowNetwork_OccupantVentilationControl_FieldEnums.hxx>
+
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;
 
