@@ -14211,9 +14211,22 @@ AirflowNetwork:MultiZone:Component:DetailedOpening,
       \type real
       \units dimensionless
       \minimum 0
-      \maximum 0
+      \maximum 1
       \default 0
+      \note Opening Factor 1
       \note This value must be specified as 0.
+      \note Opening Factor 2
+      \note If Number of Sets of Opening Factor Data = 2, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 3, this value must be less than 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than the
+      \note value entered for Opening factor 3 and greater than the value entered
+      \note for Opening factor 1.
+      \note Opening Factor 3
+      \note If Number of Sets of Opening Factor Data = 3, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than 1.0,
+      \note and greater than value entered for Opening factor 2.
+      \note Opening Factor 4
+      \note If Number of Sets of Opening Factor Data = 4, this value must be 1.0
       \begin-extensible
  N6 , \field Discharge Coefficient for Opening Factor 1
       \type real
@@ -14238,130 +14251,6 @@ AirflowNetwork:MultiZone:Component:DetailedOpening,
       \default 0
       \note The Height Factor is the opening height divided by the window or door height.
  N9 , \field Start Height Factor for Opening Factor 1
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Start Height Factor is the Start Height divided by the window or door height.
-      \note Start Height is the distance between the bottom of the window or door and the
-      \note bottom of the window or door opening. The sum of the Height Factor and the Start Height
-      \note Factor must be less than 1.0 in order to have the opening within the window or door
-      \note dimensions.
- N10, \field Opening Factor 2
-      \required-field
-      \type real
-      \units dimensionless
-      \minimum> 0
-      \maximum 1
-      \note If Number of Sets of Opening Factor Data = 2, this value must be 1.0.
-      \note If Number of Sets of Opening Factor Data = 3, this value must be less than 1.0.
-      \note If Number of Sets of Opening Factor Data = 4, this value must be less than the
-      \note value entered for Opening factor 3 and greater than the value entered
-      \note for Opening factor 1.
- N11, \field Discharge Coefficient for Opening Factor 2
-      \type real
-      \units dimensionless
-      \minimum> 0
-      \maximum 1
-      \default 1
-      \note The Discharge Coefficient indicates the fractional effectiveness
-      \note for air flow through a window or door at that Opening Factor.
- N12, \field Width Factor for Opening Factor 2
-      \type real
-      \units dimensionless
-      \minimum> 0
-      \maximum 1
-      \default 1
-      \note The Width Factor is the opening width divided by the window or door width.
- N13, \field Height Factor for Opening Factor 2
-      \type real
-      \units dimensionless
-      \minimum> 0
-      \maximum 1
-      \default 1
-      \note The Height Factor is the opening height divided by the window or door height.
- N14, \field Start Height Factor for Opening Factor 2
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum< 1
-      \default 0
-      \note The Start Height Factor is the Start Height divided by the window or door height.
-      \note Start Height is the distance between the bottom of the window or door and the
-      \note bottom of the window or door opening. The sum of the Height Factor and the Start Height
-      \note Factor must be less than 1.0 in order to have the opening within the window or door
-      \note dimensions.
- N15, \field Opening Factor 3
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \note If Number of Sets of Opening Factor Data = 3, this value must be 1.0.
-      \note If Number of Sets of Opening Factor Data = 4, this value must be less than 1.0,
-      \note and greater than value entered for Opening factor 2.
- N16, \field Discharge Coefficient for Opening Factor 3
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Discharge Coefficient indicates the fractional effectiveness
-      \note for air flow through a window or door at that Opening Factor.
- N17, \field Width Factor for Opening Factor 3
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Width Factor is the opening width divided by the window or door width.
- N18, \field Height Factor for Opening Factor 3
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Height Factor is the opening height divided by the window or door height.
- N19, \field Start Height Factor for Opening Factor 3
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Start Height Factor is the Start Height divided by the window or door height.
-      \note Start Height is the distance between the bottom of the window or door and the
-      \note bottom of the window or door opening. The sum of the Height Factor and the Start Height
-      \note Factor must be less than 1.0 in order to have the opening within the window or door
-      \note dimensions.
- N20, \field Opening Factor 4
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \note If Number of Sets of Opening Factor Data = 4, this value must be 1.0
- N21, \field Discharge Coefficient for Opening Factor 4
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Discharge Coefficient indicates the fractional effectiveness
-      \note for air flow through a window or door at that Opening Factor.
- N22, \field Width Factor for Opening Factor 4
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Width Factor is the opening width divided by the window or door width.
- N23, \field Height Factor for Opening Factor 4
-      \type real
-      \units dimensionless
-      \minimum 0
-      \maximum 1
-      \default 0
-      \note The Height Factor is the opening height divided by the window or door height.
- N24; \field Start Height Factor for Opening Factor 4
       \type real
       \units dimensionless
       \minimum 0
