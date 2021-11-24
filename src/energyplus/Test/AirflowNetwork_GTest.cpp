@@ -248,7 +248,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     Surface surface(points, model);
     surface.setSpace(space);
 
-    AirflowNetworkSimpleOpenting so0(model, 1, 0.65, 0.5);
+    AirflowNetworkSimpleOpening so0(model, 1, 0.65, 0.5);
     AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(so0);
 
     Workspace workspace = forwardTranslator.translateModel(model);
@@ -269,7 +269,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     EXPECT_EQ(1, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed, false).get());
     EXPECT_EQ(0.65, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::AirMassFlowExponentWhenOpeningisClosed, false).get());
     EXPECT_EQ(0.65, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::MinimumDensityDifferenceforTwoWayFlow, false).get());
-    EXPECT_EQ(0.5, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::DischageCoefficient, false).get());
+    EXPECT_EQ(0.5, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::DischargeCoefficient, false).get());
   }
 
   // DetailedOpening
@@ -360,7 +360,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     EXPECT_EQ(0.65,
               sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::AirMassFlowExponentWhenOpeningisClosed, false).get());
     EXPECT_EQ(90, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::SlopingPlaneAngle, false).get());
-    EXPECT_EQ(0.5, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::DischageCoefficient, false).get());
+    EXPECT_EQ(0.5, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::DischargeCoefficient, false).get());
   }
 
   // EffectiveLeakageArea
@@ -373,7 +373,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     Surface surface(points, model);
     surface.setSpace(space);
 
-    AirflowNetworkHorizontalOpening ela0(model, 10.0);
+    AirflowNetworkEffectiveLeakageArea ela0(model, 10.0);
     AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(ela0);
 
     Workspace workspace = forwardTranslator.translateModel(model);
