@@ -333,41 +333,17 @@ namespace energyplus {
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::ExtraCrackLengthorHeightofPivotingAxis,
                         modelObject.extraCrackLengthorHeightofPivotingAxis());
     auto factors = modelObject.openingFactors();
-    int N = static_cast<int>(factors.size());
-    idfObject.setInt(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::NumberofSetsofOpeningFactorData, std::min(N, 4));
 
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::OpeningFactor1, factors[0].openingFactor());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::DischargeCoefficientforOpeningFactor1,
-                        factors[0].dischargeCoefficient());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::WidthFactorforOpeningFactor1, factors[0].widthFactor());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::HeightFactorforOpeningFactor1, factors[0].heightFactor());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::StartHeightFactorforOpeningFactor1, factors[0].startHeightFactor());
+    idfObject.setInt(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::NumberofSetsofOpeningFactorData, factors.size());
 
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::OpeningFactor2, factors[1].openingFactor());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::DischargeCoefficientforOpeningFactor2,
-                        factors[1].dischargeCoefficient());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::WidthFactorforOpeningFactor2, factors[1].widthFactor());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::HeightFactorforOpeningFactor2, factors[1].heightFactor());
-    idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::StartHeightFactorforOpeningFactor2, factors[1].startHeightFactor());
-
-    if (N > 2) {
-      idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::OpeningFactor3, factors[2].openingFactor());
-      idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::DischargeCoefficientforOpeningFactor3,
-                          factors[2].dischargeCoefficient());
-      idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::WidthFactorforOpeningFactor3, factors[2].widthFactor());
-      idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::HeightFactorforOpeningFactor3, factors[2].heightFactor());
-      idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::StartHeightFactorforOpeningFactor3,
-                          factors[2].startHeightFactor());
-
-      if (N > 3) {
-        idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::OpeningFactor4, factors[3].openingFactor());
-        idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::DischargeCoefficientforOpeningFactor4,
-                            factors[3].dischargeCoefficient());
-        idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::WidthFactorforOpeningFactor4, factors[3].widthFactor());
-        idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::HeightFactorforOpeningFactor4, factors[3].heightFactor());
-        idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::StartHeightFactorforOpeningFactor4,
-                            factors[3].startHeightFactor());
-      }
+    for (const DetailedOpeningFactorData& factor : factors) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::OpeningFactor, factor.openingFactor());
+      eg.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::DischargeCoefficientforOpeningFactor,
+                   factor.dischargeCoefficient());
+      eg.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::WidthFactorforOpeningFactor, factor.widthFactor());
+      eg.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::HeightFactorforOpeningFactor, factor.heightFactor());
+      eg.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::StartHeightFactorforOpeningFactor, factor.startHeightFactor());
     }
 
     return idfObject;

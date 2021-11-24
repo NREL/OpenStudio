@@ -35256,7 +35256,8 @@ OS:AirflowNetworkSpecifiedFlowRate,
       \note MassFlow (kg/s)
 
 OS:AirflowNetworkDetailedOpening,
-      \min-fields 17
+      \min-fields 16
+      \max-fields 31
       \extensible:5
       \memo This object specifies the properties of airflow through windows and doors (window, door and
       \memo glass door heat transfer subsurfaces) when they are closed or open.

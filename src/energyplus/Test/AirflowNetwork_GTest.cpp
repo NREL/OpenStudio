@@ -283,7 +283,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     surface.setSpace(space);
 
     std::vector<DetailedOpeningFactorData> data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-                                                   DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 1.0)};
+                                                   DetailedOpeningFactorData(0.0, 0.5, 1.0, 1.0, 1.0)};
 
     AirflowNetworkDetailedOpening do0(model, 1.0, data);
     AirflowNetworkSurface afnsurf0 = surface.getAirflowNetworkSurface(do0);
@@ -319,7 +319,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     EXPECT_EQ(0, eg1.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::HeightFactorforOpeningFactor).get());
     EXPECT_EQ(0, eg1.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::StartHeightFactorforOpeningFactor).get());
     IdfExtensibleGroup eg2 = sfrObject.extensibleGroups()[1];
-    EXPECT_EQ(1, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::OpeningFactor).get());
+    EXPECT_EQ(0, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::OpeningFactor).get());
     EXPECT_EQ(0.5, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::DischargeCoefficientforOpeningFactor).get());
     EXPECT_EQ(1, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::WidthFactorforOpeningFactor).get());
     EXPECT_EQ(1, eg2.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningExtensibleFields::HeightFactorforOpeningFactor).get());
