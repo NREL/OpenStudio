@@ -39,6 +39,8 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 #include "../utilities/time/Time.hpp"
 
+#include <iostream>
+
 namespace openstudio {
 
 class ProgressBar;
@@ -491,6 +493,14 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
+  struct ForwardTranslatorOptionKeyMethod
+  {
+    std::string json_name;
+    std::string ft_method_name;
+  };
+
+  ENERGYPLUS_API std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt);
+
 #define ENERGYPLUS_VERSION "9.6"
 
   class ENERGYPLUS_API ForwardTranslator
@@ -545,6 +555,8 @@ namespace energyplus {
     /** If excludeSpaceTranslation, do usual combineSpaces(), etc. Otherwise, translate space objects.
    *  Use this at your own risks */
     void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+
+    static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
 
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -1598,6 +1610,7 @@ namespace energyplus {
 
     ProgressBar* m_progressBar;
 
+    // ForwardTranslator options
     bool m_keepRunControlSpecialDays;
     bool m_ipTabularOutput;
     bool m_excludeLCCObjects;

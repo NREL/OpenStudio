@@ -82,7 +82,9 @@ module Kernel
     'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
     'pycall.so' => 'init_pycall',\
-    'pycall.dll' => 'init_pycall'
+    'pycall.dll' => 'init_pycall',\
+    'msgpack/msgpack' => 'init_msgpack'
+    #'cbor/cbor' => 'init_cbor',\
   }
 
   def require_embedded_extension path
@@ -372,7 +374,7 @@ class IO
     alias :original_read :read
     alias :original_open :open
   end
-  
+
   # NOTES ruby2.7+ now issues warning: "Using the last argument as keyword parameters is deprecated"
   # https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/
   # Fix by capturing keywords in options hsah

@@ -753,20 +753,39 @@ include(FetchRubyMinGW.cmake)
 FetchRubyMinGW()
 
 if(BUILD_CLI)
-  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
+  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/openstudio-gems
   # need to  update the MD5sum for each platform and url below
+
+  set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
+
+  # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
+  set(USE_OPENSTUDIO_GEMS_PR TRUE)
+  if (USE_OPENSTUDIO_GEMS_PR)
+    set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-sdk-dependencies.s3.amazonaws.com/openstudio-gems")
+    set(OPENSTUDIO_GEMS_PR_NUMBER "PR-51")
+  endif()
+
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c1031e9266ff084886422168ffef684d")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2a5d7d25e79f9c7a791adfe7e9fa699d")
+       if (USE_OPENSTUDIO_GEMS_PR)
+         set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-osx/${OPENSTUDIO_GEMS_PR_NUMBER}")
+       endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "aa3b44b2efd3a6fed580a2a696b7286b")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "86adc1d50d28bf2f197bbf4167aaa689")
+       if (USE_OPENSTUDIO_GEMS_PR)
+         set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
+       endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "be012aaad33a089aca27dc99d306468d")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1822f2fee9517b134c0ba868f8b31f43")
+    if (USE_OPENSTUDIO_GEMS_PR)
+      set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
+    endif()
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -777,15 +796,36 @@ if(BUILD_CLI)
     file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
   endif()
 
+  # If you do not have the right tar.gz: download, and remove extracted dir
   if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_BASEURL}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+    file(
+      DOWNLOAD "${OPENSTUDIO_GEMS_BASEURL}/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
       ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 300 # 5 minute timeout
       SHOW_PROGRESS
       EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
     file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+  endif()
+
+  # If the extracted dir has a version.txt, it must match, otherwise remove it
+  if(EXISTS "${OPENSTUDIO_GEMS_DIR}/version.txt")
+    file(READ ${OPENSTUDIO_GEMS_DIR}/version.txt EXTRACTED_TAR_GZ_NAME)
+    string(STRIP ${EXTRACTED_TAR_GZ_NAME} EXTRACTED_TAR_GZ_NAME)
+    if(NOT EXTRACTED_TAR_GZ_NAME STREQUAL OPENSTUDIO_GEMS_ZIP_FILENAME)
+      message("Extracted gem dir ${OPENSTUDIO_GEMS_DIR} has the wrong version, removing it")
+      file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    endif()
+  else()
+    # Until the openstudio-gems package from my PR-51 goes onto develop, assume you want to remove it to avoid leaving it in place when you switch back to develop
+    if(EXISTS "${OPENSTUDIO_GEMS_DIR}" AND NOT USE_OPENSTUDIO_GEMS_PR)
+      file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    endif()
+  endif()
+
+  # If you do not have the extracted dir, then extract the tar.gz
+  if(NOT EXISTS "${OPENSTUDIO_GEMS_DIR}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
 
     file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")

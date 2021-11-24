@@ -199,6 +199,21 @@ namespace energyplus {
     m_excludeSpaceTranslation = excludeSpaceTranslation;
   }
 
+  std::vector<ForwardTranslatorOptionKeyMethod> ForwardTranslator::forwardTranslatorOptionKeyMethods() {
+    return std::vector<ForwardTranslatorOptionKeyMethod>{{{"runcontrolspecialdays", "setKeepRunControlSpecialDays"},
+                                                          {"ip_tabular_output", "setIPTabularOutput"},
+                                                          {"no_lifecyclecosts", "setExcludeLCCObjects"},
+                                                          {"no_sqlite_output", "setExcludeSQliteOutputReport"},
+                                                          {"no_html_output", "setExcludeHTMLOutputReport"},
+                                                          {"no_variable_dictionary", "setExcludeVariableDictionary"},
+                                                          {"no_space_translation", "setExcludeSpaceTranslation"}}};
+  }
+
+  std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt) {
+    out << "(" << opt.json_name << ", " << opt.ft_method_name << ")";
+    return out;
+  }
+
   // Figure out which object
   // * If the load is assigned to a space,
   //     * m_excludeSpaceTranslation = true: translate and return the IdfObject for the Zone
