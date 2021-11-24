@@ -48,8 +48,8 @@ TEST_F(ModelFixture, AirflowNetwork_SimpleOpening) {
   EXPECT_EQ(0.5, simple0.dischargeCoefficient());
   EXPECT_EQ(0.65, simple0.airMassFlowExponentWhenOpeningisClosed());
 
-  EXPECT_EQ(1, simple0.airMassFlowCoefficientWhenOpeningisClosed());
-  EXPECT_EQ(0.5, simple0.minimumDensityDifferenceforTwoWayFlow());
-  EXPECT_EQ(0.5, simple0.dischargeCoefficient());
-  EXPECT_EQ(0.5, simple0.airMassFlowExponentWhenOpeningisClosed());
+  EXPECT_EQ(1, simple1.airMassFlowCoefficientWhenOpeningisClosed());
+  EXPECT_EQ(0.5, simple1.minimumDensityDifferenceforTwoWayFlow());
+  EXPECT_EQ(0.5, simple1.dischargeCoefficient());
+  EXPECT_EQ(0.5, simple1.airMassFlowExponentWhenOpeningisClosed());
 }
