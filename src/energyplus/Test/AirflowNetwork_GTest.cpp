@@ -308,7 +308,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkSurfaces) {
     EXPECT_EQ(0.65,
               sfrObject.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::AirMassFlowExponentWhenOpeningisClosed, false).get());
     EXPECT_EQ("NonPivoted",
-              sfrObject.getString(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::TypeofRectangularLargeVerticalOpening, false).get());
+              sfrObject.getString(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::TypeofRectangularLargeVerticalOpening_LVO_, false).get());
     EXPECT_EQ(0, sfrObject.getDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::ExtraCrackLengthorHeightofPivotingAxis, false).get());
 
     ASSERT_EQ(2u, sfrObject.numExtensibleGroups());
