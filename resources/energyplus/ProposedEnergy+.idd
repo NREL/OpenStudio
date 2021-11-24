@@ -14250,7 +14250,7 @@ AirflowNetwork:MultiZone:Component:DetailedOpening,
       \maximum 1
       \default 0
       \note The Height Factor is the opening height divided by the window or door height.
- N9 , \field Start Height Factor for Opening Factor 1
+ N9 ; \field Start Height Factor for Opening Factor 1
       \type real
       \units dimensionless
       \minimum 0
