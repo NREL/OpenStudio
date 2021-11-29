@@ -65,57 +65,47 @@ TEST_F(ModelFixture, AirflowNetwork_DetailedOpening) {
 
 TEST_F(ModelFixture, AirflowNetwork_DetailedOpening_InvalidOpeningFactors) {
   Model model;
-  
+
   std::vector<DetailedOpeningFactorData> data;
-  
-  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99)};
-  
+
+  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99)};
+
   AirflowNetworkDetailedOpening detailed0(model, 1.0, data);
-  
+
   EXPECT_TRUE(detailed0.setOpeningFactors(data));
 
   // Number of Sets of Opening Factor Data
   data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
-  
-  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99),
+
+  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99),
+          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99), DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99),
           DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
-  
+
   // Opening Factor
-  data = {DetailedOpeningFactorData(0.5, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99)};
+  data = {DetailedOpeningFactorData(0.5, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
-  
-  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(0.5, 0.5, 1.0, 1.0, 0.99)};
+
+  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(0.5, 0.5, 1.0, 1.0, 0.99)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
-  
+
   // Discharge Coefficient for Opening Factor
-  data = {DetailedOpeningFactorData(0.0, 0.0, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99)};
+  data = {DetailedOpeningFactorData(0.0, 0.0, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 0.99)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
-  
-  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.0, 1.0, 1.0, 0.99)};
+
+  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.0, 1.0, 1.0, 0.99)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
-  
+
   // Width Factor for Opening Factor
-  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.5, 0.0, 1.0, 0.99)};
+  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.5, 0.0, 1.0, 0.99)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
 
   // Height Factor for Opening Factor
-  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 0.0, 0.99)};
+  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.5, 1.0, 0.0, 0.99)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
 
   // Start Height Factor for Opening Factor
-  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0),
-          DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 1.0)};
+  data = {DetailedOpeningFactorData(0.0, 0.01, 0.0, 0.0, 0.0), DetailedOpeningFactorData(1.0, 0.5, 1.0, 1.0, 1.0)};
   EXPECT_FALSE(detailed0.setOpeningFactors(data));
 }
