@@ -255,36 +255,14 @@ namespace model {
         return false;
       }
 
-      // Discharge Coefficient for Opening Factor
-      if (factors[0].dischargeCoefficient() == 0.0) {
-        LOG(Error, "First discharge coefficient must be greater than 0");
-        return false;
-      }
-      if (factors[1].dischargeCoefficient() == 0.0) {
-        LOG(Error, "Second discharge coefficient must be greater than 0");
-        return false;
-      }
-
-      // Width Factor for Opening Factor
-      if (factors[1].widthFactor() == 0.0) {
-        LOG(Error, "Second width factor must be greater than 0");
-        return false;
-      }
-
-      // Height Factor for Opening Factor
-      if (factors[1].heightFactor() == 0.0) {
-        LOG(Error, "Second height factor must be greater than 0");
-        return false;
-      }
-
-      // Start Height Factor for Opening Factor
-      if (factors[1].startHeightFactor() == 1.0) {
-        LOG(Error, "Second start height factor must be less than 1");
-        return false;
-      }
-
       clearExtensibleGroups(false);
       for (auto factor : factors) {
+        // Height Factor and Start Height Factor
+        if (factor.heightFactor() + factor.startHeightFactor() > 1.0) {
+          LOG(Error, "The sum of the Height Factor and the Start Height Factor cannot be more than 1");
+          return false;
+        }
+
         std::vector<std::string> values;
         values.push_back(toString(factor.openingFactor()));
         values.push_back(toString(factor.dischargeCoefficient()));
