@@ -236,6 +236,7 @@ namespace model {
     }
 
     bool AirflowNetworkDetailedOpening_Impl::setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors) {
+      // Number of Sets of Opening Factor Data
       if (factors.size() < 2) {
         LOG(Error, "Insufficient data in opening factors vector, minimum number of factors is 2");
         return false;
@@ -243,6 +244,8 @@ namespace model {
         LOG(Error, "Additional data in opening factors vector, maximum number of factors is 4");
         return false;
       }
+      
+      // Opening Factor
       if (factors[0].openingFactor() != 0.0) {
         LOG(Error, "First opening factor must be 0");
         return false;
@@ -251,6 +254,35 @@ namespace model {
         LOG(Error, "Last opening factor must be 1");
         return false;
       }
+      
+      // Discharge Coefficient for Opening Factor
+      if (factors[0].dischargeCoefficient() == 0.0) {
+        LOG(Error, "First discharge coefficient must be greater than 0");
+        return false;
+      }
+      if (factors[1].dischargeCoefficient() == 0.0) {
+        LOG(Error, "Second discharge coefficient must be greater than 0");
+        return false;
+      }
+      
+      // Width Factor for Opening Factor
+      if (factors[1].widthFactor() == 0.0) {
+        LOG(Error, "Second width factor must be greater than 0");
+        return false;
+      }
+      
+      // Height Factor for Opening Factor
+      if (factors[1].heightFactor() == 0.0) {
+        LOG(Error, "Second height factor must be greater than 0");
+        return false;
+      }
+      
+      // Start Height Factor for Opening Factor
+      if (factors[1].startHeightFactor() == 1.0) {
+        LOG(Error, "Second start height factor must be less than 1");
+        return false;
+      }
+      
       clearExtensibleGroups(false);
       for (auto factor : factors) {
         std::vector<std::string> values;
