@@ -14231,9 +14231,9 @@ AirflowNetwork:MultiZone:Component:DetailedOpening,
  N6 , \field Discharge Coefficient for Opening Factor 1
       \type real
       \units dimensionless
-      \minimum 0
+      \minimum> 0
       \maximum 1
-      \default 0
+      \default 0.001
       \note The Discharge Coefficient indicates the fractional effectiveness
       \note for air flow through a window or door at that Opening Factor.
  N7 , \field Width Factor for Opening Factor 1
