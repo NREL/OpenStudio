@@ -627,7 +627,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
   EXPECT_EQ(customDay2Schedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay2Schedule_DayName).get());
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_YearSimple) {
+TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearSimple) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
@@ -707,7 +707,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_YearSimple) {
   ScheduleRuleset scheduleRuleset = scheduleRulesets[0];
   EXPECT_EQ("occupants schedule", scheduleRuleset.nameString());
   EXPECT_TRUE(scheduleRuleset.scheduleTypeLimits());
-  /* EXPECT_EQ("Schedule Day 1", scheduleRuleset.defaultDaySchedule().nameString()); */
+  EXPECT_EQ("Schedule Day 1", scheduleRuleset.defaultDaySchedule().nameString());  // FIXME: we want this to somehow be Schedule Day 5?
   EXPECT_EQ(1, scheduleRuleset.scheduleRules().size());
 
   std::vector<ScheduleRule> scheduleRules = model.getModelObjects<ScheduleRule>();
@@ -715,6 +715,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_YearSimple) {
   ScheduleRule scheduleRule = scheduleRules[0];
   EXPECT_EQ(scheduleRule.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(0, scheduleRule.ruleIndex());
+  EXPECT_EQ(scheduleRule.daySchedule().nameString(), "occupants schedule allday1");
   EXPECT_TRUE(scheduleRule.applySunday());
   EXPECT_TRUE(scheduleRule.applyMonday());
   EXPECT_TRUE(scheduleRule.applyTuesday());
@@ -740,4 +741,206 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_YearSimple) {
   ASSERT_EQ(1u, scheduleWeeks.size());  // called from ReverseTranslator.cpp directly
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_YearComplex) {}
+TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearComplex) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
+  idfObject0.setString(0, "Fractional");
+  idfObject0.setString(1, "0");
+  idfObject0.setString(2, "1");
+  idfObject0.setString(3, "Continuous");
+
+  WorkspaceObject epScheduleTypeLimits = workspace.addObject(idfObject0).get();
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Schedule_Day_Interval);
+  idfObject1.setString(0, "occupants schedule allday1");
+  idfObject1.setString(1, "Fractional");
+  idfObject1.setString(2, "No");
+  idfObject1.setString(3, "07:00");
+  idfObject1.setString(4, "1");
+  idfObject1.setString(5, "08:00");
+  idfObject1.setString(6, "0.868852459016393");
+  idfObject1.setString(7, "09:00");
+  idfObject1.setString(8, "0.409836065573771");
+  idfObject1.setString(9, "16:00");
+  idfObject1.setString(10, "0.245901639344262");
+  idfObject1.setString(11, "17:00");
+  idfObject1.setString(12, "0.295081967213115");
+  idfObject1.setString(13, "18:00");
+  idfObject1.setString(14, "0.540983606557377");
+  idfObject1.setString(15, "21:00");
+  idfObject1.setString(16, "0.885245901639344");
+  idfObject1.setString(17, "24:00");
+  idfObject1.setString(18, "1");
+
+  WorkspaceObject epScheduleDayInterval1 = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Schedule_Day_Interval);
+  idfObject2.setString(0, "occupants schedule allday2");
+  idfObject2.setString(1, "Fractional");
+  idfObject2.setString(2, "No");
+  idfObject2.setString(3, "07:00");
+  idfObject2.setString(4, "1");
+  idfObject2.setString(5, "08:00");
+  idfObject2.setString(6, "0.868852459016393");
+  idfObject2.setString(7, "09:00");
+  idfObject2.setString(8, "0.409836065573771");
+  idfObject2.setString(9, "16:00");
+  idfObject2.setString(10, "0.245901639344262");
+  idfObject2.setString(11, "17:00");
+  idfObject2.setString(12, "0.295081967213115");
+  idfObject2.setString(13, "18:00");
+  idfObject2.setString(14, "0.540983606557377");
+  idfObject2.setString(15, "21:00");
+  idfObject2.setString(16, "0.885245901639344");
+  idfObject2.setString(17, "24:00");
+  idfObject2.setString(18, "1");
+
+  WorkspaceObject epScheduleDayInterval2 = workspace.addObject(idfObject2).get();
+
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Schedule_Week_Daily);
+  idfObject3.setString(0, "occupants schedule Week Rule - Jan1-Jan27");
+  idfObject3.setString(1, "occupants schedule allday1");
+  idfObject3.setString(2, "occupants schedule allday1");
+  idfObject3.setString(3, "occupants schedule allday1");
+  idfObject3.setString(4, "occupants schedule allday1");
+  idfObject3.setString(5, "occupants schedule allday1");
+  idfObject3.setString(6, "occupants schedule allday1");
+  idfObject3.setString(7, "occupants schedule allday1");
+  idfObject3.setString(8, "Schedule Day 5");
+  idfObject3.setString(9, "Schedule Day 5");
+  idfObject3.setString(10, "Schedule Day 5");
+  idfObject3.setString(11, "Schedule Day 5");
+  idfObject3.setString(12, "Schedule Day 5");
+
+  WorkspaceObject epScheduleWeekDaily1 = workspace.addObject(idfObject3).get();
+
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::Schedule_Week_Daily);
+  idfObject4.setString(0, "occupants schedule Week Rule - Jan28-Feb3");
+  idfObject4.setString(1, "occupants schedule allday1");
+  idfObject4.setString(2, "occupants schedule allday1");
+  idfObject4.setString(3, "occupants schedule allday1");
+  idfObject4.setString(4, "occupants schedule allday1");
+  idfObject4.setString(5, "occupants schedule allday2");
+  idfObject4.setString(6, "occupants schedule allday2");
+  idfObject4.setString(7, "occupants schedule allday2");
+  idfObject4.setString(8, "Schedule Day 5");
+  idfObject4.setString(9, "Schedule Day 5");
+  idfObject4.setString(10, "Schedule Day 5");
+  idfObject4.setString(11, "Schedule Day 5");
+  idfObject4.setString(12, "Schedule Day 5");
+
+  WorkspaceObject epScheduleWeekDaily2 = workspace.addObject(idfObject4).get();
+
+  openstudio::IdfObject idfObject5(openstudio::IddObjectType::Schedule_Year);
+  idfObject5.setString(0, "occupants schedule");
+  idfObject5.setString(1, "Fractional");
+  idfObject5.setString(2, "occupants schedule Week Rule - Jan1-Jan27");
+  idfObject5.setString(3, "1");
+  idfObject5.setString(4, "1");
+  idfObject5.setString(5, "1");
+  idfObject5.setString(6, "27");
+  idfObject5.setString(7, "occupants schedule Week Rule - Jan28-Feb3");
+  idfObject5.setString(8, "1");
+  idfObject5.setString(9, "28");
+  idfObject5.setString(10, "2");
+  idfObject5.setString(11, "3");
+
+  WorkspaceObject epScheduleYear = workspace.addObject(idfObject5).get();
+
+  openstudio::IdfObject idfObject6(openstudio::IddObjectType::Schedule_Day_Interval);
+  idfObject6.setString(0, "Schedule Day 5");
+  idfObject6.setString(1, "Fractional");
+  idfObject6.setString(2, "No");
+  idfObject6.setString(3, "24:00");
+  idfObject6.setString(4, "0");
+
+  WorkspaceObject epScheduleDayInterval3 = workspace.addObject(idfObject6).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<ScheduleRuleset> scheduleRulesets = model.getModelObjects<ScheduleRuleset>();
+  ASSERT_EQ(1u, scheduleRulesets.size());
+  ScheduleRuleset scheduleRuleset = scheduleRulesets[0];
+  EXPECT_EQ("occupants schedule", scheduleRuleset.nameString());
+  EXPECT_TRUE(scheduleRuleset.scheduleTypeLimits());
+  EXPECT_EQ("Schedule Day 1", scheduleRuleset.defaultDaySchedule().nameString());  // FIXME: we want this to somehow be Schedule Day 5?
+  EXPECT_EQ(3, scheduleRuleset.scheduleRules().size());
+
+  std::vector<ScheduleRule> scheduleRules = model.getModelObjects<ScheduleRule>();
+  ASSERT_EQ(3u, scheduleRules.size());
+
+  boost::optional<ScheduleRule> optscheduleRule1 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan1-Jan27");
+  ASSERT_TRUE(optscheduleRule1);
+  ScheduleRule scheduleRule1 = optscheduleRule1.get();
+  EXPECT_EQ(scheduleRule1.scheduleRuleset().handle(), scheduleRuleset.handle());
+  EXPECT_EQ(2, scheduleRule1.ruleIndex());
+  EXPECT_EQ(scheduleRule1.daySchedule().nameString(), "occupants schedule allday1");
+  EXPECT_TRUE(scheduleRule1.applySunday());
+  EXPECT_TRUE(scheduleRule1.applyMonday());
+  EXPECT_TRUE(scheduleRule1.applyTuesday());
+  EXPECT_TRUE(scheduleRule1.applyWednesday());
+  EXPECT_TRUE(scheduleRule1.applyThursday());
+  EXPECT_TRUE(scheduleRule1.applyFriday());
+  EXPECT_TRUE(scheduleRule1.applySaturday());
+  EXPECT_EQ("DateRange", scheduleRule1.dateSpecificationType());
+  ASSERT_TRUE(scheduleRule1.startDate());
+  EXPECT_EQ(1, scheduleRule1.startDate().get().monthOfYear().value());
+  EXPECT_EQ(1, scheduleRule1.startDate().get().dayOfMonth());
+  ASSERT_TRUE(scheduleRule1.endDate());
+  EXPECT_EQ(1, scheduleRule1.endDate().get().monthOfYear().value());
+  EXPECT_EQ(27, scheduleRule1.endDate().get().dayOfMonth());
+
+  boost::optional<ScheduleRule> optscheduleRule2 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3");
+  ASSERT_TRUE(optscheduleRule2);
+  ScheduleRule scheduleRule2 = optscheduleRule2.get();
+  EXPECT_EQ(scheduleRule2.scheduleRuleset().handle(), scheduleRuleset.handle());
+  EXPECT_EQ(1, scheduleRule2.ruleIndex());
+  EXPECT_EQ(scheduleRule2.daySchedule().nameString(), "occupants schedule allday1");
+  EXPECT_TRUE(scheduleRule2.applySunday());
+  EXPECT_TRUE(scheduleRule2.applyMonday());
+  EXPECT_TRUE(scheduleRule2.applyTuesday());
+  EXPECT_TRUE(scheduleRule2.applyWednesday());
+  EXPECT_FALSE(scheduleRule2.applyThursday());
+  EXPECT_FALSE(scheduleRule2.applyFriday());
+  EXPECT_FALSE(scheduleRule2.applySaturday());
+  EXPECT_EQ("DateRange", scheduleRule2.dateSpecificationType());
+  ASSERT_TRUE(scheduleRule2.startDate());
+  EXPECT_EQ(1, scheduleRule2.startDate().get().monthOfYear().value());
+  EXPECT_EQ(28, scheduleRule2.startDate().get().dayOfMonth());
+  ASSERT_TRUE(scheduleRule2.endDate());
+  EXPECT_EQ(2, scheduleRule2.endDate().get().monthOfYear().value());
+  EXPECT_EQ(3, scheduleRule2.endDate().get().dayOfMonth());
+
+  boost::optional<ScheduleRule> optscheduleRule3 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3 1");
+  ASSERT_TRUE(optscheduleRule3);
+  ScheduleRule scheduleRule3 = optscheduleRule3.get();
+  EXPECT_EQ(scheduleRule3.scheduleRuleset().handle(), scheduleRuleset.handle());
+  EXPECT_EQ(0, scheduleRule3.ruleIndex());
+  EXPECT_EQ(scheduleRule3.daySchedule().nameString(), "occupants schedule allday2");
+  EXPECT_FALSE(scheduleRule3.applySunday());
+  EXPECT_FALSE(scheduleRule3.applyMonday());
+  EXPECT_FALSE(scheduleRule3.applyTuesday());
+  EXPECT_FALSE(scheduleRule3.applyWednesday());
+  EXPECT_TRUE(scheduleRule3.applyThursday());
+  EXPECT_TRUE(scheduleRule3.applyFriday());
+  EXPECT_TRUE(scheduleRule3.applySaturday());
+  EXPECT_EQ("DateRange", scheduleRule3.dateSpecificationType());
+  ASSERT_TRUE(scheduleRule3.startDate());
+  EXPECT_EQ(1, scheduleRule3.startDate().get().monthOfYear().value());
+  EXPECT_EQ(28, scheduleRule3.startDate().get().dayOfMonth());
+  ASSERT_TRUE(scheduleRule3.endDate());
+  EXPECT_EQ(2, scheduleRule3.endDate().get().monthOfYear().value());
+  EXPECT_EQ(3, scheduleRule3.endDate().get().dayOfMonth());
+
+  std::vector<ScheduleDay> scheduleDays = model.getModelObjects<ScheduleDay>();
+  ASSERT_EQ(4u, scheduleDays.size());  // 3 from the idf and 1 from ScheduleRuleset ctor
+
+  std::vector<ScheduleYear> scheduleYears = model.getModelObjects<ScheduleYear>();
+  ASSERT_EQ(0u, scheduleYears.size());
+
+  std::vector<ScheduleWeek> scheduleWeeks = model.getModelObjects<ScheduleWeek>();
+  ASSERT_EQ(2u, scheduleWeeks.size());  // called from ReverseTranslator.cpp directly
+}
