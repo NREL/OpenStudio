@@ -34,11 +34,24 @@
 #include "../../model/ScheduleWeek.hpp"
 #include "../../model/ScheduleWeek_Impl.hpp"
 
+#include "../../model/ScheduleRuleset.hpp"
+#include "../../model/ScheduleRuleset_Impl.hpp"
+#include "../../model/ScheduleRule.hpp"
+#include "../../model/ScheduleRule_Impl.hpp"
+#include "../../model/ScheduleDay.hpp"
+#include "../../model/ScheduleDay_Impl.hpp"
+
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Week_Compact_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Day_Interval_FieldEnums.hxx>
+
 #include <utilities/idd/OS_Schedule_Year_FieldEnums.hxx>
+#include <utilities/idd/OS_Schedule_Ruleset_FieldEnums.hxx>
+
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -51,6 +64,242 @@ namespace openstudio {
 namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateScheduleYear(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Year) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Year");
+      return boost::none;
+    }
+    
+    ScheduleRuleset scheduleRuleset(m_model);
+    
+    // Name
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      scheduleRuleset.setName(*s);
+    }
+    
+    // Schedule Type Limits Name
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_YearFields::ScheduleTypeLimitsName);
+    if (target) {
+      OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
+      if (scheduleTypeLimits) {
+        scheduleRuleset.setPointer(OS_Schedule_RulesetFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+      }
+    }
+
+    std::string sundayScheduleDayName;
+    std::string mondayScheduleDayName;
+    std::string tuesdayScheduleDayName;
+    std::string wednesdayScheduleDayName;
+    std::string thursdayScheduleDayName;
+    std::string fridayScheduleDayName;
+    std::string saturdayScheduleDayName;
+
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+
+      OptionalWorkspaceObject scheduleWeek = workspaceGroup.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName); // Schedule:Week:Daily, Schedule:Week:Compact
+      OptionalInt startMonth = workspaceGroup.getInt(Schedule_YearExtensibleFields::StartMonth);
+      OptionalInt startDay = workspaceGroup.getInt(Schedule_YearExtensibleFields::StartDay);
+      OptionalInt endMonth = workspaceGroup.getInt(Schedule_YearExtensibleFields::EndMonth);
+      OptionalInt endDay = workspaceGroup.getInt(Schedule_YearExtensibleFields::EndDay);
+
+      std::vector<ScheduleRule> scheduleRules;
+      bool found;
+
+      if (scheduleWeek->iddObject().type() == IddObjectType::Schedule_Week_Daily) {
+        boost::optional<std::string> scheduleWeekDailyName = scheduleWeek->getString(Schedule_Week_DailyFields::Name);
+        OptionalWorkspaceObject sundayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::SundaySchedule_DayName);
+        OptionalWorkspaceObject mondayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::MondaySchedule_DayName);
+        OptionalWorkspaceObject tuesdayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::TuesdaySchedule_DayName);
+        OptionalWorkspaceObject wednesdayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::WednesdaySchedule_DayName);
+        OptionalWorkspaceObject thursdayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::ThursdaySchedule_DayName);
+        OptionalWorkspaceObject fridayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::FridaySchedule_DayName);
+        OptionalWorkspaceObject saturdayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::SaturdaySchedule_DayName);
+        OptionalWorkspaceObject holidayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::HolidaySchedule_DayName);
+        OptionalWorkspaceObject summerDesignDayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::SummerDesignDaySchedule_DayName);
+        OptionalWorkspaceObject winterDesignDayScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::WinterDesignDaySchedule_DayName);
+        OptionalWorkspaceObject customDay1ScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::CustomDay1Schedule_DayName);
+        OptionalWorkspaceObject customDay2ScheduleDay = scheduleWeek->getTarget(Schedule_Week_DailyFields::CustomDay2Schedule_DayName);
+
+        if (sundayScheduleDay) {
+          sundayScheduleDayName = sundayScheduleDay->getString(Schedule_Day_IntervalFields::Name).get();
+
+          found = false;
+          for (ScheduleRule scheduleRule : scheduleRules) {
+            if (sundayScheduleDayName == scheduleRule.daySchedule().nameString()) {
+              found = true;
+              scheduleRule.setApplySunday(true);
+            }
+          }
+          
+          if (!found) {
+            boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(sundayScheduleDayName);
+
+            ScheduleRule scheduleRule(scheduleRuleset, *scheduleDay);
+            scheduleRule.setName(*scheduleWeekDailyName);
+            scheduleRule.setStartDate(Date(*startMonth, *startDay));
+            scheduleRule.setEndDate(Date(*endMonth, *endDay));
+            scheduleRule.setApplySunday(true);
+            scheduleRules.push_back(scheduleRule);
+          }
+        }
+        if (mondayScheduleDay) {
+          mondayScheduleDayName = mondayScheduleDay->getString(Schedule_Day_IntervalFields::Name).get();
+
+          found = false;
+          for (ScheduleRule scheduleRule : scheduleRules) {
+            if (mondayScheduleDayName == scheduleRule.daySchedule().nameString()) {
+              found = true;
+              scheduleRule.setApplyMonday(true);
+            }
+          }
+          
+          if (!found) {
+            boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(mondayScheduleDayName);
+
+            ScheduleRule scheduleRule(scheduleRuleset, *scheduleDay);
+            scheduleRule.setName(*scheduleWeekDailyName);
+            scheduleRule.setStartDate(Date(*startMonth, *startDay));
+            scheduleRule.setEndDate(Date(*endMonth, *endDay));
+            scheduleRule.setApplyMonday(true);
+            scheduleRules.push_back(scheduleRule);
+          }
+        }
+        if (tuesdayScheduleDay) {
+          tuesdayScheduleDayName = tuesdayScheduleDay->getString(Schedule_Day_IntervalFields::Name).get();
+
+          found = false;
+          for (ScheduleRule scheduleRule : scheduleRules) {
+            if (tuesdayScheduleDayName == scheduleRule.daySchedule().nameString()) {
+              found = true;
+              scheduleRule.setApplyTuesday(true);
+            }
+          }
+          
+          if (!found) {
+            boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(tuesdayScheduleDayName);
+
+            ScheduleRule scheduleRule(scheduleRuleset, *scheduleDay);
+            scheduleRule.setName(*scheduleWeekDailyName);
+            scheduleRule.setStartDate(Date(*startMonth, *startDay));
+            scheduleRule.setEndDate(Date(*endMonth, *endDay));
+            scheduleRule.setApplyTuesday(true);
+            scheduleRules.push_back(scheduleRule);
+          }
+        }
+        if (wednesdayScheduleDay) {
+          wednesdayScheduleDayName = wednesdayScheduleDay->getString(Schedule_Day_IntervalFields::Name).get();
+
+          found = false;
+          for (ScheduleRule scheduleRule : scheduleRules) {
+            if (wednesdayScheduleDayName == scheduleRule.daySchedule().nameString()) {
+              found = true;
+              scheduleRule.setApplyWednesday(true);
+            }
+          }
+          
+          if (!found) {
+            boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(wednesdayScheduleDayName);
+
+            ScheduleRule scheduleRule(scheduleRuleset, *scheduleDay);
+            scheduleRule.setName(*scheduleWeekDailyName);
+            scheduleRule.setStartDate(Date(*startMonth, *startDay));
+            scheduleRule.setEndDate(Date(*endMonth, *endDay));
+            scheduleRule.setApplyWednesday(true);
+            scheduleRules.push_back(scheduleRule);
+          }
+        }
+        if (thursdayScheduleDay) {
+          thursdayScheduleDayName = thursdayScheduleDay->getString(Schedule_Day_IntervalFields::Name).get();
+
+          found = false;
+          for (ScheduleRule scheduleRule : scheduleRules) {
+            if (thursdayScheduleDayName == scheduleRule.daySchedule().nameString()) {
+              found = true;
+              scheduleRule.setApplyThursday(true);
+            }
+          }
+          
+          if (!found) {
+            boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(thursdayScheduleDayName);
+
+            ScheduleRule scheduleRule(scheduleRuleset, *scheduleDay);
+            scheduleRule.setName(*scheduleWeekDailyName);
+            scheduleRule.setStartDate(Date(*startMonth, *startDay));
+            scheduleRule.setEndDate(Date(*endMonth, *endDay));
+            scheduleRule.setApplyThursday(true);
+            scheduleRules.push_back(scheduleRule);
+          }
+        }
+        if (fridayScheduleDay) {
+          fridayScheduleDayName = fridayScheduleDay->getString(Schedule_Day_IntervalFields::Name).get();
+
+          found = false;
+          for (ScheduleRule scheduleRule : scheduleRules) {
+            if (fridayScheduleDayName == scheduleRule.daySchedule().nameString()) {
+              found = true;
+              scheduleRule.setApplyFriday(true);
+            }
+          }
+          
+          if (!found) {
+            boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(fridayScheduleDayName);
+
+            ScheduleRule scheduleRule(scheduleRuleset, *scheduleDay);
+            scheduleRule.setName(*scheduleWeekDailyName);
+            scheduleRule.setStartDate(Date(*startMonth, *startDay));
+            scheduleRule.setEndDate(Date(*endMonth, *endDay));
+            scheduleRule.setApplyFriday(true);
+            scheduleRules.push_back(scheduleRule);
+          }
+        }
+        if (saturdayScheduleDay) {
+          saturdayScheduleDayName = saturdayScheduleDay->getString(Schedule_Day_IntervalFields::Name).get();
+
+          found = false;
+          for (ScheduleRule scheduleRule : scheduleRules) {
+            if (saturdayScheduleDayName == scheduleRule.daySchedule().nameString()) {
+              found = true;
+              scheduleRule.setApplySaturday(true);
+            }
+          }
+          
+          if (!found) {
+            boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(saturdayScheduleDayName);
+
+            ScheduleRule scheduleRule(scheduleRuleset, *scheduleDay);
+            scheduleRule.setName(*scheduleWeekDailyName);
+            scheduleRule.setStartDate(Date(*startMonth, *startDay));
+            scheduleRule.setEndDate(Date(*endMonth, *endDay));
+            scheduleRule.setApplySaturday(true);
+            scheduleRules.push_back(scheduleRule);
+          }
+        }
+        if (holidayScheduleDay) {
+          
+        }
+        if (summerDesignDayScheduleDay) {
+          
+        }
+        if (winterDesignDayScheduleDay) {
+          
+        }
+        if (customDay1ScheduleDay) {
+          
+        }
+        if (customDay2ScheduleDay) {
+          
+        }
+      } else if (scheduleWeek->iddObject().type() == IddObjectType::Schedule_Week_Compact) {
+        boost::optional<std::string> scheduleWeekCompactName = scheduleWeek->getString(Schedule_Week_CompactFields::Name);
+        // TODO
+      }
+    }
+
+    return scheduleRuleset;
+  }
+
+/*   OptionalModelObject ReverseTranslator::translateScheduleYear(const WorkspaceObject& workspaceObject) {
     if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Year) {
       LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Year");
       return boost::none;
@@ -105,7 +354,7 @@ namespace energyplus {
     }
 
     return scheduleYear;
-  }
+  } */
 
 }  // namespace energyplus
 
