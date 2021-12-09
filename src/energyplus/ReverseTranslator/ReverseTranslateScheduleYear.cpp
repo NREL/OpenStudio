@@ -68,15 +68,15 @@ namespace energyplus {
       LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Year");
       return boost::none;
     }
-    
+
     ScheduleRuleset scheduleRuleset(m_model);
-    
+
     // Name
     OptionalString s = workspaceObject.name();
     if (s) {
       scheduleRuleset.setName(*s);
     }
-    
+
     // Schedule Type Limits Name
     OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_YearFields::ScheduleTypeLimitsName);
     if (target) {
@@ -97,7 +97,8 @@ namespace energyplus {
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
       WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
-      OptionalWorkspaceObject scheduleWeek = workspaceGroup.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName); // Schedule:Week:Daily, Schedule:Week:Compact
+      OptionalWorkspaceObject scheduleWeek =
+        workspaceGroup.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);  // Schedule:Week:Daily, Schedule:Week:Compact
       OptionalInt startMonth = workspaceGroup.getInt(Schedule_YearExtensibleFields::StartMonth);
       OptionalInt startDay = workspaceGroup.getInt(Schedule_YearExtensibleFields::StartDay);
       OptionalInt endMonth = workspaceGroup.getInt(Schedule_YearExtensibleFields::EndMonth);
@@ -131,7 +132,7 @@ namespace energyplus {
               scheduleRule.setApplySunday(true);
             }
           }
-          
+
           if (!found) {
             boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(sundayScheduleDayName);
 
@@ -153,7 +154,7 @@ namespace energyplus {
               scheduleRule.setApplyMonday(true);
             }
           }
-          
+
           if (!found) {
             boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(mondayScheduleDayName);
 
@@ -175,7 +176,7 @@ namespace energyplus {
               scheduleRule.setApplyTuesday(true);
             }
           }
-          
+
           if (!found) {
             boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(tuesdayScheduleDayName);
 
@@ -197,7 +198,7 @@ namespace energyplus {
               scheduleRule.setApplyWednesday(true);
             }
           }
-          
+
           if (!found) {
             boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(wednesdayScheduleDayName);
 
@@ -219,7 +220,7 @@ namespace energyplus {
               scheduleRule.setApplyThursday(true);
             }
           }
-          
+
           if (!found) {
             boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(thursdayScheduleDayName);
 
@@ -241,7 +242,7 @@ namespace energyplus {
               scheduleRule.setApplyFriday(true);
             }
           }
-          
+
           if (!found) {
             boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(fridayScheduleDayName);
 
@@ -263,7 +264,7 @@ namespace energyplus {
               scheduleRule.setApplySaturday(true);
             }
           }
-          
+
           if (!found) {
             boost::optional<ScheduleDay> scheduleDay = m_model.getModelObjectByName<ScheduleDay>(saturdayScheduleDayName);
 
@@ -276,19 +277,14 @@ namespace energyplus {
           }
         }
         if (holidayScheduleDay) {
-          
         }
         if (summerDesignDayScheduleDay) {
-          
         }
         if (winterDesignDayScheduleDay) {
-          
         }
         if (customDay1ScheduleDay) {
-          
         }
         if (customDay2ScheduleDay) {
-          
         }
       } else if (scheduleWeek->iddObject().type() == IddObjectType::Schedule_Week_Compact) {
         boost::optional<std::string> scheduleWeekCompactName = scheduleWeek->getString(Schedule_Week_CompactFields::Name);
@@ -299,7 +295,7 @@ namespace energyplus {
     return scheduleRuleset;
   }
 
-/*   OptionalModelObject ReverseTranslator::translateScheduleYear(const WorkspaceObject& workspaceObject) {
+  /*   OptionalModelObject ReverseTranslator::translateScheduleYear(const WorkspaceObject& workspaceObject) {
     if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Year) {
       LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Year");
       return boost::none;
