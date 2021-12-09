@@ -36,6 +36,8 @@
 #include "../../utilities/data/TimeSeries.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/ScheduleTypeLimits.hpp"
+#include "../../model/ScheduleTypeLimits_Impl.hpp"
 #include "../../model/ScheduleRuleset.hpp"
 #include "../../model/ScheduleRuleset_Impl.hpp"
 #include "../../model/ScheduleRule.hpp"
@@ -623,4 +625,121 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
   EXPECT_EQ(winterDesignDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WinterDesignDaySchedule_DayName).get());
   EXPECT_EQ(customDay1Schedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay1Schedule_DayName).get());
   EXPECT_EQ(customDay2Schedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay2Schedule_DayName).get());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_YearSimple) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  
+  openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
+  idfObject0.setString(0, "Fractional");
+  idfObject0.setString(1, "0");
+  idfObject0.setString(2, "1");
+  idfObject0.setString(3, "Continuous");
+  
+  WorkspaceObject epScheduleTypeLimits = workspace.addObject(idfObject0).get();
+  
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Schedule_Day_Interval);
+  idfObject1.setString(0, "occupants schedule allday1");
+  idfObject1.setString(1, "Fractional");
+  idfObject1.setString(2, "No");
+  idfObject1.setString(3, "07:00");
+  idfObject1.setString(4, "1");
+  idfObject1.setString(5, "08:00");
+  idfObject1.setString(6, "0.868852459016393");
+  idfObject1.setString(7, "09:00");
+  idfObject1.setString(8, "0.409836065573771");
+  idfObject1.setString(9, "16:00");
+  idfObject1.setString(10, "0.245901639344262");
+  idfObject1.setString(11, "17:00");
+  idfObject1.setString(12, "0.295081967213115");
+  idfObject1.setString(13, "18:00");
+  idfObject1.setString(14, "0.540983606557377");
+  idfObject1.setString(15, "21:00");
+  idfObject1.setString(16, "0.885245901639344");
+  idfObject1.setString(17, "24:00");
+  idfObject1.setString(18, "1");
+  
+  WorkspaceObject epScheduleDayInterval1 = workspace.addObject(idfObject1).get();
+  
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Schedule_Week_Daily);
+  idfObject2.setString(0, "occupants schedule Week Rule - Jan1-Dec31");
+  idfObject2.setString(1, "occupants schedule allday1");
+  idfObject2.setString(2, "occupants schedule allday1");
+  idfObject2.setString(3, "occupants schedule allday1");
+  idfObject2.setString(4, "occupants schedule allday1");
+  idfObject2.setString(5, "occupants schedule allday1");
+  idfObject2.setString(6, "occupants schedule allday1");
+  idfObject2.setString(7, "occupants schedule allday1");
+  idfObject2.setString(8, "Schedule Day 5");
+  idfObject2.setString(9, "Schedule Day 5");
+  idfObject2.setString(10, "Schedule Day 5");
+  idfObject2.setString(11, "Schedule Day 5");
+  idfObject2.setString(12, "Schedule Day 5");
+
+  WorkspaceObject epScheduleWeekDaily = workspace.addObject(idfObject2).get();
+
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Schedule_Year);
+  idfObject3.setString(0, "occupants schedule");
+  idfObject3.setString(1, "Fractional");
+  idfObject3.setString(2, "occupants schedule Week Rule - Jan1-Dec31");
+  idfObject3.setString(3, "1");
+  idfObject3.setString(4, "1");
+  idfObject3.setString(5, "12");
+  idfObject3.setString(6, "31");
+
+  WorkspaceObject epScheduleYear = workspace.addObject(idfObject3).get();
+
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::Schedule_Day_Interval);
+  idfObject4.setString(0, "Schedule Day 5");
+  idfObject4.setString(1, "Fractional");
+  idfObject4.setString(2, "No");
+  idfObject4.setString(3, "24:00");
+  idfObject4.setString(4, "0");
+  
+  WorkspaceObject epScheduleDayInterval2 = workspace.addObject(idfObject4).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+  
+  std::vector<ScheduleRuleset> scheduleRulesets = model.getModelObjects<ScheduleRuleset>();
+  ASSERT_EQ(1u, scheduleRulesets.size());
+  ScheduleRuleset scheduleRuleset = scheduleRulesets[0];
+  EXPECT_EQ("occupants schedule", scheduleRuleset.nameString());
+  EXPECT_TRUE(scheduleRuleset.scheduleTypeLimits());
+  /* EXPECT_EQ("Schedule Day 1", scheduleRuleset.defaultDaySchedule().nameString()); */
+  EXPECT_EQ(1, scheduleRuleset.scheduleRules().size());
+  
+  std::vector<ScheduleRule> scheduleRules = model.getModelObjects<ScheduleRule>();
+  ASSERT_EQ(1u, scheduleRules.size());
+  ScheduleRule scheduleRule = scheduleRules[0];
+  EXPECT_EQ(scheduleRule.scheduleRuleset().handle(), scheduleRuleset.handle());
+  EXPECT_EQ(0, scheduleRule.ruleIndex());
+  EXPECT_TRUE(scheduleRule.applySunday());
+  EXPECT_TRUE(scheduleRule.applyMonday());
+  EXPECT_TRUE(scheduleRule.applyTuesday());
+  EXPECT_TRUE(scheduleRule.applyWednesday());
+  EXPECT_TRUE(scheduleRule.applyThursday());
+  EXPECT_TRUE(scheduleRule.applyFriday());
+  EXPECT_TRUE(scheduleRule.applySaturday());
+  EXPECT_EQ("DateRange", scheduleRule.dateSpecificationType());
+  ASSERT_TRUE(scheduleRule.startDate());
+  EXPECT_EQ(1, scheduleRule.startDate().get().monthOfYear().value());
+  EXPECT_EQ(1, scheduleRule.startDate().get().dayOfMonth());
+  ASSERT_TRUE(scheduleRule.endDate());
+  EXPECT_EQ(12, scheduleRule.endDate().get().monthOfYear().value());
+  EXPECT_EQ(31, scheduleRule.endDate().get().dayOfMonth());
+
+  std::vector<ScheduleDay> scheduleDays = model.getModelObjects<ScheduleDay>();
+  ASSERT_EQ(3u, scheduleDays.size()); // 2 from the idf and 1 from ScheduleRuleset ctor
+  
+  std::vector<ScheduleYear> scheduleYears = model.getModelObjects<ScheduleYear>();
+  ASSERT_EQ(0u, scheduleYears.size());
+  
+  std::vector<ScheduleWeek> scheduleWeeks = model.getModelObjects<ScheduleWeek>();
+  ASSERT_EQ(1u, scheduleWeeks.size()); // called from ReverseTranslator.cpp directly
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_YearComplex) {
+  
 }
