@@ -62,7 +62,8 @@ namespace openstudio {
 
 namespace energyplus {
 
-  ScheduleRule createNewRule(ScheduleRuleset& scheduleRuleset, OptionalModelObject& modelObject, std::string name, Date& startDate, Date& endDate) {
+  ScheduleRule createNewRule(ScheduleRuleset& scheduleRuleset, OptionalModelObject& modelObject, std::string name, const Date& startDate,
+                             const Date& endDate) {
     ScheduleDay daySchedule = modelObject->cast<ScheduleDay>();
     ScheduleRule scheduleRule(scheduleRuleset, daySchedule);
     scheduleRule.setName(name);
