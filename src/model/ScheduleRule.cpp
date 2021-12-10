@@ -604,12 +604,12 @@ namespace model {
     bool result = setPointer(OS_Schedule_RuleFields::ScheduleRulesetName, scheduleRuleset.handle());
     OS_ASSERT(result);
 
-    /*     ModelObject clone = daySchedule.clone(scheduleRuleset.model());
+    ModelObject clone = daySchedule.clone(scheduleRuleset.model());
     result = setPointer(OS_Schedule_RuleFields::DayScheduleName, clone.handle());
     OS_ASSERT(result);
     if (OptionalScheduleTypeLimits limits = scheduleRuleset.scheduleTypeLimits()) {
       clone.cast<ScheduleDay>().setScheduleTypeLimits(*limits);
-    } */
+    }
     result = setPointer(OS_Schedule_RuleFields::DayScheduleName, daySchedule.handle());
     OS_ASSERT(result);
 
