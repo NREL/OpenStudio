@@ -610,8 +610,6 @@ namespace model {
     if (OptionalScheduleTypeLimits limits = scheduleRuleset.scheduleTypeLimits()) {
       clone.cast<ScheduleDay>().setScheduleTypeLimits(*limits);
     }
-    result = setPointer(OS_Schedule_RuleFields::DayScheduleName, daySchedule.handle());
-    OS_ASSERT(result);
 
     this->setRuleIndex(std::numeric_limits<int>::max());
     result = scheduleRuleset.setScheduleRuleIndex(*this, 0);
