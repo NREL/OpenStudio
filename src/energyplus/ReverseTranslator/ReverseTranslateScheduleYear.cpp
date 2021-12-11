@@ -65,7 +65,7 @@ namespace energyplus {
   ScheduleRule createNewRule(ScheduleRuleset& scheduleRuleset, OptionalModelObject& modelObject, std::string name, const Date& startDate,
                              const Date& endDate) {
     ScheduleDay daySchedule = modelObject->cast<ScheduleDay>();
-    ScheduleRule scheduleRule(scheduleRuleset, daySchedule);
+    ScheduleRule scheduleRule(scheduleRuleset, daySchedule);  // this clones daySchedule and sets the clone with a different name
     scheduleRule.setName(name);
     scheduleRule.setStartDate(startDate);
     scheduleRule.setEndDate(endDate);
@@ -254,6 +254,7 @@ namespace energyplus {
         OptionalInt endMonth = workspaceGroup.getInt(Schedule_YearExtensibleFields::EndMonth);
         OptionalInt endDay = workspaceGroup.getInt(Schedule_YearExtensibleFields::EndDay);
 
+        std::vector<std::string> dayScheduleNames;
         std::vector<ScheduleRule> scheduleRules;
 
         if (scheduleWeek->iddObject().type() == IddObjectType::Schedule_Week_Daily) {
@@ -283,16 +284,16 @@ namespace energyplus {
             sundayScheduleDayName = sundayScheduleDay->getString(0).get();
 
             boost::optional<ScheduleRule> scheduleRule;
-            for (ScheduleRule existingRule : scheduleRules) {
-              if (sundayScheduleDayName == existingRule.daySchedule().nameString()) {
-                scheduleRule = existingRule;
-              }
+            auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), sundayScheduleDayName);
+            if (itr != dayScheduleNames.end()) {
+              scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
             }
 
             if (!scheduleRule) {
               if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*sundayScheduleDay)) {
                 scheduleRule =
                   createNewRule(scheduleRuleset, modelObject, *scheduleWeekDailyName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                dayScheduleNames.push_back(sundayScheduleDayName);
                 scheduleRules.push_back(*scheduleRule);
               }
             }
@@ -303,16 +304,16 @@ namespace energyplus {
             mondayScheduleDayName = mondayScheduleDay->getString(0).get();
 
             boost::optional<ScheduleRule> scheduleRule;
-            for (ScheduleRule existingRule : scheduleRules) {
-              if (mondayScheduleDayName == existingRule.daySchedule().nameString()) {
-                scheduleRule = existingRule;
-              }
+            auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), mondayScheduleDayName);
+            if (itr != dayScheduleNames.end()) {
+              scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
             }
 
             if (!scheduleRule) {
               if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*mondayScheduleDay)) {
                 scheduleRule =
                   createNewRule(scheduleRuleset, modelObject, *scheduleWeekDailyName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                dayScheduleNames.push_back(mondayScheduleDayName);
                 scheduleRules.push_back(*scheduleRule);
               }
             }
@@ -323,16 +324,16 @@ namespace energyplus {
             tuesdayScheduleDayName = tuesdayScheduleDay->getString(0).get();
 
             boost::optional<ScheduleRule> scheduleRule;
-            for (ScheduleRule existingRule : scheduleRules) {
-              if (tuesdayScheduleDayName == existingRule.daySchedule().nameString()) {
-                scheduleRule = existingRule;
-              }
+            auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), tuesdayScheduleDayName);
+            if (itr != dayScheduleNames.end()) {
+              scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
             }
 
             if (!scheduleRule) {
               if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*tuesdayScheduleDay)) {
                 scheduleRule =
                   createNewRule(scheduleRuleset, modelObject, *scheduleWeekDailyName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                dayScheduleNames.push_back(tuesdayScheduleDayName);
                 scheduleRules.push_back(*scheduleRule);
               }
             }
@@ -343,16 +344,16 @@ namespace energyplus {
             wednesdayScheduleDayName = wednesdayScheduleDay->getString(0).get();
 
             boost::optional<ScheduleRule> scheduleRule;
-            for (ScheduleRule existingRule : scheduleRules) {
-              if (wednesdayScheduleDayName == existingRule.daySchedule().nameString()) {
-                scheduleRule = existingRule;
-              }
+            auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), wednesdayScheduleDayName);
+            if (itr != dayScheduleNames.end()) {
+              scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
             }
 
             if (!scheduleRule) {
               if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*wednesdayScheduleDay)) {
                 scheduleRule =
                   createNewRule(scheduleRuleset, modelObject, *scheduleWeekDailyName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                dayScheduleNames.push_back(wednesdayScheduleDayName);
                 scheduleRules.push_back(*scheduleRule);
               }
             }
@@ -363,16 +364,16 @@ namespace energyplus {
             thursdayScheduleDayName = thursdayScheduleDay->getString(0).get();
 
             boost::optional<ScheduleRule> scheduleRule;
-            for (ScheduleRule existingRule : scheduleRules) {
-              if (thursdayScheduleDayName == existingRule.daySchedule().nameString()) {
-                scheduleRule = existingRule;
-              }
+            auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), thursdayScheduleDayName);
+            if (itr != dayScheduleNames.end()) {
+              scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
             }
 
             if (!scheduleRule) {
               if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*thursdayScheduleDay)) {
                 scheduleRule =
                   createNewRule(scheduleRuleset, modelObject, *scheduleWeekDailyName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                dayScheduleNames.push_back(thursdayScheduleDayName);
                 scheduleRules.push_back(*scheduleRule);
               }
             }
@@ -383,16 +384,16 @@ namespace energyplus {
             fridayScheduleDayName = fridayScheduleDay->getString(0).get();
 
             boost::optional<ScheduleRule> scheduleRule;
-            for (ScheduleRule existingRule : scheduleRules) {
-              if (fridayScheduleDayName == existingRule.daySchedule().nameString()) {
-                scheduleRule = existingRule;
-              }
+            auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), fridayScheduleDayName);
+            if (itr != dayScheduleNames.end()) {
+              scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
             }
 
             if (!scheduleRule) {
               if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*fridayScheduleDay)) {
                 scheduleRule =
                   createNewRule(scheduleRuleset, modelObject, *scheduleWeekDailyName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                dayScheduleNames.push_back(fridayScheduleDayName);
                 scheduleRules.push_back(*scheduleRule);
               }
             }
@@ -403,16 +404,16 @@ namespace energyplus {
             saturdayScheduleDayName = saturdayScheduleDay->getString(0).get();
 
             boost::optional<ScheduleRule> scheduleRule;
-            for (ScheduleRule existingRule : scheduleRules) {
-              if (saturdayScheduleDayName == existingRule.daySchedule().nameString()) {
-                scheduleRule = existingRule;
-              }
+            auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), saturdayScheduleDayName);
+            if (itr != dayScheduleNames.end()) {
+              scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
             }
 
             if (!scheduleRule) {
               if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*saturdayScheduleDay)) {
                 scheduleRule =
                   createNewRule(scheduleRuleset, modelObject, *scheduleWeekDailyName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                dayScheduleNames.push_back(saturdayScheduleDayName);
                 scheduleRules.push_back(*scheduleRule);
               }
             }
@@ -435,16 +436,16 @@ namespace energyplus {
               scheduleDayName = scheduleDay->getString(0).get();
 
               boost::optional<ScheduleRule> scheduleRule;
-              for (ScheduleRule existingRule : scheduleRules) {
-                if (scheduleDayName == existingRule.daySchedule().nameString()) {
-                  scheduleRule = existingRule;
-                }
+              auto itr = std::find(dayScheduleNames.begin(), dayScheduleNames.end(), scheduleDayName);
+              if (itr != dayScheduleNames.end()) {
+                scheduleRule = scheduleRules[itr - dayScheduleNames.begin()];
               }
 
               if (!scheduleRule) {
                 if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*scheduleDay)) {
                   scheduleRule =
                     createNewRule(scheduleRuleset, modelObject, *scheduleWeekCompactName, Date(*startMonth, *startDay), Date(*endMonth, *endDay));
+                  dayScheduleNames.push_back(scheduleDayName);
                   scheduleRules.push_back(*scheduleRule);
                 }
               }

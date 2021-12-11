@@ -721,7 +721,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple
   EXPECT_EQ(scheduleRule.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(0, scheduleRule.ruleIndex());
   ScheduleDay daySchedule = scheduleRule.daySchedule();
-  EXPECT_EQ(daySchedule.nameString(), "occupants schedule allday1");
+  EXPECT_EQ(daySchedule.nameString(), "occupants schedule allday1 1");
   EXPECT_FALSE(daySchedule.interpolatetoTimestep());
   EXPECT_EQ(8u, daySchedule.values().size());
   EXPECT_TRUE(scheduleRule.applySunday());
@@ -754,7 +754,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple
   ASSERT_EQ(1u, scheduleWeeks.size());  // RT of Schedule:Week:Daily called from ReverseTranslator.cpp directly
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearToRulesetComplex) {
+TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComplex) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
@@ -887,7 +887,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearToRulesetComplex) {
   EXPECT_EQ(scheduleRule1.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(2, scheduleRule1.ruleIndex());
   ScheduleDay daySchedule1 = scheduleRule1.daySchedule();
-  EXPECT_EQ(daySchedule1.nameString(), "occupants schedule allday1");
+  EXPECT_EQ(daySchedule1.nameString(), "occupants schedule allday1 1");
   EXPECT_FALSE(daySchedule1.interpolatetoTimestep());
   EXPECT_EQ(8u, daySchedule1.values().size());
   EXPECT_TRUE(scheduleRule1.applySunday());
@@ -911,7 +911,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearToRulesetComplex) {
   EXPECT_EQ(scheduleRule2.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(1, scheduleRule2.ruleIndex());
   ScheduleDay daySchedule2 = scheduleRule2.daySchedule();
-  EXPECT_EQ(daySchedule2.nameString(), "occupants schedule allday1");
+  EXPECT_EQ(daySchedule2.nameString(), "occupants schedule allday1 2");
   EXPECT_FALSE(daySchedule2.interpolatetoTimestep());
   EXPECT_EQ(8u, daySchedule2.values().size());
   EXPECT_TRUE(scheduleRule2.applySunday());
@@ -935,7 +935,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearToRulesetComplex) {
   EXPECT_EQ(scheduleRule3.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(0, scheduleRule3.ruleIndex());
   ScheduleDay daySchedule3 = scheduleRule3.daySchedule();
-  EXPECT_EQ(daySchedule3.nameString(), "occupants schedule allday2");
+  EXPECT_EQ(daySchedule3.nameString(), "occupants schedule allday2 1");
   EXPECT_FALSE(daySchedule3.interpolatetoTimestep());
   EXPECT_EQ(8u, daySchedule3.values().size());
   EXPECT_FALSE(scheduleRule3.applySunday());
@@ -969,7 +969,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearToRulesetComplex) {
   ASSERT_EQ(2u, scheduleWeeks.size());  // RT of Schedule:Week:Daily called from ReverseTranslator.cpp directly
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearToYearComplex) {
+TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToYearComplex) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
@@ -1243,7 +1243,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   EXPECT_EQ(scheduleRule1.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(2, scheduleRule1.ruleIndex());
   ScheduleDay daySchedule1 = scheduleRule1.daySchedule();
-  EXPECT_EQ(daySchedule1.nameString(), "occupants schedule allday1");
+  EXPECT_EQ(daySchedule1.nameString(), "occupants schedule allday1 1");
   EXPECT_FALSE(daySchedule1.interpolatetoTimestep());
   EXPECT_EQ(8u, daySchedule1.values().size());
   EXPECT_TRUE(scheduleRule1.applySunday());
@@ -1267,7 +1267,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   EXPECT_EQ(scheduleRule2.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(1, scheduleRule2.ruleIndex());
   ScheduleDay daySchedule2 = scheduleRule2.daySchedule();
-  EXPECT_EQ(daySchedule2.nameString(), "occupants schedule allday1");
+  EXPECT_EQ(daySchedule2.nameString(), "occupants schedule allday1 2");
   EXPECT_FALSE(daySchedule2.interpolatetoTimestep());
   EXPECT_EQ(8u, daySchedule2.values().size());
   EXPECT_TRUE(scheduleRule2.applySunday());
@@ -1291,7 +1291,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   EXPECT_EQ(scheduleRule3.scheduleRuleset().handle(), scheduleRuleset.handle());
   EXPECT_EQ(0, scheduleRule3.ruleIndex());
   ScheduleDay daySchedule3 = scheduleRule3.daySchedule();
-  EXPECT_EQ(daySchedule3.nameString(), "occupants schedule allday2");
+  EXPECT_EQ(daySchedule3.nameString(), "occupants schedule allday2 1");
   EXPECT_FALSE(daySchedule3.interpolatetoTimestep());
   EXPECT_EQ(8u, daySchedule3.values().size());
   EXPECT_FALSE(scheduleRule3.applySunday());
