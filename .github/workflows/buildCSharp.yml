@@ -185,3 +185,74 @@ jobs:
             ./build/csharp_wrapper/
             ./build/Products/
 
+
+  Merge_WindowsPackages:
+    name: "Merge x86 and x64 nuget packages for windows"
+    runs-on: windows-latest
+    timeout-minutes: 20
+    needs: build-csharp
+
+    steps:
+      - name: "Checkout Master Branch"
+        uses: actions/checkout@v2
+      
+      - name: Download CSharp_Windows32
+        uses: actions/download-artifact@v2
+        with:
+          name: CSharp_Windows32
+
+      - name: Download CSharp_Windows64
+        uses: actions/download-artifact@v2
+        with:
+          name: CSharp_Windows64
+
+      - name: unzip artifacts
+        run: |
+          Expand-Archive CSharp_Windows32.zip -DestinationPath x86
+          Expand-Archive CSharp_Windows64.zip -DestinationPath x64
+          
+          Expand-Archive x86\*.nupkg -DestinationPath x86\package
+          Expand-Archive x64\*.nupkg -DestinationPath x64\package
+          ls -R
+
+      - name: merge x86 into x64
+        run: |
+          mv x64\package\lib\netstandard2.0\OpenStudio.dll x64\package\lib\netstandard2.0\x64\OpenStudio.dll 
+          mv x64\package\lib\net45\OpenStudio.dll x64\package\lib\net45\x64\OpenStudio.dll 
+          mv x86\package\lib\netstandard2.0\OpenStudio.dll x86\package\lib\netstandard2.0\x86\OpenStudio.dll 
+          mv x86\package\lib\net45\OpenStudio.dll x86\package\lib\net45\x86\OpenStudio.dll 
+
+          mv x64\package\lib x64\package\build
+          mv x86\package\lib\netstandard2.0\x86 x64\package\build\netstandard2.0\x86
+          mv x86\package\lib\net45\x86 x64\package\build\net45\x86
+
+          cp csharp\OpenStudio.targets x64\package\build\netstandard2.0\
+          cp csharp\OpenStudio.targets x64\package\build\net45\
+          cd x64\package
+          ls -R
+
+      - name: make a new nupkg for Windows 
+        run: |
+          $VERSION = (Get-Item x64\package\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
+          echo $VERSION
+          Compress-Archive -U -Path x64\package\* -DestinationPath OpenStudio.$VERSION.nupkg
+          cp *.nupkg OpenStudio.nupkg
+          ls
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: nugetPackage
+          path: OpenStudio.nupkg
+
+      - name: Tests on Windows
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../"
+
+
+          dotnet test OpenStudio.Tests.csproj /p:Platform=x64
+          dotnet clean
+          dotnet test OpenStudio.Tests.csproj /p:Platform=x86

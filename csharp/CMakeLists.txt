@@ -61,7 +61,7 @@ endif()
 # custom command to make OPENSTUDIO_CSHARP_DLL
 add_custom_command(
   OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-  COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
+  COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "/p:Platform=${CSHARP_PLATFORM}" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
   DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
 )
 

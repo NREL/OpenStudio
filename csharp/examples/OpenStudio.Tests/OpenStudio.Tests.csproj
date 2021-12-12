@@ -3,17 +3,15 @@
   <PropertyGroup>
 	  <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">NET45;NET5</TargetFrameworks>
     <TargetFramework Condition="'$(OS)' != 'Windows_NT'">NET5</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <OutputPath>bin/$(Configuration)</OutputPath>
     <IsPackable>false</IsPackable>
+    <Platforms>x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="NUnit" Version="3.13.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
-    <PackageReference Include="OpenStudio" Version="3.2.1" />
+    <PackageReference Include="OpenStudio" Version="3.3.1" />
   </ItemGroup>
 
 </Project>
