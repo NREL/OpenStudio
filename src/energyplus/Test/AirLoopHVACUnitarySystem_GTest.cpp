@@ -38,6 +38,8 @@
 #include "../../model/Node.hpp"
 
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../../model/FanConstantVolume.hpp"
 #include "../../model/CoilHeatingDesuperheater.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
@@ -159,4 +161,67 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
   // heating coil, fan, supp heating coil
 
   // cooling coil, heating coil, fan, supp heating coil
+  {
+    Model m;
+
+    CoilCoolingDXSingleSpeed c(m);
+    CoilHeatingDXSingleSpeed h(m);
+    FanConstantVolume f(m);
+    CoilHeatingDesuperheater s(m);
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setCoolingCoil(c);
+    unitary.setHeatingCoil(h);
+    unitary.setSupplyFan(f);
+    unitary.setSupplementalHeatingCoil(s);
+
+    AirLoopHVAC airLoop(m);
+
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(m);
+
+    WorkspaceObjectVector idfUnitaries(workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    ASSERT_EQ(1u, idfUnitaries.size());
+    WorkspaceObject idfUnitary(idfUnitaries[0]);
+
+    WorkspaceObjectVector idfCoolingCoils(workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed));
+    ASSERT_EQ(1u, idfCoolingCoils.size());
+    WorkspaceObject idfCoolingCoil(idfCoolingCoils[0]);
+
+    WorkspaceObjectVector idfHeatingCoils(workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_SingleSpeed));
+    ASSERT_EQ(1u, idfHeatingCoils.size());
+    WorkspaceObject idfHeatingCoil(idfHeatingCoils[0]);
+
+    WorkspaceObjectVector idfFans(workspace.getObjectsByType(IddObjectType::Fan_ConstantVolume));
+    ASSERT_EQ(1u, idfFans.size());
+    WorkspaceObject idfFan(idfFans[0]);
+
+    WorkspaceObjectVector idfSuppHeatingCoils(workspace.getObjectsByType(IddObjectType::Coil_Heating_Desuperheater));
+    ASSERT_EQ(1u, idfSuppHeatingCoils.size());
+    WorkspaceObject idfSuppHeatingCoil(idfSuppHeatingCoils[0]);
+
+    unitaryInletNode = idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName).get();
+    unitaryOutletNode = idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName).get();
+
+    coolingCoilInletNode = idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName).get();
+    coolingCoilOutletNode = idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName).get();
+
+    heatingCoilInletNode = idfHeatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName).get();
+    heatingCoilOutletNode = idfHeatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName).get();
+
+    fanInletNode = idfFan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get();
+    fanOutletNode = idfFan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get();
+
+    suppHeatingCoilInletNode = idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirInletNodeName).get();
+    suppHeatingCoilOutletNode = idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirOutletNodeName).get();
+
+    EXPECT_EQ(unitaryInletNode, FanInletNode);
+    EXPECT_EQ(fanOutletNode, coolingCoilInletNode);
+    EXPECT_EQ(coolingCoilOutletNode, heatingCoilInletNode);
+    EXPECT_EQ(heatingCoilOutletNode, suppHeatingCoilInletNode);
+    EXPECT_EQ(suppHeatingCoilOutletNode, unitaryOutletNode);
+  }
 }
