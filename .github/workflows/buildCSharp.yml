@@ -211,41 +211,42 @@ jobs:
           Expand-Archive x86\*.nupkg -DestinationPath x86\package
           Expand-Archive x64\*.nupkg -DestinationPath x64\package
           ls -R
-
+          
       - name: merge x86 into x64
         run: |
-          mkdir x64\package\lib\netstandard2.0\x64
-          mkdir x64\package\lib\net45\x64
-          mkdir x64\package\lib\netstandard2.0\x86
-          mkdir x64\package\lib\net45\x86
+          cp x64\package x64x86 -r
+          mv x64x86\lib x64x86\build
+
+          mkdir x64x86\build\netstandard2.0\x64
+          mkdir x64x86\build\net45\x64
+          mkdir x64x86\build\netstandard2.0\x86
+          mkdir x64x86\build\net45\x86
+
+          mv x64x86\build\netstandard2.0\*.dll x64x86\build\netstandard2.0\x64
+          mv x64x86\build\net45\*.dll x64x86\build\net45\x64 
+
+          mv x86\package\lib\netstandard2.0\* x64x86\build\netstandard2.0\x86
+          mv x86\package\lib\net45\* x64x86\build\net45\x86
 
 
-          mv x64\package\lib\netstandard2.0\* x64\package\lib\netstandard2.0\x64
-          mv x64\package\lib\net45\* x64\package\lib\net45\x64 
-
-          mv x86\package\lib\netstandard2.0\* x64\package\lib\netstandard2.0\x86
-          mv x86\package\lib\net45\* x64\package\lib\net45\x86
-
-          mv x64\package\lib x64\package\build
-
-          cp csharp\OpenStudio.targets x64\package\build\netstandard2.0\
-          cp csharp\OpenStudio.targets x64\package\build\net45\
-          cd x64\package
+          cp csharp\OpenStudio.targets x64x86\build\netstandard2.0\
+          cp csharp\OpenStudio.targets x64x86\build\net45\
+          cd x64x86
           ls -R
 
       - name: make a new nupkg for Windows 
         run: |
-          $VERSION = (Get-Item x64\package\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
+          $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
           echo $VERSION
-          Compress-Archive -U -Path x64\package\* -DestinationPath OpenStudio.$VERSION.nupkg
-          cp *.nupkg OpenStudio.nupkg
+          Compress-Archive -U -Path x64x86\* -DestinationPath OpenStudio.$VERSION.nupkg
+          cp *.nupkg x64x86\OpenStudio.nupkg
           ls
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: nugetPackage
-          path: OpenStudio.nupkg
+          path: x64x86\OpenStudio.nupkg
 
       - name: Tests on Windows
         run: |
