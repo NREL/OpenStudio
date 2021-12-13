@@ -214,14 +214,19 @@ jobs:
 
       - name: merge x86 into x64
         run: |
-          mv x64\package\lib\netstandard2.0\OpenStudio.dll x64\package\lib\netstandard2.0\x64\OpenStudio.dll 
-          mv x64\package\lib\net45\OpenStudio.dll x64\package\lib\net45\x64\OpenStudio.dll 
-          mv x86\package\lib\netstandard2.0\OpenStudio.dll x86\package\lib\netstandard2.0\x86\OpenStudio.dll 
-          mv x86\package\lib\net45\OpenStudio.dll x86\package\lib\net45\x86\OpenStudio.dll 
+          mkdir x64\package\lib\netstandard2.0\x64
+          mkdir x64\package\lib\net45\x64
+          mkdir x64\package\lib\netstandard2.0\x86
+          mkdir x64\package\lib\net45\x86
+
+
+          mv x64\package\lib\netstandard2.0\* x64\package\lib\netstandard2.0\x64
+          mv x64\package\lib\net45\* x64\package\lib\net45\x64 
+
+          mv x86\package\lib\netstandard2.0\* x64\package\lib\netstandard2.0\x86
+          mv x86\package\lib\net45\* x64\package\lib\net45\x86
 
           mv x64\package\lib x64\package\build
-          mv x86\package\lib\netstandard2.0\x86 x64\package\build\netstandard2.0\x86
-          mv x86\package\lib\net45\x86 x64\package\build\net45\x86
 
           cp csharp\OpenStudio.targets x64\package\build\netstandard2.0\
           cp csharp\OpenStudio.targets x64\package\build\net45\
