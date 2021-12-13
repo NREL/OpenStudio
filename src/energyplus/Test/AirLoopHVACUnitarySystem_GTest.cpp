@@ -37,6 +37,9 @@
 #include "../../model/AirLoopHVACUnitarySystem.hpp"
 #include "../../model/Node.hpp"
 
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilHeatingDesuperheater.hpp"
+
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -87,4 +90,73 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_ControlType
   idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
 
   ASSERT_EQ("Load", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
+
+  // Test for #4509: Bad nodes created for AirLoopHVAC:UnitarySystem with only cooling coil and supplemental heating coil
+  {
+    Model m;
+
+    CoilCoolingDXSingleSpeed c(m);
+    CoilHeatingDesuperheater s(m);
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setCoolingCoil(c);
+    unitary.setSupplementalHeatingCoil(s);
+
+    AirLoopHVAC airLoop(m);
+
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(m);
+
+    WorkspaceObjectVector idfUnitaries(workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    ASSERT_EQ(1u, idfUnitaries.size());
+    WorkspaceObject idfUnitary(idfUnitaries[0]);
+
+    WorkspaceObjectVector idfCoolingCoils(workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed));
+    ASSERT_EQ(1u, idfCoolingCoils.size());
+    WorkspaceObject idfCoolingCoil(idfCoolingCoils[0]);
+
+    WorkspaceObjectVector idfSuppHeatingCoils(workspace.getObjectsByType(IddObjectType::Coil_Heating_Desuperheater));
+    ASSERT_EQ(1u, idfSuppHeatingCoils.size());
+    WorkspaceObject idfSuppHeatingCoil(idfSuppHeatingCoils[0]);
+
+    unitaryInletNode = idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName).get();
+    unitaryOutletNode = idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName).get();
+
+    coolingCoilInletNode = idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName).get();
+    coolingCoilOutletNode = idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName).get();
+
+    suppHeatingCoilInletNode = idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirInletNodeName).get();
+    suppHeatingCoilOutletNode = idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirOutletNodeName).get();
+
+    EXPECT_EQ(unitaryInletNode, coolingCoilInletNode);
+    EXPECT_EQ(coolingCoilOutletNode, suppHeatingCoilInletNode);
+    EXPECT_EQ(suppHeatingCoilOutletNode, unitaryOutletNode);
+  }
+
+  // TODO: test other combinations
+
+  // cooling coil
+  // heating coil
+  // fan
+  // supp heating coil
+
+  // cooling coil, heating coil
+  // cooling coil, fan
+  // cooling coil, supp heating coil
+  // heating coil, fan
+  // heating coil, supp heating coil
+  // fan, supp heating coil
+
+  // cooling coil, heating coil, fan
+  // cooling coil, heating coil, supp heating coil
+  // cooling coil, fan, supp heating coil
+  // heating coil, fan, supp heating coil
+
+  // cooling coil, heating coil, fan, supp heating coil
 }
