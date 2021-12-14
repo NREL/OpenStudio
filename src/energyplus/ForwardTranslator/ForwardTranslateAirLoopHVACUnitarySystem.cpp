@@ -676,10 +676,10 @@ namespace energyplus {
       }
       if (_heatingCoil) {
         outletNodeName = baseName + " Cooling Coil - Heating Coil Node";
-      } else if (blowThroughFan && _supplementalHeatingCoil) {
-        outletNodeName = baseName + " Cooling Coil - Supplemental Coil Node";
       } else if (!blowThroughFan && _fan) {
         outletNodeName = baseName + " Cooling Coil - Fan Node";
+      } else if (_supplementalHeatingCoil) {
+        outletNodeName = baseName + " Cooling Coil - Supplemental Coil Node";
       } else {
         outletNodeName = airOutletNodeName.get();
       }
@@ -756,10 +756,10 @@ namespace energyplus {
       } else {
         inletNodeName = airInletNodeName.get();
       }
-      if (blowThroughFan && _supplementalHeatingCoil) {
-        outletNodeName = baseName + " Heating Coil - Supplemental Coil Node";
-      } else if (!blowThroughFan && _fan) {
+      if (!blowThroughFan && _fan) {
         outletNodeName = baseName + " Heating Coil - Fan Node";
+      } else if (_supplementalHeatingCoil) {
+        outletNodeName = baseName + " Heating Coil - Supplemental Coil Node";
       } else {
         outletNodeName = airOutletNodeName.get();
       }

@@ -342,7 +342,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
       std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes(workspace);
 
       EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
-      //EXPECT_EQ(coolingCoilNodes[1], suppHeatingCoilNodes[0]); FIXME
+      EXPECT_EQ(coolingCoilNodes[1], suppHeatingCoilNodes[0]);
       EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
     }
 
@@ -406,7 +406,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
       std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes(workspace);
 
       EXPECT_EQ(unitaryNodes[0], heatingCoilNodes[0]);
-      //EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]); FIXME
+      EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]);
       EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
     }
 
@@ -506,17 +506,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
       std::vector<std::string> heatingCoilNodes = getHeatingCoilNodes(workspace);
       std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes(workspace);
 
-      if (fanPlacement == "BlowThrough") {
-        EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
-        EXPECT_EQ(coolingCoilNodes[1], heatingCoilNodes[0]);
-        EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]);
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      } else if (fanPlacement == "DrawThrough") {
-        EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
-        EXPECT_EQ(coolingCoilNodes[1], heatingCoilNodes[0]);
-        //EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]); FIXME
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      }
+      EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
+      EXPECT_EQ(coolingCoilNodes[1], heatingCoilNodes[0]);
+      EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]);
+      EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
     }
 
     // cooling coil, fan, supp heating coil
@@ -643,16 +636,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
         EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
       }
     }
-
-    // EXPECT_EQ("", unitaryNodes[0]); // Node 1
-    // EXPECT_EQ("", unitaryNodes[1]); // Node 2
-    // EXPECT_EQ("", coolingCoilNodes[0]); // Node 1
-    // EXPECT_EQ("", coolingCoilNodes[1]); // Air Loop HVAC Unitary System 1 Cooling Coil - Heating Coil Node
-    // EXPECT_EQ("", heatingCoilNodes[0]); // Air Loop HVAC Unitary System 1 Cooling Coil - Heating Coil Node
-    // EXPECT_EQ("", heatingCoilNodes[1]); // Air Loop HVAC Unitary System 1 Heating Coil - Fan Node
-    // EXPECT_EQ("", suppHeatingCoilNodes[0]); // Air Loop HVAC Unitary System 1 Fan - Supplemental Coil Node
-    // EXPECT_EQ("", suppHeatingCoilNodes[1]); // Node 2
-    // EXPECT_EQ("", fanNodes[0]); // Air Loop HVAC Unitary System 1 Heating Coil - Fan Node
-    // EXPECT_EQ("", fanNodes[1]); // Air Loop HVAC Unitary System 1 Fan - Supplemental Coil Node
   }
 }
