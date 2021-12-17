@@ -30,15 +30,10 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
-#include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
-#include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include "../../model/Curve.hpp"
-#include "../../model/Curve_Impl.hpp"
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -75,7 +70,7 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::AirOutletNodeName, node->name().get());
     }
 
-    // CondenserAirInletNodeName
+    // CondenserAirInletNodeName: stays blank so we get condition from weather file
 
     // CondenserType
     if ((s = modelObject.condenserType())) {
@@ -138,12 +133,14 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::FuelType, s.get());
     }
 
+    const auto stages = modelObject.stages();
+
     // NumberofSpeeds
-    if (auto num = modelObject.stages().size()) {
-      idfObject.setInt(Coil_Cooling_DX_MultiSpeedFields::NumberofSpeeds, num);
+    if (!stages.empty()) {
+      idfObject.setInt(Coil_Cooling_DX_MultiSpeedFields::NumberofSpeeds, stages.size());
     }
 
-    for (auto stage : modelObject.stages()) {
+    for (const auto& stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
       // SpeedGrossRatedTotalCoolingCapacity
