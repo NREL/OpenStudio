@@ -321,8 +321,7 @@ namespace model {
     ModelObject CoilHeatingDXMultiSpeed_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingDXMultiSpeed>();
 
-      auto t_stages = stages();
-      for (auto stage : t_stages) {
+      for (const auto& stage : stages()) {
         auto stageClone = stage.clone(model).cast<CoilHeatingDXMultiSpeedStageData>();
         t_clone.addStage(stageClone);
       }
@@ -349,10 +348,8 @@ namespace model {
 
     std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed_Impl::stages() const {
       std::vector<CoilHeatingDXMultiSpeedStageData> result;
-      auto groups = extensibleGroups();
-      for (auto group : groups) {
-        auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::Stage);
-        if (target) {
+      for (const auto& group : extensibleGroups()) {
+        if (auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::Stage)) {
           if (auto stage = target->optionalCast<CoilHeatingDXMultiSpeedStageData>()) {
             result.push_back(stage.get());
           }
@@ -486,7 +483,7 @@ namespace model {
       return boost::none;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::addToNode(Node& node) {
+    bool CoilHeatingDXMultiSpeed_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
