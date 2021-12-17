@@ -70,7 +70,7 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::AirOutletNodeName, node->name().get());
     }
 
-    // CondenserAirInletNodeName
+    // CondenserAirInletNodeName: stays blank so we get condition from weather file
 
     // CondenserType
     if ((s = modelObject.condenserType())) {
