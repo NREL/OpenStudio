@@ -101,6 +101,14 @@ namespace model {
 
   }  // namespace detail
 
+  AirflowNetworkSpecifiedFlowRate::AirflowNetworkSpecifiedFlowRate(const Model& model)
+    : AirflowNetworkComponent(AirflowNetworkSpecifiedFlowRate::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>());
+
+    bool ok = setAirFlowValue(0);
+    OS_ASSERT(ok);
+  }
+
   AirflowNetworkSpecifiedFlowRate::AirflowNetworkSpecifiedFlowRate(const Model& model, double airFlowValue)
     : AirflowNetworkComponent(AirflowNetworkSpecifiedFlowRate::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkSpecifiedFlowRate_Impl>());
@@ -113,8 +121,12 @@ namespace model {
     return IddObjectType(IddObjectType::OS_AirflowNetworkSpecifiedFlowRate);
   }
 
-  std::vector<std::string> AirflowNetworkSpecifiedFlowRate::validAirFlowUnitsValues() {
+  std::vector<std::string> AirflowNetworkSpecifiedFlowRate::airFlowUnitsValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_AirflowNetworkSpecifiedFlowRateFields::AirFlowUnits);
+  }
+
+  std::vector<std::string> AirflowNetworkSpecifiedFlowRate::validAirFlowUnitsValues() {
+    return airFlowUnitsValues();
   }
 
   double AirflowNetworkSpecifiedFlowRate::airFlowValue() const {

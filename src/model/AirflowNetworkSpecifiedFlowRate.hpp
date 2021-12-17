@@ -50,7 +50,9 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    /** Construct a specified flow rate object with default values and a specified effective leakage area. */
+    /** Construct a specified flow rate object with a zero airflow value. */
+    AirflowNetworkSpecifiedFlowRate(const Model& model);
+    /** Construct a specified flow rate object with a specified airflow value. */
     AirflowNetworkSpecifiedFlowRate(const Model& model, double airFlowValue);
 
     virtual ~AirflowNetworkSpecifiedFlowRate() {}
@@ -58,6 +60,8 @@ namespace model {
     //@}
 
     static IddObjectType iddObjectType();
+
+    static std::vector<std::string> airFlowUnitsValues();
 
     static std::vector<std::string> validAirFlowUnitsValues();
 

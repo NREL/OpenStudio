@@ -97,3 +97,12 @@ TEST_F(ModelFixture, AirflowNetwork_SpecifiedFlowRate) {
   ASSERT_TRUE(afnsurf.setExternalNode(extnode));
   EXPECT_EQ(extnode, afnsurf.externalNode());
 }
+
+TEST_F(ModelFixture_AirflowNetwork_SpecifiedFlowRate_AlternateCtor) {
+  Model model;
+
+  AirflowNetworkSpecifiedFlowRate sfr0(model);
+  EXPECT_EQ(0.0, sfr0.airFlowValue());
+  EXPECT_EQ("MassFlow", sfr0.airFlowUnits());
+  EXPECT_TRUE(sfr0.isAirFlowUnitsDefaulted());
+}
