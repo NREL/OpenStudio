@@ -129,6 +129,9 @@ namespace model {
     /** @name Other */
     //@{
 
+    // Returns the CoilHeatingDXMultiSpeed that references it if any
+    boost::optional<CoilHeatingDXMultiSpeed> parentCoil() const;
+
     boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
 
     boost::optional<double> autosizedRatedAirFlowRate() const;

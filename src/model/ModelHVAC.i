@@ -59,6 +59,7 @@
 
   // Defined in ModelStraightComponent.i
   %ignore openstudio::model::CoilCoolingDXMultiSpeedStageData::parentCoil;
+  %ignore openstudio::model::CoilHeatingDXMultiSpeedStageData::parentCoil;
 
 #endif
 
@@ -82,6 +83,7 @@ namespace model {
 %feature("valuewrapper") PlantEquipmentOperationCoolingLoad;
 %feature("valuewrapper") WaterUseConnections;
 %feature("valuewrapper") CoilCoolingDXMultiSpeed;
+%feature("valuewrapper") CoilHeatingDXMultiSpeed;
 
 class AirflowNetworkDistributionNode;
 class AirflowNetworkZone;
@@ -93,6 +95,7 @@ class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class WaterUseConnections;
 class CoilCoolingDXMultiSpeed;
+class CoilHeatingDXMultiSpeed;
 
 }
 }
