@@ -133,14 +133,14 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::FuelType, s.get());
     }
 
-    auto const stages = modelObject.stages();
+    const auto stages = modelObject.stages();
 
     // NumberofSpeeds
-    if (auto num = stages.size()) {
-      idfObject.setInt(Coil_Cooling_DX_MultiSpeedFields::NumberofSpeeds, num);
+    if (!stages.empty()) {
+      idfObject.setInt(Coil_Cooling_DX_MultiSpeedFields::NumberofSpeeds, stages.size());
     }
 
-    for (auto stage : stages) {
+    for (const auto& stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
       // SpeedGrossRatedTotalCoolingCapacity
