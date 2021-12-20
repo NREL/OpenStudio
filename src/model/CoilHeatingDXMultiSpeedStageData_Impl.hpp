@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
   class Curve;
+  class CoilHeatingDXMultiSpeed;
 
   namespace detail {
 
@@ -67,6 +68,9 @@ namespace model {
 
       virtual std::vector<ModelObject> children() const override;
 
+      // If this object is used by any CoilHeatingDXMultiSpeed, remove the corresponding extensible group to avoid having 'blanks'
+      virtual std::vector<IdfObject> remove() override;
+
       //@}
       /** @name Getters */
       //@{
@@ -96,14 +100,6 @@ namespace model {
       double ratedWasteHeatFractionofPowerInput() const;
 
       Curve wasteHeatFunctionofTemperatureCurve() const;
-
-      boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
-
-      boost::optional<double> autosizedRatedAirFlowRate() const;
-
-      void autosize();
-
-      void applySizingValues();
 
       //@}
       /** @name Setters */
@@ -139,12 +135,22 @@ namespace model {
       /** @name Other */
       //@{
 
-      //@}
+      boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
+
+      boost::optional<double> autosizedRatedAirFlowRate() const;
+
+      void autosize();
+
+      void applySizingValues();
+
+      // Returns the CoilHeatingDXMultiSpeed that references it if any
+      boost::optional<CoilHeatingDXMultiSpeed> parentCoil() const;
 
       // Used to determine the index of this performance data in the
       // list of stages in the parent object.
       boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> stageIndexAndParentCoil() const;
 
+      //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeedStageData");
