@@ -2612,6 +2612,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSpecifiedFlowRate);
     REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
     REGISTER_CONSTRUCTOR(AirflowNetworkZone);
     REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
@@ -3138,6 +3139,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSpecifiedFlowRate);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);

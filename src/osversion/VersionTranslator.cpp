@@ -59,6 +59,7 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -144,7 +145,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
-    m_updateMethods[VersionString("3.3.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.3.1")] = &VersionTranslator::update_3_3_0_to_3_3_1;
+    //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -6824,9 +6826,89 @@ namespace osversion {
 
   }  // end update_3_2_1_to_3_3_0
 
-  /*   std::string VersionTranslator::update_3_3_0_to_3_3_1(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_3_1) {
-    
-  }  // end update_3_3_0_to_3_3_1 */
+  std::string VersionTranslator::update_3_3_0_to_3_3_1(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_3_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_3_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_3_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_3_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:Coil:Heating:DX:MultiSpeed") {
+
+        // Stage Data List becomes extensible list (Stage 1, Stage 2, etc.)
+        // ModelObjectList gets removed
+
+        auto iddObject = idd_3_3_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < 18; ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Before: There was a single modelObjectList, which extensible groups were the StageDatas
+        // Now: We move these directly onto extensible groups
+        std::string stageDataList = object.getString(18).get();  // Stage Data List: handle of the ModelObjectList
+        if (boost::optional<IdfObject> modelObjectList = idf_3_3_0.getObject(openstudio::toUUID(stageDataList))) {
+          m_untranslated.push_back(modelObjectList.get());  // original OS:ModelObjectList
+          for (const IdfExtensibleGroup& eg : modelObjectList->extensibleGroups()) {
+            std::string stageDataListHandleStr = eg.getString(0).get();
+            if (!stageDataListHandleStr.empty()) {
+              IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup({stageDataListHandleStr});  // new OS:Coil:Heating:DX:MultiSpeed:StageData
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
+        auto iddObject = idd_3_3_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Inserted name at pos 1
+        newObject.setString(1, "Coil Heating DX Multi Speed Stage Data");
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 1) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:ModelObjectList") {
+
+        bool isOnCoil = false;
+        std::vector<IdfObject> coils = idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:Coil:Heating:DX:MultiSpeed").get());
+        for (auto& coil : coils) {
+          if (object.getString(0).get() == coil.getString(18).get()) {  // Handle == Stage Data List
+            isOnCoil = true;
+          }
+        }
+
+        if (!isOnCoil) {
+          ss << object;
+        }
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_3_0_to_3_3_1
 
 }  // namespace osversion
 }  // namespace openstudio

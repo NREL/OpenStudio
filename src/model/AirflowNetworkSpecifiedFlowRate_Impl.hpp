@@ -27,29 +27,73 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef MODEL_AIRFLOWNETWORKSpecifiedFlowRate_IMPL_HPP
+#define MODEL_AIRFLOWNETWORKSpecifiedFlowRate_IMPL_HPP
 
-#include "ModelFixture.hpp"
+#include "ModelAPI.hpp"
+#include "AirflowNetworkComponent_Impl.hpp"
 
-#include "../AirflowNetworkHorizontalOpening.hpp"
-#include "../AirflowNetworkHorizontalOpening_Impl.hpp"
+namespace openstudio {
+namespace model {
 
-using namespace openstudio;
-using namespace openstudio::model;
+  namespace detail {
 
-TEST_F(ModelFixture, AirflowNetwork_HorizontalOpening) {
-  Model model;
+    /** AirflowNetworkSpecifiedFlowRate_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkSpecifiedFlowRate.*/
+    class MODEL_API AirflowNetworkSpecifiedFlowRate_Impl : public AirflowNetworkComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  AirflowNetworkHorizontalOpening horizontal0(model, 1.0, 0.5);
-  AirflowNetworkHorizontalOpening horizontal1(model, 1.0, 0.5, 0.5, 0.5);
+      AirflowNetworkSpecifiedFlowRate_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  EXPECT_EQ(1, horizontal0.airMassFlowCoefficientWhenOpeningisClosed());
-  EXPECT_EQ(0.65, horizontal0.airMassFlowExponentWhenOpeningisClosed());
-  EXPECT_EQ(90, horizontal0.slopingPlaneAngle());
-  EXPECT_EQ(0.5, horizontal0.dischargeCoefficient());
+      AirflowNetworkSpecifiedFlowRate_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  EXPECT_EQ(1, horizontal1.airMassFlowCoefficientWhenOpeningisClosed());
-  EXPECT_EQ(0.5, horizontal1.airMassFlowExponentWhenOpeningisClosed());
-  EXPECT_EQ(0.5, horizontal1.slopingPlaneAngle());
-  EXPECT_EQ(0.5, horizontal1.dischargeCoefficient());
-}
+      AirflowNetworkSpecifiedFlowRate_Impl(const AirflowNetworkSpecifiedFlowRate_Impl& other, Model_Impl* model, bool keepHandle);
+
+      virtual ~AirflowNetworkSpecifiedFlowRate_Impl() {}
+
+      //@}
+      /** @name Virtual Methods */
+      //@{
+
+      virtual const std::vector<std::string>& outputVariableNames() const override;
+
+      virtual IddObjectType iddObjectType() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
+
+      double airFlowValue() const;
+
+      std::string airFlowUnits() const;
+
+      bool isAirFlowUnitsDefaulted() const;
+
+      //@}
+      /** @name Setters */
+      //@{
+
+      bool setAirFlowValue(double airFlowValue);
+
+      bool setAirFlowUnits(const std::string& airFlowUnits);
+
+      void resetAirFlowUnits();
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkSpecifiedFlowRate");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_AIRFLOWNETWORKSpecifiedFlowRate_IMPL_HPP
