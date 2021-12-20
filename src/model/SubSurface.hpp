@@ -54,6 +54,7 @@ namespace model {
   class AirflowNetworkCrack;
   class AirflowNetworkEffectiveLeakageArea;
   class AirflowNetworkHorizontalOpening;
+  class AirflowNetworkSpecifiedFlowRate;
 
   namespace detail {
 
@@ -260,6 +261,7 @@ namespace model {
     AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
     AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
     AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage);
 
     boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 

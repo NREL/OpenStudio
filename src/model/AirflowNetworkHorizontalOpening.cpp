@@ -137,10 +137,10 @@ namespace model {
     : AirflowNetworkComponent(AirflowNetworkHorizontalOpening::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkHorizontalOpening_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    //OS_ASSERT(setHandle());
-    OS_ASSERT(setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed));
-    OS_ASSERT(setDischargeCoefficient(dischargeCoefficient));
+    bool ok = setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed);
+    OS_ASSERT(ok);
+    ok = setDischargeCoefficient(dischargeCoefficient);
+    OS_ASSERT(ok);
   }
 
   AirflowNetworkHorizontalOpening::AirflowNetworkHorizontalOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed,
