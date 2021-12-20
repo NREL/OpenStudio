@@ -72,6 +72,8 @@
 #include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "AirflowNetworkHorizontalOpening.hpp"
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate.hpp"
+#include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -1720,6 +1722,10 @@ namespace model {
   }
 
   AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage) {
+    return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+  }
+
+  AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage) {
     return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
   }
 

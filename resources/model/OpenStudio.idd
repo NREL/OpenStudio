@@ -35241,8 +35241,33 @@ OS:AirflowNetworkEffectiveLeakageArea,
       \maximum 1.0
       \note Enter the exponent used in the air mass flow equation.
 
+OS:AirflowNetworkSpecifiedFlowRate,
+      \min-fields 3
+      \memo This object is used to define specified flow through a linkage.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference SurfaceAirflowLeakageNames
+      \note Enter a unique name for this object.
+  N1, \field Air Flow Value
+      \required-field
+      \type real
+      \note Enter the specified flow rate.
+  A3; \field Air Flow Units
+      \type choice
+      \key VolumetricFlow
+      \key MassFlow
+      \default MassFlow
+      \note Enter the units of the air flow value.
+      \note VolumetricFlow (m3/s)
+      \note MassFlow (kg/s)
+
 OS:AirflowNetworkDetailedOpening,
-      \min-fields 17
+      \min-fields 16
+      \max-fields 31
       \extensible:5
       \memo This object specifies the properties of airflow through windows and doors (window, door and
       \memo glass door heat transfer subsurfaces) when they are closed or open.
@@ -35295,9 +35320,22 @@ OS:AirflowNetworkDetailedOpening,
       \type real
       \units dimensionless
       \minimum 0
-      \maximum 0
+      \maximum 1
       \default 0
+      \note Opening Factor 1
       \note This value must be specified as 0.
+      \note Opening Factor 2
+      \note If Number of Sets of Opening Factor Data = 2, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 3, this value must be less than 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than the
+      \note value entered for Opening factor 3 and greater than the value entered
+      \note for Opening factor 1.
+      \note Opening Factor 3
+      \note If Number of Sets of Opening Factor Data = 3, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than 1.0,
+      \note and greater than value entered for Opening factor 2.
+      \note Opening Factor 4
+      \note If Number of Sets of Opening Factor Data = 4, this value must be 1.0
       \begin-extensible
   N5, \field Discharge Coefficient for Opening Factor 1
       \type real

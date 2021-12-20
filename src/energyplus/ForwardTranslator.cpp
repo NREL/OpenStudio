@@ -3668,6 +3668,14 @@ namespace energyplus {
         translateAirflowNetworkHorizontalOpening(modelObject);
       }
 
+      // Specified Flow Rate
+      std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
+      std::sort(sfrs.begin(), sfrs.end(), WorkspaceObjectNameLess());
+      for (auto modelObject : sfrs) {
+        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+        translateAirflowNetworkSpecifiedFlowRate(modelObject);
+      }
+
       // Surfaces
       std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
       std::sort(surfs.begin(), surfs.end(), WorkspaceObjectNameLess());
@@ -3805,6 +3813,10 @@ namespace energyplus {
       // Horizontal Openings
       std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
       count += horzs.size();
+
+      // Specified Flow Rate
+      std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
+      count += sfrs.size();
 
       // Surfaces
       std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();

@@ -112,7 +112,6 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices) {
   Model model;
 
   Point3dVector points;
-  Point3dVector testPoints;
 
   // square with unit area
   points.push_back(Point3d(0, 1, 0));
