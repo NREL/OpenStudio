@@ -773,6 +773,6 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   auto m = model_.get();
 
   m.save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Office (ASHRAE HQ) 2016.osm"), true);
-  
+
   // TODO
 }
