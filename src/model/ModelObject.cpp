@@ -752,6 +752,51 @@ namespace model {
       return result;
     }
 
+    boost::optional<std::string> ModelObject_Impl::cadObjectId() const {
+      boost::optional<std::string> result;
+      if (hasAdditionalProperties()) {
+        AdditionalProperties additionalProperties = this->additionalProperties();
+        if (additionalProperties.hasFeature("CADObjectId")) {
+          result = additionalProperties.getFeatureAsString("CADObjectId");
+        }
+      }
+      return result;
+    }
+    
+    bool ModelObject_Impl::setCADObjectId(std::string cadObjectId) {
+      return this->additionalProperties().setFeature("CADObjectId", cadObjectId);
+    }
+    
+    boost::optional<std::string> ModelObject_Impl::gbXMLId() const {
+      boost::optional<std::string> result;
+      if (hasAdditionalProperties()) {
+        AdditionalProperties additionalProperties = this->additionalProperties();
+        if (additionalProperties.hasFeature("gbXMLId")) {
+          result = additionalProperties.getFeatureAsString("gbXMLId");
+        }
+      }
+      return result;
+    }
+    
+    bool ModelObject_Impl::setGBXMLId(std::string gbXMLId) {
+      return this->additionalProperties().setFeature("gbXMLId", gbXMLId);
+    }
+    
+    boost::optional<std::string> ModelObject_Impl::cadName() const {
+      boost::optional<std::string> result;
+      if (hasAdditionalProperties()) {
+        AdditionalProperties additionalProperties = this->additionalProperties();
+        if (additionalProperties.hasFeature("CADName")) {
+          result = additionalProperties.getFeatureAsString("CADName");
+        }
+      }
+      return result;
+    }
+    
+    bool ModelObject_Impl::setCADName(std::string cadName) {
+      return this->additionalProperties().setFeature("CADName", cadName);
+    }
+
   }  // namespace detail
 
   bool ModelObject::operator<(const ModelObject& right) const {
@@ -849,6 +894,30 @@ namespace model {
 
   std::vector<IdfObject> ModelObject::removeAdditionalProperties() {
     return getImpl<detail::ModelObject_Impl>()->removeAdditionalProperties();
+  }
+
+  boost::optional<std::string> ModelObject::cadObjectId() const {
+    return getImpl<detail::ModelObject_Impl>()->cadObjectId();
+  }
+  
+  bool ModelObject::setCADObjectId(std::string cadObjectId) {
+    return getImpl<detail::ModelObject_Impl>()->setCADObjectId(cadObjectId);
+  }
+  
+  boost::optional<std::string> ModelObject::gbXMLId() const {
+    return getImpl<detail::ModelObject_Impl>()->gbXMLId();
+  }
+  
+  bool ModelObject::setGBXMLId(std::string gbXMLId) {
+    return getImpl<detail::ModelObject_Impl>()->setGBXMLId(gbXMLId);
+  }
+  
+  boost::optional<std::string> ModelObject::cadName() const {
+    return getImpl<detail::ModelObject_Impl>()->cadName();
+  }
+  
+  bool ModelObject::setCADName(std::string cadName) {
+    return getImpl<detail::ModelObject_Impl>()->setCADName(cadName);
   }
 
   ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
