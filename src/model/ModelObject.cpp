@@ -762,11 +762,11 @@ namespace model {
       }
       return result;
     }
-    
+
     bool ModelObject_Impl::setCADObjectId(std::string cadObjectId) {
       return this->additionalProperties().setFeature("CADObjectId", cadObjectId);
     }
-    
+
     boost::optional<std::string> ModelObject_Impl::gbXMLId() const {
       boost::optional<std::string> result;
       if (hasAdditionalProperties()) {
@@ -777,11 +777,11 @@ namespace model {
       }
       return result;
     }
-    
+
     bool ModelObject_Impl::setGBXMLId(std::string gbXMLId) {
       return this->additionalProperties().setFeature("gbXMLId", gbXMLId);
     }
-    
+
     boost::optional<std::string> ModelObject_Impl::cadName() const {
       boost::optional<std::string> result;
       if (hasAdditionalProperties()) {
@@ -792,7 +792,7 @@ namespace model {
       }
       return result;
     }
-    
+
     bool ModelObject_Impl::setCADName(std::string cadName) {
       return this->additionalProperties().setFeature("CADName", cadName);
     }
@@ -899,23 +899,23 @@ namespace model {
   boost::optional<std::string> ModelObject::cadObjectId() const {
     return getImpl<detail::ModelObject_Impl>()->cadObjectId();
   }
-  
+
   bool ModelObject::setCADObjectId(std::string cadObjectId) {
     return getImpl<detail::ModelObject_Impl>()->setCADObjectId(cadObjectId);
   }
-  
+
   boost::optional<std::string> ModelObject::gbXMLId() const {
     return getImpl<detail::ModelObject_Impl>()->gbXMLId();
   }
-  
+
   bool ModelObject::setGBXMLId(std::string gbXMLId) {
     return getImpl<detail::ModelObject_Impl>()->setGBXMLId(gbXMLId);
   }
-  
+
   boost::optional<std::string> ModelObject::cadName() const {
     return getImpl<detail::ModelObject_Impl>()->cadName();
   }
-  
+
   bool ModelObject::setCADName(std::string cadName) {
     return getImpl<detail::ModelObject_Impl>()->setCADName(cadName);
   }

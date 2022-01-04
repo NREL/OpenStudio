@@ -344,17 +344,38 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
   // Test for #4457 - Support gbXML translation where user-input <Name> is different from the id
   Model model = exampleModel();
 
-  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames.xml");
+  model.save(resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames.osm"), true);
 
   ForwardTranslator forwardTranslator;
-  bool test = forwardTranslator.modelToGbXML(model, p);
-
-  EXPECT_TRUE(test);
-
   ReverseTranslator reverseTranslator;
-  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
-  ASSERT_TRUE(model2);
+  // Old
+  {
+    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.xml");
 
-  // TODO
+    bool test = forwardTranslator.modelToGbXML(model, p);
+    EXPECT_TRUE(test);
+
+    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(true);
+    boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+    ASSERT_TRUE(model2);
+
+    path p1 = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.osm");
+    model2->save(p1, true);
+  }
+
+  // New
+  {
+    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.xml");
+
+    bool test = forwardTranslator.modelToGbXML(model, p);
+    EXPECT_TRUE(test);
+
+    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(false);
+    boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+    ASSERT_TRUE(model2);
+
+    path p1 = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.osm");
+    model2->save(p1, true);
+  }
 }

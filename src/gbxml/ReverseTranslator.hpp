@@ -123,7 +123,7 @@ namespace gbxml {
     ProgressBar* m_progressBar;
 
     REGISTER_LOGGER("openstudio.gbxml.ReverseTranslator");
-    
+
     // ReverseTranslator options
     bool m_keepGBXMLNamesAsModelObjectNames;
   };

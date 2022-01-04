@@ -91,7 +91,7 @@ namespace gbxml {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
-    
+
     m_keepGBXMLNamesAsModelObjectNames = true;
   }
 
@@ -448,9 +448,9 @@ namespace gbxml {
     } else {
       std::string id = element.attribute("id").value();
       std::string name = element.child("Name").text().as_string();
-      
+
       m_idToObjectMap.insert(std::make_pair(id, zone));
-      
+
       zone.setName(id);
       zone.additionalProperties().setFeature("CADName", name);
     }
@@ -484,9 +484,9 @@ namespace gbxml {
     } else {
       id = element.attribute("id").value();
       name = element.child("Name").text().as_string();
-      
+
       m_idToObjectMap.insert(std::make_pair(id, space));
-      
+
       space.setName(id);
       space.additionalProperties().setFeature("CADName", name);
     }

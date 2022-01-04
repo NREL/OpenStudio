@@ -153,15 +153,15 @@ namespace model {
       std::vector<IdfObject> removeAdditionalProperties();
 
       boost::optional<std::string> cadObjectId() const;
-      
+
       bool setCADObjectId(std::string cadObjectId);
-      
+
       boost::optional<std::string> gbXMLId() const;
-      
+
       bool setGBXMLId(std::string gbXMLId);
-      
+
       boost::optional<std::string> cadName() const;
-      
+
       bool setCADName(std::string cadName);
 
       //@}
