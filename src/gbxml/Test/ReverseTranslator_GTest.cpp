@@ -762,3 +762,17 @@ TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Complex) {
     }
   }
 }
+
+TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
+  // Test for #4457 - Support gbXML translation where user-input <Name> is different from the id
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Office (ASHRAE HQ) 2016.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model_ = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model_);
+  auto m = model_.get();
+
+  m.save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Office (ASHRAE HQ) 2016.osm"), true);
+  
+  // TODO
+}

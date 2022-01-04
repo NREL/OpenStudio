@@ -339,3 +339,22 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State) {
   EXPECT_EQ(gbXML_str1.length(), gbXML_str2.length());
   EXPECT_GT(gbXML_str1.length(), 50000);
 }
+
+TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
+  // Test for #4457 - Support gbXML translation where user-input <Name> is different from the id
+  Model model = exampleModel();
+
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  ReverseTranslator reverseTranslator;
+  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+  ASSERT_TRUE(model2);
+
+  // TODO
+}
