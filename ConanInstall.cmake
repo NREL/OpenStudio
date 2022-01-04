@@ -68,7 +68,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#6eb6dc4e0a3af9651279d3dc6121945a")
+    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#3d11f88f647ca75cc4a500e4df6e7e1a")
   endif()
 
   if(BUILD_BENCHMARK)
