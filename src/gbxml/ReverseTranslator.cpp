@@ -91,6 +91,8 @@ namespace gbxml {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
+    
+    m_keepGBXMLNamesAsModelObjectNames = true;
   }
 
   ReverseTranslator::~ReverseTranslator() {}
@@ -436,14 +438,22 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::ThermalZone zone(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, zone));
-    zone.additionalProperties().setFeature("gbXMLId", id);
+    if (m_keepGBXMLNamesAsModelObjectNames) {
+      std::string id = element.attribute("id").value();
+      m_idToObjectMap.insert(std::make_pair(id, zone));
+      zone.additionalProperties().setFeature("gbXMLId", id);
 
-    std::string name = element.child("Name").text().as_string();
-    zone.setName(escapeName(id, name));
-
-    // DLM: we need to better support separate name from id in this translator
+      std::string name = element.child("Name").text().as_string();
+      zone.setName(escapeName(id, name));
+    } else {
+      std::string id = element.attribute("id").value();
+      std::string name = element.child("Name").text().as_string();
+      
+      m_idToObjectMap.insert(std::make_pair(id, zone));
+      
+      zone.setName(id);
+      zone.additionalProperties().setFeature("CADName", name);
+    }
 
     // DLM: todo, translate setpoints
 
@@ -461,12 +471,25 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Space space(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, space));
-    space.additionalProperties().setFeature("gbXMLId", id);
+    std::string id;
+    std::string name;
 
-    std::string name = element.child("Name").text().as_string();
-    space.setName(escapeName(id, name));
+    if (m_keepGBXMLNamesAsModelObjectNames) {
+      id = element.attribute("id").value();
+      m_idToObjectMap.insert(std::make_pair(id, space));
+      space.additionalProperties().setFeature("gbXMLId", id);
+
+      name = element.child("Name").text().as_string();
+      space.setName(escapeName(id, name));
+    } else {
+      id = element.attribute("id").value();
+      name = element.child("Name").text().as_string();
+      
+      m_idToObjectMap.insert(std::make_pair(id, space));
+      
+      space.setName(id);
+      space.additionalProperties().setFeature("CADName", name);
+    }
 
     //DLM: we should be using a map of id to model object to get this, not relying on name
     std::string storyId = element.attribute("buildingStoreyIdRef").value();
@@ -493,8 +516,12 @@ namespace gbxml {
       // DLM: may want to revisit this
       // create a new thermal zone if none assigned
       openstudio::model::ThermalZone thermalZone(model);
-      thermalZone.setName(escapeName(id, name) + " ThermalZone");
       space.setThermalZone(thermalZone);
+      if (m_keepGBXMLNamesAsModelObjectNames) {
+        thermalZone.setName(escapeName(id, name) + " ThermalZone");
+      } else {
+        thermalZone.setName(id + " ThermalZone");
+      }
     }
 
     // create a stub space type
@@ -1061,6 +1088,10 @@ namespace gbxml {
     }
 
     return result;
+  }
+
+  void ReverseTranslator::setKeepGBXMLNamesAsModelObjectNames(bool keepGBXMLNamesAsModelObjectNames) {
+    m_keepGBXMLNamesAsModelObjectNames = keepGBXMLNamesAsModelObjectNames;
   }
 
 }  // namespace gbxml

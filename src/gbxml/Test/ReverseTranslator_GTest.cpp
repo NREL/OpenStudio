@@ -765,14 +765,116 @@ TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Complex) {
 
 TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   // Test for #4457 - Support gbXML translation where user-input <Name> is different from the id
-  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Office (ASHRAE HQ) 2016.xml");
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016.xml");
 
   openstudio::gbxml::ReverseTranslator reverseTranslator;
-  boost::optional<openstudio::model::Model> model_ = reverseTranslator.loadModel(inputPath);
-  ASSERT_TRUE(model_);
-  auto m = model_.get();
 
-  m.save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Office (ASHRAE HQ) 2016.osm"), true);
+  // When keeping gbxml names as model object names (historical behavior)
+  {
+    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(true);
+    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+    ASSERT_TRUE(model);
 
-  // TODO
+    model->save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_1.osm"), true);
+
+    {
+      auto _zone = model->getModelObjectByName<ThermalZone>("Zone Default");
+      ASSERT_TRUE(_zone);
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADObjectId"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
+      ASSERT_TRUE(_zone->cadObjectId());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("gbXMLId"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("gbXMLId"));
+      ASSERT_TRUE(_zone->gbXMLId());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("gbXMLId").get(), _zone->gbXMLId().get());
+    }
+
+    {
+      auto _space = model->getModelObjectByName<Space>("Hall_105");
+      ASSERT_TRUE(_space);
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
+      ASSERT_TRUE(_space->cadObjectId());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
+      ASSERT_TRUE(_space->gbXMLId());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("gbXMLId").get(), _space->gbXMLId().get());
+    }
+
+    {
+      auto _space = model->getModelObjectByName<Space>("Laundry_104");
+      ASSERT_TRUE(_space);
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
+      ASSERT_TRUE(_space->cadObjectId());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
+      ASSERT_TRUE(_space->gbXMLId());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("gbXMLId").get(), _space->gbXMLId().get());
+    }
+  }
+
+  // When using gbxml ids as model object names
+  {
+    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(false);
+    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+    ASSERT_TRUE(model);
+
+    model->save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_2.osm"), true);
+
+    {
+      auto _zone = model->getModelObjectByName<ThermalZone>("aim9374");
+      ASSERT_TRUE(_zone);
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADObjectId"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
+      ASSERT_TRUE(_zone->cadObjectId());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADName"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADName"));
+      ASSERT_TRUE(_zone->cadName());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADName").get(), _zone->cadName().get());
+    }
+
+    {
+      auto _zone = model->getModelObjectByName<ThermalZone>("aim9378");
+      ASSERT_TRUE(_zone);
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADObjectId"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
+      ASSERT_TRUE(_zone->cadObjectId());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADName"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADName"));
+      ASSERT_TRUE(_zone->cadName());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADName").get(), _zone->cadName().get());
+    }
+
+    {
+      auto _space = model->getModelObjectByName<Space>("aim0014");
+      ASSERT_TRUE(_space);
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
+      ASSERT_TRUE(_space->cadObjectId());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADName"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADName"));
+      ASSERT_TRUE(_space->cadName());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADName").get(), _space->cadName().get());
+    }
+
+    {
+      auto _space = model->getModelObjectByName<Space>("aim0078");
+      ASSERT_TRUE(_space);
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
+      ASSERT_TRUE(_space->cadObjectId());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADName"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADName"));
+      ASSERT_TRUE(_space->cadName());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADName").get(), _space->cadName().get());
+    }
+  }
 }
