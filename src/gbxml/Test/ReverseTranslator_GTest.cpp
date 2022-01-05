@@ -768,6 +768,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016.xml");
 
   openstudio::gbxml::ReverseTranslator reverseTranslator;
+  openstudio::gbxml::ForwardTranslator forwardTranslator;
 
   // When keeping gbxml names as model object names (historical behavior)
   {
@@ -784,10 +785,12 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
       ASSERT_TRUE(_zone->cadObjectId());
       EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
+      EXPECT_FALSE(_zone->cadName());
       EXPECT_TRUE(_zone->additionalProperties().hasFeature("gbXMLId"));
       ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("gbXMLId"));
       ASSERT_TRUE(_zone->gbXMLId());
       EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("gbXMLId").get(), _zone->gbXMLId().get());
+      EXPECT_EQ("aim9374", _zone->gbXMLId().get());
     }
 
     {
@@ -797,24 +800,19 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
       ASSERT_TRUE(_space->cadObjectId());
       EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
+      EXPECT_FALSE(_space->cadName());
       EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
       ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
       ASSERT_TRUE(_space->gbXMLId());
       EXPECT_EQ(_space->additionalProperties().getFeatureAsString("gbXMLId").get(), _space->gbXMLId().get());
+      EXPECT_EQ("aim0014", _space->gbXMLId().get());
     }
 
-    {
-      auto _space = model->getModelObjectByName<Space>("Laundry_104");
-      ASSERT_TRUE(_space);
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
-      ASSERT_TRUE(_space->cadObjectId());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
-      ASSERT_TRUE(_space->gbXMLId());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("gbXMLId").get(), _space->gbXMLId().get());
-    }
+    openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_1.xml");
+    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(false);
+    bool test = forwardTranslator.modelToGbXML(*model, outputPath);
+    EXPECT_TRUE(test);
+    // FIXME: CADObjectId, among others, does not get forward translated
   }
 
   // When using gbxml ids as model object names
@@ -836,19 +834,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADName"));
       ASSERT_TRUE(_zone->cadName());
       EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADName").get(), _zone->cadName().get());
-    }
-
-    {
-      auto _zone = model->getModelObjectByName<ThermalZone>("aim9378");
-      ASSERT_TRUE(_zone);
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADObjectId"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
-      ASSERT_TRUE(_zone->cadObjectId());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADName"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADName"));
-      ASSERT_TRUE(_zone->cadName());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADName").get(), _zone->cadName().get());
+      EXPECT_EQ("Zone Default", _zone->cadName().get());
+      EXPECT_FALSE(_zone->gbXMLId());
     }
 
     {
@@ -862,19 +849,14 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADName"));
       ASSERT_TRUE(_space->cadName());
       EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADName").get(), _space->cadName().get());
+      EXPECT_EQ("Hall_105", _space->cadName().get());
+      EXPECT_FALSE(_space->gbXMLId());
     }
 
-    {
-      auto _space = model->getModelObjectByName<Space>("aim0078");
-      ASSERT_TRUE(_space);
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
-      ASSERT_TRUE(_space->cadObjectId());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADName"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADName"));
-      ASSERT_TRUE(_space->cadName());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADName").get(), _space->cadName().get());
-    }
+    openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_2.xml");
+    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(false);
+    bool test = forwardTranslator.modelToGbXML(*model, outputPath);
+    EXPECT_TRUE(test);
+    // FIXME: CADObjectId, among others, does not get forward translated
   }
 }

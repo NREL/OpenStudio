@@ -32,6 +32,8 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../ReverseTranslator.hpp"
+#include "../../model/AdditionalProperties.hpp"
+#include "../../model/AdditionalProperties_Impl.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/Construction.hpp"
@@ -349,10 +351,18 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
   ForwardTranslator forwardTranslator;
   ReverseTranslator reverseTranslator;
 
-  // Old
+  // When keeping model object names as gbxml names (historical behavior)
   {
-    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.xml");
+    auto _zone = model.getModelObjectByName<ThermalZone>("Thermal Zone 1");
+    ASSERT_TRUE(_zone);
+    EXPECT_TRUE(_zone->setGBXMLId("ThermalZone1"));
 
+    auto _space = model.getModelObjectByName<Space>("Space 1");
+    ASSERT_TRUE(_space);
+    EXPECT_TRUE(_space->setGBXMLId("Space1"));
+
+    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.xml");
+    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(true);
     bool test = forwardTranslator.modelToGbXML(model, p);
     EXPECT_TRUE(test);
 
@@ -360,14 +370,45 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     boost::optional<Model> model2 = reverseTranslator.loadModel(p);
     ASSERT_TRUE(model2);
 
-    path p1 = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.osm");
-    model2->save(p1, true);
+    model2->save(resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.osm"), true);
+
+    {
+      auto _zone = model2->getModelObjectByName<ThermalZone>("Thermal Zone 1");
+      ASSERT_TRUE(_zone);
+      EXPECT_FALSE(_zone->additionalProperties().hasFeature("CADObjectId"));
+      EXPECT_FALSE(_zone->cadName());
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("gbXMLId"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("gbXMLId"));
+      ASSERT_TRUE(_zone->gbXMLId());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("gbXMLId").get(), _zone->gbXMLId().get());
+      EXPECT_EQ("ThermalZone1", _zone->gbXMLId().get());
+    }
+
+    {
+      auto _space = model2->getModelObjectByName<Space>("Space 1");
+      ASSERT_TRUE(_space);
+      EXPECT_FALSE(_space->additionalProperties().hasFeature("CADObjectId"));
+      EXPECT_FALSE(_space->cadName());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
+      ASSERT_TRUE(_space->gbXMLId());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("gbXMLId").get(), _space->gbXMLId().get());
+      EXPECT_EQ("Space1", _space->gbXMLId().get());
+    }
   }
 
-  // New
+  // When using model object ids as gbxml names
   {
-    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.xml");
+    auto _zone = model.getModelObjectByName<ThermalZone>("Thermal Zone 1");
+    ASSERT_TRUE(_zone);
+    EXPECT_TRUE(_zone->setCADName("ThermalZone1"));
 
+    auto _space = model.getModelObjectByName<Space>("Space 1");
+    ASSERT_TRUE(_space);
+    EXPECT_TRUE(_space->setCADName("Space1"));
+
+    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.xml");
+    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(false);
     bool test = forwardTranslator.modelToGbXML(model, p);
     EXPECT_TRUE(test);
 
@@ -375,7 +416,30 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     boost::optional<Model> model2 = reverseTranslator.loadModel(p);
     ASSERT_TRUE(model2);
 
-    path p1 = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.osm");
-    model2->save(p1, true);
+    model2->save(resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.osm"), true);
+
+    {
+      auto _zone = model2->getModelObjectByName<ThermalZone>("Thermal_Zone_1");
+      ASSERT_TRUE(_zone);
+      EXPECT_FALSE(_zone->additionalProperties().hasFeature("CADObjectId"));
+      EXPECT_FALSE(_zone->gbXMLId());
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADName"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADName"));
+      ASSERT_TRUE(_zone->cadName());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADName").get(), _zone->cadName().get());
+      EXPECT_EQ("ThermalZone1", _zone->cadName().get());
+    }
+
+    {
+      auto _space = model2->getModelObjectByName<Space>("Space_1");
+      ASSERT_TRUE(_space);
+      EXPECT_FALSE(_space->additionalProperties().hasFeature("CADObjectId"));
+      EXPECT_FALSE(_space->gbXMLId());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADName"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADName"));
+      ASSERT_TRUE(_space->cadName());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADName").get(), _space->cadName().get());
+      EXPECT_EQ("Space1", _space->cadName().get());
+    }
   }
 }
