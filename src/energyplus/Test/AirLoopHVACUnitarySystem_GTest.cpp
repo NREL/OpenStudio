@@ -98,54 +98,74 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_ControlType
   ASSERT_EQ("Load", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get());
 }
 
-std::vector<std::string> getUnitaryNodes(Workspace workspace) {
+std::vector<std::string> getUnitaryNodes(const Workspace& workspace) {
   WorkspaceObjectVector idfUnitaries(workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
-  WorkspaceObject idfUnitary(idfUnitaries[0]);
+  if (idfUnitaries.empty()) {
+    return {};
+  }
 
-  std::vector<std::string> nodeNames;
-  nodeNames.push_back(idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName).get());
-  nodeNames.push_back(idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName).get());
-  return nodeNames;
+  auto& idfUnitary = idfUnitaries[0];
+
+  return {
+    idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName).get(),
+    idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName).get(),
+  };
 }
 
-std::vector<std::string> getCoolingCoilNodes(Workspace workspace) {
+std::vector<std::string> getCoolingCoilNodes(const Workspace& workspace) {
   WorkspaceObjectVector idfCoolingCoils(workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed));
-  WorkspaceObject idfCoolingCoil(idfCoolingCoils[0]);
+  if (idfCoolingCoils.empty()) {
+    return {};
+  }
 
-  std::vector<std::string> nodeNames;
-  nodeNames.push_back(idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName).get());
-  nodeNames.push_back(idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName).get());
-  return nodeNames;
+  auto& idfCoolingCoil = idfCoolingCoils[0];
+
+  return {
+    idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName).get(),
+    idfCoolingCoil.getString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName).get(),
+  };
 }
 
-std::vector<std::string> getHeatingCoilNodes(Workspace workspace) {
+std::vector<std::string> getHeatingCoilNodes(const Workspace& workspace) {
   WorkspaceObjectVector idfHeatingCoils(workspace.getObjectsByType(IddObjectType::Coil_Heating_DX_SingleSpeed));
-  WorkspaceObject idfHeatingCoil(idfHeatingCoils[0]);
+  if (idfHeatingCoils.empty()) {
+    return {};
+  }
 
-  std::vector<std::string> nodeNames;
-  nodeNames.push_back(idfHeatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName).get());
-  nodeNames.push_back(idfHeatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName).get());
-  return nodeNames;
+  auto& idfHeatingCoil = idfHeatingCoils[0];
+
+  return {
+    idfHeatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName).get(),
+    idfHeatingCoil.getString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName).get(),
+  };
 }
 
-std::vector<std::string> getFanNodes(Workspace workspace) {
+std::vector<std::string> getFanNodes(const Workspace& workspace) {
   WorkspaceObjectVector idfFans(workspace.getObjectsByType(IddObjectType::Fan_ConstantVolume));
-  WorkspaceObject idfFan(idfFans[0]);
+  if (idfFans.empty()) {
+    return {};
+  }
 
-  std::vector<std::string> nodeNames;
-  nodeNames.push_back(idfFan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get());
-  nodeNames.push_back(idfFan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get());
-  return nodeNames;
+  auto& idfFan = idfFans[0];
+
+  return {
+    idfFan.getString(Fan_ConstantVolumeFields::AirInletNodeName).get(),
+    idfFan.getString(Fan_ConstantVolumeFields::AirOutletNodeName).get(),
+  };
 }
 
-std::vector<std::string> getSuppHeatingCoilNodes(Workspace workspace) {
+std::vector<std::string> getSuppHeatingCoilNodes(const Workspace& workspace) {
   WorkspaceObjectVector idfSuppHeatingCoils(workspace.getObjectsByType(IddObjectType::Coil_Heating_Desuperheater));
-  WorkspaceObject idfSuppHeatingCoil(idfSuppHeatingCoils[0]);
+  if (idfSuppHeatingCoils.empty()) {
+    return {};
+  }
 
-  std::vector<std::string> nodeNames;
-  nodeNames.push_back(idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirInletNodeName).get());
-  nodeNames.push_back(idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirOutletNodeName).get());
-  return nodeNames;
+  auto& idfSuppHeatingCoil = idfSuppHeatingCoils[0];
+
+  return {
+    idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirInletNodeName).get(),
+    idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirOutletNodeName).get(),
+  };
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {

@@ -620,6 +620,11 @@ namespace energyplus {
 
     std::string baseName = modelObject.name().get();
 
+    // Figure out node connections:
+    // If BlowThrough:   o---- Fan --- CC ----  HC ---- SupplHC ----o
+    // If DrawThrough:   o----  CC --- HC ---- Fan ---- SupplHC ----o
+    // (All above components are optional, but at least one must be present)
+
     if (_fan) {
       std::string outletNodeName;
       std::string inletNodeName = airInletNodeName.get();
