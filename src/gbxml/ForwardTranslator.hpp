@@ -128,7 +128,7 @@ namespace gbxml {
     ProgressBar* m_progressBar;
 
     REGISTER_LOGGER("openstudio.gbxml.ForwardTranslator");
-    
+
     // ForwardTranslator options
     bool m_keepModelObjectNamesAsGBXMLNames;
   };

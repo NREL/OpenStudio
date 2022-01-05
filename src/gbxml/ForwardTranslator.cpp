@@ -93,7 +93,7 @@ namespace gbxml {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
-    
+
     m_keepModelObjectNamesAsGBXMLNames = true;
   }
 
@@ -626,7 +626,7 @@ namespace gbxml {
       name = space.name().get();
     } else {
       id = space.name().get();
-      
+
       name = space.name().get();
       if (space.hasAdditionalProperties()) {
         model::AdditionalProperties additionalProperties = space.additionalProperties();
@@ -638,7 +638,7 @@ namespace gbxml {
 
     // id
     result.append_attribute("id") = escapeName(id).c_str();
-    
+
     // name
     auto nameElement = result.append_child("Name");
     nameElement.text() = name.c_str();
@@ -1317,7 +1317,7 @@ namespace gbxml {
       name = thermalZone.name().get();
     } else {
       id = thermalZone.name().get();
-      
+
       name = thermalZone.name().get();
       if (thermalZone.hasAdditionalProperties()) {
         model::AdditionalProperties additionalProperties = thermalZone.additionalProperties();
@@ -1326,10 +1326,10 @@ namespace gbxml {
         }
       }
     }
-    
+
     // id
     result.append_attribute("id") = escapeName(id).c_str();
-    
+
     // name
     auto nameElement = result.append_child("Name");
     nameElement.text() = name.c_str();
