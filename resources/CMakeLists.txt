@@ -271,7 +271,7 @@ SET(gbxml_resources_src
   gbxml/3951_Geometry_bug.xml
   gbxml/3997_WindowScaling_bug.xml
   gbxml/TestSchedules.xml
-  "gbxml/gbXMLStandard Single Family Residential 2016_1.xml"
+  "gbxml/gbXMLStandard Single Family Residential 2016.xml"
 )
 
 # update the resources
