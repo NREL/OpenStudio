@@ -620,6 +620,11 @@ namespace energyplus {
 
     std::string baseName = modelObject.name().get();
 
+    // Figure out node connections:
+    // If BlowThrough:   o---- Fan --- CC ----  HC ---- SupplHC ----o
+    // If DrawThrough:   o----  CC --- HC ---- Fan ---- SupplHC ----o
+    // (All above components are optional, but at least one must be present)
+
     if (_fan) {
       std::string outletNodeName;
       std::string inletNodeName = airInletNodeName.get();
@@ -676,10 +681,10 @@ namespace energyplus {
       }
       if (_heatingCoil) {
         outletNodeName = baseName + " Cooling Coil - Heating Coil Node";
-      } else if (blowThroughFan && _supplementalHeatingCoil) {
-        outletNodeName = baseName + " Cooling Coil - Supplemental Coil Node";
       } else if (!blowThroughFan && _fan) {
         outletNodeName = baseName + " Cooling Coil - Fan Node";
+      } else if (_supplementalHeatingCoil) {
+        outletNodeName = baseName + " Cooling Coil - Supplemental Coil Node";
       } else {
         outletNodeName = airOutletNodeName.get();
       }
@@ -756,10 +761,10 @@ namespace energyplus {
       } else {
         inletNodeName = airInletNodeName.get();
       }
-      if (blowThroughFan && _supplementalHeatingCoil) {
-        outletNodeName = baseName + " Heating Coil - Supplemental Coil Node";
-      } else if (!blowThroughFan && _fan) {
+      if (!blowThroughFan && _fan) {
         outletNodeName = baseName + " Heating Coil - Fan Node";
+      } else if (_supplementalHeatingCoil) {
+        outletNodeName = baseName + " Heating Coil - Supplemental Coil Node";
       } else {
         outletNodeName = airOutletNodeName.get();
       }
