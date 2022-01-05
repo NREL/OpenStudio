@@ -54,6 +54,7 @@ namespace model {
   class AirflowNetworkCrack;
   class AirflowNetworkEffectiveLeakageArea;
   class AirflowNetworkHorizontalOpening;
+  class AirflowNetworkSpecifiedFlowRate;
 
   namespace detail {
 
@@ -260,8 +261,21 @@ namespace model {
     AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
     AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
     AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage);
 
     boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+
+    /* Get the total area of the sub surface rough area which includes the frame */
+    double roughOpeningArea() const;
+
+    /* Get the rough opening vertices for the sub surface including the frame */
+    std::vector<Point3d> roughOpeningVertices() const;
+
+    // Gets the total area of the frame
+    double frameArea() const;
+
+    // Gets the total area of the divider
+    double dividerArea() const;
 
     // DLM: todo add methods to create light shelves by projection factor
 

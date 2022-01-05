@@ -41,7 +41,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-CoilCoolingDXMultiSpeedStageData makeStage(Model& model) {
+CoilCoolingDXMultiSpeedStageData makeCoolingStage(Model& model) {
   CurveBiquadratic cooling_curve_1(model);
   cooling_curve_1.setCoefficient1Constant(0.766956);
   cooling_curve_1.setCoefficient2x(0.0107756);
@@ -121,10 +121,10 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API) {
   Model m;
   CoilCoolingDXMultiSpeed coil(m);
 
-  auto stage1 = makeStage(m);
+  auto stage1 = makeCoolingStage(m);
   coil.addStage(stage1);
 
-  auto stage2 = makeStage(m);
+  auto stage2 = makeCoolingStage(m);
   coil.addStage(stage2);
 
   ASSERT_EQ(2u, coil.stages().size());
@@ -136,6 +136,7 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API) {
   EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
   EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 }
+
 TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages) {
   Model model;
   CoilCoolingDXMultiSpeed dx(model);
@@ -256,4 +257,16 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages) {
   EXPECT_EQ(0u, dx.numExtensibleGroups());
   EXPECT_EQ(0u, dx.numberOfStages());
   EXPECT_EQ(0u, dx.stages().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Remove) {
+  Model m;
+
+  CoilCoolingDXMultiSpeed coil(m);
+  CoilCoolingDXMultiSpeedStageData stage(m);
+  coil.addStage(stage);
+  coil.remove();
+
+  auto curves = m.getModelObjects<model::Curve>();
+  EXPECT_EQ(curves.size(), m.modelObjects().size());
 }
