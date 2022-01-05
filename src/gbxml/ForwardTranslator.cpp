@@ -93,6 +93,8 @@ namespace gbxml {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
+    
+    m_keepModelObjectNamesAsGBXMLNames = true;
   }
 
   ForwardTranslator::~ForwardTranslator() {}
@@ -609,9 +611,37 @@ namespace gbxml {
     auto result = parent.append_child("Space");
     m_translatedObjects[space.handle()] = result;
 
+    std::string name;
+    std::string id;
+
+    if (m_keepModelObjectNamesAsGBXMLNames) {
+      id = space.name().get();
+      if (space.hasAdditionalProperties()) {
+        model::AdditionalProperties additionalProperties = space.additionalProperties();
+        if (additionalProperties.hasFeature("gbXMLId")) {
+          id = additionalProperties.getFeatureAsString("gbXMLId").get();
+        }
+      }
+
+      name = space.name().get();
+    } else {
+      id = space.name().get();
+      
+      name = space.name().get();
+      if (space.hasAdditionalProperties()) {
+        model::AdditionalProperties additionalProperties = space.additionalProperties();
+        if (additionalProperties.hasFeature("CADName")) {
+          name = additionalProperties.getFeatureAsString("CADName").get();
+        }
+      }
+    }
+
     // id
-    std::string name = space.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    result.append_attribute("id") = escapeName(id).c_str();
+    
+    // name
+    auto nameElement = result.append_child("Name");
+    nameElement.text() = name.c_str();
 
     // space type
     //boost::optional<model::SpaceType> spaceType = space.spaceType();
@@ -634,10 +664,6 @@ namespace gbxml {
       std::string storyName = story->name().get();
       result.append_attribute("buildingStoreyIdRef") = escapeName(storyName).c_str();
     }
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
 
     // append floor area
     double area = space.floorArea();
@@ -1276,10 +1302,34 @@ namespace gbxml {
     auto result = parent.append_child("Zone");
     m_translatedObjects[thermalZone.handle()] = result;
 
-    // id
-    std::string name = thermalZone.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    std::string name;
+    std::string id;
 
+    if (m_keepModelObjectNamesAsGBXMLNames) {
+      id = thermalZone.name().get();
+      if (thermalZone.hasAdditionalProperties()) {
+        model::AdditionalProperties additionalProperties = thermalZone.additionalProperties();
+        if (additionalProperties.hasFeature("gbXMLId")) {
+          id = additionalProperties.getFeatureAsString("gbXMLId").get();
+        }
+      }
+
+      name = thermalZone.name().get();
+    } else {
+      id = thermalZone.name().get();
+      
+      name = thermalZone.name().get();
+      if (thermalZone.hasAdditionalProperties()) {
+        model::AdditionalProperties additionalProperties = thermalZone.additionalProperties();
+        if (additionalProperties.hasFeature("CADName")) {
+          name = additionalProperties.getFeatureAsString("CADName").get();
+        }
+      }
+    }
+    
+    // id
+    result.append_attribute("id") = escapeName(id).c_str();
+    
     // name
     auto nameElement = result.append_child("Name");
     nameElement.text() = name.c_str();
@@ -1355,6 +1405,10 @@ namespace gbxml {
       }
     }
     return result;
+  }
+
+  void ForwardTranslator::setKeepModelObjectNamesAsGBXMLNames(bool keepModelObjectNamesAsGBXMLNames) {
+    m_keepModelObjectNamesAsGBXMLNames = keepModelObjectNamesAsGBXMLNames;
   }
 
 }  // namespace gbxml
