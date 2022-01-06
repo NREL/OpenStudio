@@ -809,7 +809,6 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
     }
 
     openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_1.xml");
-    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(false);
     bool test = forwardTranslator.modelToGbXML(*model, outputPath);
     EXPECT_TRUE(test);
     // FIXME: CADObjectId, among others, does not get forward translated
@@ -854,7 +853,6 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
     }
 
     openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_2.xml");
-    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(false);
     bool test = forwardTranslator.modelToGbXML(*model, outputPath);
     EXPECT_TRUE(test);
     // FIXME: CADObjectId, among others, does not get forward translated

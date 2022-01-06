@@ -362,7 +362,6 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     EXPECT_TRUE(_space->setGBXMLId("Space1"));
 
     path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_1.xml");
-    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(true);
     bool test = forwardTranslator.modelToGbXML(model, p);
     EXPECT_TRUE(test);
 
@@ -401,14 +400,15 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
   {
     auto _zone = model.getModelObjectByName<ThermalZone>("Thermal Zone 1");
     ASSERT_TRUE(_zone);
+    _zone->removeAdditionalProperties();
     EXPECT_TRUE(_zone->setCADName("ThermalZone1"));
 
     auto _space = model.getModelObjectByName<Space>("Space 1");
     ASSERT_TRUE(_space);
+    _space->removeAdditionalProperties();
     EXPECT_TRUE(_space->setCADName("Space1"));
 
     path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.xml");
-    forwardTranslator.setKeepModelObjectNamesAsGBXMLNames(false);
     bool test = forwardTranslator.modelToGbXML(model, p);
     EXPECT_TRUE(test);
 
