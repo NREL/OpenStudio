@@ -37,6 +37,7 @@
 #include <boost/regex.hpp>
 
 #include <string>
+#include <sstream>
 #include <cstdint>
 
 namespace openstudio {
