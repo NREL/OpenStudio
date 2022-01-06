@@ -236,24 +236,13 @@ class EmbeddedRuby_Test < Minitest::Test
   def test_ffi
     # Start by monkeypatching Math.sin so there's no doubt what's happening
     assert(Math.sin(Math::PI/2) == 1.0)
-    module Math
-      def sin(d)
-        return 100.0
-      end
-      module_function :sin
-    end
-    assert(Math.sin(Math::PI/2) == 100.0)
 
-    # Use ffi to call into libc
-    require 'ffi'
-
-    module Foo
-      extend FFI::Library
-      ffi_lib FFI::Library::LIBC
-      # double sin (double x)
-      attach_function("sin", [ :double ], :double)
-    end
-    assert(Foo.sin(Math::PI/2) == 1.0)
+    Math.stub(:sin, 100.0) {
+      # This creates a Module called LibC that loads the sin function from LIBC
+      require File.expand_path(File.join(File.dirname(__FILE__), "ffi_helper"))
+      assert(LibC.sin(Math::PI / 2) == 1.0)
+      assert(Math.sin(Math::PI / 2) == 100.0)
+    }
 
   end
 
