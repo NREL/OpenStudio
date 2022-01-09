@@ -48,6 +48,7 @@ file(GLOB_RECURSE JSON_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.json")
 file(GLOB_RECURSE SPEC_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gemspec")
 file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gz")
 file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.yml")
+file(GLOB_RECURSE CONF_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/types.conf")
 file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.rb") # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
 
 foreach( _FILE ${GEMFILE_FILES} )
@@ -153,6 +154,12 @@ foreach( _FILE ${GZ_FILES} )
 endforeach()
 
 foreach( _FILE ${YML_FILES} )
+  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
+endforeach()
+
+foreach( _FILE ${CONF_FILES} )
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
