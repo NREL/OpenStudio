@@ -1,7 +1,6 @@
 //
 // Header-only tiny glTF 2.0 loader and serializer.
 //
-//
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 - Present Syoyo Fujita, Aurélien Chatelain and many

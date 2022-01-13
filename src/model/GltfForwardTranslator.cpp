@@ -128,8 +128,8 @@ namespace model {
     m.name = name;
     PbrMetallicRoughness pbr;
     pbr.baseColorFactor = {red, green, blue, alpha};
-    pbr.metallicFactor = 0;
-    pbr.roughnessFactor = 1;
+    pbr.metallicFactor = 0.1;
+    pbr.roughnessFactor = 0.5;
     m.pbrMetallicRoughness = pbr;
     std::vector<double> eF{0, 0, 0};
     m.emissiveFactor = eF;
@@ -210,12 +210,27 @@ namespace model {
     GLTF::Material m;
     m.name = mat_Data.matName;
     GLTF::PbrMetallicRoughness pbr;
+    //this contains the red, green, blue and alpha components of the main color of the material
     pbr.baseColorFactor = {(float)(mat_Data.r / 255.0), (float)(mat_Data.g / 255.0), (float)(mat_Data.b / 255.0), (float)(mat_Data.a)};
-    pbr.metallicFactor = 0;
-    pbr.roughnessFactor = 1;
+    //this indicates that the material should have very minimum reflection characteristics
+    //between that of a metal and non-metal material.
+    pbr.metallicFactor = 0.1;
+    //this makes the material to not be perfectly mirror-like, but instead scatter the
+    //reflected light a bit.
+    pbr.roughnessFactor = 0.5;
     m.pbrMetallicRoughness = pbr;
-    m.emissiveFactor = {0, 0, 0};
+
+    //emissive texture describes the parts of the object surface that emit light with a
+    //a certain color
+    m.emissiveFactor = {0.01, 0.01, 0.01};
+    //occlusion texture can be used to simulate the effect of objects self-shadowing
+    //each other.
+    //m.occlusionTexture = "";
+    //normal map is a texture applied to modulate the surface normal in a way that makes
+    // it possible to simulate finer geometric details without the cost of a higher mesh.
+    //m.normalTexture = "";
     m.alphaMode = (mat_Data.a < 1.0f) ? "BLEND" : "OPAQUE";
+    //alphaCutoff should not be 1.0f else MATERIAL_ALPHA_CUTOFF_INVALID_MODE	Alpha cutoff is supported only for 'MASK' alpha mode
     m.alphaCutoff = 0.5f;
     m.doubleSided = mat_Data.isDoubleSided;
 
@@ -687,6 +702,12 @@ namespace model {
   /// <param name="_accessors"></param>
   /// <returns></returns>
   int CreateBuffers(std::vector<float>& values, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
+    // Fixes ACCESSOR_TOTAL_OFFSET_ALIGNMENT	
+    // Accessor's total byteOffset XXXX isn't a multiple of componentType length 4.
+    auto _padding = _coordinatesBuffer.size() % 4;
+    for (int i = 0; i < _padding; i++) {
+      _coordinatesBuffer.push_back((unsigned)0);
+    }
     int startingBufferPosition = _coordinatesBuffer.size();
     std::vector<float> min = {FLT_MAX, FLT_MAX, FLT_MAX};
     std::vector<float> max = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
@@ -801,28 +822,27 @@ namespace model {
   /// Exports a gltf against a Model
   /// </summary>
   /// <param name="model"></param>
-  /// <param name="triangulateSurfaces"></param>
   /// <param name="outputPath"></param>
   /// <returns>exports a GLTF file against a Model</returns>
-  bool GltfForwardTranslator::modelToGLTF(const Model& model, bool triangulateSurfaces, const path& outputPath) {
+  bool GltfForwardTranslator::modelToGLTF(const Model& model, const path& outputPath) {
     return modelToGLTF(
-      model, triangulateSurfaces, [](double percentage) {}, outputPath);
+      model, [](double percentage) {}, outputPath);
   }
 
   /// <summary>
   /// MAIN PIPELINE TO TRANSLATE OPENSTUDIO MODEL -> GLTF MODEL
   /// </summary>
   /// <param name="model"></param>
-  /// <param name="triangulateSurfaces"></param>
   /// <param name="updatePercentage"></param>
   /// <param name="outputPath"></param>
   /// <returns>exports GLTF file aginst the Model</returns>
-  bool GltfForwardTranslator::modelToGLTF(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage,
+  bool GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage,
                                           const path& outputPath) {
     m_logSink.setThreadId(std::this_thread::get_id());
     m_logSink.resetStringStream();
 
-    bool BufferInBase64 = false;  //no *.bin file is involed
+    bool triangulateSurfaces = true; //we're always triangulating the surfaces to get the best possible output.
+    bool BufferInBase64 = false;  //no *.bin file is involed | everything is integrated in the mail output gltf file only.
 
     GLTF::TinyGLTF loader;
     GLTF::Model gltf_Model;
@@ -894,10 +914,11 @@ namespace model {
     std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
     std::vector<DefaultConstructionSet> defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
     double n = 0;
-    std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
-                                              + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
+    std::vector<PlanarSurface>::size_type _N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
+                                               + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
 
-    //new test end
+    std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + 1;
+
     updatePercentage(0.0);
 
 #pragma region CREATE MATERIALS
@@ -906,7 +927,6 @@ namespace model {
 
 #pragma endregion CREATE MATERIALS
 
-    //stack<Transformation> transformStack;
     TransformationVector transformStack;
     Transformation transformation;
     transformStack.push_back(transformation);
@@ -930,7 +950,6 @@ namespace model {
       Transformation t = transformStack.back();
       t = Transformation::alignFace(vertices);
       transformStack.push_back(t);
-      //Transformation r = t.rotationMatrix();
       Transformation tInv = t.inverse();
       Point3dVector faceVertices = reverse(tInv * vertices);
       std::vector<double> matrix;
@@ -997,6 +1016,7 @@ namespace model {
         // convert to 1 based indices
         //face_indices.each_index {|i| face_indices[i] = face_indices[i] + 1}
       }
+
       Vector3d outwardNormal = planarSurface.outwardNormal();
       double x = outwardNormal.x();
       double y = outwardNormal.y();
@@ -1005,47 +1025,7 @@ namespace model {
       for (n = 0; n < allVertices.size(); n++) {
         normalVectors.push_back(outwardNormal);
       }
-#pragma region Process One triangle at a time.
-      //auto trianglesCount = triangleVertices.size() / 3;
-      //for (int t = 0; t < triangleVertices.size(); t++) {
-      //  std::vector<size_t> faceIndices_1;
-      //  Point3dVector triangleVertices_1;
-      //  faceIndices_1.push_back(faceIndices[t]);
-      //  faceIndices_1.push_back(faceIndices[t + 1]);
-      //  faceIndices_1.push_back(faceIndices[t + 2]);
 
-      //  triangleVertices_1.push_back(triangleVertices[t]);
-      //  triangleVertices_1.push_back(triangleVertices[t + 1]);
-      //  triangleVertices_1.push_back(triangleVertices[t + 2]);
-      //  t = t + 2;
-      //  ShapeComponentIds shapeCompoentIds{
-      //    AddIndices(faceIndices_1, _indicesBuffer, _accessors),  //IndicesAccessorId
-      //    //AddCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
-      //    AddCoordinates(triangleVertices_1, _coordinatesBuffer, _accessors),
-      //    0  //NormalsAccessorId = AddCoordinates(normals)
-      //  };
-
-      //  GLTF::Primitive thisPrimitive;
-
-      //  std::map<std::string, int> attrib;
-      //  //attrib["NORMAL"] = shapeCompoentIds.NormalsAccessorId;  //TODO BPS
-      //  attrib["POSITION"] = shapeCompoentIds.VerticesAccessorId;
-
-      //  thisPrimitive.attributes = attrib;
-      //  thisPrimitive.indices = shapeCompoentIds.IndicesAccessorId;
-      //  thisPrimitive.material = materialIndex;
-      //  //thisPrimitive.mode = TINYGLTF_MODE_LINE;
-      //  thisPrimitive.mode = TINYGLTF_MODE_TRIANGLES;
-
-      //  //int initSize = targetMesh.primitives.size();
-      //  /* if (initSize == 0) {
-      //  targetMesh.primitives = {thisPrimitive};
-      //} else {
-      //  targetMesh.primitives.push_back(thisPrimitive);
-      //}*/
-      //  targetMesh.primitives.push_back(thisPrimitive);
-      //}
-#pragma endregion Process One triangle at a time.
       ShapeComponentIds shapeCompoentIds{
         AddIndices(faceIndices, _indicesBuffer, _accessors),          //IndicesAccessorId
         AddCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
@@ -1065,28 +1045,17 @@ namespace model {
       _nodes.push_back(node);
       _meshes.push_back(targetMesh);
 
+      n += 1;
+      updatePercentage(100.0 * n / N);
 #pragma endregion MAIN
     }
 #pragma region BUILD SCENE | ELEMENT
 
     if (_coordinatesBuffer.size() == 0) return false;
 
-    if (BufferInBase64) {
-      //TODO:BPS
-      std::string sb = "data:application/octet-stream;base64,";
-      _coordinatesBuffer.insert(_coordinatesBuffer.end(), _indicesBuffer.begin(), _indicesBuffer.end());
-      //sb = sb + "BASE64DATAAFTERCONVERSION";
-      for (unsigned char cb : _coordinatesBuffer) {
-        //char* charBytes = reinterpret_cast<char*>(cb.data());
-        auto adfads = (unsigned char const*)cb;
-        if (adfads != nullptr) {
-          //sb = sb + base64_encode((unsigned char const*)cb, sizeof(std::byte));
-        }
-      }
-      //auto afdsfas = base64_encode(_coordinatesBuffer, _indicesBuffer.size() + _coordinatesBuffer.size());
-      _buffer.uri = sb;
-      //const char* b64Str =
-    } else {
+    if (!BufferInBase64) {
+      //BPS:having a separate input file for the GLTF is old now everything resides 
+      //in the main GLTF file only as a binary buffer data.
       auto padding = _indicesBuffer.size() % 4;
       for (int i = 0; i < padding; i++) {
         _indicesBuffer.push_back(0x00);  //padding bytes
@@ -1276,6 +1245,8 @@ namespace model {
     // Create a simple material
     GLTF::Material mat;
     mat.pbrMetallicRoughness.baseColorFactor = {1.0f, 0.9f, 0.9f, 1.0f};
+    mat.pbrMetallicRoughness.metallicFactor = 0.8;
+    mat.pbrMetallicRoughness.roughnessFactor = 0.5;
     mat.doubleSided = true;
     m.materials.push_back(mat);
 
@@ -1385,6 +1356,8 @@ namespace model {
     // Create a simple material
     GLTF::Material mat;
     mat.pbrMetallicRoughness.baseColorFactor = {1.0f, 0.9f, 0.9f, 1.0f};
+    mat.pbrMetallicRoughness.metallicFactor = 1.0;
+    mat.pbrMetallicRoughness.roughnessFactor = 0.5;
     mat.doubleSided = true;
     m.materials.push_back(mat);
 

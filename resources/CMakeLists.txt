@@ -67,6 +67,20 @@ set(utilities_resources_src
   utilities/Geometry/threejs.json
   utilities/Geometry/window_floorplan.json
   utilities/Geometry/minimal_GLTF_File.gltf
+  utilities/Geometry/7-7_Windows_Complete.gltf
+  utilities/Geometry/15023_Model12.gltf
+  utilities/Geometry/exampleModel.gltf
+  utilities/Geometry/floorplan_school.gltf
+  utilities/Geometry/open_to_below.gltf
+  utilities/Geometry/RefBldgFullServiceRestaurantNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgHospitalNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeHotelNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeOfficeNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgOutPatientNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgSecondarySchoolNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgSmallHotelNew2004_Chicago.gltf
+  utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf
+  utilities/Geometry/split_level.gltf
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
@@ -130,6 +144,8 @@ set(model_resources_src
   model/Space_SurfaceMatch_LargeTest.osm
   model/split_level.osm
   model/open_to_below.osm
+  model/TwoStoryOffice_Trane.osm
+  model/story_multipliers.osm
 )
 
 

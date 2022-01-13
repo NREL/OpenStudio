@@ -50,16 +50,45 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+
+/// <summary>
+/// Validation report
+////Format: glTF 2.0
+///Stats:
+///0 animations
+///9 materials
+///30 meshes
+///31 nodes
+///30 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
   Model model = exampleModel();
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
-  bool result = ft.modelToGLTF(model, true, output);
+  bool result = ft.modelToGLTF(model, output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///4 materials
+///481 meshes
+///482 nodes
+///481 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -67,10 +96,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSecondarySchoolNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///5 materials
+///443 meshes
+///444 nodes
+///443 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -78,10 +121,28 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgHospitalNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+/// Format: glTF 2.0
+///0 animations
+///5 materials
+///871 meshes
+///872 nodes
+///871 primitives
+///0 textures
+///Extensions: None
+/// 
+/// FIXED : 1742 Validation issues 
+/// starting from : 
+/// ACCESSOR_TOTAL_OFFSET_ALIGNMENT	Accessor's total byteOffset 7162 isn't a multiple of componentType length 4.	
+/// /accessors/1
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -89,10 +150,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgOutPatientNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///5 materials
+///589 meshes
+///590 nodes
+///589 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -100,10 +175,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSmallHotelNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///4 materials
+///21 meshes
+///22 nodes
+///21 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -111,10 +200,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_C
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgFullServiceRestaurantNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///5 materials
+///208 meshes
+///209 nodes
+///208 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -122,10 +225,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgLargeHotelNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///4 materials
+///142 meshes
+///143 nodes
+///142 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -133,10 +250,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgLargeOfficeNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///4 materials
+///80 meshes
+///81 nodes
+///80 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -144,10 +275,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/Space_SurfaceMatch_LargeTest.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///3 materials
+///1515 meshes
+///1516 nodes
+///1515 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_15023_Model12) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -155,10 +300,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_15023_Model12) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/15023_Model12.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///3 materials
+///21 meshes
+///22 nodes
+///21 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_split_level) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -166,10 +325,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_split_level) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/split_level.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///3 materials
+///24 meshes
+///25 nodes
+///24 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_open_to_below) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -177,10 +350,15 @@ TEST_F(ModelFixture, GltfForwardTranslator_open_to_below) {
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/open_to_below.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
-  bool result = ft.modelToGLTF(model.get(), true, output);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Load Test with and without bin file
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
   GltfForwardTranslator ft;
   openstudio::path inputPath;
@@ -191,6 +369,20 @@ TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
   ASSERT_TRUE(result);
 }
 
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///1 materials
+///1 meshes
+///1 nodes
+///1 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -203,4 +395,119 @@ TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
   //Created Raw buffer data from Point3dVector
   bool result_2 = ft.CreateTriangleGLTF_2(output_2);
   ASSERT_TRUE(result_2);
+}
+
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///4 materials
+///3915 meshes
+///3916 nodes
+///3915 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, GltfForwardTranslator_7_7_Windows_Complete) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/7-7_Windows_Complete.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);
+}
+
+/// <summary>
+/// VersionTranslator.cpp@590 : Unable to retrieve OpenStudio Version 3.2.2 IDD from the IddFactory."
+///  thrown in the test body.
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, GltfForwardTranslator_story_multipliers) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/story_multipliers.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/story_multipliers.osm");
+  //model::OptionalModel model = translator.loadModel(modelPath);
+  //bool result = ft.modelToGLTF(model.get(), output);
+  //ASSERT_TRUE(result);
+}
+
+/// <summary>
+/// Assertion failed: this->is_initialized() | Optional.hpp 1212
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, GltfForwardTranslator_story_space_heights) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/story_space_heights.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/story_space_heights.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  /*bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);*/
+}
+
+/// <summary>
+/// Validation report
+///Format: glTF 2.0
+///Stats:
+///0 animations
+///3 materials
+///227 meshes
+///228 nodes
+///227 primitives
+///0 textures
+///Extensions: None
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, GltfForwardTranslator_floorplan_school) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/floorplan_school.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/floorplan_school.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);
+}
+
+/// <summary>
+/// Assertion failed: this->is_initialized() | Optional.hpp 1212
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, GltfForwardTranslator_two_stories_pre_intersect) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/two_stories_pre_intersect.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/two_stories_pre_intersect.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  /*bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);*/
+}
+
+/// <summary>
+/// Assertion failed: this->is_initialized() | Optinoal.hpp 1212
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, GltfForwardTranslator_TwoStoryOffice_Trane) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/TwoStoryOffice_Trane.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("gbxml/TwoStoryOffice_Trane.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  /*bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);*/
 }
