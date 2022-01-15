@@ -106,6 +106,8 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateScheduleDay(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateScheduleWeek(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSchedule(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateScheduleYear(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateScheduleFile(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateHoliday(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateDoorConstruction(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateFenestrationConstruction(const pugi::xml_node& element, openstudio::model::Model& model);
