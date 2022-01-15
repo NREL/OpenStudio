@@ -188,6 +188,8 @@
 #include "../model/WaterToAirComponent_Impl.hpp"
 #include "../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../model/LoadProfilePlant.hpp"
+#include "../model/LoadProfilePlant_Impl.hpp"
 #include "../model/PlantLoop.hpp"
 #include "../model/PlantLoop_Impl.hpp"
 #include "../model/ZoneHVACComponent.hpp"
@@ -5898,6 +5900,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
+  // Translate ProcLd elements to LoadProfilePlant
+  const auto procLdElements = makeVectorOfChildren(fluidSysElement, "ProcLd");
+  for (const auto & procLdElement : procLdElements) {
+    auto loadProfilePlant = translateProcLd(procLdElement, model);
+    if (loadProfilePlant) {
+      plantLoop.addDemandBranchForComponent(loadProfilePlant->cast<model::HVACComponent>());
+    }
+  }
+
   // Translate PlantLoop::MaximumLoopFlowRate and MinimumLoopFlowRate
   if( ! autosize() )
   {
@@ -7571,6 +7582,39 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   tes.setAdditionalDestratificationConductivity(0.0);
 
   return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateProcLd(
+                                                  const pugi::xml_node& element,
+                                                  openstudio::model::Model& model )
+{
+  if( ! istringEqual(element.name(),"ProcLd") ) {
+    return boost::none;
+  }
+
+  std::string name = element.child("Name").text().as_string();
+  openstudio::model::LoadProfilePlant load(model);
+  load.setName(name);
+
+  const auto ldSchRefElement = element.child("LdSchRef");
+  auto ldSch = model.getModelObjectByName<model::Schedule>(ldSchRefElement.text().as_string());
+  if (ldSch) {
+    load.setLoadSchedule(ldSch.get());
+  }
+
+  const auto pkFlowRtElement = element.child("PkFlowRt");
+  if (pkFlowRtElement) {
+    const auto pkFlowRt = unitToUnit(pkFlowRtElement.text().as_double(), "gal/min", "m^3/s").get();
+    load.setPeakFlowRate(pkFlowRt);
+  }
+
+  const auto flowFracSchRefElement = element.child("FlowFracSchRef");
+  auto flowFracSch = model.getModelObjectByName<model::Schedule>(flowFracSchRefElement.text().as_string());
+  if (flowFracSch) {
+    load.setLoadSchedule(flowFracSch.get());
+  }
+
+  return load;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChiller(

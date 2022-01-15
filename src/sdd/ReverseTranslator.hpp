@@ -125,6 +125,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translatePump(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateBoiler(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateChiller(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateProcLd(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateThrmlEngyStor(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWtrHtr(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateHtRej(const pugi::xml_node& element, openstudio::model::Model& model);
