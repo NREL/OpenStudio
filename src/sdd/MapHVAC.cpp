@@ -96,6 +96,8 @@
 #include "../model/ScheduleYear_Impl.hpp"
 #include "../model/ScheduleWeek.hpp"
 #include "../model/ScheduleWeek_Impl.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
+#include "../model/ScheduleTypeLimits_Impl.hpp"
 #include "../model/SizingZone.hpp"
 #include "../model/SizingZone_Impl.hpp"
 #include "../model/Node.hpp"
@@ -7599,6 +7601,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateProc
   const auto ldSchRefElement = element.child("LdSchRef");
   auto ldSch = model.getModelObjectByName<model::Schedule>(ldSchRefElement.text().as_string());
   if (ldSch) {
+    auto typeLimits = ldSch->scheduleTypeLimits();
+    if (! typeLimits) {
+      typeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>("Load");
+      if (! typeLimits) {
+        typeLimits = model::ScheduleTypeLimits(model);
+        typeLimits->setName("Load");
+        typeLimits->setNumericType("Continuous");
+      }
+    }
+    OS_ASSERT(typeLimits);
+    ldSch->setScheduleTypeLimits(typeLimits.get());
+
     load.setLoadSchedule(ldSch.get());
   }
 
@@ -7611,7 +7625,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateProc
   const auto flowFracSchRefElement = element.child("FlowFracSchRef");
   auto flowFracSch = model.getModelObjectByName<model::Schedule>(flowFracSchRefElement.text().as_string());
   if (flowFracSch) {
-    load.setLoadSchedule(flowFracSch.get());
+    auto typeLimits = flowFracSch->scheduleTypeLimits();
+    if (! typeLimits) {
+      typeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>("Flow Rate Fraction");
+      if (! typeLimits) {
+        typeLimits = model::ScheduleTypeLimits(model);
+        typeLimits->setName("Flow Rate Fraction");
+        typeLimits->setLowerLimitValue(0);
+        typeLimits->setUpperLimitValue(1);
+        typeLimits->setNumericType("Continuous");
+        typeLimits->setUnitType("Dimensionless");
+      }
+    }
+    OS_ASSERT(typeLimits);
+    flowFracSch->setScheduleTypeLimits(typeLimits.get());
+
+    load.setFlowRateFractionSchedule(flowFracSch.get());
   }
 
   return load;

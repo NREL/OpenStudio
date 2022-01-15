@@ -338,6 +338,8 @@ namespace sdd {
     const auto minutesPerRow = element.child("MinutesPerRow");
     if (minutesPerRow) {
       schedule.setMinutesperItem(minutesPerRow.text().as_string());
+    } else {
+      schedule.setMinutesperItem("60");
     }
 
     return schedule;
