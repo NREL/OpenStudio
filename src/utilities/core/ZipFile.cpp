@@ -30,7 +30,7 @@
 #include "ZipFile.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <zip.h>
+#include <minizip/zip.h>
 
 namespace openstudio {
 
