@@ -542,6 +542,8 @@ endif()
 # But also infer the new E+ package names (starting at 9.4.0)
 if(APPLE)
 
+  set(ENERGYPLUS_SYSTEM_VERSION "")
+
   find_program(UNAME uname)
   execute_process(COMMAND ${UNAME} -m
     OUTPUT_VARIABLE ARCH
@@ -582,7 +584,7 @@ if(UNIX)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS11.2-arm64")
     else()
       set(ENERGYPLUS_EXPECTED_HASH e330eb7b658cb0987d4fee27cf956659)
-      set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
+      set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
