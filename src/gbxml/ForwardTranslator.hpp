@@ -113,6 +113,8 @@ namespace gbxml {
     boost::optional<pugi::xml_node> translateLayer(const openstudio::model::Material& material, pugi::xml_node& parent);
     boost::optional<pugi::xml_node> translateMaterial(const openstudio::model::Material& material, pugi::xml_node& parent);
     boost::optional<pugi::xml_node> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& parent);
+    boost::optional<pugi::xml_node> translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
+    boost::optional<pugi::xml_node> translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
     boost::optional<pugi::xml_node> translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
 
     std::map<openstudio::Handle, pugi::xml_node> m_translatedObjects;

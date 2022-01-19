@@ -609,31 +609,8 @@ namespace gbxml {
     auto result = parent.append_child("Space");
     m_translatedObjects[space.handle()] = result;
 
-    std::string name;
-    std::string id;
-
-    id = space.name().get();
-    if (space.hasAdditionalProperties()) {
-      model::AdditionalProperties additionalProperties = space.additionalProperties();
-      if (additionalProperties.hasFeature("gbXMLId")) {
-        id = additionalProperties.getFeatureAsString("gbXMLId").get();
-      }
-    }
-
-    name = space.name().get();
-    if (space.hasAdditionalProperties()) {
-      model::AdditionalProperties additionalProperties = space.additionalProperties();
-      if (additionalProperties.hasFeature("CADName")) {
-        name = additionalProperties.getFeatureAsString("CADName").get();
-      }
-    }
-
-    // id
-    result.append_attribute("id") = escapeName(id).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(space, result);
+    translateName(space, result);
 
     // space type
     //boost::optional<model::SpaceType> spaceType = space.spaceType();
@@ -720,13 +697,8 @@ namespace gbxml {
     auto result = parent.append_child("Space");
     m_translatedObjects[shadingSurfaceGroup.handle()] = result;
 
-    // id
-    std::string name = shadingSurfaceGroup.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(shadingSurfaceGroup, result);
+    translateName(shadingSurfaceGroup, result);
 
     return result;
   }
@@ -757,13 +729,8 @@ namespace gbxml {
     auto result = parent.append_child("BuildingStorey");
     m_translatedObjects[story.handle()] = result;
 
-    // id
-    std::string name = story.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(story, result);
+    translateName(story, result);
 
     // append level
     auto levelElement = result.append_child("Level");
@@ -781,9 +748,7 @@ namespace gbxml {
     auto result = parent.append_child("Surface");
     m_translatedObjects[surface.handle()] = result;
 
-    // id
-    std::string name = surface.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    translateId(surface, result);
 
     // DLM: currently unhandled
     //FreestandingColumn
@@ -997,9 +962,7 @@ namespace gbxml {
     auto result = parent.append_child("Opening");
     m_translatedObjects[subSurface.handle()] = result;
 
-    // id
-    std::string name = subSurface.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    translateId(subSurface, result);
 
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
@@ -1151,9 +1114,7 @@ namespace gbxml {
     auto result = parent.append_child("Surface");
     m_translatedObjects[shadingSurface.handle()] = result;
 
-    // id
-    std::string name = shadingSurface.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    translateId(shadingSurface, result);
 
     result.append_attribute("surfaceType") = "Shade";
 
@@ -1294,31 +1255,8 @@ namespace gbxml {
     auto result = parent.append_child("Zone");
     m_translatedObjects[thermalZone.handle()] = result;
 
-    std::string name;
-    std::string id;
-
-    id = thermalZone.name().get();
-    if (thermalZone.hasAdditionalProperties()) {
-      model::AdditionalProperties additionalProperties = thermalZone.additionalProperties();
-      if (additionalProperties.hasFeature("gbXMLId")) {
-        id = additionalProperties.getFeatureAsString("gbXMLId").get();
-      }
-    }
-
-    name = thermalZone.name().get();
-    if (thermalZone.hasAdditionalProperties()) {
-      model::AdditionalProperties additionalProperties = thermalZone.additionalProperties();
-      if (additionalProperties.hasFeature("CADName")) {
-        name = additionalProperties.getFeatureAsString("CADName").get();
-      }
-    }
-
-    // id
-    result.append_attribute("id") = escapeName(id).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(thermalZone, result);
+    translateName(thermalZone, result);
 
     // heating setpoint
     boost::optional<double> designHeatT;
@@ -1367,6 +1305,40 @@ namespace gbxml {
     // export CADObjectId if present
     translateCADObjectId(thermalZone, result);
 
+    return result;
+  }
+
+  boost::optional<pugi::xml_node> ForwardTranslator::translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
+    boost::optional<pugi::xml_node> result;
+
+    std::string id;
+    id = modelObject.name().get();
+    if (modelObject.hasAdditionalProperties()) {
+      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+      if (additionalProperties.hasFeature("gbXMLId")) {
+        id = additionalProperties.getFeatureAsString("gbXMLId").get();
+      }
+    }
+    auto idElement = parentElement;
+    idElement.append_attribute("id") = escapeName(id).c_str();
+    result = idElement;
+    return result;
+  }
+
+  boost::optional<pugi::xml_node> ForwardTranslator::translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
+    boost::optional<pugi::xml_node> result;
+
+    std::string name;
+    name = modelObject.name().get();
+    if (modelObject.hasAdditionalProperties()) {
+      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+      if (additionalProperties.hasFeature("displayName")) {
+        name = additionalProperties.getFeatureAsString("displayName").get();
+      }
+    }
+    auto nameElement = parentElement.append_child("Name");
+    nameElement.text() = name.c_str();
+    result = nameElement;
     return result;
   }
 
