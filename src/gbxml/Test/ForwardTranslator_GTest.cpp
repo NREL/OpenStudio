@@ -365,7 +365,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     bool test = forwardTranslator.modelToGbXML(model, p);
     EXPECT_TRUE(test);
 
-    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(true);
+    /* reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(true); */
     boost::optional<Model> model2 = reverseTranslator.loadModel(p);
     ASSERT_TRUE(model2);
 
@@ -412,7 +412,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     bool test = forwardTranslator.modelToGbXML(model, p);
     EXPECT_TRUE(test);
 
-    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(false);
+    /* reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(false); */
     boost::optional<Model> model2 = reverseTranslator.loadModel(p);
     ASSERT_TRUE(model2);
 

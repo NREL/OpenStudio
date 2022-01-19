@@ -772,7 +772,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
 
   // When keeping gbxml names as model object names (historical behavior)
   {
-    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(true);
+    /* reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(true); */
     boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
     ASSERT_TRUE(model);
 
@@ -816,7 +816,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
 
   // When using gbxml ids as model object names
   {
-    reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(false);
+    /* reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(false); */
     boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
     ASSERT_TRUE(model);
 
