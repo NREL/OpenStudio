@@ -112,8 +112,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH) {
 
   // add test to see that surfaces that reference two spaces get "surface" boundary condition
   // e.g. surface named "su-76" should have "Surface" string for OutsideBoundaryCondition
-  //OptionalSurface osurf = model->getModelObjectByName<Surface>("su-76"); // su-76 is the id
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("B-101-201-I-F-76");  // B-101-201-I-F-76 is the name
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("su-76");  // su-76 is the id
+  //OptionalSurface osurf = model->getModelObjectByName<Surface>("B-101-201-I-F-76");  // B-101-201-I-F-76 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Surface", osurf->outsideBoundaryCondition());
 
@@ -139,7 +139,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions) {
 
   model->save(resourcesPath() / openstudio::toPath("gbxml/TestCube.osm"), true);
 
-  auto osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6 Reversed");
+  auto osurf = model->getModelObjectByName<Surface>("aim0757");  // aim0757 is the id
+  //auto osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6 Reversed");  // T-1-5-I-F-6 Reversed is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Surface", osurf->outsideBoundaryCondition());
 
@@ -220,35 +221,43 @@ TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls) {
   ASSERT_TRUE(model);
 
   // Check all the surfaces that are supposed to be underground
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("S-3-U-W-12");
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("aim0826");  // aim0826 is the id
+  //OptionalSurface osurf = model->getModelObjectByName<Surface>("S-3-U-W-12");  // S-3-U-W-12 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("S-2-U-W-8");
+  osurf = model->getModelObjectByName<Surface>("aim0780");  // aim0780 is the id
+  //osurf = model->getModelObjectByName<Surface>("S-2-U-W-8");  // S-2-U-W-8 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("E-2-U-W-7");
+  osurf = model->getModelObjectByName<Surface>("aim0769");  // aim0769 is the id
+  //osurf = model->getModelObjectByName<Surface>("E-2-U-W-7");  // E-2-U-W-7 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("E-1-U-W-1");
+  osurf = model->getModelObjectByName<Surface>("aim0700");  // aim0700 is the id
+  //osurf = model->getModelObjectByName<Surface>("E-1-U-W-1");  // E-1-U-W-1 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("N-1-U-W-2");
+  osurf = model->getModelObjectByName<Surface>("aim0711");  // aim0711 is the id
+  //osurf = model->getModelObjectByName<Surface>("N-1-U-W-2");  // N-1-U-W-2 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("N-4-U-W-18");
+  osurf = model->getModelObjectByName<Surface>("aim0894");  // aim0894 is the id
+  //osurf = model->getModelObjectByName<Surface>("N-4-U-W-18");  // N-4-U-W-18 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("W-4-U-W-17");
+  osurf = model->getModelObjectByName<Surface>("aim0883");  // aim0883 is the id
+  //osurf = model->getModelObjectByName<Surface>("W-4-U-W-17");  // W-4-U-W-17 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("W-3-U-W-13");
+  osurf = model->getModelObjectByName<Surface>("aim0837");  // aim0837 is the id
+  //osurf = model->getModelObjectByName<Surface>("W-3-U-W-13");  // W-3-U-W-13 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
@@ -282,30 +291,30 @@ TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces) {
     const std::string spaceName;
   };
 
-  std::vector<ExpectedSurfaceInfo> expectedSurfaceInfos({ExpectedSurfaceInfo("B-1-U-F-3", "Floor", "1 Space"),
-                                                         ExpectedSurfaceInfo("B-2-U-F-9", "Floor", "2 Space"),
-                                                         ExpectedSurfaceInfo("B-3-U-F-14", "Floor", "3 Space"),
-                                                         ExpectedSurfaceInfo("B-4-U-F-19", "Floor", "4 Space"),
-                                                         ExpectedSurfaceInfo("T-1-5-I-F-6", "Floor", "5 Space"),
-                                                         ExpectedSurfaceInfo("T-1-5-I-F-6 Reversed", "RoofCeiling", "1 Space"),
-                                                         ExpectedSurfaceInfo("T-10-E-R-44", "RoofCeiling", "10 Space"),
-                                                         ExpectedSurfaceInfo("T-11-E-R-48", "RoofCeiling", "11 Space"),
-                                                         ExpectedSurfaceInfo("T-12-E-R-52", "RoofCeiling", "12 Space"),
-                                                         ExpectedSurfaceInfo("T-2-6-I-F-11", "Floor", "6 Space"),
-                                                         ExpectedSurfaceInfo("T-2-6-I-F-11 Reversed", "RoofCeiling", "2 Space"),
-                                                         ExpectedSurfaceInfo("T-3-7-I-F-16", "Floor", "7 Space"),
-                                                         ExpectedSurfaceInfo("T-3-7-I-F-16 Reversed", "RoofCeiling", "3 Space"),
-                                                         ExpectedSurfaceInfo("T-4-8-I-F-20", "Floor", "8 Space"),
-                                                         ExpectedSurfaceInfo("T-4-8-I-F-20 Reversed", "RoofCeiling", "4 Space"),
-                                                         ExpectedSurfaceInfo("T-5-9-I-F-25", "Floor", "9 Space"),
-                                                         ExpectedSurfaceInfo("T-5-9-I-F-25 Reversed", "RoofCeiling", "5 Space"),
-                                                         ExpectedSurfaceInfo("T-6-10-I-F-29", "Floor", "10 Space"),
-                                                         ExpectedSurfaceInfo("T-6-10-I-F-29 Reversed", "RoofCeiling", "6 Space"),
-                                                         ExpectedSurfaceInfo("T-7-11-I-F-33", "Floor", "11 Space"),
-                                                         ExpectedSurfaceInfo("T-7-11-I-F-33 Reversed", "RoofCeiling", "7 Space"),
-                                                         ExpectedSurfaceInfo("T-8-12-I-F-36", "Floor", "12 Space"),
-                                                         ExpectedSurfaceInfo("T-8-12-I-F-36 Reversed", "RoofCeiling", "8 Space"),
-                                                         ExpectedSurfaceInfo("T-9-E-R-39", "RoofCeiling", "9 Space")});
+  std::vector<ExpectedSurfaceInfo> expectedSurfaceInfos({ExpectedSurfaceInfo("aim0722", "Floor", "aim0046"),
+                                                         ExpectedSurfaceInfo("aim0791", "Floor", "aim0106"),
+                                                         ExpectedSurfaceInfo("aim0848", "Floor", "aim0154"),
+                                                         ExpectedSurfaceInfo("aim0905", "Floor", "aim0202"),
+                                                         ExpectedSurfaceInfo("aim0757", "Floor", "aim0250"),
+                                                         ExpectedSurfaceInfo("aim0757 Reversed", "RoofCeiling", "aim0046"),
+                                                         ExpectedSurfaceInfo("aim1191", "RoofCeiling", "aim0490"),
+                                                         ExpectedSurfaceInfo("aim1236", "RoofCeiling", "aim0538"),
+                                                         ExpectedSurfaceInfo("aim1281", "RoofCeiling", "aim0586"),
+                                                         ExpectedSurfaceInfo("aim0814", "Floor", "aim0298"),
+                                                         ExpectedSurfaceInfo("aim0814 Reversed", "RoofCeiling", "aim0106"),
+                                                         ExpectedSurfaceInfo("aim0871", "Floor", "aim0346"),
+                                                         ExpectedSurfaceInfo("aim0871 Reversed", "RoofCeiling", "aim0154"),
+                                                         ExpectedSurfaceInfo("aim0916", "Floor", "aim0394"),
+                                                         ExpectedSurfaceInfo("aim0916 Reversed", "RoofCeiling", "aim0202"),
+                                                         ExpectedSurfaceInfo("aim0974", "Floor", "aim0442"),
+                                                         ExpectedSurfaceInfo("aim0974 Reversed", "RoofCeiling", "aim0250"),
+                                                         ExpectedSurfaceInfo("aim1020", "Floor", "aim0490"),
+                                                         ExpectedSurfaceInfo("aim1020 Reversed", "RoofCeiling", "aim0298"),
+                                                         ExpectedSurfaceInfo("aim1066", "Floor", "aim0538"),
+                                                         ExpectedSurfaceInfo("aim1066 Reversed", "RoofCeiling", "aim0346"),
+                                                         ExpectedSurfaceInfo("aim1100", "Floor", "aim0586"),
+                                                         ExpectedSurfaceInfo("aim1100 Reversed", "RoofCeiling", "aim0394"),
+                                                         ExpectedSurfaceInfo("aim1134", "RoofCeiling", "aim0442")});
 
   for (auto& expectedSurfaceInfo : expectedSurfaceInfos) {
     OptionalSurface _surf = model->getConcreteModelObjectByName<Surface>(expectedSurfaceInfo.name);
@@ -326,7 +335,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_AlternateUnits) {
 
   auto surfs = model->getModelObjects<Surface>();
 
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6");
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("aim0757");  // aim0757 is the id
+  //OptionalSurface osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6");  // T-1-5-I-F-6 is the name
   ASSERT_TRUE(osurf);
   auto points = osurf->vertices();
   ASSERT_EQ(4, points.size());
@@ -499,21 +509,23 @@ TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface) {
 
   // Check all the surfaces that are supposed to be floors and ceilings
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-slabongrade-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-2");  // surface-2 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-slabongrade-space-1");  // storey-1-slabongrade-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Floor", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-ceiling-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-1");  // surface-1 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-ceiling-space-1");  // storey-1-ceiling-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("RoofCeiling", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());
   }
 }
 
@@ -535,67 +547,79 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   // Might as well retest #3951 while we're at it
   // Check all the surfaces for their surfaceTypes and boundary conditions
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-slabongrade-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-2");  // surface-2 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-slabongrade-space-1");  // storey-1-slabongrade-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Floor", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());  // space-1 is the id
+    //EXPECT_EQ("storey-1-space-1", _space->nameString());  // storey-1-space-1 is the name
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Ground", _surf->outsideBoundaryCondition());
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-roof-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-1");  // surface-1 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-roof-space-1");  // storey-1-roof-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("RoofCeiling", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());  // space-1 is the id
+    //EXPECT_EQ("storey-1-space-1", _space->nameString());  // storey-1-space-1 is the name
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-1-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-19");  // surface-19 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-1-space-1");  // storey-1-exterior-wall-1-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());  // space-1 is the id
+    //EXPECT_EQ("storey-1-space-1", _space->nameString());  // storey-1-space-1 is the name
     EXPECT_EQ(1u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-2-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-11");  // surface-11 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-2-space-1");  // storey-1-exterior-wall-2-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());  // space-1 is the id
+    //EXPECT_EQ("storey-1-space-1", _space->nameString());  // storey-1-space-1 is the name
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-1-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-15");  // surface-15 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-1-space-1");  // storey-1-exterior-wall-diagonal-1-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());  // space-1 is the id
+    //EXPECT_EQ("storey-1-space-1", _space->nameString());  // storey-1-space-1 is the name
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-2-space-1");
+    auto _surf = _model->getModelObjectByName<Surface>("surface-16");  // surface-16 is the id
+    //auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-2-space-1");  // storey-1-exterior-wall-diagonal-2-space-1 is the name
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();
     ASSERT_TRUE(_space);
-    EXPECT_EQ("storey-1-space-1", _space->nameString());
+    EXPECT_EQ("space-1", _space->nameString());  // space-1 is the id
+    //EXPECT_EQ("storey-1-space-1", _space->nameString());  // storey-1-space-1 is the name
     EXPECT_EQ(0u, _surf->subSurfaces().size());
     EXPECT_EQ("Outdoors", _surf->outsideBoundaryCondition());
   }
