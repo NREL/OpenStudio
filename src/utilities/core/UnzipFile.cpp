@@ -28,7 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "UnzipFile.hpp"
-#include <unzip.h>
+#include <minizip/unzip.h>
 
 namespace openstudio {
 
