@@ -749,6 +749,7 @@ namespace gbxml {
     m_translatedObjects[surface.handle()] = result;
 
     translateId(surface, result);
+    translateName(surface, result);
 
     // DLM: currently unhandled
     //FreestandingColumn
@@ -963,6 +964,7 @@ namespace gbxml {
     m_translatedObjects[subSurface.handle()] = result;
 
     translateId(subSurface, result);
+    translateName(subSurface, result);
 
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
@@ -1115,6 +1117,7 @@ namespace gbxml {
     m_translatedObjects[shadingSurface.handle()] = result;
 
     translateId(shadingSurface, result);
+    translateName(shadingSurface, result);
 
     result.append_attribute("surfaceType") = "Shade";
 

@@ -146,7 +146,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions) {
 
   auto oconstruct = osurf->construction();
   ASSERT_TRUE(oconstruct);
-  EXPECT_EQ("Floor: Floor 1", oconstruct->name().get());
+  EXPECT_EQ("aim0634", oconstruct->name().get());
 
   int count = 0;
   for (auto& srf : model->getModelObjects<Surface>()) {
@@ -195,10 +195,10 @@ TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions) {
 
   auto oconstruct = osurf->construction();
   ASSERT_TRUE(oconstruct);
-  EXPECT_EQ("3\'0\" x 3\'0\" Double pane  Alum Construction", oconstruct->name().get());
+  EXPECT_EQ("id_3'0\"_x_3'0\"_Double_pane__Alum_Construction", oconstruct->name().get());
   auto ofield = osurf->getString(OS_SubSurfaceFields::ConstructionName);
   ASSERT_TRUE(ofield);
-  EXPECT_EQ("3\'0\" x 3\'0\" Double pane  Alum Construction", ofield.get());
+  EXPECT_EQ("id_3'0\"_x_3'0\"_Double_pane__Alum_Construction", ofield.get());
 
   int count = 0;
   for (auto& srf : model->getModelObjects<SubSurface>()) {

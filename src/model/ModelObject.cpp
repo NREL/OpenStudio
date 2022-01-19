@@ -782,19 +782,19 @@ namespace model {
       return this->additionalProperties().setFeature("gbXMLId", gbXMLId);
     }
 
-    boost::optional<std::string> ModelObject_Impl::cadName() const {
+    boost::optional<std::string> ModelObject_Impl::displayName() const {
       boost::optional<std::string> result;
       if (hasAdditionalProperties()) {
         AdditionalProperties additionalProperties = this->additionalProperties();
-        if (additionalProperties.hasFeature("CADName")) {
-          result = additionalProperties.getFeatureAsString("CADName");
+        if (additionalProperties.hasFeature("displayName")) {
+          result = additionalProperties.getFeatureAsString("displayName");
         }
       }
       return result;
     }
 
-    bool ModelObject_Impl::setCADName(std::string cadName) {
-      return this->additionalProperties().setFeature("CADName", cadName);
+    bool ModelObject_Impl::setDisplayName(std::string displayName) {
+      return this->additionalProperties().setFeature("displayName", displayName);
     }
 
   }  // namespace detail
@@ -912,12 +912,12 @@ namespace model {
     return getImpl<detail::ModelObject_Impl>()->setGBXMLId(gbXMLId);
   }
 
-  boost::optional<std::string> ModelObject::cadName() const {
-    return getImpl<detail::ModelObject_Impl>()->cadName();
+  boost::optional<std::string> ModelObject::displayName() const {
+    return getImpl<detail::ModelObject_Impl>()->displayName();
   }
 
-  bool ModelObject::setCADName(std::string cadName) {
-    return getImpl<detail::ModelObject_Impl>()->setCADName(cadName);
+  bool ModelObject::setDisplayName(std::string displayName) {
+    return getImpl<detail::ModelObject_Impl>()->setDisplayName(displayName);
   }
 
   ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)

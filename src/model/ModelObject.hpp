@@ -226,9 +226,9 @@ namespace model {
 
     bool setGBXMLId(std::string gbXMLId);
 
-    boost::optional<std::string> cadName() const;
+    boost::optional<std::string> displayName() const;
 
-    bool setCADName(std::string cadName);
+    bool setDisplayName(std::string displayName);
 
     //@}
     /** @name Setters */
