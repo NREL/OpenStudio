@@ -47,7 +47,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 6,
+      "byteOffset": 8,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -94,7 +94,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 12,
+      "byteOffset": 16,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -141,7 +141,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 18,
+      "byteOffset": 24,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -188,7 +188,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 24,
+      "byteOffset": 32,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -235,7 +235,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 30,
+      "byteOffset": 40,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -282,7 +282,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 36,
+      "byteOffset": 48,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -329,7 +329,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 42,
+      "byteOffset": 56,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -376,7 +376,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 48,
+      "byteOffset": 64,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -423,7 +423,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 54,
+      "byteOffset": 72,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -470,7 +470,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 60,
+      "byteOffset": 80,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -517,7 +517,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 66,
+      "byteOffset": 88,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -564,7 +564,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 72,
+      "byteOffset": 96,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -611,7 +611,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 78,
+      "byteOffset": 104,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -658,7 +658,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 84,
+      "byteOffset": 112,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -705,7 +705,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 90,
+      "byteOffset": 120,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -752,7 +752,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 96,
+      "byteOffset": 128,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -799,7 +799,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 102,
+      "byteOffset": 136,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -846,7 +846,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 108,
+      "byteOffset": 144,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -893,7 +893,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 114,
+      "byteOffset": 152,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -940,7 +940,7 @@
     },
     {
       "bufferView": 0,
-      "byteOffset": 120,
+      "byteOffset": 160,
       "componentType": 5121,
       "count": 6,
       "max": [
@@ -993,21 +993,21 @@
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 128,
+      "byteLength": 168,
       "target": 34963
     },
     {
       "buffer": 0,
       "byteLength": 2016,
-      "byteOffset": 128,
+      "byteOffset": 168,
       "byteStride": 12,
       "target": 34962
     }
   ],
   "buffers": [
     {
-      "byteLength": 2144,
-      "uri": "data:application/octet-stream;base64,AAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAECAAIDAAApXFXCbxLDQQAAAABI4bbBbxLDQQAAAABI4bbBbxLDwAAAAAApXFXCbxLDwAAAAAAAAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL9I4bbBbxLDQb8OHEApXFXCbxLDQb8OHEApXFXCbxLDwL8OHEBI4bbBbxLDwL8OHEAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD9I4bbBbxLDwB4WakBI4bbBbxLDQR4WakBI4bbBbxLDQb8OHEBI4bbBbxLDwL8OHEAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAABI4bbBbxLDQb8OnD9I4bbBbxLDQR4WakAK1/NAbxLDQR4WakAK1/NAbxLDQb8OnD8AAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAApXFXCbxLDQb8OHEBI4bbBbxLDQb8OHEBI4bbBbxLDwL8OHEApXFXCbxLDwL8OHEAAAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL9I4bbBbxLDQb8OnEApXFXCbxLDQb8OnEApXFXCbxLDwL8OnEBI4bbBbxLDwL8OnEAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD9I4bbBbxLDQR4WakBI4bbBbxLDwB4WakBI4bbBbxLDwL8OHEBI4bbBbxLDQb8OHEAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAABI4bbBbxLDwL8OHEBI4bbBbxLDwL8OnEApXFXCbxLDwL8OnEApXFXCbxLDwL8OHEAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAApXFXCbxLDwL8OHEApXFXCbxLDwL8OnEApXFXCbxLDQb8OnEApXFXCbxLDQb8OHEAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAApXFXCbxLDQb8OHEApXFXCbxLDQb8OnEBI4bbBbxLDQb8OnEBI4bbBbxLDQb8OHEAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAABI4bbBbxLDQb8OHEBI4bbBbxLDwL8OHEBI4bbBbxLDwL8OnD9I4bbBbxLDQb8OnD8AAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAABI4bbBbxLDwAAAAABI4bbBbxLDwL8OHEApXFXCbxLDwL8OHEApXFXCbxLDwAAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAApXFXCbxLDwAAAAAApXFXCbxLDwL8OHEApXFXCbxLDQb8OHEApXFXCbxLDQQAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAApXFXCbxLDQQAAAAApXFXCbxLDQb8OHEBI4bbBbxLDQb8OHEBI4bbBbxLDQQAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAABI4bbBbxLDQb8OnD8K1/NAbxLDQb8OnD8K1/NAbxLDwL8OnD9I4bbBbxLDwL8OnD8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8K1/NAbxLDQR4WakBI4bbBbxLDQR4WakBI4bbBbxLDwB4WakAK1/NAbxLDwB4WakAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8K1/NAbxLDQb8OnD8K1/NAbxLDQR4WakAK1/NAbxLDwB4WakAK1/NAbxLDwL8OnD8AAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAK1/NAbxLDwL8OnD8K1/NAbxLDwB4WakBI4bbBbxLDwB4WakBI4bbBbxLDwL8OnD8AAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAABI4bbBbxLDwL8OHEBI4bbBbxLDQb8OHEBI4bbBbxLDQb8OnD9I4bbBbxLDwL8OnD8AAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAABI4bbBbxLDQb8OnEBI4bbBbxLDwL8OnEBI4bbBbxLDwB4WakBI4bbBbxLDQR4WakAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAABI4bbBbxLDQb8OnD9I4bbBbxLDwL8OnD9I4bbBbxLDwAAAAABI4bbBbxLDQQAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAA="
+      "byteLength": 2184,
+      "uri": "data:application/octet-stream;base64,AAECAAIDAAAAAQIAAgMAAAABAgACAwAAAAECAAIDAAAAAQIAAgMAAAABAgACAwAAAAECAAIDAAAAAQIAAgMAAAABAgACAwAAAAECAAIDAAAAAQIAAgMAAAABAgACAwAAAAECAAIDAAAAAQIAAgMAAAABAgACAwAAAAECAAIDAAAAAQIAAgMAAAABAgACAwAAAAECAAIDAAAAAQIAAgMAAAABAgACAwAAKVxVwm8Sw0EAAAAASOG2wW8Sw0EAAAAASOG2wW8Sw8AAAAAAKVxVwm8Sw8AAAAAAAAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/SOG2wW8Sw0G/DhxAKVxVwm8Sw0G/DhxAKVxVwm8Sw8C/DhxASOG2wW8Sw8C/DhxAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/SOG2wW8Sw8AeFmpASOG2wW8Sw0EeFmpASOG2wW8Sw0G/DhxASOG2wW8Sw8C/DhxAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAASOG2wW8Sw0G/Dpw/SOG2wW8Sw0EeFmpACtfzQG8Sw0EeFmpACtfzQG8Sw0G/Dpw/AAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAKVxVwm8Sw0G/DhxASOG2wW8Sw0G/DhxASOG2wW8Sw8C/DhxAKVxVwm8Sw8C/DhxAAAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/SOG2wW8Sw0G/DpxAKVxVwm8Sw0G/DpxAKVxVwm8Sw8C/DpxASOG2wW8Sw8C/DpxAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/SOG2wW8Sw0EeFmpASOG2wW8Sw8AeFmpASOG2wW8Sw8C/DhxASOG2wW8Sw0G/DhxAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAASOG2wW8Sw8C/DhxASOG2wW8Sw8C/DpxAKVxVwm8Sw8C/DpxAKVxVwm8Sw8C/DhxAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAKVxVwm8Sw8C/DhxAKVxVwm8Sw8C/DpxAKVxVwm8Sw0G/DpxAKVxVwm8Sw0G/DhxAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAKVxVwm8Sw0G/DhxAKVxVwm8Sw0G/DpxASOG2wW8Sw0G/DpxASOG2wW8Sw0G/DhxAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAASOG2wW8Sw0G/DhxASOG2wW8Sw8C/DhxASOG2wW8Sw8C/Dpw/SOG2wW8Sw0G/Dpw/AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAASOG2wW8Sw8AAAAAASOG2wW8Sw8C/DhxAKVxVwm8Sw8C/DhxAKVxVwm8Sw8AAAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAKVxVwm8Sw8AAAAAAKVxVwm8Sw8C/DhxAKVxVwm8Sw0G/DhxAKVxVwm8Sw0EAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAKVxVwm8Sw0EAAAAAKVxVwm8Sw0G/DhxASOG2wW8Sw0G/DhxASOG2wW8Sw0EAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAASOG2wW8Sw0G/Dpw/CtfzQG8Sw0G/Dpw/CtfzQG8Sw8C/Dpw/SOG2wW8Sw8C/Dpw/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/CtfzQG8Sw0EeFmpASOG2wW8Sw0EeFmpASOG2wW8Sw8AeFmpACtfzQG8Sw8AeFmpAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/CtfzQG8Sw0G/Dpw/CtfzQG8Sw0EeFmpACtfzQG8Sw8AeFmpACtfzQG8Sw8C/Dpw/AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAACtfzQG8Sw8C/Dpw/CtfzQG8Sw8AeFmpASOG2wW8Sw8AeFmpASOG2wW8Sw8C/Dpw/AAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAASOG2wW8Sw8C/DhxASOG2wW8Sw0G/DhxASOG2wW8Sw0G/Dpw/SOG2wW8Sw8C/Dpw/AACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAASOG2wW8Sw0G/DpxASOG2wW8Sw8C/DpxASOG2wW8Sw8AeFmpASOG2wW8Sw0EeFmpAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAASOG2wW8Sw0G/Dpw/SOG2wW8Sw8C/Dpw/SOG2wW8Sw8AAAAAASOG2wW8Sw0EAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAA"
     }
   ],
   "materials": [
@@ -1016,7 +1016,7 @@
       "emissiveFactor": [
         0.01,
         0.01,
-        0.01
+        0.0
       ],
       "name": "Floor",
       "pbrMetallicRoughness": {
@@ -1026,8 +1026,7 @@
           0.5490196347236633,
           1.0
         ],
-        "metallicFactor": 0.1,
-        "roughnessFactor": 0.5
+        "metallicFactor": 0.0
       }
     },
     {
@@ -1035,7 +1034,7 @@
       "emissiveFactor": [
         0.01,
         0.01,
-        0.01
+        0.0
       ],
       "name": "RoofCeiling",
       "pbrMetallicRoughness": {
@@ -1045,8 +1044,7 @@
           0.2235294133424759,
           1.0
         ],
-        "metallicFactor": 0.1,
-        "roughnessFactor": 0.5
+        "metallicFactor": 0.0
       }
     },
     {
@@ -1054,7 +1052,7 @@
       "emissiveFactor": [
         0.01,
         0.01,
-        0.01
+        0.0
       ],
       "name": "Wall",
       "pbrMetallicRoughness": {
@@ -1064,8 +1062,7 @@
           0.29411765933036804,
           1.0
         ],
-        "metallicFactor": 0.1,
-        "roughnessFactor": 0.5
+        "metallicFactor": 0.0
       }
     }
   ],

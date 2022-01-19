@@ -214,15 +214,15 @@ namespace model {
     pbr.baseColorFactor = {(float)(mat_Data.r / 255.0), (float)(mat_Data.g / 255.0), (float)(mat_Data.b / 255.0), (float)(mat_Data.a)};
     //this indicates that the material should have very minimum reflection characteristics
     //between that of a metal and non-metal material.
-    pbr.metallicFactor = 0.1;
+    pbr.metallicFactor = 0.0;
     //this makes the material to not be perfectly mirror-like, but instead scatter the
     //reflected light a bit.
-    pbr.roughnessFactor = 0.5;
+    pbr.roughnessFactor = 1.0;
     m.pbrMetallicRoughness = pbr;
 
     //emissive texture describes the parts of the object surface that emit light with a
     //a certain color
-    m.emissiveFactor = {0.01, 0.01, 0.01};
+    m.emissiveFactor = {0.01, 0.01, 0.00};
     //occlusion texture can be used to simulate the effect of objects self-shadowing
     //each other.
     //m.occlusionTexture = "";
@@ -649,6 +649,12 @@ namespace model {
     // so we inject some padding when needed
     auto padding = _indicesBuffer.size() % size;
     for (int i = 0; i < padding; i++) {
+      _indicesBuffer.push_back(0x00);
+    }
+
+    //To avoid Accessor offset Validation Issue
+    auto _padding = _indicesBuffer.size() % 4;
+    for (int i = 0; i < _padding; i++) {
       _indicesBuffer.push_back(0x00);
     }
 
