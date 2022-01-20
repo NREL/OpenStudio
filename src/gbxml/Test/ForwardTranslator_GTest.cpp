@@ -375,7 +375,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
       auto _zone = model2->getModelObjectByName<ThermalZone>("Thermal Zone 1");
       ASSERT_TRUE(_zone);
       EXPECT_FALSE(_zone->additionalProperties().hasFeature("CADObjectId"));
-      EXPECT_FALSE(_zone->cadName());
+      EXPECT_FALSE(_zone->displayName());
       EXPECT_TRUE(_zone->additionalProperties().hasFeature("gbXMLId"));
       ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("gbXMLId"));
       ASSERT_TRUE(_zone->gbXMLId());
@@ -387,7 +387,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
       auto _space = model2->getModelObjectByName<Space>("Space 1");
       ASSERT_TRUE(_space);
       EXPECT_FALSE(_space->additionalProperties().hasFeature("CADObjectId"));
-      EXPECT_FALSE(_space->cadName());
+      EXPECT_FALSE(_space->displayName());
       EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
       ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
       ASSERT_TRUE(_space->gbXMLId());
@@ -401,12 +401,12 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     auto _zone = model.getModelObjectByName<ThermalZone>("Thermal Zone 1");
     ASSERT_TRUE(_zone);
     _zone->removeAdditionalProperties();
-    EXPECT_TRUE(_zone->setCADName("ThermalZone1"));
+    EXPECT_TRUE(_zone->setDisplayName("ThermalZone1"));
 
     auto _space = model.getModelObjectByName<Space>("Space 1");
     ASSERT_TRUE(_space);
     _space->removeAdditionalProperties();
-    EXPECT_TRUE(_space->setCADName("Space1"));
+    EXPECT_TRUE(_space->setDisplayName("Space1"));
 
     path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelIDsNames_2.xml");
     bool test = forwardTranslator.modelToGbXML(model, p);
@@ -423,11 +423,11 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
       ASSERT_TRUE(_zone);
       EXPECT_FALSE(_zone->additionalProperties().hasFeature("CADObjectId"));
       EXPECT_FALSE(_zone->gbXMLId());
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADName"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADName"));
-      ASSERT_TRUE(_zone->cadName());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADName").get(), _zone->cadName().get());
-      EXPECT_EQ("ThermalZone1", _zone->cadName().get());
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("displayName"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("displayName"));
+      ASSERT_TRUE(_zone->displayName());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("displayName").get(), _zone->displayName().get());
+      EXPECT_EQ("ThermalZone1", _zone->displayName().get());
     }
 
     {
@@ -435,11 +435,11 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
       ASSERT_TRUE(_space);
       EXPECT_FALSE(_space->additionalProperties().hasFeature("CADObjectId"));
       EXPECT_FALSE(_space->gbXMLId());
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADName"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADName"));
-      ASSERT_TRUE(_space->cadName());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADName").get(), _space->cadName().get());
-      EXPECT_EQ("Space1", _space->cadName().get());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("displayName"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("displayName"));
+      ASSERT_TRUE(_space->displayName());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("displayName").get(), _space->displayName().get());
+      EXPECT_EQ("Space1", _space->displayName().get());
     }
   }
 }

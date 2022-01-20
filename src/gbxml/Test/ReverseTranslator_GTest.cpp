@@ -809,7 +809,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
       ASSERT_TRUE(_zone->cadObjectId());
       EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
-      EXPECT_FALSE(_zone->cadName());
+      EXPECT_FALSE(_zone->displayName());
       EXPECT_TRUE(_zone->additionalProperties().hasFeature("gbXMLId"));
       ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("gbXMLId"));
       ASSERT_TRUE(_zone->gbXMLId());
@@ -824,7 +824,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
       ASSERT_TRUE(_space->cadObjectId());
       EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
-      EXPECT_FALSE(_space->cadName());
+      EXPECT_FALSE(_space->displayName());
       EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
       ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
       ASSERT_TRUE(_space->gbXMLId());
@@ -853,11 +853,11 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
       ASSERT_TRUE(_zone->cadObjectId());
       EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADName"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADName"));
-      ASSERT_TRUE(_zone->cadName());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADName").get(), _zone->cadName().get());
-      EXPECT_EQ("Zone Default", _zone->cadName().get());
+      EXPECT_TRUE(_zone->additionalProperties().hasFeature("displayName"));
+      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("displayName"));
+      ASSERT_TRUE(_zone->displayName());
+      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("displayName").get(), _zone->displayName().get());
+      EXPECT_EQ("Zone Default", _zone->displayName().get());
       EXPECT_FALSE(_zone->gbXMLId());
     }
 
@@ -868,11 +868,11 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
       ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
       ASSERT_TRUE(_space->cadObjectId());
       EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADName"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADName"));
-      ASSERT_TRUE(_space->cadName());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADName").get(), _space->cadName().get());
-      EXPECT_EQ("Hall_105", _space->cadName().get());
+      EXPECT_TRUE(_space->additionalProperties().hasFeature("displayName"));
+      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("displayName"));
+      ASSERT_TRUE(_space->displayName());
+      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("displayName").get(), _space->displayName().get());
+      EXPECT_EQ("Hall_105", _space->displayName().get());
       EXPECT_FALSE(_space->gbXMLId());
     }
 
