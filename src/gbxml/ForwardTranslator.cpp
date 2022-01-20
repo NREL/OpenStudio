@@ -1354,12 +1354,13 @@ namespace gbxml {
       if (additionalProperties.hasFeature("CADObjectId")) {
         boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
         if (cadObjectId) {
+          auto cadObjectIdElement = parentElement.append_child("CADObjectId");
+          cadObjectIdElement.text() = (*cadObjectId).c_str();
+          result = cadObjectIdElement;
           if (additionalProperties.hasFeature("programIdRef")) {
             boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
             if (programIdRef) {
-              auto cadObjectIdElement = parentElement.append_child("CADObjectId");
               cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
-              result = cadObjectIdElement;
             }
           }
         }

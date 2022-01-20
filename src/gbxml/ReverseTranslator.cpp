@@ -1034,10 +1034,12 @@ namespace gbxml {
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateName(const pugi::xml_node& element,
                                                                                    openstudio::model::ModelObject& modelObject) {
-    std::string name = element.child("Name").text().as_string();
-
     model::AdditionalProperties result = modelObject.additionalProperties();
-    result.setFeature("displayName", name);
+
+    auto name = element.child("Name").text();
+    if (!name.empty()) {
+      result.setFeature("displayName", name.as_string());
+    }
 
     return result;
   }

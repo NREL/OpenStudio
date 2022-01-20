@@ -40,28 +40,34 @@
 #include "../../model/ModelMerger.hpp"
 #include "../../model/AdditionalProperties.hpp"
 #include "../../model/AdditionalProperties_Impl.hpp"
-#include "../../model/Facility.hpp"
-#include "../../model/Facility_Impl.hpp"
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/BuildingStory.hpp"
+#include "../../model/BuildingStory_Impl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/Facility.hpp"
+#include "../../model/Facility_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 #include "../../model/ScheduleDay.hpp"
 #include "../../model/ScheduleDay_Impl.hpp"
 #include "../../model/ScheduleWeek.hpp"
 #include "../../model/ScheduleWeek_Impl.hpp"
 #include "../../model/ScheduleYear.hpp"
 #include "../../model/ScheduleYear_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
-#include "../../model/Surface.hpp"
-#include "../../model/Surface_Impl.hpp"
 #include "../../model/ShadingSurface.hpp"
 #include "../../model/ShadingSurface_Impl.hpp"
-#include "../../model/SubSurface.hpp"
-#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
@@ -794,91 +800,149 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   openstudio::gbxml::ReverseTranslator reverseTranslator;
   openstudio::gbxml::ForwardTranslator forwardTranslator;
 
-  // When keeping gbxml names as model object names (historical behavior)
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  model->save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016.osm"), true);
+
   {
-    /* reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(true); */
-    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-    ASSERT_TRUE(model);
-
-    model->save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_1.osm"), true);
-
-    {
-      auto _zone = model->getModelObjectByName<ThermalZone>("Zone Default");
-      ASSERT_TRUE(_zone);
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADObjectId"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
-      ASSERT_TRUE(_zone->cadObjectId());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
-      EXPECT_FALSE(_zone->displayName());
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("gbXMLId"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("gbXMLId"));
-      ASSERT_TRUE(_zone->gbXMLId());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("gbXMLId").get(), _zone->gbXMLId().get());
-      EXPECT_EQ("aim9374", _zone->gbXMLId().get());
-    }
-
-    {
-      auto _space = model->getModelObjectByName<Space>("Hall_105");
-      ASSERT_TRUE(_space);
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
-      ASSERT_TRUE(_space->cadObjectId());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
-      EXPECT_FALSE(_space->displayName());
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("gbXMLId"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("gbXMLId"));
-      ASSERT_TRUE(_space->gbXMLId());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("gbXMLId").get(), _space->gbXMLId().get());
-      EXPECT_EQ("aim0014", _space->gbXMLId().get());
-    }
-
-    openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_1.xml");
-    bool test = forwardTranslator.modelToGbXML(*model, outputPath);
-    EXPECT_TRUE(test);
-    // FIXME: CADObjectId, among others, does not get forward translated
+    auto _obj = model->getModelObjectByName<Building>("aim0013");
+    ASSERT_TRUE(_obj);
+    EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_FALSE(_obj->cadObjectId());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_TRUE(_obj->displayName());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("displayName").get(), _obj->displayName().get());
+    EXPECT_EQ("Sample House", _obj->displayName().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
   }
 
-  // When using gbxml ids as model object names
   {
-    /* reverseTranslator.setKeepGBXMLNamesAsModelObjectNames(false); */
-    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-    ASSERT_TRUE(model);
-
-    model->save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_2.osm"), true);
-
-    {
-      auto _zone = model->getModelObjectByName<ThermalZone>("aim9374");
-      ASSERT_TRUE(_zone);
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("CADObjectId"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("CADObjectId"));
-      ASSERT_TRUE(_zone->cadObjectId());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("CADObjectId").get(), _zone->cadObjectId().get());
-      EXPECT_TRUE(_zone->additionalProperties().hasFeature("displayName"));
-      ASSERT_TRUE(_zone->additionalProperties().getFeatureAsString("displayName"));
-      ASSERT_TRUE(_zone->displayName());
-      EXPECT_EQ(_zone->additionalProperties().getFeatureAsString("displayName").get(), _zone->displayName().get());
-      EXPECT_EQ("Zone Default", _zone->displayName().get());
-      EXPECT_FALSE(_zone->gbXMLId());
-    }
-
-    {
-      auto _space = model->getModelObjectByName<Space>("aim0014");
-      ASSERT_TRUE(_space);
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("CADObjectId"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("CADObjectId"));
-      ASSERT_TRUE(_space->cadObjectId());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("CADObjectId").get(), _space->cadObjectId().get());
-      EXPECT_TRUE(_space->additionalProperties().hasFeature("displayName"));
-      ASSERT_TRUE(_space->additionalProperties().getFeatureAsString("displayName"));
-      ASSERT_TRUE(_space->displayName());
-      EXPECT_EQ(_space->additionalProperties().getFeatureAsString("displayName").get(), _space->displayName().get());
-      EXPECT_EQ("Hall_105", _space->displayName().get());
-      EXPECT_FALSE(_space->gbXMLId());
-    }
-
-    openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_2.xml");
-    bool test = forwardTranslator.modelToGbXML(*model, outputPath);
-    EXPECT_TRUE(test);
-    // FIXME: CADObjectId, among others, does not get forward translated
+    auto _obj = model->getModelObjectByName<BuildingStory>("aim0013-Storey-0");
+    ASSERT_TRUE(_obj);
+    EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_FALSE(_obj->cadObjectId());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_TRUE(_obj->displayName());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("displayName").get(), _obj->displayName().get());
+    EXPECT_EQ("Storey-0-Name", _obj->displayName().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
   }
+
+  {
+    auto _obj = model->getModelObjectByName<Space>("aim0014");
+    ASSERT_TRUE(_obj);
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_TRUE(_obj->cadObjectId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("CADObjectId").get(), _obj->cadObjectId().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_TRUE(_obj->displayName());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("displayName").get(), _obj->displayName().get());
+    EXPECT_EQ("Hall_105", _obj->displayName().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
+  }
+
+  {
+    auto _obj = model->getModelObjectByName<Surface>("aim0065");
+    ASSERT_TRUE(_obj);
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_TRUE(_obj->cadObjectId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("CADObjectId").get(), _obj->cadObjectId().get());
+    EXPECT_FALSE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_FALSE(_obj->displayName());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
+  }
+
+  {
+    auto _obj = model->getModelObjectByName<SubSurface>("aim2707");
+    ASSERT_TRUE(_obj);
+    EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_FALSE(_obj->cadObjectId());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_TRUE(_obj->displayName());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("displayName").get(), _obj->displayName().get());
+    EXPECT_EQ("aim2707_NW_FxWin_aim0014", _obj->displayName().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
+  }
+
+  {
+    auto _obj = model->getModelObjectByName<ThermalZone>("aim9374");
+    ASSERT_TRUE(_obj);
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_TRUE(_obj->cadObjectId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("CADObjectId").get(), _obj->cadObjectId().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_TRUE(_obj->displayName());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("displayName").get(), _obj->displayName().get());
+    EXPECT_EQ("Zone Default", _obj->displayName().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
+  }
+
+  {
+    auto _obj = model->getModelObjectByName<Construction>("construction-51");
+    ASSERT_TRUE(_obj);
+    EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_FALSE(_obj->cadObjectId());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_TRUE(_obj->displayName());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("displayName").get(), _obj->displayName().get());
+    EXPECT_EQ("R20 over Roof Deck - Cool Roof", _obj->displayName().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
+  }
+
+  {
+    auto _obj = model->getModelObjectByName<Material>("mat-247");
+    ASSERT_TRUE(_obj);
+    EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
+    ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
+    ASSERT_FALSE(_obj->cadObjectId());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("displayName"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("displayName"));
+    ASSERT_TRUE(_obj->displayName());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("displayName").get(), _obj->displayName().get());
+    EXPECT_EQ("Blt-Up Roof 3/8in  (BR01)", _obj->displayName().get());
+    EXPECT_TRUE(_obj->additionalProperties().hasFeature("gbXMLId"));
+    ASSERT_TRUE(_obj->additionalProperties().getFeatureAsString("gbXMLId"));
+    ASSERT_TRUE(_obj->gbXMLId());
+    EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
+  }
+
+  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_2.xml");
+  bool test = forwardTranslator.modelToGbXML(*model, outputPath);
+  EXPECT_TRUE(test);
 }
