@@ -50,7 +50,6 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 /// <summary>
 /// Validation report
 ////Format: glTF 2.0
@@ -135,10 +134,10 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
 ///871 primitives
 ///0 textures
 ///Extensions: None
-/// 
-/// FIXED : 1742 Validation issues 
-/// starting from : 
-/// ACCESSOR_TOTAL_OFFSET_ALIGNMENT	Accessor's total byteOffset 7162 isn't a multiple of componentType length 4.	
+///
+/// FIXED : 1742 Validation issues
+/// starting from :
+/// ACCESSOR_TOTAL_OFFSET_ALIGNMENT	Accessor's total byteOffset 7162 isn't a multiple of componentType length 4.
 /// /accessors/1
 /// </summary>
 /// <param name=""></param>

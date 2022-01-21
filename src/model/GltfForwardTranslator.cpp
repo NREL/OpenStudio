@@ -708,7 +708,7 @@ namespace model {
   /// <param name="_accessors"></param>
   /// <returns></returns>
   int CreateBuffers(std::vector<float>& values, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
-    // Fixes ACCESSOR_TOTAL_OFFSET_ALIGNMENT	
+    // Fixes ACCESSOR_TOTAL_OFFSET_ALIGNMENT
     // Accessor's total byteOffset XXXX isn't a multiple of componentType length 4.
     auto _padding = _coordinatesBuffer.size() % 4;
     for (int i = 0; i < _padding; i++) {
@@ -842,13 +842,12 @@ namespace model {
   /// <param name="updatePercentage"></param>
   /// <param name="outputPath"></param>
   /// <returns>exports GLTF file aginst the Model</returns>
-  bool GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage,
-                                          const path& outputPath) {
+  bool GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputPath) {
     m_logSink.setThreadId(std::this_thread::get_id());
     m_logSink.resetStringStream();
 
-    bool triangulateSurfaces = true; //we're always triangulating the surfaces to get the best possible output.
-    bool BufferInBase64 = false;  //no *.bin file is involed | everything is integrated in the mail output gltf file only.
+    bool triangulateSurfaces = true;  //we're always triangulating the surfaces to get the best possible output.
+    bool BufferInBase64 = false;      //no *.bin file is involed | everything is integrated in the mail output gltf file only.
 
     GLTF::TinyGLTF loader;
     GLTF::Model gltf_Model;
@@ -1060,7 +1059,7 @@ namespace model {
     if (_coordinatesBuffer.size() == 0) return false;
 
     if (!BufferInBase64) {
-      //BPS:having a separate input file for the GLTF is old now everything resides 
+      //BPS:having a separate input file for the GLTF is old now everything resides
       //in the main GLTF file only as a binary buffer data.
       auto padding = _indicesBuffer.size() % 4;
       for (int i = 0; i < padding; i++) {

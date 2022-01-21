@@ -261,18 +261,22 @@ namespace detail {
 
   template <std::size_t... I1, std::size_t... I2>
   struct merge_and_renumber<index_sequence<I1...>, index_sequence<I2...>> : index_sequence<I1..., (sizeof...(I1) + I2)...>
-  {};
+  {
+  };
 
   template <std::size_t N>
   struct make_index_sequence : merge_and_renumber<typename make_index_sequence<N / 2>::type, typename make_index_sequence<N - N / 2>::type>
-  {};
+  {
+  };
 
   template <>
   struct make_index_sequence<0> : index_sequence<>
-  {};
+  {
+  };
   template <>
   struct make_index_sequence<1> : index_sequence<0>
-  {};
+  {
+  };
 
   template <typename... Ts>
   using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
@@ -280,15 +284,19 @@ namespace detail {
   // dispatch utility (taken from ranges-v3)
   template <unsigned N>
   struct priority_tag : priority_tag<N - 1>
-  {};
+  {
+  };
   template <>
   struct priority_tag<0>
-  {};
+  {
+  };
 
   // taken from ranges-v3
   template <typename T>
   struct static_const
-  { static constexpr T value{}; };
+  {
+    static constexpr T value{};
+  };
 
   template <typename T>
   constexpr T static_const<T>::value;
@@ -297,10 +305,10 @@ namespace detail {
 
 // #include <nlohmann/detail/meta/type_traits.hpp>
 
-#include <ciso646>  // not
-#include <limits>  // numeric_limits
+#include <ciso646>      // not
+#include <limits>       // numeric_limits
 #include <type_traits>  // false_type, is_constructible, is_integral, is_same, true_type
-#include <utility>  // declval
+#include <utility>      // declval
 
 // #include <nlohmann/json_fwd.hpp>
 
@@ -314,7 +322,9 @@ namespace nlohmann {
 namespace detail {
   template <typename... Ts>
   struct make_void
-  { using type = void; };
+  {
+    using type = void;
+  };
   template <typename... Ts>
   using void_t = typename make_void<Ts...>::type;
 }  // namespace detail
@@ -326,7 +336,8 @@ namespace nlohmann {
 namespace detail {
   template <typename It, typename = void>
   struct iterator_types
-  {};
+  {
+  };
 
   template <typename It>
   struct iterator_types<
@@ -343,11 +354,13 @@ namespace detail {
   // doesn't work with SFINAE. See https://github.com/nlohmann/json/issues/1341.
   template <typename T, typename = void>
   struct iterator_traits
-  {};
+  {
+  };
 
   template <typename T>
   struct iterator_traits<T, enable_if_t<!std::is_pointer<T>::value>> : iterator_types<T>
-  {};
+  {
+  };
 
   template <typename T>
   struct iterator_traits<T*, enable_if_t<std::is_object<T>::value>>
@@ -441,7 +454,8 @@ namespace detail {
 
   template <typename>
   struct is_basic_json : std::false_type
-  {};
+  {
+  };
 
   NLOHMANN_BASIC_JSON_TPL_DECLARATION
   struct is_basic_json<NLOHMANN_BASIC_JSON_TPL> : std::true_type
@@ -488,7 +502,8 @@ namespace detail {
   // trait checking if JSONSerializer<T>::from_json(json const&, udt&) exists
   template <typename BasicJsonType, typename T, typename = void>
   struct has_from_json : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename T>
   struct has_from_json<BasicJsonType, T, enable_if_t<not is_basic_json<T>::value>>
@@ -502,7 +517,8 @@ namespace detail {
   // this overload is used for non-default-constructible user-defined-types
   template <typename BasicJsonType, typename T, typename = void>
   struct has_non_default_from_json : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename T>
   struct has_non_default_from_json<BasicJsonType, T, enable_if_t<not is_basic_json<T>::value>>
@@ -516,7 +532,8 @@ namespace detail {
   // Do not evaluate the trait when T is a basic_json type, to avoid template instantiation infinite recursion.
   template <typename BasicJsonType, typename T, typename = void>
   struct has_to_json : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename T>
   struct has_to_json<BasicJsonType, T, enable_if_t<not is_basic_json<T>::value>>
@@ -532,7 +549,8 @@ namespace detail {
 
   template <typename T, typename = void>
   struct is_iterator_traits : std::false_type
-  {};
+  {
+  };
 
   template <typename T>
   struct is_iterator_traits<iterator_traits<T>>
@@ -550,15 +568,18 @@ namespace detail {
 
   template <typename T, typename = void>
   struct is_complete_type : std::false_type
-  {};
+  {
+  };
 
   template <typename T>
   struct is_complete_type<T, decltype(void(sizeof(T)))> : std::true_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleObjectType, typename = void>
   struct is_compatible_object_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleObjectType>
   struct is_compatible_object_type_impl<
@@ -575,11 +596,13 @@ namespace detail {
 
   template <typename BasicJsonType, typename CompatibleObjectType>
   struct is_compatible_object_type : is_compatible_object_type_impl<BasicJsonType, CompatibleObjectType>
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename ConstructibleObjectType, typename = void>
   struct is_constructible_object_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename ConstructibleObjectType>
   struct is_constructible_object_type_impl<
@@ -596,39 +619,49 @@ namespace detail {
 
   template <typename BasicJsonType, typename ConstructibleObjectType>
   struct is_constructible_object_type : is_constructible_object_type_impl<BasicJsonType, ConstructibleObjectType>
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleStringType, typename = void>
   struct is_compatible_string_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleStringType>
   struct is_compatible_string_type_impl<
     BasicJsonType, CompatibleStringType,
     enable_if_t<is_detected_exact<typename BasicJsonType::string_t::value_type, value_type_t, CompatibleStringType>::value>>
-  { static constexpr auto value = std::is_constructible<typename BasicJsonType::string_t, CompatibleStringType>::value; };
+  {
+    static constexpr auto value = std::is_constructible<typename BasicJsonType::string_t, CompatibleStringType>::value;
+  };
 
   template <typename BasicJsonType, typename ConstructibleStringType>
   struct is_compatible_string_type : is_compatible_string_type_impl<BasicJsonType, ConstructibleStringType>
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename ConstructibleStringType, typename = void>
   struct is_constructible_string_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename ConstructibleStringType>
   struct is_constructible_string_type_impl<
     BasicJsonType, ConstructibleStringType,
     enable_if_t<is_detected_exact<typename BasicJsonType::string_t::value_type, value_type_t, ConstructibleStringType>::value>>
-  { static constexpr auto value = std::is_constructible<ConstructibleStringType, typename BasicJsonType::string_t>::value; };
+  {
+    static constexpr auto value = std::is_constructible<ConstructibleStringType, typename BasicJsonType::string_t>::value;
+  };
 
   template <typename BasicJsonType, typename ConstructibleStringType>
   struct is_constructible_string_type : is_constructible_string_type_impl<BasicJsonType, ConstructibleStringType>
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleArrayType, typename = void>
   struct is_compatible_array_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleArrayType>
   struct is_compatible_array_type_impl<
@@ -638,21 +671,26 @@ namespace detail {
                 // Therefore it is detected as a CompatibleArrayType.
                 // The real fix would be to have an Iterable concept.
                 not is_iterator_traits<iterator_traits<CompatibleArrayType>>::value>>
-  { static constexpr bool value = std::is_constructible<BasicJsonType, typename CompatibleArrayType::value_type>::value; };
+  {
+    static constexpr bool value = std::is_constructible<BasicJsonType, typename CompatibleArrayType::value_type>::value;
+  };
 
   template <typename BasicJsonType, typename CompatibleArrayType>
   struct is_compatible_array_type : is_compatible_array_type_impl<BasicJsonType, CompatibleArrayType>
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename ConstructibleArrayType, typename = void>
   struct is_constructible_array_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename ConstructibleArrayType>
   struct is_constructible_array_type_impl<BasicJsonType, ConstructibleArrayType,
                                           enable_if_t<std::is_same<ConstructibleArrayType, typename BasicJsonType::value_type>::value>>
     : std::true_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename ConstructibleArrayType>
   struct is_constructible_array_type_impl<
@@ -675,11 +713,13 @@ namespace detail {
 
   template <typename BasicJsonType, typename ConstructibleArrayType>
   struct is_constructible_array_type : is_constructible_array_type_impl<BasicJsonType, ConstructibleArrayType>
-  {};
+  {
+  };
 
   template <typename RealIntegerType, typename CompatibleNumberIntegerType, typename = void>
   struct is_compatible_integer_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename RealIntegerType, typename CompatibleNumberIntegerType>
   struct is_compatible_integer_type_impl<RealIntegerType, CompatibleNumberIntegerType,
@@ -696,19 +736,24 @@ namespace detail {
 
   template <typename RealIntegerType, typename CompatibleNumberIntegerType>
   struct is_compatible_integer_type : is_compatible_integer_type_impl<RealIntegerType, CompatibleNumberIntegerType>
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleType, typename = void>
   struct is_compatible_type_impl : std::false_type
-  {};
+  {
+  };
 
   template <typename BasicJsonType, typename CompatibleType>
   struct is_compatible_type_impl<BasicJsonType, CompatibleType, enable_if_t<is_complete_type<CompatibleType>::value>>
-  { static constexpr bool value = has_to_json<BasicJsonType, CompatibleType>::value; };
+  {
+    static constexpr bool value = has_to_json<BasicJsonType, CompatibleType>::value;
+  };
 
   template <typename BasicJsonType, typename CompatibleType>
   struct is_compatible_type : is_compatible_type_impl<BasicJsonType, CompatibleType>
-  {};
+  {
+  };
 }  // namespace detail
 }  // namespace nlohmann
 
@@ -716,7 +761,7 @@ namespace detail {
 
 #include <exception>  // exception
 #include <stdexcept>  // runtime_error
-#include <string>  // to_string
+#include <string>     // to_string
 
 // #include <nlohmann/detail/input/position_t.hpp>
 
@@ -1071,7 +1116,7 @@ caught.,other_error}
 
 // #include <nlohmann/detail/value_t.hpp>
 
-#include <array>  // array
+#include <array>    // array
 #include <ciso646>  // and
 #include <cstddef>  // size_t
 #include <cstdint>  // uint8_t
@@ -1143,18 +1188,18 @@ Returns an ordering that is similar to Python:
 
 // #include <nlohmann/detail/conversions/from_json.hpp>
 
-#include <algorithm>  // transform
-#include <array>  // array
-#include <ciso646>  // and, not
-#include <forward_list>  // forward_list
-#include <iterator>  // inserter, front_inserter, end
-#include <map>  // map
-#include <string>  // string
-#include <tuple>  // tuple, make_tuple
-#include <type_traits>  // is_arithmetic, is_same, is_enum, underlying_type, is_convertible
+#include <algorithm>      // transform
+#include <array>          // array
+#include <ciso646>        // and, not
+#include <forward_list>   // forward_list
+#include <iterator>       // inserter, front_inserter, end
+#include <map>            // map
+#include <string>         // string
+#include <tuple>          // tuple, make_tuple
+#include <type_traits>    // is_arithmetic, is_same, is_enum, underlying_type, is_convertible
 #include <unordered_map>  // unordered_map
-#include <utility>  // pair, declval
-#include <valarray>  // valarray
+#include <utility>        // pair, declval
+#include <valarray>       // valarray
 
 // #include <nlohmann/detail/exceptions.hpp>
 
@@ -1434,13 +1479,13 @@ namespace {
 
 // #include <nlohmann/detail/conversions/to_json.hpp>
 
-#include <ciso646>  // or, and, not
-#include <iterator>  // begin, end
-#include <tuple>  // tuple, get
+#include <ciso646>      // or, and, not
+#include <iterator>     // begin, end
+#include <tuple>        // tuple, get
 #include <type_traits>  // is_same, is_constructible, is_floating_point, is_enum, underlying_type
-#include <utility>  // move, forward, declval, pair
-#include <valarray>  // valarray
-#include <vector>  // vector
+#include <utility>      // move, forward, declval, pair
+#include <valarray>     // valarray
+#include <vector>       // vector
 
 // #include <nlohmann/detail/meta/cpp_future.hpp>
 
@@ -1450,10 +1495,10 @@ namespace {
 
 // #include <nlohmann/detail/iterators/iteration_proxy.hpp>
 
-#include <cstddef>  // size_t
-#include <string>  // string, to_string
+#include <cstddef>   // size_t
+#include <string>    // string, to_string
 #include <iterator>  // input_iterator_tag
-#include <tuple>  // tuple_size, get, tuple_element
+#include <tuple>     // tuple_size, get, tuple_element
 
 // #include <nlohmann/detail/value_t.hpp>
 
@@ -1585,7 +1630,8 @@ namespace detail {
 namespace std {
 template <typename IteratorType>
 class tuple_size<::nlohmann::detail::iteration_proxy_value<IteratorType>> : public std::integral_constant<std::size_t, 2>
-{};
+{
+};
 
 template <std::size_t N, typename IteratorType>
 class tuple_element<N, ::nlohmann::detail::iteration_proxy_value<IteratorType>>
@@ -1876,17 +1922,17 @@ namespace {
 
 // #include <nlohmann/detail/input/input_adapters.hpp>
 
-#include <cassert>  // assert
-#include <cstddef>  // size_t
-#include <cstring>  // strlen
-#include <istream>  // istream
-#include <iterator>  // begin, end, iterator_traits, random_access_iterator_tag, distance, next
-#include <memory>  // shared_ptr, make_shared, addressof
-#include <numeric>  // accumulate
-#include <string>  // string, char_traits
+#include <cassert>      // assert
+#include <cstddef>      // size_t
+#include <cstring>      // strlen
+#include <istream>      // istream
+#include <iterator>     // begin, end, iterator_traits, random_access_iterator_tag, distance, next
+#include <memory>       // shared_ptr, make_shared, addressof
+#include <numeric>      // accumulate
+#include <string>       // string, char_traits
 #include <type_traits>  // enable_if, is_base_of, is_pointer, is_integral, remove_pointer
-#include <utility>  // pair, declval
-#include <cstdio>  //FILE *
+#include <utility>      // pair, declval
+#include <cstdio>       //FILE *
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
@@ -2240,13 +2286,13 @@ subsequent call for input from the std::istream.
 
 // #include <nlohmann/detail/input/lexer.hpp>
 
-#include <clocale>  // localeconv
-#include <cstddef>  // size_t
-#include <cstdlib>  // strtof, strtod, strtold, strtoll, strtoull
-#include <cstdio>  // snprintf
+#include <clocale>           // localeconv
+#include <cstddef>           // size_t
+#include <cstdlib>           // strtof, strtod, strtold, strtoll, strtoull
+#include <cstdio>            // snprintf
 #include <initializer_list>  // initializer_list
-#include <string>  // char_traits, string
-#include <vector>  // vector
+#include <string>            // char_traits, string
+#include <vector>            // vector
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
@@ -3576,12 +3622,12 @@ This class organizes the lexical analysis during JSON deserialization.
 
 // #include <nlohmann/detail/input/parser.hpp>
 
-#include <cassert>  // assert
-#include <cmath>  // isfinite
-#include <cstdint>  // uint8_t
+#include <cassert>     // assert
+#include <cmath>       // isfinite
+#include <cstdint>     // uint8_t
 #include <functional>  // function
-#include <string>  // string
-#include <utility>  // move
+#include <string>      // string
+#include <utility>     // move
 
 // #include <nlohmann/detail/exceptions.hpp>
 
@@ -4570,8 +4616,7 @@ This class implements a recursive decent parser.
                                       parse_error::create(101, m_lexer.get_position(), exception_message(token_type::uninitialized, "value")));
             }
 
-            default
-              :  // the last token was unexpected
+            default:  // the last token was unexpected
             {
               return sax->parse_error(m_lexer.get_position(), m_lexer.get_token_string(),
                                       parse_error::create(101, m_lexer.get_position(), exception_message(token_type::literal_or_value, "value")));
@@ -4705,7 +4750,7 @@ This class implements a recursive decent parser.
 // #include <nlohmann/detail/iterators/primitive_iterator.hpp>
 
 #include <cstddef>  // ptrdiff_t
-#include <limits>  // numeric_limits
+#include <limits>   // numeric_limits
 
 namespace nlohmann {
 namespace detail {
@@ -4833,8 +4878,8 @@ unions members with complex constructors, see https://github.com/nlohmann/json/p
 
 // #include <nlohmann/detail/iterators/iter_impl.hpp>
 
-#include <ciso646>  // not
-#include <iterator>  // iterator, random_access_iterator_tag, bidirectional_iterator_tag, advance, next
+#include <ciso646>      // not
+#include <iterator>     // iterator, random_access_iterator_tag, bidirectional_iterator_tag, advance, next
 #include <type_traits>  // conditional, is_const, remove_const
 
 // #include <nlohmann/detail/exceptions.hpp>
@@ -5379,9 +5424,9 @@ This class implements a both iterators (iterator and const_iterator) for the
 
 // #include <nlohmann/detail/iterators/json_reverse_iterator.hpp>
 
-#include <cstddef>  // ptrdiff_t
+#include <cstddef>   // ptrdiff_t
 #include <iterator>  // reverse_iterator
-#include <utility>  // declval
+#include <utility>   // declval
 
 namespace nlohmann {
 namespace detail {
@@ -5486,13 +5531,13 @@ create @ref const_reverse_iterator).
 // #include <nlohmann/detail/output/output_adapters.hpp>
 
 #include <algorithm>  // copy
-#include <cstddef>  // size_t
-#include <ios>  // streamsize
-#include <iterator>  // back_inserter
-#include <memory>  // shared_ptr, make_shared
-#include <ostream>  // basic_ostream
-#include <string>  // basic_string
-#include <vector>  // vector
+#include <cstddef>    // size_t
+#include <ios>        // streamsize
+#include <iterator>   // back_inserter
+#include <memory>     // shared_ptr, make_shared
+#include <ostream>    // basic_ostream
+#include <string>     // basic_string
+#include <vector>     // vector
 
 namespace nlohmann {
 namespace detail {
@@ -5589,17 +5634,17 @@ namespace detail {
 // #include <nlohmann/detail/input/binary_reader.hpp>
 
 #include <algorithm>  // generate_n
-#include <array>  // array
-#include <cassert>  // assert
-#include <cmath>  // ldexp
-#include <cstddef>  // size_t
-#include <cstdint>  // uint8_t, uint16_t, uint32_t, uint64_t
-#include <cstdio>  // snprintf
-#include <cstring>  // memcpy
-#include <iterator>  // back_inserter
-#include <limits>  // numeric_limits
-#include <string>  // char_traits, string
-#include <utility>  // make_pair, move
+#include <array>      // array
+#include <cassert>    // assert
+#include <cmath>      // ldexp
+#include <cstddef>    // size_t
+#include <cstdint>    // uint8_t, uint16_t, uint32_t, uint64_t
+#include <cstdio>     // snprintf
+#include <cstring>    // memcpy
+#include <iterator>   // back_inserter
+#include <limits>     // numeric_limits
+#include <string>     // char_traits, string
+#include <utility>    // make_pair, move
 
 // #include <nlohmann/detail/input/input_adapters.hpp>
 
@@ -5833,8 +5878,7 @@ namespace detail {
           return get_number<std::int64_t, true>(input_format_t::bson, value) and sax->number_integer(value);
         }
 
-        default
-          :  // anything else not supported (yet)
+        default:  // anything else not supported (yet)
         {
           char cr[3];
           (std::snprintf)(cr, sizeof(cr), "%.2hhX", static_cast<unsigned char>(element_type));
@@ -6228,8 +6272,7 @@ namespace detail {
           return get_number(input_format_t::cbor, number) and sax->number_float(static_cast<number_float_t>(number), "");
         }
 
-        default
-          :  // anything else (0xFF is handled inside the other types)
+        default:  // anything else (0xFF is handled inside the other types)
         {
           auto last_token = get_token_string();
           return sax->parse_error(
@@ -6753,8 +6796,7 @@ namespace detail {
         case 0xFF:
           return sax->number_integer(static_cast<int8_t>(current));
 
-        default
-          :  // anything else
+        default:  // anything else
         {
           auto last_token = get_token_string();
           return sax->parse_error(
@@ -7148,8 +7190,7 @@ namespace detail {
         case '{':  // object
           return get_ubjson_object();
 
-        default
-          :  // anything else
+        default:  // anything else
         {
           auto last_token = get_token_string();
           return sax->parse_error(
@@ -7431,10 +7472,10 @@ namespace detail {
 // #include <nlohmann/detail/output/binary_writer.hpp>
 
 #include <algorithm>  // reverse
-#include <array>  // array
-#include <cstdint>  // uint8_t, uint16_t, uint32_t, uint64_t
-#include <cstring>  // memcpy
-#include <limits>  // numeric_limits
+#include <array>      // array
+#include <cstdint>    // uint8_t, uint16_t, uint32_t, uint64_t
+#include <cstring>    // memcpy
+#include <limits>     // numeric_limits
 
 // #include <nlohmann/detail/input/binary_reader.hpp>
 
@@ -8475,17 +8516,17 @@ namespace detail {
 
 // #include <nlohmann/detail/output/serializer.hpp>
 
-#include <algorithm>  // reverse, remove, fill, find, none_of
-#include <array>  // array
-#include <cassert>  // assert
-#include <ciso646>  // and, or
-#include <clocale>  // localeconv, lconv
-#include <cmath>  // labs, isfinite, isnan, signbit
-#include <cstddef>  // size_t, ptrdiff_t
-#include <cstdint>  // uint8_t
-#include <cstdio>  // snprintf
-#include <limits>  // numeric_limits
-#include <string>  // string
+#include <algorithm>    // reverse, remove, fill, find, none_of
+#include <array>        // array
+#include <cassert>      // assert
+#include <ciso646>      // and, or
+#include <clocale>      // localeconv, lconv
+#include <cmath>        // labs, isfinite, isnan, signbit
+#include <cstddef>      // size_t, ptrdiff_t
+#include <cstdint>      // uint8_t
+#include <cstdio>       // snprintf
+#include <limits>       // numeric_limits
+#include <string>       // string
 #include <type_traits>  // is_same
 
 // #include <nlohmann/detail/exceptions.hpp>
@@ -8494,7 +8535,7 @@ namespace detail {
 
 #include <cassert>  // assert
 #include <ciso646>  // or, and, not
-#include <cmath>  // signbit, isfinite
+#include <cmath>    // signbit, isfinite
 #include <cstdint>  // intN_t, uintN_t
 #include <cstring>  // memcpy, memmove
 
@@ -9855,8 +9896,7 @@ namespace detail {
             break;
           }
 
-          default
-            :  // decode found yet incomplete multi-byte code point
+          default:  // decode found yet incomplete multi-byte code point
           {
             if (not ensure_ascii) {
               // code point will not be escaped - copy byte to buffer
@@ -10152,8 +10192,8 @@ namespace detail {
 
 #include <cassert>  // assert
 #include <numeric>  // accumulate
-#include <string>  // string
-#include <vector>  // vector
+#include <string>   // string
+#include <vector>   // vector
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
