@@ -43,7 +43,7 @@
 #include "../../osversion/VersionTranslator.hpp"
 #include "../Construction.hpp"
 
-#include "../tiny_gltf.h"
+//#include "../tiny_gltf.h"
 
 #include <algorithm>
 

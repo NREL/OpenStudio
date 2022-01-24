@@ -91,6 +91,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "websocketpp/0.8.2#6d77b9b8a2368fa5fd5377af0c0ca211"
     "geographiclib/1.50.1#b1a7966385dead17ec170b25a99cf71b"
     "swig/4.0.2#bfafb16cd2bea6af3b8003163abcbd09"
+	"tinygltf/2.5.0"
     ${CONAN_GTEST}
     ${CONAN_BENCHMARK}
     # Override to avoid dependency mismatches

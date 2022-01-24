@@ -36,10 +36,6 @@ set(${target_name}_src
   ThreeJSReverseTranslator.cpp
   GltfForwardTranslator.hpp
   GltfForwardTranslator.cpp
-  tiny_gltf.h
-  json.hpp
-  stb_image.h
-  stb_image_write.h
   ModelMerger.hpp
   ModelMerger.cpp
 
