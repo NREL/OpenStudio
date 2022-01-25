@@ -55,6 +55,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/time/Date.hpp"
+#include "../../utilities/core/ASCIIStrings.hpp"
 
 using namespace openstudio::model;
 
@@ -62,9 +63,9 @@ namespace openstudio {
 
 namespace energyplus {
 
-  ScheduleRule createNewRule(ScheduleRuleset& scheduleRuleset, OptionalModelObject& modelObject, std::string name, const Date& startDate,
+  ScheduleRule createNewRule(ScheduleRuleset& scheduleRuleset, OptionalModelObject& modelObject, const std::string& name, const Date& startDate,
                              const Date& endDate) {
-    ScheduleDay daySchedule = modelObject->cast<ScheduleDay>();
+    auto daySchedule = modelObject->cast<ScheduleDay>();
     ScheduleRule scheduleRule(scheduleRuleset, daySchedule);  // this clones daySchedule and sets the clone with a different name
     scheduleRule.setName(name);
     scheduleRule.setStartDate(startDate);
@@ -87,10 +88,10 @@ namespace energyplus {
 
     std::vector<IdfExtensibleGroup> extensibleGroups = workspaceObject.extensibleGroups();
     for (const IdfExtensibleGroup& idfGroup : extensibleGroups) {
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
-      OptionalWorkspaceObject scheduleWeek =
-        workspaceGroup.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);  // Schedule:Week:Daily, Schedule:Week:Compact
+      // Schedule:Week:Daily, Schedule:Week:Compact
+      OptionalWorkspaceObject scheduleWeek = workspaceGroup.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
 
       if (scheduleWeek->iddObject().type() == IddObjectType::Schedule_Week_Daily) {
         if (OptionalString holidayScheduleDayName = scheduleWeek->getString(Schedule_Week_DailyFields::HolidaySchedule_DayName)) {
@@ -125,35 +126,37 @@ namespace energyplus {
       } else if (scheduleWeek->iddObject().type() == IddObjectType::Schedule_Week_Compact) {
 
         for (const IdfExtensibleGroup& dayTypeIdfGroup : scheduleWeek->extensibleGroups()) {
-          WorkspaceExtensibleGroup dayTypeWorkspaceGroup = dayTypeIdfGroup.cast<WorkspaceExtensibleGroup>();
+          auto dayTypeWorkspaceGroup = dayTypeIdfGroup.cast<WorkspaceExtensibleGroup>();
 
-          boost::optional<std::string> dayType = dayTypeWorkspaceGroup.getString(Schedule_Week_CompactExtensibleFields::DayTypeList);
+          boost::optional<std::string> dayType_ = dayTypeWorkspaceGroup.getString(Schedule_Week_CompactExtensibleFields::DayTypeList);
+          OS_ASSERT(dayType_);
+          std::string dayTypeLower = openstudio::ascii_to_lower_copy(dayType_.get());
           boost::optional<std::string> scheduleDayName = dayTypeWorkspaceGroup.getString(Schedule_Week_CompactExtensibleFields::Schedule_DayName);
 
-          if (dayType.get() == "Holiday") {
+          if (dayTypeLower == "holiday") {
             if (std::find(holidayScheduleDayNames.begin(), holidayScheduleDayNames.end(), *scheduleDayName) == holidayScheduleDayNames.end()) {
               holidayScheduleDayNames.push_back(*scheduleDayName);
             }
           }
-          if (dayType.get() == "SummerDesignDay") {
+          if (dayTypeLower == "summerdesignday") {
             if (std::find(summerDesignDayScheduleDayNames.begin(), summerDesignDayScheduleDayNames.end(), *scheduleDayName)
                 == summerDesignDayScheduleDayNames.end()) {
               summerDesignDayScheduleDayNames.push_back(*scheduleDayName);
             }
           }
-          if (dayType.get() == "WinterDesignDay") {
+          if (dayTypeLower == "winterdesignday") {
             if (std::find(winterDesignDayScheduleDayNames.begin(), winterDesignDayScheduleDayNames.end(), *scheduleDayName)
                 == winterDesignDayScheduleDayNames.end()) {
               winterDesignDayScheduleDayNames.push_back(*scheduleDayName);
             }
           }
-          if (dayType.get() == "CustomDay1") {
+          if (dayTypeLower == "customday1") {
             if (std::find(customDay1ScheduleDayNames.begin(), customDay1ScheduleDayNames.end(), *scheduleDayName)
                 == customDay1ScheduleDayNames.end()) {
               customDay1ScheduleDayNames.push_back(*scheduleDayName);
             }
           }
-          if (dayType.get() == "CustomDay2") {
+          if (dayTypeLower == "customday2") {
             if (std::find(customDay2ScheduleDayNames.begin(), customDay2ScheduleDayNames.end(), *scheduleDayName)
                 == customDay2ScheduleDayNames.end()) {
               customDay2ScheduleDayNames.push_back(*scheduleDayName);
@@ -245,7 +248,7 @@ namespace energyplus {
       OptionalWorkspaceObject customDay2ScheduleDay;
 
       for (const IdfExtensibleGroup& idfGroup : extensibleGroups) {
-        WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+        auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
         OptionalWorkspaceObject scheduleWeek =
           workspaceGroup.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);  // Schedule:Week:Daily, Schedule:Week:Compact
@@ -426,13 +429,24 @@ namespace energyplus {
           boost::optional<std::string> scheduleWeekCompactName = scheduleWeek->getString(Schedule_Week_CompactFields::Name);
 
           for (const IdfExtensibleGroup& dayTypeIdfGroup : scheduleWeek->extensibleGroups()) {
-            WorkspaceExtensibleGroup dayTypeWorkspaceGroup = dayTypeIdfGroup.cast<WorkspaceExtensibleGroup>();
+            auto dayTypeWorkspaceGroup = dayTypeIdfGroup.cast<WorkspaceExtensibleGroup>();
 
-            boost::optional<std::string> dayType = dayTypeWorkspaceGroup.getString(Schedule_Week_CompactExtensibleFields::DayTypeList);
+            boost::optional<std::string> dayType_ = dayTypeWorkspaceGroup.getString(Schedule_Week_CompactExtensibleFields::DayTypeList);
+            OS_ASSERT(dayType_);
+            std::string dayTypeLower = openstudio::ascii_to_lower_copy(dayType_.get());
             OptionalWorkspaceObject scheduleDay = dayTypeWorkspaceGroup.getTarget(Schedule_Week_CompactExtensibleFields::Schedule_DayName);
 
-            if (scheduleDay && dayType.get() != "Holiday" && dayType.get() != "SummerDesignDay" && dayType.get() != "WinterDesignDay"
-                && dayType.get() != "CustomDay1" && dayType.get() != "CustomDay2") {
+            if (dayTypeLower == "holiday") {
+              holidayScheduleDay = scheduleDay;
+            } else if (dayTypeLower == "summerdesignday") {
+              summerDesignDayScheduleDay = scheduleDay;
+            } else if (dayTypeLower == "winterdesignday") {
+              winterDesignDayScheduleDay = scheduleDay;
+            } else if (dayTypeLower == "customday1") {
+              customDay1ScheduleDay = scheduleDay;
+            } else if (dayTypeLower == "customday2") {
+              customDay2ScheduleDay = scheduleDay;
+            } else if (scheduleDay) {
               scheduleDayName = scheduleDay->getString(0).get();
 
               boost::optional<ScheduleRule> scheduleRule;
@@ -450,7 +464,8 @@ namespace energyplus {
                 }
               }
 
-              if (dayType.get() == "AllDays" || dayType.get() == "AllOtherDays") {
+              // TODO: allotherdays not correctly handled here
+              if (dayTypeLower == "alldays" || dayTypeLower == "allotherdays") {
                 scheduleRule->setApplySunday(true);
                 scheduleRule->setApplyMonday(true);
                 scheduleRule->setApplyTuesday(true);
@@ -458,79 +473,63 @@ namespace energyplus {
                 scheduleRule->setApplyThursday(true);
                 scheduleRule->setApplyFriday(true);
                 scheduleRule->setApplySaturday(true);
-              } else if (dayType.get() == "Weekdays") {
+              } else if (dayTypeLower == "weekdays") {
                 scheduleRule->setApplyMonday(true);
                 scheduleRule->setApplyTuesday(true);
                 scheduleRule->setApplyWednesday(true);
                 scheduleRule->setApplyThursday(true);
                 scheduleRule->setApplyFriday(true);
-              } else if (dayType.get() == "Weekends") {
+              } else if (dayTypeLower == "weekends") {
                 scheduleRule->setApplySunday(true);
                 scheduleRule->setApplySaturday(true);
-              } else if (dayType.get() == "Sunday") {
+              } else if (dayTypeLower == "sunday") {
                 scheduleRule->setApplySunday(true);
-              } else if (dayType.get() == "Monday") {
+              } else if (dayTypeLower == "monday") {
                 scheduleRule->setApplyMonday(true);
-              } else if (dayType.get() == "Tuesday") {
+              } else if (dayTypeLower == "tuesday") {
                 scheduleRule->setApplyTuesday(true);
-              } else if (dayType.get() == "Wednesday") {
+              } else if (dayTypeLower == "wednesday") {
                 scheduleRule->setApplyWednesday(true);
-              } else if (dayType.get() == "Thursday") {
+              } else if (dayTypeLower == "thursday") {
                 scheduleRule->setApplyThursday(true);
-              } else if (dayType.get() == "Friday") {
+              } else if (dayTypeLower == "friday") {
                 scheduleRule->setApplyFriday(true);
-              } else if (dayType.get() == "Saturday") {
+              } else if (dayTypeLower == "saturday") {
                 scheduleRule->setApplySaturday(true);
               }
-            }
-
-            if (dayType.get() == "Holiday") {
-              holidayScheduleDay = scheduleDay;
-            } else if (dayType.get() == "SummerDesignDay") {
-              summerDesignDayScheduleDay = scheduleDay;
-            } else if (dayType.get() == "WinterDesignDay") {
-              winterDesignDayScheduleDay = scheduleDay;
-            } else if (dayType.get() == "CustomDay1") {
-              customDay1ScheduleDay = scheduleDay;
-            } else if (dayType.get() == "CustomDay2") {
-              customDay2ScheduleDay = scheduleDay;
             }
           }
         }
       }
 
+      // Common path to both Schedule_Week_Daily and Schedule_Week_Compact
       if (holidayScheduleDay) {
-        OptionalModelObject modelObject = translateAndMapWorkspaceObject(*holidayScheduleDay);
-        if (modelObject) {
-          ScheduleDay scheduleDay = modelObject->cast<ScheduleDay>();
+        if (auto mo_ = translateAndMapWorkspaceObject(*holidayScheduleDay)) {
+          auto scheduleDay = mo_->cast<ScheduleDay>();
           scheduleRuleset.setHolidaySchedule(scheduleDay);
         }
       }
       if (summerDesignDayScheduleDay) {
-        OptionalModelObject modelObject = translateAndMapWorkspaceObject(*summerDesignDayScheduleDay);
-        if (modelObject) {
-          ScheduleDay scheduleDay = modelObject->cast<ScheduleDay>();
+        if (auto mo_ = translateAndMapWorkspaceObject(*summerDesignDayScheduleDay)) {
+          auto scheduleDay = mo_->cast<ScheduleDay>();
           scheduleRuleset.setSummerDesignDaySchedule(scheduleDay);
         }
       }
       if (winterDesignDayScheduleDay) {
-        OptionalModelObject modelObject = translateAndMapWorkspaceObject(*winterDesignDayScheduleDay);
-        if (modelObject) {
-          ScheduleDay scheduleDay = modelObject->cast<ScheduleDay>();
+        if (auto mo_ = translateAndMapWorkspaceObject(*winterDesignDayScheduleDay)) {
+          auto scheduleDay = mo_->cast<ScheduleDay>();
           scheduleRuleset.setWinterDesignDaySchedule(scheduleDay);
         }
       }
       if (customDay1ScheduleDay) {
-        OptionalModelObject modelObject = translateAndMapWorkspaceObject(*customDay1ScheduleDay);
-        if (modelObject) {
-          ScheduleDay scheduleDay = modelObject->cast<ScheduleDay>();
+        if (auto mo_ = translateAndMapWorkspaceObject(*customDay1ScheduleDay)) {
+          auto scheduleDay = mo_->cast<ScheduleDay>();
           scheduleRuleset.setCustomDay1Schedule(scheduleDay);
         }
       }
       if (customDay2ScheduleDay) {
-        OptionalModelObject modelObject = translateAndMapWorkspaceObject(*customDay2ScheduleDay);
-        if (modelObject) {
-          ScheduleDay scheduleDay = modelObject->cast<ScheduleDay>();
+        if (auto mo_ = translateAndMapWorkspaceObject(*customDay2ScheduleDay)) {
+          auto scheduleDay = mo_->cast<ScheduleDay>();
           scheduleRuleset.setCustomDay2Schedule(scheduleDay);
         }
       }
