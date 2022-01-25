@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,9 +28,7 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-
 #include "ModelFixture.hpp"
-
 #include "../GltfForwardTranslator.hpp"
 #include "../Model.hpp"
 #include "../Space.hpp"
@@ -42,28 +40,21 @@
 #include "../ConstructionAirBoundary.hpp"
 #include "../../osversion/VersionTranslator.hpp"
 #include "../Construction.hpp"
-
-//#include "../tiny_gltf.h"
-
 #include <algorithm>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-/// <summary>
-/// Validation report
-////Format: glTF 2.0
-///Stats:
-///0 animations
-///9 materials
-///30 meshes
-///31 nodes
-///30 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// /Format: glTF 2.0
+// Stats:
+// 0 animations
+// 9 materials
+// 30 meshes
+// 31 nodes
+// 30 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -74,20 +65,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///4 materials
-///481 meshes
-///482 nodes
-///481 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 4 materials
+// 481 meshes
+// 482 nodes
+// 481 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -99,20 +86,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///5 materials
-///443 meshes
-///444 nodes
-///443 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 5 materials
+// 443 meshes
+// 444 nodes
+// 443 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -124,24 +107,19 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-/// Format: glTF 2.0
-///0 animations
-///5 materials
-///871 meshes
-///872 nodes
-///871 primitives
-///0 textures
-///Extensions: None
-///
-/// FIXED : 1742 Validation issues
-/// starting from :
-/// ACCESSOR_TOTAL_OFFSET_ALIGNMENT	Accessor's total byteOffset 7162 isn't a multiple of componentType length 4.
-/// /accessors/1
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// 0 animations
+// 5 materials
+// 871 meshes
+// 872 nodes
+// 871 primitives
+// 0 textures
+// Extensions: None
+// FIXED : 1742 Validation issues
+// starting from :
+// ACCESSOR_TOTAL_OFFSET_ALIGNMENT	Accessor's total byteOffset 7162 isn't a multiple of componentType length 4.
+// /accessors/1
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -153,20 +131,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///5 materials
-///589 meshes
-///590 nodes
-///589 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 5 materials
+// 589 meshes
+// 590 nodes
+// 589 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -178,20 +152,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///4 materials
-///21 meshes
-///22 nodes
-///21 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 4 materials
+// 21 meshes
+// 22 nodes
+// 21 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -203,20 +173,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_C
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///5 materials
-///208 meshes
-///209 nodes
-///208 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 5 materials
+// 208 meshes
+// 209 nodes
+// 208 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -228,20 +194,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///4 materials
-///142 meshes
-///143 nodes
-///142 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 4 materials
+// 142 meshes
+// 143 nodes
+// 142 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -253,20 +215,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///4 materials
-///80 meshes
-///81 nodes
-///80 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 4 materials
+// 80 meshes
+// 81 nodes
+// 80 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -278,20 +236,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///3 materials
-///1515 meshes
-///1516 nodes
-///1515 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 3 materials
+// 1515 meshes
+// 1516 nodes
+// 1515 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_15023_Model12) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -303,20 +257,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_15023_Model12) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///3 materials
-///21 meshes
-///22 nodes
-///21 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 3 materials
+// 21 meshes
+// 22 nodes
+// 21 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_split_level) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -328,20 +278,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_split_level) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///3 materials
-///24 meshes
-///25 nodes
-///24 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 3 materials
+// 24 meshes
+// 25 nodes
+// 24 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_open_to_below) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -353,11 +299,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_open_to_below) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Load Test with and without bin file
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Load Test with and without bin file
 TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
   GltfForwardTranslator ft;
   openstudio::path inputPath;
@@ -368,48 +310,40 @@ TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///1 materials
-///1 meshes
-///1 nodes
-///1 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 1 materials
+// 1 meshes
+// 1 nodes
+// 1 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
   GltfForwardTranslator ft;
   openstudio::path output;
   openstudio::path output_2;
   output = resourcesPath() / toPath("utilities/Geometry/triangle.gltf");
-  //Passed Raw buffer data
-  bool result = ft.CreateTriangleGLTF(output);
+  // Passed Raw buffer data
+  bool result = ft.createTriangleGLTF(output);
   ASSERT_TRUE(result);
   output_2 = resourcesPath() / toPath("utilities/Geometry/triangle_2.gltf");
-  //Created Raw buffer data from Point3dVector
-  bool result_2 = ft.CreateTriangleGLTF_2(output_2);
+  // Creates Raw buffer data from Point3dVector
+  bool result_2 = ft.createTriangleGLTFFromPoint3DVector(output_2);
   ASSERT_TRUE(result_2);
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///4 materials
-///3915 meshes
-///3916 nodes
-///3915 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 4 materials
+// 3915 meshes
+// 3916 nodes
+// 3915 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_7_7_Windows_Complete) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -421,12 +355,8 @@ TEST_F(ModelFixture, GltfForwardTranslator_7_7_Windows_Complete) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// VersionTranslator.cpp@590 : Unable to retrieve OpenStudio Version 3.2.2 IDD from the IddFactory."
-///  thrown in the test body.
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// VersionTranslator.cpp@590 : Unable to retrieve OpenStudio Version 3.2.2 IDD from the IddFactory."
+// thrown in the test body.
 TEST_F(ModelFixture, GltfForwardTranslator_story_multipliers) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -438,11 +368,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_story_multipliers) {
   //ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Assertion failed: this->is_initialized() | Optional.hpp 1212
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+//  Assertion failed: this->is_initialized() | Optional.hpp 1212
 TEST_F(ModelFixture, GltfForwardTranslator_story_space_heights) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -454,20 +380,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_story_space_heights) {
   ASSERT_TRUE(result);*/
 }
 
-/// <summary>
-/// Validation report
-///Format: glTF 2.0
-///Stats:
-///0 animations
-///3 materials
-///227 meshes
-///228 nodes
-///227 primitives
-///0 textures
-///Extensions: None
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 3 materials
+// 227 meshes
+// 228 nodes
+// 227 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_floorplan_school) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -479,11 +401,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_floorplan_school) {
   ASSERT_TRUE(result);
 }
 
-/// <summary>
-/// Assertion failed: this->is_initialized() | Optional.hpp 1212
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Assertion failed: this->is_initialized() | Optional.hpp 1212
 TEST_F(ModelFixture, GltfForwardTranslator_two_stories_pre_intersect) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -495,11 +413,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_two_stories_pre_intersect) {
   ASSERT_TRUE(result);*/
 }
 
-/// <summary>
-/// Assertion failed: this->is_initialized() | Optinoal.hpp 1212
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Assertion failed: this->is_initialized() | Optinoal.hpp 1212
 TEST_F(ModelFixture, GltfForwardTranslator_TwoStoryOffice_Trane) {
   GltfForwardTranslator ft;
   openstudio::path output;

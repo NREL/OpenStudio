@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,7 +79,6 @@
 #include "tiny_gltf.h"
 
 #include <thread>
-
 #include <cmath>
 #include <stack>
 
@@ -89,9 +88,7 @@ namespace model {
   namespace GLTF = tinygltf;
   using namespace GLTF;
 
-  /// <summary>
-  /// For raw values for GLTF Materials
-  /// </summary>
+  // For raw values for GLTF Materials
   struct mat_Data
   {
     std::string matName;
@@ -102,10 +99,8 @@ namespace model {
     bool isDoubleSided = false;
   };
 
-  /// <summary>
-  /// For Indices of Indices, Coordinates & Normal buffers
-  /// against each Components
-  /// </summary>
+  // For Indices of Indices, Coordinates & Normal buffers
+  // against each Components
   struct ShapeComponentIds
   {
     int IndicesAccessorId;
@@ -113,17 +108,15 @@ namespace model {
     int NormalsAccessorId;
   };
 
-  /// <summary>
-  /// Creates and returns a GLTF material
-  /// </summary>
-  /// <param name="name"></param>
-  /// <param name="red"></param>
-  /// <param name="green"></param>
-  /// <param name="blue"></param>
-  /// <param name="alpha"></param>
-  /// <param name="isDoubleSided"></param>
-  /// <returns>GLTF Material</returns>
-  GLTF::Material CreateMaterial(const std::string& name, float red, float green, float blue, float alpha, bool isDoubleSided) {
+  // Creates and returns a GLTF material
+  // param : name
+  // param : red
+  // param : green
+  // param : blue
+  // param : alpha
+  // param : isDoubleSided
+  // returns : GLTF Material
+  GLTF::Material createMaterial(const std::string& name, float red, float green, float blue, float alpha, bool isDoubleSided) {
 
     GLTF::Material m;
     m.name = name;
@@ -141,26 +134,22 @@ namespace model {
     return m;
   }
 
-  /// <summary>
-  /// Initializes the Default material for the GLTF Model materials
-  /// </summary>
-  /// <param name="_materials"></param>
+  // Initializes the Default material for the GLTF Model materials
+  // param : _materials
   void initMaterials(std::vector<GLTF::Material>& _materials) {
     // default material is always set at index 0;
     const float grey = 0.8f;
     const float alpha = 1.0f;
-    GLTF::Material m = CreateMaterial("Default material", grey, grey, grey, alpha, true);
+    GLTF::Material m = createMaterial("Default material", grey, grey, grey, alpha, true);
     _materials.push_back(m);
   }
 
-  /// <summary>
-  /// Initializes the SCENE for the GLTF model that will be
-  /// aware of all other nodes, meshes, materials, BufferViews, Accessors tightly
-  /// tied up in a Heirarchy using indices pointing one to other.
-  /// </summary>
-  /// <param name="_scene"></param>
-  /// <param name="_topNode"></param>
-  /// <param name="_nodes"></param>
+  // Initializes the SCENE for the GLTF model that will be
+  // aware of all other nodes, meshes, materials, BufferViews, Accessors tightly
+  // tied up in a Heirarchy using indices pointing one to other.
+  // param : _scene
+  // param : _topNode
+  // param : _nodes
   void initScene(GLTF::Scene& _scene, GLTF::Node& _topNode, std::vector<GLTF::Node>& _nodes) {
     std::vector<int> ns{0};
     _scene.nodes = ns;
@@ -172,13 +161,11 @@ namespace model {
     _nodes.push_back(_topNode);
   }
 
-  /// <summary>
-  /// Initializes our two main Buffer Views
-  /// one for the indices & other for Coordinates and Normals
-  /// </summary>
-  /// <param name="_indicesBv"></param>
-  /// <param name="_coordinatesBv"></param>
-  /// <param name="_bufferViews"></param>
+  // Initializes our two main Buffer Views
+  // one for the indices & other for Coordinates and Normals
+  // param : _indicesBv
+  // param : _coordinatesBv
+  // param : _bufferViews
   void initBufferViews(GLTF::BufferView& _indicesBv, GLTF::BufferView& _coordinatesBv, std::vector<GLTF::BufferView>& _bufferViews) {
     GLTF::BufferView bv_indices;
     bv_indices.buffer = 0;
@@ -199,37 +186,32 @@ namespace model {
     //_bufferViews.push_back(_coordinatesBv);
   }
 
-  /// <summary>
-  /// Creates a GLTF material on the basis of raw Material Values
-  /// i.e, R, G, B, A & isDoubleSided
-  /// and adds to GLTF model's materials
-  /// </summary>
-  /// <param name="_materials"></param>
-  /// <param name="mat_Data"></param>
-  /// <returns>index of the created GLTF Material</returns>
-  int CreateMaterial(std::vector<GLTF::Material>& _materials, mat_Data mat_Data) {
+  // Creates a GLTF material on the basis of raw Material Values
+  // i.e, R, G, B, A & isDoubleSided
+  // and adds to GLTF model's materials
+  // param : _materials
+  // param : mat_Data
+  // returns : index of the created GLTF Material
+  int createMaterial(std::vector<GLTF::Material>& _materials, mat_Data mat_Data) {
     GLTF::Material m;
     m.name = mat_Data.matName;
     GLTF::PbrMetallicRoughness pbr;
-    //this contains the red, green, blue and alpha components of the main color of the material
+    // this contains the red, green, blue and alpha components of the main color of the material
     pbr.baseColorFactor = {(float)(mat_Data.r / 255.0), (float)(mat_Data.g / 255.0), (float)(mat_Data.b / 255.0), (float)(mat_Data.a)};
-    //this indicates that the material should have very minimum reflection characteristics
-    //between that of a metal and non-metal material.
+    // this indicates that the material should have very minimum reflection characteristics
+    // between that of a metal and non-metal material.
     pbr.metallicFactor = 0.0;
-    //this makes the material to not be perfectly mirror-like, but instead scatter the
-    //reflected light a bit.
+    // this makes the material to not be perfectly mirror-like, but instead scatter the
+    // reflected light a bit.
     pbr.roughnessFactor = 1.0;
     m.pbrMetallicRoughness = pbr;
-
-    //emissive texture describes the parts of the object surface that emit light with a
-    //a certain color
+    // emissive texture describes the parts of the object surface that emit light with a certain color
     m.emissiveFactor = {0.01, 0.01, 0.00};
-    //occlusion texture can be used to simulate the effect of objects self-shadowing
-    //each other.
-    //m.occlusionTexture = "";
-    //normal map is a texture applied to modulate the surface normal in a way that makes
+    // occlusion texture can be used to simulate the effect of objects self-shadowing each other.
+    // m.occlusionTexture = "";
+    // normal map is a texture applied to modulate the surface normal in a way that makes
     // it possible to simulate finer geometric details without the cost of a higher mesh.
-    //m.normalTexture = "";
+    // m.normalTexture = "";
     m.alphaMode = (mat_Data.a < 1.0f) ? "BLEND" : "OPAQUE";
     //alphaCutoff should not be 1.0f else MATERIAL_ALPHA_CUTOFF_INVALID_MODE	Alpha cutoff is supported only for 'MASK' alpha mode
     m.alphaCutoff = 0.5f;
@@ -240,12 +222,10 @@ namespace model {
     return ret;
   }
 
-  /// <summary>
-  /// Creates a collection of raw (values: R,G,B,A & isDoubleSided)
-  /// for all pre-defined GLTF material
-  /// </summary>
-  /// <returns>collection of raw material Values </returns>
-  std::vector<mat_Data> GetAllMaterials() {
+  // Creates a collection of raw (values: R,G,B,A & isDoubleSided)
+  // for all pre-defined GLTF material
+  // returns : collection of raw material Values
+  std::vector<mat_Data> getAllMaterials() {
     std::vector<mat_Data> result;
 
     result.push_back({"Undefined", 255, 255, 255, 1, true});
@@ -254,17 +234,14 @@ namespace model {
     result.push_back({"NormalMaterial_Ext", 255, 255, 255, 1});
     result.push_back({"NormalMaterial_Int", 255, 0, 0, 1});
 
-    //result.push_back({"Floor", 128, 128, 128, 1, true});
     result.push_back({"Floor", 140, 140, 140, 1, true});
     result.push_back({"Floor_Ext", 128, 128, 128, 1});
     result.push_back({"Floor_Int", 191, 191, 191, 1});
 
-    //result.push_back({"Wall", 204, 178, 102, 1, true});
     result.push_back({"Wall", 150, 131, 75, 1, true});
     result.push_back({"Wall_Ext", 204, 178, 102, 1});
     result.push_back({"Wall_Int", 235, 226, 197, 1});
 
-    //result.push_back({"RoofCeiling", 153, 76, 76, 1, true});
     result.push_back({"RoofCeiling", 112, 56, 57, 1, true});
     result.push_back({"RoofCeiling_Ext", 153, 76, 76, 1});
     result.push_back({"RoofCeiling_Int", 202, 149, 149, 1});
@@ -273,27 +250,22 @@ namespace model {
     result.push_back({"Window_Ext", 102, 178, 204, 0.6});
     result.push_back({"Window_Int", 192, 226, 235, 0.6});
 
-    //result.push_back({"Door", 153, 133, 76, 1, true});
     result.push_back({"Door", 111, 98, 56, 1, true});
     result.push_back({"Door_Ext", 153, 133, 76, 1});
     result.push_back({"Door_Int", 202, 188, 149, 1});
 
-    //result.push_back({"SiteShading", 75, 124, 149, 1, true});
     result.push_back({"SiteShading", 55, 90, 109, 1, true});
     result.push_back({"SiteShading_Ext", 75, 124, 149, 1});
     result.push_back({"SiteShading_Int", 187, 209, 220, 1});
 
-    //result.push_back({"BuildingShading", 113, 76, 153, 1, true});
     result.push_back({"BuildingShading", 83, 56, 111, 1, true});
     result.push_back({"BuildingShading_Ext", 113, 76, 153, 1});
     result.push_back({"BuildingShading_Int", 216, 203, 229, 1});
 
-    //result.push_back({"SpaceShading", 76, 110, 178, 1, true});
     result.push_back({"SpaceShading", 55, 81, 130, 1, true});
     result.push_back({"SpaceShading_Ext", 76, 110, 178, 1});
     result.push_back({"SpaceShading_Int", 183, 197, 224, 1});
 
-    //result.push_back({"InteriorPartitionSurface", 158, 188, 143, 1, true});
     result.push_back({"InteriorPartitionSurface", 117, 138, 105, 1, true});
     result.push_back({"InteriorPartitionSurface_Ext", 158, 188, 143, 1});
     result.push_back({"InteriorPartitionSurface_Int", 213, 226, 207, 1});
@@ -331,29 +303,24 @@ namespace model {
     return result;
   }
 
-  /// <summary>
-  /// Adds all pre-defined materials to GLTF Model materials
-  /// </summary>
-  /// <param name="materialList"></param>
-  /// <param name="_materials"></param>
-  void AddGLTFMaterials(std::map<std::string, int>& materialList, std::vector<GLTF::Material>& _materials) {
-    std::vector<mat_Data> result = GetAllMaterials();
+  // Adds all pre-defined materials to GLTF Model materials
+  // param : materialList
+  // param : _materials
+  void addGLTFMaterials(std::map<std::string, int>& materialList, std::vector<GLTF::Material>& _materials) {
+    std::vector<mat_Data> result = getAllMaterials();
     for (auto& m : result) {
       if (materialList.find(m.matName) != materialList.end()) {
         std::cout << "Key found";
       } else {
-        materialList[m.matName] = CreateMaterial(_materials, m);
+        materialList[m.matName] = createMaterial(_materials, m);
       }
     }
-    //int index = CreateMaterial(_materials, 255, 255, 255, 1, "Undefined");
   }
 
-  /// <summary>
-  /// Gets GLTF Material name on the basis of idd Object Type and Name
-  /// </summary>
-  /// <param name="iddObjectType"></param>
-  /// <param name="name"></param>
-  /// <returns>name of GLTF Material Name</returns>
+  // Gets GLTF Material name on the basis of idd Object Type and Name
+  // param : iddObjectType
+  // param : name
+  // returns : name of GLTF Material Name
   std::string getObjectGLTFMaterialName(const std::string& iddObjectType, const std::string& name) {
     std::string result;
     if (istringEqual(iddObjectType, "OS:Construction")) {
@@ -378,24 +345,20 @@ namespace model {
     return result;
   }
 
-  /// <summary>
-  /// Gets GLTF Material Name on the basis of Model Object
-  /// </summary>
-  /// <param name="object"></param>
-  /// <returns>name of GLTF material Name</returns>
+  // Gets GLTF Material Name on the basis of Model Object
+  // param : object
+  // returns : name of GLTF material Name
   std::string getObjectGLTFMaterialName(const ModelObject& object) {
     return getObjectGLTFMaterialName(object.iddObjectType().valueDescription(), object.nameString());
   }
 
-  /// <summary>
-  /// Adds Model Specific GLTF Material to all Materials Collection
-  /// </summary>
-  /// <param name="_materials"></param>
-  /// <param name="color"></param>
-  /// <param name="materialName"></param>
-  /// <param name="isDoubleSided"></param>
-  /// <param name="allMaterials"></param>
-  void AddModelSpecificMaterialToCollection(std::vector<GLTF::Material>& _materials, boost::optional<RenderingColor>& color,
+  // Adds Model Specific GLTF Material to all Materials Collection
+  // param : _materials
+  // param : color
+  // param : materialName
+  // param : isDoubleSided
+  // param : allMaterials
+  void addModelSpecificMaterialToCollection(std::vector<GLTF::Material>& _materials, boost::optional<RenderingColor>& color,
                                             std::string& materialName, bool isDoubleSided, std::vector<mat_Data>& allMaterials) {
 
     mat_Data material{
@@ -405,11 +368,9 @@ namespace model {
     allMaterials.push_back(material);
   }
 
-  /// <summary>
-  /// Gets GLTF Material name on the basis of Suface Type
-  /// </summary>
-  /// <param name="surfaceType"></param>
-  /// <returns>surface Type</returns>
+  // Gets GLTF Material name on the basis of Suface Type
+  // param : surfaceType
+  // returns : surface Type
   std::string getSurfaceTypeGLTFMaterialName(const std::string& surfaceType) {
     if (istringEqual(surfaceType, "FixedWindow") || istringEqual(surfaceType, "OperableWindow") || istringEqual(surfaceType, "GlassDoor")
         || istringEqual(surfaceType, "Skylight") || istringEqual(surfaceType, "TubularDaylightDome")
@@ -421,14 +382,12 @@ namespace model {
     return surfaceType;
   }
 
-  /// <summary>
-  /// Finds / Create GLTF Material depending upon MaterialName
-  /// </summary>
-  /// <param name="materialName"></param>
-  /// <param name="materialList"></param>
-  /// <param name="allMaterials"></param>
-  /// <param name="_materials"></param>
-  /// <returns>index of Material</returns>
+  // Finds / Create GLTF Material depending upon MaterialName
+  // param : materialName
+  // param : materialList
+  // param : allMaterials
+  // param : _materials
+  // returns : index of Material
   int getGLTFMaterialIndex(const std::string& materialName, std::map<std::string, int>& materialList, std::vector<mat_Data>& allMaterials,
                            std::vector<GLTF::Material>& _materials) {
     std::map<std::string, int>::const_iterator it = materialList.find(materialName);
@@ -437,12 +396,12 @@ namespace model {
     } else {
       for (int i = 0; i < allMaterials.size(); i++) {
         if (allMaterials[i].matName == materialName) {
-          //Create Material and Add to _materials
-          int newMatIndex = CreateMaterial(_materials, allMaterials[i]);
-          //Add to map list
+          // Create Material and Add to _materials
+          int newMatIndex = createMaterial(_materials, allMaterials[i]);
+          // Add to map list
           materialList[allMaterials[i].matName] = newMatIndex;
-          //send back index
-          //return newMatIndex;
+          // send back index
+          // return newMatIndex;
           break;
         }
       }
@@ -450,7 +409,6 @@ namespace model {
       if (it != materialList.end()) {
         return it->second;
       }
-      // ..
       it = materialList.find("Undefined");
       if (it != materialList.end()) {
         return it->second;
@@ -459,11 +417,9 @@ namespace model {
     return 0;
   }
 
-  /// <summary>
-  /// Now: Instead of creating materials for all the objects in Model
-  /// we're adding them to the all materials collection and create them only if required
-  /// while processing the surface i.e, in MAIN LOOP
-  /// </summary>
+  // Now: Instead of creating materials for all the objects in Model
+  // we're adding them to the all materials collection and create them only if required
+  // while processing the surface i.e, in MAIN LOOP
   void buildMaterials(Model model, std::vector<GLTF::Material>& _materials, std::map<std::string, int>& materialList,
                       std::vector<mat_Data>& allMaterials) {
     std::string materialName;
@@ -483,9 +439,8 @@ namespace model {
           // instead of creating the material whose node might get not used inshort to avoid
           // warning "UNUSED_OBJECT". we'll add the material to our allMaterial collection
           // and whie processing the surface if required we'll create and the node.
-          //CreateMaterial(_materials, color, materialName, true);
-
-          AddModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
+          // createMaterial(_materials, color, materialName, true);
+          addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
         }
       }
     }
@@ -501,7 +456,7 @@ namespace model {
       if (materialList.find(materialName) != materialList.end()) {
         std::cout << "Key found";
       } else {
-        AddModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
+        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
       }
     }
 
@@ -516,7 +471,7 @@ namespace model {
       if (materialList.find(materialName) != materialList.end()) {
         std::cout << "Key found";
       } else {
-        AddModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
+        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
       }
     }
 
@@ -531,7 +486,7 @@ namespace model {
       if (materialList.find(materialName) != materialList.end()) {
         std::cout << "Key found";
       } else {
-        AddModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
+        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
       }
     }
 
@@ -546,7 +501,7 @@ namespace model {
       if (materialList.find(materialName) != materialList.end()) {
         std::cout << "Key found";
       } else {
-        AddModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
+        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
       }
     }
 
@@ -557,18 +512,16 @@ namespace model {
       if (materialList.find(materialName) != materialList.end()) {
         std::cout << "Key found";
       } else {
-        AddModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
+        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
       }
     }
   }
 
-  /// <summary>
-  /// Finds the vertex Index from all Vertices of a planar Surface
-  /// </summary>
-  /// <param name="point3d"></param>
-  /// <param name="allPoints"></param>
-  /// <param name="tol"></param>
-  /// <returns> index of the Vertex </returns>
+  // Finds the vertex Index from all Vertices of a planar Surface
+  // param : point3d
+  // param : allPoints
+  // param : tol
+  // returns :  index of the Vertex
   size_t getVertexIndexT(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001) {
     size_t n = allPoints.size();
     for (size_t i = 0; i < n; ++i) {
@@ -582,11 +535,9 @@ namespace model {
     return (allPoints.size() - 1);
   }
 
-  /// <summary>
-  /// Get BYtes from an integer
-  /// </summary>
-  /// <param name="paramInt"></param>
-  /// <returns>collection of Bytes</returns>
+  // Get BYtes from an integer
+  // param : paramInt
+  // returns : collection of Bytes
   std::vector<unsigned char> intToBytes(int paramInt) {
     std::vector<unsigned char> arrayOfByte(4);
     for (int i = 0; i < 4; i++)
@@ -594,12 +545,10 @@ namespace model {
     return arrayOfByte;
   }
 
-  /// <summary>
-  /// Get Bytes from a value
-  /// </summary>
-  /// <typeparam name="T"></typeparam>
-  /// <param name="value"></param>
-  /// <returns>collection of bytes</returns>
+  // Get Bytes from a value
+  // typeparam name :"T"
+  // param : value
+  // returns : collection of bytes
   template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
   std::vector<uint8_t> splitValueToBytes(T const& value) {
     std::vector<uint8_t> bytes;
@@ -611,32 +560,27 @@ namespace model {
     return bytes;
   }
 
-  /// <summary>
-  /// Adds & Creates Face Indices buffers and Accessors
-  /// </summary>
-  /// <param name="faceIndices"></param>
-  /// <param name="_indicesBuffer"></param>
-  /// <param name="_accessors"></param>
-  /// <returns>index of the Face Indices</returns>
-  int AddIndices(std::vector<size_t>& faceIndices, std::vector<unsigned char>& _indicesBuffer, std::vector<GLTF::Accessor>& _accessors) {
-    //Value of INT_MAX is + 2147483647.
-    //Value of INT_MIN is - 2147483648.
-    int min = INT_MAX;
-    int max = INT_MIN;
+  // Adds & Creates Face Indices buffers and Accessors
+  // param : faceIndices
+  // param : _indicesBuffer
+  // param : _accessors
+  // returns : index of the Face Indices
+  int addIndices(std::vector<size_t>& faceIndices, std::vector<unsigned char>& _indicesBuffer, std::vector<GLTF::Accessor>& _accessors) {
+    int min = INT_MAX;  // Value of INT_MAX is + 2147483647.
+    int max = INT_MIN;  // Value of INT_MIN is - 2147483648.
     int j = 0;
     for (auto& item : faceIndices) {
       int i = (int)item;
       min = std::min(i, min);
       max = std::max(i, max);
     }
-    // TODO: This but seems to be just figuring out the best way to back the indices in
+    // This but seems to be just figuring out the best way to back the indices in
     // depenbding on the range of numbers
     int ct = TINYGLTF_COMPONENT_TYPE_BYTE;
     auto size = 0;
 
     if (max <= std::pow(2, 8)) {
       ct = TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE;
-      //size = sizeof(BYTE);
       size = sizeof(std::byte);
     } else if (max <= std::pow(2, 16)) {
       ct = TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT;
@@ -653,7 +597,7 @@ namespace model {
       _indicesBuffer.push_back(0x00);
     }
 
-    //To avoid Accessor offset Validation Issue
+    // To avoid Accessor offset Validation Issue
     auto _padding = _indicesBuffer.size() % 4;
     for (int i = 0; i < _padding; i++) {
       _indicesBuffer.push_back(0x00);
@@ -681,18 +625,9 @@ namespace model {
       }
       indicesBufferData.insert(indicesBufferData.end(), arrayOfByte.begin(), arrayOfByte.end());
     }
-    //May be add empty like we did in Triangle test
-    /*if (indicesBufferData.size() % 8 != 0) {
-      std::cout << "needs padding";
-      auto padding = indicesBufferData.size() % size;
-      for (int i = 0; i < padding; i++) {
-        indicesBufferData.push_back((std::byte)0);
-      }
-    }*/
+
     if (indicesBufferData.size() < 4) {
       indicesBufferData.push_back(0x00);
-    } else {
-      //TODO: larger models are required to test & add padding in case of unsigned short,int,etc
     }
     _indicesBuffer.insert(_indicesBuffer.end(), indicesBufferData.begin(), indicesBufferData.end());
 
@@ -701,14 +636,12 @@ namespace model {
     return thisIndex;
   }
 
-  /// <summary>
-  /// Creates Coordinates / Normal Buffers and Accessors.
-  /// </summary>
-  /// <param name="values"></param>
-  /// <param name="_coordinatesBuffer"></param>
-  /// <param name="_accessors"></param>
-  /// <returns></returns>
-  int CreateBuffers(std::vector<float>& values, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
+  // Creates Coordinates / Normal Buffers and Accessors.
+  // param : values
+  // param : _coordinatesBuffer
+  // param : _accessors
+  // returns :
+  int createBuffers(std::vector<float>& values, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
     // Fixes ACCESSOR_TOTAL_OFFSET_ALIGNMENT
     // Accessor's total byteOffset XXXX isn't a multiple of componentType length 4.
     auto _padding = _coordinatesBuffer.size() % 4;
@@ -730,12 +663,12 @@ namespace model {
         v.push_back(ptr[i]);
       _coordinatesBuffer.insert(_coordinatesBuffer.end(), v.begin(), v.end());
     }
-    //to fix : offset 18 is not a multiple of Comonent Type lenght 4
+    // To Fix : offset 18 is not a multiple of Comonent Type lenght 4
     auto padding = _coordinatesBuffer.size() % 4;
     for (int i = 0; i < padding; i++) {
       _coordinatesBuffer.push_back((unsigned)0);
     }
-    //convert min and max to double
+    // convert min and max to double
     std::vector<double> min_d;
     std::vector<double> max_d;
     for (auto mn : min) {
@@ -759,14 +692,12 @@ namespace model {
     return ret;
   }
 
-  /// <summary>
-  /// Adds Coordinate Buffers for all vertices of the surface
-  /// </summary>
-  /// <param name="allVertices"></param>
-  /// <param name="_coordinatesBuffer"></param>
-  /// <param name="_accessors"></param>
-  /// <returns>index for the Coordinates Buffer</returns>
-  int AddCoordinates(Point3dVector& allVertices, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
+  // Adds Coordinate Buffers for all vertices of the surface
+  // param : allVertices
+  // param : _coordinatesBuffer
+  // param : _accessors
+  // returns : index for the Coordinates Buffer
+  int addCoordinates(Point3dVector& allVertices, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
     std::vector<float> values;
     float divider = 1;
     for (auto& loc : allVertices) {
@@ -774,17 +705,15 @@ namespace model {
       values.push_back((float)(loc.y() / divider));
       values.push_back((float)(loc.z() / divider));
     }
-    return CreateBuffers(values, _coordinatesBuffer, _accessors);
+    return createBuffers(values, _coordinatesBuffer, _accessors);
   }
 
-  /// <summary>
-  /// Adds Normal Buffers for all normal Vectors
-  /// </summary>
-  /// <param name="normalVectors"></param>
-  /// <param name="_coordinatesBuffer"></param>
-  /// <param name="_accessors"></param>
-  /// <returns>index for the Normals Buffer</returns>
-  int AddNormals(Vector3dVector& normalVectors, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
+  // Adds Normal Buffers for all normal Vectors
+  // param : normalVectors
+  // param : _coordinatesBuffer
+  // param : _accessors
+  // returns : index for the Normals Buffer
+  int addNormals(Vector3dVector& normalVectors, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
     std::vector<float> values;
     float divider = 1;
     for (auto& vec : normalVectors) {
@@ -792,18 +721,16 @@ namespace model {
       values.push_back((float)(vec.y() / divider));
       values.push_back((float)(vec.z() / divider));
     }
-    return CreateBuffers(values, _coordinatesBuffer, _accessors);
+    return createBuffers(values, _coordinatesBuffer, _accessors);
   }
 
-  /// <summary>
-  /// Returns material index depending upon the surface type.
-  /// </summary>
-  /// <param name="planarSurface"></param>
-  /// <param name="_materials"></param>
-  /// <param name="materialList"></param>
-  /// <param name="allMaterials"></param>
-  /// <returns>index of the Material</returns>
-  int GetMaterialIndex(const PlanarSurface& planarSurface, std::vector<GLTF::Material>& _materials, std::map<std::string, int>& materialList,
+  // Returns material index depending upon the surface type.
+  // param : planarSurface
+  // param : _materials
+  // param : materialList
+  // param : allMaterials
+  // returns : index of the Material
+  int getMaterialIndex(const PlanarSurface& planarSurface, std::vector<GLTF::Material>& _materials, std::map<std::string, int>& materialList,
                        std::vector<mat_Data>& allMaterials) {
     std::string surfaceType;
     std::string surfaceTypeGLTFMaterialName;
@@ -825,24 +752,20 @@ namespace model {
     return getGLTFMaterialIndex(surfaceTypeGLTFMaterialName, materialList, allMaterials, _materials);
   }
 
-  /// <summary>
-  /// Exports a gltf against a Model
-  /// </summary>
-  /// <param name="model"></param>
-  /// <param name="outputPath"></param>
-  /// <returns>exports a GLTF file against a Model</returns>
+  // Exports a gltf against a Model
+  // param : model
+  // param : outputPath
+  // returns : exports a GLTF file against a Model
   bool GltfForwardTranslator::modelToGLTF(const Model& model, const path& outputPath) {
     return modelToGLTF(
       model, [](double percentage) {}, outputPath);
   }
 
-  /// <summary>
-  /// MAIN PIPELINE TO TRANSLATE OPENSTUDIO MODEL -> GLTF MODEL
-  /// </summary>
-  /// <param name="model"></param>
-  /// <param name="updatePercentage"></param>
-  /// <param name="outputPath"></param>
-  /// <returns>exports GLTF file aginst the Model</returns>
+  // MAIN PIPELINE TO TRANSLATE OPENSTUDIO MODEL -> GLTF MODEL
+  // param : model
+  // param : updatePercentage
+  // param : outputPath
+  // returns : exports GLTF file aginst the Model
   bool GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputPath) {
     m_logSink.setThreadId(std::this_thread::get_id());
     m_logSink.resetStringStream();
@@ -897,8 +820,7 @@ namespace model {
 
     std::map<std::string, int> materialList;
     std::map<std::string, int> materialIndicesUsed;
-    //AddGLTFMaterials(materialList, _materials);
-    std::vector<mat_Data> allMaterials = GetAllMaterials();
+    std::vector<mat_Data> allMaterials = getAllMaterials();
 
     /*std::vector<GLTF::Scene> scenes;
     std::vector<GLTF::Buffer> buffers;
@@ -963,7 +885,7 @@ namespace model {
         matrix.push_back(p);
       }
 
-      //Adding a check to avoid warning "NODE_MATRIX_DEFAULT"	<Do not specify default transform matrix>.
+      // Adding a check to avoid warning "NODE_MATRIX_DEFAULT"	<Do not specify default transform matrix>.
       std::vector<double> matrixDefaultTransformation{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0};
       if (matrixDefaultTransformation != matrix) {
         node.matrix = matrix;
@@ -975,7 +897,7 @@ namespace model {
       GLTF::Mesh targetMesh;
       targetMesh.name = elementName;
 
-      materialIndex = GetMaterialIndex(planarSurface, _materials, materialList, allMaterials);
+      materialIndex = getMaterialIndex(planarSurface, _materials, materialList, allMaterials);
 
       // get vertices of all sub surfaces
       Point3dVectorVector faceSubVertices;
@@ -1003,24 +925,13 @@ namespace model {
       int oe = 1;
       for (const auto& finalFaceVerts : finalFaceVertices) {
         Point3dVector finalVerts = t * finalFaceVerts;
-        //Debug only to check for orientation of the faces
-        /*Polygon3d trianglePoly = Polygon3d(finalVerts);
-          bool isClockwise = trianglePoly.isClockwise();       
-          if (isClockwise && oe % 2 == 0) {
-            reverse(finalVerts.begin(), finalVerts.end());
-          }*/
         triangleVertices.insert(triangleVertices.end(), finalVerts.begin(), finalVerts.end());
-        //normal = buildingTransformation.rotationMatrix * r * z;
-        if (triangulateSurfaces) {
-          //faceIndices.push_back(0);
-        }
+
         Point3dVector::reverse_iterator it = finalVerts.rbegin();
         Point3dVector::reverse_iterator itend = finalVerts.rend();
         for (; it != itend; ++it) {
           faceIndices.push_back(getVertexIndexT(*it, allVertices));
         }
-        // convert to 1 based indices
-        //face_indices.each_index {|i| face_indices[i] = face_indices[i] + 1}
       }
 
       Vector3d outwardNormal = planarSurface.outwardNormal();
@@ -1033,10 +944,11 @@ namespace model {
       }
 
       ShapeComponentIds shapeCompoentIds{
-        AddIndices(faceIndices, _indicesBuffer, _accessors),          //IndicesAccessorId
-        AddCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
-        AddNormals(normalVectors, _coordinatesBuffer, _accessors)     //NormalsAccessorId
+        addIndices(faceIndices, _indicesBuffer, _accessors),          // IndicesAccessorId
+        addCoordinates(allVertices, _coordinatesBuffer, _accessors),  // VerticesAccessorId
+        addNormals(normalVectors, _coordinatesBuffer, _accessors)     // NormalsAccessorId
       };
+
       GLTF::Primitive thisPrimitive;
       std::map<std::string, int> attrib;
       attrib["NORMAL"] = shapeCompoentIds.NormalsAccessorId;
@@ -1045,7 +957,6 @@ namespace model {
       thisPrimitive.attributes = attrib;
       thisPrimitive.indices = shapeCompoentIds.IndicesAccessorId;
       thisPrimitive.material = materialIndex;
-      //thisPrimitive.mode = TINYGLTF_MODE_LINE;
       thisPrimitive.mode = TINYGLTF_MODE_TRIANGLES;
       targetMesh.primitives.push_back(thisPrimitive);
       _nodes.push_back(node);
@@ -1060,11 +971,11 @@ namespace model {
     if (_coordinatesBuffer.size() == 0) return false;
 
     if (!BufferInBase64) {
-      //BPS:having a separate input file for the GLTF is old now everything resides
-      //in the main GLTF file only as a binary buffer data.
+      // BPS:having a separate input file for the GLTF is old now everything resides
+      // in the main GLTF file only..as a binary buffer data.
       auto padding = _indicesBuffer.size() % 4;
       for (int i = 0; i < padding; i++) {
-        _indicesBuffer.push_back(0x00);  //padding bytes
+        _indicesBuffer.push_back(0x00);  // padding bytes
       }
       std::vector<unsigned char> _allBuffer;
       _allBuffer.insert(_allBuffer.end(), _indicesBuffer.begin(), _indicesBuffer.end());
@@ -1084,7 +995,6 @@ namespace model {
 
     _bufferViews.push_back(_indicesBv);
     _bufferViews.push_back(_coordinatesBv);
-    // TODO:BPS _buffer.byteLength = _indicesBuffer.size() + _coordinatesBuffer.size();
 
 #pragma endregion BUILD SCENE | ELEMENT
 
@@ -1092,17 +1002,14 @@ namespace model {
     gltf_Model.bufferViews = _bufferViews;
     gltf_Model.buffers = {_buffer};
 
-    //Other tie ups
-    //node.mesh = 0;
-    //scene.nodes.push_back(0);  // Default scene
-
+    // Other tie ups
     // Define the asset. The version is required
     _asset.version = "2.0";
     _asset.generator = "OpenStudio";
 
     // Now all that remains is to tie back all the loose objects into the
     // our single model.
-    gltf_Model.scenes.push_back(_scene);
+    gltf_Model.scenes.push_back(_scene);  // Default scene
     gltf_Model.meshes = _meshes;
 
     std::vector<GLTF::Node> _nodesNew;
@@ -1123,9 +1030,9 @@ namespace model {
       sk++;
     }
 
-    //gltf_Model.nodes = _nodes;
     gltf_Model.nodes = _nodesNew;
     gltf_Model.asset = _asset;
+
     // Add Materials to Model
     gltf_Model.materials = _materials;
 
@@ -1136,29 +1043,15 @@ namespace model {
                                            true,    // pretty print
                                            false);  // write binary
 
-    //may be some validatoin of the gltf generated
     updatePercentage(100.0);
 
     return ret;
   }
 
-  /// <summary>
-  /// TODO: exports JSON explicitly if we
-  /// segreagate creation of GLTF MODEL from implicitly exporting
-  /// the GLTF json file.
-  /// </summary>
-  /// <returns></returns>
-  bool GltfForwardTranslator::toJSON() {
-    return false;
-  }
-
-  /// <summary>
-  /// To export a Minimal GLTF file (Triangle with 3 Points) using raw
-  /// buffer data.
-  /// </summary>
-  /// <param name="outputPath"></param>
-  /// <returns>exports triangle.gltf</returns>
-  bool GltfForwardTranslator::CreateTriangleGLTF(const path& outputPath) {
+  // To export a Minimal GLTF file (Triangle with 3 Points) using raw buffer data.
+  // param : outputPath
+  // returns : exports triangle.gltf
+  bool GltfForwardTranslator::createTriangleGLTF(const path& outputPath) {
     GLTF::Model m;
     GLTF::Scene scene;
     GLTF::Mesh mesh;
@@ -1173,38 +1066,33 @@ namespace model {
 
     // This is the raw data buffer.
     buffer.data = {// 6 bytes of indices and two bytes of padding
-                   //0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00,
+                   // 0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00,
                    0x00, 0x01, 0x02, 0x00,
                    // 36 bytes of floating point numbers
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x00, 0x00, 0x00, 0x00};
 
-    //// Create an array of size equivalent to vector
-    //unsigned char arr[42]
+    // Create an array of size equivalent to vector
+    // unsigned char arr[42]
 
-    // "The indices of the vertices (ELEMENT_ARRAY_BUFFER) take up 6 bytes in the
+    // The indices of the vertices (ELEMENT_ARRAY_BUFFER) take up 6 bytes in the
     // start of the buffer.
     bufferView1.buffer = 0;
     bufferView1.byteOffset = 0;
-    //bufferView1.byteLength = 6;
     bufferView1.byteLength = 3;
     bufferView1.target = TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER;
 
     // The vertices take up 36 bytes (3 vertices * 3 floating points * 4 bytes)
     // at position 8 in the buffer and are of type ARRAY_BUFFER
     bufferView2.buffer = 0;
-    //bufferView2.byteOffset = 8;
-    ////bufferView2.byteStride = 12;
-    //bufferView2.byteLength = 36;
     bufferView2.byteOffset = 4;
-    //bufferView2.byteStride = 12;
     bufferView2.byteLength = 36;
     bufferView2.target = TINYGLTF_TARGET_ARRAY_BUFFER;
 
     // Describe the layout of bufferView1, the indices of the vertices
     accessor1.bufferView = 0;
     accessor1.byteOffset = 0;
-    accessor1.componentType = TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE;  //TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT;
+    accessor1.componentType = TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE;  // TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT;
     accessor1.count = 3;
     accessor1.type = TINYGLTF_TYPE_SCALAR;
     accessor1.maxValues.push_back(2);
@@ -1223,8 +1111,8 @@ namespace model {
     primitive.indices = 0;                 // The index of the accessor for the vertex indices
     primitive.attributes["POSITION"] = 1;  // The index of the accessor for positions
     primitive.material = 0;
-    //primitive.mode = TINYGLTF_MODE_POINTS;
-    //primitive.mode = TINYGLTF_MODE_LINE;
+    // primitive.mode = TINYGLTF_MODE_POINTS;
+    // primitive.mode = TINYGLTF_MODE_LINE;
     primitive.mode = TINYGLTF_MODE_TRIANGLES;
     mesh.primitives.push_back(primitive);
 
@@ -1266,13 +1154,11 @@ namespace model {
     return ret;
   }
 
-  /// <summary>
-  /// To export a Minimal GLTF file (Triangle with 3 Points) using generated
-  /// raw data from Point3DVector
-  /// </summary>
-  /// <param name="outputPath"></param>
-  /// <returns>exports triangle_2.gltf</returns>
-  bool GltfForwardTranslator::CreateTriangleGLTF_2(const path& outputPath) {
+  // To export a Minimal GLTF file (Triangle with 3 Points) using generated
+  // raw data from Point3DVector
+  // param : outputPath
+  // returns : exports triangle_2.gltf
+  bool GltfForwardTranslator::createTriangleGLTFFromPoint3DVector(const path& outputPath) {
     GLTF::Model m;
     GLTF::Scene scene;
     GLTF::Mesh mesh;
@@ -1285,10 +1171,9 @@ namespace model {
     GLTF::Accessor accessor2;
     GLTF::Asset asset;
 
-    //// Create an array of size equivalent to vector
-    //unsigned char arr[42];
-    //
-    // "The indices of the vertices (ELEMENT_ARRAY_BUFFER) take up 6 bytes in the
+    // Create an array of size equivalent to vector
+    // unsigned char arr[42];
+    // The indices of the vertices (ELEMENT_ARRAY_BUFFER) take up 6 bytes in the
     // start of the buffer.
     bufferView1.buffer = 0;
     bufferView1.target = TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER;
@@ -1310,8 +1195,8 @@ namespace model {
     allVertices = pvec;
 
     ShapeComponentIds shapeCompoentIds{
-      AddIndices(faceIndices, _indicesBuffer, _accessors),          //IndicesAccessorId
-      AddCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
+      addIndices(faceIndices, _indicesBuffer, _accessors),          //IndicesAccessorId
+      addCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
       0                                                             //NormalsAccessorId
     };
 
@@ -1377,13 +1262,11 @@ namespace model {
     return ret;
   }
 
-  /// <summary>
-  /// To populate a GLTF Model from an existing GLTF file.
-  /// also exports a gltf file with a .bin file (non embeded version).
-  /// </summary>
-  /// <param name="inputPath"></param>
-  /// <param name="inputNonEmbededPath"></param>
-  /// <returns></returns>
+  // To populate a GLTF Model from an existing GLTF file.
+  // also exports a gltf file with a .bin file (non embeded version).
+  // param : inputPath
+  // param : inputNonEmbededPath
+  // returns :
   bool GltfForwardTranslator::loadGLTF(const path& inputPath, const path& inputNonEmbededPath) {
     GLTF::TinyGLTF loader;
     GLTF::Model gltf_Model;
@@ -1420,31 +1303,26 @@ namespace model {
 
   GltfForwardTranslator::GltfForwardTranslator() {
     m_logSink.setLogLevel(Warn);
-    //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.GltfForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
   std::vector<LogMessage> GltfForwardTranslator::warnings() const {
     std::vector<LogMessage> result;
-
     for (LogMessage logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
     }
-
     return result;
   }
 
   std::vector<LogMessage> GltfForwardTranslator::errors() const {
     std::vector<LogMessage> result;
-
     for (LogMessage logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }
     }
-
     return result;
   }
 
