@@ -76,26 +76,28 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
-#include "tiny_gltf.h"
+#include <tiny_gltf.h>
 
-#include <thread>
+#include <algorithm>
 #include <cmath>
+#include <iterator>
+#include <numeric>
 #include <stack>
+#include <limits.h>
 
 namespace openstudio {
 namespace model {
 
   namespace GLTF = tinygltf;
-  using namespace GLTF;
 
   // For raw values for GLTF Materials
-  struct mat_Data
+  struct MaterialData
   {
     std::string matName;
-    int r;
-    int g;
-    int b;
-    double a;
+    int r;     // [0, 255]
+    int g;     // [0, 255]
+    int b;     // [0, 255]
+    double a;  // [0, 1]
     bool isDoubleSided = false;
   };
 
@@ -108,40 +110,49 @@ namespace model {
     int NormalsAccessorId;
   };
 
-  // Creates and returns a GLTF material
-  // param : name
-  // param : red
-  // param : green
-  // param : blue
-  // param : alpha
-  // param : isDoubleSided
-  // returns : GLTF Material
-  GLTF::Material createMaterial(const std::string& name, float red, float green, float blue, float alpha, bool isDoubleSided) {
-
+  // Creates a GLTF material on the basis of raw Material Values
+  // i.e, R, G, B, A & isDoubleSided
+  // and adds to GLTF model's materials
+  // param : _materials
+  // param : mat_Data
+  // returns : index of the created GLTF Material
+  int createMaterial(std::vector<GLTF::Material>& _materials, const MaterialData& mat_Data) {
     GLTF::Material m;
-    m.name = name;
-    PbrMetallicRoughness pbr;
-    pbr.baseColorFactor = {red, green, blue, alpha};
-    pbr.metallicFactor = 0.1;
-    pbr.roughnessFactor = 0.5;
+    m.name = mat_Data.matName;
+    GLTF::PbrMetallicRoughness pbr;
+    // this contains the red, green, blue and alpha components of the main color of the material
+    pbr.baseColorFactor = {(float)(mat_Data.r / 255.0), (float)(mat_Data.g / 255.0), (float)(mat_Data.b / 255.0), (float)(mat_Data.a)};
+    // this indicates that the material should have very minimum reflection characteristics
+    // between that of a metal and non-metal material.
+    pbr.metallicFactor = 0.0;
+    // this makes the material to not be perfectly mirror-like, but instead scatter the
+    // reflected light a bit.
+    pbr.roughnessFactor = 1.0;
     m.pbrMetallicRoughness = pbr;
-    std::vector<double> eF{0, 0, 0};
-    m.emissiveFactor = eF;
-    m.alphaMode = (alpha < 1.0f) ? "BLEND" : "OPAQUE";
+    // emissive texture describes the parts of the object surface that emit light with a certain color
+    m.emissiveFactor = {0.01, 0.01, 0.00};
+    // occlusion texture can be used to simulate the effect of objects self-shadowing each other.
+    // m.occlusionTexture = "";
+    // normal map is a texture applied to modulate the surface normal in a way that makes
+    // it possible to simulate finer geometric details without the cost of a higher mesh.
+    // m.normalTexture = "";
+    m.alphaMode = (mat_Data.a < 1.0f) ? "BLEND" : "OPAQUE";
+    //alphaCutoff should not be 1.0f else MATERIAL_ALPHA_CUTOFF_INVALID_MODE	Alpha cutoff is supported only for 'MASK' alpha mode
     m.alphaCutoff = 0.5f;
-    m.doubleSided = isDoubleSided;
+    m.doubleSided = mat_Data.isDoubleSided;
 
-    return m;
+    int ret = _materials.size();
+    _materials.push_back(m);
+    return ret;
   }
 
   // Initializes the Default material for the GLTF Model materials
   // param : _materials
   void initMaterials(std::vector<GLTF::Material>& _materials) {
     // default material is always set at index 0;
-    const float grey = 0.8f;
-    const float alpha = 1.0f;
-    GLTF::Material m = createMaterial("Default material", grey, grey, grey, alpha, true);
-    _materials.push_back(m);
+    const int grey = 204;
+    const double alpha = 1.0;
+    createMaterial(_materials, MaterialData{.matName = "Default material", .r = grey, .g = grey, .b = grey, .a = alpha, .isDoubleSided = true});
   }
 
   // Initializes the SCENE for the GLTF model that will be
@@ -186,119 +197,83 @@ namespace model {
     //_bufferViews.push_back(_coordinatesBv);
   }
 
-  // Creates a GLTF material on the basis of raw Material Values
-  // i.e, R, G, B, A & isDoubleSided
-  // and adds to GLTF model's materials
-  // param : _materials
-  // param : mat_Data
-  // returns : index of the created GLTF Material
-  int createMaterial(std::vector<GLTF::Material>& _materials, mat_Data mat_Data) {
-    GLTF::Material m;
-    m.name = mat_Data.matName;
-    GLTF::PbrMetallicRoughness pbr;
-    // this contains the red, green, blue and alpha components of the main color of the material
-    pbr.baseColorFactor = {(float)(mat_Data.r / 255.0), (float)(mat_Data.g / 255.0), (float)(mat_Data.b / 255.0), (float)(mat_Data.a)};
-    // this indicates that the material should have very minimum reflection characteristics
-    // between that of a metal and non-metal material.
-    pbr.metallicFactor = 0.0;
-    // this makes the material to not be perfectly mirror-like, but instead scatter the
-    // reflected light a bit.
-    pbr.roughnessFactor = 1.0;
-    m.pbrMetallicRoughness = pbr;
-    // emissive texture describes the parts of the object surface that emit light with a certain color
-    m.emissiveFactor = {0.01, 0.01, 0.00};
-    // occlusion texture can be used to simulate the effect of objects self-shadowing each other.
-    // m.occlusionTexture = "";
-    // normal map is a texture applied to modulate the surface normal in a way that makes
-    // it possible to simulate finer geometric details without the cost of a higher mesh.
-    // m.normalTexture = "";
-    m.alphaMode = (mat_Data.a < 1.0f) ? "BLEND" : "OPAQUE";
-    //alphaCutoff should not be 1.0f else MATERIAL_ALPHA_CUTOFF_INVALID_MODE	Alpha cutoff is supported only for 'MASK' alpha mode
-    m.alphaCutoff = 0.5f;
-    m.doubleSided = mat_Data.isDoubleSided;
-
-    int ret = _materials.size();
-    _materials.push_back(m);
-    return ret;
-  }
-
   // Creates a collection of raw (values: R,G,B,A & isDoubleSided)
   // for all pre-defined GLTF material
   // returns : collection of raw material Values
-  std::vector<mat_Data> getAllMaterials() {
-    std::vector<mat_Data> result;
+  std::vector<MaterialData> getAllMaterials() {
+    std::vector<MaterialData> result{
+      {"Undefined", 255, 255, 255, 1, true},
 
-    result.push_back({"Undefined", 255, 255, 255, 1, true});
+      {"NormalMaterial", 255, 255, 255, 1, true},
+      {"NormalMaterial_Ext", 255, 255, 255, 1},
+      {"NormalMaterial_Int", 255, 0, 0, 1},
 
-    result.push_back({"NormalMaterial", 255, 255, 255, 1, true});
-    result.push_back({"NormalMaterial_Ext", 255, 255, 255, 1});
-    result.push_back({"NormalMaterial_Int", 255, 0, 0, 1});
+      {"Floor", 140, 140, 140, 1, true},
+      {"Floor_Ext", 128, 128, 128, 1},
+      {"Floor_Int", 191, 191, 191, 1},
 
-    result.push_back({"Floor", 140, 140, 140, 1, true});
-    result.push_back({"Floor_Ext", 128, 128, 128, 1});
-    result.push_back({"Floor_Int", 191, 191, 191, 1});
+      {"Wall", 150, 131, 75, 1, true},
+      {"Wall_Ext", 204, 178, 102, 1},
+      {"Wall_Int", 235, 226, 197, 1},
 
-    result.push_back({"Wall", 150, 131, 75, 1, true});
-    result.push_back({"Wall_Ext", 204, 178, 102, 1});
-    result.push_back({"Wall_Int", 235, 226, 197, 1});
+      {"RoofCeiling", 112, 56, 57, 1, true},
+      {"RoofCeiling_Ext", 153, 76, 76, 1},
+      {"RoofCeiling_Int", 202, 149, 149, 1},
 
-    result.push_back({"RoofCeiling", 112, 56, 57, 1, true});
-    result.push_back({"RoofCeiling_Ext", 153, 76, 76, 1});
-    result.push_back({"RoofCeiling_Int", 202, 149, 149, 1});
+      {"Window", 102, 178, 204, 0.6, true},
+      {"Window_Ext", 102, 178, 204, 0.6},
+      {"Window_Int", 192, 226, 235, 0.6},
 
-    result.push_back({"Window", 102, 178, 204, 0.6, true});
-    result.push_back({"Window_Ext", 102, 178, 204, 0.6});
-    result.push_back({"Window_Int", 192, 226, 235, 0.6});
+      {"Door", 111, 98, 56, 1, true},
+      {"Door_Ext", 153, 133, 76, 1},
+      {"Door_Int", 202, 188, 149, 1},
 
-    result.push_back({"Door", 111, 98, 56, 1, true});
-    result.push_back({"Door_Ext", 153, 133, 76, 1});
-    result.push_back({"Door_Int", 202, 188, 149, 1});
+      {"SiteShading", 55, 90, 109, 1, true},
+      {"SiteShading_Ext", 75, 124, 149, 1},
+      {"SiteShading_Int", 187, 209, 220, 1},
 
-    result.push_back({"SiteShading", 55, 90, 109, 1, true});
-    result.push_back({"SiteShading_Ext", 75, 124, 149, 1});
-    result.push_back({"SiteShading_Int", 187, 209, 220, 1});
+      {"BuildingShading", 83, 56, 111, 1, true},
+      {"BuildingShading_Ext", 113, 76, 153, 1},
+      {"BuildingShading_Int", 216, 203, 229, 1},
 
-    result.push_back({"BuildingShading", 83, 56, 111, 1, true});
-    result.push_back({"BuildingShading_Ext", 113, 76, 153, 1});
-    result.push_back({"BuildingShading_Int", 216, 203, 229, 1});
+      {"SpaceShading", 55, 81, 130, 1, true},
+      {"SpaceShading_Ext", 76, 110, 178, 1},
+      {"SpaceShading_Int", 183, 197, 224, 1},
 
-    result.push_back({"SpaceShading", 55, 81, 130, 1, true});
-    result.push_back({"SpaceShading_Ext", 76, 110, 178, 1});
-    result.push_back({"SpaceShading_Int", 183, 197, 224, 1});
+      {"InteriorPartitionSurface", 117, 138, 105, 1, true},
+      {"InteriorPartitionSurface_Ext", 158, 188, 143, 1},
+      {"InteriorPartitionSurface_Int", 213, 226, 207, 1},
 
-    result.push_back({"InteriorPartitionSurface", 117, 138, 105, 1, true});
-    result.push_back({"InteriorPartitionSurface_Ext", 158, 188, 143, 1});
-    result.push_back({"InteriorPartitionSurface_Int", 213, 226, 207, 1});
+      // start textures for boundary conditions
+      {"Boundary_Surface", 0, 153, 0, 1, true},
+      {"Boundary_Adiabatic", 255, 0, 0, 1, true},
+      {"Boundary_Space", 255, 0, 0, 1, true},
+      {"Boundary_Outdoors", 163, 204, 204, 1, true},
+      {"Boundary_Outdoors_Sun", 40, 204, 204, 1, true},
+      {"Boundary_Outdoors_Wind", 9, 159, 162, 1, true},
+      {"Boundary_Outdoors_SunWind", 68, 119, 161, 1, true},
+      {"Boundary_Ground", 204, 183, 122, 1, true},
+      {"Boundary_Groundfcfactormethod", 153, 122, 30, 1, true},
+      {"Boundary_Groundslabpreprocessoraverage", 255, 191, 0, 1, true},
+      {"Boundary_Groundslabpreprocessorcore", 255, 182, 50, 1, true},
+      {"Boundary_Groundslabpreprocessorperimeter", 255, 178, 101, 1, true},
+      {"Boundary_Groundbasementpreprocessoraveragewall", 204, 51, 0, 1, true},
+      {"Boundary_Groundbasementpreprocessoraveragefloor", 204, 81, 40, 1, true},
+      {"Boundary_Groundbasementpreprocessorupperwall", 204, 112, 81, 1, true},
+      {"Boundary_Groundbasementpreprocessorlowerwall", 204, 173, 163, 1, true},
+      {"Boundary_Othersidecoefficients", 63, 63, 63, 1, true},
+      {"Boundary_Othersideconditionsmodel", 153, 0, 76, 1, true},
 
-    // start textures for boundary conditions
-    result.push_back({"Boundary_Surface", 0, 153, 0, 1, true});
-    result.push_back({"Boundary_Adiabatic", 255, 0, 0, 1, true});
-    result.push_back({"Boundary_Space", 255, 0, 0, 1, true});
-    result.push_back({"Boundary_Outdoors", 163, 204, 204, 1, true});
-    result.push_back({"Boundary_Outdoors_Sun", 40, 204, 204, 1, true});
-    result.push_back({"Boundary_Outdoors_Wind", 9, 159, 162, 1, true});
-    result.push_back({"Boundary_Outdoors_SunWind", 68, 119, 161, 1, true});
-    result.push_back({"Boundary_Ground", 204, 183, 122, 1, true});
-    result.push_back({"Boundary_Groundfcfactormethod", 153, 122, 30, 1, true});
-    result.push_back({"Boundary_Groundslabpreprocessoraverage", 255, 191, 0, 1, true});
-    result.push_back({"Boundary_Groundslabpreprocessorcore", 255, 182, 50, 1, true});
-    result.push_back({"Boundary_Groundslabpreprocessorperimeter", 255, 178, 101, 1, true});
-    result.push_back({"Boundary_Groundbasementpreprocessoraveragewall", 204, 51, 0, 1, true});
-    result.push_back({"Boundary_Groundbasementpreprocessoraveragefloor", 204, 81, 40, 1, true});
-    result.push_back({"Boundary_Groundbasementpreprocessorupperwall", 204, 112, 81, 1, true});
-    result.push_back({"Boundary_Groundbasementpreprocessorlowerwall", 204, 173, 163, 1, true});
-    result.push_back({"Boundary_Othersidecoefficients", 63, 63, 63, 1, true});
-    result.push_back({"Boundary_Othersideconditionsmodel", 153, 0, 76, 1, true});
+      // special rendering materials
+      {"SpaceType_Plenum", 192, 192, 192, 0.1, true},
+      {"ThermalZone_Plenum", 192, 192, 192, 0.1, true},
 
-    // special rendering materials
-    result.push_back({"SpaceType_Plenum", 192, 192, 192, 0.1, true});
-    result.push_back({"ThermalZone_Plenum", 192, 192, 192, 0.1, true});
-
-    // special rendering materials, these are components or textures in SketchUp
-    result.push_back({"DaylightingControl", 102, 178, 204, 0.1, true});
-    result.push_back({"AirWall", 102, 178, 204, 0.1, true});
-    result.push_back({"SolarCollector", 255, 255, 255, 1, true});
-    result.push_back({"Photovoltaic", 255, 255, 255, 0.1, true});
+      // special rendering materials, these are components or textures in SketchUp
+      {"DaylightingControl", 102, 178, 204, 0.1, true},
+      {"AirWall", 102, 178, 204, 0.1, true},
+      {"SolarCollector", 255, 255, 255, 1, true},
+      {"Photovoltaic", 255, 255, 255, 0.1, true},
+    };
 
     return result;
   }
@@ -307,10 +282,10 @@ namespace model {
   // param : materialList
   // param : _materials
   void addGLTFMaterials(std::map<std::string, int>& materialList, std::vector<GLTF::Material>& _materials) {
-    std::vector<mat_Data> result = getAllMaterials();
+    std::vector<MaterialData> result = getAllMaterials();
     for (auto& m : result) {
       if (materialList.find(m.matName) != materialList.end()) {
-        std::cout << "Key found";
+        LOG_FREE(Debug, "GltfForwardTranslator", "addGLTFMaterials, Key " << m.matName << " found in materialList");
       } else {
         materialList[m.matName] = createMaterial(_materials, m);
       }
@@ -358,14 +333,11 @@ namespace model {
   // param : materialName
   // param : isDoubleSided
   // param : allMaterials
-  void addModelSpecificMaterialToCollection(std::vector<GLTF::Material>& _materials, boost::optional<RenderingColor>& color,
-                                            std::string& materialName, bool isDoubleSided, std::vector<mat_Data>& allMaterials) {
+  void addModelSpecificMaterialToCollection(std::vector<GLTF::Material>& _materials, const RenderingColor& color, const std::string& materialName,
+                                            bool isDoubleSided, std::vector<MaterialData>& allMaterials) {
 
-    mat_Data material{
-      materialName, color->renderingRedValue(), color->renderingGreenValue(), color->renderingBlueValue(), (double)color->renderingAlphaValue(),
-      true};
-
-    allMaterials.push_back(material);
+    allMaterials.emplace_back(MaterialData{materialName, color.renderingRedValue(), color.renderingGreenValue(), color.renderingBlueValue(),
+                                           color.renderingAlphaValue() / 255.0, true});
   }
 
   // Gets GLTF Material name on the basis of Suface Type
@@ -388,13 +360,13 @@ namespace model {
   // param : allMaterials
   // param : _materials
   // returns : index of Material
-  int getGLTFMaterialIndex(const std::string& materialName, std::map<std::string, int>& materialList, std::vector<mat_Data>& allMaterials,
+  int getGLTFMaterialIndex(const std::string& materialName, std::map<std::string, int>& materialList, std::vector<MaterialData>& allMaterials,
                            std::vector<GLTF::Material>& _materials) {
     std::map<std::string, int>::const_iterator it = materialList.find(materialName);
     if (it != materialList.end()) {
       return it->second;
     } else {
-      for (int i = 0; i < allMaterials.size(); i++) {
+      for (size_t i = 0; i < allMaterials.size(); ++i) {
         if (allMaterials[i].matName == materialName) {
           // Create Material and Add to _materials
           int newMatIndex = createMaterial(_materials, allMaterials[i]);
@@ -420,98 +392,68 @@ namespace model {
   // Now: Instead of creating materials for all the objects in Model
   // we're adding them to the all materials collection and create them only if required
   // while processing the surface i.e, in MAIN LOOP
-  void buildMaterials(Model model, std::vector<GLTF::Material>& _materials, std::map<std::string, int>& materialList,
-                      std::vector<mat_Data>& allMaterials) {
+  void buildMaterials(const Model& model, std::vector<GLTF::Material>& _materials, std::map<std::string, int>& materialList,
+                      std::vector<MaterialData>& allMaterials) {
     std::string materialName;
+
+    auto getOrCreateRenderingColor = [&model](auto& object) {
+      boost::optional<RenderingColor> color_ = object.renderingColor();
+      if (!color_) {
+        color_ = RenderingColor(model);
+        object.setRenderingColor(color_.get());
+      }
+      return color_.get();
+    };
+
+    auto getOrCreateMaterial = [&getOrCreateRenderingColor, &_materials, &allMaterials, &materialList](auto& object) {
+      std::string materialName = getObjectGLTFMaterialName(object);
+      if (materialList.find(materialName) != materialList.end()) {
+        LOG_FREE(Debug, "GltfForwardTranslator", "buildMaterials, Key " << materialName << " found in materialList");
+      } else {
+        // instead of creating the material whose node might get not used inshort to avoid
+        // warning "UNUSED_OBJECT". we'll add the material to our allMaterial collection
+        // and whie processing the surface if required we'll create and the node.
+        // createMaterial(_materials, color, materialName, true);
+        auto color = getOrCreateRenderingColor(object);
+        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
+      }
+    };
+
     // make construction materials
     for (auto& construction : model.getModelObjects<ConstructionBase>()) {
       // If it's ConstructionAirBoundary, we'll later use the standard material "AirWall"
       if (!construction.optionalCast<ConstructionAirBoundary>()) {
-        boost::optional<RenderingColor> color = construction.renderingColor();
-        if (!color) {
-          color = RenderingColor(model);
-          construction.setRenderingColor(*color);
-        }
-        materialName = getObjectGLTFMaterialName(construction);
-        if (materialList.find(materialName) != materialList.end()) {
-          std::cout << "Key found";
-        } else {
-          // instead of creating the material whose node might get not used inshort to avoid
-          // warning "UNUSED_OBJECT". we'll add the material to our allMaterial collection
-          // and whie processing the surface if required we'll create and the node.
-          // createMaterial(_materials, color, materialName, true);
-          addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
-        }
+        getOrCreateMaterial(construction);
       }
     }
 
     // make thermal zone materials
     for (auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
-      boost::optional<RenderingColor> color = thermalZone.renderingColor();
-      if (!color) {
-        color = RenderingColor(model);
-        thermalZone.setRenderingColor(*color);
-      }
-      materialName = getObjectGLTFMaterialName(thermalZone);
-      if (materialList.find(materialName) != materialList.end()) {
-        std::cout << "Key found";
-      } else {
-        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
-      }
+      getOrCreateMaterial(thermalZone);
     }
 
     // make space type materials
     for (auto& spaceType : model.getConcreteModelObjects<SpaceType>()) {
-      boost::optional<RenderingColor> color = spaceType.renderingColor();
-      if (!color) {
-        color = RenderingColor(model);
-        spaceType.setRenderingColor(*color);
-      }
-      materialName = getObjectGLTFMaterialName(spaceType);
-      if (materialList.find(materialName) != materialList.end()) {
-        std::cout << "Key found";
-      } else {
-        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
-      }
+      getOrCreateMaterial(spaceType);
     }
 
     // make building story materials
     for (auto& buildingStory : model.getConcreteModelObjects<BuildingStory>()) {
-      boost::optional<RenderingColor> color = buildingStory.renderingColor();
-      if (!color) {
-        color = RenderingColor(model);
-        buildingStory.setRenderingColor(*color);
-      }
-      materialName = getObjectGLTFMaterialName(buildingStory);
-      if (materialList.find(materialName) != materialList.end()) {
-        std::cout << "Key found";
-      } else {
-        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
-      }
+      getOrCreateMaterial(buildingStory);
     }
 
     // make building unit materials
     for (auto& buildingUnit : model.getConcreteModelObjects<BuildingUnit>()) {
-      boost::optional<RenderingColor> color = buildingUnit.renderingColor();
-      if (!color) {
-        color = RenderingColor(model);
-        buildingUnit.setRenderingColor(*color);
-      }
-      materialName = getObjectGLTFMaterialName(buildingUnit);
-      if (materialList.find(materialName) != materialList.end()) {
-        std::cout << "Key found";
-      } else {
-        addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
-      }
+      getOrCreateMaterial(buildingUnit);
     }
 
     // make air loop HVAC materials
     for (auto& airLoopHVAC : model.getConcreteModelObjects<AirLoopHVAC>()) {
       materialName = getObjectGLTFMaterialName(airLoopHVAC);
-      boost::optional<RenderingColor> color = RenderingColor(model);
       if (materialList.find(materialName) != materialList.end()) {
-        std::cout << "Key found";
+        LOG_FREE(Debug, "GltfForwardTranslator", "buildMaterials, Key " << materialName << " found in materialList");
       } else {
+        RenderingColor color = RenderingColor(model);
         addModelSpecificMaterialToCollection(_materials, color, materialName, true, allMaterials);
       }
     }
@@ -525,9 +467,7 @@ namespace model {
   size_t getVertexIndexT(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001) {
     size_t n = allPoints.size();
     for (size_t i = 0; i < n; ++i) {
-      if (std::sqrt(std::pow(point3d.x() - allPoints[i].x(), 2) + std::pow(point3d.y() - allPoints[i].y(), 2)
-                    + std::pow(point3d.z() - allPoints[i].z(), 2))
-          < tol) {
+      if (openstudio::getDistance(point3d, allPoints[i]) < tol) {
         return i;
       }
     }
@@ -540,7 +480,7 @@ namespace model {
   // returns : collection of Bytes
   std::vector<unsigned char> intToBytes(int paramInt) {
     std::vector<unsigned char> arrayOfByte(4);
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; ++i)
       arrayOfByte[3 - i] = (paramInt >> (i * 8));
     return arrayOfByte;
   }
@@ -553,7 +493,7 @@ namespace model {
   std::vector<uint8_t> splitValueToBytes(T const& value) {
     std::vector<uint8_t> bytes;
 
-    for (size_t i = 0; i < sizeof(value); i++) {
+    for (size_t i = 0; i < sizeof(value); ++i) {
       uint8_t byte = value >> (i * 8);
       bytes.insert(bytes.begin(), byte);
     }
@@ -566,23 +506,17 @@ namespace model {
   // param : _accessors
   // returns : index of the Face Indices
   int addIndices(std::vector<size_t>& faceIndices, std::vector<unsigned char>& _indicesBuffer, std::vector<GLTF::Accessor>& _accessors) {
-    int min = INT_MAX;  // Value of INT_MAX is + 2147483647.
-    int max = INT_MIN;  // Value of INT_MIN is - 2147483648.
-    int j = 0;
-    for (auto& item : faceIndices) {
-      int i = (int)item;
-      min = std::min(i, min);
-      max = std::max(i, max);
-    }
+    auto [min, max] = std::minmax_element(std::cbegin(faceIndices), std::cend(faceIndices));
+
     // This but seems to be just figuring out the best way to back the indices in
     // depenbding on the range of numbers
     int ct = TINYGLTF_COMPONENT_TYPE_BYTE;
     auto size = 0;
 
-    if (max <= std::pow(2, 8)) {
+    if (*max <= static_cast<size_t>(std::pow(2, 8))) {
       ct = TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE;
       size = sizeof(std::byte);
-    } else if (max <= std::pow(2, 16)) {
+    } else if (*max <= static_cast<size_t>(std::pow(2, 16))) {
       ct = TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT;
       size = sizeof(short);
     } else {
@@ -593,13 +527,13 @@ namespace model {
     // (this is from a warning we received in beta testing)
     // so we inject some padding when needed
     auto padding = _indicesBuffer.size() % size;
-    for (int i = 0; i < padding; i++) {
+    for (size_t i = 0; i < padding; ++i) {
       _indicesBuffer.push_back(0x00);
     }
 
     // To avoid Accessor offset Validation Issue
     auto _padding = _indicesBuffer.size() % 4;
-    for (int i = 0; i < _padding; i++) {
+    for (size_t i = 0; i < _padding; ++i) {
       _indicesBuffer.push_back(0x00);
     }
 
@@ -610,8 +544,8 @@ namespace model {
     indAccessor.normalized = false;
     indAccessor.type = TINYGLTF_TYPE_SCALAR;
     indAccessor.count = faceIndices.size();
-    indAccessor.minValues = {(double)min};
-    indAccessor.maxValues = {(double)max};
+    indAccessor.minValues = {static_cast<double>(*min)};
+    indAccessor.maxValues = {static_cast<double>(*max)};
 
     std::vector<unsigned char> indicesBufferData;
     for (auto index : faceIndices) {
@@ -645,7 +579,7 @@ namespace model {
     // Fixes ACCESSOR_TOTAL_OFFSET_ALIGNMENT
     // Accessor's total byteOffset XXXX isn't a multiple of componentType length 4.
     auto _padding = _coordinatesBuffer.size() % 4;
-    for (int i = 0; i < _padding; i++) {
+    for (size_t i = 0; i < _padding; ++i) {
       _coordinatesBuffer.push_back((unsigned)0);
     }
     int startingBufferPosition = _coordinatesBuffer.size();
@@ -655,17 +589,18 @@ namespace model {
     for (auto& value : values) {
       min[i] = std::min(value, min[i]);
       max[i] = std::max(value, max[i]);
-      i++;
+      ++i;
       if (i > 2) i = 0;
       std::vector<unsigned char> v;
       const unsigned char* ptr = reinterpret_cast<const unsigned char*>(&value);
-      for (size_t i = 0; i < sizeof(float); ++i)
+      for (size_t i = 0; i < sizeof(float); ++i) {
         v.push_back(ptr[i]);
+      }
       _coordinatesBuffer.insert(_coordinatesBuffer.end(), v.begin(), v.end());
     }
     // To Fix : offset 18 is not a multiple of Comonent Type lenght 4
     auto padding = _coordinatesBuffer.size() % 4;
-    for (int i = 0; i < padding; i++) {
+    for (size_t i = 0; i < padding; ++i) {
       _coordinatesBuffer.push_back((unsigned)0);
     }
     // convert min and max to double
@@ -698,13 +633,14 @@ namespace model {
   // param : _accessors
   // returns : index for the Coordinates Buffer
   int addCoordinates(Point3dVector& allVertices, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
-    std::vector<float> values;
-    float divider = 1;
-    for (auto& loc : allVertices) {
-      values.push_back((float)(loc.x() / divider));
-      values.push_back((float)(loc.y() / divider));
-      values.push_back((float)(loc.z() / divider));
+    std::vector<float> values(3 * allVertices.size());
+    size_t i = 0;
+    for (const auto& point : allVertices) {
+      values[i++] = static_cast<float>(point.x());
+      values[i++] = static_cast<float>(point.y());
+      values[i++] = static_cast<float>(point.z());
     }
+
     return createBuffers(values, _coordinatesBuffer, _accessors);
   }
 
@@ -714,13 +650,14 @@ namespace model {
   // param : _accessors
   // returns : index for the Normals Buffer
   int addNormals(Vector3dVector& normalVectors, std::vector<unsigned char>& _coordinatesBuffer, std::vector<GLTF::Accessor>& _accessors) {
-    std::vector<float> values;
-    float divider = 1;
-    for (auto& vec : normalVectors) {
-      values.push_back((float)(vec.x() / divider));
-      values.push_back((float)(vec.y() / divider));
-      values.push_back((float)(vec.z() / divider));
+    std::vector<float> values(3 * normalVectors.size());
+    size_t i = 0;
+    for (const auto& vec : normalVectors) {
+      values[i++] = static_cast<float>(vec.x());
+      values[i++] = static_cast<float>(vec.y());
+      values[i++] = static_cast<float>(vec.z());
     }
+
     return createBuffers(values, _coordinatesBuffer, _accessors);
   }
 
@@ -731,7 +668,7 @@ namespace model {
   // param : allMaterials
   // returns : index of the Material
   int getMaterialIndex(const PlanarSurface& planarSurface, std::vector<GLTF::Material>& _materials, std::map<std::string, int>& materialList,
-                       std::vector<mat_Data>& allMaterials) {
+                       std::vector<MaterialData>& allMaterials) {
     std::string surfaceType;
     std::string surfaceTypeGLTFMaterialName;
     if (auto surface = planarSurface.optionalCast<Surface>()) {
@@ -796,31 +733,31 @@ namespace model {
 
     GLTF::Asset _asset;
 
-#pragma region INIT
+    // Start Region INIT
 
-#pragma region MATERIALS
+    // Start Region MATERIALS
 
     //initMaterials(_materials);
 
-#pragma endregion MATERIALS
+    // End Region MATERIALS
 
-#pragma region SCENE
+    // Start Region SCENE
 
     initScene(_scene, _topNode, _nodes);
 
-#pragma endregion SCENE
+    // End Region SCENE
 
-#pragma region BUFFERVIEWS
+    // Start Region BUFFERVIEWS
 
     initBufferViews(_indicesBv, _coordinatesBv, _bufferViews);
 
-#pragma endregion BUFFERVIEWS
+    // End Region BUFFERVIEWS
 
-#pragma endregion INIT
+    // End Region INIT
 
     std::map<std::string, int> materialList;
     std::map<std::string, int> materialIndicesUsed;
-    std::vector<mat_Data> allMaterials = getAllMaterials();
+    std::vector<MaterialData> allMaterials = getAllMaterials();
 
     /*std::vector<GLTF::Scene> scenes;
     std::vector<GLTF::Buffer> buffers;
@@ -842,50 +779,44 @@ namespace model {
     std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
     std::vector<DefaultConstructionSet> defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
     double n = 0;
-    std::vector<PlanarSurface>::size_type _N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
-                                               + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
+    //std::vector<PlanarSurface>::size_type _N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
+    //                                           + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
 
     std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + 1;
 
     updatePercentage(0.0);
 
-#pragma region CREATE MATERIALS
+    // Start Region CREATE MATERIALS
     // add model specific materials
     buildMaterials(model, _materials, materialList, allMaterials);
 
-#pragma endregion CREATE MATERIALS
+    // End Region CREATE MATERIALS
 
-    TransformationVector transformStack;
-    Transformation transformation;
-    transformStack.push_back(transformation);
+    TransformationVector transformStack{Transformation{}};
 
     for (const auto& planarSurface : planarSurfaces) {
-#pragma region MAIN LOOP
+      // Start Region MAIN LOOP
       int materialIndex = 0;
       std::string elementName = planarSurface.nameString();
-      GLTF::Node node;
+      // Construct in place
+      GLTF::Node& node = _nodes.emplace_back();
       node.name = elementName;
 
       // Now the geometry
-      boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
       // get the transformation to site coordinates
       Transformation buildingTransformation;
-      if (planarSurfaceGroup) {
-        buildingTransformation = planarSurfaceGroup->buildingTransformation();
+      if (boost::optional<PlanarSurfaceGroup> planarSurfaceGroup_ = planarSurface.planarSurfaceGroup()) {
+        buildingTransformation = planarSurfaceGroup_->buildingTransformation();
       }
       // get the vertices
       Point3dVector vertices = planarSurface.vertices();
-      Transformation t = transformStack.back();
-      t = Transformation::alignFace(vertices);
-      transformStack.push_back(t);
+      Transformation& t = transformStack.emplace_back(Transformation::alignFace(vertices));
       Transformation tInv = t.inverse();
       Point3dVector faceVertices = reverse(tInv * vertices);
-      std::vector<double> matrix;
-      for (auto& p : buildingTransformation.vector()) {
-        matrix.push_back(p);
-      }
+      std::vector<double> matrix = openstudio::toStandardVector(buildingTransformation.vector());
 
-      // Adding a check to avoid warning "NODE_MATRIX_DEFAULT"	<Do not specify default transform matrix>.
+      // Adding a check to avoid warning "NODE_MATRIX_DEFAULT"  <Do not specify default transform matrix>.
+      // This is the identity_matrix<4>
       std::vector<double> matrixDefaultTransformation{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0};
       if (matrixDefaultTransformation != matrix) {
         node.matrix = matrix;
@@ -894,7 +825,7 @@ namespace model {
       }
       node.mesh = _meshes.size();
 
-      GLTF::Mesh targetMesh;
+      GLTF::Mesh& targetMesh = _meshes.emplace_back();
       targetMesh.name = elementName;
 
       materialIndex = getMaterialIndex(planarSurface, _materials, materialList, allMaterials);
@@ -922,7 +853,6 @@ namespace model {
       Point3dVector allVertices;
       Point3dVector triangleVertices;
       std::vector<size_t> faceIndices;
-      int oe = 1;
       for (const auto& finalFaceVerts : finalFaceVertices) {
         Point3dVector finalVerts = t * finalFaceVerts;
         triangleVertices.insert(triangleVertices.end(), finalVerts.begin(), finalVerts.end());
@@ -935,56 +865,32 @@ namespace model {
       }
 
       Vector3d outwardNormal = planarSurface.outwardNormal();
-      double x = outwardNormal.x();
-      double y = outwardNormal.y();
-      double z = outwardNormal.z();
       Vector3dVector normalVectors;
       for (n = 0; n < allVertices.size(); n++) {
         normalVectors.push_back(outwardNormal);
       }
 
-      ShapeComponentIds shapeCompoentIds{
-        addIndices(faceIndices, _indicesBuffer, _accessors),          // IndicesAccessorId
-        addCoordinates(allVertices, _coordinatesBuffer, _accessors),  // VerticesAccessorId
-        addNormals(normalVectors, _coordinatesBuffer, _accessors)     // NormalsAccessorId
+      ShapeComponentIds shapeComponentIds{
+        .IndicesAccessorId = addIndices(faceIndices, _indicesBuffer, _accessors),           // IndicesAccessorId
+        .VerticesAccessorId = addCoordinates(allVertices, _coordinatesBuffer, _accessors),  // VerticesAccessorId
+        .NormalsAccessorId = addNormals(normalVectors, _coordinatesBuffer, _accessors)      // NormalsAccessorId
       };
 
-      GLTF::Primitive thisPrimitive;
-      std::map<std::string, int> attrib;
-      attrib["NORMAL"] = shapeCompoentIds.NormalsAccessorId;
-      attrib["POSITION"] = shapeCompoentIds.VerticesAccessorId;
-
-      thisPrimitive.attributes = attrib;
-      thisPrimitive.indices = shapeCompoentIds.IndicesAccessorId;
+      GLTF::Primitive& thisPrimitive = targetMesh.primitives.emplace_back();
+      thisPrimitive.attributes["NORMAL"] = shapeComponentIds.NormalsAccessorId;
+      thisPrimitive.attributes["POSITION"] = shapeComponentIds.VerticesAccessorId;
+      thisPrimitive.indices = shapeComponentIds.IndicesAccessorId;
       thisPrimitive.material = materialIndex;
       thisPrimitive.mode = TINYGLTF_MODE_TRIANGLES;
-      targetMesh.primitives.push_back(thisPrimitive);
-      _nodes.push_back(node);
-      _meshes.push_back(targetMesh);
 
       n += 1;
       updatePercentage(100.0 * n / N);
-#pragma endregion MAIN
+      // End Region MAIN
     }
-#pragma region BUILD SCENE | ELEMENT
+    // Start Region BUILD SCENE | ELEMENT
 
-    if (_coordinatesBuffer.size() == 0) return false;
-
-    if (!BufferInBase64) {
-      // BPS:having a separate input file for the GLTF is old now everything resides
-      // in the main GLTF file only..as a binary buffer data.
-      auto padding = _indicesBuffer.size() % 4;
-      for (int i = 0; i < padding; i++) {
-        _indicesBuffer.push_back(0x00);  // padding bytes
-      }
-      std::vector<unsigned char> _allBuffer;
-      _allBuffer.insert(_allBuffer.end(), _indicesBuffer.begin(), _indicesBuffer.end());
-      _allBuffer.insert(_allBuffer.end(), _coordinatesBuffer.begin(), _coordinatesBuffer.end());
-      std::vector<unsigned char> _data;
-      for (unsigned char b : _allBuffer) {
-        _data.push_back(b);
-      }
-      _buffer.data = _data;
+    if (_coordinatesBuffer.size() == 0) {
+      return false;
     }
 
     _indicesBv.byteLength = _indicesBuffer.size();
@@ -993,13 +899,24 @@ namespace model {
     _coordinatesBv.byteLength = _coordinatesBuffer.size();
     _coordinatesBv.byteOffset = _indicesBuffer.size();
 
-    _bufferViews.push_back(_indicesBv);
-    _bufferViews.push_back(_coordinatesBv);
+    _bufferViews.emplace_back(std::move(_indicesBv));
+    _bufferViews.emplace_back(std::move(_coordinatesBv));
 
-#pragma endregion BUILD SCENE | ELEMENT
+    if (!BufferInBase64) {
+      // BPS:having a separate input file for the GLTF is old now everything resides
+      // in the main GLTF file only..as a binary buffer data.
+      auto padding = _indicesBuffer.size() % 4;
+      for (size_t i = 0; i < padding; ++i) {
+        _indicesBuffer.push_back(0x00);  // padding bytes
+      }
+      _buffer.data = std::move(_indicesBuffer);
+      _buffer.data.insert(_buffer.data.end(), _coordinatesBuffer.begin(), _coordinatesBuffer.end());
+    }
 
-    gltf_Model.accessors = _accessors;
-    gltf_Model.bufferViews = _bufferViews;
+    // End Region BUILD SCENE | ELEMENT
+
+    gltf_Model.accessors = std::move(_accessors);
+    gltf_Model.bufferViews = std::move(_bufferViews);
     gltf_Model.buffers = {_buffer};
 
     // Other tie ups
@@ -1009,32 +926,18 @@ namespace model {
 
     // Now all that remains is to tie back all the loose objects into the
     // our single model.
-    gltf_Model.scenes.push_back(_scene);  // Default scene
-    gltf_Model.meshes = _meshes;
+    gltf_Model.scenes.emplace_back(std::move(_scene));  // Default scene
+    gltf_Model.meshes = std::move(_meshes);
 
-    std::vector<GLTF::Node> _nodesNew;
-    std::vector<int> nodes;
-    nodes.resize(_nodes.size() - 1);
-    for (int i = 1; i < _nodes.size(); i++) {
-      int j = i - 1;
-      nodes[j] = i;
-    }
-    _topNode.children = nodes;
+    std::vector<int> children_nodes(_nodes.size() - 1);                  // Construct a vector of a specific size
+    std::iota(std::begin(children_nodes), std::end(children_nodes), 1);  // Fill it with [1..(size)]
+    _topNode.children = std::move(children_nodes);
 
-    _nodesNew.push_back(_topNode);
-    int sk = 0;
-    for (auto& nn : _nodes) {
-      if (sk != 0) {
-        _nodesNew.push_back(nn);
-      }
-      sk++;
-    }
-
-    gltf_Model.nodes = _nodesNew;
-    gltf_Model.asset = _asset;
+    gltf_Model.nodes = std::move(_nodes);
+    gltf_Model.asset = std::move(_asset);
 
     // Add Materials to Model
-    gltf_Model.materials = _materials;
+    gltf_Model.materials = std::move(_materials);
 
     // Save it to a file
     bool ret = loader.WriteGltfSceneToFile(&gltf_Model, toString(outputPath),
@@ -1162,7 +1065,6 @@ namespace model {
     GLTF::Model m;
     GLTF::Scene scene;
     GLTF::Mesh mesh;
-    GLTF::Primitive primitive;
     GLTF::Node node;
     GLTF::Buffer buffer;
     GLTF::BufferView bufferView1;
@@ -1187,43 +1089,35 @@ namespace model {
     std::vector<unsigned char> _indicesBuffer;
     std::vector<unsigned char> _coordinatesBuffer;
     std::vector<GLTF::Accessor> _accessors;
-    Point3dVector allVertices;
-    Point3d p1 = Point3d(0, 0, 0);
-    Point3d p2 = Point3d(1, 0, 0);
-    Point3d p3 = Point3d(0, 1, 0);
-    std::vector<Point3d> pvec{p1, p2, p3};
-    allVertices = pvec;
+    Point3dVector allVertices{
+      {0, 0, 0},
+      {1, 0, 0},
+      {0, 1, 0},
+    };
 
-    ShapeComponentIds shapeCompoentIds{
-      addIndices(faceIndices, _indicesBuffer, _accessors),          //IndicesAccessorId
-      addCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
-      0                                                             //NormalsAccessorId
+    ShapeComponentIds shapeComponentIds{
+      .IndicesAccessorId = addIndices(faceIndices, _indicesBuffer, _accessors),           //IndicesAccessorId
+      .VerticesAccessorId = addCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
+      .NormalsAccessorId = 0                                                              //NormalsAccessorId
     };
 
     // Build the mesh primitive and add it to the mesh
     // The index of the accessor for the vertex indices
+    GLTF::Primitive& primitive = mesh.primitives.emplace_back();
     primitive.indices = 0;
     // The index of the accessor for positions
-    primitive.attributes["POSITION"] = shapeCompoentIds.VerticesAccessorId;
+    primitive.attributes["POSITION"] = shapeComponentIds.VerticesAccessorId;
     primitive.material = 0;
     primitive.mode = TINYGLTF_MODE_TRIANGLES;
-    mesh.primitives.push_back(primitive);
 
     bufferView1.byteOffset = 0;
     bufferView1.byteLength = _indicesBuffer.size();
     bufferView2.byteOffset = _indicesBuffer.size();
     bufferView2.byteLength = _coordinatesBuffer.size();
 
-    std::vector<unsigned char> _allBuffer;
-    _allBuffer.insert(_allBuffer.end(), _indicesBuffer.begin(), _indicesBuffer.end());
-    _allBuffer.insert(_allBuffer.end(), _coordinatesBuffer.begin(), _coordinatesBuffer.end());
-
-    std::vector<unsigned char> _data;
-    for (unsigned char b : _allBuffer) {
-      _data.push_back(b);
-    }
     // This is the raw data buffer.
-    buffer.data = _data;
+    buffer.data = std::move(_indicesBuffer);
+    buffer.data.insert(buffer.data.end(), _coordinatesBuffer.begin(), _coordinatesBuffer.end());
 
     // Other tie ups
     node.mesh = 0;
@@ -1235,7 +1129,8 @@ namespace model {
 
     // Now all that remains is to tie back all the loose objects into the
     // our single model.
-    m.scenes.push_back(scene);
+    // TODO: optimize the rest. Probably just emplace_back with default ctor above...
+    m.scenes.emplace_back(std::move(scene));
     m.meshes.push_back(mesh);
     m.nodes.push_back(node);
     m.buffers.push_back(buffer);
@@ -1275,27 +1170,25 @@ namespace model {
     std::string fileName = toString(inputPath);
     bool ret = loader.LoadASCIIFromFile(&gltf_Model, &err, &warning, fileName);
     if (err.size() != 0) {
-      fprintf(stderr, "Error loading GLTF %s", err.c_str());
+      LOG(Error, "Error loading GLTF " << err);
       //ret = false;
     }
     if (!warning.empty()) {
-      printf("Warn: %s\n", warning.c_str());
-    }
-
-    if (!err.empty()) {
-      printf("Err: %s\n", err.c_str());
+      LOG(Warn, "Error loading GLTF " << warning);
     }
 
     if (!ret) {
-      printf("Failed to parse glTF\n");
+      LOG(Error, "Failed to parse glTF");
     } else {
       std::string output_filename = toString(inputNonEmbededPath);
       std::string embedded_filename = output_filename.substr(0, output_filename.size() - 5) + "-Embedded.gltf";
       bool a = loader.WriteGltfSceneToFile(&gltf_Model, output_filename);
+      OS_ASSERT(a);
 
       // Embedd buffers and (images if present)
 #ifndef TINYGLTF_NO_STB_IMAGE_WRITE
       bool b = loader.WriteGltfSceneToFile(&gltf_Model, embedded_filename, true, true);
+      OS_ASSERT(b);
 #endif
     }
     return ret;
