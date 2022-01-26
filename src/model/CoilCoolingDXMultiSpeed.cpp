@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -285,8 +285,7 @@ namespace model {
     ModelObject CoilCoolingDXMultiSpeed_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDXMultiSpeed>();
 
-      auto t_stages = stages();
-      for (auto stage : t_stages) {
+      for (const auto& stage : stages()) {
         auto stageClone = stage.clone(model).cast<CoilCoolingDXMultiSpeedStageData>();
         t_clone.addStage(stageClone);
       }
@@ -307,10 +306,8 @@ namespace model {
 
     std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeed_Impl::stages() const {
       std::vector<CoilCoolingDXMultiSpeedStageData> result;
-      auto groups = extensibleGroups();
-      for (auto group : groups) {
-        auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Cooling_DX_MultiSpeedExtensibleFields::Stage);
-        if (target) {
+      for (const auto& group : extensibleGroups()) {
+        if (auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Cooling_DX_MultiSpeedExtensibleFields::Stage)) {
           if (auto stage = target->optionalCast<CoilCoolingDXMultiSpeedStageData>()) {
             result.push_back(stage.get());
           }
@@ -395,6 +392,7 @@ namespace model {
       ok = setStageIndex(stage, index);
       return ok;
     }
+
     bool CoilCoolingDXMultiSpeed_Impl::setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages) {
       // Clear the extensible groups, and redo them
       bool ok = true;
@@ -479,14 +477,23 @@ namespace model {
   CoilCoolingDXMultiSpeed::CoilCoolingDXMultiSpeed(const Model& model) : StraightComponent(CoilCoolingDXMultiSpeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilCoolingDXMultiSpeed_Impl>());
 
-    setCondenserType("AirCooled");
-    setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
-    setCrankcaseHeaterCapacity(0.0);
-    setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
-    setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
-    setBasinHeaterCapacity(0.0);
-    setBasinHeaterSetpointTemperature(2.0);
-    setFuelType("NaturalGas");
+    bool ok = true;
+    ok = setCondenserType("AirCooled");
+    OS_ASSERT(ok);
+    ok = setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
+    OS_ASSERT(ok);
+    ok = setCrankcaseHeaterCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+    OS_ASSERT(ok);
+    ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
+    OS_ASSERT(ok);
+    ok = setBasinHeaterCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setBasinHeaterSetpointTemperature(2.0);
+    OS_ASSERT(ok);
+    ok = setFuelType("NaturalGas");
+    OS_ASSERT(ok);
   }
 
   IddObjectType CoilCoolingDXMultiSpeed::iddObjectType() {

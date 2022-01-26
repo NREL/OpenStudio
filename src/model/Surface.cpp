@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,6 +67,8 @@
 #include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "AirflowNetworkHorizontalOpening.hpp"
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate.hpp"
+#include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
 #include "FoundationKivaSettings.hpp"
@@ -85,6 +87,8 @@
 #include "../utilities/core/Assert.hpp"
 
 #include "../utilities/sql/SqlFile.hpp"
+
+#include <numeric>  // std::accumulate
 
 using boost::to_upper_copy;
 
@@ -1440,16 +1444,93 @@ namespace model {
         return result;
       }
 
-      double windowArea = 0.0;
+      double roughOpeningArea = totalAreaOfSubSurfaces();
+      double wwr = roughOpeningArea / grossArea;
+
+      return wwr;
+    }
+
+    // Calculates and returns the toital area of the subsurfaces
+    // If any subsurface extends outside the parent surface or overlaps an adjacent subsurface
+    // then that subsurface's vertices rather than rough opening vertices are used to calculate the area
+    // NOTE: I'm starting to think a better way to do this would be to use polygon booleans
+    // 1 - Intersect the subsurface rough opening with the parent surface to get the area inside the parent surface
+    // 2 - Add all the subsurface rough openings together (so overlap areas don't count twice)
+    double Surface_Impl::totalAreaOfSubSurfaces() const {
+      double tol = 0.01;
+      // iterate over all sub surfaces
+      // make a map of sub surface/roughOpening vertices (flattened)
+      // iterate over map
+      // check each subsurface for overlap with parent and not overlap with sibling
+      // if either fails, replace roughOpening vertices with original vertices
+      // Add up all the openign areas
+
+      // Records the rough opening of each sub surface
+      std::map<SubSurface, Point3dVector> roughOpenings;
+      // Get the flattened parent surface vertices
+      Transformation parentToXY = Transformation::alignFace(this->vertices()).inverse();
+      std::vector<Point3d> parentVertices = parentToXY * this->vertices();
+      // Make sure the parent surface is oriented clockwise
+      auto norm = openstudio::getOutwardNormal(parentVertices);
+      if (norm && norm->z() > 0) {
+        std::reverse(parentVertices.begin(), parentVertices.end());
+      }
+
+      // Get the flattened sub surface vertices for windows
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          windowArea += subSurface.multiplier() * subSurface.netArea();
+          auto opening = parentToXY * subSurface.roughOpeningVertices();
+          auto norm = openstudio::getOutwardNormal(opening);
+          if (norm && norm->z() > 0) {
+            std::reverse(opening.begin(), opening.end());
+          }
+          roughOpenings[subSurface] = opening;
         }
       }
 
-      double wwr = windowArea / grossArea;
+      // Check each rough opening against the parent surface, if any vertices are outside
+      // the parent surface then revert back to the original vertices
+      for (const auto& opening : roughOpenings) {
+        const SubSurface& subSurface = opening.first;
+        std::vector<Point3d> flattenedVertices = opening.second;
 
-      return wwr;
+        if (!openstudio::polygonInPolygon(flattenedVertices, parentVertices, tol)) {
+          // One or more vertices not within the parent surface so replace with the original vertices
+          auto vertices = parentToXY * subSurface.vertices();
+          auto norm = openstudio::getOutwardNormal(vertices);
+          if (norm && norm->z() > 0) {
+            std::reverse(vertices.begin(), vertices.end());
+          }
+          roughOpenings[subSurface] = vertices;
+        }
+      }
+
+      // Check subsurfaces for overlaps
+      // (if I knew how I'd order themn left to right in x then we could test adjacent ones only)
+      for (const auto& opening1 : roughOpenings) {
+        for (const auto& opening2 : roughOpenings) {
+          if (opening1 == opening2) {
+            continue;
+          }
+
+          if (auto result = openstudio::intersect(opening1.second, opening2.second, tol)) {
+            //There's an overlap so swap out the overlapped vertices for the original
+            auto vertices = parentToXY * opening1.first.vertices();
+            auto norm = openstudio::getOutwardNormal(vertices);
+            if (norm && norm->z() > 0) {
+              std::reverse(vertices.begin(), vertices.end());
+            }
+            roughOpenings[opening1.first] = vertices;
+          }
+        }
+      }
+
+      // Accumulate the areas
+      double area = std::accumulate(roughOpenings.cbegin(), roughOpenings.cend(), 0.0, [](double sum, auto& roughOpening) {
+        return sum + openstudio::getArea(roughOpening.second).value() * roughOpening.first.multiplier();
+      });
+
+      return area;
     }
 
     double Surface_Impl::skylightToRoofRatio() const {
@@ -2407,6 +2488,10 @@ namespace model {
   }
 
   AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage) {
+    return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+  }
+
+  AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage) {
     return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
   }
 

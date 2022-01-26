@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -916,6 +916,9 @@ class Run
     options[:post_process] = false
     options[:ep_json] = false
     options[:ft_options] = {}
+    options[:show_stdout] = false
+    options[:add_timings] = false
+    options[:style_stdout] = false
     # TODO: I don't know if there's any value harcoding a default here really
     # options[:ft_options] = {
     #   :runcontrolspecialdays => true,
@@ -948,6 +951,9 @@ class Run
       o.on('-s', '--socket PORT', 'Pipe status messages to a socket on localhost PORT') do |port|
         options[:socket] = port
       end
+      o.on('--show-stdout', 'Prints the output of the workflow run in real time to the console, including E+ output') do
+        options[:show_stdout] = true
+      end
       o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
         options[:debug] = f
       end
@@ -978,6 +984,18 @@ class Run
       o.on('--[no-]space-translation', "Add individual E+ Space [Default: True]") do |b|
         options[:ft_options][:no_space_translation] = !b
       end
+
+      o.separator ""
+      o.separator "Stdout Options: only available when --show-stdout is passed"
+
+      o.on('--add-timings', 'Print the start, end and elapsed times of each state of the simulation.') do
+          options[:add_timings] = true
+      end
+      o.on('--style-stdout', 'Style the stdout output to more clearly show the start and end of each state of the simulation') do
+          options[:style_stdout] = true
+      end
+
+      o.separator ""
 
     end
 
@@ -1019,11 +1037,94 @@ class Run
       end
     end
 
+    if options[:show_stdout] && options[:socket]
+      raise "Error: --show-stdout and --socket cannot be used at the same time"
+    end
+
     if options[:socket]
       require 'openstudio/workflow/adapters/input/local'
       require 'openstudio/workflow/adapters/output/socket'
       input_adapter = OpenStudio::Workflow::InputAdapter::Local.new(osw_path)
       output_adapter = OpenStudio::Workflow::OutputAdapter::Socket.new({output_directory: input_adapter.run_dir, port: options[:socket]})
+      run_options[:output_adapter] = output_adapter
+    end
+
+    tcp_thread = nil
+    if options[:show_stdout]
+      # prefered port
+      port = 8080
+      server = nil
+      n_try = 0
+      begin
+        n_try += 1
+        server = TCPServer.open('localhost', port)
+      rescue Errno::EADDRINUSE
+        port = rand(65000 - 1024) + 1024
+        if n_try < 10
+          retry
+        else
+          raise "Cannot find a TCP port that isn't in use"
+        end
+      end
+
+      def h1(str)
+        len = [80, str.length + 4].max
+        l1 = "#" * len
+        n1 = (len - str.length - 2) / 2
+        n2 = (len - str.length - 2) - n1
+        l2 = "#" + " " * n1 + str + " " * n2 + "#"
+
+        return "\n" + l1 + "\n" + l2 + "\n" + l1
+      end
+
+      def end_h1(str)
+        len = [80, str.length + 4].max
+        n1 = (len - str.length - 2) / 2
+        n2 = (len - str.length - 2) - n1
+        l2 = "#" * n1 + " " + str + + " " + "#" * n2
+        return l2 + "\n"
+      end
+
+      # Start a TCP thread to receive the messages that workflow-gem with send
+      tcp_thread = Thread.new do
+        start_time = nil
+        while client = server.accept
+          while line = client.gets.strip
+
+            if line.downcase.start_with?('starting state')
+              if options[:style_stdout]
+                puts h1(line)
+              else
+                puts line
+              end
+              if options[:add_timings]
+                start_time = Time.now
+                puts "Start Time: #{start_time}"
+              end
+
+            elsif line.downcase.start_with?('returned from state')
+              if options[:add_timings]
+                end_time = Time.now
+                puts "End Time: #{end_time}"
+                puts "Elapsed Time for state: #{(end_time - start_time).round(2)} s"
+              end
+              if options[:style_stdout]
+                puts end_h1(line)
+              else
+                puts line
+              end
+
+            else
+              puts line
+            end
+          end
+        end
+      end
+
+      require 'openstudio/workflow/adapters/input/local'
+      require 'openstudio/workflow/adapters/output/socket'
+      input_adapter = OpenStudio::Workflow::InputAdapter::Local.new(osw_path)
+      output_adapter = OpenStudio::Workflow::OutputAdapter::Socket.new({output_directory: input_adapter.run_dir, port: port})
       run_options[:output_adapter] = output_adapter
     end
 
@@ -1060,11 +1161,27 @@ class Run
       run_options[:preserve_run_dir] = true
     end
 
+    if options[:add_timings]
+      workflow_start = Time.now
+      puts "WORKFLOW START TIME: #{workflow_start}"
+    end
+
     $logger.debug "Initializing run method"
     k = OpenStudio::Workflow::Run.new osw_path, run_options
 
     $logger.debug "Beginning run"
     state = k.run
+
+    if options[:add_timings]
+      workflow_end = Time.now
+      puts "WORKFLOW END TIME: #{workflow_end}"
+      puts "WORKFLOW ELAPSED TIME: #{(workflow_end - workflow_start).round(2)} s"
+    end
+
+    if options[:show_stdout]
+      Thread.kill(tcp_thread)
+    end
+
     # check if state symbol is either :finished or :errored
     if state == :finished
       return 0

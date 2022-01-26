@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,8 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 #include "../utilities/time/Time.hpp"
 
+#include <iostream>
+
 namespace openstudio {
 
 class ProgressBar;
@@ -56,6 +58,7 @@ namespace model {
   class AirflowNetworkDetailedOpening;
   class AirflowNetworkSimpleOpening;
   class AirflowNetworkHorizontalOpening;
+  class AirflowNetworkSpecifiedFlowRate;
   class AirflowNetworkZoneExhaustFan;
   class AirflowNetworkExternalNode;
   class AirflowNetworkDistributionNode;
@@ -490,6 +493,14 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
+  struct ForwardTranslatorOptionKeyMethod
+  {
+    std::string json_name;
+    std::string ft_method_name;
+  };
+
+  ENERGYPLUS_API std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt);
+
 #define ENERGYPLUS_VERSION "9.6"
 
   class ENERGYPLUS_API ForwardTranslator
@@ -545,6 +556,8 @@ namespace energyplus {
    *  Use this at your own risks */
     void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
 
+    static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
+
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
 
@@ -590,6 +603,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateAirflowNetworkSimpleOpening(model::AirflowNetworkSimpleOpening& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkHorizontalOpening(model::AirflowNetworkHorizontalOpening& modelObject);
+
+    boost::optional<IdfObject> translateAirflowNetworkSpecifiedFlowRate(model::AirflowNetworkSpecifiedFlowRate& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkZoneExhaustFan(model::AirflowNetworkZoneExhaustFan& modelObject);
 
@@ -1595,6 +1610,7 @@ namespace energyplus {
 
     ProgressBar* m_progressBar;
 
+    // ForwardTranslator options
     bool m_keepRunControlSpecialDays;
     bool m_ipTabularOutput;
     bool m_excludeLCCObjects;

@@ -637,7 +637,6 @@ set(${target_name}_test_src
 
   Test/CentralHeatPumpSystem_GTest.cpp
 
-  Test/CoilHeatingGas_GTest.cpp
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
   Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
@@ -647,6 +646,8 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoSpeed_GTest.cpp
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
+  Test/CoilHeatingDXMultiSpeed_GTest.cpp
+  Test/CoilHeatingGas_GTest.cpp
   Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   Test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
   Test/CoilWaterHeatingDesuperheater_GTest.cpp

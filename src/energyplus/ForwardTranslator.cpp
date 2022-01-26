@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -197,6 +197,21 @@ namespace energyplus {
 
   void ForwardTranslator::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
     m_excludeSpaceTranslation = excludeSpaceTranslation;
+  }
+
+  std::vector<ForwardTranslatorOptionKeyMethod> ForwardTranslator::forwardTranslatorOptionKeyMethods() {
+    return std::vector<ForwardTranslatorOptionKeyMethod>{{{"runcontrolspecialdays", "setKeepRunControlSpecialDays"},
+                                                          {"ip_tabular_output", "setIPTabularOutput"},
+                                                          {"no_lifecyclecosts", "setExcludeLCCObjects"},
+                                                          {"no_sqlite_output", "setExcludeSQliteOutputReport"},
+                                                          {"no_html_output", "setExcludeHTMLOutputReport"},
+                                                          {"no_variable_dictionary", "setExcludeVariableDictionary"},
+                                                          {"no_space_translation", "setExcludeSpaceTranslation"}}};
+  }
+
+  std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt) {
+    out << "(" << opt.json_name << ", " << opt.ft_method_name << ")";
+    return out;
   }
 
   // Figure out which object
@@ -1129,8 +1144,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed_StageData: {
-        //DLM: is this a no-op?
-        break;
+        return retVal;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_DX_VariableSpeed: {
         model::CoilHeatingDXVariableSpeed coil = modelObject.cast<CoilHeatingDXVariableSpeed>();
@@ -3654,6 +3668,14 @@ namespace energyplus {
         translateAirflowNetworkHorizontalOpening(modelObject);
       }
 
+      // Specified Flow Rate
+      std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
+      std::sort(sfrs.begin(), sfrs.end(), WorkspaceObjectNameLess());
+      for (auto modelObject : sfrs) {
+        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+        translateAirflowNetworkSpecifiedFlowRate(modelObject);
+      }
+
       // Surfaces
       std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
       std::sort(surfs.begin(), surfs.end(), WorkspaceObjectNameLess());
@@ -3791,6 +3813,10 @@ namespace energyplus {
       // Horizontal Openings
       std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
       count += horzs.size();
+
+      // Specified Flow Rate
+      std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
+      count += sfrs.size();
 
       // Surfaces
       std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -206,6 +206,9 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.CoilCoolingDXMultiSpeedStageData");
 
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
       boost::optional<Curve> optionalTotalCoolingCapacityFunctionofTemperatureCurve() const;
       boost::optional<Curve> optionalTotalCoolingCapacityFunctionofFlowFractionCurve() const;
       boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;

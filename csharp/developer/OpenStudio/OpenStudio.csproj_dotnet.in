@@ -21,7 +21,7 @@
     <FileVersion>${CSHARP_ASSEMBLY_VERSION}</FileVersion>
 
     <Product>OpenStudio</Product>
-    <Copyright>Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.</Copyright>
+    <Copyright>Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.</Copyright>
     <Description>OpenStudio C# bindings for whole building energy simulation</Description>
     <OutputPath>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\$(Configuration)\</OutputPath>
     <!-- CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member' -->
