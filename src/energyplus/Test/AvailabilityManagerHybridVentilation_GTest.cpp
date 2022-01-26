@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,7 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/CurveLinear.hpp"
@@ -66,6 +67,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerHybridVentilation
   // Controlled Zone: Optional Object
   ThermalZone z(m);
   z.setName("Zone 1");
+  Space s(m);
+  s.setThermalZone(z);
 
   Schedule alwaysOn = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctConstantVolumeNoReheat atu(m, alwaysOn);

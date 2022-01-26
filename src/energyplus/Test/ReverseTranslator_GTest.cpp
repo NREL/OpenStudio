@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -457,7 +457,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_ZoneBoundaryCondition) {
   ASSERT_TRUE(osurf_b);
   OptionalSpace ospace_b = osurf_b->space();
   ASSERT_TRUE(ospace_b);
-  EXPECT_EQ("8B02A8", ospace_b->name().get());
+  EXPECT_EQ("8B02A8 Space", ospace_b->name().get());
   // confirm that surf_b has surf_a  as outside boundary object
   ASSERT_TRUE(osurf_b->adjacentSurface());
   EXPECT_EQ(osurf_a->handle(), osurf_b->adjacentSurface()->handle());
@@ -960,10 +960,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
-    ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
-    ASSERT_TRUE(_zone2);
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_TRUE(_space1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::SpaceType>().size());
     openstudio::model::SpaceType spaceType1 = model.getModelObjects<openstudio::model::SpaceType>()[0];
@@ -995,7 +995,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     // This time we should have gotten one warning that the SpaceType is overriden
     EXPECT_EQ(1u, reverseTranslator.warnings().size());
-    EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2'", reverseTranslator.warnings()[0].logMessage());
+    EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2 Space'", reverseTranslator.warnings()[0].logMessage());
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
@@ -1005,10 +1005,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
-    ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
-    ASSERT_TRUE(_zone2);
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_TRUE(_space1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::SpaceType>().size());
     boost::optional<openstudio::model::SpaceType> _spaceType1 = model.getModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());

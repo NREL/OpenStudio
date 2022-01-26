@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,6 +42,9 @@ namespace model {
   namespace detail {
 
     class ControllerWaterCoil_Impl;
+    class CoilCoolingWater_Impl;
+    class CoilHeatingWater_Impl;
+    class CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
 
   }  // namespace detail
 
@@ -52,8 +55,6 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-
-    explicit ControllerWaterCoil(const Model& model);
 
     virtual ~ControllerWaterCoil() {}
 
@@ -73,11 +74,15 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> controlVariable() const;
+    boost::optional<HVACComponent> waterCoil() const;
 
-    boost::optional<std::string> action() const;
+    boost::optional<std::string> controlVariable() const;  // Shouldn't return an optional, has a default
+    bool isControlVariableDefaulted() const;
 
-    boost::optional<std::string> actuatorVariable() const;
+    boost::optional<std::string> action() const;  // Has no default and is required...
+
+    boost::optional<std::string> actuatorVariable() const;  // Shouldn't return an optional, has a default
+    bool isActuatorVariableDefaulted() const;
 
     boost::optional<Node> sensorNode() const;
 
@@ -101,15 +106,15 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(std::string controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
     void resetControlVariable();
 
-    bool setAction(std::string action);
+    bool setAction(const std::string& action);
 
     void resetAction();
 
-    bool setActuatorVariable(std::string actuatorVariable);
+    bool setActuatorVariable(const std::string& actuatorVariable);
 
     void resetActuatorVariable();
 
@@ -133,6 +138,10 @@ namespace model {
 
     void resetMinimumActuatedFlow();
 
+    //@}
+    /** @name Other */
+    //@{
+
     boost::optional<double> autosizedControllerConvergenceTolerance() const;
 
     boost::optional<double> autosizedMaximumActuatedFlow() const;
@@ -147,6 +156,13 @@ namespace model {
     friend class Model;
 
     friend class openstudio::IdfObject;
+
+    // Classes that need to instantiate it
+    friend class openstudio::model::detail::CoilCoolingWater_Impl;
+    friend class openstudio::model::detail::CoilHeatingWater_Impl;
+    friend class openstudio::model::detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
+
+    explicit ControllerWaterCoil(const Model& model);
 
     explicit ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
 

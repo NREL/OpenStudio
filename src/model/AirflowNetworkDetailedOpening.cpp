@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -236,6 +236,7 @@ namespace model {
     }
 
     bool AirflowNetworkDetailedOpening_Impl::setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors) {
+      // Number of Sets of Opening Factor Data
       if (factors.size() < 2) {
         LOG(Error, "Insufficient data in opening factors vector, minimum number of factors is 2");
         return false;
@@ -243,6 +244,8 @@ namespace model {
         LOG(Error, "Additional data in opening factors vector, maximum number of factors is 4");
         return false;
       }
+
+      // Opening Factor
       if (factors[0].openingFactor() != 0.0) {
         LOG(Error, "First opening factor must be 0");
         return false;
@@ -251,8 +254,15 @@ namespace model {
         LOG(Error, "Last opening factor must be 1");
         return false;
       }
+
       clearExtensibleGroups(false);
       for (auto factor : factors) {
+        // Height Factor and Start Height Factor
+        if (factor.heightFactor() + factor.startHeightFactor() > 1.0) {
+          LOG(Error, "The sum of the Height Factor and the Start Height Factor cannot be more than 1");
+          return false;
+        }
+
         std::vector<std::string> values;
         values.push_back(toString(factor.openingFactor()));
         values.push_back(toString(factor.dischargeCoefficient()));

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,6 +56,10 @@ namespace detail {
     bool setDebug(bool debug);
     void resetDebug();
 
+    bool epjson() const;
+    bool setEpjson(bool epjson);
+    void resetEpjson();
+
     bool fast() const;
     bool setFast(bool fast);
     void resetFast();
@@ -80,6 +84,10 @@ namespace detail {
     bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
     void resetCustomOutputAdapter();
 
+    std::string forwardTranslateOptions() const;
+    bool setForwardTranslateOptions(const std::string& options);
+    void resetForwardTranslateOptions();
+
     // Emitted on any change
     Nano::Signal<void()> onChange;
 
@@ -91,11 +99,13 @@ namespace detail {
     REGISTER_LOGGER("openstudio.RunOptions");
 
     bool m_debug;
+    bool m_epjson;
     bool m_fast;
     bool m_preserveRunDir;
     bool m_skipExpandObjects;
     bool m_skipEnergyPlusPreprocess;
     bool m_cleanup;
+    std::string m_forwardTranslateOptions;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };
 

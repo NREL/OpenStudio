@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -418,9 +418,9 @@ namespace model {
       Transformation transformation = Transformation::rotation(rotationAxis, angle);
       EulerAngles eulerAngles = transformation.eulerAngles();
 
-      this->setPsiRotationAroundXAxis(eulerAngles.psi());
-      this->setThetaRotationAroundYAxis(eulerAngles.theta());
-      this->setPhiRotationAroundZAxis(eulerAngles.phi());
+      this->setPsiRotationAroundXAxis(radToDeg(eulerAngles.psi()));
+      this->setThetaRotationAroundYAxis(radToDeg(eulerAngles.theta()));
+      this->setPhiRotationAroundZAxis(radToDeg(eulerAngles.phi()));
 
       return true;
     }

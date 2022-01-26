@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -51,7 +51,13 @@ class Path_Test < MiniTest::Unit::TestCase
     assert_equal("./here", p.to_s())
   end
 
-  def test_funcOnlyTakesAPath
+  def test_function_accepting_path_takes_a_string
+    w = OpenStudio::Workspace::load('hello.idf')
+    assert w.empty?
+  end
+
+
+  def DISABLED_test_funcOnlyTakesAPath
 
     functions = []
     functions << OpenStudio.method("funcOnlyTakesAPath")
@@ -92,7 +98,7 @@ class Path_Test < MiniTest::Unit::TestCase
     end
   end
 
-  def test_defaultArgFuncTakesAPath
+  def DISABLED_test_defaultArgFuncTakesAPath
 
     functions = []
     functions << OpenStudio.method("defaultArgFuncTakesAPath")

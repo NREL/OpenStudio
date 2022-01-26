@@ -109,6 +109,9 @@ set(${target_name}_src
   AirflowNetworkSimulationControl.hpp
   AirflowNetworkSimulationControl_Impl.hpp
   AirflowNetworkSimulationControl.cpp
+  AirflowNetworkSpecifiedFlowRate.hpp
+  AirflowNetworkSpecifiedFlowRate_Impl.hpp
+  AirflowNetworkSpecifiedFlowRate.cpp
   AirflowNetworkSurface.hpp
   AirflowNetworkSurface_Impl.hpp
   AirflowNetworkSurface.cpp
@@ -1793,6 +1796,7 @@ set(${target_name}_test_src
   test/AirflowNetworkOccupantVentilationControl_GTest.cpp
   test/AirflowNetworkSimpleOpening_GTest.cpp
   test/AirflowNetworkSimulationControl_GTest.cpp
+  test/AirflowNetworkSpecifiedFlowRate_GTest.cpp
   test/AirflowNetworkSurface_GTest.cpp
   test/AirflowNetworkZone_GTest.cpp
   test/AirGap_GTest.cpp
