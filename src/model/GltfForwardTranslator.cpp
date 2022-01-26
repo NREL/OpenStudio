@@ -161,15 +161,14 @@ namespace model {
   // param : _scene
   // param : _topNode
   // param : _nodes
-  void initScene(GLTF::Scene& _scene, GLTF::Node& _topNode, std::vector<GLTF::Node>& _nodes) {
+  void initScene(GLTF::Scene& _scene, std::vector<GLTF::Node>& _nodes) {
     std::vector<int> ns{0};
     _scene.nodes = ns;
 
+    GLTF::Node& _topNode = _nodes.emplace_back();
     _topNode.name = "Z_UP";
     std::vector<double> mtrx{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     _topNode.matrix = mtrx;
-
-    _nodes.push_back(_topNode);
   }
 
   // Initializes our two main Buffer Views
@@ -537,7 +536,7 @@ namespace model {
       _indicesBuffer.push_back(0x00);
     }
 
-    GLTF::Accessor indAccessor;
+    GLTF::Accessor& indAccessor = _accessors.emplace_back();
     indAccessor.bufferView = 0;
     indAccessor.componentType = ct;
     indAccessor.byteOffset = _indicesBuffer.size();
@@ -566,7 +565,6 @@ namespace model {
     _indicesBuffer.insert(_indicesBuffer.end(), indicesBufferData.begin(), indicesBufferData.end());
 
     const auto thisIndex = _accessors.size();
-    _accessors.push_back(indAccessor);
     return thisIndex;
   }
 
@@ -716,22 +714,21 @@ namespace model {
     std::string warning;
     path p;
 
-    std::vector<GLTF::Accessor> _accessors;
-    std::vector<GLTF::Material> _materials;
-    std::vector<GLTF::Mesh> _meshes;
-    std::vector<GLTF::Node> _nodes;
-    std::vector<GLTF::BufferView> _bufferViews;
+    std::vector<GLTF::Accessor>& _accessors = gltf_Model.accessors;
+    std::vector<GLTF::Material>& _materials = gltf_Model.materials;
+    std::vector<GLTF::Mesh>& _meshes = gltf_Model.meshes;
+    std::vector<GLTF::Node>& _nodes = gltf_Model.nodes;
+    std::vector<GLTF::BufferView>& _bufferViews = gltf_Model.bufferViews;
 
-    GLTF::Scene _scene;
-    GLTF::Buffer _buffer;
-    GLTF::Node _topNode;
+    GLTF::Scene& _scene = gltf_Model.scenes.emplace_back();
+    GLTF::Buffer& _buffer = gltf_Model.buffers.emplace_back();
 
     GLTF::BufferView _indicesBv;
     GLTF::BufferView _coordinatesBv;
     std::vector<unsigned char> _indicesBuffer;
     std::vector<unsigned char> _coordinatesBuffer;
 
-    GLTF::Asset _asset;
+    GLTF::Asset& _asset = gltf_Model.asset;
 
     // Start Region INIT
 
@@ -743,12 +740,14 @@ namespace model {
 
     // Start Region SCENE
 
-    initScene(_scene, _topNode, _nodes);
+    initScene(_scene, _nodes);
 
     // End Region SCENE
 
     // Start Region BUFFERVIEWS
 
+    // TODO: GLTF::BufferView will have to get copied around here...
+    // TODO: _bufferViews is unused anyways
     initBufferViews(_indicesBv, _coordinatesBv, _bufferViews);
 
     // End Region BUFFERVIEWS
@@ -899,6 +898,7 @@ namespace model {
     _coordinatesBv.byteLength = _coordinatesBuffer.size();
     _coordinatesBv.byteOffset = _indicesBuffer.size();
 
+    // TODO: we could do that directly at the start
     _bufferViews.emplace_back(std::move(_indicesBv));
     _bufferViews.emplace_back(std::move(_coordinatesBv));
 
@@ -915,10 +915,6 @@ namespace model {
 
     // End Region BUILD SCENE | ELEMENT
 
-    gltf_Model.accessors = std::move(_accessors);
-    gltf_Model.bufferViews = std::move(_bufferViews);
-    gltf_Model.buffers = {_buffer};
-
     // Other tie ups
     // Define the asset. The version is required
     _asset.version = "2.0";
@@ -926,18 +922,11 @@ namespace model {
 
     // Now all that remains is to tie back all the loose objects into the
     // our single model.
-    gltf_Model.scenes.emplace_back(std::move(_scene));  // Default scene
-    gltf_Model.meshes = std::move(_meshes);
 
+    GLTF::Node& _topNode = _nodes.front();
     std::vector<int> children_nodes(_nodes.size() - 1);                  // Construct a vector of a specific size
     std::iota(std::begin(children_nodes), std::end(children_nodes), 1);  // Fill it with [1..(size)]
     _topNode.children = std::move(children_nodes);
-
-    gltf_Model.nodes = std::move(_nodes);
-    gltf_Model.asset = std::move(_asset);
-
-    // Add Materials to Model
-    gltf_Model.materials = std::move(_materials);
 
     // Save it to a file
     bool ret = loader.WriteGltfSceneToFile(&gltf_Model, toString(outputPath),
@@ -956,16 +945,14 @@ namespace model {
   // returns : exports triangle.gltf
   bool GltfForwardTranslator::createTriangleGLTF(const path& outputPath) {
     GLTF::Model m;
-    GLTF::Scene scene;
-    GLTF::Mesh mesh;
-    GLTF::Primitive primitive;
-    GLTF::Node node;
-    GLTF::Buffer buffer;
-    GLTF::BufferView bufferView1;
-    GLTF::BufferView bufferView2;
-    GLTF::Accessor accessor1;
-    GLTF::Accessor accessor2;
-    GLTF::Asset asset;
+
+    GLTF::Scene& scene = m.scenes.emplace_back();
+    GLTF::Mesh& mesh = m.meshes.emplace_back();
+    GLTF::Node& node = m.nodes.emplace_back();
+    GLTF::Buffer& buffer = m.buffers.emplace_back();
+    GLTF::BufferView& bufferView1 = m.bufferViews.emplace_back();
+    GLTF::BufferView& bufferView2 = m.bufferViews.emplace_back();
+    GLTF::Asset& asset = m.asset;
 
     // This is the raw data buffer.
     buffer.data = {// 6 bytes of indices and two bytes of padding
@@ -993,6 +980,7 @@ namespace model {
     bufferView2.target = TINYGLTF_TARGET_ARRAY_BUFFER;
 
     // Describe the layout of bufferView1, the indices of the vertices
+    GLTF::Accessor& accessor1 = m.accessors.emplace_back();
     accessor1.bufferView = 0;
     accessor1.byteOffset = 0;
     accessor1.componentType = TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE;  // TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT;
@@ -1002,6 +990,7 @@ namespace model {
     accessor1.minValues.push_back(0);
 
     // Describe the layout of bufferView2, the vertices themself
+    GLTF::Accessor& accessor2 = m.accessors.emplace_back();
     accessor2.bufferView = 1;
     accessor2.byteOffset = 0;
     accessor2.componentType = TINYGLTF_COMPONENT_TYPE_FLOAT;
@@ -1011,13 +1000,13 @@ namespace model {
     accessor2.minValues = {0.0, 0.0, 0.0};
 
     // Build the mesh primitive and add it to the mesh
+    GLTF::Primitive& primitive = mesh.primitives.emplace_back();
     primitive.indices = 0;                 // The index of the accessor for the vertex indices
     primitive.attributes["POSITION"] = 1;  // The index of the accessor for positions
     primitive.material = 0;
     // primitive.mode = TINYGLTF_MODE_POINTS;
     // primitive.mode = TINYGLTF_MODE_LINE;
     primitive.mode = TINYGLTF_MODE_TRIANGLES;
-    mesh.primitives.push_back(primitive);
 
     // Other tie ups
     node.mesh = 0;
@@ -1029,15 +1018,7 @@ namespace model {
 
     // Now all that remains is to tie back all the loose objects into the
     // our single model.
-    m.scenes.push_back(scene);
-    m.meshes.push_back(mesh);
-    m.nodes.push_back(node);
-    m.buffers.push_back(buffer);
-    m.bufferViews.push_back(bufferView1);
-    m.bufferViews.push_back(bufferView2);
-    m.accessors.push_back(accessor1);
-    m.accessors.push_back(accessor2);
-    m.asset = asset;
+    // Note: everything is emplace_back'ed above, so there should be nothing loose anymore
 
     // Create a simple material
     GLTF::Material mat;
@@ -1063,15 +1044,13 @@ namespace model {
   // returns : exports triangle_2.gltf
   bool GltfForwardTranslator::createTriangleGLTFFromPoint3DVector(const path& outputPath) {
     GLTF::Model m;
-    GLTF::Scene scene;
-    GLTF::Mesh mesh;
-    GLTF::Node node;
-    GLTF::Buffer buffer;
-    GLTF::BufferView bufferView1;
-    GLTF::BufferView bufferView2;
-    GLTF::Accessor accessor1;
-    GLTF::Accessor accessor2;
-    GLTF::Asset asset;
+    GLTF::Scene& scene = m.scenes.emplace_back();
+    GLTF::Mesh& mesh = m.meshes.emplace_back();
+    GLTF::Node& node = m.nodes.emplace_back();
+    GLTF::Buffer& buffer = m.buffers.emplace_back();
+    GLTF::BufferView& bufferView1 = m.bufferViews.emplace_back();
+    GLTF::BufferView& bufferView2 = m.bufferViews.emplace_back();
+    GLTF::Asset& asset = m.asset;
 
     // Create an array of size equivalent to vector
     // unsigned char arr[42];
@@ -1088,7 +1067,6 @@ namespace model {
     std::vector<size_t> faceIndices{0, 1, 2};
     std::vector<unsigned char> _indicesBuffer;
     std::vector<unsigned char> _coordinatesBuffer;
-    std::vector<GLTF::Accessor> _accessors;
     Point3dVector allVertices{
       {0, 0, 0},
       {1, 0, 0},
@@ -1096,9 +1074,9 @@ namespace model {
     };
 
     ShapeComponentIds shapeComponentIds{
-      .IndicesAccessorId = addIndices(faceIndices, _indicesBuffer, _accessors),           //IndicesAccessorId
-      .VerticesAccessorId = addCoordinates(allVertices, _coordinatesBuffer, _accessors),  //VerticesAccessorId
-      .NormalsAccessorId = 0                                                              //NormalsAccessorId
+      .IndicesAccessorId = addIndices(faceIndices, _indicesBuffer, m.accessors),           //IndicesAccessorId
+      .VerticesAccessorId = addCoordinates(allVertices, _coordinatesBuffer, m.accessors),  //VerticesAccessorId
+      .NormalsAccessorId = 0                                                               //NormalsAccessorId
     };
 
     // Build the mesh primitive and add it to the mesh
@@ -1129,23 +1107,14 @@ namespace model {
 
     // Now all that remains is to tie back all the loose objects into the
     // our single model.
-    // TODO: optimize the rest. Probably just emplace_back with default ctor above...
-    m.scenes.emplace_back(std::move(scene));
-    m.meshes.push_back(mesh);
-    m.nodes.push_back(node);
-    m.buffers.push_back(buffer);
-    m.bufferViews.push_back(bufferView1);
-    m.bufferViews.push_back(bufferView2);
-    m.accessors = _accessors;
-    m.asset = asset;
+    // Note: eveyrthing is emplace_back'ed directly or passed by ref, so there's nothing loose anymore
 
     // Create a simple material
-    GLTF::Material mat;
+    GLTF::Material& mat = m.materials.emplace_back();
     mat.pbrMetallicRoughness.baseColorFactor = {1.0f, 0.9f, 0.9f, 1.0f};
     mat.pbrMetallicRoughness.metallicFactor = 1.0;
     mat.pbrMetallicRoughness.roughnessFactor = 0.5;
     mat.doubleSided = true;
-    m.materials.push_back(mat);
 
     // Save it to a file
     GLTF::TinyGLTF gltf;
