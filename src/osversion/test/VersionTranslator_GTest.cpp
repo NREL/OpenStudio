@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1702,13 +1702,13 @@ TEST_F(OSVersionFixture, update_3_2_0_to_3_2_1_WaterHeaterSizing) {
   EXPECT_TRUE(foundStratified);
 }
 
-TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_AirTerminalSingleDuctInletSideMixer) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer.osm");
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_AirTerminalSingleDuctInletSideMixer) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_AirTerminalSingleDuctInletSideMixer.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_AirTerminalSingleDuctInletSideMixer_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_AirTerminalSingleDuctInletSideMixer_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> atus = model->getObjectsByType("OS:AirTerminal:SingleDuct:InletSideMixer");
@@ -1720,13 +1720,13 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_AirTerminalSingleDuctInletSideMix
   EXPECT_EQ("CurrentOccupancy", atu.getString(6).get());
 }
 
-TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_GroundHeatExchangerVertical) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_2_2/test_vt_GroundHeatExchangerVertical.osm");
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_GroundHeatExchangerVertical) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_GroundHeatExchangerVertical.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_2/test_vt_GroundHeatExchangerVertical_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_GroundHeatExchangerVertical_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> ghes = model->getObjectsByType("OS:GroundHeatExchanger:Vertical");
@@ -1742,4 +1742,84 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_2_2_GroundHeatExchangerVertical) {
   EXPECT_EQ(0.71111, ghe.getDouble(11).get());
 
   EXPECT_EQ(35, ghe.numExtensibleGroups());
+}
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_ControllerMechanicalVentilation) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_ControllerMechanicalVentilation.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_ControllerMechanicalVentilation_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> cs = model->getObjectsByType("OS:Controller:MechanicalVentilation");
+  ASSERT_EQ(1u, cs.size());
+  WorkspaceObject c = cs[0];
+
+  // Field 4: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+  EXPECT_EQ("Standard62.1VentilationRateProcedure", c.getString(4, false, true).get());
+}
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_SizingSystem) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingSystem.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingSystem_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> szs = model->getObjectsByType("OS:Sizing:System");
+  ASSERT_EQ(1u, szs.size());
+  WorkspaceObject sz = szs[0];
+
+  // Field 20: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+  EXPECT_EQ("Standard62.1VentilationRateProcedure", sz.getString(20, false, true).get());
+
+  // Field before
+  EXPECT_EQ(1.2, sz.getDouble(19).get());  // Heating Design Air Flow Rate
+  // Field right after
+  EXPECT_EQ(1.0, sz.getDouble(21).get());  // Zone Maximum Outdoor Air Fraction
+}
+
+TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_DesignDay) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_0/test_vt_DesignDay.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_DesignDay_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> dds = model->getObjectsByType("OS:SizingPeriod:DesignDay");
+  ASSERT_EQ(1u, dds.size());
+  WorkspaceObject dd = dds[0];
+
+  EXPECT_EQ("", dd.getString(8).get());          // Rain Indicator
+  EXPECT_EQ("No", dd.getString(9).get());        // Snow Indicator
+  EXPECT_EQ("WetBulb", dd.getString(14).get());  // Humidity Condition Type
+  EXPECT_EQ(23, dd.getDouble(16).get());         // Wetbulb or DewPoint at Maximum Dry-Bulb
+  EXPECT_EQ("", dd.getString(17).get());         // Humidity Ratio at Maximum Dry-Bulb
+  EXPECT_EQ("", dd.getString(18).get());         // Enthalpy at Maximum Dry-Bulb
+}
+
+TEST_F(OSVersionFixture, update_3_3_0_to_3_3_1_CoilHeatingDXMultiSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_3_1/test_vt_CoilHeatingDXMultiSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_1/test_vt_CoilHeatingDXMultiSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  ASSERT_EQ(22u, coil.numFields());
+  ASSERT_EQ(4u, coil.numExtensibleGroups());
+
+  ASSERT_EQ(4u, model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData").size());
+  ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
 }

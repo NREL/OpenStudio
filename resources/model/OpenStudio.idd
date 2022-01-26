@@ -1,4 +1,4 @@
-!IDD_Version 3.2.2
+!IDD_Version 3.3.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.2.2
+       \default 3.3.1
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -532,6 +532,7 @@ OS:PerformancePrecisionTradeoffs,
       \key Mode05
       \key Mode06
       \key Mode07
+      \key Mode08
       \key Advanced
       \default Normal
   N1, \field MaxZoneTempDiff
@@ -541,13 +542,19 @@ OS:PerformancePrecisionTradeoffs,
       \minimum 0.1
       \maximum 3.0
       \default 0.3
-  N2; \field MaxAllowedDelTemp
+  N2, \field MaxAllowedDelTemp
       \note Maximum surface temperature change before HVAC timestep is shortened.
       \note Only used when Override Mode is set to Advanced
       \type real
       \minimum 0.002
       \maximum 0.1
       \default 0.002
+  A5; \field Use Representative Surfaces for Calculations
+      \note Automatically group surfaces with similar characteristics and perform relevant calculations only once for each group.
+      \type choice
+      \key Yes
+      \key No
+      \default No
 
 OS:Sizing:Parameters,
        \unique-object
@@ -1295,24 +1302,25 @@ OS:Site:WaterMainsTemperature,
        \units deltaC
        \minimum 0
 
-! TODO: way out of line with E+
 OS:SizingPeriod:DesignDay,
-       \min-fields 16
-  A1, \field Handle
+       \min-fields 20
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference DesignDays
        \reference RunPeriodsAndDesignDays
-  N1, \field Maximum Dry-Bulb Temperature
+  N1,  \field Maximum Dry-Bulb Temperature
+       \note This field is required when field "Dry-Bulb Temperature Range Modifier Type"
+       \note is not "TemperatureProfileSchedule".
        \type real
        \units C
-       \minimum -70
+       \minimum -90
        \maximum 70
        \default 23.0
-  N2, \field Daily Dry-Bulb Temperature Range
+  N2,  \field Daily Dry-Bulb Temperature Range
        \note Must still produce appropriate maximum dry bulb (within range)
        \note This field is not needed if Dry-Bulb Temperature Range Modifier Type
        \note is "delta".
@@ -1320,13 +1328,7 @@ OS:SizingPeriod:DesignDay,
        \units deltaC
        \minimum 0
        \default 0.0
-  N3, \field Humidity Indicating Conditions at Maximum Dry-Bulb
-       \note this will be a wet-bulb, dewpoint, humidity ratio, or enthalpy coincident with the
-       \note maximum temperature depending on the value of the field
-       \note Humidity Indicating Type
-       \note required-field if Humidity Indicating Day Schedule is not used
-       \type real
-  N4, \field Barometric Pressure
+  N3,  \field Barometric Pressure
        \note This field's value is also checked against the calculated "standard barometric pressure"
        \note for the location.  If out of range (>10%), then is replaced by standard value.
        \type real
@@ -1335,14 +1337,14 @@ OS:SizingPeriod:DesignDay,
        \minimum 31000
        \maximum 120000
        \default 31000.0
-  N5, \field Wind Speed
+  N4,  \field Wind Speed
        \type real
        \units m/s
        \ip-units miles/hr
        \minimum 0
        \maximum 40
        \default 0.0
-  N6, \field Wind Direction
+  N5,  \field Wind Direction
        \note North=0.0 East=90.0
        \note 0 and 360 are the same direction.
        \type real
@@ -1350,37 +1352,37 @@ OS:SizingPeriod:DesignDay,
        \minimum 0
        \maximum 360
        \default 0.0
-  N7, \field Sky Clearness
+  N6,  \field Sky Clearness
        \note Only used if Sky Model Indicator = ASHRAEClearSky
        \note 0.0 is totally unclear, 1.0 is totally clear
        \type real
        \minimum 0
        \maximum 1.2
        \default 0.0
-  N8, \field Rain Indicator
-       \note 1 is raining, 0 is not
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  N9, \field Snow Indicator
-       \note 1 is Snow on Ground, 0 is no Snow on Ground
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  N10, \field Day of Month
+  A3,  \field Rain Indicator
+       \note Yes is raining (all day), No is not raining
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A4,  \field Snow Indicator
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note Yes is Snow on Ground, No is no Snow on Grou
+  N7,  \field Day of Month
        \note must be valid for Month field
        \type integer
        \minimum 1
        \maximum 31
        \default 1
-  N11, \field Month
+  N8,  \field Month
        \type integer
        \minimum 1
        \maximum 12
        \default 1
-  A3, \field Day Type
+  A5,  \field Day Type
        \note Day Type selects the schedules appropriate for this design day
        \type choice
        \default SummerDesignDay
@@ -1396,57 +1398,78 @@ OS:SizingPeriod:DesignDay,
        \key WinterDesignDay
        \key CustomDay1
        \key CustomDay2
-  N12, \field Daylight Saving Time Indicator
-       \note 1=Yes, 0=No
-       \type integer
-       \minimum 0
-       \maximum 1
-       \default 0
-  A4, \field Humidity Indicating Type
-       \note What Field "Humidity Indicating Conditions at Maximum Dry-Bulb" is.
-       \note Units for WetBulb, DewPoint, WetBulbProfilexxx [C]
-       \note Units for Humidity-Ratio []
-       \note Units for Enthalpy [kJ/kg]
+  A6,  \field Daylight Saving Time Indicator
+       \note Yes -- use schedules modified for Daylight Saving Time Schedules.
+       \note No - do not use schedules modified for Daylight Saving Time Schedules
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A7,  \field Humidity Condition Type
+       \note values/schedules indicated here and in subsequent fields create the humidity
+       \note values in the 24 hour design day conditions profile.
        \type choice
        \default WetBulb
        \key WetBulb
        \key DewPoint
        \key HumidityRatio
        \key Enthalpy
-       \key Schedule
+       \key RelativeHumiditySchedule
        \key WetBulbProfileMultiplierSchedule
        \key WetBulbProfileDifferenceSchedule
        \key WetBulbProfileDefaultMultipliers
-  A5, \field Humidity Indicating Day Schedule Name
-       \note only used when previous field is "Schedule", "WetBulbProfileMultiplierSchedule", or "WetBulbProfileDifferenceSchedule"
-       \note For type "Schedule", the hour/time interval values should specify
-       \note relative humidity (percent) from 0.0 to 100.0.
+  A8,  \field Humidity Condition Day Schedule Name
+       \note Only used when Humidity Condition Type is "RelativeHumiditySchedule",
+       \note  "WetBulbProfileMultiplierSchedule", or "WetBulbProfileDifferenceSchedule"
+       \note For type "RelativeHumiditySchedule", the hour/time interval values should specify
+       \note   relative humidity (percent) from 0.0 to 100.0.
        \note For type "WetBulbProfileMultiplierSchedule" the hour/time interval values should specify
-       \note the fraction (0-1) of the wet-bulb temperature range to be subtracted from the
-       \note maximum wet-bulb temperature for each timestep in the day
+       \note   the fraction (0-1) of the wet-bulb temperature range to be subtracted from the
+       \note   maximum wet-bulb temperature for each timestep in the day (units = Fraction)
        \note For type "WetBulbProfileDifferenceSchedule" the values should specify a number to be subtracted
-       \note from the maximum wet-bulb temperature for each timestep in the day.
+       \note   from the maximum wet-bulb temperature for each timestep in the day. (units = deltaC)
        \type object-list
        \object-list DayScheduleNames
-  A6, \field Dry-Bulb Temperature Range Modifier Type
+  N9,  \field Wetbulb or DewPoint at Maximum Dry-Bulb
+       \note Wetbulb or dewpoint temperature coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Wetbulb", "Dewpoint",
+       \note "WetBulbProfileMultiplierSchedule", "WetBulbProfileDifferenceSchedule",
+       \note or "WetBulbProfileDefaultMultipliers"
+       \type real
+       \units C
+  N10, \field Humidity Ratio at Maximum Dry-Bulb
+       \note Humidity ratio coincident with the maximum temperature (constant humidity ratio throughout day).
+       \note Required only if field Humidity Condition Type is "HumidityRatio".
+       \type real
+       \units kgWater/kgDryAir
+  N11, \field Enthalpy at Maximum Dry-Bulb
+       \note Enthalpy coincident with the maximum temperature.
+       \note Required only if field Humidity Condition Type is "Enthalpy".
+       \type real
+       \units J/kg
+  A9,  \field Dry-Bulb Temperature Range Modifier Type
        \note Type of modifier to the dry-bulb temperature calculated for the timestep
        \type choice
        \default DefaultMultipliers
        \key MultiplierSchedule
        \key DifferenceSchedule
+       \key TemperatureProfileSchedule
        \key DefaultMultipliers
-  A7, \field Dry-Bulb Temperature Range Modifier Schedule Name
-       \note Only used when previous field is "MultiplierSchedule" or "DifferenceSchedule".
+  A10, \field Dry-Bulb Temperature Range Modifier Day Schedule Name
+       \note Only used when previous field is "MultiplierSchedule", "DifferenceSchedule" or
+       \note   "TemperatureProfileSchedule".
        \note For type "MultiplierSchedule"  the hour/time interval values should specify
-       \note the fraction (0-1) of the dry-bulb temperature range to be subtracted
-       \note from the maximum dry-bulb temperature for each timestep in the day
+       \note   the fraction (0-1) of the dry-bulb temperature range to be subtracted
+       \note   from the maximum dry-bulb temperature for each timestep in the day
        \note For type "DifferenceSchedule" the values should specify a number to be subtracted
-       \note from the maximum dry-bulb temperature for each timestep in the day.
+       \note   from the maximum dry-bulb temperature for each timestep in the day.
        \note Note that numbers in the difference schedule cannot be negative as that
-       \note would result in a higher maximum than the maximum previously specified.
+       \note   would result in a higher maximum than the maximum previously specified.
+       \note For type "TemperatureProfileSchedule" the values should specify the actual dry-bulb
+       \note   temperature for each timestep in the day.
        \type object-list
        \object-list DayScheduleNames
-  A8, \field Solar Model Indicator
+  A11, \field Solar Model Indicator
        \type choice
        \default ASHRAEClearSky
        \key ASHRAEClearSky
@@ -1454,32 +1477,43 @@ OS:SizingPeriod:DesignDay,
        \key Schedule
        \key ASHRAETau
        \key ASHRAETau2017
-  A9, \field Beam Solar Day Schedule Name
+  A12, \field Beam Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then beam schedule name (for day)
        \type object-list
        \object-list DayScheduleNames
-  A10, \field Diffuse Solar Day Schedule Name
+  A13, \field Diffuse Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then diffuse schedule name (for day)
        \type object-list
        \object-list DayScheduleNames
-  N13, \field ASHRAE Taub
+  N12, \field ASHRAE Clear Sky Optical Depth for Beam Irradiance
        \units dimensionless
        \note Required if Solar Model Indicator = ASHRAETau or ASHRAETau2017
        \note ASHRAETau2017 solar model can be used with 2013 and 2017 HOF matching taub
        \minimum 0
        \maximum 1.2
        \default 0
-  N14, \field ASHRAE Taud
+  N13, \field ASHRAE Clear Sky Optical Depth for Diffuse Irradiance
        \units dimensionless
        \note required if solar model indicator = ashraetau or ashraetau2017
        \note ashraetau2017 solar model can be used with 2013 and 2017 hof matching taud
        \minimum 0
        \maximum 3
        \default 0
-  N15; \field Daily Wet-Bulb Temperature Range
+  N14, \field Daily Wet-Bulb Temperature Range
        \note Required only if Humidity Indicating Type = "WetbulbProfileMultiplierSchedule" or "WetBulbProfileDefaultMultipliers"
        \type real
        \units deltaC
+  N15, \field Maximum Number Warmup Days
+       \note If used this design day will be run with a custom limit on the maximum number of days that are repeated for warmup.
+       \note Limiting the number of warmup days can improve run time.
+       \type integer
+  A14; \field Begin Environment Reset Mode
+       \note If used this can control if you want the thermal history to be reset at the beginning of the design day.
+       \note When using a series of similiar design days, this field can be used to retain warmup state from the previous design day.
+       \type choice
+       \key FullResetAtBeginEnvironment
+       \key SuppressAllBeginEnvironmentResets
+       \default FullResetAtBeginEnvironment
 
 OS:SizingPeriod:WeatherFileConditionType,
        \memo Use a weather file period for design sizing calculations.
@@ -1976,6 +2010,7 @@ OS:SpaceType,
        \required-field
        \reference SpaceTypeNames
        \reference SpaceAndSpaceTypeNames
+       \reference SpaceAndSpaceGroupNames
   A3, \field Default Construction Set Name
        \type object-list
        \object-list DefaultConstructionSetNames
@@ -7642,18 +7677,22 @@ OS:Refrigeration:Case,
   N24,  \field Standard Case Fan Power per Door
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
   N25,  \field Operating Case Fan Power per Door
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
   N26,  \field Standard Case Lighting Power per Door
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
   N27,  \field Installed Case Lighting Power per Door
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
   N28,  \field Case Anti-Sweat Heater Power per Door
         \type real
@@ -7712,6 +7751,7 @@ OS:Refrigeration:Condenser:AirCooled,
   N2,   \field Rated Fan Power
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
         \default 250.0
         \note Power for condenser fan(s) corresponding to rated total heat rejection effect.
@@ -7783,6 +7823,7 @@ OS:Refrigeration:Condenser:EvaporativeCooled,
         \type real
         \required-field
         \units W
+        \ip-units W
         \minimum 0.0
         \note Power for condenser fan(s) corresponding to rated total heat rejection effect.
   N4,   \field Minimum Fan Air Flow Ratio
@@ -7860,6 +7901,7 @@ OS:Refrigeration:Condenser:EvaporativeCooled,
   N14,  \field Rated Water Pump Power
         \type real
         \units W
+        \ip-units W
         \autocalculatable
         \default 1000.0
         \note Design recirculating water pump power.
@@ -8149,6 +8191,7 @@ OS:Refrigeration:CompressorRack,
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
   A5,   \field Condenser Fan Power Function of Temperature Curve Name
         \type object-list
@@ -8242,6 +8285,7 @@ OS:Refrigeration:CompressorRack,
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
         \autocalculatable
         \note Design recirc water pump power for Condenser Type = EvaporativelyCooled.
@@ -8400,6 +8444,7 @@ OS:Refrigeration:GasCooler:AirCooled,
         \note Power for gas cooler fan(s) corresponding to rated total heat rejection effect.
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
         \default 5000.0
   N2,   \field Minimum Fan Air Flow Ratio
@@ -8776,6 +8821,7 @@ OS:Refrigeration:SecondarySystem,
         \type real
         \minimum 0.0
         \units W
+        \ip-units W
         \note Either the Total Pump Power or the Total Pump Head is required.
   N10,   \field Total Pump Head
         \type real
@@ -8892,17 +8938,20 @@ OS:Refrigeration:WalkIn,
   N5,   \field Rated Cooling Coil Fan Power
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
         \default 375.0
   N6,   \field Rated Circulation Fan Power
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
         \default 0.0
   N7,   \field Rated Total Lighting Power
         \type real
         \required-field
         \units W
+        \ip-units W
         \note Enter the total (display + task) installed lighting power.
   A5,   \field Lighting Schedule Name
         \type object-list
@@ -9214,6 +9263,7 @@ OS:Refrigeration:AirChiller,
   N11,  \field Rated Fan Power
         \type real
         \units W
+        \ip-units W
         \default 375.0
         \minimum 0.
   N12,  \field Rated Air Flow
@@ -9699,6 +9749,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
   N26, \field Evaporative Condenser Pump Rated Power Consumption
        \type real
        \units W
+        \ip-units W
        \minimum 0.0
        \required-field
        \autosizable
@@ -10132,11 +10183,13 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
    N4 , \field Auxiliary On-Cycle Electric Power
         \type real
         \units W
+        \ip-units W
         \minimum 0
         \required-field
    N5 , \field Auxiliary Off-Cycle Electric Power
         \type real
         \units W
+        \ip-units W
         \minimum 0
         \required-field
    N6 , \field Design Heat Recovery Water Flow Rate
@@ -10915,12 +10968,14 @@ OS:AirLoopHVAC:UnitarySystem,
   N23, \field Ancilliary On-Cycle Electric Power
        \type real
        \units W
+        \ip-units W
        \minimum 0
        \default 0
        \note Enter the value of ancilliary electric power for controls or other devices consumed during the on cycle.
   N24, \field Ancilliary Off-Cycle Electric Power
        \type real
        \units W
+        \ip-units W
        \minimum 0
        \default 0
        \note Enter the value of ancilliary electric power for controls or other devices consumed during the off cycle.
@@ -12574,6 +12629,7 @@ OS:Boiler:HotWater,
   N8, \field Parasitic Electric Load
        \type real
        \units W
+        \ip-units W
        \minimum 0.0
        \default 0.0
   N9, \field Sizing Factor
@@ -15662,6 +15718,7 @@ OS:Coil:Cooling:DX:CurveFit:OperatingMode,
        \note Rated power consumed by the evaporative condenser's water pump
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -16289,6 +16346,7 @@ OS:CoilPerformance:DX:Cooling,
   N12, \field Evaporative Condenser Pump Rated Power Consumption
        \type real
        \units W
+        \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -16508,6 +16566,7 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
   N13; \field Rated Evaporative Condenser Pump Power Consumption
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \autosizable
        \required-field
@@ -16690,6 +16749,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \autosizable
        \units W
+        \ip-units W
        \minimum 0
   N14, \field Low Speed Evaporative Condenser Effectiveness
        \type real
@@ -16708,6 +16768,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \autosizable
        \units W
+        \ip-units W
        \minimum 0
   A15, \field Supply Water Storage Tank Name
        \type object-list
@@ -17489,6 +17550,7 @@ OS:Coil:Heating:Electric,
        \type real
        \autosizable
        \units W
+        \ip-units W
        \default Autosize
   A4, \field Air Inlet Node Name
        \type object-list
@@ -17773,6 +17835,7 @@ OS:Coil:WaterHeating:Desuperheater,
   N7,  \field Water Pump Power
        \type real
        \units W
+        \ip-units W
        \minimum 0.0
        \default 0.0
        \note The water circulation pump electric power.
@@ -18009,7 +18072,6 @@ OS:Coil:Heating:Water:Baseboard,
        \minimum 0.0
        \autosizable
        \required-field
-       \ip-units W
        \note Enter the design heating capacity.Required field when the heating design capacity method
        \note HeatingDesignCapacity.
   N2 , \field Heating Design Capacity Per Floor Area
@@ -18171,7 +18233,12 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \object-list QuadvariateFunctions
 
 OS:Coil:Heating:DX:MultiSpeed,
-       \min-fields 19
+       \extensible:1
+       \max-fields 22
+       \memo Direct expansion (DX) heating coil (air-to-air heat pump) and compressor unit
+       \memo (includes electric or engine-driven compressor and outdoor fan), multi-speed
+       \memo (or variable-speed), with defrost controls. Requires two to four sets
+       \memo of performance data and will interpolate between speeds.
   A1 , \field Handle
        \type handle
        \required-field
@@ -18262,15 +18329,20 @@ OS:Coil:Heating:DX:MultiSpeed,
        \type integer
        \minimum 1
        \maximum 6
-  A11; \field Stage Data List
+  A11; \field Stage 1
+       \begin-extensible
        \type object-list
-       \object-list ModelObjectLists
+       \object-list CoilHeatingDXMultiSpeedStageData
 
 OS:Coil:Heating:DX:MultiSpeed:StageData,
-       \min-fields 12
+       \min-fields 13
   A1 , \field Handle
        \type handle
        \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference CoilHeatingDXMultiSpeedStageData
   N1 , \field Gross Rated Heating Capacity
        \note Heating capacity not accounting for the effect of supply air fan heat
        \required-field
@@ -18295,25 +18367,25 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \units W/(m3/s)
        \minimum 0.0
        \maximum 1250.0
-  A2 , \field Heating Capacity Function of Temperature Curve Name
+  A3 , \field Heating Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A3 , \field Heating Capacity Function of Flow Fraction Curve Name
+  A4 , \field Heating Capacity Function of Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
-  A4 , \field Energy Input Ratio Function of Temperature Curve Name
+  A5 , \field Energy Input Ratio Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A5 , \field Energy Input Ratio Function of Flow Fraction Curve Name
+  A6 , \field Energy Input Ratio Function of Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
-  A6 , \field Part Load Fraction Correlation Curve Name
+  A7 , \field Part Load Fraction Correlation Curve Name
        \required-field
        \type object-list
        \object-list UnivariateFunctions
@@ -18323,7 +18395,7 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \units dimensionless
        \minimum> 0.0
        \maximum 1.0
-  A7 ; \field Waste Heat Function of Temperature Curve Name
+  A8 ; \field Waste Heat Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list BivariateFunctions
@@ -19088,7 +19160,8 @@ OS:Controller:MechanicalVentilation,
   A5, \field System Outdoor Air Method
        \type choice
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedureWithLimit
        \key IndoorAirQualityProcedure
        \key ProportionalControl
        \key ProportionalControlBasedOnOccupancySchedule
@@ -21082,6 +21155,7 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \type real
        \required-field
        \units W
+       \ip-units W
        \note This is the fan power at Secondary Design Air Flow Rate
        \note this is the nominal design power at full speed.
        \autosizable
@@ -21637,6 +21711,7 @@ OS:Fan:SystemModel,
   N6 , \field Design Electric Power Consumption
        \type real
        \units W
+       \ip-units W
        \autosizable
        \required-field
        \minimum> 0.0
@@ -22042,6 +22117,7 @@ OS:Fan:ComponentModel,
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum> 0.0
         \autosizable
         \note Maximum power input to drive belt by motor
@@ -22069,6 +22145,7 @@ OS:Fan:ComponentModel,
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum> 0.0
         \autosizable
         \note Maximum power input to motor by VFD
@@ -24764,7 +24841,8 @@ OS:Sizing:System,
        \type choice
        \default ZoneSum
        \key ZoneSum
-       \key VentilationRateProcedure
+       \key Standard62.1VentilationRateProcedure
+       \key Standard62.1SimplifiedProcedure
   N13, \field Zone Maximum Outdoor Air Fraction
        \type real
        \minimum> 0.0
@@ -24893,7 +24971,7 @@ OS:Sizing:System,
        \required-field
        \note Enter the fraction of auto-sized heating design capacity. Required field when capacity the
        \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
-  A12; \field Central Cooling Capacity Control Method
+  A12, \field Central Cooling Capacity Control Method
        \note Method used to control the coil's output
        \required-field
        \type choice
@@ -24901,6 +24979,15 @@ OS:Sizing:System,
        \key Bypass
        \key VT
        \key OnOff
+  N27; \field Occupant Diversity
+       \type real
+       \maximum 1.0
+       \minimum 0.0
+       \autosizable
+       \note The Occupant Diversity is used to determine a multi-zone system's outdoor air intake when the System Outdoor Air Method is
+       \note Standard62.1VentilationRateProcedure or the Standard62.1SimplifiedProcedure. If set to be autosized, it will be calculated
+       \note using the information in the People objects assigned to each zone attached to this system/airloop.
+       \required-field
 
 OS:Sizing:Zone,
        \min-fields 20
@@ -25099,6 +25186,7 @@ OS:ThermalZone,
        \required-field
        \reference ThermalZoneNames
        \reference ConnectionObject
+       \reference SpaceAndSpaceGroupNames
   N1, \field Multiplier
        \type integer
        \minimum 1
@@ -26753,11 +26841,13 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum 0
   N9 ,  \field Zone Terminal Unit Off Parasitic Electric Energy Use
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum 0
   N10,  \field Rated Total Heating Capacity Sizing Ratio
         \required-field
@@ -27095,6 +27185,7 @@ OS:ZoneHVAC:Dehumidifier:DX,
         \required-field
         \type real
         \units W
+        \ip-units W
         \minimum 0.0
    A9;  \field Condensate Collection Water Storage Tank Name
         \type object-list
@@ -27919,6 +28010,7 @@ OS:WaterHeater:HeatPump,
   N6 , \field On Cycle Parasitic Electric Load
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor operates.
@@ -27926,6 +28018,7 @@ OS:WaterHeater:HeatPump,
   N7 , \field Off Cycle Parasitic Electric Load
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor is off.
@@ -28068,6 +28161,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   N9 , \field Condenser Water Pump Power
        \type real
        \units W
+       \ip-units W
        \minimum 0
        \required-field
        \note A warning message will be issued if the ratio of Condenser Water Pump Power to Rated
@@ -28353,6 +28447,7 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
   N7 , \field On Cycle Parasitic Electric Load
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor operates.
@@ -28360,6 +28455,7 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
   N8 , \field Off Cycle Parasitic Electric Load
        \type real
        \units W
+       \ip-units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor is off.
@@ -28616,6 +28712,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \required-field
   N6,  \field Reference Unit Water Pump Input Power At Rated Conditions
        \units W
+       \ip-units W
        \type real
        \minimum 0
        \required-field
@@ -30466,15 +30563,18 @@ OS:Generator:MicroTurbine,
       \required-field
       \type real
       \units W
+       \ip-units W
       \minimum> 0.0
   N2, \field Minimum Full Load Electrical Power Output
       \type real
       \units W
+       \ip-units W
       \minimum 0.0
       \default 0.0
   N3, \field Maximum Full Load Electrical Power Output
       \type real
       \units W
+       \ip-units W
       \minimum> 0.0
       \note If left blank, Maximum Full Load Electrical Power Output will be set
       \note equal to the Reference Electrical Power Output.
@@ -30546,6 +30646,7 @@ OS:Generator:MicroTurbine,
  N10, \field Standby Power
       \type real
       \units W
+       \ip-units W
       \default 0.0
       \minimum 0.0
       \note Electric power consumed when the generator is available but not being called
@@ -30553,6 +30654,7 @@ OS:Generator:MicroTurbine,
  N11, \field Ancillary Power
       \type real
       \units W
+       \ip-units W
       \default 0.0
       \minimum 0.0
       \note Electric power consumed by ancillary equipment (e.g., external fuel pressurization pump).
@@ -30763,6 +30865,7 @@ OS:Generator:Photovoltaic,
    N3 , \field Rated Electric Power Output
         \type real
         \units W
+        \ip-units W
    A6 ; \field Availability Schedule Name
         \note Availability schedule name for this generator. Schedule value > 0 means the generator is available.
         \note If this field is blank, the generator is always available.
@@ -31176,6 +31279,7 @@ OS:Generator:FuelCell:PowerModule,
   N2, \field Nominal Electrical Power
       \note This field is not used
       \units W
+      \ip-units W
   N3, \field Number of Stops at Start of Simulation
       \note this is Nstops in SOFC model specification
   N4, \field Cycling Performance Degradation Coefficient
@@ -31369,8 +31473,10 @@ OS:Generator:FuelCell:AuxiliaryHeater,
       \key kmol/s
   N5, \field Maximum Heating Capacity in Watts
       \units W
+      \ip-units W
   N6, \field Minimum Heating Capacity in Watts
       \units W
+      \ip-units W
   N7, \field Maximum Heating Capacity in Kmol per Second
       \units kmol/s
   N8; \field Minimum Heating Capacity in Kmol per Second
@@ -31449,8 +31555,10 @@ OS:Generator:FuelCell:ElectricalStorage,
       \units J
   N4, \field Simple Maximum Power Draw
       \units W
+      \ip-units W
   N5, \field Simple Maximum Power Store
       \units W
+      \ip-units W
   N6; \field Initial Charge State
       \units J
 
@@ -31514,6 +31622,7 @@ OS:Generator:FuelCell:Inverter,
   N13, \field Stack Cogeneration Exchanger Nominal Heat Transfer Coefficient Exponent
   N14, \field Stack Cooler Pump Power
        \units W
+       \ip-units W
   N15, \field Stack Cooler Pump Heat Loss Fraction
        \minimum 0.0
        \maximum 1.0
@@ -31643,6 +31752,7 @@ OS:Generator:WindTurbine,
       \type real
       \minimum> 0.0
       \units W
+      \ip-units W
   N6, \field Rated Wind Speed
       \required-field
       \type real
@@ -31754,6 +31864,7 @@ OS:Generator:PVWatts,
       \type real
       \required-field
       \units W
+      \ip-units W
       \minimum> 0
   A4, \field Module Type
       \type choice
@@ -31874,8 +31985,10 @@ OS:ElectricLoadCenter:Inverter:LookUpTable,
         \maximum 1.0
    N2 , \field Rated Maximum Continuous Output Power
         \units W
+        \ip-units W
    N3 , \field Night Tare Loss Power
         \units W
+        \ip-units W
    N4 , \field Nominal Voltage Input
         \units V
    N5 , \field Efficiency at 10% Power and Nominal Voltage
@@ -31941,10 +32054,12 @@ OS:ElectricLoadCenter:Storage:Simple,
   N5,  \field Maximum Power for Discharging
        \required-field
        \units W
+       \ip-units W
        \minimum 0.0
   N6,  \field Maximum Power for Charging
        \required-field
        \units W
+       \ip-units W
        \minimum 0.0
   N7;  \field Initial State of Charge
        \units J
@@ -32160,11 +32275,13 @@ OS:ElectricLoadCenter:Transformer,
   N6,  \field Rated No Load Loss
        \type real
        \units W
+       \ip-units W
        \minimum> 0
        \note Only required when RatedLosses is the performance input method
   N7,  \field Rated Load Loss
        \type real
        \units W
+       \ip-units W
        \minimum 0
        \note Only required when RatedLosses is the performance input method
   N8,  \field Nameplate Efficiency
@@ -32235,6 +32352,7 @@ OS:ElectricLoadCenter:Distribution,
   N1 , \field Demand Limit Scheme Purchased Electric Demand Limit
        \type real
        \units W
+       \ip-units W
   A5 , \field Track Schedule Name Scheme Schedule Name
        \note required when Generator Operation Scheme Type=TrackSchedule
        \type object-list
@@ -32310,6 +32428,7 @@ OS:ElectricLoadCenter:Distribution,
        \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
        \type real
        \units W
+       \ip-units W
   A14, \field Storage Charge Power Fraction Schedule Name
        \note Controls timing and magnitude of charging storage.
        \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
@@ -32322,6 +32441,7 @@ OS:ElectricLoadCenter:Distribution,
        \note Required field when using Storage Operation Schemes FacilityDemandLeveling or TrackChargeDischargeSchedules.
        \type real
        \units W
+       \ip-units W
   A15, \field Storage Discharge Power Fraction Schedule Name
        \note Controls timing and magnitude of discharging storage
        \note Required field if Storage Operation Scheme is set to TrackChargeDischargeSchedules.
@@ -32333,6 +32453,7 @@ OS:ElectricLoadCenter:Distribution,
        \note Required field for FacilityDemandLeveling storage operation scheme
        \type real
        \units W
+       \ip-units W
   A16; \field Storage Control Utility Demand Target Fraction Schedule Name
        \note Modifies the target utility service demand power over time.
        \note Schedule values should be fractions from -1.0 to 1.0, inclusive.
@@ -32374,6 +32495,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note Required field when Power Conversion Efficiency Method is set to FunctionOfPower.
         \type real
         \units W
+        \ip-units W
    A5 , \field Efficiency Function of Power Curve Name
         \note Curve or table with a single independent variable that describes efficiency as a function of normalized power.
         \note The "x" input for curve or table is the ratio of current input power divided by design power in the previous field
@@ -32384,6 +32506,7 @@ OS:ElectricLoadCenter:Storage:Converter,
         \note Optional standby power consumed when converter is available but no power is being conditioned.
         \type real
         \units W
+        \ip-units W
         \default 0.0
    A6 , \field Zone Name
         \note enter name of zone to receive converter losses as heat
@@ -35118,8 +35241,33 @@ OS:AirflowNetworkEffectiveLeakageArea,
       \maximum 1.0
       \note Enter the exponent used in the air mass flow equation.
 
+OS:AirflowNetworkSpecifiedFlowRate,
+      \min-fields 3
+      \memo This object is used to define specified flow through a linkage.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference SurfaceAirflowLeakageNames
+      \note Enter a unique name for this object.
+  N1, \field Air Flow Value
+      \required-field
+      \type real
+      \note Enter the specified flow rate.
+  A3; \field Air Flow Units
+      \type choice
+      \key VolumetricFlow
+      \key MassFlow
+      \default MassFlow
+      \note Enter the units of the air flow value.
+      \note VolumetricFlow (m3/s)
+      \note MassFlow (kg/s)
+
 OS:AirflowNetworkDetailedOpening,
-      \min-fields 17
+      \min-fields 16
+      \max-fields 31
       \extensible:5
       \memo This object specifies the properties of airflow through windows and doors (window, door and
       \memo glass door heat transfer subsurfaces) when they are closed or open.
@@ -35172,9 +35320,22 @@ OS:AirflowNetworkDetailedOpening,
       \type real
       \units dimensionless
       \minimum 0
-      \maximum 0
+      \maximum 1
       \default 0
+      \note Opening Factor 1
       \note This value must be specified as 0.
+      \note Opening Factor 2
+      \note If Number of Sets of Opening Factor Data = 2, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 3, this value must be less than 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than the
+      \note value entered for Opening factor 3 and greater than the value entered
+      \note for Opening factor 1.
+      \note Opening Factor 3
+      \note If Number of Sets of Opening Factor Data = 3, this value must be 1.0.
+      \note If Number of Sets of Opening Factor Data = 4, this value must be less than 1.0,
+      \note and greater than value entered for Opening factor 2.
+      \note Opening Factor 4
+      \note If Number of Sets of Opening Factor Data = 4, this value must be 1.0
       \begin-extensible
   N5, \field Discharge Coefficient for Opening Factor 1
       \type real

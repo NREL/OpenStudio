@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1431,7 +1431,7 @@ namespace model {
     DesignDay designDay1(model);
     designDay1.setMaximumDryBulbTemperature(-20.6);
     designDay1.setDailyDryBulbTemperatureRange(0.0);
-    designDay1.setHumidityIndicatingConditionsAtMaximumDryBulb(-20.6);
+    designDay1.setWetBulbOrDewPointAtMaximumDryBulb(-20.6);
     designDay1.setBarometricPressure(99063.0);
     designDay1.setWindSpeed(4.9);
     designDay1.setWindDirection(270);
@@ -1442,12 +1442,12 @@ namespace model {
     designDay1.setMonth(1);
     designDay1.setDayType("WinterDesignDay");
     designDay1.setDaylightSavingTimeIndicator(false);
-    designDay1.setHumidityIndicatingType("WetBulb");
+    designDay1.setHumidityConditionType("WetBulb");
 
     DesignDay designDay2(model);
     designDay2.setMaximumDryBulbTemperature(33.2);
     designDay2.setDailyDryBulbTemperatureRange(10.7);
-    designDay2.setHumidityIndicatingConditionsAtMaximumDryBulb(23.8);
+    designDay2.setWetBulbOrDewPointAtMaximumDryBulb(23.8);
     designDay2.setBarometricPressure(99063.0);
     designDay2.setWindSpeed(5.3);
     designDay2.setWindDirection(230);
@@ -1458,7 +1458,7 @@ namespace model {
     designDay2.setMonth(7);
     designDay2.setDayType("SummerDesignDay");
     designDay2.setDaylightSavingTimeIndicator(false);
-    designDay2.setHumidityIndicatingType("WetBulb");
+    designDay2.setHumidityConditionType("WetBulb");
 
     // add schedules
     addExampleSchedules(model);
@@ -1518,6 +1518,24 @@ namespace model {
     buildingStory.setNominalFloortoFloorHeight(3);
 
     // create spaces from floor print
+
+    //            y (=North)
+    //  Site      ▲
+    //  Shading   │                  building height = 3m
+    //   ║      20├────────┬────────┐
+    //   ║        │        │        │
+    //   ║        │        │        │
+    //   ║        │ Space 3│ Space 4│
+    //   ║        │        │        │
+    //   ║      10├────────┼────────┤
+    //   ║        │        │        │
+    //   ║        │        │        ├
+    //   ║        │ Space 1│ Space 2│◄─── window + space shading
+    //   ║        │        │        ├
+    //   ║        └──┬─┬───┴────────┴──────► x
+    //           0    ▲    10       20
+    //                └─ door+building shading
+
     std::vector<Point3d> floorPrint;
     floorPrint.push_back(Point3d(0, 0, 0));
     floorPrint.push_back(Point3d(0, 10, 0));
@@ -2594,6 +2612,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSpecifiedFlowRate);
     REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
     REGISTER_CONSTRUCTOR(AirflowNetworkZone);
     REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
@@ -3120,6 +3139,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSpecifiedFlowRate);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);

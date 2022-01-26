@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -138,13 +138,13 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   OptionalWorkspaceObject light = workspace.getObjectByTypeAndName(IddObjectType::Lights, "SPACE1-1 Lights 1");
   ASSERT_TRUE(light);
 
-  OptionalString lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  OptionalString lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
 
   OptionalString lightsScheduleName = light->getString(LightsFields::ScheduleName);
   ASSERT_TRUE(lightsScheduleName);
 
-  OptionalWorkspaceObject zone = light->getTarget(LightsFields::ZoneorZoneListName);
+  OptionalWorkspaceObject zone = light->getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(zone);
 
   OptionalString zoneName = zone->getString(ZoneFields::Name);
@@ -166,7 +166,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   ASSERT_TRUE(zoneName);
   EXPECT_EQ("New Zone Name", *zoneName);
 
-  lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
   EXPECT_EQ(*lightsZoneName, *zoneName);
 
@@ -175,7 +175,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   ASSERT_TRUE(zoneName);
   EXPECT_EQ("Zone 1", *zoneName);
 
-  lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
   EXPECT_EQ(*lightsZoneName, *zoneName);
 
@@ -204,8 +204,8 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
   EXPECT_TRUE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
-  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));
-  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListName, Handle()));
+  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, ""));
+  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, Handle()));
 
   EXPECT_TRUE(light->setString(LightsFields::ScheduleName, ""));
   EXPECT_TRUE(light->setPointer(LightsFields::ScheduleName, Handle()));
@@ -238,8 +238,8 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   EXPECT_FALSE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
-  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));         // PointerType error
-  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListName, Handle()));  // PointerType error
+  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, ""));         // PointerType error
+  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, Handle()));  // PointerType error
 
   EXPECT_TRUE(light->setString(LightsFields::ScheduleName, ""));         // PointerType error
   EXPECT_TRUE(light->setPointer(LightsFields::ScheduleName, Handle()));  // PointerType error

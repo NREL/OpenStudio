@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,6 +72,10 @@ class UTILITIES_API RunOptions
   bool setDebug(bool debug);
   void resetDebug();
 
+  bool epjson() const;
+  bool setEpjson(bool epjson);
+  void resetEpjson();
+
   bool fast() const;
   bool setFast(bool fast);
   void resetFast();
@@ -95,6 +99,10 @@ class UTILITIES_API RunOptions
   boost::optional<CustomOutputAdapter> customOutputAdapter() const;
   bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
   void resetCustomOutputAdapter();
+
+  std::string forwardTranslateOptions() const;
+  bool setForwardTranslateOptions(const std::string& options);
+  void resetForwardTranslateOptions();
 
  protected:
   // get the impl

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,7 @@
 #include "../../model/CurveBiquadratic.hpp"
 #include "../../model/WaterHeaterHeatPump.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -60,6 +61,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   WaterHeaterHeatPump hpwh(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed(m);
   ThermalZone tz(m);
+  Space space(m);
+  space.setThermalZone(tz);
 
   hpwh.setDXCoil(coil);
   hpwh.addToThermalZone(tz);

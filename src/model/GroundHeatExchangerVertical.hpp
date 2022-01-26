@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
-#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -85,9 +84,6 @@ namespace model {
 
     boost::optional<double> designFlowRate() const;
 
-    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
-    OS_DEPRECATED boost::optional<double> maximumFlowRate() const;
-
     boost::optional<int> numberofBoreHoles() const;
 
     boost::optional<double> boreHoleLength() const;
@@ -122,10 +118,6 @@ namespace model {
     //@{
 
     bool setDesignFlowRate(double designFlowRate);
-    OS_DEPRECATED void resetDesignFlowRate();
-
-    OS_DEPRECATED bool setMaximumFlowRate(double maximumFlowRate);
-    OS_DEPRECATED void resetMaximumFlowRate();
 
     bool setNumberofBoreHoles(int numberofBoreHoles);
 

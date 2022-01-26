@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
@@ -63,9 +64,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump) {
 
   ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   pthp.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
@@ -96,9 +99,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
 
   ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   pthp.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
@@ -129,9 +134,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
 
   ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, with at least one space
   ThermalZone z(m);
   pthp.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);

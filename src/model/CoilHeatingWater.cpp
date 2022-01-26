@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -109,13 +109,16 @@ namespace model {
       if (success && (!containingHVACComponent()) && (!containingZoneHVACComponent())) {
         if (boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject()) {
           if (auto oldController = controllerWaterCoil()) {
-            oldController->remove();
+            if (!openstudio::istringEqual(oldController->action().get(), "Normal")) {
+              LOG(Warn, briefDescription()
+                          << " has an existing ControllerWaterCoil with action set to something else than 'Normal'. Make sure this is what you want");
+            }
+          } else {
+            Model t_model = model();
+            ControllerWaterCoil controller(t_model);
+            controller.getImpl<ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
+            controller.setAction("Normal");
           }
-
-          Model _model = model();
-          ControllerWaterCoil controller(_model);
-          controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
-          controller.setAction("Normal");
         }
       }
 

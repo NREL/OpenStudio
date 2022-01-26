@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -190,7 +190,7 @@ TEST_F(IdfFixture, WorkspaceObjectWatcher_RelationshipFieldChanges_TargetDeleted
   OptionalWorkspaceObject oZone = workspace.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oZone);
 
-  EXPECT_TRUE(workspaceObject.setPointer(LightsFields::ZoneorZoneListName, oZone->handle()));
+  EXPECT_TRUE(workspaceObject.setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, oZone->handle()));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_FALSE(watcher.nameChanged());

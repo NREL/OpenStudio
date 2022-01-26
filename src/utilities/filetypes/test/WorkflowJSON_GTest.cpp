@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1096,6 +1096,56 @@ TEST(Filetypes, RunOptions) {
   ASSERT_TRUE(workflow2->runOptions());
   EXPECT_TRUE(workflow2->runOptions()->debug());
   ASSERT_TRUE(workflow2->runOptions()->customOutputAdapter());
+  EXPECT_EQ("my_ruby_file.rb", workflow2->runOptions()->customOutputAdapter()->customFileName());
+  EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
+}
+
+TEST(Filetypes, RunOptions_ForwardTranslate) {
+  WorkflowJSON workflow;
+
+  EXPECT_FALSE(workflow.runOptions());
+
+  CustomOutputAdapter adapter("my_ruby_file.rb", "MyOutputAdapter", "{}");
+
+  RunOptions options;
+  options.setDebug(true);
+  options.setEpjson(true);
+  options.setCustomOutputAdapter(adapter);
+
+  // return string is formated with wbuilder["indentation"] = "   ";
+  std::string ft_options = "{\n   \"no_space_translation\" : false\n}";
+
+  //std::string ft_options = "{\n"
+  //                         "   \"runcontrolspecialdays\" : true,\n"
+  //                         "   \"ip_tabular_output\" : true,\n"
+  //                         "   \"no_lifecyclecosts\" : true,\n"
+  //                         "   \"no_sqlite_output\" : true,\n"
+  //                         "   \"no_html_output\" : true,\n"
+  //                         "   \"no_variable_dictionary\" : true,\n"
+  //                         "   \"no_space_translation\" : true\n"
+  //                         "}";
+
+  options.setForwardTranslateOptions(ft_options);
+
+  workflow.setRunOptions(options);
+
+  ASSERT_TRUE(workflow.runOptions());
+  EXPECT_TRUE(workflow.runOptions()->debug());
+  EXPECT_TRUE(workflow.runOptions()->epjson());
+  ASSERT_TRUE(workflow.runOptions()->customOutputAdapter());
+  EXPECT_EQ(ft_options, workflow.runOptions()->forwardTranslateOptions());
+  EXPECT_EQ("my_ruby_file.rb", workflow.runOptions()->customOutputAdapter()->customFileName());
+  EXPECT_EQ("MyOutputAdapter", workflow.runOptions()->customOutputAdapter()->className());
+
+  std::string s = workflow.string();
+
+  boost::optional<WorkflowJSON> workflow2 = WorkflowJSON::load(s);
+  ASSERT_TRUE(workflow2);
+
+  ASSERT_TRUE(workflow2->runOptions());
+  EXPECT_TRUE(workflow2->runOptions()->debug());
+  ASSERT_TRUE(workflow2->runOptions()->customOutputAdapter());
+  EXPECT_EQ(ft_options, workflow2->runOptions()->forwardTranslateOptions());
   EXPECT_EQ("my_ruby_file.rb", workflow2->runOptions()->customOutputAdapter()->customFileName());
   EXPECT_EQ("MyOutputAdapter", workflow2->runOptions()->customOutputAdapter()->className());
 }

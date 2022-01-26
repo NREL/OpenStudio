@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -402,12 +402,12 @@ TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_OAMethod) {
   EXPECT_EQ(mechanicalVentOAMethod, sizingSystemOAMethod);
   EXPECT_EQ(mechanicalVentOAMethod, "ZoneSum");
 
-  airLoopHVAC.sizingSystem().setSystemOutdoorAirMethod("VentilationRateProcedure");
+  EXPECT_TRUE(airLoopHVAC.sizingSystem().setSystemOutdoorAirMethod("Standard62.1VentilationRateProcedure"));
   mechanicalVentOAMethod = controller.controllerMechanicalVentilation().systemOutdoorAirMethod();
-  //EXPECT_EQ(mechanicalVentOAMethod, "VentilationRateProcedure");
+  //EXPECT_EQ(mechanicalVentOAMethod, "Standard62.1VentilationRateProcedure");
 
   sizingSystemOAMethod = airLoopHVAC.sizingSystem().systemOutdoorAirMethod();
-  EXPECT_EQ(sizingSystemOAMethod, "VentilationRateProcedure");
+  EXPECT_EQ(sizingSystemOAMethod, "Standard62.1VentilationRateProcedure");
 }
 
 TEST_F(ModelFixture, AirLoopHVAC_supplyComponents) {

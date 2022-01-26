@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -180,12 +180,39 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool PerformancePrecisionTradeoffs_Impl::useRepresentativeSurfacesforCalculations() const {
+      boost::optional<std::string> value = getString(OS_PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool PerformancePrecisionTradeoffs_Impl::isUseRepresentativeSurfacesforCalculationsDefaulted() const {
+      return isEmpty(OS_PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations);
+    }
+
+    bool PerformancePrecisionTradeoffs_Impl::setUseRepresentativeSurfacesforCalculations(bool useRepresentativeSurfacesforCalculations) {
+      bool result = false;
+      if (useRepresentativeSurfacesforCalculations) {
+        result = setString(OS_PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "Yes");
+      } else {
+        result = setString(OS_PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void PerformancePrecisionTradeoffs_Impl::resetUseRepresentativeSurfacesforCalculations() {
+      bool result = setString(OS_PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   IddObjectType PerformancePrecisionTradeoffs::iddObjectType() {
     return IddObjectType(IddObjectType::OS_PerformancePrecisionTradeoffs);
   }
 
+  // Use Coil Direct Solutions
   bool PerformancePrecisionTradeoffs::useCoilDirectSolutions() const {
     return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->useCoilDirectSolutions();
   }
@@ -268,6 +295,24 @@ namespace model {
 
   void PerformancePrecisionTradeoffs::resetMaxAllowedDelTemp() {
     getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetMaxAllowedDelTemp();
+  }
+
+  // Use Representative Surfaces for Calculations
+  bool PerformancePrecisionTradeoffs::useRepresentativeSurfacesforCalculations() const {
+    return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->useRepresentativeSurfacesforCalculations();
+  }
+
+  bool PerformancePrecisionTradeoffs::isUseRepresentativeSurfacesforCalculationsDefaulted() const {
+    return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->isUseRepresentativeSurfacesforCalculationsDefaulted();
+  }
+
+  bool PerformancePrecisionTradeoffs::setUseRepresentativeSurfacesforCalculations(bool useRepresentativeSurfacesforCalculations) {
+    return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setUseRepresentativeSurfacesforCalculations(
+      useRepresentativeSurfacesforCalculations);
+  }
+
+  void PerformancePrecisionTradeoffs::resetUseRepresentativeSurfacesforCalculations() {
+    getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetUseRepresentativeSurfacesforCalculations();
   }
 
   /// @cond

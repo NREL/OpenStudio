@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -76,6 +76,9 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_PerformancePrecisionTradeoffs
 
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
   EXPECT_EQ(0.002, performancePrecisionTradeoffs.maxAllowedDelTemp());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_FALSE(performancePrecisionTradeoffs.useRepresentativeSurfacesforCalculations());
 }
 
 // test setting and getting
@@ -134,6 +137,12 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {
   performancePrecisionTradeoffs.resetMaxAllowedDelTemp();
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
   EXPECT_EQ(0.002, performancePrecisionTradeoffs.maxAllowedDelTemp());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.setUseRepresentativeSurfacesforCalculations(true));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.useRepresentativeSurfacesforCalculations());
+  performancePrecisionTradeoffs.resetUseRepresentativeSurfacesforCalculations();
+  EXPECT_TRUE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
 }
 
 // test cloning it
@@ -150,6 +159,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone) {
   EXPECT_TRUE(performancePrecisionTradeoffs.setOverrideMode("Advanced"));
   EXPECT_TRUE(performancePrecisionTradeoffs.setMaxZoneTempDiff(0.65));
   EXPECT_TRUE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(0.05));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setUseRepresentativeSurfacesforCalculations(true));
 
   // clone it into the same model
   PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
@@ -163,6 +173,8 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone) {
   EXPECT_EQ(0.65, performancePrecisionTradeoffsClone.maxZoneTempDiff());
   EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
   EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffsClone.useRepresentativeSurfacesforCalculations());
 
   // clone it into a different model
   Model model2;
@@ -178,6 +190,8 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone) {
   EXPECT_EQ(0.65, performancePrecisionTradeoffsClone2.maxZoneTempDiff());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxAllowedDelTempDefaulted());
   EXPECT_EQ(0.05, performancePrecisionTradeoffsClone2.maxAllowedDelTemp());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone2.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffsClone2.useRepresentativeSurfacesforCalculations());
 }
 
 // check that remove works

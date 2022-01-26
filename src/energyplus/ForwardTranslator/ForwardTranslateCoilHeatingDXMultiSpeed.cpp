@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -141,14 +141,14 @@ namespace energyplus {
       idfObject.setInt(Coil_Heating_DX_MultiSpeedFields::RegionnumberforCalculatingHSPF, num);
     }
 
-    auto const stages = modelObject.stages();
+    const auto stages = modelObject.stages();
 
     // NumberofSpeeds
-    if (auto num = stages.size()) {
-      idfObject.setInt(Coil_Heating_DX_MultiSpeedFields::NumberofSpeeds, num);
+    if (!stages.empty()) {
+      idfObject.setInt(Coil_Heating_DX_MultiSpeedFields::NumberofSpeeds, stages.size());
     }
 
-    for (auto const& stage : stages) {
+    for (const auto& stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
       // GrossRatedHeatingCapacity

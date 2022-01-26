@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -47,14 +47,14 @@ class IddObject_Test < MiniTest::Unit::TestCase
 
     extInd = OpenStudio::ExtensibleIndex.new(0,1)
     ind = iddObj.index(extInd)
-    assert_equal(11,ind)
+    assert_equal(12,ind)
 
     extInd.group = 2
     extInd.field = 2
     ind = iddObj.index(extInd)
-    assert_equal(18,ind)
+    assert_equal(19,ind)
 
-    ind = 26
+    ind = 27
     extInd = iddObj.extensibleIndex(ind)
     assert_equal(5,extInd.group)
     assert_equal(1,extInd.field)

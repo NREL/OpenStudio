@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -245,7 +245,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
     EXPECT_TRUE(light.isSource());
 
     // get the zone
-    OptionalWorkspaceObject zone = light.getTarget(LightsFields::ZoneorZoneListName);
+    OptionalWorkspaceObject zone = light.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
     ASSERT_TRUE(zone);
     //EXPECT_TRUE(zone->canBeTarget());
     EXPECT_TRUE(zone->isTarget());
@@ -282,7 +282,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
       }
       EXPECT_EQ(static_cast<unsigned>(1), zoneLights.size());
       if (!zoneLights.empty()) {
-        OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListName);
+        OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
         ASSERT_TRUE(lightsZoneName);
         EXPECT_EQ(*zoneName, *lightsZoneName);
       }
@@ -376,7 +376,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
     // make a new lights object with the correct lpd
     IdfObject newLights(IddObjectType::Lights);
     EXPECT_TRUE(newLights.setString(LightsFields::Name, *zoneName + "-Lights"));
-    EXPECT_TRUE(newLights.setString(LightsFields::ZoneorZoneListName, *zoneName));
+    EXPECT_TRUE(newLights.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, *zoneName));
     EXPECT_TRUE(newLights.setString(LightsFields::ScheduleName, schedule.name().get()));
     EXPECT_TRUE(newLights.setString(LightsFields::DesignLevelCalculationMethod, "Watts/Area"));
     EXPECT_TRUE(newLights.setDouble(LightsFields::WattsperZoneFloorArea, lpd));
@@ -393,7 +393,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
     ASSERT_TRUE(lightsName);
     EXPECT_TRUE(istringEqual(*zoneName + "-Lights", *lightsName));
 
-    OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListName);
+    OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
     ASSERT_TRUE(lightsZoneName);
     EXPECT_EQ(*zoneName, *lightsZoneName);
 
@@ -672,6 +672,7 @@ TEST_F(IdfFixture, Workspace_BadObjects) {
     Wall,                    !- Surface Type \n\
     Wall,                    !- Construction Name \n\
     Zone,                    !- Zone Name \n\
+    ,                        !- Space Name \n\
     Outdoors,                !- Outside Boundary Condition \n\
     ,                        !- Outside Boundary Condition Object \n\
     SunExposed,              !- Sun Exposure \n\
@@ -701,6 +702,7 @@ Wall:Exterior, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -754,6 +756,7 @@ Window, \n\
   Wall,        !- Surface Type \n\
   ,            !- Construction Name \n\
   Zone,        !- Zone Name \n\
+  ,            !- Space Name \n\
   Outdoors,    !- Outside Boundary Condition \n\
   ,            !- Outside Boundary Condition Object \n\
   SunExposed,  !- Sun Exposure \n\
@@ -820,6 +823,7 @@ Wall:Adiabatic, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -873,6 +877,7 @@ Window, \n\
   Wall,        !- Surface Type \n\
   ,            !- Construction Name \n\
   Zone,        !- Zone Name \n\
+  ,            !- Space Name \n\
   Adiabatic,   !- Outside Boundary Condition \n\
   ,            !- Outside Boundary Condition Object \n\
   NoSun,       !- Sun Exposure \n\
@@ -938,6 +943,7 @@ Wall:Adiabatic, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -1270,13 +1276,13 @@ TEST_F(IdfFixture, Workspace_SpecialNames) {
   objects = ws.getObjectsByName("Office, Hallway, and Other Lights", exactMatch);
   ASSERT_EQ(2u, objects.size());
 
-  EXPECT_TRUE(lights1.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
-  ASSERT_TRUE(lights1.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zone.handle(), lights1.getTarget(LightsFields::ZoneorZoneListName).get().handle());
+  EXPECT_TRUE(lights1.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, "Office, Hallway, and Other Zone"));
+  ASSERT_TRUE(lights1.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(zone.handle(), lights1.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get().handle());
 
-  EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
-  ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListName).get().handle());
+  EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, "Office, Hallway, and Other Zone"));
+  ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get().handle());
 }
 
 TEST_F(IdfFixture, Workspace_AvoidingNameClashes_IdfObject) {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -134,7 +134,7 @@ namespace energyplus {
             }
           }
           //Give WArning that spaceType has multiple spaces
-          if (spaceType->spaces().size() > 1) {
+          if (m_excludeSpaceTranslation && spaceType->spaces().size() > 1) {
             LOG(Warn, "Actuator '" << modelObject.nameString() << "' references a SpaceLoad '" << load.get().name().get()
                                    << "' attached to SpaceType '" << spaceType.get().nameString()
                                    << "', with multiple spaces. Check your EMS programs to make sure your actuators are correct.");
