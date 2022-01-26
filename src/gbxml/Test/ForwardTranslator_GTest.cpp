@@ -355,7 +355,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State) {
 TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
 
   // Load the file with known issues
-  path p = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
+  path p = resourcesPath() / openstudio::toPath("gbxml/TropicBird.xml");
   ReverseTranslator reverseTranslator;
   boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
