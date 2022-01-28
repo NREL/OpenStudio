@@ -344,8 +344,7 @@ namespace detail {
   // SETTERS
 
   boost::optional<std::string> WorkspaceObject_Impl::setName(const std::string& newName) {
-    //boost::optional<std::string> result = setName(newName, true);
-    boost::optional<std::string> result = setName(newName, false);
+    boost::optional<std::string> result = setName(newName, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -414,8 +413,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::setString(unsigned index, const std::string& value) {
-    //bool result = setString(index, value, true);
-    bool result = setString(index, value, false);
+    bool result = setString(index, value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -499,8 +497,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::setPointer(unsigned index, const Handle& targetHandle) {
-    //bool result = setPointer(index, targetHandle, true);
-    bool result = setPointer(index, targetHandle, false);
+    bool result = setPointer(index, targetHandle, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -580,8 +577,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::pushString() {
-    //bool result = pushString(std::string(), true);
-    bool result = pushString(std::string(), false);
+    bool result = pushString(std::string(), true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -593,8 +589,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::pushString(const std::string& value) {
-    //bool result = pushString(value, true);
-    bool result = pushString(value, false);
+    bool result = pushString(value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -637,8 +632,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::pushPointer(const Handle& targetHandle) {
-    //bool result = pushPointer(targetHandle, true);
-    bool result = pushPointer(targetHandle, false);
+    bool result = pushPointer(targetHandle, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -674,8 +668,7 @@ namespace detail {
   }
 
   std::vector<std::string> WorkspaceObject_Impl::popExtensibleGroup() {
-    //StringVector result = popExtensibleGroup(true);
-    StringVector result = popExtensibleGroup(false);
+    StringVector result = popExtensibleGroup(true);
     if (!result.empty()) {
       this->emitChangeSignals();
     }

@@ -310,8 +310,7 @@ namespace detail {
   // SETTERS
 
   void IdfObject_Impl::setComment(const std::string& comment) {
-    //setComment(comment, true);
-    setComment(comment, false);
+    setComment(comment, true);
     this->emitChangeSignals();
   }
 
@@ -321,8 +320,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setFieldComment(unsigned index, const std::string& cmnt) {
-    //bool result = setFieldComment(index, cmnt, true);
-    bool result = setFieldComment(index, cmnt, false);
+    bool result = setFieldComment(index, cmnt, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -345,8 +343,7 @@ namespace detail {
   }
 
   boost::optional<std::string> IdfObject_Impl::setName(const std::string& newName) {
-    //OptionalString result = IdfObject_Impl::setName(newName, true);
-    OptionalString result = IdfObject_Impl::setName(newName, false);
+    OptionalString result = IdfObject_Impl::setName(newName, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -430,9 +427,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setString(unsigned index, const std::string& value) {
-    //bool result = IdfObject_Impl::setString(index, value, true);
-    //bool result = IdfObject_Impl::setString(index, value, m_checkValidity);
-    bool result = IdfObject_Impl::setString(index, value, false);
+    bool result = IdfObject_Impl::setString(index, value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -494,7 +489,6 @@ namespace detail {
 
   bool IdfObject_Impl::setDouble(unsigned index, double value) {
     //bool result = setDouble(index, value, true);
-    //bool result = setDouble(index, value, m_checkValidity);
     bool result = setDouble(index, value, false);
     if (result) {
       this->emitChangeSignals();
@@ -527,8 +521,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setUnsigned(unsigned index, unsigned value) {
-    //bool result = setUnsigned(index, value, true);
-    bool result = setUnsigned(index, value, false);
+    bool result = setUnsigned(index, value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -562,8 +555,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::pushString() {
-    //bool result = IdfObject_Impl::pushString(std::string(), true);
-    bool result = IdfObject_Impl::pushString(std::string(), false);
+    bool result = IdfObject_Impl::pushString(std::string(), true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -575,8 +567,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::pushString(const std::string& value) {
-    //bool result = IdfObject_Impl::pushString(value, true);
-    bool result = IdfObject_Impl::pushString(value, false);
+    bool result = IdfObject_Impl::pushString(value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -600,8 +591,7 @@ namespace detail {
   }
 
   IdfExtensibleGroup IdfObject_Impl::pushExtensibleGroup(const std::vector<std::string>& values) {
-    //IdfExtensibleGroup result = IdfObject_Impl::pushExtensibleGroup(values, true);
-    IdfExtensibleGroup result = IdfObject_Impl::pushExtensibleGroup(values, false);
+    IdfExtensibleGroup result = IdfObject_Impl::pushExtensibleGroup(values, true);
     if (!result.empty()) {
       this->emitChangeSignals();
     }
@@ -678,8 +668,7 @@ namespace detail {
   }
 
   IdfExtensibleGroup IdfObject_Impl::insertExtensibleGroup(unsigned groupIndex, const std::vector<std::string>& values) {
-    //IdfExtensibleGroup result = insertExtensibleGroup(groupIndex, values, true);
-    IdfExtensibleGroup result = insertExtensibleGroup(groupIndex, values, false);
+    IdfExtensibleGroup result = insertExtensibleGroup(groupIndex, values, true);
     if (!result.empty()) {
       this->emitChangeSignals();
     }
@@ -832,8 +821,7 @@ namespace detail {
    *  preserves the relative order of the remaining data if successful. Otherwise, the returned
    *  vector will be empty. */
   std::vector<std::string> IdfObject_Impl::eraseExtensibleGroup(unsigned groupIndex) {
-    //StringVector result = eraseExtensibleGroup(groupIndex, true);
-    StringVector result = eraseExtensibleGroup(groupIndex, false);
+    StringVector result = eraseExtensibleGroup(groupIndex, true);
     if (!result.empty()) {
       this->emitChangeSignals();
     }
