@@ -2280,6 +2280,7 @@ if(BUILD_BENCHMARK)
       CONAN_PKG::fmt
       openstudiolib
     )
+    set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
   endforeach()
 
 endif()
