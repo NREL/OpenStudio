@@ -91,14 +91,6 @@ BENCHMARK(BM_WorkspaceSetNameWithoutAnyChecks)->Unit(benchmark::kMillisecond)->A
 */
 
 // Calculate complexity
-BENCHMARK(BM_WorkspaceSetNameWithChecks)
-  //->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(8)
-  ->Range(2, 2048)
-  ->Complexity();
+BENCHMARK(BM_WorkspaceSetNameWithChecks)->Unit(benchmark::kMillisecond)->RangeMultiplier(8)->Range(2, 2048)->Complexity();
 
-BENCHMARK(BM_WorkspaceSetNameWithoutAnyChecks)
-  // ->Unit(benchmark::kMillisecond)
-  ->RangeMultiplier(8)
-  ->Range(2, 2048)
-  ->Complexity();
+BENCHMARK(BM_WorkspaceSetNameWithoutAnyChecks)->Unit(benchmark::kMillisecond)->RangeMultiplier(8)->Range(2, 2048)->Complexity();

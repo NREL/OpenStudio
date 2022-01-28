@@ -104,4 +104,4 @@ BENCHMARK(BM_AddObjects)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Ran
 
 // 128 takes 14secs,  512 takes about 300 seconds, 1024 takes 20 minutes. By interpolation, 4096 would take 636 minutes, 8192 = 2567 minutes = 42 h
 // 'y[ms] = 1.156580334046908*x**2 + -72.31709114930806*x + 1397.3555792110117'
-BENCHMARK(BM_SetUpPlantLoop)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(1, 512)->Complexity();
+BENCHMARK(BM_SetUpPlantLoop)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(1, 128)->Complexity();

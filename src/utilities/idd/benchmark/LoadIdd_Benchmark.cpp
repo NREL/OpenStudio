@@ -63,10 +63,10 @@ static void BM_ParseOpenStudioIdd(benchmark::State& state, const std::string& te
   }
 }
 
-BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, Old, std::string("Old"));
+BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, Old, std::string("Old"))->Unit(benchmark::kMillisecond);
 // BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, New, std::string("New"));
 // BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, NewParallel, std::string("NewParallel"));
 
-BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, Old, std::string("Old"));
+BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, Old, std::string("Old"))->Unit(benchmark::kMillisecond);
 // BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, New, std::string("New"));
 // BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, NewParallel, std::string("NewParallel"));
