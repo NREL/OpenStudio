@@ -469,6 +469,7 @@ if(BUILD_BENCHMARK)
       )
     endif()
     set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")
+    add_dependencies(run_benchmarks ${bench_name})
   endforeach()
 
 endif()
