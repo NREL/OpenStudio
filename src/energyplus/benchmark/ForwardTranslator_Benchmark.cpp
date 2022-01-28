@@ -63,6 +63,6 @@ BENCHMARK(BM_WorkspaceSetNameWithoutAnyChecks)->Unit(benchmark::kMillisecond)->A
 //BENCHMARK(BM_ExampleModel);
 
 // With Complexity
-BENCHMARK(BM_FT_ExampleModel_newFT)->Unit(benchmark::kMillisecond)->Ranges({{1, 512}, {0, 1}})->Complexity();
+BENCHMARK(BM_FT_ExampleModel_newFT)->Unit(benchmark::kMillisecond)->Ranges({{1, 256}, {0, 1}})->Complexity();
 
-BENCHMARK(BM_FT_ExampleModel_sameFT)->Unit(benchmark::kMillisecond)->Ranges({{1, 512}, {0, 1}})->Complexity();
+BENCHMARK(BM_FT_ExampleModel_sameFT)->Unit(benchmark::kMillisecond)->Ranges({{1, 256}, {0, 1}})->Complexity();

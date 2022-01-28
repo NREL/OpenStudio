@@ -120,23 +120,23 @@ static void ProposedEmplace(benchmark::State& state) {
 BENCHMARK(Current)
   // ->Unit(benchmark::kMillisecond)
   ->RangeMultiplier(2)
-  ->Range(4, 2048)
+  ->Range(4, 1024)
   ->Complexity();
 
 BENCHMARK(Proposed)
   // ->Unit(benchmark::kMillisecond)
   ->RangeMultiplier(2)
-  ->Range(4, 2048)
+  ->Range(4, 1024)
   ->Complexity();
 
 BENCHMARK(ProposedPushBackNoName)
   // ->Unit(benchmark::kMillisecond)
   ->RangeMultiplier(2)
-  ->Range(4, 2048)
+  ->Range(4, 1024)
   ->Complexity();
 
 BENCHMARK(ProposedEmplace)
   // ->Unit(benchmark::kMillisecond)
   ->RangeMultiplier(2)
-  ->Range(4, 2048)
+  ->Range(4, 1024)
   ->Complexity();

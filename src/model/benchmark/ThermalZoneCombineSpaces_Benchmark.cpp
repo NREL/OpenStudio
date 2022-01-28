@@ -67,7 +67,7 @@ static void BM_CombineSpaces(benchmark::State& state) {
 
 // (Note: Under heaver external load, 1024 takes 99 s, 2048 takes 475s (8 min))
 // Normal load: 1024 takes 33s
-BENCHMARK(BM_CombineSpaces)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(1, 512)->Complexity();
+BENCHMARK(BM_CombineSpaces)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(1, 256)->Complexity();
 
 model::Model makeModelWithNSpacesInNZones(size_t nSpaces) {
 
@@ -126,4 +126,4 @@ static void BM_CombineSpacesInNZones(benchmark::State& state) {
   state.SetComplexityN(state.range(0));
 }
 
-BENCHMARK(BM_CombineSpacesInNZones)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(4, 512)->Complexity();
+BENCHMARK(BM_CombineSpacesInNZones)->Unit(benchmark::kMillisecond)->RangeMultiplier(2)->Range(4, 256)->Complexity();
