@@ -399,6 +399,7 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   CONAN_PKG::sqlite3
   CONAN_PKG::jsoncpp
+  CONAN_PKG::minizip
   CONAN_PKG::zlib
   CONAN_PKG::fmt
   CONAN_PKG::pugixml

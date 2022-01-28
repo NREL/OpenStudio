@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -2618,6 +2618,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSpecifiedFlowRate);
     REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
     REGISTER_CONSTRUCTOR(AirflowNetworkZone);
     REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
@@ -3144,6 +3145,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSpecifiedFlowRate);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);

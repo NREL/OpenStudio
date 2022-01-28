@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,6 +50,7 @@
 #include "AirflowNetworkReferenceCrackConditions.hpp"
 #include "AirflowNetworkSimpleOpening.hpp"
 #include "AirflowNetworkSimulationControl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate.hpp"
 #include "AirflowNetworkSurface.hpp"
 #include "AirflowNetworkZone.hpp"
 #include "AirflowNetworkZoneExhaustFan.hpp"
@@ -568,6 +569,7 @@
 #include "AirflowNetworkReferenceCrackConditions_Impl.hpp"
 #include "AirflowNetworkSimpleOpening_Impl.hpp"
 #include "AirflowNetworkSimulationControl_Impl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 #include "AirflowNetworkSurface_Impl.hpp"
 #include "AirflowNetworkZone_Impl.hpp"
 #include "AirflowNetworkZoneExhaustFan_Impl.hpp"

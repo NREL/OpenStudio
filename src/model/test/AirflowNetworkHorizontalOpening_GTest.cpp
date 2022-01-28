@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,14 +39,17 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirflowNetwork_HorizontalOpening) {
   Model model;
-  /*
-  AirflowNetworkSimpleOpening simple0(model, 1.0, 0.5, 0.5);
-  AirflowNetworkSimpleOpening simple1(model, 1.0, 0.5, 0.5, 0.5);
 
-  EXPECT_EQ(1, simple0.airMassFlowCoefficientWhenOpeningisClosed());
-  EXPECT_EQ(0.65, simple0.airMassFlowExponentWhenOpeningisClosed());
+  AirflowNetworkHorizontalOpening horizontal0(model, 1.0, 0.5);
+  AirflowNetworkHorizontalOpening horizontal1(model, 1.0, 0.5, 0.5, 0.5);
 
-  EXPECT_EQ(1, simple1.airMassFlowCoefficientWhenOpeningisClosed());
-  EXPECT_EQ(0.5, simple1.airMassFlowExponentWhenOpeningisClosed());
-*/
+  EXPECT_EQ(1, horizontal0.airMassFlowCoefficientWhenOpeningisClosed());
+  EXPECT_EQ(0.65, horizontal0.airMassFlowExponentWhenOpeningisClosed());
+  EXPECT_EQ(90, horizontal0.slopingPlaneAngle());
+  EXPECT_EQ(0.5, horizontal0.dischargeCoefficient());
+
+  EXPECT_EQ(1, horizontal1.airMassFlowCoefficientWhenOpeningisClosed());
+  EXPECT_EQ(0.5, horizontal1.airMassFlowExponentWhenOpeningisClosed());
+  EXPECT_EQ(0.5, horizontal1.slopingPlaneAngle());
+  EXPECT_EQ(0.5, horizontal1.dischargeCoefficient());
 }
