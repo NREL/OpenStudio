@@ -860,10 +860,6 @@ namespace model {
       thisPrimitive.material = materialIndex;
       thisPrimitive.mode = TINYGLTF_MODE_TRIANGLES;
 
-      //ERROR : BPS Generated model isn't Proper
-      /*_nodes.emplace_back(std::move(node));
-      _meshes.emplace_back(std::move(targetMesh));*/
-
       n += 1;
       updatePercentage(100.0 * n / N);
       // End Region MAIN
@@ -1111,10 +1107,6 @@ namespace model {
     bufferView2.byteOffset = _indicesBuffer.size();
     bufferView2.byteLength = _coordinatesBuffer.size();
 
-    /* std::vector<unsigned char> _allBuffer;
-    _allBuffer.insert(_allBuffer.end(), _indicesBuffer.begin(), _indicesBuffer.end());
-    _allBuffer.insert(_allBuffer.end(), _coordinatesBuffer.begin(), _coordinatesBuffer.end());*/
-
     std::vector<unsigned char> _allBuffer = _indicesBuffer;  //std::move(_indicesBuffer);
     _allBuffer.insert(_allBuffer.end(), _coordinatesBuffer.begin(), _coordinatesBuffer.end());
 
@@ -1135,7 +1127,6 @@ namespace model {
 
     // Create a simple material
     GLTF::Material mat;
-    //GLTF::Material mat = m.materials.emplace_back();
     mat.pbrMetallicRoughness.baseColorFactor = {1.0f, 0.9f, 0.9f, 1.0f};
     mat.pbrMetallicRoughness.metallicFactor = 1.0;
     mat.pbrMetallicRoughness.roughnessFactor = 0.5;
