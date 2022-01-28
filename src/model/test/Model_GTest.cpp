@@ -82,6 +82,8 @@
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/ValidityReport.hpp"
 
+#include "../../osversion/VersionTranslator.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 
 #include <boost/algorithm/string/case_conv.hpp>
@@ -790,3 +792,53 @@ TEST_F(ModelFixture, Ensure_Name_Unicity_SpaceAndSpaceGroupNames) {
     EXPECT_NE(mos[i1].nameString(), mos[i2].nameString());
   }
 }
+
+TEST_F(ModelFixture, Issue_4372) {
+
+  openstudio::path modelPath = resourcesPath() / "model" / toPath("bar_hosp_unmatched_floor.osm");
+  ASSERT_TRUE(openstudio::filesystem::exists(modelPath));
+  //boost::optional<Model> model = Model::load(path);
+
+  openstudio::osversion::VersionTranslator vt;
+  boost::optional<openstudio::model::Model> model = vt.loadModel(modelPath);
+
+  ASSERT_TRUE(model);
+
+  int numobj = model->numObjects();
+  std::vector<Space> spaces = model->getModelObjects<Space>();
+  std::vector<Surface> surfacesBefore = model->getModelObjects<Surface>();
+
+  double totalAreaBefore = 0;
+  for (const auto& surface : surfacesBefore) {
+    auto name = surface.nameString();
+    auto type = surface.surfaceType();
+    auto area = surface.grossArea();
+    auto condition = surface.outsideBoundaryCondition();
+
+    //if (type == "Wall" && condition == "Outdoors") {
+      totalAreaBefore += area;
+    //}
+  }
+
+  intersectSurfaces(spaces);
+  //matchSurfaces(spaces);
+  std::vector<Surface> surfacesAfter = model->getModelObjects<Surface>();
+
+  modelPath = resourcesPath() / "model" / toPath("bar_hosp_after_floor.osm");
+  model->save(modelPath, true);
+
+  double totalAreaAfter = 0;
+  for (const auto& surface : surfacesAfter) {
+    auto name = surface.nameString();
+    auto type = surface.surfaceType();
+    auto area = surface.grossArea();
+    auto condition  = surface.outsideBoundaryCondition();
+
+    //if (type == "Wall" && condition == "Outdoors") {
+      totalAreaAfter += area;
+    //}
+  }
+  ASSERT_NEAR(totalAreaBefore, totalAreaAfter, 1);
+}
+
+
