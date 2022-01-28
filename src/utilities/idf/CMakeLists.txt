@@ -63,10 +63,12 @@ set(idf_test_src
   idf/Test/Validity_GTest.cpp
 )
 
-SET(idf_swig_src
+set(idf_swig_src
   idf/Idf.i
 )
 
-SET(idf_benchmark_src
-  idf/Test/Workspace_Benchmark.cpp
+set(idf_benchmark_src
+  idf/benchmark/Workspace_Benchmark.cpp
+  idf/benchmark/IdfObjectParse_Benchmark.cpp
+  idf/benchmark/LoadIdfFile_Benchmark.cpp
 )

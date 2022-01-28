@@ -440,12 +440,13 @@ endif()
 if(BUILD_BENCHMARK)
 
   set(core_benchmark_src
-    core/test/Checksum_Benchmark.cpp
-    core/test/Zip_Benchmark.cpp
+    core/benchmark/Checksum_Benchmark.cpp
+    core/benchmark/Zip_Benchmark.cpp
   )
   set(${target_name}_benchmark_src
     ${core_benchmark_src}
     ${idf_benchmark_src}
+    ${idd_benchmark_src}
   )
 
   foreach( bench_file ${${target_name}_benchmark_src} )
