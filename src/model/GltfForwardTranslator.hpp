@@ -48,7 +48,7 @@ namespace model {
    public:
     GltfForwardTranslator();
 
-    // Convert an OpenStudio Model to Gltf format
+    //  Convert an OpenStudio Model to Gltf format
     bool modelToGLTF(const Model& model, const path& outputPath);
     bool modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputpath);
 
