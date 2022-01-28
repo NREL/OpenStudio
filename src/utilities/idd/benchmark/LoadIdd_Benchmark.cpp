@@ -22,11 +22,11 @@ static void BM_ParseEnergyPlusIdd(benchmark::State& state, const std::string& te
     std::shared_ptr<openstudio::detail::IddFile_Impl> iddFileImpl_ptr;
 
     if (testCase == "Old") {
-      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, boost::none);
-    } else if (testCase == "New") {
-      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, false);
-    } else if (testCase == "NewParallel") {
-      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, true);
+      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile);  //, boost::none);
+      //} else if (testCase == "New") {
+      //iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, false);
+      //} else if (testCase == "NewParallel") {
+      //iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, true);
     } else {
       BOOST_ASSERT(false);
     }
@@ -48,11 +48,11 @@ static void BM_ParseOpenStudioIdd(benchmark::State& state, const std::string& te
     std::shared_ptr<openstudio::detail::IddFile_Impl> iddFileImpl_ptr;
 
     if (testCase == "Old") {
-      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, boost::none);
-    } else if (testCase == "New") {
-      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, false);
-    } else if (testCase == "NewParallel") {
-      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, true);
+      iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile);  //, boost::none);
+      //} else if (testCase == "New") {
+      //iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, false);
+      //} else if (testCase == "NewParallel") {
+      //iddFileImpl_ptr = openstudio::detail::IddFile_Impl::load(inFile, true);
     } else {
       BOOST_ASSERT(false);
     }
@@ -64,9 +64,9 @@ static void BM_ParseOpenStudioIdd(benchmark::State& state, const std::string& te
 }
 
 BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, Old, std::string("Old"));
-BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, New, std::string("New"));
-BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, NewParallel, std::string("NewParallel"));
+// BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, New, std::string("New"));
+// BENCHMARK_CAPTURE(BM_ParseEnergyPlusIdd, NewParallel, std::string("NewParallel"));
 
 BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, Old, std::string("Old"));
-BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, New, std::string("New"));
-BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, NewParallel, std::string("NewParallel"));
+// BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, New, std::string("New"));
+// BENCHMARK_CAPTURE(BM_ParseOpenStudioIdd, NewParallel, std::string("NewParallel"));
