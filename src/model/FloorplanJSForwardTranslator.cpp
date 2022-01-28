@@ -79,28 +79,19 @@ namespace model {
   }
 
   std::vector<LogMessage> FloorplanJSForwardTranslator::warnings() const {
-    std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() != Warn; }),
+                 result.end());
     return result;
   }
 
   std::vector<LogMessage> FloorplanJSForwardTranslator::errors() const {
-    std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() <= Warn; }),
+                 result.end());
     return result;
   }
+
 
   FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJS(const FloorplanJS& floorplan, const Model& model, bool removeMissingObjects) {
     m_logSink.setThreadId(std::this_thread::get_id());

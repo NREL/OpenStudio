@@ -121,7 +121,7 @@ namespace model {
       this->makeUnique();
 
       HotWaterEquipmentDefinition hotWaterEquipmentDefinition = this->hotWaterEquipmentDefinition();
-      for (LifeCycleCost cost : hotWaterEquipmentDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : hotWaterEquipmentDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

@@ -391,7 +391,7 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
       RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
         if (!refrigerationAirChillers.empty()
             && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
@@ -405,7 +405,7 @@ namespace model {
     boost::optional<RefrigerationSecondarySystem> RefrigerationAirChiller_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
       RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+      for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSecondarySystem.airChillers();
         if (!refrigerationAirChillers.empty()
             && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
@@ -419,7 +419,7 @@ namespace model {
     boost::optional<RefrigerationCompressorRack> RefrigerationAirChiller_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
       RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+      for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationCompressorRack.airChillers();
         if (!refrigerationAirChillers.empty()
             && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)

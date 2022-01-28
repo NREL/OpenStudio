@@ -336,7 +336,7 @@ namespace model {
         valueNameAndUnits = valueName + std::string(" []");
       }
 
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
         std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'Initialization Summary'

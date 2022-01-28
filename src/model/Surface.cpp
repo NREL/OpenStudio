@@ -155,11 +155,11 @@ namespace model {
       ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
       ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
 
-      for (ModelObject child : children()) {
+      for (const ModelObject& child : children()) {
         ModelObject newChild = child.clone(model);
         newChild.setParent(newParent);
-        if (child.optionalCast<SubSurface>()) {
-          newChild.cast<SubSurface>().setSubSurfaceType(child.cast<SubSurface>().subSurfaceType());
+        if (auto ss_ = child.optionalCast<SubSurface>()) {
+          newChild.cast<SubSurface>().setSubSurfaceType(ss_->subSurfaceType());
         }
       }
 
@@ -179,10 +179,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> Surface_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_SubSurface);
-
-      return result;
+      return std::vector<IddObjectType> { IddObjectType::OS_SubSurface };
     }
 
     const std::vector<std::string>& Surface_Impl::outputVariableNames() const {
@@ -461,7 +458,7 @@ namespace model {
           if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
             // remove all subsurfaces
             int n_subsurfaces = 0;
-            for (auto subSurface : subSurfaces()) {
+            for (auto& subSurface : subSurfaces()) {
               subSurface.remove();
               ++n_subsurfaces;
             }
@@ -806,7 +803,7 @@ namespace model {
       if (test) {
 
         // clean all other surfaces pointing to this (unless it is surface)
-        for (WorkspaceObject wo : this->getSources(IddObjectType::OS_Surface)) {
+        for (const WorkspaceObject& wo : this->getSources(IddObjectType::OS_Surface)) {
           if (wo.handle() == surface.handle()) {
             continue;
           }
@@ -818,14 +815,14 @@ namespace model {
           otherSurface.assignDefaultSunExposure();
           otherSurface.assignDefaultWindExposure();
 
-          for (SubSurface subSurface : otherSurface.subSurfaces()) {
+          for (SubSurface& subSurface : otherSurface.subSurfaces()) {
             subSurface.resetAdjacentSubSurface();
           }
         }
 
         if (!isSameSurface) {
           // clean all other surfaces pointing to surface (unless it is this)
-          for (WorkspaceObject wo : surface.getSources(IddObjectType::OS_Surface)) {
+          for (const WorkspaceObject& wo : surface.getSources(IddObjectType::OS_Surface)) {
             if (wo.handle() == this->handle()) {
               continue;
             }
@@ -837,7 +834,7 @@ namespace model {
             otherSurface.assignDefaultSunExposure();
             otherSurface.assignDefaultWindExposure();
 
-            for (SubSurface subSurface : otherSurface.subSurfaces()) {
+            for (SubSurface& subSurface : otherSurface.subSurfaces()) {
               subSurface.resetAdjacentSubSurface();
             }
           }
@@ -845,11 +842,11 @@ namespace model {
 
         // this and surface are newly pointing to each other, clean sub surfaces on both
         if (isNewMatch) {
-          for (SubSurface subSurface : this->subSurfaces()) {
+          for (SubSurface& subSurface : this->subSurfaces()) {
             subSurface.resetAdjacentSubSurface();
           }
           if (!isSameSurface) {
-            for (SubSurface subSurface : surface.subSurfaces()) {
+            for (SubSurface& subSurface : surface.subSurfaces()) {
               subSurface.resetAdjacentSubSurface();
             }
           }
@@ -891,12 +888,12 @@ namespace model {
       }
 
       // unset all matched sub surfaces
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         subSurface.resetAdjacentSubSurface();
       }
 
       // clean all other surfaces pointing to this
-      for (WorkspaceObject wo : this->getSources(IddObjectType::OS_Surface)) {
+      for (const WorkspaceObject& wo : this->getSources(IddObjectType::OS_Surface)) {
 
         Surface otherSurface = wo.cast<Surface>();
         test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
@@ -905,7 +902,7 @@ namespace model {
         otherSurface.assignDefaultSunExposure();
         otherSurface.assignDefaultWindExposure();
 
-        for (SubSurface subSurface : otherSurface.subSurfaces()) {
+        for (SubSurface& subSurface : otherSurface.subSurfaces()) {
           subSurface.resetAdjacentSubSurface();
         }
       }
@@ -926,16 +923,15 @@ namespace model {
     }
 
     boost::optional<SurfacePropertyConvectionCoefficients> Surface_Impl::surfacePropertyConvectionCoefficients() const {
-      std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
-      std::vector<SurfacePropertyConvectionCoefficients> spccs;
-      for (auto& spcc : allspccs) {
+      std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+      auto thisHandle = this->handle();
+      auto isNotPointingToMe = [&thisHandle](const auto& spcc)  {
         OptionalSurface surface = spcc.surfaceAsSurface();
-        if (surface) {
-          if (surface->handle() == handle()) {
-            spccs.push_back(spcc);
-          }
-        }
-      }
+        return !surface || !(surface->handle() == thisHandle);
+      };
+
+      spccs.erase(std::remove_if(spccs.begin(), spccs.end(), isNotPointingToMe), spccs.end());
+
       if (spccs.empty()) {
         return boost::none;
       } else if (spccs.size() == 1) {
@@ -982,7 +978,7 @@ namespace model {
       }
 
       // reset all sub surfaces
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         subSurface.resetSurfacePropertyOtherSideCoefficients();
       }
     }
@@ -1024,7 +1020,7 @@ namespace model {
       }
 
       // reset all sub surfaces
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         subSurface.resetSurfacePropertyOtherSideConditionsModel();
       }
     }
@@ -1238,7 +1234,7 @@ namespace model {
 
       this->setAdjacentSurface(otherSurface);
 
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         vertices = transformation * subSurface.vertices();
         std::reverse(vertices.begin(), vertices.end());
 
@@ -1658,7 +1654,7 @@ namespace model {
       }
 
       // everything ok, remove all windows
-      for (SubSurface subSurface : this->subSurfaces()) {
+      for (SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
           subSurface.remove();
         }
@@ -1824,12 +1820,12 @@ namespace model {
           continue;
         }
 
-        Point3dVector mask;
-        mask.push_back(Point3d(xmax + expand, ymax + expand, 0));
-        mask.push_back(Point3d(xmax + expand, ymin - expand, 0));
-        mask.push_back(Point3d(xmin - expand, ymin - expand, 0));
-        mask.push_back(Point3d(xmin - expand, ymax + expand, 0));
-        masks.push_back(mask);
+        masks.emplace_back(Point3dVector{
+          Point3d(xmax + expand, ymax + expand, 0),
+          Point3d(xmax + expand, ymin - expand, 0),
+          Point3d(xmin - expand, ymin - expand, 0),
+          Point3d(xmin - expand, ymax + expand, 0)
+        });
       }
 
       // join masks
@@ -1849,9 +1845,8 @@ namespace model {
           if (intersection) {
             numIntersects += 1;
             tmpFaces.push_back(intersection->polygon1());
-            for (const Point3dVector& tmpFace : intersection->newPolygons1()) {
-              tmpFaces.push_back(tmpFace);
-            }
+            auto thisTmpFaces = intersection->newPolygons1();
+            tmpFaces.insert(tmpFaces.end(), thisTmpFaces.begin(), thisTmpFaces.end());
           } else {
             tmpFaces.push_back(newFace);
           }
@@ -1887,7 +1882,7 @@ namespace model {
           surface = object->optionalCast<Surface>();
           OS_ASSERT(surface);
           // remove cloned sub surfaces
-          for (ModelObject child : surface->children()) {
+          for (ModelObject& child : surface->children()) {
             child.remove();
           }
           result.push_back(*surface);
@@ -1970,6 +1965,7 @@ namespace model {
             allNewFaceVertices = computeTriangulation(intersectionVertices, holes, tol);
           }
 
+          // TODO: I think the copy makes sense here
           for (Point3dVector newFaceVertices : allNewFaceVertices) {
 
             std::reverse(newFaceVertices.begin(), newFaceVertices.end());

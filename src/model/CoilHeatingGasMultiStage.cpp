@@ -161,7 +161,7 @@ namespace model {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingGasMultiStage>();
 
       auto t_stages = stages();
-      for (auto stage : t_stages) {
+      for (const auto& stage : t_stages) {
         auto stageClone = stage.clone(model).cast<CoilHeatingGasMultiStageStageData>();
         t_clone.addStage(stageClone);
       }
@@ -175,7 +175,7 @@ namespace model {
     std::vector<CoilHeatingGasMultiStageStageData> CoilHeatingGasMultiStage_Impl::stages() const {
       std::vector<CoilHeatingGasMultiStageStageData> result;
       auto groups = extensibleGroups();
-      for (auto group : groups) {
+      for (const auto& group : groups) {
         auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_Gas_MultiStageExtensibleFields::Stage);
         if (target) {
           if (auto stage = target->optionalCast<CoilHeatingGasMultiStageStageData>()) {

@@ -167,7 +167,7 @@ namespace model {
       this->makeUnique();
 
       ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition = this->electricEquipmentITEAirCooledDefinition();
-      for (LifeCycleCost cost : electricEquipmentITEAirCooledDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : electricEquipmentITEAirCooledDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

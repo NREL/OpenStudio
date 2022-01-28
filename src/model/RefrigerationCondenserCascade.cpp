@@ -215,7 +215,7 @@ namespace model {
       boost::optional<RefrigerationSystem> result;
 
       RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
-      for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationCondenserCascadeVector refrigerationCondenserCascades = refrigerationSystem.cascadeCondenserLoads();
         if (!refrigerationCondenserCascades.empty()
             && std::find(refrigerationCondenserCascades.begin(), refrigerationCondenserCascades.end(), refrigerationCondenserCascade)
@@ -239,7 +239,7 @@ namespace model {
       boost::optional<RefrigerationSystem> result;
 
       RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
-      for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      for (const RefrigerationSystem &refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         if (auto cond = refrigerationSystem.refrigerationCondenser()) {
           if (cond.get() == refrigerationCondenserCascade) {
             result = refrigerationSystem;

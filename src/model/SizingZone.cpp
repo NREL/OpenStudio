@@ -647,7 +647,7 @@ namespace model {
 
       // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
       // that contains this component to get the desired value.
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'Initialization Summary'
@@ -720,7 +720,7 @@ namespace model {
 
       // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
       // that contains this component to get the desired value.
-      for (std::string rowName : rowNames.get()) {
+      for (const std::string& rowName : rowNames.get()) {
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'Initialization Summary'

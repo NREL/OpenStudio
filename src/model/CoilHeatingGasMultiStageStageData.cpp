@@ -129,7 +129,7 @@ namespace model {
         // Check the coil performance objects in this coil to see if one of them is this object
         std::vector<CoilHeatingGasMultiStageStageData> perfStages = coilInModel.stages();
         int i = 1;
-        for (auto perfStage : perfStages) {
+        for (const auto& perfStage : perfStages) {
           if (perfStage.handle() == this->handle()) {
             stageIndex = i;
             parentCoil = coilInModel;

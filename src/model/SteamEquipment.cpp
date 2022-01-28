@@ -121,7 +121,7 @@ namespace model {
       makeUnique();
 
       SteamEquipmentDefinition definition = steamEquipmentDefinition();
-      for (LifeCycleCost cost : definition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : definition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

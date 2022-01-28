@@ -120,7 +120,7 @@ namespace model {
       makeUnique();
 
       OtherEquipmentDefinition definition = otherEquipmentDefinition();
-      for (LifeCycleCost cost : definition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : definition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

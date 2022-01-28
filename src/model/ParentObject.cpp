@@ -103,7 +103,7 @@ namespace model {
     ModelObject ParentObject_Impl::clone(Model model) const {
       ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
       ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
-      for (ModelObject child : children()) {
+      for (const ModelObject& child : children()) {
         ModelObject newChild = child.clone(model);
         newChild.setParent(newParent);
       }

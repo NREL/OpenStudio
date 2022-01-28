@@ -121,7 +121,7 @@ namespace model {
       this->makeUnique();
 
       GasEquipmentDefinition gasEquipmentDefinition = this->gasEquipmentDefinition();
-      for (LifeCycleCost cost : gasEquipmentDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : gasEquipmentDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

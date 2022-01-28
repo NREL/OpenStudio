@@ -727,7 +727,7 @@ namespace model {
       boost::optional<RefrigerationSystem> result;
 
       RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
-      for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationSecondarySystemVector refrigerationSecondarySystems = refrigerationSystem.secondarySystemLoads();
         if (!refrigerationSecondarySystems.empty()
             && std::find(refrigerationSecondarySystems.begin(), refrigerationSecondarySystems.end(), refrigerationSecondarySystem)

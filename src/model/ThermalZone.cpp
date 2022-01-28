@@ -1642,7 +1642,7 @@ namespace model {
       // zoneHVACEquipmentList().remove();
 
       // remove ZoneMixing objects
-      for (auto mixing : this->zoneMixing()) {
+      for (auto& mixing : this->zoneMixing()) {
         mixing.remove();
       }
 

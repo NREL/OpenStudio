@@ -165,7 +165,7 @@ namespace model {
         }
       }
 
-      for (IdfExtensibleGroup group : this->extensibleGroups()) {
+      for (const IdfExtensibleGroup& group : this->extensibleGroups()) {
         month = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Month);
         if (month && (month.get() == 2)) {
           day = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Day);

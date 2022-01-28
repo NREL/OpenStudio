@@ -82,7 +82,7 @@ namespace model {
       this->makeUnique();
 
       InternalMassDefinition internalMassDefinition = this->internalMassDefinition();
-      for (LifeCycleCost cost : internalMassDefinition.lifeCycleCosts()) {
+      for (LifeCycleCost& cost : internalMassDefinition.lifeCycleCosts()) {
         cost.convertToCostPerEach();
       }
 

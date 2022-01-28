@@ -867,23 +867,22 @@ namespace model {
       bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
       OS_ASSERT(test);
 
-      for (WorkspaceObject wo : this->getSources(IddObjectType::OS_SubSurface)) {
+      for (WorkspaceObject& wo : this->getSources(IddObjectType::OS_SubSurface)) {
         test = wo.setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
         OS_ASSERT(test);
       }
     }
 
     boost::optional<SurfacePropertyConvectionCoefficients> SubSurface_Impl::surfacePropertyConvectionCoefficients() const {
-      std::vector<SurfacePropertyConvectionCoefficients> allspccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
-      std::vector<SurfacePropertyConvectionCoefficients> spccs;
-      for (auto& spcc : allspccs) {
+      std::vector<SurfacePropertyConvectionCoefficients> spccs(model().getConcreteModelObjects<SurfacePropertyConvectionCoefficients>());
+      auto thisHandle = this->handle();
+      auto isNotPointingToMe = [&thisHandle](const auto& spcc)  {
         OptionalSubSurface surface = spcc.surfaceAsSubSurface();
-        if (surface) {
-          if (surface->handle() == handle()) {
-            spccs.push_back(spcc);
-          }
-        }
-      }
+        return !surface || !(surface->handle() == thisHandle);
+      };
+
+      spccs.erase(std::remove_if(spccs.begin(), spccs.end(), isNotPointingToMe), spccs.end());
+
       if (spccs.empty()) {
         return boost::none;
       } else if (spccs.size() == 1) {
@@ -1685,7 +1684,7 @@ namespace model {
         spacePattern.push_back(inverseTransformation * face);
       }
 
-      for (Surface surface : space.surfaces()) {
+      for (Surface& surface : space.surfaces()) {
         if (istringEqual("RoofCeiling", surface.surfaceType()) && istringEqual("Outdoors", surface.outsideBoundaryCondition())) {
 
           Plane surfacePlane = surface.plane();
