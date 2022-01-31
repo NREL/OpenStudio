@@ -121,8 +121,8 @@ namespace model {
     m.name = materialData.materialName;
     GLTF::PbrMetallicRoughness pbr;
     // this contains the red, green, blue and alpha components of the main color of the material
-    pbr.baseColorFactor = {(static_cast<float>(materialData.r) / 255.0f), (static_cast<float>(materialData.g) / 255.0f), 
-        (static_cast<float>(materialData.b) / 255.0f),static_cast<float>(materialData.a)};
+    pbr.baseColorFactor = {(static_cast<float>(materialData.r) / 255.0f), (static_cast<float>(materialData.g) / 255.0f),
+                           (static_cast<float>(materialData.b) / 255.0f), static_cast<float>(materialData.a)};
     // this indicates that the material should have very minimum reflection characteristics
     // between that of a metal and non-metal material.
     pbr.metallicFactor = 0.0;
@@ -318,8 +318,8 @@ namespace model {
   // param : materialName
   // param : isDoubleSided
   // param : allMaterials
-  void addModelSpecificMaterialToCollection(const RenderingColor& color, const std::string& materialName,
-                                            bool isDoubleSided, std::vector<MaterialData>& allMaterials) {
+  void addModelSpecificMaterialToCollection(const RenderingColor& color, const std::string& materialName, bool isDoubleSided,
+                                            std::vector<MaterialData>& allMaterials) {
     allMaterials.emplace_back(MaterialData{materialName, color.renderingRedValue(), color.renderingGreenValue(), color.renderingBlueValue(),
                                            color.renderingAlphaValue() / 255.0, true});
   }

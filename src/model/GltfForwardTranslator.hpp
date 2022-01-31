@@ -37,7 +37,7 @@
 namespace openstudio {
 namespace model {
 
-   /* GltfForwardTranslator converts an OpenStudio Model to GLTF format. There are two variations of the GLTF format,
+  /* GltfForwardTranslator converts an OpenStudio Model to GLTF format. There are two variations of the GLTF format,
     *   a triangulated one which is suitable for rendering with GLTF and non-triangulated one that preserves all vertices in a
     *   surface for conversion to OpenStudio Model format.
     *
