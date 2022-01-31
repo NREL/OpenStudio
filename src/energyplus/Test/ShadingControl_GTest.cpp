@@ -89,11 +89,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 2, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(2, 0, 0));
-  vertices.push_back(Point3d(2, 2, 0));
+  std::vector<Point3d> vertices{
+    {0, 2, 0},
+    {0, 0, 0},
+    {2, 0, 0},
+    {2, 2, 0},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
@@ -106,11 +107,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
   //  0      1     2
 
   // A
-  vertices.clear();
-  vertices.push_back(Point3d(0, 1, 0));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
+  vertices = {
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   SubSurface subSurfaceA(vertices, model);
   subSurfaceA.setName("SubSurface A");
@@ -118,11 +120,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
   subSurfaceA.assignDefaultSubSurfaceType();
 
   // B
-  vertices.clear();
-  vertices.push_back(Point3d(1, 2, 0));
-  vertices.push_back(Point3d(1, 1, 0));
-  vertices.push_back(Point3d(2, 1, 0));
-  vertices.push_back(Point3d(2, 2, 0));
+  vertices = {
+    {1, 2, 0},
+    {1, 1, 0},
+    {2, 1, 0},
+    {2, 2, 0},
+  };
 
   SubSurface subSurfaceB(vertices, model);
   subSurfaceB.setName("SubSurface B");

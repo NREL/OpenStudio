@@ -1531,11 +1531,12 @@ namespace model {
     //           0    ▲    10       20
     //                └─ door+building shading
 
-    std::vector<Point3d> floorPrint;
-    floorPrint.push_back(Point3d(0, 0, 0));
-    floorPrint.push_back(Point3d(0, 10, 0));
-    floorPrint.push_back(Point3d(10, 10, 0));
-    floorPrint.push_back(Point3d(10, 0, 0));
+    std::vector<Point3d> floorPrint{
+      {0, 0, 0},
+      {0, 10, 0},
+      {10, 10, 0},
+      {10, 0, 0},
+    };
 
     // make spaces
     boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
@@ -1557,11 +1558,12 @@ namespace model {
     space4.setYOrigin(10);
 
     // add a door to south wall of space1
-    std::vector<Point3d> doorPoints;
-    doorPoints.push_back(Point3d(2, 0, 2));
-    doorPoints.push_back(Point3d(2, 0, 0));
-    doorPoints.push_back(Point3d(4, 0, 0));
-    doorPoints.push_back(Point3d(4, 0, 2));
+    std::vector<Point3d> doorPoints{
+      {2, 0, 2},
+      {2, 0, 0},
+      {4, 0, 0},
+      {4, 0, 2},
+    };
 
     // find south wall
     searchResults = space1->findSurfaces(180.0, 180.0, 90.0, 90.0);
@@ -1572,11 +1574,12 @@ namespace model {
     door.setSurface(searchResults[0]);
 
     // add a window to east wall of space2
-    std::vector<Point3d> windowPoints;
-    windowPoints.push_back(Point3d(10, 2, 2));
-    windowPoints.push_back(Point3d(10, 2, 1));
-    windowPoints.push_back(Point3d(10, 8, 1));
-    windowPoints.push_back(Point3d(10, 8, 2));
+    std::vector<Point3d> windowPoints{
+      {10, 2, 2},
+      {10, 2, 1},
+      {10, 8, 1},
+      {10, 8, 2},
+    };
 
     // find east wall
     searchResults = space2.findSurfaces(90.0, 90.0, 90.0, 90.0);
@@ -1622,11 +1625,12 @@ namespace model {
     InteriorPartitionSurfaceGroup deskGroup(model);
     deskGroup.setSpace(space2);
 
-    std::vector<Point3d> deskPoints;
-    deskPoints.push_back(Point3d(5, 8, 1));
-    deskPoints.push_back(Point3d(5, 6, 1));
-    deskPoints.push_back(Point3d(8, 6, 1));
-    deskPoints.push_back(Point3d(8, 8, 1));
+    std::vector<Point3d> deskPoints{
+      {5, 8, 1},
+      {5, 6, 1},
+      {8, 6, 1},
+      {8, 8, 1},
+    };
     InteriorPartitionSurface desk(deskPoints, model);
     desk.setInteriorPartitionSurfaceGroup(deskGroup);
 
@@ -1642,11 +1646,12 @@ namespace model {
     ShadingSurfaceGroup canopyGroup(model);
     canopyGroup.setShadingSurfaceType("Building");
 
-    std::vector<Point3d> canopyPoints;
-    canopyPoints.push_back(Point3d(2, 0, 2));
-    canopyPoints.push_back(Point3d(2, -1, 2));
-    canopyPoints.push_back(Point3d(4, -1, 2));
-    canopyPoints.push_back(Point3d(4, 0, 2));
+    std::vector<Point3d> canopyPoints{
+      {2, 0, 2},
+      {2, -1, 2},
+      {4, -1, 2},
+      {4, 0, 2},
+    };
     ShadingSurface canopy(canopyPoints, model);
     canopy.setShadingSurfaceGroup(canopyGroup);
 
@@ -1654,11 +1659,12 @@ namespace model {
     ShadingSurfaceGroup neighboringBuildingGroup(model);
     neighboringBuildingGroup.setShadingSurfaceType("Site");
 
-    std::vector<Point3d> neighboringBuildingPoints;
-    neighboringBuildingPoints.push_back(Point3d(-30, 0, 20));
-    neighboringBuildingPoints.push_back(Point3d(-30, 0, 0));
-    neighboringBuildingPoints.push_back(Point3d(-30, 20, 0));
-    neighboringBuildingPoints.push_back(Point3d(-30, 20, 20));
+    std::vector<Point3d> neighboringBuildingPoints{
+      {-30, 0, 20},
+      {-30, 0, 0},
+      {-30, 20, 0},
+      {-30, 20, 20},
+    };
     ShadingSurface neighboringBuilding(neighboringBuildingPoints, model);
     neighboringBuilding.setShadingSurfaceGroup(neighboringBuildingGroup);
 

@@ -221,10 +221,11 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
 TEST_F(ModelFixture, FoundationKiva_AdjacentFoundation) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   FoundationKiva kiva(model);
   EXPECT_EQ(0, kiva.surfaces().size());
@@ -239,10 +240,11 @@ TEST_F(ModelFixture, FoundationKiva_AdjacentFoundation) {
 TEST_F(ModelFixture, FoundationKiva_ParentReset) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   FoundationKiva kiva(model);
   surface.setAdjacentFoundation(kiva);

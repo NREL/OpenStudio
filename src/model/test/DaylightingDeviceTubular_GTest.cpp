@@ -45,22 +45,24 @@ using namespace openstudio;
 TEST_F(ModelFixture, DaylightingDeviceTubular) {
   Model model;
 
-  Point3dVector points1;
-  points1.push_back(Point3d(0, 0, 1));
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(0, 1, 1));
+  Point3dVector points1{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface dome(points1, model);
   EXPECT_TRUE(dome.setSubSurfaceType("TubularDaylightDome"));
   EXPECT_EQ("TubularDaylightDome", dome.subSurfaceType());
 
   EXPECT_FALSE(dome.daylightingDeviceTubular());
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 0, 2));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 2, 0));
-  points2.push_back(Point3d(0, 2, 2));
+  Point3dVector points2{
+    {0, 0, 2},
+    {0, 0, 0},
+    {0, 2, 0},
+    {0, 2, 2},
+  };
   SubSurface diffuser(points2, model);
   EXPECT_TRUE(diffuser.setSubSurfaceType("TubularDaylightDiffuser"));
   EXPECT_EQ("TubularDaylightDiffuser", diffuser.subSurfaceType());
@@ -105,21 +107,23 @@ TEST_F(ModelFixture, DaylightingDeviceTubular) {
 TEST_F(ModelFixture, DaylightingDeviceTubular_Throw) {
   Model model;
 
-  Point3dVector points1;
-  points1.push_back(Point3d(0, 0, 1));
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(0, 1, 1));
+  Point3dVector points1{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface door1(points1, model);
   EXPECT_TRUE(door1.setSubSurfaceType("Door"));
   EXPECT_EQ("Door", door1.subSurfaceType());
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 0, 1));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 1, 1));
+  Point3dVector points2{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface door2(points2, model);
   EXPECT_TRUE(door2.setSubSurfaceType("Door"));
   EXPECT_EQ("Door", door2.subSurfaceType());
@@ -173,21 +177,23 @@ TEST_F(ModelFixture, DaylightingDeviceTubular_Throw) {
 TEST_F(ModelFixture, DaylightingDeviceTubular_Throw2) {
   Model model;
 
-  Point3dVector points1;
-  points1.push_back(Point3d(0, 0, 1));
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(0, 1, 1));
+  Point3dVector points1{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface door1(points1, model);
   EXPECT_TRUE(door1.setSubSurfaceType("Door"));
   EXPECT_EQ("Door", door1.subSurfaceType());
   EXPECT_EQ(0, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 0, 1));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 1, 0));
-  points2.push_back(Point3d(0, 1, 1));
+  Point3dVector points2{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface door2(points2, model);
   EXPECT_TRUE(door2.setSubSurfaceType("Door"));
   EXPECT_EQ("Door", door2.subSurfaceType());
@@ -241,20 +247,22 @@ TEST_F(ModelFixture, DaylightingDeviceTubular_Throw2) {
 TEST_F(ModelFixture, DaylightingDeviceTubular_SettersGetters) {
   Model model;
 
-  Point3dVector points1;
-  points1.push_back(Point3d(0, 0, 1));
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(0, 1, 1));
+  Point3dVector points1{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface dome(points1, model);
   EXPECT_TRUE(dome.setSubSurfaceType("TubularDaylightDome"));
   EXPECT_EQ("TubularDaylightDome", dome.subSurfaceType());
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 0, 2));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 2, 0));
-  points2.push_back(Point3d(0, 2, 2));
+  Point3dVector points2{
+    {0, 0, 2},
+    {0, 0, 0},
+    {0, 2, 0},
+    {0, 2, 2},
+  };
   SubSurface diffuser(points2, model);
   EXPECT_TRUE(diffuser.setSubSurfaceType("TubularDaylightDiffuser"));
   EXPECT_EQ("TubularDaylightDiffuser", diffuser.subSurfaceType());
@@ -286,21 +294,23 @@ TEST_F(ModelFixture, DaylightingDeviceTubular_SettersGetters) {
 TEST_F(ModelFixture, DaylightingDeviceTubular_TransitionZones) {
   Model model;
 
-  Point3dVector points1;
-  points1.push_back(Point3d(0, 0, 1));
-  points1.push_back(Point3d(0, 0, 0));
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(0, 1, 1));
+  Point3dVector points1{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
   SubSurface dome(points1, model);
   EXPECT_TRUE(dome.setSubSurfaceType("TubularDaylightDome"));
 
   EXPECT_FALSE(dome.daylightingDeviceTubular());
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 0, 2));
-  points2.push_back(Point3d(0, 0, 0));
-  points2.push_back(Point3d(0, 2, 0));
-  points2.push_back(Point3d(0, 2, 2));
+  Point3dVector points2{
+    {0, 0, 2},
+    {0, 0, 0},
+    {0, 2, 0},
+    {0, 2, 2},
+  };
   SubSurface diffuser(points2, model);
   EXPECT_TRUE(diffuser.setSubSurfaceType("TubularDaylightDiffuser"));
 

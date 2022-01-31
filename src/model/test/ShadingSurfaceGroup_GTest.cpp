@@ -60,10 +60,11 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Space_Hierarchy) {
   EXPECT_EQ(space.handle(), group.space()->handle());
 
   // make a new shading surface
-  Point3dVector points;
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   ShadingSurface surface(points, model);
   EXPECT_TRUE(surface.setShadingSurfaceGroup(group));
   ASSERT_TRUE(surface.shadingSurfaceGroup());
@@ -108,10 +109,11 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Building_Hierarchy) {
   EXPECT_TRUE(group.setShadingSurfaceType("Building"));
 
   // make a new shading surface
-  Point3dVector points;
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   ShadingSurface surface(points, model);
   EXPECT_TRUE(surface.setShadingSurfaceGroup(group));
   ASSERT_TRUE(surface.shadingSurfaceGroup());
@@ -145,10 +147,11 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Site_Hierarchy) {
   EXPECT_TRUE(group.setShadingSurfaceType("Site"));
 
   // make a new shading surface
-  Point3dVector points;
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   ShadingSurface surface(points, model);
   EXPECT_TRUE(surface.setShadingSurfaceGroup(group));
   ASSERT_TRUE(surface.shadingSurfaceGroup());
@@ -217,10 +220,11 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy) {
   ShadingSurfaceGroup spaceGroup(model);
   EXPECT_TRUE(spaceGroup.setSpace(space));
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
 
   // add site shading surface
   ShadingSurface siteSurface(points, model);

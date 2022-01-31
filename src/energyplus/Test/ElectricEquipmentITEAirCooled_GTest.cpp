@@ -246,11 +246,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> points{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
@@ -329,11 +330,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpa
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> points{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   // 20 W/m^2
   ElectricEquipmentITEAirCooledDefinition definition(model);

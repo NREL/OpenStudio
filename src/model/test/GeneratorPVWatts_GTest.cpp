@@ -140,10 +140,11 @@ TEST_F(ModelFixture, GeneratorPVWatts_SetGetFields) {
 TEST_F(ModelFixture, GeneratorPVWatts_SurfaceConstruct) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   GeneratorPVWatts generator(model, surface, 1);
   EXPECT_TRUE(generator.surface());
@@ -156,10 +157,11 @@ TEST_F(ModelFixture, GeneratorPVWatts_SurfaceConstruct) {
 TEST_F(ModelFixture, GeneratorPVWatts_SurfaceConstructBadDCSystemCapacity) {
   Model model;
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   EXPECT_THROW(GeneratorPVWatts(model, surface, -1), openstudio::Exception);
 }
@@ -170,10 +172,11 @@ TEST_F(ModelFixture, GeneratorPVWatts_SurfaceAssign) {
   GeneratorPVWatts generator(model, 1);
   EXPECT_FALSE(generator.surface());
   Point3dVector points;
-  points.clear();
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   ShadingSurface shadingsurface(points, model);
   generator.setSurface(shadingsurface);
   EXPECT_TRUE(generator.surface());

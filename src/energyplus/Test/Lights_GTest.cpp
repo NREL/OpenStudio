@@ -715,11 +715,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Costs) {
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  std::vector<Point3d> floorPrint;
-  floorPrint.push_back(Point3d(0, 1, 0));
-  floorPrint.push_back(Point3d(1, 1, 0));
-  floorPrint.push_back(Point3d(1, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorPrint{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
   space1->setThermalZone(zone1);

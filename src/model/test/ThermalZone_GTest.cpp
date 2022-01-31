@@ -192,11 +192,12 @@ TEST_F(ModelFixture, CombinedInfiltration) {
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> points{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   // 100 m^2, 200 m^2
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 2, model);
@@ -366,11 +367,12 @@ TEST_F(ModelFixture, ThermalZone_Cost) {
 TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -405,11 +407,12 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost) {
 TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -449,11 +452,12 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2) {
 TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);

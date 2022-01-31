@@ -221,7 +221,7 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (auto& thermalZone : model.getModelObjects<ThermalZone>()) {
     //make a variable flow radiant unit
     ScheduleConstant availabilitySched(model);
     ScheduleConstant coolingControlTemperatureSchedule(model);
@@ -234,8 +234,8 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
     CoilCoolingLowTempRadiantVarFlow testCC(model, coolingControlTemperatureSchedule);
     CoilHeatingLowTempRadiantVarFlow testHC(model, heatingControlTemperatureSchedule);
 
-    HVACComponent testCC1 = testCC.cast<HVACComponent>();
-    HVACComponent testHC1 = testHC.cast<HVACComponent>();
+    auto testCC1 = testCC.cast<HVACComponent>();
+    auto testHC1 = testHC.cast<HVACComponent>();
 
     ZoneHVACLowTempRadiantVarFlow testRad(model, availabilitySched, testHC1, testCC1);
 
@@ -268,7 +268,7 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
   defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (const auto& thermalZone : model.getModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
     for (const ModelObject& equipment : thermalZone.equipment()) {
@@ -285,11 +285,12 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_surfaces) {
   Model m;
 
   // make a space with some surfaces
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
   ASSERT_TRUE(_space1);

@@ -121,18 +121,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space) {
 TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   Model model;
 
-  Point3dVector points1;
-  points1.push_back(Point3d(0, 1, 0));
-  points1.push_back(Point3d(1, 1, 0));
-  points1.push_back(Point3d(1, 0, 0));
-  points1.push_back(Point3d(0, 0, 0));
+  Point3dVector points1{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor1(points1, model);
 
-  Point3dVector points2;
-  points2.push_back(Point3d(0, 2, 0));
-  points2.push_back(Point3d(2, 2, 0));
-  points2.push_back(Point3d(2, 0, 0));
-  points2.push_back(Point3d(0, 0, 0));
+  Point3dVector points2{
+    {0, 2, 0},
+    {2, 2, 0},
+    {2, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor2(points2, model);
 
   Space space1(model);

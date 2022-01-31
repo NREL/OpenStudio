@@ -2822,11 +2822,12 @@ namespace model {
 
     // create each wall
     for (unsigned i = 1; i <= numPoints; ++i) {
-      points.clear();
-      points.push_back(Point3d(floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z + floorHeight));
-      points.push_back(Point3d(floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z));
-      points.push_back(Point3d(floorPrint[i - 1].x(), floorPrint[i - 1].y(), z));
-      points.push_back(Point3d(floorPrint[i - 1].x(), floorPrint[i - 1].y(), z + floorHeight));
+      points = {
+        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z + floorHeight},
+        {floorPrint[i % numPoints].x(), floorPrint[i % numPoints].y(), z},
+        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z},
+        {floorPrint[i - 1].x(), floorPrint[i - 1].y(), z + floorHeight},
+      };
 
       Surface wall(points, model);
       wall.setSpace(space);
@@ -3394,11 +3395,12 @@ namespace model {
         double y2 = std::min(y + desiredHeight, ymax - ySpace / 2.0);
 
         // skylight in grid coordinates
-        std::vector<Point3d> skylight;
-        skylight.push_back(Point3d(x, y, 0));
-        skylight.push_back(Point3d(x2, y, 0));
-        skylight.push_back(Point3d(x2, y2, 0));
-        skylight.push_back(Point3d(x, y2, 0));
+        std::vector<Point3d> skylight{
+          {x, y, 0},
+          {x2, y, 0},
+          {x2, y2, 0},
+          {x, y2, 0},
+        };
 
         // put results into building coordinates
         result.push_back(gridToBuildingTransformation * skylight);

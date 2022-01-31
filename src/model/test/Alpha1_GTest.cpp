@@ -225,7 +225,7 @@ TEST_F(ModelFixture, Alpha1)
   ASSERT_EQ(static_cast<size_t>(2),idfObjectVector.size());
 
   // go through each zone
-  for (Zone zone : building.zones()){
+  for (Zone& zone : building.zones()){
 
     // pretend a rule has checked space type and given us lpd and idfObjectVector
     double lpd = 1.0;
@@ -238,7 +238,7 @@ TEST_F(ModelFixture, Alpha1)
     // DLM@20100719: would be great if we could know something about order of these handles
     // that way we would not have to loop through and test each one
     OptionalSchedule schedule;
-    for (Handle h : handles){
+    for (Handle& h : handles){
       schedule = model.getModelObject<Schedule>(h);
       if (schedule){
         break;

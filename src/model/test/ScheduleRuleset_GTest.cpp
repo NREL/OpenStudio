@@ -108,7 +108,7 @@ TEST_F(ModelFixture, ScheduleRuleset) {
   for (int i : activeRuleIndices) {
     EXPECT_EQ(-1, i);
   }
-  for (ScheduleDay daySchedule : daySchedules) {
+  for (const ScheduleDay& daySchedule : daySchedules) {
     EXPECT_EQ(schedule.defaultDaySchedule().handle(), daySchedule.handle());
   }
 
@@ -133,7 +133,7 @@ TEST_F(ModelFixture, ScheduleRuleset) {
   for (int i : activeRuleIndices) {
     EXPECT_EQ(0, i);
   }
-  for (ScheduleDay daySchedule : daySchedules) {
+  for (const ScheduleDay& daySchedule : daySchedules) {
     EXPECT_EQ(scheduleRules[0].daySchedule().handle(), daySchedule.handle());
   }
 
@@ -171,7 +171,7 @@ TEST_F(ModelFixture, ScheduleRuleset) {
     ++doy;
   }
   doy = 1;
-  for (ScheduleDay daySchedule : daySchedules) {
+  for (const ScheduleDay& daySchedule : daySchedules) {
     Date date = yd.makeDate(doy);
     if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday) {
       EXPECT_EQ(weekendRule.daySchedule().handle(), daySchedule.handle());  // weekend rule

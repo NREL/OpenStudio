@@ -97,17 +97,19 @@ TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
   building2.setNorthAxis(northAxis);
 
   // object#_model#
-  std::vector<Point3d> floorprint1_2;
-  floorprint1_2.push_back(Point3d(0, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 0, 0));
-  floorprint1_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint1_2{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint2_2;
-  floorprint2_2.push_back(Point3d(0, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 0, 0));
-  floorprint2_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint2_2{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1_2 = Space::fromFloorPrint(floorprint1_2, 3, model2);
   ASSERT_TRUE(space1_2);
@@ -244,17 +246,19 @@ TEST_F(ModelFixture, ModelMerger_Initial_Minimal) {
   building2.setNorthAxis(northAxis);
 
   // object#_model#
-  std::vector<Point3d> floorprint1_2;
-  floorprint1_2.push_back(Point3d(0, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 0, 0));
-  floorprint1_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint1_2{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint2_2;
-  floorprint2_2.push_back(Point3d(0, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 0, 0));
-  floorprint2_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint2_2{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1_2 = Space::fromFloorPrint(floorprint1_2, 3, model2);
   ASSERT_TRUE(space1_2);
@@ -369,29 +373,33 @@ TEST_F(ModelFixture, ModelMerger_Merge) {
   // second model has spaces
 
   // object#_model#
-  std::vector<Point3d> floorprint1_1;
-  floorprint1_1.push_back(Point3d(0, 10, 0));
-  floorprint1_1.push_back(Point3d(10, 10, 0));
-  floorprint1_1.push_back(Point3d(10, 0, 0));
-  floorprint1_1.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint1_1{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint2_1;
-  floorprint2_1.push_back(Point3d(0, 5, 0));
-  floorprint2_1.push_back(Point3d(5, 5, 0));
-  floorprint2_1.push_back(Point3d(5, 0, 0));
-  floorprint2_1.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint2_1{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint1_2;
-  floorprint1_2.push_back(Point3d(0, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 0, 0));
-  floorprint1_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint1_2{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint2_2;
-  floorprint2_2.push_back(Point3d(0, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 0, 0));
-  floorprint2_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint2_2{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
 
   // set up model 1
   boost::optional<Space> space1_1 = Space::fromFloorPrint(floorprint1_1, 3, model1);
@@ -525,29 +533,33 @@ TEST_F(ModelFixture, ModelMerger_Clobber) {
   // second model has spaces
 
   // object#_model#
-  std::vector<Point3d> floorprint1_1;
-  floorprint1_1.push_back(Point3d(0, 10, 0));
-  floorprint1_1.push_back(Point3d(10, 10, 0));
-  floorprint1_1.push_back(Point3d(10, 0, 0));
-  floorprint1_1.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint1_1{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint2_1;
-  floorprint2_1.push_back(Point3d(0, 5, 0));
-  floorprint2_1.push_back(Point3d(5, 5, 0));
-  floorprint2_1.push_back(Point3d(5, 0, 0));
-  floorprint2_1.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint2_1{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint1_2;
-  floorprint1_2.push_back(Point3d(0, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 10, 0));
-  floorprint1_2.push_back(Point3d(10, 0, 0));
-  floorprint1_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint1_2{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint2_2;
-  floorprint2_2.push_back(Point3d(0, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 5, 0));
-  floorprint2_2.push_back(Point3d(5, 0, 0));
-  floorprint2_2.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint2_2{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
 
   // set up model 1
   boost::optional<Space> space1_1 = Space::fromFloorPrint(floorprint1_1, 3, model1);
@@ -682,17 +694,19 @@ TEST_F(ModelFixture, ModelMerger_Remove) {
   // second model is empty
 
   // object#_model#
-  std::vector<Point3d> floorprint1_1;
-  floorprint1_1.push_back(Point3d(0, 10, 0));
-  floorprint1_1.push_back(Point3d(10, 10, 0));
-  floorprint1_1.push_back(Point3d(10, 0, 0));
-  floorprint1_1.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint1_1{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
-  std::vector<Point3d> floorprint2_1;
-  floorprint2_1.push_back(Point3d(0, 5, 0));
-  floorprint2_1.push_back(Point3d(5, 5, 0));
-  floorprint2_1.push_back(Point3d(5, 0, 0));
-  floorprint2_1.push_back(Point3d(0, 0, 0));
+  std::vector<Point3d> floorprint2_1{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1_1 = Space::fromFloorPrint(floorprint1_1, 3, model1);
   ASSERT_TRUE(space1_1);

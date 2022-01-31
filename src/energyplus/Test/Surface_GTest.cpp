@@ -65,11 +65,12 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_Surface) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
   Surface surface(points, model);
 
   ForwardTranslator forwardTranslator;
@@ -88,11 +89,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_Zone) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
 
@@ -129,11 +131,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_DefaultConstruction) {
   ThermalZone zone(model);
   EXPECT_TRUE(space.setThermalZone(zone));
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
 

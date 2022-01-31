@@ -70,20 +70,22 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   Space space(model);
   space.setThermalZone(thermalZone);
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 10));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(10, 0, 0));
-  vertices.push_back(Point3d(10, 0, 10));
+  std::vector<Point3d> vertices{
+    {0, 0, 10},
+    {0, 0, 0},
+    {10, 0, 0},
+    {10, 0, 10},
+  };
 
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  vertices = {
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   SubSurface subSurface1(vertices, model);
   subSurface1.setName("No Offset");

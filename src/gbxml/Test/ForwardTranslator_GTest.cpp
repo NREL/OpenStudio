@@ -155,11 +155,12 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   Space space(model);
   space.setName("Space1");
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
   std::string surfname("Surface1");
@@ -234,11 +235,12 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   Space space(model);
   space.setName("Space1");
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 0, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
 
   //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
   std::string surfname("Surface1");

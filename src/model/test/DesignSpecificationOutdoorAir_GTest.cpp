@@ -109,11 +109,12 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   Model model;
 
   // 1 m^2
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   ThermalZone thermalZone(model);
 

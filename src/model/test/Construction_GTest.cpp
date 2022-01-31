@@ -450,11 +450,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
 
   Space space(model);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 1, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
 
   Surface surface1(points, model);
   surface1.setSpace(space);
@@ -462,11 +463,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_DOUBLE_EQ(1.0, surface1.netArea());
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 1));
+  points = {
+    {0, 1, 1},
+    {0, 1, 0},
+    {0, 0, 0},
+    {0, 0, 1},
+  };
 
   Surface surface2(points, model);
   surface2.setSpace(space);
@@ -529,11 +531,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
   EXPECT_DOUBLE_EQ(3.0, cost1->totalCost());
   EXPECT_DOUBLE_EQ(0, cost2->totalCost());
 
-  points.clear();
-  points.push_back(Point3d(0, 0.75, 0.5));
-  points.push_back(Point3d(0, 0.75, 0));
-  points.push_back(Point3d(0, 0.25, 0));
-  points.push_back(Point3d(0, 0.25, 0.5));
+  points = {
+    {0, 0.75, 0.5},
+    {0, 0.75, 0},
+    {0, 0.25, 0},
+    {0, 0.25, 0.5},
+  };
 
   SubSurface subSurface1(points, model);
   subSurface1.setSurface(surface1);
@@ -542,11 +545,12 @@ TEST_F(ModelFixture, Construction_NetArea) {
   EXPECT_DOUBLE_EQ(0.25, subSurface1.netArea());
   EXPECT_DOUBLE_EQ(0.75, surface1.netArea());
 
-  points.clear();
-  points.push_back(Point3d(0, 0.25, 0.5));
-  points.push_back(Point3d(0, 0.25, 0));
-  points.push_back(Point3d(0, 0.75, 0));
-  points.push_back(Point3d(0, 0.75, 0.5));
+  points = {
+    {0, 0.25, 0.5},
+    {0, 0.25, 0},
+    {0, 0.75, 0},
+    {0, 0.75, 0.5},
+  };
 
   SubSurface subSurface2(points, model);
   subSurface2.setSurface(surface2);
@@ -633,11 +637,12 @@ TEST_F(ModelFixture, Construction_NetArea_InteriorWall) {
 
   Space space(model);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 1, 1));
+  Point3dVector points{
+    {0, 0, 1},
+    {0, 0, 0},
+    {0, 1, 0},
+    {0, 1, 1},
+  };
 
   Surface surface1(points, model);
   surface1.setSpace(space);
@@ -645,11 +650,12 @@ TEST_F(ModelFixture, Construction_NetArea_InteriorWall) {
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_DOUBLE_EQ(1.0, surface1.netArea());
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 1));
+  points = {
+    {0, 1, 1},
+    {0, 1, 0},
+    {0, 0, 0},
+    {0, 0, 1},
+  };
 
   Surface surface2(points, model);
   surface2.setSpace(space);
@@ -717,11 +723,12 @@ TEST_F(ModelFixture, Construction_NetArea_SubSurface) {
   EXPECT_DOUBLE_EQ(0.0, construction1.getNetArea());
   EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 10));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(0, 10, 10));
+  Point3dVector points{
+    {0, 0, 10},
+    {0, 0, 0},
+    {0, 10, 0},
+    {0, 10, 10},
+  };
 
   Surface surface(points, model);
   surface.setConstruction(construction1);
@@ -732,11 +739,12 @@ TEST_F(ModelFixture, Construction_NetArea_SubSurface) {
   EXPECT_DOUBLE_EQ(0.0, construction2.getNetArea());
   EXPECT_DOUBLE_EQ(0, surface.windowToWallRatio());
 
-  points.clear();
-  points.push_back(Point3d(0, 0, 2));
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 1, 2));
+  points = {
+    {0, 0, 2},
+    {0, 0, 1},
+    {0, 1, 1},
+    {0, 1, 2},
+  };
 
   SubSurface subSurface(points, model);
   subSurface.setConstruction(construction2);

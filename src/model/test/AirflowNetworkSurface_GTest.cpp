@@ -156,11 +156,12 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   Model model;
 
   // construct Surface
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 1));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
+  std::vector<Point3d> vertices{
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+  };
   Surface surface(vertices, model);
 
   AirflowNetworkCrack crack0(model, 1.0, 0.5);
@@ -194,11 +195,12 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
 TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 3));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(3, 0, 0));
-  vertices.push_back(Point3d(3, 0, 3));
+  std::vector<Point3d> vertices{
+    {0, 0, 3},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 0, 3},
+  };
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -268,11 +270,12 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface) {
 TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0, 0, 3));
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(3, 0, 0));
-  vertices.push_back(Point3d(3, 0, 3));
+  std::vector<Point3d> vertices{
+    {0, 0, 3},
+    {0, 0, 0},
+    {3, 0, 0},
+    {3, 0, 3},
+  };
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -286,11 +289,12 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface) {
   wall2.setSpace(space2);
   EXPECT_FALSE(wall2.adjacentSurface());
 
-  vertices.clear();
-  vertices.push_back(Point3d(1, 0, 2));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(2, 0, 1));
-  vertices.push_back(Point3d(2, 0, 2));
+  vertices = {
+    {1, 0, 2},
+    {1, 0, 1},
+    {2, 0, 1},
+    {2, 0, 2},
+  };
 
   SubSurface window1(vertices, model);
   EXPECT_FALSE(window1.adjacentSubSurface());

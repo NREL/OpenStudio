@@ -98,20 +98,22 @@ TEST_F(ModelFixture, Space_Clone) {
   ASSERT_TRUE(space.name());
   EXPECT_EQ("Space 1", space.name().get());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 4, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(4, 0, 0));
-  points.push_back(Point3d(4, 4, 0));
+  Point3dVector points{
+    {0, 4, 0},
+    {0, 0, 0},
+    {4, 0, 0},
+    {4, 4, 0},
+  };
 
   Surface surface(points, model);
   surface.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(1, 3, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(3, 1, 0));
-  points.push_back(Point3d(3, 3, 0));
+  points = {
+    {1, 3, 0},
+    {1, 1, 0},
+    {3, 1, 0},
+    {3, 3, 0},
+  };
 
   SubSurface subSurface(points, model);
   subSurface.setParent(surface);
@@ -153,44 +155,48 @@ TEST_F(ModelFixture, Space_FloorArea) {
   Point3dVector points;
 
   // walls
-  points.clear();
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
+  points = {
+    {0, 0, 1},
+    {0, 1, 1},
+    {0, 1, 0},
+    {0, 0, 0},
+  };
   Surface westWall(points, model);
   westWall.setParent(space);
   EXPECT_EQ("Wall", westWall.surfaceType());
 
   EXPECT_EQ(0, space.floorArea());
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(1, 1, 1));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(0, 1, 0));
+  points = {
+    {0, 1, 1},
+    {1, 1, 1},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
   Surface northWall(points, model);
   northWall.setParent(space);
   EXPECT_EQ("Wall", northWall.surfaceType());
 
   EXPECT_EQ(0, space.floorArea());
 
-  points.clear();
-  points.push_back(Point3d(1, 1, 1));
-  points.push_back(Point3d(1, 0, 1));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  points = {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
   Surface eastWall(points, model);
   eastWall.setParent(space);
   EXPECT_EQ("Wall", eastWall.surfaceType());
 
   EXPECT_EQ(0, space.floorArea());
 
-  points.clear();
-  points.push_back(Point3d(1, 0, 1));
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {1, 0, 1},
+    {0, 0, 1},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface southWall(points, model);
   southWall.setParent(space);
   EXPECT_EQ("Wall", southWall.surfaceType());
@@ -198,11 +204,12 @@ TEST_F(ModelFixture, Space_FloorArea) {
   EXPECT_EQ(0, space.floorArea());
 
   // roof
-  points.clear();
-  points.push_back(Point3d(1, 1, 1));
-  points.push_back(Point3d(0, 1, 1));
-  points.push_back(Point3d(0, 0, 1));
-  points.push_back(Point3d(1, 0, 1));
+  points = {
+    {1, 1, 1},
+    {0, 1, 1},
+    {0, 0, 1},
+    {1, 0, 1},
+  };
   Surface roof(points, model);
   roof.setParent(space);
   EXPECT_EQ("RoofCeiling", roof.surfaceType());
@@ -210,11 +217,12 @@ TEST_F(ModelFixture, Space_FloorArea) {
   EXPECT_EQ(0, space.floorArea());
 
   // floor
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  points = {
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor(points, model);
   floor.setParent(space);
   EXPECT_EQ("Floor", floor.surfaceType());
@@ -242,11 +250,12 @@ TEST_F(ModelFixture, Space_FloorArea) {
 
   EXPECT_NEAR(6, space.floorArea(), 0.0001);
 
-  points.clear();
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  points = {
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
   SubSurface floorWindow(points, model);
   floorWindow.setSurface(floor);
   EXPECT_EQ("Skylight", floorWindow.subSurfaceType());
@@ -283,11 +292,12 @@ TEST_F(ModelFixture, Space_Lights) {
   EXPECT_EQ(0, space.lightingPowerPerFloorArea());
 
   // floor
-  Point3dVector points;
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor(points, model);
   floor.setParent(space);
   EXPECT_EQ("Floor", floor.surfaceType());
@@ -439,11 +449,12 @@ TEST_F(ModelFixture, Space_Transformation) {
 TEST_F(ModelFixture, Space_Transformation2) {
   Model model;
   Space space(model);
-  Point3dVector points;
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {1, 0, 0},
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
 
@@ -467,11 +478,12 @@ TEST_F(ModelFixture, Space_IddAssumptions) {
 TEST_F(ModelFixture, Space_BoundingBox) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {1, 0, 0},
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+  };
 
   Space space1(model);
   Surface surface1(points, model);
@@ -563,11 +575,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_2WallsWindow) {
   Space space2(model);
 
   // outward normal is in -y direction
-  Point3dVector points;
-  points.push_back(Point3d(0, -10, 10));
-  points.push_back(Point3d(0, -10, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 10));
+  Point3dVector points{
+    {0, -10, 10},
+    {0, -10, 0},
+    {0, 0, 0},
+    {0, 0, 10},
+  };
   Surface wall1(points, model);
   wall1.setSpace(space1);
 
@@ -575,11 +588,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_2WallsWindow) {
   EXPECT_EQ("Outdoors", wall1.outsideBoundaryCondition());
   EXPECT_FALSE(wall1.adjacentSurface());
 
-  points.clear();
-  points.push_back(Point3d(0, -7, 7));
-  points.push_back(Point3d(0, -7, 3));
-  points.push_back(Point3d(0, -3, 3));
-  points.push_back(Point3d(0, -3, 7));
+  points = {
+    {0, -7, 7},
+    {0, -7, 3},
+    {0, -3, 3},
+    {0, -3, 7},
+  };
   SubSurface window1(points, model);
   window1.setSurface(wall1);
 
@@ -587,11 +601,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_2WallsWindow) {
   EXPECT_FALSE(window1.adjacentSubSurface());
 
   // outward normal in +y
-  points.clear();
-  points.push_back(Point3d(0, 0, 10));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, -10, 0));
-  points.push_back(Point3d(0, -10, 10));
+  points = {
+    {0, 0, 10},
+    {0, 0, 0},
+    {0, -10, 0},
+    {0, -10, 10},
+  };
   Surface wall2(points, model);
   wall2.setSpace(space2);
 
@@ -599,11 +614,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_2WallsWindow) {
   EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
   EXPECT_FALSE(wall2.adjacentSurface());
 
-  points.clear();
-  points.push_back(Point3d(0, -3, 7));
-  points.push_back(Point3d(0, -3, 3));
-  points.push_back(Point3d(0, -7, 3));
-  points.push_back(Point3d(0, -7, 7));
+  points = {
+    {0, -3, 7},
+    {0, -3, 3},
+    {0, -7, 3},
+    {0, -7, 7},
+  };
   SubSurface window2(points, model);
   window2.setSurface(wall2);
 
@@ -650,11 +666,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_2WallsWindow) {
 TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+  };
 
   int Nx = 2;
   int Ny = 2;
@@ -676,11 +693,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
         searchResults = space->findSurfaces(0.0, 0.0, 90.0, 90.0);
         ASSERT_EQ(1u, searchResults.size());
 
-        subSurfacePoints.clear();
-        subSurfacePoints.push_back(Point3d(0.75, 1.0, 0.75));
-        subSurfacePoints.push_back(Point3d(0.75, 1.0, 0.25));
-        subSurfacePoints.push_back(Point3d(0.25, 1.0, 0.25));
-        subSurfacePoints.push_back(Point3d(0.25, 1.0, 0.75));
+        subSurfacePoints = {
+          {0.75, 1.0, 0.75},
+          {0.75, 1.0, 0.25},
+          {0.25, 1.0, 0.25},
+          {0.25, 1.0, 0.75},
+        };
 
         SubSurface northWindow(subSurfacePoints, model);
         northWindow.setSurface(searchResults[0]);
@@ -689,11 +707,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
         searchResults = space->findSurfaces(180.0, 180.0, 90.0, 90.0);
         ASSERT_EQ(1u, searchResults.size());
 
-        subSurfacePoints.clear();
-        subSurfacePoints.push_back(Point3d(0.25, 0.0, 0.75));
-        subSurfacePoints.push_back(Point3d(0.25, 0.0, 0.25));
-        subSurfacePoints.push_back(Point3d(0.75, 0.0, 0.25));
-        subSurfacePoints.push_back(Point3d(0.75, 0.0, 0.75));
+        subSurfacePoints = {
+          {0.25, 0.0, 0.75},
+          {0.25, 0.0, 0.25},
+          {0.75, 0.0, 0.25},
+          {0.75, 0.0, 0.75},
+        };
 
         SubSurface southWindow(subSurfacePoints, model);
         southWindow.setSurface(searchResults[0]);
@@ -702,11 +721,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
         searchResults = space->findSurfaces(90.0, 90.0, 90.0, 90.0);
         ASSERT_EQ(1u, searchResults.size());
 
-        subSurfacePoints.clear();
-        subSurfacePoints.push_back(Point3d(1.0, 0.25, 0.75));
-        subSurfacePoints.push_back(Point3d(1.0, 0.25, 0.25));
-        subSurfacePoints.push_back(Point3d(1.0, 0.75, 0.25));
-        subSurfacePoints.push_back(Point3d(1.0, 0.75, 0.75));
+        subSurfacePoints = {
+          {1.0, 0.25, 0.75},
+          {1.0, 0.25, 0.25},
+          {1.0, 0.75, 0.25},
+          {1.0, 0.75, 0.75},
+        };
 
         SubSurface eastDoor(subSurfacePoints, model);
         eastDoor.setSurface(searchResults[0]);
@@ -715,11 +735,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
         searchResults = space->findSurfaces(270.0, 270.0, 90.0, 90.0);
         ASSERT_EQ(1u, searchResults.size());
 
-        subSurfacePoints.clear();
-        subSurfacePoints.push_back(Point3d(0.0, 0.75, 0.75));
-        subSurfacePoints.push_back(Point3d(0.0, 0.75, 0.25));
-        subSurfacePoints.push_back(Point3d(0.0, 0.25, 0.25));
-        subSurfacePoints.push_back(Point3d(0.0, 0.25, 0.75));
+        subSurfacePoints = {
+          {0.0, 0.75, 0.75},
+          {0.0, 0.75, 0.25},
+          {0.0, 0.25, 0.25},
+          {0.0, 0.25, 0.75},
+        };
 
         SubSurface westDoor(subSurfacePoints, model);
         westDoor.setSurface(searchResults[0]);
@@ -737,11 +758,12 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
 TEST_F(ModelFixture, Space_FindSurfaces) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -787,11 +809,12 @@ TEST_F(ModelFixture, Space_FindSurfaces) {
 TEST_F(ModelFixture, Space_FindSurfaces_Translated) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -839,11 +862,12 @@ TEST_F(ModelFixture, Space_FindSurfaces_Translated) {
 TEST_F(ModelFixture, Space_FindSurfaces_Translated_Rotated) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);
@@ -893,11 +917,12 @@ TEST_F(ModelFixture, Space_Remove) {
   EXPECT_FALSE(spaceWatcher.relationshipChanged());
   EXPECT_FALSE(spaceWatcher.removedFromWorkspace());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 4, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(4, 0, 0));
-  points.push_back(Point3d(4, 4, 0));
+  Point3dVector points{
+    {0, 4, 0},
+    {0, 0, 0},
+    {4, 0, 0},
+    {4, 4, 0},
+  };
 
   Surface surface(points, model);
   surface.setParent(space);
@@ -930,11 +955,12 @@ TEST_F(ModelFixture, Space_Remove2) {
   EXPECT_FALSE(spaceWatcher.relationshipChanged());
   EXPECT_FALSE(spaceWatcher.removedFromWorkspace());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 4, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(4, 0, 0));
-  points.push_back(Point3d(4, 4, 0));
+  Point3dVector points{
+    {0, 4, 0},
+    {0, 0, 0},
+    {4, 0, 0},
+    {4, 4, 0},
+  };
 
   Surface surface(points, model);
   surface.setParent(space);
@@ -967,11 +993,12 @@ TEST_F(ModelFixture, Space_FloorPrint1) {
   std::vector<Point3d> floorPrint = space.floorPrint();
   EXPECT_EQ(0, floorPrint.size());
 
-  Point3dVector points;
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
+  Point3dVector points{
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+    {0, 1, 0},
+  };
 
   Surface surface1(points, model);
   surface1.setParent(space);
@@ -984,11 +1011,12 @@ TEST_F(ModelFixture, Space_FloorPrint1) {
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 1, 0))) << floorPrint;
 
-  points.clear();
-  points.push_back(Point3d(1, 2, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 2, 0));
+  points = {
+    {1, 2, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+    {0, 2, 0},
+  };
 
   Surface surface2(points, model);
   surface2.setParent(space);
@@ -1000,11 +1028,12 @@ TEST_F(ModelFixture, Space_FloorPrint1) {
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 2, 0))) << floorPrint;
 
-  points.clear();
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 2, 0));
+  points = {
+    {2, 2, 0},
+    {2, 1, 0},
+    {1, 1, 0},
+    {1, 2, 0},
+  };
 
   Surface surface3(points, model);
   surface3.setParent(space);
@@ -1018,11 +1047,12 @@ TEST_F(ModelFixture, Space_FloorPrint1) {
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[4], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[5], Point3d(0, 2, 0))) << floorPrint;
 
-  points.clear();
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  points = {
+    {1, 1, 0},
+    {2, 1, 0},
+    {2, 0, 0},
+    {1, 0, 0},
+  };
 
   Surface surface4(points, model);
   surface4.setParent(space);
@@ -1036,47 +1066,52 @@ TEST_F(ModelFixture, Space_FloorPrint1) {
 
   // now we will make a 3x3 square, then delete the center (surface3)
 
-  points.clear();
-  points.push_back(Point3d(1, 3, 0));
-  points.push_back(Point3d(1, 2, 0));
-  points.push_back(Point3d(0, 2, 0));
-  points.push_back(Point3d(0, 3, 0));
+  points = {
+    {1, 3, 0},
+    {1, 2, 0},
+    {0, 2, 0},
+    {0, 3, 0},
+  };
 
   Surface surface5(points, model);
   surface5.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(2, 3, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(1, 2, 0));
-  points.push_back(Point3d(1, 3, 0));
+  points = {
+    {2, 3, 0},
+    {2, 2, 0},
+    {1, 2, 0},
+    {1, 3, 0},
+  };
 
   Surface surface6(points, model);
   surface6.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(3, 3, 0));
-  points.push_back(Point3d(3, 2, 0));
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 3, 0));
+  points = {
+    {3, 3, 0},
+    {3, 2, 0},
+    {2, 2, 0},
+    {2, 3, 0},
+  };
 
   Surface surface7(points, model);
   surface7.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(3, 2, 0));
-  points.push_back(Point3d(3, 1, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 2, 0));
+  points = {
+    {3, 2, 0},
+    {3, 1, 0},
+    {2, 1, 0},
+    {2, 2, 0},
+  };
 
   Surface surface8(points, model);
   surface8.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(3, 1, 0));
-  points.push_back(Point3d(3, 0, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(2, 1, 0));
+  points = {
+    {3, 1, 0},
+    {3, 0, 0},
+    {2, 0, 0},
+    {2, 1, 0},
+  };
 
   Surface surface9(points, model);
   surface9.setParent(space);
@@ -1112,11 +1147,12 @@ TEST_F(ModelFixture, Space_FloorPrint2) {
   std::vector<Point3d> floorPrint = space.floorPrint();
   EXPECT_EQ(0, floorPrint.size());
 
-  Point3dVector points;
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
+  Point3dVector points{
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 0, 0},
+    {0, 1, 0},
+  };
 
   Surface surface1(points, model);
   surface1.setParent(space);
@@ -1129,11 +1165,12 @@ TEST_F(ModelFixture, Space_FloorPrint2) {
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 1, 0))) << floorPrint;
 
-  points.clear();
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(2, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  points = {
+    {2, 1, 0},
+    {2, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   Surface surface2(points, model);
   surface2.setParent(space);
@@ -1146,11 +1183,12 @@ TEST_F(ModelFixture, Space_FloorPrint2) {
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[2], Point3d(0, 0, 0))) << floorPrint;
   EXPECT_DOUBLE_EQ(0, getDistance(floorPrint[3], Point3d(0, 1, 0))) << floorPrint;
 
-  points.clear();
-  points.push_back(Point3d(2, 2, 0));
-  points.push_back(Point3d(2, 1, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 2, 0));
+  points = {
+    {2, 2, 0},
+    {2, 1, 0},
+    {0, 1, 0},
+    {0, 2, 0},
+  };
 
   Surface surface3(points, model);
   surface3.setParent(space);
@@ -1167,11 +1205,12 @@ TEST_F(ModelFixture, Space_FloorPrint2) {
 TEST_F(ModelFixture, Space_Cost) {
   Model model;
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space);
@@ -1195,11 +1234,12 @@ TEST_F(ModelFixture, Space_Cost) {
 TEST_F(ModelFixture, Space_InfiltrationDesignFlowRate) {
   // create from floor print
   Model model;
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   boost::optional<Space> ospace = Space::fromFloorPrint(floorPrint, 3.6, model);
   ASSERT_TRUE(ospace);
   Space space = *ospace;
@@ -1355,22 +1395,24 @@ TEST_F(ModelFixture, Space_Intersect_OneToFour) {
       Space space1(model);
       Space space2(model);
 
-      Point3dVector points;
-      points.push_back(Point3d(xOrigin, 0, 20));
-      points.push_back(Point3d(xOrigin, 0, 0));
-      points.push_back(Point3d(xOrigin, 10, 0));
-      points.push_back(Point3d(xOrigin, 10, 20));
+      Point3dVector points{
+        {xOrigin, 0, 20},
+        {xOrigin, 0, 0},
+        {xOrigin, 10, 0},
+        {xOrigin, 10, 20},
+      };
       Surface surface(t * points, model);
       surface.setSpace(space1);
       EXPECT_NEAR(200.0, surface.grossArea(), areaTol);
 
       std::vector<Surface> surfaces;
       for (unsigned i = 0; i < 4; ++i) {
-        points.clear();
-        points.push_back(Point3d(xOrigin, 10, (i + 1) * 5));
-        points.push_back(Point3d(xOrigin, 10, i * 5));
-        points.push_back(Point3d(xOrigin, 0, i * 5));
-        points.push_back(Point3d(xOrigin, 0, (i + 1) * 5));
+        points = {
+          {xOrigin, 10, (i + 1) * 5.0},
+          {xOrigin, 10, i * 5.0},
+          {xOrigin, 0, i * 5.0},
+          {xOrigin, 0, (i + 1) * 5.0},
+        };
         Surface tempSurface(t * points, model);
         tempSurface.setSpace(space2);
         EXPECT_NEAR(50.0, tempSurface.grossArea(), areaTol);
@@ -1412,22 +1454,24 @@ TEST_F(ModelFixture, Space_Intersect_FourToOne) {
       Space space1(model);
       Space space2(model);
 
-      Point3dVector points;
-      points.push_back(Point3d(xOrigin, 0, 20));
-      points.push_back(Point3d(xOrigin, 0, 0));
-      points.push_back(Point3d(xOrigin, 10, 0));
-      points.push_back(Point3d(xOrigin, 10, 20));
+      Point3dVector points{
+        {xOrigin, 0, 20},
+        {xOrigin, 0, 0},
+        {xOrigin, 10, 0},
+        {xOrigin, 10, 20},
+      };
       Surface surface(t * points, model);
       surface.setSpace(space1);
       EXPECT_NEAR(200.0, surface.grossArea(), areaTol);
 
       std::vector<Surface> surfaces;
       for (unsigned i = 0; i < 4; ++i) {
-        points.clear();
-        points.push_back(Point3d(xOrigin, 10, (i + 1) * 5));
-        points.push_back(Point3d(xOrigin, 10, i * 5));
-        points.push_back(Point3d(xOrigin, 0, i * 5));
-        points.push_back(Point3d(xOrigin, 0, (i + 1) * 5));
+        points = {
+          {xOrigin, 10, (i + 1) * 5.0},
+          {xOrigin, 10, i * 5.0},
+          {xOrigin, 0, i * 5.0},
+          {xOrigin, 0, (i + 1) * 5.0},
+        };
         Surface tempSurface(t * points, model);
         tempSurface.setSpace(space2);
         EXPECT_NEAR(50.0, tempSurface.grossArea(), areaTol);
@@ -1516,11 +1560,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   BuildingStory bottomStory(m);
 
   // bottom core
-  vertices.clear();
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  vertices = {
+    {-13.0256, 7.1598, 0},
+    {13.0256, 7.1598, 0},
+    {13.0256, -7.1598, 0},
+    {-13.0256, -7.1598, 0},
+  };
   boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomCore);
   bottomCore->setZOrigin(0);
@@ -1528,11 +1573,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   bottomCore->setName("bottomCore");
 
   // bottom top
-  vertices.clear();
-  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  vertices = {
+    {-17.5976, 11.7318, 0},
+    {17.5976, 11.7318, 0},
+    {13.0256, 7.1598, 0},
+    {-13.0256, 7.1598, 0},
+  };
   boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomTop);
   bottomTop->setZOrigin(0);
@@ -1540,11 +1586,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   bottomTop->setName("bottomTop");
 
   // bottom right
-  vertices.clear();
-  vertices.push_back(Point3d(17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  vertices = {
+    {17.5976, 11.7318, 0},
+    {17.5976, -11.7318, 0},
+    {13.0256, -7.1598, 0},
+    {13.0256, 7.1598, 0},
+  };
   boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomRight);
   bottomRight->setZOrigin(0);
@@ -1552,11 +1599,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   bottomRight->setName("bottomRight");
 
   // bottom bottom
-  vertices.clear();
-  vertices.push_back(Point3d(17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  vertices = {
+    {17.5976, -11.7318, 0},
+    {-17.5976, -11.7318, 0},
+    {-13.0256, -7.1598, 0},
+    {13.0256, -7.1598, 0},
+  };
   boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomBottom);
   bottomBottom->setZOrigin(0);
@@ -1564,11 +1612,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   bottomBottom->setName("bottomBottom");
 
   // bottom left
-  vertices.clear();
-  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  vertices = {
+    {-17.5976, 11.7318, 0},
+    {-13.0256, 7.1598, 0},
+    {-13.0256, -7.1598, 0},
+    {-17.5976, -11.7318, 0},
+  };
   boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomLeft);
   bottomLeft->setZOrigin(0);
@@ -1579,11 +1628,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   BuildingStory topStory(m);
 
   // top core
-  vertices.clear();
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  vertices = {
+    {-7.8714, 3.7236, 0},
+    {7.8714, 3.7236, 0},
+    {7.8714, -3.7236, 0},
+    {-7.8714, -3.7236, 0},
+  };
   boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topCore);
   topCore->setZOrigin(3);
@@ -1591,11 +1641,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   topCore->setName("topCore");
 
   // top top
-  vertices.clear();
-  vertices.push_back(Point3d(-12.4434, 8.2956, 0));
-  vertices.push_back(Point3d(12.4434, 8.2956, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  vertices = {
+    {-12.4434, 8.2956, 0},
+    {12.4434, 8.2956, 0},
+    {7.8714, 3.7236, 0},
+    {-7.8714, 3.7236, 0},
+  };
   boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topTop);
   topTop->setZOrigin(3);
@@ -1603,11 +1654,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   topTop->setName("topTop");
 
   // top right
-  vertices.clear();
-  vertices.push_back(Point3d(12.4434, 8.2956, 0));
-  vertices.push_back(Point3d(12.4434, -8.2956, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  vertices = {
+    {12.4434, 8.2956, 0},
+    {12.4434, -8.2956, 0},
+    {7.8714, -3.7236, 0},
+    {7.8714, 3.7236, 0},
+  };
   boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topRight);
   topRight->setZOrigin(3);
@@ -1615,11 +1667,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   topRight->setName("topRight");
 
   // top bottom
-  vertices.clear();
-  vertices.push_back(Point3d(12.4434, -8.2956, 0));
-  vertices.push_back(Point3d(-12.4434, -8.2956, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  vertices = {
+    {12.4434, -8.2956, 0},
+    {-12.4434, -8.2956, 0},
+    {-7.8714, -3.7236, 0},
+    {7.8714, -3.7236, 0},
+  };
   boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topBottom);
   topBottom->setZOrigin(3);
@@ -1627,11 +1680,12 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   topBottom->setName("topBottom");
 
   // top left
-  vertices.clear();
-  vertices.push_back(Point3d(-12.4434, 8.2956, 0));
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(-12.4434, -8.2956, 0));
+  vertices = {
+    {-12.4434, 8.2956, 0},
+    {-7.8714, 3.7236, 0},
+    {-7.8714, -3.7236, 0},
+    {-12.4434, -8.2956, 0},
+  };
   boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topLeft);
   topLeft->setZOrigin(3);
@@ -1718,51 +1772,56 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   // bottom floor
 
   // bottom core
-  vertices.clear();
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  vertices = {
+    {-13.0256, 7.1598, 0},
+    {13.0256, 7.1598, 0},
+    {13.0256, -7.1598, 0},
+    {-13.0256, -7.1598, 0},
+  };
   boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomCore);
   bottomCore->setZOrigin(0);
 
   // bottom top
-  vertices.clear();
-  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  vertices = {
+    {-17.5976, 11.7318, 0},
+    {17.5976, 11.7318, 0},
+    {13.0256, 7.1598, 0},
+    {-13.0256, 7.1598, 0},
+  };
   boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomTop);
   bottomTop->setZOrigin(0);
 
   // bottom right
-  vertices.clear();
-  vertices.push_back(Point3d(17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  vertices = {
+    {17.5976, 11.7318, 0},
+    {17.5976, -11.7318, 0},
+    {13.0256, -7.1598, 0},
+    {13.0256, 7.1598, 0},
+  };
   boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomRight);
   bottomRight->setZOrigin(0);
 
   // bottom bottom
-  vertices.clear();
-  vertices.push_back(Point3d(17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  vertices = {
+    {17.5976, -11.7318, 0},
+    {-17.5976, -11.7318, 0},
+    {-13.0256, -7.1598, 0},
+    {13.0256, -7.1598, 0},
+  };
   boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomBottom);
   bottomBottom->setZOrigin(0);
 
   // bottom left
-  vertices.clear();
-  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  vertices = {
+    {-17.5976, 11.7318, 0},
+    {-13.0256, 7.1598, 0},
+    {-13.0256, -7.1598, 0},
+    {-17.5976, -11.7318, 0},
+  };
   boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomLeft);
   bottomLeft->setZOrigin(0);
@@ -1770,51 +1829,56 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   // top floor
 
   // top core
-  vertices.clear();
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  vertices = {
+    {-7.8714, 3.7236, 0},
+    {7.8714, 3.7236, 0},
+    {7.8714, -3.7236, 0},
+    {-7.8714, -3.7236, 0},
+  };
   boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topCore);
   topCore->setZOrigin(3);
 
   // top top
-  vertices.clear();
-  vertices.push_back(Point3d(-14.1614, 8.2956, 0));
-  vertices.push_back(Point3d(14.1614, 8.2956, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  vertices = {
+    {-14.1614, 8.2956, 0},
+    {14.1614, 8.2956, 0},
+    {7.8714, 3.7236, 0},
+    {-7.8714, 3.7236, 0},
+  };
   boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topTop);
   topTop->setZOrigin(3);
 
   // top right
-  vertices.clear();
-  vertices.push_back(Point3d(14.1614, 8.2956, 0));
-  vertices.push_back(Point3d(14.1614, -8.2956, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  vertices = {
+    {14.1614, 8.2956, 0},
+    {14.1614, -8.2956, 0},
+    {7.8714, -3.7236, 0},
+    {7.8714, 3.7236, 0},
+  };
   boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topRight);
   topRight->setZOrigin(3);
 
   // top bottom
-  vertices.clear();
-  vertices.push_back(Point3d(14.1614, -8.2956, 0));
-  vertices.push_back(Point3d(-14.1614, -8.2956, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  vertices = {
+    {14.1614, -8.2956, 0},
+    {-14.1614, -8.2956, 0},
+    {-7.8714, -3.7236, 0},
+    {7.8714, -3.7236, 0},
+  };
   boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topBottom);
   topBottom->setZOrigin(3);
 
   // top left
-  vertices.clear();
-  vertices.push_back(Point3d(-14.1614, 8.2956, 0));
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(-14.1614, -8.2956, 0));
+  vertices = {
+    {-14.1614, 8.2956, 0},
+    {-7.8714, 3.7236, 0},
+    {-7.8714, -3.7236, 0},
+    {-14.1614, -8.2956, 0},
+  };
   boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topLeft);
   topLeft->setZOrigin(3);
@@ -1881,51 +1945,56 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   // bottom floor
 
   // bottom core
-  vertices.clear();
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  vertices = {
+    {-13.0256, 7.1598, 0},
+    {13.0256, 7.1598, 0},
+    {13.0256, -7.1598, 0},
+    {-13.0256, -7.1598, 0},
+  };
   boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomCore);
   bottomCore->setZOrigin(0);
 
   // bottom top
-  vertices.clear();
-  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  vertices = {
+    {-17.5976, 11.7318, 0},
+    {17.5976, 11.7318, 0},
+    {13.0256, 7.1598, 0},
+    {-13.0256, 7.1598, 0},
+  };
   boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomTop);
   bottomTop->setZOrigin(0);
 
   // bottom right
-  vertices.clear();
-  vertices.push_back(Point3d(17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  vertices = {
+    {17.5976, 11.7318, 0},
+    {17.5976, -11.7318, 0},
+    {13.0256, -7.1598, 0},
+    {13.0256, 7.1598, 0},
+  };
   boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomRight);
   bottomRight->setZOrigin(0);
 
   // bottom bottom
-  vertices.clear();
-  vertices.push_back(Point3d(17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  vertices = {
+    {17.5976, -11.7318, 0},
+    {-17.5976, -11.7318, 0},
+    {-13.0256, -7.1598, 0},
+    {13.0256, -7.1598, 0},
+  };
   boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomBottom);
   bottomBottom->setZOrigin(0);
 
   // bottom left
-  vertices.clear();
-  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
-  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
-  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
-  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  vertices = {
+    {-17.5976, 11.7318, 0},
+    {-13.0256, 7.1598, 0},
+    {-13.0256, -7.1598, 0},
+    {-17.5976, -11.7318, 0},
+  };
   boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomLeft);
   bottomLeft->setZOrigin(0);
@@ -1933,51 +2002,56 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   // top floor
 
   // top core
-  vertices.clear();
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  vertices = {
+    {-7.8714, 3.7236, 0},
+    {7.8714, 3.7236, 0},
+    {7.8714, -3.7236, 0},
+    {-7.8714, -3.7236, 0},
+  };
   boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topCore);
   topCore->setZOrigin(3);
 
   // top top
-  vertices.clear();
-  vertices.push_back(Point3d(-15.4434, 8.2956, 0));
-  vertices.push_back(Point3d(15.4434, 8.2956, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  vertices = {
+    {-15.4434, 8.2956, 0},
+    {15.4434, 8.2956, 0},
+    {7.8714, 3.7236, 0},
+    {-7.8714, 3.7236, 0},
+  };
   boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topTop);
   topTop->setZOrigin(3);
 
   // top right
-  vertices.clear();
-  vertices.push_back(Point3d(15.4434, 8.2956, 0));
-  vertices.push_back(Point3d(15.4434, -8.2956, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  vertices = {
+    {15.4434, 8.2956, 0},
+    {15.4434, -8.2956, 0},
+    {7.8714, -3.7236, 0},
+    {7.8714, 3.7236, 0},
+  };
   boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topRight);
   topRight->setZOrigin(3);
 
   // top bottom
-  vertices.clear();
-  vertices.push_back(Point3d(15.4434, -8.2956, 0));
-  vertices.push_back(Point3d(-15.4434, -8.2956, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  vertices = {
+    {15.4434, -8.2956, 0},
+    {-15.4434, -8.2956, 0},
+    {-7.8714, -3.7236, 0},
+    {7.8714, -3.7236, 0},
+  };
   boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topBottom);
   topBottom->setZOrigin(3);
 
   // top left
-  vertices.clear();
-  vertices.push_back(Point3d(-15.4434, 8.2956, 0));
-  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
-  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
-  vertices.push_back(Point3d(-15.4434, -8.2956, 0));
+  vertices = {
+    {-15.4434, 8.2956, 0},
+    {-7.8714, 3.7236, 0},
+    {-7.8714, -3.7236, 0},
+    {-15.4434, -8.2956, 0},
+  };
   boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topLeft);
   topLeft->setZOrigin(3);
@@ -2043,218 +2117,197 @@ boost::optional<Model> CreatePerimeterTestModel() {
 
   BuildingStory story1(model);
 
-  Point3dVector p1;
-  p1.push_back(Point3d(36, 168, 0));
-  p1.push_back(Point3d(36, 138, 0));
-  p1.push_back(Point3d(0, 138, 0));
-  p1.push_back(Point3d(0, 168, 0));
+  Point3dVector p1{
+    {36, 168, 0},
+    {36, 138, 0},
+    {0, 138, 0},
+    {0, 168, 0},
+  };
   auto sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 101");
 
-  p1.clear();
-  p1.push_back(Point3d(220, 168, 0));
-  p1.push_back(Point3d(220, 150, 0));
-  p1.push_back(Point3d(220, 124, 0));
-  p1.push_back(Point3d(220, 70, 0));
-  p1.push_back(Point3d(220, 30, 0));
-  p1.push_back(Point3d(200, 30, 0));
-  p1.push_back(Point3d(200, 168, 0));
+  p1 = {
+    {220, 168, 0}, {220, 150, 0}, {220, 124, 0}, {220, 70, 0}, {220, 30, 0}, {200, 30, 0}, {200, 168, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Mechanical 114");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 70, 0));
-  p1.push_back(Point3d(288, 0, 0));
-  p1.push_back(Point3d(220, 0, 0));
-  p1.push_back(Point3d(220, 30, 0));
-  p1.push_back(Point3d(220, 70, 0));
+  p1 = {
+    {288, 70, 0}, {288, 0, 0}, {220, 0, 0}, {220, 30, 0}, {220, 70, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Offices 117");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 124, 0));
-  p1.push_back(Point3d(288, 70, 0));
-  p1.push_back(Point3d(220, 70, 0));
-  p1.push_back(Point3d(220, 124, 0));
+  p1 = {
+    {288, 124, 0},
+    {288, 70, 0},
+    {220, 70, 0},
+    {220, 124, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Gym 118");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 168, 0));
-  p1.push_back(Point3d(158, 138, 0));
-  p1.push_back(Point3d(98, 138, 0));
-  p1.push_back(Point3d(98, 168, 0));
+  p1 = {
+    {158, 168, 0},
+    {158, 138, 0},
+    {98, 138, 0},
+    {98, 168, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Artroom 103");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 150, 0));
-  p1.push_back(Point3d(288, 124, 0));
-  p1.push_back(Point3d(220, 124, 0));
-  p1.push_back(Point3d(220, 150, 0));
+  p1 = {
+    {288, 150, 0},
+    {288, 124, 0},
+    {220, 124, 0},
+    {220, 150, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Kitchen 119");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 200, 0));
-  p1.push_back(Point3d(288, 150, 0));
-  p1.push_back(Point3d(220, 150, 0));
-  p1.push_back(Point3d(220, 168, 0));
-  p1.push_back(Point3d(220, 200, 0));
+  p1 = {
+    {288, 200, 0}, {288, 150, 0}, {220, 150, 0}, {220, 168, 0}, {220, 200, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Cafeteria 120");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 138, 0));
-  p1.push_back(Point3d(158, 128, 0));
-  p1.push_back(Point3d(36, 128, 0));
-  p1.push_back(Point3d(0, 128, 0));
-  p1.push_back(Point3d(0, 138, 0));
-  p1.push_back(Point3d(36, 138, 0));
-  p1.push_back(Point3d(98, 138, 0));
+  p1 = {
+    {158, 138, 0}, {158, 128, 0}, {36, 128, 0}, {0, 128, 0}, {0, 138, 0}, {36, 138, 0}, {98, 138, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Corridor 104");
 
-  p1.clear();
-  p1.push_back(Point3d(36, 128, 0));
-  p1.push_back(Point3d(36, 98, 0));
-  p1.push_back(Point3d(0, 98, 0));
-  p1.push_back(Point3d(0, 128, 0));
+  p1 = {
+    {36, 128, 0},
+    {36, 98, 0},
+    {0, 98, 0},
+    {0, 128, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 105");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 128, 0));
-  p1.push_back(Point3d(158, 98, 0));
-  p1.push_back(Point3d(36, 98, 0));
-  p1.push_back(Point3d(36, 128, 0));
+  p1 = {
+    {158, 128, 0},
+    {158, 98, 0},
+    {36, 98, 0},
+    {36, 128, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 106");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(158, 40, 0));
-  p1.push_back(Point3d(158, 70, 0));
-  p1.push_back(Point3d(158, 98, 0));
-  p1.push_back(Point3d(158, 128, 0));
-  p1.push_back(Point3d(158, 138, 0));
-  p1.push_back(Point3d(158, 168, 0));
-  p1.push_back(Point3d(200, 168, 0));
-  p1.push_back(Point3d(200, 30, 0));
+  p1 = {
+    {158, 30, 0}, {158, 40, 0}, {158, 70, 0}, {158, 98, 0}, {158, 128, 0}, {158, 138, 0}, {158, 168, 0}, {200, 168, 0}, {200, 30, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Corridor 107");
 
-  p1.clear();
-  p1.push_back(Point3d(36, 40, 0));
-  p1.push_back(Point3d(36, 70, 0));
-  p1.push_back(Point3d(158, 70, 0));
-  p1.push_back(Point3d(158, 40, 0));
+  p1 = {
+    {36, 40, 0},
+    {36, 70, 0},
+    {158, 70, 0},
+    {158, 40, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 108");
 
-  p1.clear();
-  p1.push_back(Point3d(0, 40, 0));
-  p1.push_back(Point3d(0, 70, 0));
-  p1.push_back(Point3d(36, 70, 0));
-  p1.push_back(Point3d(36, 40, 0));
+  p1 = {
+    {0, 40, 0},
+    {0, 70, 0},
+    {36, 70, 0},
+    {36, 40, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 109");
 
-  p1.clear();
-  p1.push_back(Point3d(98, 168, 0));
-  p1.push_back(Point3d(98, 138, 0));
-  p1.push_back(Point3d(36, 138, 0));
-  p1.push_back(Point3d(36, 168, 0));
+  p1 = {
+    {98, 168, 0},
+    {98, 138, 0},
+    {36, 138, 0},
+    {36, 168, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 102");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 40, 0));
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(36, 30, 0));
-  p1.push_back(Point3d(0, 30, 0));
-  p1.push_back(Point3d(0, 40, 0));
-  p1.push_back(Point3d(36, 40, 0));
+  p1 = {
+    {158, 40, 0}, {158, 30, 0}, {36, 30, 0}, {0, 30, 0}, {0, 40, 0}, {36, 40, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Corridor 110");
 
-  p1.clear();
-  p1.push_back(Point3d(36, 30, 0));
-  p1.push_back(Point3d(36, 0, 0));
-  p1.push_back(Point3d(0, 0, 0));
-  p1.push_back(Point3d(0, 30, 0));
+  p1 = {
+    {36, 30, 0},
+    {36, 0, 0},
+    {0, 0, 0},
+    {0, 30, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 111");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(158, 0, 0));
-  p1.push_back(Point3d(36, 0, 0));
-  p1.push_back(Point3d(36, 30, 0));
+  p1 = {
+    {158, 30, 0},
+    {158, 0, 0},
+    {36, 0, 0},
+    {36, 30, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 112");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 0, 0));
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(200, 30, 0));
-  p1.push_back(Point3d(220, 30, 0));
-  p1.push_back(Point3d(220, 0, 0));
+  p1 = {
+    {158, 0, 0}, {158, 30, 0}, {200, 30, 0}, {220, 30, 0}, {220, 0, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Lobby 113");
 
-  p1.clear();
-  p1.push_back(Point3d(220, 200, 0));
-  p1.push_back(Point3d(220, 168, 0));
-  p1.push_back(Point3d(200, 168, 0));
-  p1.push_back(Point3d(158, 168, 0));
-  p1.push_back(Point3d(158, 200, 0));
+  p1 = {
+    {220, 200, 0}, {220, 168, 0}, {200, 168, 0}, {158, 168, 0}, {158, 200, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Bathroom 115");
 
-  p1.clear();
-  p1.push_back(Point3d(220, 268, 0));
-  p1.push_back(Point3d(220, 200, 0));
-  p1.push_back(Point3d(158, 200, 0));
-  p1.push_back(Point3d(158, 268, 0));
+  p1 = {
+    {220, 268, 0},
+    {220, 200, 0},
+    {158, 200, 0},
+    {158, 268, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
@@ -2279,85 +2332,94 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   ASSERT_TRUE(space.name());
   EXPECT_EQ("Space 1", space.name().get());  //TZ46-81
 
-  Point3dVector points;
-  points.push_back(Point3d(0.787401574803132, 3.14960629921254, 3.84078906495842e-15));
-  points.push_back(Point3d(2.75590551181098, 1.18110236220469, 7.70979364755774e-15));
-  points.push_back(Point3d(2.00599925009369, 0.356205474315723, 3.76899861514623e-15));
-  points.push_back(Point3d(0, 2.36220472440939, 0));
+  Point3dVector points{
+    {0.787401574803132, 3.14960629921254, 3.84078906495842e-15},
+    {2.75590551181098, 1.18110236220469, 7.70979364755774e-15},
+    {2.00599925009369, 0.356205474315723, 3.76899861514623e-15},
+    {0, 2.36220472440939, 0},
+  };
 
   Surface surface(points, model);
   surface.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(1.37795275590549, 0.984251968503903, 3.51739188744401));
-  points.push_back(Point3d(5.31496062992121, 4.92125984251968, 3.51739188744401));
-  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 3.51739188744401));
-  points.push_back(Point3d(0, 2.36220472440939, 3.51739188744401));
+  points = {
+    {1.37795275590549, 0.984251968503903, 3.51739188744401},
+    {5.31496062992121, 4.92125984251968, 3.51739188744401},
+    {3.93700787401569, 6.2992125984252, 3.51739188744401},
+    {0, 2.36220472440939, 3.51739188744401},
+  };
 
   Surface surface2(points, model);
   surface2.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 3.51739188744401));
-  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 0));
-  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 0));
-  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 3.51739188744401));
+  points = {
+    {5.11811023622049, 2.75590551181099, 3.51739188744401},
+    {5.11811023622049, 2.75590551181099, 0},
+    {6.2992125984252, 3.93700787401571, 0},
+    {6.2992125984252, 3.93700787401571, 3.51739188744401},
+  };
 
   Surface surface3(points, model);
   surface3.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(2.36220472440939, 0, 3.51739188744401));
-  points.push_back(Point3d(2.36220472440939, 0, 0));
-  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 0));
-  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 3.51739188744401));
+  points = {
+    {2.36220472440939, 0, 3.51739188744401},
+    {2.36220472440939, 0, 0},
+    {5.11811023622049, 2.75590551181099, 0},
+    {5.11811023622049, 2.75590551181099, 3.51739188744401},
+  };
 
   Surface surface4(points, model);
   surface4.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(0, 2.36220472440939, 3.51739188744401));
-  points.push_back(Point3d(0, 2.36220472440939, 0));
-  points.push_back(Point3d(2.36220472440939, 0, 0));
-  points.push_back(Point3d(2.36220472440939, 0, 3.51739188744401));
+  points = {
+    {0, 2.36220472440939, 3.51739188744401},
+    {0, 2.36220472440939, 0},
+    {2.36220472440939, 0, 0},
+    {2.36220472440939, 0, 3.51739188744401},
+  };
 
   Surface surface5(points, model);
   surface5.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 3.51739188744401));
-  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 0));
-  points.push_back(Point3d(0, 2.36220472440939, 0));
-  points.push_back(Point3d(0, 2.36220472440939, 3.51739188744401));
+  points = {
+    {3.93700787401569, 6.2992125984252, 3.51739188744401},
+    {3.93700787401569, 6.2992125984252, 0},
+    {0, 2.36220472440939, 0},
+    {0, 2.36220472440939, 3.51739188744401},
+  };
 
   Surface surface6(points, model);
   surface6.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 3.51739188744401));
-  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 0));
-  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 0));
-  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 3.51739188744401));
+  points = {
+    {6.2992125984252, 3.93700787401571, 3.51739188744401},
+    {6.2992125984252, 3.93700787401571, 0},
+    {3.93700787401569, 6.2992125984252, 0},
+    {3.93700787401569, 6.2992125984252, 3.51739188744401},
+  };
 
   Surface surface7(points, model);
   surface7.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(2.3622047244094, -1.44382283906452e-15, 3.51739188744401));
-  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 3.51739188744401));
-  points.push_back(Point3d(5.31496062992121, 4.92125984251968, 3.51739188744401));
-  points.push_back(Point3d(1.37795275590549, 0.984251968503901, 3.51739188744401));
+  points = {
+    {2.3622047244094, -1.44382283906452e-15, 3.51739188744401},
+    {6.2992125984252, 3.93700787401571, 3.51739188744401},
+    {5.31496062992121, 4.92125984251968, 3.51739188744401},
+    {1.37795275590549, 0.984251968503901, 3.51739188744401},
+  };
 
   Surface surface8(points, model);
   surface8.setParent(space);
 
-  points.clear();
-  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 0));
-  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 0));
-  points.push_back(Point3d(2.3622047244094, -2.88764567812905e-15, 0));
-  points.push_back(Point3d(2.00599925009369, 0.356205474315719, 4.33146851719357e-15));
-  points.push_back(Point3d(2.75590551181099, 1.18110236220469, 7.21911419532262e-15));
-  points.push_back(Point3d(0.787401574803138, 3.14960629921254, 4.33146851719357e-15));
+  points = {
+    {3.93700787401569, 6.2992125984252, 0},
+    {6.2992125984252, 3.93700787401571, 0},
+    {2.3622047244094, -2.88764567812905e-15, 0},
+    {2.00599925009369, 0.356205474315719, 4.33146851719357e-15},
+    {2.75590551181099, 1.18110236220469, 7.21911419532262e-15},
+    {0.787401574803138, 3.14960629921254, 4.33146851719357e-15},
+  };
 
   Surface surface9(points, model);
   surface9.setParent(space);
@@ -2371,67 +2433,74 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   ASSERT_TRUE(space2.name());
   EXPECT_EQ("Space 2", space2.name().get());  //TZ47-91
 
-  points.clear();
-  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 0));
-  points.push_back(Point3d(8.16034359341449, 8.55404438081602, -1.44382283906452e-15));
-  points.push_back(Point3d(5.90551181102359, 6.2992125984252, -1.44382283906452e-15));
-  points.push_back(Point3d(4.92125984251972, 7.28346456692913, -7.21911419532262e-16));
+  points = {
+    {7.0866141732284, 9.44881889763781, 0},
+    {8.16034359341449, 8.55404438081602, -1.44382283906452e-15},
+    {5.90551181102359, 6.2992125984252, -1.44382283906452e-15},
+    {4.92125984251972, 7.28346456692913, -7.21911419532262e-16},
+  };
 
   Surface surface10(points, model);
   surface10.setParent(space2);
 
-  points.clear();
-  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 6.095999804928));
-  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 6.095999804928));
-  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 6.095999804928));
-  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 6.095999804928));
+  points = {
+    {1.96850393700789, -2.88764567812905e-15, 6.095999804928},
+    {9.44881889763779, 7.4803149606299, 6.095999804928},
+    {7.0866141732284, 9.44881889763781, 6.095999804928},
+    {-5.77529135625809e-15, 2.3622047244094, 6.095999804928},
+  };
 
   Surface surface11(points, model);
   surface11.setParent(space2);
 
-  points.clear();
-  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 6.095999804928));
-  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 0));
-  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 0));
-  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 6.095999804928));
+  points = {
+    {7.0866141732284, 9.44881889763781, 6.095999804928},
+    {7.0866141732284, 9.44881889763781, 0},
+    {-5.77529135625809e-15, 2.3622047244094, 0},
+    {-5.77529135625809e-15, 2.3622047244094, 6.095999804928},
+  };
 
   Surface surface12(points, model);
   surface12.setParent(space2);
 
-  points.clear();
-  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 6.095999804928));
-  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 0));
-  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 0));
-  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 6.095999804928));
+  points = {
+    {9.44881889763779, 7.4803149606299, 6.095999804928},
+    {9.44881889763779, 7.4803149606299, 0},
+    {7.0866141732284, 9.44881889763781, 0},
+    {7.0866141732284, 9.44881889763781, 6.095999804928},
+  };
 
   Surface surface13(points, model);
   surface13.setParent(space2);
 
-  points.clear();
-  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 6.095999804928));
-  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 0));
-  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 0));
-  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 6.095999804928));
+  points = {
+    {1.96850393700789, -2.88764567812905e-15, 6.095999804928},
+    {1.96850393700789, -2.88764567812905e-15, 0},
+    {9.44881889763779, 7.4803149606299, 0},
+    {9.44881889763779, 7.4803149606299, 6.095999804928},
+  };
 
   Surface surface14(points, model);
   surface14.setParent(space2);
 
-  points.clear();
-  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 6.095999804928));
-  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 0));
-  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 0));
-  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 6.095999804928));
+  points = {
+    {-5.77529135625809e-15, 2.3622047244094, 6.095999804928},
+    {-5.77529135625809e-15, 2.3622047244094, 0},
+    {1.96850393700789, -2.88764567812905e-15, 0},
+    {1.96850393700789, -2.88764567812905e-15, 6.095999804928},
+  };
 
   Surface surface15(points, model);
   surface15.setParent(space2);
 
-  points.clear();
-  points.push_back(Point3d(8.16034359341449, 8.55404438081602, -1.44382283906452e-15));
-  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 0));
-  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 0));
-  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 0));
-  points.push_back(Point3d(4.92125984251972, 7.28346456692913, -7.21911419532262e-16));
-  points.push_back(Point3d(5.90551181102359, 6.2992125984252, -1.44382283906452e-15));
+  points = {
+    {8.16034359341449, 8.55404438081602, -1.44382283906452e-15},
+    {9.44881889763779, 7.4803149606299, 0},
+    {1.96850393700789, -2.88764567812905e-15, 0},
+    {-5.77529135625809e-15, 2.3622047244094, 0},
+    {4.92125984251972, 7.28346456692913, -7.21911419532262e-16},
+    {5.90551181102359, 6.2992125984252, -1.44382283906452e-15},
+  };
 
   Surface surface16(points, model);
   surface16.setParent(space2);
@@ -2496,22 +2565,24 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
 
   double z = 1;
 
-  Point3dVector top;
-  top.push_back(Point3d(3, 0, z));
-  top.push_back(Point3d(3, 5, z));
-  top.push_back(Point3d(7, 5, z));
-  top.push_back(Point3d(7, 0, z));
+  Point3dVector top{
+    {3, 0, z},
+    {3, 5, z},
+    {7, 5, z},
+    {7, 0, z},
+  };
   auto normTop = getOutwardNormal(top);
   EXPECT_NEAR(normTop->z(), -1, 0.01);
   Surface s1(top, model);
   s1.setParent(sp1);
 
   Space sp2(model);
-  Point3dVector bottom;
-  bottom.push_back(Point3d(0, 0, z));
-  bottom.push_back(Point3d(10, 0, z));
-  bottom.push_back(Point3d(10, 10, z));
-  bottom.push_back(Point3d(0, 10, z));
+  Point3dVector bottom{
+    {0, 0, z},
+    {10, 0, z},
+    {10, 10, z},
+    {0, 10, z},
+  };
   auto normBottom = getOutwardNormal(bottom);
   EXPECT_NEAR(normBottom->z(), 1, 0.01);
   Surface s2(bottom, model);
@@ -2537,11 +2608,12 @@ TEST_F(ModelFixture, Issue_2560) {
   Model model;
 
   BuildingStory story2(model);
-  Point3dVector perimeter;
-  perimeter.push_back(Point3d(4, 2, 3));
-  perimeter.push_back(Point3d(4, 6, 3));
-  perimeter.push_back(Point3d(18, 6, 3));
-  perimeter.push_back(Point3d(18, 2, 3));
+  Point3dVector perimeter{
+    {4, 2, 3},
+    {4, 6, 3},
+    {18, 6, 3},
+    {18, 2, 3},
+  };
   auto sp1 = Space::fromFloorPrint(perimeter, 3, model);
   ASSERT_TRUE(sp1);
   ThermalZone tz1(model);
@@ -2549,33 +2621,36 @@ TEST_F(ModelFixture, Issue_2560) {
   sp1->setBuildingStory(story2);
 
   BuildingStory story1(model);
-  perimeter.clear();
-  perimeter.push_back(Point3d(0, 0, 0));
-  perimeter.push_back(Point3d(0, 3, 0));
-  perimeter.push_back(Point3d(22, 3, 0));
-  perimeter.push_back(Point3d(22, 0, 0));
+  perimeter = {
+    {0, 0, 0},
+    {0, 3, 0},
+    {22, 3, 0},
+    {22, 0, 0},
+  };
   auto sp2 = Space::fromFloorPrint(perimeter, 3, model);
   ASSERT_TRUE(sp2);
   ThermalZone tz2(model);
   sp2->setThermalZone(tz2);
   sp2->setBuildingStory(story1);
 
-  perimeter.clear();
-  perimeter.push_back(Point3d(0, 3, 0));
-  perimeter.push_back(Point3d(0, 5, 0));
-  perimeter.push_back(Point3d(22, 5, 0));
-  perimeter.push_back(Point3d(22, 3, 0));
+  perimeter = {
+    {0, 3, 0},
+    {0, 5, 0},
+    {22, 5, 0},
+    {22, 3, 0},
+  };
   auto sp3 = Space::fromFloorPrint(perimeter, 3, model);
   ASSERT_TRUE(sp3);
   ThermalZone tz3(model);
   sp3->setThermalZone(tz3);
   sp3->setBuildingStory(story1);
 
-  perimeter.clear();
-  perimeter.push_back(Point3d(0, 5, 0));
-  perimeter.push_back(Point3d(0, 8, 0));
-  perimeter.push_back(Point3d(22, 8, 0));
-  perimeter.push_back(Point3d(22, 5, 0));
+  perimeter = {
+    {0, 5, 0},
+    {0, 8, 0},
+    {22, 8, 0},
+    {22, 5, 0},
+  };
   auto sp4 = Space::fromFloorPrint(perimeter, 3, model);
   ASSERT_TRUE(sp4);
   ThermalZone tz4(model);
@@ -2619,19 +2694,21 @@ TEST_F(ModelFixture, Issue_3982) {
   Space sp1(model);
 
   // Create a rectangular surface and an overlapping triangular surface and intersect them
-  Point3dVector faceVertices;
-  faceVertices.push_back(Point3d(0, 0, 0));
-  faceVertices.push_back(Point3d(50, 0, 0));
-  faceVertices.push_back(Point3d(50, 10, 0));
-  faceVertices.push_back(Point3d(0, 10, 0));
+  Point3dVector faceVertices{
+    {0, 0, 0},
+    {50, 0, 0},
+    {50, 10, 0},
+    {0, 10, 0},
+  };
   Surface s1(faceVertices, model);
   s1.setParent(sp1);
 
   Space sp2(model);
-  Point3dVector otherFaceVertices;
-  otherFaceVertices.push_back(Point3d(25, 0, 0));
-  otherFaceVertices.push_back(Point3d(37.50, 8, 0));
-  otherFaceVertices.push_back(Point3d(50, 0, 0));
+  Point3dVector otherFaceVertices{
+    {25, 0, 0},
+    {37.50, 8, 0},
+    {50, 0, 0},
+  };
   Surface s2(otherFaceVertices, model);
   s2.setParent(sp2);
 
@@ -2662,10 +2739,10 @@ TEST_F(ModelFixture, Perimeter) {
   std::vector<std::string> spaceNames;
   std::vector<Surface> surfaces;
 
-  for (auto space : model->getModelObjects<Space>()) {
+  for (const auto& space : model->getModelObjects<Space>()) {
     std::string spacename = space.name().value();
     Transformation spaceTransformation = space.transformation();
-    for (auto surface : space.surfaces()) {
+    for (const auto& surface : space.surfaces()) {
       std::string surfname = surface.name().value();
       Point3dVector points = spaceTransformation * surface.vertices();
       auto normal = openstudio::getOutwardNormal(points);
@@ -2713,10 +2790,10 @@ TEST_F(ModelFixture, ExposedPerimeter) {
 
   // Iterate over spaces, get their surfaces and transform to model coordinates,
   // find the surfaces with downward facing normal at elevation of 0
-  for (auto space : model->getModelObjects<Space>()) {
+  for (const auto& space : model->getModelObjects<Space>()) {
     Transformation spaceTransformation = space.transformation();
     std::string spacename = space.name().value();
-    for (auto surface : space.surfaces()) {
+    for (const auto& surface : space.surfaces()) {
       bool added = false;
       Point3dVector points = spaceTransformation * surface.vertices();
       auto normal = openstudio::getOutwardNormal(points);
@@ -2743,7 +2820,7 @@ TEST_F(ModelFixture, ExposedPerimeter) {
   EXPECT_EQ(12, result2[0].getOuterPath().size());
   Polygon3d footprint = result2.front();
 
-  for (auto surface : surfaces) {
+  for (const auto& surface : surfaces) {
     std::string surfname = surface.name().value();
     double exposedPerimeter = 0;
     int nOverlaps = 0;
@@ -2761,7 +2838,7 @@ TEST_F(ModelFixture, ExposedPerimeter) {
       line.push_back(p1);
       line.push_back(p2);
       Point3dVectorVector overlaps = footprint.overlap(line);
-      for (auto overlap : overlaps) {
+      for (const auto& overlap : overlaps) {
         exposedPerimeter += openstudio::getDistance(overlap[0], overlap[1]);
         nOverlaps++;
       }
@@ -2870,63 +2947,69 @@ TEST_F(ModelFixture, DISABLED_ShatteredModel_Existing_3424) {
   BuildingStory bottom(model);
   BuildingStory top(model);
 
-  Point3dVector points1;
-  points1.push_back(Point3d(25.908, 24.384, 0));
-  points1.push_back(Point3d(25.908, -22.86, 0));
-  points1.push_back(Point3d(-38.1, -22.86, 0));
-  points1.push_back(Point3d(-38.1, 24.384, 0));
+  Point3dVector points1{
+    {25.908, 24.384, 0},
+    {25.908, -22.86, 0},
+    {-38.1, -22.86, 0},
+    {-38.1, 24.384, 0},
+  };
   boost::optional<Space> space1 = Space::fromFloorPrint(points1, 2.4384, model);
   ASSERT_TRUE(space1);
   space1->setBuildingStory(bottom);
   // double a1 = getArea(points1).value();
 
-  Point3dVector points2;
-  points2.push_back(Point3d(9.144, 10.668, 2.4384));
-  points2.push_back(Point3d(9.144, -9.144, 2.4384));
-  points2.push_back(Point3d(-19.812, -9.144, 2.4384));
-  points2.push_back(Point3d(-19.812, 10.668, 2.4384));
+  Point3dVector points2{
+    {9.144, 10.668, 2.4384},
+    {9.144, -9.144, 2.4384},
+    {-19.812, -9.144, 2.4384},
+    {-19.812, 10.668, 2.4384},
+  };
   boost::optional<Space> space2 = Space::fromFloorPrint(points2, 2.4384, model);
   ASSERT_TRUE(space2);
   space2->setBuildingStory(top);
   // double a2 = getArea(points2).value();
 
-  Point3dVector points3;
-  points3.push_back(Point3d(9.144, 24.384, 2.4384));
-  points3.push_back(Point3d(9.144, 10.668, 2.4384));
-  points3.push_back(Point3d(-38.1, 10.668, 2.4384));
-  points3.push_back(Point3d(-38.1, 24.384, 2.4384));
+  Point3dVector points3{
+    {9.144, 24.384, 2.4384},
+    {9.144, 10.668, 2.4384},
+    {-38.1, 10.668, 2.4384},
+    {-38.1, 24.384, 2.4384},
+  };
   boost::optional<Space> space3 = Space::fromFloorPrint(points3, 2.4384, model);
   ASSERT_TRUE(space3);
   space3->setBuildingStory(top);
   // double a3 = getArea(points3).value();
 
-  Point3dVector points4;
-  points4.push_back(Point3d(25.908, 24.384, 0));
-  points4.push_back(Point3d(25.908, -22.86, 0));
-  points4.push_back(Point3d(-38.1, -22.86, 0));
-  points4.push_back(Point3d(-38.1, 24.384, 0));
+  Point3dVector points4{
+    {25.908, 24.384, 0},
+    {25.908, -22.86, 0},
+    {-38.1, -22.86, 0},
+    {-38.1, 24.384, 0},
+  };
   boost::optional<Space> space4 = Space::fromFloorPrint(points4, 2.4384, model);
   ASSERT_TRUE(space4);
   space4->setBuildingStory(bottom);
   space4->setXOrigin(75);
   // double a4 = getArea(points4).value();
 
-  Point3dVector points5;
-  points5.push_back(Point3d(9.144, 10.668, 2.4384));
-  points5.push_back(Point3d(9.144, -9.144, 2.4384));
-  points5.push_back(Point3d(-19.812, -9.144, 2.4384));
-  points5.push_back(Point3d(-19.812, 10.668, 2.4384));
+  Point3dVector points5{
+    {9.144, 10.668, 2.4384},
+    {9.144, -9.144, 2.4384},
+    {-19.812, -9.144, 2.4384},
+    {-19.812, 10.668, 2.4384},
+  };
   boost::optional<Space> space5 = Space::fromFloorPrint(points5, 2.4384, model);
   ASSERT_TRUE(space5);
   space5->setBuildingStory(top);
   space5->setXOrigin(75);
   // double a5 = getArea(points5).value();
 
-  Point3dVector points6;
-  points6.push_back(Point3d(9.144, 24.384, 2.4384));
-  points6.push_back(Point3d(9.144, 10.668, 2.4384));
-  points6.push_back(Point3d(-38.1, 10.668, 2.4384));
-  points6.push_back(Point3d(-38.1, 24.384, 2.4384));
+  Point3dVector points6{
+    {9.144, 24.384, 2.4384},
+    {9.144, 10.668, 2.4384},
+    {-38.1, 10.668, 2.4384},
+    {-38.1, 24.384, 2.4384},
+  };
   boost::optional<Space> space6 = Space::fromFloorPrint(points6, 2.4384, model);
   ASSERT_TRUE(space6);
   space6->setBuildingStory(top);
@@ -2975,12 +3058,12 @@ TEST_F(ModelFixture, DISABLED_ShatteredModel_Existing_3424) {
   std::vector<Surface> ceilingSpace1;
   std::vector<Surface> ceilingSpace4;
 
-  for (auto surface : space1->surfaces()) {
+  for (const auto& surface : space1->surfaces()) {
     if (getOutwardNormal(surface.vertices())->z() == 1) {
       ceilingSpace1.push_back(surface);
     }
   }
-  for (auto surface : space4->surfaces()) {
+  for (const auto& surface : space4->surfaces()) {
     if (getOutwardNormal(surface.vertices())->z() == 1) {
       ceilingSpace4.push_back(surface);
     }

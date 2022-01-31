@@ -219,7 +219,7 @@ TEST_F(ModelFixture, Lights_ExampleModel) {
   std::vector<Lights> lights = model.getModelObjects<Lights>();
   EXPECT_FALSE(lights.empty());
 
-  for (Lights light : lights) {
+  for (const Lights& light : lights) {
     EXPECT_TRUE(light.schedule());
   }
 }
@@ -388,11 +388,12 @@ TEST_F(ModelFixture, Lights_Costs2) {
   EXPECT_TRUE(definitionCost.setCostUnits("CostPerArea"));
   EXPECT_EQ("CostPerArea", definitionCost.costUnits());
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space);
@@ -433,11 +434,12 @@ TEST_F(ModelFixture, Lights_FloorArea) {
   SpaceType spaceType(model);
   building.setSpaceType(spaceType);
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space1);

@@ -85,11 +85,12 @@ TEST_F(ModelFixture, ConstructionAirBoundary) {
   EXPECT_EQ(schedule.handle(), construction.simpleMixingSchedule()->handle());
 
   // square with unit area
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  std::vector<Point3d> points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
   Surface surface(points, model);
   EXPECT_TRUE(surface.setConstruction(construction));
   ASSERT_TRUE(surface.construction());

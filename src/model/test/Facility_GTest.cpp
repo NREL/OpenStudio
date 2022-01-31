@@ -75,42 +75,42 @@ TEST_F(ModelFixture, Facility_EconomicsTest) {
 
   ///! Remove unknown costs
   ComponentCost_AdjustmentsVector componentCostAdjustmentss = model.getModelObjects<ComponentCost_Adjustments>();
-  for (ComponentCost_Adjustments componentCostAdjustments : componentCostAdjustmentss){
+  for (ComponentCost_Adjustments& componentCostAdjustments : componentCostAdjustmentss){
     componentCostAdjustments.remove();
   }
 
   ComponentCost_LineItemVector componentCostLineItems = model.getModelObjects<ComponentCost_LineItem>();
-  for (ComponentCost_LineItem componentCostLineItem : componentCostLineItems){
+  for (ComponentCost_LineItem& componentCostLineItem : componentCostLineItems){
     componentCostLineItem.remove();
   }
 
   ComponentCost_ReferenceVector componentCostReferences = model.getModelObjects<ComponentCost_Reference>();
-  for (ComponentCost_Reference componentCostReference : componentCostReferences){
+  for (ComponentCost_Reference& componentCostReference : componentCostReferences){
     componentCostReference.remove();
   }
 
   LifeCycleCost_NonrecurringCostVector lifeCycleCostNonrecurringCosts = model.getModelObjects<LifeCycleCost_NonrecurringCost>();
-  for (LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
+  for (LifeCycleCost_NonrecurringCost& lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
     lifeCycleCostNonrecurringCost.remove();
   }
 
   LifeCycleCost_ParametersVector lifeCycleCostParameterss = model.getModelObjects<LifeCycleCost_Parameters>();
-  for (LifeCycleCost_Parameters lifeCycleCostParameters : lifeCycleCostParameterss){
+  for (LifeCycleCost_Parameters& lifeCycleCostParameters : lifeCycleCostParameterss){
     lifeCycleCostParameters.remove();
   }
 
   LifeCycleCost_RecurringCostsVector lifeCycleCostRecurringCostss = model.getModelObjects<LifeCycleCost_RecurringCosts>();
-  for (LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
+  for (LifeCycleCost_RecurringCosts& lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
     lifeCycleCostRecurringCosts.remove();
   }
 
   LifeCycleCost_UseAdjustmentVector lifeCycleCostUseAdjustments = model.getModelObjects<LifeCycleCost_UseAdjustment>();
-  for (LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
+  for (LifeCycleCost_UseAdjustment& lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
     lifeCycleCostUseAdjustment.remove();
   }
 
   LifeCycleCost_UsePriceEscalationVector lifeCycleCostUsePriceEscalations = model.getModelObjects<LifeCycleCost_UsePriceEscalation>();
-  for (LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
+  for (LifeCycleCost_UsePriceEscalation& lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
     lifeCycleCostUsePriceEscalation.remove();
   }
 
@@ -317,42 +317,42 @@ TEST_F(ModelFixture, Facility_EconomicsTest_NoLifeCycleParameters) {
 
   ///! Remove unknown costs
   ComponentCost_AdjustmentsVector componentCostAdjustmentss = model.getModelObjects<ComponentCost_Adjustments>();
-  for (ComponentCost_Adjustments componentCostAdjustments : componentCostAdjustmentss){
+  for (ComponentCost_Adjustments& componentCostAdjustments : componentCostAdjustmentss){
     componentCostAdjustments.remove();
   }
 
   ComponentCost_LineItemVector componentCostLineItems = model.getModelObjects<ComponentCost_LineItem>();
-  for (ComponentCost_LineItem componentCostLineItem : componentCostLineItems){
+  for (ComponentCost_LineItem& componentCostLineItem : componentCostLineItems){
     componentCostLineItem.remove();
   }
 
   ComponentCost_ReferenceVector componentCostReferences = model.getModelObjects<ComponentCost_Reference>();
-  for (ComponentCost_Reference componentCostReference : componentCostReferences){
+  for (ComponentCost_Reference& componentCostReference : componentCostReferences){
     componentCostReference.remove();
   }
 
   LifeCycleCost_NonrecurringCostVector lifeCycleCostNonrecurringCosts = model.getModelObjects<LifeCycleCost_NonrecurringCost>();
-  for (LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
+  for (LifeCycleCost_NonrecurringCost& lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
     lifeCycleCostNonrecurringCost.remove();
   }
 
   LifeCycleCost_ParametersVector lifeCycleCostParameterss = model.getModelObjects<LifeCycleCost_Parameters>();
-  for (LifeCycleCost_Parameters lifeCycleCostParameters : lifeCycleCostParameterss){
+  for (LifeCycleCost_Parameters& lifeCycleCostParameters : lifeCycleCostParameterss){
     lifeCycleCostParameters.remove();
   }
 
   LifeCycleCost_RecurringCostsVector lifeCycleCostRecurringCostss = model.getModelObjects<LifeCycleCost_RecurringCosts>();
-  for (LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
+  for (LifeCycleCost_RecurringCosts& lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
     lifeCycleCostRecurringCosts.remove();
   }
 
   LifeCycleCost_UseAdjustmentVector lifeCycleCostUseAdjustments = model.getModelObjects<LifeCycleCost_UseAdjustment>();
-  for (LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
+  for (LifeCycleCost_UseAdjustment& lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
     lifeCycleCostUseAdjustment.remove();
   }
 
   LifeCycleCost_UsePriceEscalationVector lifeCycleCostUsePriceEscalations = model.getModelObjects<LifeCycleCost_UsePriceEscalation>();
-  for (LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
+  for (LifeCycleCost_UsePriceEscalation& lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
     lifeCycleCostUsePriceEscalation.remove();
   }
 
@@ -379,42 +379,42 @@ TEST_F(ModelFixture, FacilityEconomicsTest_NoSqlFile) {
 
   ///! Remove unknown costs
   ComponentCost_AdjustmentsVector componentCostAdjustmentss = model.getModelObjects<ComponentCost_Adjustments>();
-  for (ComponentCost_Adjustments componentCostAdjustments : componentCostAdjustmentss){
+  for (ComponentCost_Adjustments& componentCostAdjustments : componentCostAdjustmentss){
     componentCostAdjustments.remove();
   }
 
   ComponentCost_LineItemVector componentCostLineItems = model.getModelObjects<ComponentCost_LineItem>();
-  for (ComponentCost_LineItem componentCostLineItem : componentCostLineItems){
+  for (ComponentCost_LineItem& componentCostLineItem : componentCostLineItems){
     componentCostLineItem.remove();
   }
 
   ComponentCost_ReferenceVector componentCostReferences = model.getModelObjects<ComponentCost_Reference>();
-  for (ComponentCost_Reference componentCostReference : componentCostReferences){
+  for (ComponentCost_Reference& componentCostReference : componentCostReferences){
     componentCostReference.remove();
   }
 
   LifeCycleCost_NonrecurringCostVector lifeCycleCostNonrecurringCosts = model.getModelObjects<LifeCycleCost_NonrecurringCost>();
-  for (LifeCycleCost_NonrecurringCost lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
+  for (LifeCycleCost_NonrecurringCost& lifeCycleCostNonrecurringCost : lifeCycleCostNonrecurringCosts){
     lifeCycleCostNonrecurringCost.remove();
   }
 
   LifeCycleCost_ParametersVector lifeCycleCostParameterss = model.getModelObjects<LifeCycleCost_Parameters>();
-  for (LifeCycleCost_Parameters lifeCycleCostParameters : lifeCycleCostParameterss){
+  for (LifeCycleCost_Parameters& lifeCycleCostParameters : lifeCycleCostParameterss){
     lifeCycleCostParameters.remove();
   }
 
   LifeCycleCost_RecurringCostsVector lifeCycleCostRecurringCostss = model.getModelObjects<LifeCycleCost_RecurringCosts>();
-  for (LifeCycleCost_RecurringCosts lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
+  for (LifeCycleCost_RecurringCosts& lifeCycleCostRecurringCosts : lifeCycleCostRecurringCostss){
     lifeCycleCostRecurringCosts.remove();
   }
 
   LifeCycleCost_UseAdjustmentVector lifeCycleCostUseAdjustments = model.getModelObjects<LifeCycleCost_UseAdjustment>();
-  for (LifeCycleCost_UseAdjustment lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
+  for (LifeCycleCost_UseAdjustment& lifeCycleCostUseAdjustment : lifeCycleCostUseAdjustments){
     lifeCycleCostUseAdjustment.remove();
   }
 
   LifeCycleCost_UsePriceEscalationVector lifeCycleCostUsePriceEscalations = model.getModelObjects<LifeCycleCost_UsePriceEscalation>();
-  for (LifeCycleCost_UsePriceEscalation lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
+  for (LifeCycleCost_UsePriceEscalation& lifeCycleCostUsePriceEscalation : lifeCycleCostUsePriceEscalations){
     lifeCycleCostUsePriceEscalation.remove();
   }
 
@@ -430,7 +430,7 @@ TEST_F(ModelFixture, Facility_EconomicsTest_EmptyModel) {
 
   Model model;
 
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
 
   OptionalDouble result = facility.economicsCapitalCost();
   EXPECT_FALSE(result);

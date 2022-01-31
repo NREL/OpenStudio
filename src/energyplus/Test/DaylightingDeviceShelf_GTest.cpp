@@ -66,11 +66,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceShelf) {
   Space space(model);
   space.setThermalZone(zone);
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 10, 3));
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 0, 3));
+  Point3dVector points{
+    {0, 10, 3},
+    {0, 10, 0},
+    {0, 0, 0},
+    {0, 0, 3},
+  };
   Surface surface(points, model);
   surface.setSpace(space);
   EXPECT_EQ("Wall", surface.surfaceType());

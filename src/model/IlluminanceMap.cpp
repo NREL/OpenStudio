@@ -288,11 +288,12 @@ namespace model {
     }
 
     std::vector<Point3d> IlluminanceMap_Impl::corners() const {
-      std::vector<Point3d> result;
-      result.push_back(Point3d(0, this->yLength(), 0));
-      result.push_back(Point3d(0, 0, 0));
-      result.push_back(Point3d(this->xLength(), 0, 0));
-      result.push_back(Point3d(this->xLength(), this->yLength(), 0));
+      std::vector<Point3d> result{
+        {0, this->yLength(), 0},
+        {0, 0, 0},
+        {this->xLength(), 0, 0},
+        {this->xLength(), this->yLength(), 0},
+      };
       return result;
     }
 

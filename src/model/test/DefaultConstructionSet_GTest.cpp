@@ -137,10 +137,11 @@ TEST_F(ModelFixture, DefaultConstructionSet) {
 TEST_F(ModelFixture, DefaultConstructionSet_ExteriorSurfaces) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   EXPECT_TRUE(surface.setOutsideBoundaryCondition("Outdoors"));
 
@@ -181,19 +182,21 @@ TEST_F(ModelFixture, DefaultConstructionSet_ExteriorSurfaces) {
 TEST_F(ModelFixture, DefaultConstructionSet_InteriorSurfaces) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Space space(model);
   Surface surface(points, model);
   surface.setSpace(space);
   EXPECT_FALSE(surface.setOutsideBoundaryCondition("Surface"));
 
-  points.clear();
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
+  points = {
+    {1, 0, 0},
+    {0, 0, 0},
+    {0, 1, 0},
+  };
   Space space2(model);
   Surface surface2(points, model);
   surface2.setSpace(space2);
@@ -242,10 +245,11 @@ TEST_F(ModelFixture, DefaultConstructionSet_InteriorSurfaces) {
 TEST_F(ModelFixture, DefaultConstructionSet_GroundContactSurfaces) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   EXPECT_TRUE(surface.setOutsideBoundaryCondition("Ground"));
 
@@ -286,10 +290,11 @@ TEST_F(ModelFixture, DefaultConstructionSet_GroundContactSurfaces) {
 TEST_F(ModelFixture, DefaultConstructionSet_ExteriorSubSurfaces) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, model);
   EXPECT_TRUE(surface.setOutsideBoundaryCondition("Outdoors"));
 
@@ -333,19 +338,21 @@ TEST_F(ModelFixture, DefaultConstructionSet_ExteriorSubSurfaces) {
 TEST_F(ModelFixture, DefaultConstructionSet_InteriorSubSurfaces) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Space space(model);
   Surface surface(points, model);
   surface.setSpace(space);
   EXPECT_FALSE(surface.setOutsideBoundaryCondition("Surface"));
 
-  points.clear();
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
+  points = {
+    {1, 0, 0},
+    {0, 0, 0},
+    {0, 1, 0},
+  };
   Space space2(model);
   Surface surface2(points, model);
   surface2.setSpace(space2);
@@ -397,10 +404,11 @@ TEST_F(ModelFixture, DefaultConstructionSet_InteriorSubSurfaces) {
 TEST_F(ModelFixture, DefaultConstructionSet_InteriorPartitionSurface) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   InteriorPartitionSurface surface(points, model);
 
   DefaultConstructionSet defaultConstructionSet(model);
@@ -420,10 +428,11 @@ TEST_F(ModelFixture, DefaultConstructionSet_InteriorPartitionSurface) {
 TEST_F(ModelFixture, DefaultConstructionSet_ShadingSurface) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   ShadingSurface surface(points, model);
 
   ShadingSurfaceGroup shadingSurfaceGroup(model);
@@ -478,10 +487,11 @@ TEST_F(ModelFixture, DefaultConstructionSet_ShadingSurface) {
 TEST_F(ModelFixture, DefaultConstructionSet_AdiabaticSurface) {
   Model model;
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Space space(model);
   Surface surface(points, model);
   surface.setSpace(space);

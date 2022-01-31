@@ -130,20 +130,22 @@ TEST_F(ModelFixture, BuildingUnit_Spaces) {
   EXPECT_NE(std::find(spaces.begin(), spaces.end(), space1), spaces.end());
   EXPECT_NE(std::find(spaces.begin(), spaces.end(), space2), spaces.end());
 
-  std::vector<Point3d> surf1vert;
-  surf1vert.push_back(Point3d(0, 0, 0));
-  surf1vert.push_back(Point3d(10, 0, 0));
-  surf1vert.push_back(Point3d(10, 10, 0));
-  surf1vert.push_back(Point3d(0, 10, 0));
+  std::vector<Point3d> surf1vert{
+    {0, 0, 0},
+    {10, 0, 0},
+    {10, 10, 0},
+    {0, 10, 0},
+  };
   Surface surf1(surf1vert, model);
   surf1.setSurfaceType("Floor");
   surf1.setSpace(space1);
 
-  std::vector<Point3d> surf2vert;
-  surf2vert.push_back(Point3d(10, 0, 0));
-  surf2vert.push_back(Point3d(15, 0, 0));
-  surf2vert.push_back(Point3d(15, 5, 0));
-  surf2vert.push_back(Point3d(10, 5, 0));
+  std::vector<Point3d> surf2vert{
+    {10, 0, 0},
+    {15, 0, 0},
+    {15, 5, 0},
+    {10, 5, 0},
+  };
   Surface surf2(surf2vert, model);
   surf2.setSurfaceType("Floor");
   surf2.setSpace(space2);

@@ -82,11 +82,12 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
-  vertices.push_back(Point3d(0, 1, 0));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
   Surface surface(vertices, model);
 
   surface.setSpace(space);
@@ -113,11 +114,12 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(0, 0, 1));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+    {0, 0, 1},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
@@ -143,19 +145,21 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 1, 0));
-  vertices.push_back(Point3d(0, 1, 0));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0.25, 0.25, 0));
-  vertices.push_back(Point3d(0.75, 0.25, 0));
-  vertices.push_back(Point3d(0.75, 0.75, 0));
-  vertices.push_back(Point3d(0.25, 0.75, 0));
+  vertices = {
+    {0.25, 0.25, 0},
+    {0.75, 0.25, 0},
+    {0.75, 0.75, 0},
+    {0.25, 0.75, 0},
+  };
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 
@@ -180,19 +184,21 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ) {
 
   Space space(model);
 
-  Point3dVector vertices;
-  vertices.push_back(Point3d(0, 0, 0));
-  vertices.push_back(Point3d(1, 0, 0));
-  vertices.push_back(Point3d(1, 0, 1));
-  vertices.push_back(Point3d(0, 0, 1));
+  Point3dVector vertices{
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 0, 1},
+    {0, 0, 1},
+  };
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  vertices.clear();
-  vertices.push_back(Point3d(0.25, 0, 0.25));
-  vertices.push_back(Point3d(0.75, 0, 0.25));
-  vertices.push_back(Point3d(0.75, 0, 0.75));
-  vertices.push_back(Point3d(0.25, 0, 0.75));
+  vertices = {
+    {0.25, 0, 0.25},
+    {0.75, 0, 0.25},
+    {0.75, 0, 0.75},
+    {0.25, 0, 0.75},
+  };
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 

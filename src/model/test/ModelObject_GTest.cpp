@@ -55,10 +55,11 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ModelObject_Clone_SameModel) {
   // Make model object with resource that has children
   Model original;
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, original);
   Construction construction(original);
   surface.setConstruction(construction);
@@ -81,10 +82,11 @@ TEST_F(ModelFixture, ModelObject_Clone_SameModel) {
 TEST_F(ModelFixture, ModelObject_Clone_DifferentModel) {
   // Make model object with resource that has children
   Model original;
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
   Surface surface(points, original);
   Construction construction(original);
   surface.setConstruction(construction);

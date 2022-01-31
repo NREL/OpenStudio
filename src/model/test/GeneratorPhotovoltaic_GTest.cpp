@@ -66,11 +66,12 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Simple) {
   // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
 
@@ -123,11 +124,12 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
   // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
 
@@ -179,11 +181,12 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Sandia) {
   // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
-  Point3dVector points;
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(1, 0, 0));
-  points.push_back(Point3d(1, 1, 0));
+  Point3dVector points{
+    {0, 1, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+    {1, 1, 0},
+  };
 
   ShadingSurface shadingSurface(points, model);
 

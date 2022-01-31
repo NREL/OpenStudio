@@ -136,11 +136,12 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Crash_no_constru
   Model m;
 
   // make a space with some surfaces
-  Point3dVector points;
-  points.push_back(Point3d(0, 0, 0));
-  points.push_back(Point3d(0, 1, 0));
-  points.push_back(Point3d(1, 1, 0));
-  points.push_back(Point3d(1, 0, 0));
+  Point3dVector points{
+    {0, 0, 0},
+    {0, 1, 0},
+    {1, 1, 0},
+    {1, 0, 0},
+  };
 
   boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
   ASSERT_TRUE(_space1);

@@ -114,11 +114,12 @@ TEST_F(ModelFixture, Building_SpaceAttributes) {
   Space space(model);
 
   // floor
-  Point3dVector points;
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor(points, model);
   floor.setParent(space);
   EXPECT_EQ("Floor", floor.surfaceType());
@@ -182,11 +183,12 @@ TEST_F(ModelFixture, Building_SpaceTypeAttributes) {
   EXPECT_EQ(0, building.peoplePerFloorArea());
 
   // floor
-  Point3dVector points;
-  points.push_back(Point3d(0, 10, 0));
-  points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10, 0, 0));
-  points.push_back(Point3d(0, 0, 0));
+  Point3dVector points{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
   Surface floor(points, model);
   floor.setParent(space);
   EXPECT_EQ("Floor", floor.surfaceType());
@@ -268,11 +270,12 @@ TEST_F(ModelFixture, Building_Cost) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
 
-  Point3dVector floorPrint;
-  floorPrint.push_back(Point3d(0, 10, 0));
-  floorPrint.push_back(Point3d(10, 10, 0));
-  floorPrint.push_back(Point3d(10, 0, 0));
-  floorPrint.push_back(Point3d(0, 0, 0));
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
 
   boost::optional<Space> space = Space::fromFloorPrint(floorPrint, 3, model);
   ASSERT_TRUE(space);
@@ -556,218 +559,197 @@ boost::optional<Model> CreatePerimeterTestModel1() {
 
   BuildingStory story1(model);
 
-  Point3dVector p1;
-  p1.push_back(Point3d(36, 168, 0));
-  p1.push_back(Point3d(36, 138, 0));
-  p1.push_back(Point3d(0, 138, 0));
-  p1.push_back(Point3d(0, 168, 0));
+  Point3dVector p1{
+    {36, 168, 0},
+    {36, 138, 0},
+    {0, 138, 0},
+    {0, 168, 0},
+  };
   auto sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 101");
 
-  p1.clear();
-  p1.push_back(Point3d(220, 168, 0));
-  p1.push_back(Point3d(220, 150, 0));
-  p1.push_back(Point3d(220, 124, 0));
-  p1.push_back(Point3d(220, 70, 0));
-  p1.push_back(Point3d(220, 30, 0));
-  p1.push_back(Point3d(200, 30, 0));
-  p1.push_back(Point3d(200, 168, 0));
+  p1 = {
+    {220, 168, 0}, {220, 150, 0}, {220, 124, 0}, {220, 70, 0}, {220, 30, 0}, {200, 30, 0}, {200, 168, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Mechanical 114");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 70, 0));
-  p1.push_back(Point3d(288, 0, 0));
-  p1.push_back(Point3d(220, 0, 0));
-  p1.push_back(Point3d(220, 30, 0));
-  p1.push_back(Point3d(220, 70, 0));
+  p1 = {
+    {288, 70, 0}, {288, 0, 0}, {220, 0, 0}, {220, 30, 0}, {220, 70, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Offices 117");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 124, 0));
-  p1.push_back(Point3d(288, 70, 0));
-  p1.push_back(Point3d(220, 70, 0));
-  p1.push_back(Point3d(220, 124, 0));
+  p1 = {
+    {288, 124, 0},
+    {288, 70, 0},
+    {220, 70, 0},
+    {220, 124, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Gym 118");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 168, 0));
-  p1.push_back(Point3d(158, 138, 0));
-  p1.push_back(Point3d(98, 138, 0));
-  p1.push_back(Point3d(98, 168, 0));
+  p1 = {
+    {158, 168, 0},
+    {158, 138, 0},
+    {98, 138, 0},
+    {98, 168, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Artroom 103");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 150, 0));
-  p1.push_back(Point3d(288, 124, 0));
-  p1.push_back(Point3d(220, 124, 0));
-  p1.push_back(Point3d(220, 150, 0));
+  p1 = {
+    {288, 150, 0},
+    {288, 124, 0},
+    {220, 124, 0},
+    {220, 150, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Kitchen 119");
 
-  p1.clear();
-  p1.push_back(Point3d(288, 200, 0));
-  p1.push_back(Point3d(288, 150, 0));
-  p1.push_back(Point3d(220, 150, 0));
-  p1.push_back(Point3d(220, 168, 0));
-  p1.push_back(Point3d(220, 200, 0));
+  p1 = {
+    {288, 200, 0}, {288, 150, 0}, {220, 150, 0}, {220, 168, 0}, {220, 200, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Cafeteria 120");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 138, 0));
-  p1.push_back(Point3d(158, 128, 0));
-  p1.push_back(Point3d(36, 128, 0));
-  p1.push_back(Point3d(0, 128, 0));
-  p1.push_back(Point3d(0, 138, 0));
-  p1.push_back(Point3d(36, 138, 0));
-  p1.push_back(Point3d(98, 138, 0));
+  p1 = {
+    {158, 138, 0}, {158, 128, 0}, {36, 128, 0}, {0, 128, 0}, {0, 138, 0}, {36, 138, 0}, {98, 138, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Corridor 104");
 
-  p1.clear();
-  p1.push_back(Point3d(36, 128, 0));
-  p1.push_back(Point3d(36, 98, 0));
-  p1.push_back(Point3d(0, 98, 0));
-  p1.push_back(Point3d(0, 128, 0));
+  p1 = {
+    {36, 128, 0},
+    {36, 98, 0},
+    {0, 98, 0},
+    {0, 128, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 105");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 128, 0));
-  p1.push_back(Point3d(158, 98, 0));
-  p1.push_back(Point3d(36, 98, 0));
-  p1.push_back(Point3d(36, 128, 0));
+  p1 = {
+    {158, 128, 0},
+    {158, 98, 0},
+    {36, 98, 0},
+    {36, 128, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 106");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(158, 40, 0));
-  p1.push_back(Point3d(158, 70, 0));
-  p1.push_back(Point3d(158, 98, 0));
-  p1.push_back(Point3d(158, 128, 0));
-  p1.push_back(Point3d(158, 138, 0));
-  p1.push_back(Point3d(158, 168, 0));
-  p1.push_back(Point3d(200, 168, 0));
-  p1.push_back(Point3d(200, 30, 0));
+  p1 = {
+    {158, 30, 0}, {158, 40, 0}, {158, 70, 0}, {158, 98, 0}, {158, 128, 0}, {158, 138, 0}, {158, 168, 0}, {200, 168, 0}, {200, 30, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Corridor 107");
 
-  p1.clear();
-  p1.push_back(Point3d(36, 40, 0));
-  p1.push_back(Point3d(36, 70, 0));
-  p1.push_back(Point3d(158, 70, 0));
-  p1.push_back(Point3d(158, 40, 0));
+  p1 = {
+    {36, 40, 0},
+    {36, 70, 0},
+    {158, 70, 0},
+    {158, 40, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 108");
 
-  p1.clear();
-  p1.push_back(Point3d(0, 40, 0));
-  p1.push_back(Point3d(0, 70, 0));
-  p1.push_back(Point3d(36, 70, 0));
-  p1.push_back(Point3d(36, 40, 0));
+  p1 = {
+    {0, 40, 0},
+    {0, 70, 0},
+    {36, 70, 0},
+    {36, 40, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 109");
 
-  p1.clear();
-  p1.push_back(Point3d(98, 168, 0));
-  p1.push_back(Point3d(98, 138, 0));
-  p1.push_back(Point3d(36, 138, 0));
-  p1.push_back(Point3d(36, 168, 0));
+  p1 = {
+    {98, 168, 0},
+    {98, 138, 0},
+    {36, 138, 0},
+    {36, 168, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 102");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 40, 0));
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(36, 30, 0));
-  p1.push_back(Point3d(0, 30, 0));
-  p1.push_back(Point3d(0, 40, 0));
-  p1.push_back(Point3d(36, 40, 0));
+  p1 = {
+    {158, 40, 0}, {158, 30, 0}, {36, 30, 0}, {0, 30, 0}, {0, 40, 0}, {36, 40, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Corridor 110");
 
-  p1.clear();
-  p1.push_back(Point3d(36, 30, 0));
-  p1.push_back(Point3d(36, 0, 0));
-  p1.push_back(Point3d(0, 0, 0));
-  p1.push_back(Point3d(0, 30, 0));
+  p1 = {
+    {36, 30, 0},
+    {36, 0, 0},
+    {0, 0, 0},
+    {0, 30, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 111");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(158, 0, 0));
-  p1.push_back(Point3d(36, 0, 0));
-  p1.push_back(Point3d(36, 30, 0));
+  p1 = {
+    {158, 30, 0},
+    {158, 0, 0},
+    {36, 0, 0},
+    {36, 30, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Classroom 112");
 
-  p1.clear();
-  p1.push_back(Point3d(158, 0, 0));
-  p1.push_back(Point3d(158, 30, 0));
-  p1.push_back(Point3d(200, 30, 0));
-  p1.push_back(Point3d(220, 30, 0));
-  p1.push_back(Point3d(220, 0, 0));
+  p1 = {
+    {158, 0, 0}, {158, 30, 0}, {200, 30, 0}, {220, 30, 0}, {220, 0, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Lobby 113");
 
-  p1.clear();
-  p1.push_back(Point3d(220, 200, 0));
-  p1.push_back(Point3d(220, 168, 0));
-  p1.push_back(Point3d(200, 168, 0));
-  p1.push_back(Point3d(158, 168, 0));
-  p1.push_back(Point3d(158, 200, 0));
+  p1 = {
+    {220, 200, 0}, {220, 168, 0}, {200, 168, 0}, {158, 168, 0}, {158, 200, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
   sp1->setName("Bathroom 115");
 
-  p1.clear();
-  p1.push_back(Point3d(220, 268, 0));
-  p1.push_back(Point3d(220, 200, 0));
-  p1.push_back(Point3d(158, 200, 0));
-  p1.push_back(Point3d(158, 268, 0));
+  p1 = {
+    {220, 268, 0},
+    {220, 200, 0},
+    {158, 200, 0},
+    {158, 268, 0},
+  };
   sp1 = Space::fromFloorPrint(p1, 13.125, model);
   sp1->setBuildingStory(story1);
   sp1->setThermalZone(tz1);
@@ -783,7 +765,7 @@ TEST_F(ModelFixture, Building_exteriorPerimeter) {
   EXPECT_TRUE(model);
 
   auto buildings = model->getConcreteModelObjects<Building>();
-  for (auto building : buildings) {
+  for (const auto& building : buildings) {
     double perimeter = building.exteriorPerimeter();
     ASSERT_NEAR(perimeter, 1428.0, 0.01);
   }

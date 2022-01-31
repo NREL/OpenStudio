@@ -1047,11 +1047,12 @@ namespace model {
           return boost::none;
         }
 
-        Point3dVector overhangVertices;
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
+        Point3dVector overhangVertices{
+          {xmax + offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, depth},
+          {xmax + offset, ymax + offset, depth},
+        };
 
         ShadingSurfaceGroup shadingSurfaceGroup(model);
         shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");
@@ -1100,11 +1101,12 @@ namespace model {
         double offset = offsetFraction * (ymax - ymin);
         double depth = projectionFactor * (offset + (ymax - ymin));
 
-        Point3dVector overhangVertices;
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, 0));
-        overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
-        overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
+        Point3dVector overhangVertices{
+          {xmax + offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, 0},
+          {xmin - offset, ymax + offset, depth},
+          {xmax + offset, ymax + offset, depth},
+        };
 
         ShadingSurfaceGroup shadingSurfaceGroup(model);
         shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");

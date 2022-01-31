@@ -148,7 +148,7 @@ void checkObject(ModelObject object){
 
   if (parentObject){
     // loop through each child
-    for (ModelObject child : parentObject->children()){
+    for (const ModelObject& child : parentObject->children()){
       OptionalParentObject parent = child.parent();
       if (!parent){
         std::cout << "Child " << child << " does not have a parent" << '\n';
