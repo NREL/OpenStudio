@@ -582,7 +582,9 @@ namespace energyplus {
     // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoadInstance
     IdfObject getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType = true);
 
+    // NOLINTBEGIN(readability-function-size, bugprone-branch-clone)
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
+    // NOLINTEND(readability-function-size, bugprone-branch-clone)
 
     boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow(model::AirConditionerVariableRefrigerantFlow& modelObject);
 
@@ -1545,7 +1547,7 @@ namespace energyplus {
 
     void createStandardOutputRequests();
 
-    std::string stripOS2(const std::string& s);
+    static std::string stripOS2(const std::string& s);
 
     IdfObject createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject);
 
@@ -1556,11 +1558,11 @@ namespace energyplus {
 
     /** Determines whether or not the HVACComponent is part of a unitary system or on an
    *  AirLoopHVAC */
-    bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const;
+    static bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent);
 
     /** Looks up in embedded_files to locate the path to IdfFile that is supplied, and returns the
    *  IdfFile if successful. */
-    boost::optional<IdfFile> findIdfFile(const std::string& path);
+    static boost::optional<IdfFile> findIdfFile(const std::string& path);
 
     /** Create a simple Schedule:Compact based on input vectors. The function will consume the vectors in
    *  order, so the times must be in chronological order otherwise E+ will output an error. Summer and
