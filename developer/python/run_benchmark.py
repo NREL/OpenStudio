@@ -31,16 +31,40 @@ Example:
 """
 
 from docopt import docopt
+import re
+import shlex
 import stat
 import subprocess
+import typing
+
 from pathlib import Path
-import shlex
 import glob as gb
 import pandas as pd
 import matplotlib.pyplot as plt
-import typing
+
 
 ROOT_DIR = Path(__file__).parent.absolute()
+
+
+def get_branch_and_sha() -> [str, str]:
+    """
+    Get source directory from CMakeCache.txt, recompute branch and sha
+    the CMakeCache.txt has the branch and sha, but it may be outdated (if cmake
+    didn't rerun explicitly)
+    """
+    with open(ROOT_DIR / 'CMakeCache.txt', 'r') as f:
+        content = f.read()
+
+    source_dir = re.search(r'CMAKE_HOME_DIRECTORY:INTERNAL=(.*)',
+                           content).groups()[0]
+
+    cmd_branch = shlex.split(f'git --git-dir={source_dir}/.git '
+                             'rev-parse --abbrev-ref HEAD')
+    branch = subprocess.check_output(cmd_branch).decode().strip()
+    cmd_sha = shlex.split(f'git --git-dir={source_dir}/.git '
+                          'log --pretty=format:"%h" -n 1')
+    sha = subprocess.check_output(cmd_sha).decode().strip()
+    return branch, sha
 
 
 def infer_products_dir() -> Path:
@@ -149,6 +173,16 @@ def run_bench(bench_exe: Path,
             f'{bench_exe} --benchmark_out_format=csv'
             f' --benchmark_out="{results_file}"')
         subprocess.check_call(cmd)
+
+        # Prepend branch + Sha
+        branch, sha = get_branch_and_sha()
+        with open(results_file, 'r') as original:
+            data = original.read()
+        with open(results_file, 'w') as modified:
+            modified.write(f'Git Branch: {branch}\n')
+            modified.write(f'Git SHA: {sha}\n')
+            modified.write(data)
+
     df = pd.read_csv(results_file,
                      skiprows=find_skip_rows(results_file),
                      index_col=0)
