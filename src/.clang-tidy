@@ -46,6 +46,7 @@ Checks: |
   -readability-redundant-access-specifiers,
   -cppcoreguidelines-explicit-virtual-functions,
   -readability-else-after-return,
+  -readability-uppercase-literal-suffix,
   -modernize-concat-nested-namespaces,
   -hicpp-*,
   hicpp-avoid-goto,

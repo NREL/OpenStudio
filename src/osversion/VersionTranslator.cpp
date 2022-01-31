@@ -47,8 +47,6 @@
 #include "../model/ComponentData_Impl.hpp"
 #include "../model/ModelExtensibleGroup.hpp"
 
-#include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddEnums.hxx>
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -57,15 +55,20 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
-#include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/idf/IdfObject_Impl.hpp"
 #include "../utilities/core/UUID.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
 #include <OpenStudio.hxx>
 
-#include <thread>
 #include <map>
+#include <memory>
 #include <sstream>
+#include <thread>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -151,159 +154,40 @@ namespace osversion {
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
     //     release).
-    m_startVersions.push_back(VersionString("0.7.0"));
-    m_startVersions.push_back(VersionString("0.7.1"));
-    m_startVersions.push_back(VersionString("0.7.2"));
-    m_startVersions.push_back(VersionString("0.7.3"));
-    m_startVersions.push_back(VersionString("0.7.4"));
-    m_startVersions.push_back(VersionString("0.7.5"));
-    m_startVersions.push_back(VersionString("0.7.6"));
-    m_startVersions.push_back(VersionString("0.8.0"));
-    m_startVersions.push_back(VersionString("0.8.1"));
-    m_startVersions.push_back(VersionString("0.8.2"));
-    m_startVersions.push_back(VersionString("0.8.3"));
-    m_startVersions.push_back(VersionString("0.8.4"));
-    m_startVersions.push_back(VersionString("0.8.5"));
-    m_startVersions.push_back(VersionString("0.9.0"));
-    m_startVersions.push_back(VersionString("0.9.1"));
-    m_startVersions.push_back(VersionString("0.9.2"));
-    m_startVersions.push_back(VersionString("0.9.3"));
-    m_startVersions.push_back(VersionString("0.9.4"));
-    m_startVersions.push_back(VersionString("0.9.5"));
-    m_startVersions.push_back(VersionString("0.9.6"));
-    m_startVersions.push_back(VersionString("0.10.0"));
-    m_startVersions.push_back(VersionString("0.10.1"));
-    m_startVersions.push_back(VersionString("0.10.2"));
-    m_startVersions.push_back(VersionString("0.10.3"));
-    m_startVersions.push_back(VersionString("0.10.4"));
-    m_startVersions.push_back(VersionString("0.10.5"));
-    m_startVersions.push_back(VersionString("0.11.0"));
-    m_startVersions.push_back(VersionString("0.11.1"));
-    m_startVersions.push_back(VersionString("0.11.2"));
-    m_startVersions.push_back(VersionString("0.11.3"));
-    m_startVersions.push_back(VersionString("0.11.4"));
-    m_startVersions.push_back(VersionString("0.11.5"));
-    m_startVersions.push_back(VersionString("0.11.6"));
-    m_startVersions.push_back(VersionString("1.0.0"));
-    m_startVersions.push_back(VersionString("1.0.1"));
-    m_startVersions.push_back(VersionString("1.0.2"));
-    m_startVersions.push_back(VersionString("1.0.3"));
-    m_startVersions.push_back(VersionString("1.0.4"));
-    m_startVersions.push_back(VersionString("1.0.5"));
-    m_startVersions.push_back(VersionString("1.0.6"));
-    m_startVersions.push_back(VersionString("1.0.7"));
-    m_startVersions.push_back(VersionString("1.1.0"));
-    m_startVersions.push_back(VersionString("1.1.1"));
-    m_startVersions.push_back(VersionString("1.1.2"));
-    m_startVersions.push_back(VersionString("1.1.3"));
-    m_startVersions.push_back(VersionString("1.2.0"));
-    m_startVersions.push_back(VersionString("1.2.1"));
-    m_startVersions.push_back(VersionString("1.2.2"));
-    m_startVersions.push_back(VersionString("1.2.3"));
-    m_startVersions.push_back(VersionString("1.2.4"));
-    m_startVersions.push_back(VersionString("1.2.5"));
-    m_startVersions.push_back(VersionString("1.3.0"));
-    m_startVersions.push_back(VersionString("1.3.1"));
-    m_startVersions.push_back(VersionString("1.3.2"));
-    m_startVersions.push_back(VersionString("1.3.3"));
-    m_startVersions.push_back(VersionString("1.3.4"));
-    m_startVersions.push_back(VersionString("1.3.5"));
-    m_startVersions.push_back(VersionString("1.4.0"));
-    m_startVersions.push_back(VersionString("1.4.1"));
-    m_startVersions.push_back(VersionString("1.4.2"));
-    m_startVersions.push_back(VersionString("1.4.3"));
-    m_startVersions.push_back(VersionString("1.5.0"));
-    m_startVersions.push_back(VersionString("1.5.1"));
-    m_startVersions.push_back(VersionString("1.5.2"));
-    m_startVersions.push_back(VersionString("1.5.3"));
-    m_startVersions.push_back(VersionString("1.5.4"));
-    m_startVersions.push_back(VersionString("1.5.5"));
-    m_startVersions.push_back(VersionString("1.6.0"));
-    m_startVersions.push_back(VersionString("1.6.1"));
-    m_startVersions.push_back(VersionString("1.6.2"));
-    m_startVersions.push_back(VersionString("1.6.3"));
-    m_startVersions.push_back(VersionString("1.7.0"));
-    m_startVersions.push_back(VersionString("1.7.1"));
-    m_startVersions.push_back(VersionString("1.7.2"));
-    m_startVersions.push_back(VersionString("1.7.3"));
-    m_startVersions.push_back(VersionString("1.7.4"));
-    m_startVersions.push_back(VersionString("1.7.5"));
-    m_startVersions.push_back(VersionString("1.8.0"));
-    m_startVersions.push_back(VersionString("1.8.1"));
-    m_startVersions.push_back(VersionString("1.8.2"));
-    m_startVersions.push_back(VersionString("1.8.3"));
-    m_startVersions.push_back(VersionString("1.8.4"));
-    m_startVersions.push_back(VersionString("1.8.5"));
-    m_startVersions.push_back(VersionString("1.9.0"));
-    m_startVersions.push_back(VersionString("1.9.1"));
-    m_startVersions.push_back(VersionString("1.9.2"));
-    m_startVersions.push_back(VersionString("1.9.3"));
-    m_startVersions.push_back(VersionString("1.9.4"));
-    m_startVersions.push_back(VersionString("1.9.5"));
-    m_startVersions.push_back(VersionString("1.10.0"));
-    m_startVersions.push_back(VersionString("1.10.1"));
-    m_startVersions.push_back(VersionString("1.10.2"));
-    m_startVersions.push_back(VersionString("1.10.3"));
-    m_startVersions.push_back(VersionString("1.10.4"));
-    m_startVersions.push_back(VersionString("1.10.5"));
-    m_startVersions.push_back(VersionString("1.10.6"));
-    m_startVersions.push_back(VersionString("1.11.0"));
-    m_startVersions.push_back(VersionString("1.11.1"));
-    m_startVersions.push_back(VersionString("1.11.2"));
-    m_startVersions.push_back(VersionString("1.11.3"));
-    m_startVersions.push_back(VersionString("1.11.4"));
-    m_startVersions.push_back(VersionString("1.11.5"));
-    m_startVersions.push_back(VersionString("1.11.6"));
-    m_startVersions.push_back(VersionString("1.12.0"));
-    m_startVersions.push_back(VersionString("1.12.1"));
-    m_startVersions.push_back(VersionString("1.12.2"));
-    m_startVersions.push_back(VersionString("1.12.3"));
-    m_startVersions.push_back(VersionString("1.12.4"));
-    m_startVersions.push_back(VersionString("1.12.5"));
-    m_startVersions.push_back(VersionString("1.12.6"));
-    m_startVersions.push_back(VersionString("1.13.0"));
-    m_startVersions.push_back(VersionString("1.13.1"));
-    m_startVersions.push_back(VersionString("1.13.2"));
-    m_startVersions.push_back(VersionString("1.13.3"));
-    m_startVersions.push_back(VersionString("1.13.4"));
-    m_startVersions.push_back(VersionString("1.14.0"));
-    m_startVersions.push_back(VersionString("2.0.0"));
-    m_startVersions.push_back(VersionString("2.0.1"));
-    m_startVersions.push_back(VersionString("2.0.2"));
-    m_startVersions.push_back(VersionString("2.0.3"));
-    m_startVersions.push_back(VersionString("2.0.5"));
-    m_startVersions.push_back(VersionString("2.1.0"));
-    m_startVersions.push_back(VersionString("2.1.1"));
-    m_startVersions.push_back(VersionString("2.1.2"));
-    m_startVersions.push_back(VersionString("2.2.0"));
-    m_startVersions.push_back(VersionString("2.2.1"));
-    m_startVersions.push_back(VersionString("2.2.2"));
-    m_startVersions.push_back(VersionString("2.3.0"));
-    m_startVersions.push_back(VersionString("2.3.1"));
-    m_startVersions.push_back(VersionString("2.4.0"));
-    m_startVersions.push_back(VersionString("2.4.1"));
-    m_startVersions.push_back(VersionString("2.4.2"));
-    m_startVersions.push_back(VersionString("2.4.3"));
-    m_startVersions.push_back(VersionString("2.5.0"));
-    m_startVersions.push_back(VersionString("2.5.1"));
-    m_startVersions.push_back(VersionString("2.5.2"));
-    m_startVersions.push_back(VersionString("2.6.0"));
-    m_startVersions.push_back(VersionString("2.6.1"));
-    m_startVersions.push_back(VersionString("2.6.2"));
-    m_startVersions.push_back(VersionString("2.7.0"));
-    m_startVersions.push_back(VersionString("2.7.1"));
-    m_startVersions.push_back(VersionString("2.7.2"));
-    m_startVersions.push_back(VersionString("2.8.0"));
-    m_startVersions.push_back(VersionString("2.8.1"));
-    m_startVersions.push_back(VersionString("2.9.0"));
-    m_startVersions.push_back(VersionString("2.9.1"));
-    m_startVersions.push_back(VersionString("3.0.0"));
-    m_startVersions.push_back(VersionString("3.0.1"));
-    m_startVersions.push_back(VersionString("3.1.0"));
-    m_startVersions.push_back(VersionString("3.2.0"));
-    m_startVersions.push_back(VersionString("3.2.1"));
-    m_startVersions.push_back(VersionString("3.3.0"));
-    //m_startVersions.push_back(VersionString("3.3.1"));
+    m_startVersions = {
+      VersionString("0.7.0"),  VersionString("0.7.1"),  VersionString("0.7.2"),  VersionString("0.7.3"),  VersionString("0.7.4"),
+      VersionString("0.7.5"),  VersionString("0.7.6"),  VersionString("0.8.0"),  VersionString("0.8.1"),  VersionString("0.8.2"),
+      VersionString("0.8.3"),  VersionString("0.8.4"),  VersionString("0.8.5"),  VersionString("0.9.0"),  VersionString("0.9.1"),
+      VersionString("0.9.2"),  VersionString("0.9.3"),  VersionString("0.9.4"),  VersionString("0.9.5"),  VersionString("0.9.6"),
+      VersionString("0.10.0"), VersionString("0.10.1"), VersionString("0.10.2"), VersionString("0.10.3"), VersionString("0.10.4"),
+      VersionString("0.10.5"), VersionString("0.11.0"), VersionString("0.11.1"), VersionString("0.11.2"), VersionString("0.11.3"),
+      VersionString("0.11.4"), VersionString("0.11.5"), VersionString("0.11.6"), VersionString("1.0.0"),  VersionString("1.0.1"),
+      VersionString("1.0.2"),  VersionString("1.0.3"),  VersionString("1.0.4"),  VersionString("1.0.5"),  VersionString("1.0.6"),
+      VersionString("1.0.7"),  VersionString("1.1.0"),  VersionString("1.1.1"),  VersionString("1.1.2"),  VersionString("1.1.3"),
+      VersionString("1.2.0"),  VersionString("1.2.1"),  VersionString("1.2.2"),  VersionString("1.2.3"),  VersionString("1.2.4"),
+      VersionString("1.2.5"),  VersionString("1.3.0"),  VersionString("1.3.1"),  VersionString("1.3.2"),  VersionString("1.3.3"),
+      VersionString("1.3.4"),  VersionString("1.3.5"),  VersionString("1.4.0"),  VersionString("1.4.1"),  VersionString("1.4.2"),
+      VersionString("1.4.3"),  VersionString("1.5.0"),  VersionString("1.5.1"),  VersionString("1.5.2"),  VersionString("1.5.3"),
+      VersionString("1.5.4"),  VersionString("1.5.5"),  VersionString("1.6.0"),  VersionString("1.6.1"),  VersionString("1.6.2"),
+      VersionString("1.6.3"),  VersionString("1.7.0"),  VersionString("1.7.1"),  VersionString("1.7.2"),  VersionString("1.7.3"),
+      VersionString("1.7.4"),  VersionString("1.7.5"),  VersionString("1.8.0"),  VersionString("1.8.1"),  VersionString("1.8.2"),
+      VersionString("1.8.3"),  VersionString("1.8.4"),  VersionString("1.8.5"),  VersionString("1.9.0"),  VersionString("1.9.1"),
+      VersionString("1.9.2"),  VersionString("1.9.3"),  VersionString("1.9.4"),  VersionString("1.9.5"),  VersionString("1.10.0"),
+      VersionString("1.10.1"), VersionString("1.10.2"), VersionString("1.10.3"), VersionString("1.10.4"), VersionString("1.10.5"),
+      VersionString("1.10.6"), VersionString("1.11.0"), VersionString("1.11.1"), VersionString("1.11.2"), VersionString("1.11.3"),
+      VersionString("1.11.4"), VersionString("1.11.5"), VersionString("1.11.6"), VersionString("1.12.0"), VersionString("1.12.1"),
+      VersionString("1.12.2"), VersionString("1.12.3"), VersionString("1.12.4"), VersionString("1.12.5"), VersionString("1.12.6"),
+      VersionString("1.13.0"), VersionString("1.13.1"), VersionString("1.13.2"), VersionString("1.13.3"), VersionString("1.13.4"),
+      VersionString("1.14.0"), VersionString("2.0.0"),  VersionString("2.0.1"),  VersionString("2.0.2"),  VersionString("2.0.3"),
+      VersionString("2.0.5"),  VersionString("2.1.0"),  VersionString("2.1.1"),  VersionString("2.1.2"),  VersionString("2.2.0"),
+      VersionString("2.2.1"),  VersionString("2.2.2"),  VersionString("2.3.0"),  VersionString("2.3.1"),  VersionString("2.4.0"),
+      VersionString("2.4.1"),  VersionString("2.4.2"),  VersionString("2.4.3"),  VersionString("2.5.0"),  VersionString("2.5.1"),
+      VersionString("2.5.2"),  VersionString("2.6.0"),  VersionString("2.6.1"),  VersionString("2.6.2"),  VersionString("2.7.0"),
+      VersionString("2.7.1"),  VersionString("2.7.2"),  VersionString("2.8.0"),  VersionString("2.8.1"),  VersionString("2.9.0"),
+      VersionString("2.9.1"),  VersionString("3.0.0"),  VersionString("3.0.1"),  VersionString("3.1.0"),  VersionString("3.2.0"),
+      VersionString("3.2.1"),  VersionString("3.3.0"),
+      //VersionString("3.3.1"),
+    };
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -360,22 +244,14 @@ namespace osversion {
   }
 
   std::vector<LogMessage> VersionTranslator::warnings() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() != Warn; }), result.end());
     return result;
   }
 
   std::vector<LogMessage> VersionTranslator::errors() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
+    std::vector<LogMessage> result = m_logSink.logMessages();
+    result.erase(std::remove_if(result.begin(), result.end(), [](const auto& logMessage) { return logMessage.logLevel() <= Warn; }), result.end());
     return result;
   }
 
@@ -419,7 +295,7 @@ namespace osversion {
 
     initializeMap(is);
     OS_ASSERT(m_map.size() < 2u);
-    if (m_map.size() == 0u) {
+    if (m_map.empty()) {
       return boost::none;
     }
 
@@ -604,13 +480,13 @@ namespace osversion {
   }
 
   void VersionTranslator::update(const VersionString& startVersion) {
-    std::map<VersionString, IdfFile>::const_iterator start = m_map.find(startVersion);
+    auto start = m_map.find(startVersion);
     if (start != m_map.end()) {
 
       std::string translatedIdf;
       VersionString lastVersion("0.0.0");
       boost::optional<IddFileAndFactoryWrapper> oIddFile;
-      for (std::map<VersionString, OSVersionUpdater>::const_iterator it = m_updateMethods.begin(), itEnd = m_updateMethods.end(); it != itEnd; ++it) {
+      for (auto it = m_updateMethods.begin(), itEnd = m_updateMethods.end(); it != itEnd; ++it) {
         // make sure map iteration is behaving as expected
         OS_ASSERT(lastVersion < it->first);
         lastVersion = it->first;
@@ -747,7 +623,7 @@ namespace osversion {
     ss << targetIdf.versionObject().get();
 
     // all other objects
-    for (IdfObject object : idf_0_7_3.objects()) {
+    for (IdfObject& object : idf_0_7_3.objects()) {
       if (istringEqual(object.iddObject().name(), "OS:ComponentData:Tags")) {
         m_deprecated.push_back(object);
         continue;
@@ -899,7 +775,7 @@ namespace osversion {
             componentDataIdf.printField(objectSS, i);
           }
         }
-        m_refactored.push_back(RefactoredObjectData(object, componentDataIdf));
+        m_refactored.emplace_back(object, componentDataIdf);
       } else {
         // modify the object if necessary
         if (istringEqual(object.iddObject().name(), "OS:Connection")) {
@@ -970,7 +846,8 @@ namespace osversion {
   }
 
   std::shared_ptr<VersionTranslator::InterobjectIssueInformation> VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model) {
-    std::shared_ptr<InterobjectIssueInformation_0_8_3_to_0_8_4> result(new InterobjectIssueInformation_0_8_3_to_0_8_4());
+
+    auto result = std::make_shared<InterobjectIssueInformation_0_8_3_to_0_8_4>();
 
     // deal with component data
     model::ComponentDataVector allComponentData = model.getConcreteModelObjects<model::ComponentData>();
@@ -990,9 +867,9 @@ namespace osversion {
         if (!schedule.scheduleTypeLimits() || !schedule.isValid(StrictnessLevel::Draft)) {
           LOG(Debug, "Adding Schedule '" << schedule.name().get() << "' to the list of schedules that need fix-up.");
           result->schedules.push_back(schedule);
-          result->users.push_back(users);
+          auto& thisUsers = result->users.emplace_back(std::move(users));
           // keep separate track of component data objects
-          result->componentDataObjects.push_back(IdfObjectVector());
+          auto& thisComponentDataObjects = result->componentDataObjects.emplace_back();
           IdfObjectVector thisSchedulesComponentData;
           for (int i = 0, n = allComponentData.size(); i < n; ++i) {
             model::ModelObjectVector objs = allComponentDataObjects[i];
@@ -1002,25 +879,25 @@ namespace osversion {
             }
           }
           for (IdfObject& cd : thisSchedulesComponentData) {
-            auto it = std::find_if(result->users.back().begin(), result->users.back().end(),
-                                   std::bind(handleEquals<IdfObject, Handle>, std::placeholders::_1, cd.handle()));
-            if (it != result->users.back().end()) {
-              result->users.back().erase(it);
+            auto it = std::find_if(thisUsers.begin(), thisUsers.end(),
+                                   [&cd](const IdfObject& idfObject) { return handleEquals<IdfObject, Handle>(idfObject, cd.handle()); });
+            if (it != thisUsers.end()) {
+              thisUsers.erase(it);
             }
-            IdfObjectVector::const_iterator jit = std::find(allIdfComponentData.begin(), allIdfComponentData.end(), cd);
+            auto jit = std::find(allIdfComponentData.begin(), allIdfComponentData.end(), cd);
             OS_ASSERT(jit != allIdfComponentData.end());
-            result->componentDataObjects.back().push_back(*jit);
+            thisComponentDataObjects.push_back(*jit);
           }
 
           std::vector<std::vector<unsigned>> thisSchedulesIndices;
           std::vector<std::vector<model::ScheduleTypeKey>> thisSchedulesKeys;
-          auto it = result->users.back().begin();
-          while (it != result->users.back().end()) {
+          auto it = thisUsers.begin();
+          while (it != thisUsers.end()) {
             UnsignedVector thisUsersIndices = it->getSourceIndices(schedule.handle());
             std::vector<model::ScheduleTypeKey> thisUsersKeys = it->getScheduleTypeKeys(schedule);
 
             if (thisUsersKeys.empty()) {
-              it = result->users.back().erase(it);
+              it = thisUsers.erase(it);
               continue;
             }
 
@@ -1031,7 +908,7 @@ namespace osversion {
             thisSchedulesIndices.push_back(thisUsersIndices);
             thisSchedulesKeys.push_back(thisUsersKeys);
             if (std::find_if(result->originalUsers.begin(), result->originalUsers.end(),
-                             std::bind(handleEquals<IdfObject, Handle>, std::placeholders::_1, it->handle()))
+                             [&it](const IdfObject& idfObject) { return handleEquals<IdfObject, Handle>(idfObject, it->handle()); })
                 == result->originalUsers.end()) {
               result->originalUsers.push_back(it->idfObject());
             }
@@ -1163,7 +1040,7 @@ namespace osversion {
               ok = user.setPointer(indices[k], schedule.handle());
               OS_ASSERT(ok);
             } else {
-              model::Schedule clonedSchedule = schedule.clone().cast<model::Schedule>();
+              auto clonedSchedule = schedule.clone().cast<model::Schedule>();
               ok = clonedSchedule.resetScheduleTypeLimits();
               OS_ASSERT(ok);
               modelN = model.numObjects();
@@ -1178,7 +1055,7 @@ namespace osversion {
           }
         }  // for keys
       }    // for users
-      m_refactored.push_back(RefactoredObjectData(originalSchedule, schedule.idfObject()));
+      m_refactored.emplace_back(originalSchedule, schedule.idfObject());
       for (const auto& candidate : candidates) {
         model::ModelObjectVector wholeCandidate = getRecursiveChildren(candidate);
         m_new.push_back(candidate.idfObject());
@@ -1227,7 +1104,7 @@ namespace osversion {
       while (i < cd.numExtensibleGroups()) {
         Handle h = toUUID(*cd.getExtensibleGroup(i).getString(0));
         if (std::find_if(componentObjects.begin(), componentObjects.end(),
-                         std::bind(handleEquals<model::ModelObject, Handle>, std::placeholders::_1, h))
+                         [&h](const model::ModelObject& mo) { return handleEquals<model::ModelObject, Handle>(mo, h); })
             != componentObjects.end()) {
           cd.eraseExtensibleGroup(i);
           continue;
@@ -1253,7 +1130,8 @@ namespace osversion {
           std::sort(users.begin(), users.end(), IdfObjectImplLess());
           model::ModelObjectVector children = model::getRecursiveChildren(*schedule);
           std::sort(children.begin(), children.end(), IdfObjectImplLess());
-          model::ModelObjectVector intersection(users.size(), componentObjects[0]), result(users.size(), componentObjects[0]);
+          model::ModelObjectVector intersection(users.size(), componentObjects[0]);
+          model::ModelObjectVector result(users.size(), componentObjects[0]);
           // intersect users and componentObjects
           auto intersectionEnd = std::set_intersection(users.begin(), users.end(), componentObjects.begin(), componentObjects.end(),
                                                        intersection.begin(), IdfObjectImplLess());
@@ -1308,10 +1186,10 @@ namespace osversion {
     // populate m_refactored
     model::ModelObjectVector refactoredUsersVector(schedulesToFixup->refactoredUsers.begin(), schedulesToFixup->refactoredUsers.end());
     for (model::ModelObject& user : refactoredUsersVector) {
-      IdfObjectVector::const_iterator it = std::find_if(schedulesToFixup->originalUsers.begin(), schedulesToFixup->originalUsers.end(),
-                                                        std::bind(handleEquals<IdfObject, Handle>, std::placeholders::_1, user.handle()));
+      auto it = std::find_if(schedulesToFixup->originalUsers.begin(), schedulesToFixup->originalUsers.end(),
+                             [&user](const IdfObject& idfObject) { return handleEquals<IdfObject, Handle>(idfObject, user.handle()); });
       OS_ASSERT(it != schedulesToFixup->originalUsers.end());
-      m_refactored.push_back(RefactoredObjectData(*it, user.idfObject()));
+      m_refactored.emplace_back(*it, user.idfObject());
     }
   }
 
@@ -1428,7 +1306,7 @@ namespace osversion {
                         if (target1Handle.get() == node.getString(0).get()) {
                           // Does the exhaust node have a outlet connection?
                           if (boost::optional<std::string> connection2Handle = node.getString(3)) {
-                            if (connection2Handle && connection2Handle.get() != "") {
+                            if (connection2Handle && !connection2Handle.get().empty()) {
                               // We fix up the connection to the thermal zone.
                               // Now actually it is a connection to the port list.
                               newExhaustPortList.setString(2, s.get());
@@ -1588,14 +1466,12 @@ namespace osversion {
       if (object.iddObject().name() == "OS:RadianceParameters") {
         boost::optional<std::string> value = object.getString(14);
 
-        if (!value) {
-          ss << object;
-        } else if (*value == "146" || *value == "581" || *value == "2321") {
+        if (!value || *value == "146" || *value == "581" || *value == "2321") {
           ss << object;
         } else {
           IdfObject newParameters = object.clone(true);
           newParameters.setString(14, "");
-          m_refactored.push_back(RefactoredObjectData(object, newParameters));
+          m_refactored.emplace_back(object, newParameters);
 
           ss << newParameters;
         }
@@ -1632,7 +1508,7 @@ namespace osversion {
       }
     }
 
-    if (removedComponentCostLineItemHandles.size() > 0) {
+    if (!removedComponentCostLineItemHandles.empty()) {
       LOG(Warn, "OS:ComponentCost:LineItem objects created before 0.11.1 are no longer supported, " << removedComponentCostLineItemHandles.size()
                                                                                                     << " objects have been removed.");
     }
@@ -1674,7 +1550,7 @@ namespace osversion {
       }
 
       // write out remaining fields
-      for (std::vector<unsigned>::const_iterator it = extensibleIndicesToKeep.begin(), itend = extensibleIndicesToKeep.end(); it < itend; ++it) {
+      for (auto it = extensibleIndicesToKeep.begin(), itend = extensibleIndicesToKeep.end(); it < itend; ++it) {
         if (it == itend - 1) {
           componentDataObject.printField(ss, *it, true);
         } else {
@@ -1910,7 +1786,7 @@ namespace osversion {
       }
 
       // write out remaining fields
-      for (std::vector<unsigned>::const_iterator it = extensibleIndicesToKeep.begin(), itend = extensibleIndicesToKeep.end(); it < itend; ++it) {
+      for (auto it = extensibleIndicesToKeep.begin(), itend = extensibleIndicesToKeep.end(); it < itend; ++it) {
         if (it == itend - 1) {
           componentDataObject.printField(ss, *it, true);
         } else {
@@ -2010,7 +1886,7 @@ namespace osversion {
       }
 
       // write out remaining fields
-      for (std::vector<unsigned>::const_iterator it = extensibleIndicesToKeep.begin(), itend = extensibleIndicesToKeep.end(); it < itend; ++it) {
+      for (auto it = extensibleIndicesToKeep.begin(), itend = extensibleIndicesToKeep.end(); it < itend; ++it) {
         if (it == itend - 1) {
           componentDataObject.printField(ss, *it, true);
         } else {
@@ -2074,7 +1950,7 @@ namespace osversion {
                   }
                 }
 
-                m_refactored.push_back(RefactoredObjectData(object2, newPortList));
+                m_refactored.emplace_back(object2, newPortList);
 
                 ss << newPortList;
               }
@@ -2117,7 +1993,7 @@ namespace osversion {
 
           newBoiler.setString(15, "LeavingSetpointModulated");
 
-          m_refactored.push_back(RefactoredObjectData(object, newBoiler));
+          m_refactored.emplace_back(object, newBoiler);
 
           ss << newBoiler;
 
@@ -2134,7 +2010,7 @@ namespace osversion {
 
           newChiller.setString(15, "LeavingSetpointModulated");
 
-          m_refactored.push_back(RefactoredObjectData(object, newChiller));
+          m_refactored.emplace_back(object, newChiller);
 
           ss << newChiller;
 
@@ -2175,7 +2051,7 @@ namespace osversion {
             newParameters.setString(14, "2306");
           }
 
-          m_refactored.push_back(RefactoredObjectData(object, newParameters));
+          m_refactored.emplace_back(object, newParameters);
 
           ss << newParameters;
         } else {
@@ -2215,7 +2091,7 @@ namespace osversion {
           } else {
             newObject.setString(2, "ExteriorFloor");
           }
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
         } else {
           ss << object;
@@ -2322,7 +2198,7 @@ namespace osversion {
         OS_ASSERT(test);
       }
 
-      m_refactored.push_back(RefactoredObjectData(*buildingObject, newBuildingObject));
+      m_refactored.emplace_back(*buildingObject, newBuildingObject);
       ss << newBuildingObject;
     }
 
@@ -2352,7 +2228,7 @@ namespace osversion {
           OS_ASSERT(test);
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newWalkin));
+        m_refactored.emplace_back(object, newWalkin);
 
         ss << newWalkin;
 
@@ -2413,7 +2289,7 @@ namespace osversion {
         }
         newObject.setDouble(11, 0.1);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (object.iddObject().name() == "OS:EvaporativeCooler:Indirect:ResearchSpecial") {
         auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Indirect:ResearchSpecial");
@@ -2433,7 +2309,7 @@ namespace osversion {
         newObject.setDouble(22, 0.1);
         newObject.setDouble(24, 1.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -2482,7 +2358,7 @@ namespace osversion {
         newObject.setDouble(36, 1.0);
         newObject.setString(37, "OnOff");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (object.iddObject().name() == "OS:Sizing:Plant") {
         auto iddObject = idd_1_7_5.getObject("OS:Sizing:Plant");
@@ -2499,7 +2375,7 @@ namespace osversion {
         newObject.setInt(6, 1);
         newObject.setString(7, "None");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (object.iddObject().name() == "OS:DistrictCooling") {
         IdfObject newObject = object.clone(true);
@@ -2508,7 +2384,7 @@ namespace osversion {
           newObject.setString(4, "Autosize");
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (object.iddObject().name() == "OS:DistrictHeating") {
         IdfObject newObject = object.clone(true);
@@ -2517,7 +2393,7 @@ namespace osversion {
           newObject.setString(4, "Autosize");
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (object.iddObject().name() == "OS:Humidifier:Steam:Electric") {
         IdfObject newObject = object.clone(true);
@@ -2526,7 +2402,7 @@ namespace osversion {
           newObject.setString(4, "Autosize");
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -2564,7 +2440,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:AirLoopHVAC") {
         auto iddObject = idd_1_8_4.getObject("OS:AirLoopHVAC");
@@ -2624,7 +2500,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:AvailabilityManager:Scheduled") {
         m_deprecated.push_back(object);
@@ -2725,7 +2601,7 @@ namespace osversion {
             newObject.setString(i, s.get());
           }
         }
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -2768,7 +2644,7 @@ namespace osversion {
           }
         }
         ss << newObject;
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
 
       } else if (iddname == "OS:ZoneAirMassFlowConservation") {
         auto iddObject = idd_1_9_3.getObject("OS:ZoneAirMassFlowConservation");
@@ -2792,7 +2668,7 @@ namespace osversion {
         }
         // new field Infiltration Balancing Zones is defaulted to MixingSourceZonesOnly
         ss << newObject;
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
       } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
         auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
         OS_ASSERT(iddObject);
@@ -2806,7 +2682,7 @@ namespace osversion {
 
         newObject.setString(18, "No");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
         auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
@@ -2821,7 +2697,7 @@ namespace osversion {
 
         newObject.setString(10, "No");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -2890,7 +2766,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -2932,7 +2808,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
         auto iddObject = idd_1_10_0.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
@@ -2955,7 +2831,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3039,7 +2915,7 @@ namespace osversion {
         newObject.setString(26, "Autosize");
         newObject.setString(27, "Autosize");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3102,7 +2978,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3144,7 +3020,7 @@ namespace osversion {
         newObject.setDouble(4, 0.0);
         newObject.setDouble(5, 0.8);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3187,7 +3063,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3221,7 +3097,7 @@ namespace osversion {
           ++newi;
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3259,7 +3135,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3295,7 +3171,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Heating") {
         auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Heating");
@@ -3310,7 +3186,7 @@ namespace osversion {
         newObject.setDouble(21, 1.0);
         newObject.setString(22, "");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Cooling") {
         auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Cooling");
@@ -3325,7 +3201,7 @@ namespace osversion {
         newObject.setDouble(21, 1.0);
         newObject.setString(22, "");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3362,7 +3238,7 @@ namespace osversion {
           ++newi;
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:ZoneHVAC:FourPipeFanCoil") {
         auto iddObject = idd_2_1_2.getObject("OS:ZoneHVAC:FourPipeFanCoil");
@@ -3378,7 +3254,7 @@ namespace osversion {
         newObject.setString(23, "Autosize");
         newObject.setString(24, "Autosize");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else {
         ss << object;
@@ -3414,7 +3290,7 @@ namespace osversion {
         newObject.setString(17, "348701.1");
         newObject.setString(18, "1.282051282");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:Pump:VariableSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:Pump:VariableSpeed");
@@ -3432,7 +3308,7 @@ namespace osversion {
         newObject.setString(28, "1.282051282");
         newObject.setString(29, "0.0");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:CoolingTower:SingleSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:SingleSpeed");
@@ -3454,7 +3330,7 @@ namespace osversion {
         newObject.setString(36, "Autosize");
         newObject.setString(37, "General");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:CoolingTower:TwoSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:TwoSpeed");
@@ -3472,7 +3348,7 @@ namespace osversion {
         newObject.setString(44, "Autosize");
         newObject.setString(45, "General");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:CoolingTower:VariableSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:VariableSpeed");
@@ -3486,7 +3362,7 @@ namespace osversion {
 
         newObject.setString(31, "General");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Chiller:Electric:EIR") {
@@ -3505,7 +3381,7 @@ namespace osversion {
           newObject.setString(19, "AirCooled");
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:AirLoopHVAC") {
         auto iddObject = idd_2_3_1.getObject("OS:AirLoopHVAC");
@@ -3522,11 +3398,11 @@ namespace osversion {
            */
 
         // Create an AVMList with a handle and a name
-        std::string avmName = "";
+        std::string avmName;
         if (auto loopName = object.getString(1)) {
           avmName = loopName.get();
         }
-        avmName = avmName + " AvailabilityManagerAssignmentList";
+        avmName += " AvailabilityManagerAssignmentList";
 
         IdfObject avmList(idd_2_3_1.getObject("OS:AvailabilityManagerAssignmentList").get());
         std::string avmHandle = toString(createUUID());
@@ -3541,7 +3417,7 @@ namespace osversion {
         // Assign AVM list to loop
         newObject.setString(4, avmHandle);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         m_new.push_back(avmList);
 
         ss << newObject;
@@ -3558,11 +3434,11 @@ namespace osversion {
         }
 
         // Create an AVMList with a handle and a name
-        std::string avmName = "";
+        std::string avmName;
         if (auto loopName = object.getString(1)) {
           avmName = loopName.get();
         }
-        avmName = avmName + " AvailabilityManagerAssignmentList";
+        avmName += " AvailabilityManagerAssignmentList";
 
         IdfObject avmList(idd_2_3_1.getObject("OS:AvailabilityManagerAssignmentList").get());
         std::string avmHandle = toString(createUUID());
@@ -3577,7 +3453,7 @@ namespace osversion {
         // Assign AVM list to loop
         newObject.setString(22, avmHandle);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         m_new.push_back(avmList);
 
         ss << newObject;
@@ -3602,11 +3478,11 @@ namespace osversion {
 
         // We need to create the four ModelObjectLists for the control zones
         // 8 = Control Zone or Zone List Name
-        std::string controlThermalZoneListName = "";
+        std::string controlThermalZoneListName;
         if (auto avmName = object.getString(1)) {
           controlThermalZoneListName = avmName.get();
         }
-        controlThermalZoneListName = controlThermalZoneListName + " Control Zone List";
+        controlThermalZoneListName += " Control Zone List";
 
         IdfObject controlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
         std::string controlThermalZoneListHandle = toString(createUUID());
@@ -3615,11 +3491,11 @@ namespace osversion {
         newObject.setString(8, controlThermalZoneListHandle);
 
         // 9 = Cooling Control Zone or Zone List Name
-        std::string coolingControlThermalZoneListName = "";
+        std::string coolingControlThermalZoneListName;
         if (auto avmName = object.getString(1)) {
           coolingControlThermalZoneListName = avmName.get();
         }
-        coolingControlThermalZoneListName = coolingControlThermalZoneListName + " Cooling Control Zone List";
+        coolingControlThermalZoneListName += " Cooling Control Zone List";
 
         IdfObject coolingControlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
         std::string coolingControlThermalZoneListHandle = toString(createUUID());
@@ -3628,11 +3504,11 @@ namespace osversion {
         newObject.setString(9, coolingControlThermalZoneListHandle);
 
         // 10 = Heating Control Zone or Zone List Name
-        std::string heatingControlThermalZoneListName = "";
+        std::string heatingControlThermalZoneListName;
         if (auto avmName = object.getString(1)) {
           heatingControlThermalZoneListName = avmName.get();
         }
-        heatingControlThermalZoneListName = heatingControlThermalZoneListName + " Heating Control Zone List";
+        heatingControlThermalZoneListName += " Heating Control Zone List";
 
         IdfObject heatingControlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
         std::string heatingControlThermalZoneListHandle = toString(createUUID());
@@ -3641,11 +3517,11 @@ namespace osversion {
         newObject.setString(10, heatingControlThermalZoneListHandle);
 
         // 11 = Heating Control Zone or Zone List Name
-        std::string heatingZoneFansOnlyThermalZoneListName = "";
+        std::string heatingZoneFansOnlyThermalZoneListName;
         if (auto avmName = object.getString(1)) {
           heatingZoneFansOnlyThermalZoneListName = avmName.get();
         }
-        heatingZoneFansOnlyThermalZoneListName = heatingZoneFansOnlyThermalZoneListName + " Heating Zone Fans Only Zone List";
+        heatingZoneFansOnlyThermalZoneListName += " Heating Zone Fans Only Zone List";
 
         IdfObject heatingZoneFansOnlyThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
         std::string heatingZoneFansOnlyThermalZoneListHandle = toString(createUUID());
@@ -3653,7 +3529,7 @@ namespace osversion {
         heatingZoneFansOnlyThermalZoneList.setString(1, heatingZoneFansOnlyThermalZoneListName);
         newObject.setString(11, heatingZoneFansOnlyThermalZoneListHandle);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         m_new.push_back(controlThermalZoneList);
         m_new.push_back(coolingControlThermalZoneList);
         m_new.push_back(heatingControlThermalZoneList);
@@ -3695,7 +3571,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         iddObject = idd_2_4_2.getObject("OS:AdditionalProperties");
@@ -3724,7 +3600,7 @@ namespace osversion {
         }
         newObject.setString(18, "General");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Boiler:Steam") {
@@ -3738,7 +3614,7 @@ namespace osversion {
         }
         newObject.setString(16, "General");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:WaterHeater:Mixed") {
@@ -3759,7 +3635,7 @@ namespace osversion {
         // End Use Subcategory
         newObject.setString(42, "General");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Chiller:Electric:EIR") {
@@ -3784,7 +3660,7 @@ namespace osversion {
         // endUseSubcategory
         newObject.setString(34, "General");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Default case
@@ -3841,7 +3717,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Default case
@@ -3910,7 +3786,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         m_new.push_back(newReturnPortList);
         ss << newObject;
         ss << newReturnPortList;
@@ -3930,7 +3806,7 @@ namespace osversion {
           // it needs to specify a port on the PortList instead of the ThermalZone now
           newConnection.setString(2, c->second.newPortListHandle);
           newConnection.setUnsigned(3, 3);
-          m_refactored.push_back(RefactoredObjectData(object, newConnection));
+          m_refactored.emplace_back(object, newConnection);
           ss << newConnection;
         } else {
           ss << object;
@@ -3981,7 +3857,7 @@ namespace osversion {
           newObject.setDouble(16, 99);
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
@@ -4002,7 +3878,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else {
@@ -4108,7 +3984,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Connection") {
@@ -4140,7 +4016,7 @@ namespace osversion {
 
         // Field is optional string, so leave it empty
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:SpaceType") {
@@ -4163,7 +4039,7 @@ namespace osversion {
 
         // Field is optional string, so leave it empty
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else {
@@ -4194,7 +4070,7 @@ namespace osversion {
           // And it connects to the "Inlet Port" of the name (field 2 of the node)
           newConnection.setString(4, c->second.newNodeHandle);
           newConnection.setUnsigned(5, 2);
-          m_refactored.push_back(RefactoredObjectData(object, newConnection));
+          m_refactored.emplace_back(object, newConnection);
           ss << newConnection;
         }
       }
@@ -4228,7 +4104,7 @@ namespace osversion {
                       << "It was replaced by 'Total' instead for object with handle '" << newObject.getString(0).get()
                       << "'. Please review carefully.");
 
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
         } else {
           // Nothing to do here
@@ -4260,7 +4136,7 @@ namespace osversion {
         if (value && (value.get().rfind("file://", 0) == 0)) {
           IdfObject newObject = object.clone(true);
           newObject.setString(10, value.get().substr(7));
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
         } else {
           // Nothing to do here
@@ -4275,7 +4151,7 @@ namespace osversion {
         if (value && (value.get().rfind("file://", 0) == 0)) {
           IdfObject newObject = object.clone(true);
           newObject.setString(2, value.get().substr(7));
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
         } else {
           // Nothing to do here
@@ -4302,7 +4178,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // No-op
@@ -4341,7 +4217,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Schedule:FixedInterval") {
@@ -4360,7 +4236,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
@@ -4408,7 +4284,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ThermalStorage:Ice:Detailed") {
@@ -4473,7 +4349,7 @@ namespace osversion {
            *}
            */
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass") {
@@ -4528,7 +4404,7 @@ namespace osversion {
         ss << newConnection;
 
         // Register refactored
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
@@ -4542,11 +4418,9 @@ namespace osversion {
           }
         }
 
-        unsigned currentIndex;
+        unsigned currentIndex = 20;
         if (iddname == "OS:HeaderedPumps:ConstantSpeed") {
           currentIndex = 15;
-        } else {
-          currentIndex = 20;
         }
 
         // DesignPowerSizingMethod
@@ -4564,7 +4438,7 @@ namespace osversion {
         }
 
         // Register refactored
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // No-op
@@ -4644,7 +4518,7 @@ namespace osversion {
         // Applicability Schedule
         newObject.setString(2, alwaysOnDiscreteSchedule->getString(0).get());
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // No-op
@@ -4745,7 +4619,7 @@ namespace osversion {
             replaceForField(object, newObject, it->second);
           }
 
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
         } else {
           // No-op
@@ -4781,7 +4655,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Schedule:Rule") {
@@ -4799,7 +4673,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Note: OS:ScheduleRuleset got a new optional field at the end, so no-op
@@ -4823,7 +4697,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ClimateZones") {
@@ -4843,7 +4717,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Boiler:HotWater") {
@@ -4866,7 +4740,7 @@ namespace osversion {
         // Fuel Type: renames
         replaceForField(object, newObject, 2);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Chiller:Electric:EIR") {
@@ -4916,7 +4790,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ShadowCalculation") {
@@ -4971,7 +4845,7 @@ namespace osversion {
         // Disable Self-Shading From Shading Zone Groups to Other Zones
         newObject.setString(10, "No");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Sizing:Zone") {
@@ -4998,7 +4872,7 @@ namespace osversion {
         // Two fields were plain added to the end: Design Zone Secondary Recirculation Fraction,
         // and  Design Minimum Zone Ventilation Efficiency, but both are optional (has default) so no-op there
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
@@ -5023,7 +4897,7 @@ namespace osversion {
         newObject.setDouble(25, 21.0);
 
         // Register refactored
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // No-op
@@ -5066,7 +4940,7 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(15, -25.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode") {
@@ -5089,7 +4963,7 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(15, -25.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
@@ -5112,7 +4986,7 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(7, -25.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Coil:Cooling:DX:VariableSpeed") {
@@ -5135,7 +5009,7 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(15, -25.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
@@ -5165,7 +5039,7 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(23, -25.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // No-op
@@ -5811,7 +5685,7 @@ namespace osversion {
         // Minimum Ventilation Time
         newObject.setDouble(18, 0.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:AirLoopHVAC") {
@@ -5835,7 +5709,7 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(6, 1.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Construction:InternalSource") {
@@ -5860,7 +5734,7 @@ namespace osversion {
         // If we made it required-field, set new field per IDD default, same as Model Ctor
         // newObject.setDouble(6, 0.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:Electric") {
@@ -5880,7 +5754,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:WaterHeater:HeatPump") {
@@ -5903,7 +5777,7 @@ namespace osversion {
         // Made it a required-field with the E+ IDD default value set in Ctor, so set it here too
         newObject.setDouble(16, 48.89);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow") {
@@ -5956,7 +5830,7 @@ namespace osversion {
         // newObject.setDouble(8, 0.35);
         // newObject.setDouble(10, 0.8);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow") {
@@ -6001,7 +5875,7 @@ namespace osversion {
         // newObject.setDouble(10, 0.35);
         // newObject.setString(23, "HalfFlowPower");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Output:Meter") {
@@ -6033,7 +5907,7 @@ namespace osversion {
 
           newObject.setName(name);
 
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
         }
 
@@ -6073,7 +5947,7 @@ namespace osversion {
             LOG(Trace, "Replacing " << variableName << " with " << it->second << " for " << object.nameString());
             newObject.setString(variableNameIndex, it->second);
 
-            m_refactored.push_back(RefactoredObjectData(object, newObject));
+            m_refactored.emplace_back(object, newObject);
             ss << newObject;
           }
         } else {
@@ -6137,7 +6011,7 @@ namespace osversion {
             }
           }
 
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
         }
 
@@ -6167,7 +6041,7 @@ namespace osversion {
           newObject.pushExtensibleGroup(StringVector(1u, subSurfaceHandleIt->second));
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:SubSurface") {
@@ -6187,7 +6061,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // No-op
@@ -6282,7 +6156,7 @@ namespace osversion {
         newObject.setDouble(4, 0.0);
         newObject.setDouble(5, 1.0);
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if ((iddname == "OS:Connection") || (iddname == "OS:PortList")) {
@@ -6300,7 +6174,7 @@ namespace osversion {
             }
           }
         }
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Construction:AirBoundary") {
@@ -6324,7 +6198,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneAirMassFlowConservation") {
@@ -6349,7 +6223,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
@@ -6367,7 +6241,7 @@ namespace osversion {
 
         newObject.setString(13, "DrawThrough");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
@@ -6436,7 +6310,7 @@ namespace osversion {
         newObject.setString(12, sensibleCoolingCapacityCurve.nameString());
         newObject.setString(13, coolingPowerConsumptionCurve.nameString());
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Register new Curve objects
@@ -6492,7 +6366,7 @@ namespace osversion {
         newObject.setString(10, heatingCapacityCurve.nameString());
         newObject.setString(11, heatingPowerConsumptionCurve.nameString());
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Register new Curve objects
@@ -6554,7 +6428,7 @@ namespace osversion {
         newObject.setString(10, coolingCapacityCurve.nameString());
         newObject.setString(11, coolingCompressorPowerCurve.nameString());
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Register new Curve objects
@@ -6616,7 +6490,7 @@ namespace osversion {
         newObject.setString(10, heatingCapacityCurve.nameString());
         newObject.setString(11, heatingCompressorPowerCurve.nameString());
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // Register new Curve objects
@@ -6711,7 +6585,7 @@ namespace osversion {
         newObject.setString(5, "Yes");
         newObject.setString(6, "CurrentOccupancy");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:GroundHeatExchanger:Vertical") {
@@ -6736,7 +6610,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if ((iddname == "OS:Controller:MechanicalVentilation") || (iddname == "OS:Sizing:System")) {
@@ -6764,7 +6638,7 @@ namespace osversion {
             }
           }
 
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          m_refactored.emplace_back(object, newObject);
           ss << newObject;
 
         } else {
@@ -6813,7 +6687,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
         // No-op
@@ -6864,7 +6738,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
       } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
         auto iddObject = idd_3_3_1.getObject(iddname);
@@ -6883,7 +6757,7 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        m_refactored.emplace_back(object, newObject);
         ss << newObject;
 
       } else if (iddname == "OS:ModelObjectList") {
