@@ -55,8 +55,6 @@ class UTILITIES_API IddFileAndFactoryWrapper
    *  IddFileType::UserCustom, since this results in an empty IddFile. */
   IddFileAndFactoryWrapper(IddFileType iddFileType);
 
-  virtual ~IddFileAndFactoryWrapper() {}
-
   //@}
   /** @name Getters */
   //@{

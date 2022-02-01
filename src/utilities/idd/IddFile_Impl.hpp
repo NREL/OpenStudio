@@ -50,8 +50,8 @@ namespace detail {
     /** @name Constructors */
     //@{
 
-    /// default constructor
-    IddFile_Impl();
+    /// default constructor: it's defaulted
+    // IddFile_Impl() = default;
 
     //@}
     /** @name Getters */

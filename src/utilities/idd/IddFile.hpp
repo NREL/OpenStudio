@@ -61,10 +61,10 @@ class UTILITIES_API IddFile
   //@{
 
   /** Default constructor returns an IddFile with no version, no header, and no objects. */
-  IddFile();
+  IddFile() = default;  // Must be provided because we declared a (private) one
 
   /** Copy constructor returns an IddFile that shares its data with other. */
-  IddFile(const IddFile& other);
+  // IddFile(const IddFile& other);
 
   /** Returns an IddFile containing a single, default constructed IddObject of Catchall type. */
   static IddFile catchallIddFile();
@@ -160,7 +160,8 @@ class UTILITIES_API IddFile
   // impl
   std::shared_ptr<detail::IddFile_Impl> m_impl;
 
-  IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl);
+  IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl) noexcept;
+  IddFile(std::shared_ptr<detail::IddFile_Impl>&& impl) noexcept;
 
   // configure logging
   REGISTER_LOGGER("utilities.idd.IddFile");
