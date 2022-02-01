@@ -41,10 +41,7 @@
 
 #include "../utilities/units/Unit.hpp"
 #include <unordered_map>
-
-namespace pugi {
-class xml_node;
-}
+#include <pugixml.hpp>
 
 namespace openstudio {
 
