@@ -70,7 +70,7 @@ namespace model {
 
       // no swap method here because no component-level data
 
-      virtual ~Component_Impl();
+      virtual ~Component_Impl() = default;
 
       //@}
       /** @name Getters */

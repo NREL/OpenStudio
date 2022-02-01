@@ -55,10 +55,6 @@ namespace model {
 
     Component_Impl::Component_Impl(const Model_Impl& model, const std::vector<Handle>& hs) : Model_Impl(model, hs, false, StrictnessLevel::Draft) {}
 
-    Component_Impl::~Component_Impl() {
-      LOG(Trace, "Component_Impl destructor.");
-    }
-
     Workspace Component_Impl::clone(bool keepHandles) const {
       // copy everything but objects
       std::shared_ptr<Component_Impl> cloneImpl(new Component_Impl(*this, keepHandles));
@@ -212,10 +208,6 @@ namespace model {
     }
 
     getImpl<detail::Model_Impl>()->createComponentWatchers();
-  }
-
-  Component::~Component() {
-    LOG(Trace, "Component destructor.");
   }
 
   boost::optional<Component> Component::load(const path& p) {

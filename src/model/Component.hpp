@@ -64,7 +64,7 @@ namespace model {
    *  list in ComponentData must exactly match the contents of idfFile. */
     explicit Component(const openstudio::IdfFile& idfFile);
 
-    virtual ~Component();
+    virtual ~Component() = default;
 
     //@}
     /** @name Getters */
