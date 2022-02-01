@@ -151,3 +151,51 @@ TEST_F(ModelFixture, ModelObject_SetString) {
   EXPECT_NE("", space2.getString(nameIndex).get());
   EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
 }
+
+TEST_F(ModelFixture, ModelObject_SpecialMembers) {
+
+  static_assert(!std::is_trivial<ModelObject>{});
+  static_assert(!std::is_pod<ModelObject>{});
+
+  // checks if a type has a default constructor
+  static_assert(!std::is_default_constructible<ModelObject>{});
+  static_assert(!std::is_trivially_default_constructible<ModelObject>{});
+  static_assert(!std::is_nothrow_default_constructible<ModelObject>{});
+
+  // checks if a type has a copy constructor
+  static_assert(std::is_copy_constructible<ModelObject>{});
+  static_assert(!std::is_trivially_copy_constructible<ModelObject>{});
+  static_assert(!std::is_nothrow_copy_constructible<ModelObject>{});
+
+  // checks if a type can be constructed from an rvalue reference
+  // Note: Types without a move constructor, but with a copy constructor that accepts const T& arguments, satisfy std::is_move_constructible.
+  // Move constructors are usually noexcept, since otherwise they are unusable in any code that provides strong exception guarantee.
+  static_assert(std::is_move_constructible<ModelObject>{});
+  static_assert(!std::is_trivially_move_constructible<std::shared_ptr<openstudio::model::detail::ModelObject_Impl>>{});
+  static_assert(!std::is_trivially_move_constructible<ModelObject>{});
+  static_assert(std::is_nothrow_move_constructible<ModelObject>{});
+
+  // checks if a type has a copy assignment operator
+  static_assert(std::is_copy_assignable<ModelObject>{});
+  static_assert(!std::is_trivially_copy_assignable<ModelObject>{});
+  static_assert(!std::is_nothrow_copy_assignable<ModelObject>{});  // We didn't specify noexcept on the user defined one
+
+  // checks if a type has a move assignment operator
+  static_assert(std::is_move_assignable<ModelObject>{});
+  static_assert(!std::is_trivially_move_assignable<std::shared_ptr<openstudio::model::detail::ModelObject_Impl>>{});
+  static_assert(!std::is_trivially_move_assignable<ModelObject>{});
+  static_assert(std::is_nothrow_move_assignable<ModelObject>{});
+
+  // checks if a type has a non-deleted destructor
+  static_assert(std::is_destructible<ModelObject>{});
+  static_assert(!std::is_trivially_destructible<std::shared_ptr<openstudio::model::detail::ModelObject_Impl>>{});
+  static_assert(!std::is_trivially_destructible<ModelObject>{});
+  static_assert(std::is_nothrow_destructible<ModelObject>{});
+
+  // checks if a type has a virtual destructor
+  static_assert(std::has_virtual_destructor<ModelObject>{});
+
+  // checks if objects of a type can be swapped with objects of same or different type
+  static_assert(std::is_swappable<ModelObject>{});
+  static_assert(std::is_nothrow_swappable<ModelObject>{});
+}
