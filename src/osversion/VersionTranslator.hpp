@@ -65,6 +65,7 @@ namespace osversion {
   {
    public:
     RefactoredObjectData(const IdfObject& old, const IdfObject& newObject);
+    RefactoredObjectData(IdfObject&& old, IdfObject&& newObject);
 
     IdfObject oldObject() const;
     IdfObject newObject() const;

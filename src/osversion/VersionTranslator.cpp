@@ -77,8 +77,13 @@ namespace openstudio {
 namespace osversion {
 
   // Helper class
+  // A passed lvalue binds to name, then is copied into m_name.
   RefactoredObjectData::RefactoredObjectData(const IdfObject& oldObject, const IdfObject& newObject)
     : m_oldObject(oldObject), m_newObject(newObject) {}
+
+  // A passed rvalue binds to rname, then is moved into m_name.
+  RefactoredObjectData::RefactoredObjectData(IdfObject&& oldObject, IdfObject&& newObject)
+    : m_oldObject(std::move(oldObject)), m_newObject(std::move(newObject)) {}
 
   IdfObject RefactoredObjectData::oldObject() const {
     return m_oldObject;
