@@ -56,7 +56,7 @@ namespace model {
    */
     explicit PipeAdiabatic(const Model& model);
 
-    virtual ~PipeAdiabatic() {}
+    virtual ~PipeAdiabatic() = default;
 
     unsigned inletPort() const;
 

@@ -54,7 +54,7 @@ namespace model {
 
     explicit EvaporativeFluidCoolerSingleSpeed(const Model& model);
 
-    virtual ~EvaporativeFluidCoolerSingleSpeed() {}
+    virtual ~EvaporativeFluidCoolerSingleSpeed() = default;
 
     //@}
 

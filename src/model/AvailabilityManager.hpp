@@ -48,7 +48,7 @@ namespace model {
    public:
     AvailabilityManager(IddObjectType type, const Model& model);
 
-    virtual ~AvailabilityManager() {}
+    virtual ~AvailabilityManager() = default;
 
     boost::optional<Loop> loop() const;
 

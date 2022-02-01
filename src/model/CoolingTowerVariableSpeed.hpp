@@ -52,7 +52,7 @@ namespace model {
    public:
     explicit CoolingTowerVariableSpeed(const Model& model);
 
-    virtual ~CoolingTowerVariableSpeed() {}
+    virtual ~CoolingTowerVariableSpeed() = default;
 
     static IddObjectType iddObjectType();
 

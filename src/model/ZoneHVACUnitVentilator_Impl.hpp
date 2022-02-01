@@ -54,7 +54,7 @@ namespace model {
 
       ZoneHVACUnitVentilator_Impl(const ZoneHVACUnitVentilator_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACUnitVentilator_Impl() {}
+      virtual ~ZoneHVACUnitVentilator_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

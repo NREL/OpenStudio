@@ -81,7 +81,7 @@ namespace model {
 
     explicit GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve);
 
-    virtual ~GeneratorFuelSupply() {}
+    virtual ~GeneratorFuelSupply() = default;
 
     //@}
 

@@ -54,7 +54,7 @@ namespace model {
    public:
     explicit AirTerminalSingleDuctVAVReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
-    virtual ~AirTerminalSingleDuctVAVReheat() {}
+    virtual ~AirTerminalSingleDuctVAVReheat() = default;
 
     static IddObjectType iddObjectType();
 

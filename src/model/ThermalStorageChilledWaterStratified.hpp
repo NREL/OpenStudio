@@ -55,7 +55,7 @@ namespace model {
 
     explicit ThermalStorageChilledWaterStratified(const Model& model);
 
-    virtual ~ThermalStorageChilledWaterStratified() {}
+    virtual ~ThermalStorageChilledWaterStratified() = default;
 
     //@}
 

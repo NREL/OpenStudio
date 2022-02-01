@@ -55,7 +55,7 @@ namespace model {
 
     explicit RefrigerationCondenserWaterCooled(const Model& model);
 
-    virtual ~RefrigerationCondenserWaterCooled() {}
+    virtual ~RefrigerationCondenserWaterCooled() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
 
     explicit RefrigerationWalkInZoneBoundary(const Model& model);
 
-    virtual ~RefrigerationWalkInZoneBoundary() {}
+    virtual ~RefrigerationWalkInZoneBoundary() = default;
 
     //@}
 

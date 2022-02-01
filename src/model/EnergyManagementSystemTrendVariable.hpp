@@ -76,7 +76,7 @@ namespace model {
 
     explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
-    virtual ~EnergyManagementSystemTrendVariable() {}
+    virtual ~EnergyManagementSystemTrendVariable() = default;
 
     //@}
 

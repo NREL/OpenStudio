@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ConvergenceLimits() {}
+    virtual ~ConvergenceLimits() = default;
 
     //@}
 

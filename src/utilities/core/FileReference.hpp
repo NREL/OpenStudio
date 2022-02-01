@@ -92,7 +92,7 @@ class UTILITIES_API FileReference
                 const std::string& description, const openstudio::path& p, const FileReferenceType& fileType, const DateTime& timestampLast,
                 const std::string& checksumCreate, const std::string& checksumLast);
 
-  virtual ~FileReference() {}
+  virtual ~FileReference() = default;
 
   FileReference clone() const;
 

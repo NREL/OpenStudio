@@ -61,7 +61,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Schedule() {}
+    virtual ~Schedule() = default;
 
     //@}
    protected:

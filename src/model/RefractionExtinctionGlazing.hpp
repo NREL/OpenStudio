@@ -55,7 +55,7 @@ namespace model {
                                          double visibleExtinctionCoefficient = 0.1);
     //double dirtCorrectionFactorforSolarandVisibleTransmittance = 0.1);
 
-    virtual ~RefractionExtinctionGlazing() {}
+    virtual ~RefractionExtinctionGlazing() = default;
 
     //@}
     /** @name Static Methods */

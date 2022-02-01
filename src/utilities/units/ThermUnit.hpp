@@ -103,7 +103,7 @@ class UTILITIES_API ThermUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   ThermUnit(const std::string& scaleAbbreviation, const ThermExpnt& exponents = ThermExpnt(), const std::string& prettyString = "");
 
-  virtual ~ThermUnit() {}
+  virtual ~ThermUnit() = default;
 
   //@}
  protected:

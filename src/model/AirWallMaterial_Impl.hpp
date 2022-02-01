@@ -51,7 +51,7 @@ namespace model {
 
       AirWallMaterial_Impl(const AirWallMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirWallMaterial_Impl() {}
+      virtual ~AirWallMaterial_Impl() = default;
 
       //@}
 

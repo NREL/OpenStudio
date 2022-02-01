@@ -57,7 +57,7 @@ namespace model {
 
     explicit CoilHeatingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
 
-    virtual ~CoilHeatingDXVariableSpeed() {}
+    virtual ~CoilHeatingDXVariableSpeed() = default;
 
     //@}
 

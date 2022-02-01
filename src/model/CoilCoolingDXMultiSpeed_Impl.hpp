@@ -54,7 +54,7 @@ namespace model {
 
       CoilCoolingDXMultiSpeed_Impl(const CoilCoolingDXMultiSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingDXMultiSpeed_Impl() {}
+      virtual ~CoilCoolingDXMultiSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

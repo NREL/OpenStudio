@@ -60,7 +60,7 @@ namespace model {
                                               const Curve& energyInputRatioFunctionofFlowFraction, const Curve& partLoadFractionCorrelation,
                                               const Curve& wasteHeatFunctionofTemperature);
 
-    virtual ~CoilHeatingDXMultiSpeedStageData() {}
+    virtual ~CoilHeatingDXMultiSpeedStageData() = default;
 
     //@}
 

@@ -58,7 +58,7 @@ namespace model {
    */
     explicit EvaporativeCoolerDirectResearchSpecial(const Model& model, Schedule& schedule);
 
-    virtual ~EvaporativeCoolerDirectResearchSpecial() {}
+    virtual ~EvaporativeCoolerDirectResearchSpecial() = default;
 
     //@}
 

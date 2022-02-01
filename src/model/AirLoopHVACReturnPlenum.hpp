@@ -50,7 +50,7 @@ namespace model {
    public:
     explicit AirLoopHVACReturnPlenum(const Model& model);
 
-    virtual ~AirLoopHVACReturnPlenum() {}
+    virtual ~AirLoopHVACReturnPlenum() = default;
 
     static IddObjectType iddObjectType();
 

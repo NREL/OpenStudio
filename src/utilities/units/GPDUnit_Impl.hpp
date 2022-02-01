@@ -59,7 +59,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     GPDUnit_Impl(const std::string& scaleAbbreviation, const GPDExpnt& exponents = GPDExpnt(), const std::string& prettyString = "");
 
-    virtual ~GPDUnit_Impl() {}
+    virtual ~GPDUnit_Impl() = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

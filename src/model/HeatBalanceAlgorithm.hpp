@@ -56,7 +56,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~HeatBalanceAlgorithm() {}
+    virtual ~HeatBalanceAlgorithm() = default;
 
     //@}
     /** @name Static Methods */

@@ -54,7 +54,7 @@ namespace model {
       SetpointManagerMultiZoneMinimumHumidityAverage_Impl(const SetpointManagerMultiZoneMinimumHumidityAverage_Impl& other, Model_Impl* model,
                                                           bool keepHandle);
 
-      virtual ~SetpointManagerMultiZoneMinimumHumidityAverage_Impl() {}
+      virtual ~SetpointManagerMultiZoneMinimumHumidityAverage_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

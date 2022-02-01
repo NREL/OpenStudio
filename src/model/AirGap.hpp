@@ -52,7 +52,7 @@ namespace model {
 
     explicit AirGap(const Model& model, double thermalResistance = 0.1);
 
-    virtual ~AirGap() {}
+    virtual ~AirGap() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RunPeriodControlDaylightSavingTime() {}
+    virtual ~RunPeriodControlDaylightSavingTime() = default;
 
     //@}
     /** @name Static Methods */

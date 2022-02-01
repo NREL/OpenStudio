@@ -57,7 +57,7 @@ namespace model {
 
       ZoneHVACPackagedTerminalHeatPump_Impl(const ZoneHVACPackagedTerminalHeatPump_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACPackagedTerminalHeatPump_Impl() {}
+      virtual ~ZoneHVACPackagedTerminalHeatPump_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -46,7 +46,7 @@ namespace model {
     // constructor
     explicit SkyTemperature(const Model& model);
 
-    virtual ~SkyTemperature() {}
+    virtual ~SkyTemperature() = default;
 
     static IddObjectType iddObjectType();
 

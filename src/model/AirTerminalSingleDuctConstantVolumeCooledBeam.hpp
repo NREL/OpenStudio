@@ -59,7 +59,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model, Schedule& availabilitySchedule, HVACComponent& coilCoolingCooledBeam);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() = default;
 
     //@}
 

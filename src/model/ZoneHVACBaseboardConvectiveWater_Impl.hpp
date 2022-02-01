@@ -56,7 +56,7 @@ namespace model {
 
       ZoneHVACBaseboardConvectiveWater_Impl(const ZoneHVACBaseboardConvectiveWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACBaseboardConvectiveWater_Impl() {}
+      virtual ~ZoneHVACBaseboardConvectiveWater_Impl() = default;
 
       //@}
 

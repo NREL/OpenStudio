@@ -60,7 +60,7 @@ namespace model {
     /** Initializes the schedule to value until 24:00. */
     ScheduleDay(const Model& model, double value);
 
-    virtual ~ScheduleDay() {}
+    virtual ~ScheduleDay() = default;
 
     //@}
 

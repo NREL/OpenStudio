@@ -51,7 +51,7 @@ namespace model {
 
     explicit PlantEquipmentOperationOutdoorDryBulb(const Model& model);
 
-    virtual ~PlantEquipmentOperationOutdoorDryBulb() {}
+    virtual ~PlantEquipmentOperationOutdoorDryBulb() = default;
 
     //@}
 

@@ -52,7 +52,7 @@ namespace model {
 
     explicit CoolingTowerPerformanceYorkCalc(const Model& model);
 
-    virtual ~CoolingTowerPerformanceYorkCalc() {}
+    virtual ~CoolingTowerPerformanceYorkCalc() = default;
 
     //@}
 

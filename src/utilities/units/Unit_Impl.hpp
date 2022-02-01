@@ -65,7 +65,7 @@ namespace detail {
      *  there is no entry for scaleAbbreviation in ScaleFactory. */
     Unit_Impl(const std::string& scaleAbbreviation, const std::string& prettyString = "");
 
-    virtual ~Unit_Impl() {}
+    virtual ~Unit_Impl() = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const;

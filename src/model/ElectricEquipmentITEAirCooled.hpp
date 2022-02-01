@@ -57,7 +57,7 @@ namespace model {
 
     explicit ElectricEquipmentITEAirCooled(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
-    virtual ~ElectricEquipmentITEAirCooled() {}
+    virtual ~ElectricEquipmentITEAirCooled() = default;
 
     //@}
 

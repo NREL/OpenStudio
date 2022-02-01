@@ -58,7 +58,7 @@ namespace model {
 
       YearDescription_Impl(const YearDescription_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~YearDescription_Impl() {}
+      virtual ~YearDescription_Impl() = default;
 
       //@}
       virtual const std::vector<std::string>& outputVariableNames() const override;

@@ -56,7 +56,7 @@ namespace model {
 
     explicit FanZoneExhaust(const Model& model);
 
-    virtual ~FanZoneExhaust() {}
+    virtual ~FanZoneExhaust() = default;
 
     //@}
 

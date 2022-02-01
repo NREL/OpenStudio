@@ -54,7 +54,7 @@ namespace model {
 
     explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData(const Model& model);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData() = default;
 
     //@}
 

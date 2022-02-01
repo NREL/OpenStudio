@@ -58,7 +58,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkZone() {}
+    virtual ~AirflowNetworkZone() = default;
 
     //@}
 

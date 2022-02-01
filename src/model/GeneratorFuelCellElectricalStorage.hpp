@@ -54,7 +54,7 @@ namespace model {
 
     explicit GeneratorFuelCellElectricalStorage(const Model& model);
 
-    virtual ~GeneratorFuelCellElectricalStorage() {}
+    virtual ~GeneratorFuelCellElectricalStorage() = default;
 
     //@}
 

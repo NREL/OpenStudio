@@ -54,7 +54,7 @@ namespace model {
 
     explicit InteriorPartitionSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~InteriorPartitionSurface() {}
+    virtual ~InteriorPartitionSurface() = default;
 
     //@}
     /** @name Static Methods */

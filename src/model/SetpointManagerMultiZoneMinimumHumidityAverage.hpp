@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerMultiZoneMinimumHumidityAverage(const Model& model);
 
-    virtual ~SetpointManagerMultiZoneMinimumHumidityAverage() {}
+    virtual ~SetpointManagerMultiZoneMinimumHumidityAverage() = default;
 
     //@}
 

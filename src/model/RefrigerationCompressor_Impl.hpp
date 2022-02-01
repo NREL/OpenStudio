@@ -54,7 +54,7 @@ namespace model {
 
       RefrigerationCompressor_Impl(const RefrigerationCompressor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCompressor_Impl() {}
+      virtual ~RefrigerationCompressor_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

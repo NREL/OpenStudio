@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerFollowSystemNodeTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowSystemNodeTemperature() {}
+    virtual ~SetpointManagerFollowSystemNodeTemperature() = default;
 
     //@}
 

@@ -52,7 +52,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctInletSideMixer(const Model& model);
 
-    virtual ~AirTerminalSingleDuctInletSideMixer() {}
+    virtual ~AirTerminalSingleDuctInletSideMixer() = default;
 
     //@}
 

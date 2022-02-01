@@ -53,7 +53,7 @@ namespace model {
 
     explicit CurveQuintLinear(const Model& model);
 
-    virtual ~CurveQuintLinear() {}
+    virtual ~CurveQuintLinear() = default;
 
     //@}
 

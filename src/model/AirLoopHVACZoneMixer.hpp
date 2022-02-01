@@ -56,7 +56,7 @@ namespace model {
     /** Constructs a new AirLoopHVACZoneMixer object and places it inside the model. */
     explicit AirLoopHVACZoneMixer(const Model& model);
 
-    virtual ~AirLoopHVACZoneMixer() {}
+    virtual ~AirLoopHVACZoneMixer() = default;
 
     unsigned outletPort() const override;
 

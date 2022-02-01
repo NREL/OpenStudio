@@ -51,7 +51,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ZoneAirContaminantBalance() {}
+    virtual ~ZoneAirContaminantBalance() = default;
 
     //@}
 

@@ -70,7 +70,7 @@ namespace model {
     // as it will throw if it cannot find it
     static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
-    virtual ~PhotovoltaicPerformanceSandia() {}
+    virtual ~PhotovoltaicPerformanceSandia() = default;
 
     //@}
 

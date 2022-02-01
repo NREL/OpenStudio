@@ -59,7 +59,7 @@ namespace model {
 
     FanConstantVolume(const Model& model);
 
-    virtual ~FanConstantVolume() {}
+    virtual ~FanConstantVolume() = default;
 
     //@}
 

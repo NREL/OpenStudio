@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputEnergyManagementSystem() {}
+    virtual ~OutputEnergyManagementSystem() = default;
 
     //@}
 

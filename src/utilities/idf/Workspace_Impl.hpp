@@ -101,7 +101,7 @@ namespace detail {
     /** Swaps underlying data between this workspace and other. */
     virtual void swap(Workspace& other);
 
-    virtual ~Workspace_Impl() {}
+    virtual ~Workspace_Impl() = default;
 
     //@}
     /** @name Type Casting */

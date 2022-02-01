@@ -56,7 +56,7 @@ namespace model {
 
     explicit ScheduleYear(const Model& model);
 
-    virtual ~ScheduleYear() {}
+    virtual ~ScheduleYear() = default;
 
     //@}
 

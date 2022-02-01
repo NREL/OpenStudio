@@ -55,7 +55,7 @@ namespace model {
 
     explicit ElectricLoadCenterInverterLookUpTable(const Model& model);
 
-    virtual ~ElectricLoadCenterInverterLookUpTable() {}
+    virtual ~ElectricLoadCenterInverterLookUpTable() = default;
 
     //@}
 

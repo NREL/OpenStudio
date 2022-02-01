@@ -54,7 +54,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctVAVHeatAndCoolNoReheat(const Model& model);
 
-    virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat() {}
+    virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat() = default;
 
     //@}
 

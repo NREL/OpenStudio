@@ -53,7 +53,7 @@ namespace model {
 
       PumpConstantSpeed_Impl(const PumpConstantSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PumpConstantSpeed_Impl() {}
+      virtual ~PumpConstantSpeed_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

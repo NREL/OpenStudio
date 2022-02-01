@@ -64,7 +64,7 @@ namespace model {
     /// The given daySchedule is cloned and the new object is owned by (a child of) this rule.
     explicit ScheduleRule(ScheduleRuleset& scheduleRuleset, const ScheduleDay& daySchedule);
 
-    virtual ~ScheduleRule() {}
+    virtual ~ScheduleRule() = default;
 
     //@}
 

@@ -53,7 +53,7 @@ namespace model {
     explicit StandardOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thickness = 0.1, double conductivity = 0.1,
                                     double density = 0.1, double specificHeat = 1400);
 
-    virtual ~StandardOpaqueMaterial() {}
+    virtual ~StandardOpaqueMaterial() = default;
 
     //@}
 

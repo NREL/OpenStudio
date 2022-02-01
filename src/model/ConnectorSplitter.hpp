@@ -54,7 +54,7 @@ namespace model {
     /** Constructs a new Splitter object and places it inside the model. */
     explicit ConnectorSplitter(const Model& model);
 
-    virtual ~ConnectorSplitter() {}
+    virtual ~ConnectorSplitter() = default;
 
     /** Returns the inlet port to the splitter. */
     unsigned inletPort() const override;

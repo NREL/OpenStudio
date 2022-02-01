@@ -54,7 +54,7 @@ namespace model {
 
       SiteGroundTemperatureFCfactorMethod_Impl(const SiteGroundTemperatureFCfactorMethod_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SiteGroundTemperatureFCfactorMethod_Impl() {}
+      virtual ~SiteGroundTemperatureFCfactorMethod_Impl() = default;
 
       //@}
 

@@ -101,7 +101,7 @@ namespace contam {
       UNKNOWN
     };
     /** Destroy the object. */
-    virtual ~AirflowElement() {}
+    virtual ~AirflowElement() = default;
     /** Write the object to a string. */
     virtual std::string write() = 0;
     /** Convert an input string into an airflow element type enum. */

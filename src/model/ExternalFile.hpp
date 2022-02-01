@@ -54,7 +54,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalFile() {}
+    virtual ~ExternalFile() = default;
 
     //@}
 

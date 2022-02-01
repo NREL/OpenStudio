@@ -55,7 +55,7 @@ namespace model {
       AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl(const AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl& other,
                                                                 Model_Impl* model, bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl() {}
+      virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

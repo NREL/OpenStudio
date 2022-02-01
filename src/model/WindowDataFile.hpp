@@ -50,7 +50,7 @@ namespace model {
 
     explicit WindowDataFile(const Model& model);
 
-    virtual ~WindowDataFile() {}
+    virtual ~WindowDataFile() = default;
 
     //@}
     /** @name Static Methods */

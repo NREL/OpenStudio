@@ -64,7 +64,7 @@ namespace model {
 
     explicit DaylightingDeviceTubular(const SubSurface& dome, const SubSurface& diffuser, const ConstructionBase& construction);
 
-    virtual ~DaylightingDeviceTubular() {}
+    virtual ~DaylightingDeviceTubular() = default;
 
     //@}
     /** @name Static Methods */

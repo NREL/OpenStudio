@@ -65,7 +65,7 @@ namespace model {
 
     explicit ChillerElectricEIR(const Model& model);
 
-    virtual ~ChillerElectricEIR() {}
+    virtual ~ChillerElectricEIR() = default;
 
     //@}
 

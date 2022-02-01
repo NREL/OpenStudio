@@ -62,7 +62,7 @@ namespace model {
     /** Sets \f$D = 0.05\f$ */
     explicit CurveFunctionalPressureDrop(const Model& model);
 
-    virtual ~CurveFunctionalPressureDrop() {}
+    virtual ~CurveFunctionalPressureDrop() = default;
 
     //@}
 

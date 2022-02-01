@@ -51,7 +51,7 @@ namespace model {
 
     explicit EnergyManagementSystemProgram(const Model& model);
 
-    virtual ~EnergyManagementSystemProgram() {}
+    virtual ~EnergyManagementSystemProgram() = default;
 
     //@}
 

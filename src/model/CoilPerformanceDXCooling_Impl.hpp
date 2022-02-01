@@ -54,7 +54,7 @@ namespace model {
 
       CoilPerformanceDXCooling_Impl(const CoilPerformanceDXCooling_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilPerformanceDXCooling_Impl() {}
+      virtual ~CoilPerformanceDXCooling_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -54,7 +54,7 @@ namespace model {
 
     explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(const Model& model);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() = default;
 
     //@}
 

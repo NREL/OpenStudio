@@ -55,7 +55,7 @@ namespace model {
       CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl& other,
                                                                     Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl() {}
+      virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

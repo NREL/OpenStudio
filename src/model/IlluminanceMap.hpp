@@ -61,7 +61,7 @@ namespace model {
 
     explicit IlluminanceMap(const Model& model);
 
-    virtual ~IlluminanceMap() {}
+    virtual ~IlluminanceMap() = default;
 
     //@}
     /** @name Static Methods */

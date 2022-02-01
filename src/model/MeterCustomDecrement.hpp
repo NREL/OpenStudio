@@ -54,7 +54,7 @@ namespace model {
     // Constructs a new MeterCustomDecrement object in the model.
     explicit MeterCustomDecrement(const Model& model, const std::string& sourceMeterName);
 
-    virtual ~MeterCustomDecrement() {}
+    virtual ~MeterCustomDecrement() = default;
 
     //@}
 

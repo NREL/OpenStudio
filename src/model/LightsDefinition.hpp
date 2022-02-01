@@ -55,7 +55,7 @@ namespace model {
 
     explicit LightsDefinition(const Model& model);
 
-    virtual ~LightsDefinition() {}
+    virtual ~LightsDefinition() = default;
 
     //@}
 

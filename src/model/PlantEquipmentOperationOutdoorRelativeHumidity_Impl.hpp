@@ -52,7 +52,7 @@ namespace model {
       PlantEquipmentOperationOutdoorRelativeHumidity_Impl(const PlantEquipmentOperationOutdoorRelativeHumidity_Impl& other, Model_Impl* model,
                                                           bool keepHandle);
 
-      virtual ~PlantEquipmentOperationOutdoorRelativeHumidity_Impl() {}
+      virtual ~PlantEquipmentOperationOutdoorRelativeHumidity_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

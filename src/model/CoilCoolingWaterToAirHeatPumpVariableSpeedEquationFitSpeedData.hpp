@@ -60,7 +60,7 @@ namespace model {
       const Curve& energyInputRatioFunctionofAirFlowFraction, const Curve& energyInputRatioFunctionofWaterFlowFraction,
       const Curve& wasteHeatFunctionofTemperature);
 
-    virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() {}
+    virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() = default;
 
     //@}
 

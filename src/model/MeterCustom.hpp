@@ -54,7 +54,7 @@ namespace model {
     // Constructs a new MeterCustom object in the model.
     explicit MeterCustom(const Model& model);
 
-    virtual ~MeterCustom() {}
+    virtual ~MeterCustom() = default;
 
     //@}
 

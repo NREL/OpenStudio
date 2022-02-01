@@ -60,7 +60,7 @@ namespace model {
     AirflowNetworkDistributionLinkage(const Model& model, const AirflowNetworkNode& node1, const AirflowNetworkNode& node2,
                                       const AirflowNetworkComponent& component);
 
-    virtual ~AirflowNetworkDistributionLinkage() {}
+    virtual ~AirflowNetworkDistributionLinkage() = default;
 
     //@}
 

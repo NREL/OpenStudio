@@ -52,7 +52,7 @@ namespace model {
    public:
     explicit SizingSystem(const Model& model, const AirLoopHVAC& airLoopHVAC);
 
-    virtual ~SizingSystem() {}
+    virtual ~SizingSystem() = default;
 
     static IddObjectType iddObjectType();
 

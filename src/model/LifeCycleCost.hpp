@@ -59,7 +59,7 @@ namespace model {
     /// This will throw if the object type is not known
     explicit LifeCycleCost(const ModelObject& modelObject);
 
-    virtual ~LifeCycleCost() {}
+    virtual ~LifeCycleCost() = default;
 
     //@}
     /** @name Static Methods */

@@ -53,7 +53,7 @@ namespace model {
 
       DaylightingDeviceLightWell_Impl(const DaylightingDeviceLightWell_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DaylightingDeviceLightWell_Impl() {}
+      virtual ~DaylightingDeviceLightWell_Impl() = default;
 
       //@}
 

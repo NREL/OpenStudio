@@ -53,7 +53,7 @@ namespace model {
 
     explicit CoilHeatingGasMultiStageStageData(const Model& model);
 
-    virtual ~CoilHeatingGasMultiStageStageData() {}
+    virtual ~CoilHeatingGasMultiStageStageData() = default;
 
     //@}
 

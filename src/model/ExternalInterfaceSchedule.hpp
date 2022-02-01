@@ -54,7 +54,7 @@ namespace model {
 
     explicit ExternalInterfaceSchedule(const Model& model);
 
-    virtual ~ExternalInterfaceSchedule() {}
+    virtual ~ExternalInterfaceSchedule() = default;
 
     //@}
 

@@ -56,7 +56,7 @@ namespace model {
       GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl(const GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl& other, Model_Impl* model,
                                                            bool keepHandle);
 
-      virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl() {}
+      virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

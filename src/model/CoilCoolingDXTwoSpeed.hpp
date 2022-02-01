@@ -77,7 +77,7 @@ namespace model {
 
     CoilCoolingDXTwoSpeed(const Model& model);
 
-    virtual ~CoilCoolingDXTwoSpeed() {}
+    virtual ~CoilCoolingDXTwoSpeed() = default;
 
     //@}
 

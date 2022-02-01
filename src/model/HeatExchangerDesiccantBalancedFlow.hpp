@@ -57,7 +57,7 @@ namespace model {
     explicit HeatExchangerDesiccantBalancedFlow(const Model& model,
                                                 const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
 
-    virtual ~HeatExchangerDesiccantBalancedFlow() {}
+    virtual ~HeatExchangerDesiccantBalancedFlow() = default;
 
     static IddObjectType iddObjectType();
 

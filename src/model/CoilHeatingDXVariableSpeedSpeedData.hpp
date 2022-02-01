@@ -59,7 +59,7 @@ namespace model {
                                                  const Curve& energyInputRatioFunctionofTemperatureCurve,
                                                  const Curve& energyInputRatioFunctionofAirFlowFractionCurve);
 
-    virtual ~CoilHeatingDXVariableSpeedSpeedData() {}
+    virtual ~CoilHeatingDXVariableSpeedSpeedData() = default;
 
     //@}
 

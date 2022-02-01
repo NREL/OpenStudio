@@ -53,7 +53,7 @@ namespace model {
     /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = 1.0\f$. Sets the range for x to [0.0,1.0]. */
     explicit CurveExponent(const Model& model);
 
-    virtual ~CurveExponent() {}
+    virtual ~CurveExponent() = default;
 
     //@}
 

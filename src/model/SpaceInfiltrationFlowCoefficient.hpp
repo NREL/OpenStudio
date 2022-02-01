@@ -53,7 +53,7 @@ namespace model {
 
     explicit SpaceInfiltrationFlowCoefficient(const Model& model);
 
-    virtual ~SpaceInfiltrationFlowCoefficient() {}
+    virtual ~SpaceInfiltrationFlowCoefficient() = default;
 
     //@}
 

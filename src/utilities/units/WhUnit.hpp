@@ -94,7 +94,7 @@ class UTILITIES_API WhUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   WhUnit(const std::string& scaleAbbreviation, const WhExpnt& exponents = WhExpnt(), const std::string& prettyString = "");
 
-  virtual ~WhUnit() {}
+  virtual ~WhUnit() = default;
 
   //@}
  protected:

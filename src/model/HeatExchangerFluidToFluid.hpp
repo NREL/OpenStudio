@@ -55,7 +55,7 @@ namespace model {
 
     explicit HeatExchangerFluidToFluid(const Model& model);
 
-    virtual ~HeatExchangerFluidToFluid() {}
+    virtual ~HeatExchangerFluidToFluid() = default;
 
     //@}
 

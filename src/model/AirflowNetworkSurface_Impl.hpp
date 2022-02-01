@@ -57,7 +57,7 @@ namespace model {
 
       AirflowNetworkSurface_Impl(const AirflowNetworkSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkSurface_Impl() {}
+      virtual ~AirflowNetworkSurface_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -53,7 +53,7 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorFuelEquipmentDefinition(const Model& model);
 
-    virtual ~ExteriorFuelEquipmentDefinition() {}
+    virtual ~ExteriorFuelEquipmentDefinition() = default;
 
     //@}
 

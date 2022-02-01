@@ -56,7 +56,7 @@ namespace model {
     explicit AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const Model& model, const HVACComponent& fan, const HVACComponent& coolingCoil,
                                                            const HVACComponent& heatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass() {}
+    virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass() = default;
 
     //@}
 

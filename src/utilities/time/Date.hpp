@@ -211,7 +211,7 @@ class UTILITIES_API Date
   Date();
 
   /// destructor
-  ~Date() {}
+  ~Date() = default;
 
   /// from impl
   Date(const ImplType& impl);

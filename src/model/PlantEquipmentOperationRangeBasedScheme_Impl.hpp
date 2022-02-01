@@ -50,7 +50,7 @@ namespace model {
 
       PlantEquipmentOperationRangeBasedScheme_Impl(const PlantEquipmentOperationRangeBasedScheme_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~PlantEquipmentOperationRangeBasedScheme_Impl() {}
+      virtual ~PlantEquipmentOperationRangeBasedScheme_Impl() = default;
 
       bool addLoadRange(double upperLimit, const std::vector<HVACComponent>& equipment);
 

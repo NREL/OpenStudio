@@ -55,7 +55,7 @@ namespace model {
 
     explicit SetpointManagerSingleZoneCooling(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneCooling() {}
+    virtual ~SetpointManagerSingleZoneCooling() = default;
 
     //@}
 

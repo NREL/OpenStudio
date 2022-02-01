@@ -54,7 +54,7 @@ namespace model {
 
       GeneratorFuelCellInverter_Impl(const GeneratorFuelCellInverter_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelCellInverter_Impl() {}
+      virtual ~GeneratorFuelCellInverter_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

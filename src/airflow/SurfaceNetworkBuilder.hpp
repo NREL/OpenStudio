@@ -66,7 +66,7 @@ namespace airflow {
     /** Construct a new object. */
     explicit SurfaceNetworkBuilder(ProgressBar* progressBar = nullptr);
     /** Destroy the translator.*/
-    virtual ~SurfaceNetworkBuilder() {}
+    virtual ~SurfaceNetworkBuilder() = default;
 
     //@}
     /** @name Network Construction Functions */

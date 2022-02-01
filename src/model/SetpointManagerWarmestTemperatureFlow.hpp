@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerWarmestTemperatureFlow(const Model& model);
 
-    virtual ~SetpointManagerWarmestTemperatureFlow() {}
+    virtual ~SetpointManagerWarmestTemperatureFlow() = default;
 
     //@}
 

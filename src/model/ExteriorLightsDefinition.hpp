@@ -53,7 +53,7 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorLightsDefinition(const Model& model);
 
-    virtual ~ExteriorLightsDefinition() {}
+    virtual ~ExteriorLightsDefinition() = default;
 
     //@}
 

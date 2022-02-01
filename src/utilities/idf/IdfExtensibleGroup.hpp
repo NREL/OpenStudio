@@ -58,7 +58,7 @@ class UTILITIES_API IdfExtensibleGroup
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~IdfExtensibleGroup() {}
+  virtual ~IdfExtensibleGroup() = default;
 
   //@}
   /** @name Getters */

@@ -52,7 +52,7 @@ namespace model {
    public:
     Generator(IddObjectType type, const Model& model);
 
-    virtual ~Generator() {}
+    virtual ~Generator() = default;
 
     std::string generatorObjectType() const;
 

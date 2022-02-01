@@ -58,7 +58,7 @@ namespace model {
     /** Construct an occupant ventilation control object with a low temperature curve. */
     AirflowNetworkOccupantVentilationControl(const Model& model, const Curve& curve);
 
-    virtual ~AirflowNetworkOccupantVentilationControl() {}
+    virtual ~AirflowNetworkOccupantVentilationControl() = default;
 
     //@}
 

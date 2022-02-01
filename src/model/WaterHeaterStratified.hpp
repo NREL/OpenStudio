@@ -56,7 +56,7 @@ namespace model {
 
     explicit WaterHeaterStratified(const Model& model);
 
-    virtual ~WaterHeaterStratified() {}
+    virtual ~WaterHeaterStratified() = default;
 
     //@}
 

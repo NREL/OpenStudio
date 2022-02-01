@@ -66,7 +66,7 @@ namespace model {
     explicit GeneratorFuelCellWaterSupply(const Model& model, const CurveQuadratic& flowRateCurve, const CurveCubic& pumpPowerCurve,
                                           const Node& waterTempNode, const std::string& waterTempMode);
 
-    virtual ~GeneratorFuelCellWaterSupply() {}
+    virtual ~GeneratorFuelCellWaterSupply() = default;
 
     //@}
 

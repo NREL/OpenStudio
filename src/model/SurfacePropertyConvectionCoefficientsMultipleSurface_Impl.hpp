@@ -55,7 +55,7 @@ namespace model {
       SurfacePropertyConvectionCoefficientsMultipleSurface_Impl(const SurfacePropertyConvectionCoefficientsMultipleSurface_Impl& other,
                                                                 Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface_Impl() {}
+      virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

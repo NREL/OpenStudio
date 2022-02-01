@@ -52,7 +52,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Curve() {}
+    virtual ~Curve() = default;
 
     //@}
     /** @name Other */

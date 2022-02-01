@@ -55,7 +55,7 @@ namespace model {
       Version_Impl(const Version_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~Version_Impl() {}
+      virtual ~Version_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

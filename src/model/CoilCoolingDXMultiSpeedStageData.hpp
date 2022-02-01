@@ -61,7 +61,7 @@ namespace model {
     /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
     explicit CoilCoolingDXMultiSpeedStageData(const Model& model);
 
-    virtual ~CoilCoolingDXMultiSpeedStageData() {}
+    virtual ~CoilCoolingDXMultiSpeedStageData() = default;
 
     //@}
 

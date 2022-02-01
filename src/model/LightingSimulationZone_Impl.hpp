@@ -55,7 +55,7 @@ namespace model {
 
       LightingSimulationZone_Impl(const LightingSimulationZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LightingSimulationZone_Impl() {}
+      virtual ~LightingSimulationZone_Impl() = default;
 
       //@}
       virtual const std::vector<std::string>& outputVariableNames() const override;

@@ -55,7 +55,7 @@ namespace model {
 
     explicit ThermalStorageIceDetailed(const Model& model);
 
-    virtual ~ThermalStorageIceDetailed() {}
+    virtual ~ThermalStorageIceDetailed() = default;
 
     //@}
 

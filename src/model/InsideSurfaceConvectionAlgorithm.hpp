@@ -51,7 +51,7 @@ namespace model {
   class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject
   {
    public:
-    virtual ~InsideSurfaceConvectionAlgorithm() {}
+    virtual ~InsideSurfaceConvectionAlgorithm() = default;
 
     /** @name Static Methods */
     //@{

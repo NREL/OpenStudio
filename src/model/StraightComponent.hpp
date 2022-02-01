@@ -54,7 +54,7 @@ namespace model {
    public:
     StraightComponent(IddObjectType type, const Model& model);
 
-    virtual ~StraightComponent() {}
+    virtual ~StraightComponent() = default;
 
     std::vector<openstudio::IdfObject> remove();
 

@@ -54,7 +54,7 @@ namespace model {
   class MODEL_API WaterToAirComponent : public HVACComponent
   {
    public:
-    virtual ~WaterToAirComponent() {}
+    virtual ~WaterToAirComponent() = default;
 
     /** Returns the air inlet port. **/
     virtual unsigned airInletPort() const;

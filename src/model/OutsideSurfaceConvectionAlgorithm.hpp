@@ -51,7 +51,7 @@ namespace model {
   class MODEL_API OutsideSurfaceConvectionAlgorithm : public ModelObject
   {
    public:
-    virtual ~OutsideSurfaceConvectionAlgorithm() {}
+    virtual ~OutsideSurfaceConvectionAlgorithm() = default;
 
     /** @name Static Methods */
     //@{

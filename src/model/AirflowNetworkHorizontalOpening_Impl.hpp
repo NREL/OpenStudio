@@ -51,7 +51,7 @@ namespace model {
 
       AirflowNetworkHorizontalOpening_Impl(const AirflowNetworkHorizontalOpening_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkHorizontalOpening_Impl() {}
+      virtual ~AirflowNetworkHorizontalOpening_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

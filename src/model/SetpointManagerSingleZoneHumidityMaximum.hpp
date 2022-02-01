@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerSingleZoneHumidityMaximum(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneHumidityMaximum() {}
+    virtual ~SetpointManagerSingleZoneHumidityMaximum() = default;
 
     //@}
 

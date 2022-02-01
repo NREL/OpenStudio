@@ -52,7 +52,7 @@ namespace model {
 
     explicit AirflowNetworkDuct(const Model& model);
 
-    virtual ~AirflowNetworkDuct() {}
+    virtual ~AirflowNetworkDuct() = default;
 
     //@}
 

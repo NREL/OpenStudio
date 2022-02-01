@@ -53,7 +53,7 @@ namespace model {
 
     explicit SiteGroundTemperatureShallow(Model& model);
 
-    virtual ~SiteGroundTemperatureShallow() {}
+    virtual ~SiteGroundTemperatureShallow() = default;
 
     //@}
     /** @name Static Methods */

@@ -55,7 +55,7 @@ namespace model {
 
     explicit ZoneVentilationDesignFlowRate(const Model& model);
 
-    virtual ~ZoneVentilationDesignFlowRate() {}
+    virtual ~ZoneVentilationDesignFlowRate() = default;
 
     //@}
 

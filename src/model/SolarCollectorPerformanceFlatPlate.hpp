@@ -53,7 +53,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SolarCollectorPerformanceFlatPlate() {}
+    virtual ~SolarCollectorPerformanceFlatPlate() = default;
 
     //@}
 

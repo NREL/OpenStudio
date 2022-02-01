@@ -58,7 +58,7 @@ namespace model {
 
       GeneratorPhotovoltaic_Impl(const GeneratorPhotovoltaic_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorPhotovoltaic_Impl() {}
+      virtual ~GeneratorPhotovoltaic_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -57,7 +57,7 @@ namespace model {
     AirflowNetworkSimpleOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
                                 double minimumDensityDifferenceforTwoWayFlow, double dischargeCoefficient);
 
-    virtual ~AirflowNetworkSimpleOpening() {}
+    virtual ~AirflowNetworkSimpleOpening() = default;
 
     //@}
 

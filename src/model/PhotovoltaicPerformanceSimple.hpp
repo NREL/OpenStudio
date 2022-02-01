@@ -54,7 +54,7 @@ namespace model {
 
     explicit PhotovoltaicPerformanceSimple(const Model& model);
 
-    virtual ~PhotovoltaicPerformanceSimple() {}
+    virtual ~PhotovoltaicPerformanceSimple() = default;
 
     //@}
 

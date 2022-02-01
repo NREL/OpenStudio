@@ -55,7 +55,7 @@ namespace model {
    public:
     explicit ControllerOutdoorAir(const Model& model);
 
-    virtual ~ControllerOutdoorAir() {}
+    virtual ~ControllerOutdoorAir() = default;
 
     static IddObjectType iddObjectType();
 

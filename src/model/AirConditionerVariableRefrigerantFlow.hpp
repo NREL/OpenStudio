@@ -56,7 +56,7 @@ namespace model {
    public:
     explicit AirConditionerVariableRefrigerantFlow(const Model& model);
 
-    virtual ~AirConditionerVariableRefrigerantFlow() {}
+    virtual ~AirConditionerVariableRefrigerantFlow() = default;
 
     static IddObjectType iddObjectType();
 

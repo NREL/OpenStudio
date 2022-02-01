@@ -56,7 +56,7 @@ namespace model {
 
     explicit DefaultConstructionSet(const Model& model);
 
-    virtual ~DefaultConstructionSet() {}
+    virtual ~DefaultConstructionSet() = default;
 
     //@}
     /** @name Static Methods */

@@ -259,7 +259,7 @@ namespace osversion {
     {
       VersionString endVersion;
       InterobjectIssueInformation(const VersionString& t_endVersion) : endVersion(t_endVersion) {}
-      virtual ~InterobjectIssueInformation() {}
+      virtual ~InterobjectIssueInformation() = default;
     };
 
     std::vector<std::shared_ptr<InterobjectIssueInformation>> fixInterobjectIssuesStage1(model::Model& model, const VersionString& startVersion);
@@ -277,7 +277,7 @@ namespace osversion {
       std::set<model::ModelObject> refactoredUsers;
 
       InterobjectIssueInformation_0_8_3_to_0_8_4() : InterobjectIssueInformation(VersionString("0.8.4")) {}
-      virtual ~InterobjectIssueInformation_0_8_3_to_0_8_4() {}
+      virtual ~InterobjectIssueInformation_0_8_3_to_0_8_4() = default;
     };
 
     std::shared_ptr<InterobjectIssueInformation> fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model);

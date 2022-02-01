@@ -61,7 +61,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     CFMUnit_Impl(const std::string& scaleAbbreviation, const CFMExpnt& exponents = CFMExpnt(), const std::string& prettyString = "");
 
-    virtual ~CFMUnit_Impl() {}
+    virtual ~CFMUnit_Impl() = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

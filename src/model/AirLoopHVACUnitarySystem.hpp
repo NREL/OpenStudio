@@ -57,7 +57,7 @@ namespace model {
 
     explicit AirLoopHVACUnitarySystem(const Model& model);
 
-    virtual ~AirLoopHVACUnitarySystem() {}
+    virtual ~AirLoopHVACUnitarySystem() = default;
 
     //@}
 

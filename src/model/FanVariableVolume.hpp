@@ -58,7 +58,7 @@ namespace model {
 
     FanVariableVolume(const Model& model);
 
-    virtual ~FanVariableVolume() {}
+    virtual ~FanVariableVolume() = default;
 
     //@}
 

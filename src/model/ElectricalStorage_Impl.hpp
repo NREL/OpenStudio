@@ -54,7 +54,7 @@ namespace model {
 
       ElectricalStorage_Impl(const ElectricalStorage_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~ElectricalStorage_Impl() {}
+      virtual ~ElectricalStorage_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

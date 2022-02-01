@@ -59,7 +59,7 @@ namespace model {
 
     explicit CurveTriquadratic(const Model& model);
 
-    virtual ~CurveTriquadratic() {}
+    virtual ~CurveTriquadratic() = default;
 
     //@}
 

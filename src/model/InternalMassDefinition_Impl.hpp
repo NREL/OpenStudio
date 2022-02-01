@@ -55,7 +55,7 @@ namespace model {
 
       InternalMassDefinition_Impl(const InternalMassDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~InternalMassDefinition_Impl() {}
+      virtual ~InternalMassDefinition_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -68,7 +68,7 @@ namespace model {
 
     explicit ThermalZone(const Model& model);
 
-    virtual ~ThermalZone() {}
+    virtual ~ThermalZone() = default;
 
     //@}
 

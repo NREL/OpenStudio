@@ -54,7 +54,7 @@ namespace model {
 
     explicit PlantComponentTemperatureSource(const Model& model);
 
-    virtual ~PlantComponentTemperatureSource() {}
+    virtual ~PlantComponentTemperatureSource() = default;
 
     //@}
 

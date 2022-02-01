@@ -92,7 +92,7 @@ class InternalMass; */
    */
     explicit ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
 
-    virtual ~ZonePropertyUserViewFactorsBySurfaceName() {}
+    virtual ~ZonePropertyUserViewFactorsBySurfaceName() = default;
 
     //@}
 

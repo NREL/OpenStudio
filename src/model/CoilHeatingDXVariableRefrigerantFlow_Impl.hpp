@@ -52,7 +52,7 @@ namespace model {
 
       CoilHeatingDXVariableRefrigerantFlow_Impl(const CoilHeatingDXVariableRefrigerantFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingDXVariableRefrigerantFlow_Impl() {}
+      virtual ~CoilHeatingDXVariableRefrigerantFlow_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

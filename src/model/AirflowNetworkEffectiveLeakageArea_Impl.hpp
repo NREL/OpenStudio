@@ -51,7 +51,7 @@ namespace model {
 
       AirflowNetworkEffectiveLeakageArea_Impl(const AirflowNetworkEffectiveLeakageArea_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkEffectiveLeakageArea_Impl() {}
+      virtual ~AirflowNetworkEffectiveLeakageArea_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

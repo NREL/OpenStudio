@@ -55,7 +55,7 @@ namespace model {
 
     explicit SolarCollectorIntegralCollectorStorage(const Model& model);
 
-    virtual ~SolarCollectorIntegralCollectorStorage() {}
+    virtual ~SolarCollectorIntegralCollectorStorage() = default;
 
     //@}
 

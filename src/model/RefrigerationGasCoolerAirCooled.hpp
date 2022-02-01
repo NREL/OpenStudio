@@ -55,7 +55,7 @@ namespace model {
 
     explicit RefrigerationGasCoolerAirCooled(const Model& model);
 
-    virtual ~RefrigerationGasCoolerAirCooled() {}
+    virtual ~RefrigerationGasCoolerAirCooled() = default;
 
     //@}
 

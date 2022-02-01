@@ -55,7 +55,7 @@ namespace model {
 
       SetpointManagerSingleZoneCooling_Impl(const SetpointManagerSingleZoneCooling_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerSingleZoneCooling_Impl() {}
+      virtual ~SetpointManagerSingleZoneCooling_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

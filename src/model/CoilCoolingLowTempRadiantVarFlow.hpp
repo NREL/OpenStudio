@@ -56,7 +56,7 @@ namespace model {
 
     explicit CoilCoolingLowTempRadiantVarFlow(const Model& model, Schedule& coolingControlTemperatureSchedule);
 
-    virtual ~CoilCoolingLowTempRadiantVarFlow() {}
+    virtual ~CoilCoolingLowTempRadiantVarFlow() = default;
 
     //@}
 

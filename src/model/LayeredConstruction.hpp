@@ -53,7 +53,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~LayeredConstruction() {}
+    virtual ~LayeredConstruction() = default;
 
     //@}
     /** @name Static Methods */

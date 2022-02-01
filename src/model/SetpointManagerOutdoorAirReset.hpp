@@ -52,7 +52,7 @@ namespace model {
    public:
     explicit SetpointManagerOutdoorAirReset(const Model& model);
 
-    virtual ~SetpointManagerOutdoorAirReset() {}
+    virtual ~SetpointManagerOutdoorAirReset() = default;
 
     static IddObjectType iddObjectType();
 

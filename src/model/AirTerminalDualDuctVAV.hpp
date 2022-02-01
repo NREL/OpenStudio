@@ -56,7 +56,7 @@ namespace model {
 
     explicit AirTerminalDualDuctVAV(const Model& model);
 
-    virtual ~AirTerminalDualDuctVAV() {}
+    virtual ~AirTerminalDualDuctVAV() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctSeriesPIUReheat(const Model& model, HVACComponent& fan, HVACComponent& reheatCoil);
 
-    virtual ~AirTerminalSingleDuctSeriesPIUReheat() {}
+    virtual ~AirTerminalSingleDuctSeriesPIUReheat() = default;
 
     //@}
 

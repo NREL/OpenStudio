@@ -52,7 +52,7 @@ namespace model {
 
     explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model, const std::string& fMUVariableName, double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() = default;
 
     //@}
 

@@ -57,7 +57,7 @@ namespace model {
     /// Constructor with vector of material layers, throws if opaqueMaterials size < 2.
     explicit ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials);
 
-    virtual ~ConstructionWithInternalSource() {}
+    virtual ~ConstructionWithInternalSource() = default;
 
     /// The source is located after layer number.  Must be >= 1 and <= numLayers-1.
     /// Defaults to 1.

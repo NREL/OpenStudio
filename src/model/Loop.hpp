@@ -116,7 +116,7 @@ waterCoolingCoil.addToSplitter( plantLoop.demandSplitter() );
   class MODEL_API Loop : public ParentObject
   {
    public:
-    virtual ~Loop(){};
+    virtual ~Loop() = default;
 
     virtual Node supplyInletNode() const;
 

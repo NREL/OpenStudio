@@ -55,7 +55,7 @@ namespace model {
 
     explicit HotWaterEquipmentDefinition(const Model& model);
 
-    virtual ~HotWaterEquipmentDefinition() {}
+    virtual ~HotWaterEquipmentDefinition() = default;
 
     //@}
     /** @name Static Methods */

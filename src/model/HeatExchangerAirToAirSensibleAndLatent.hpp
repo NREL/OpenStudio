@@ -53,7 +53,7 @@ namespace model {
    public:
     explicit HeatExchangerAirToAirSensibleAndLatent(const Model& model);
 
-    virtual ~HeatExchangerAirToAirSensibleAndLatent() {}
+    virtual ~HeatExchangerAirToAirSensibleAndLatent() = default;
 
     static IddObjectType iddObjectType();
 

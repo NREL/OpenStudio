@@ -63,7 +63,7 @@ namespace model {
    */
     explicit AvailabilityManagerAssignmentList(const Loop& loop);
 
-    virtual ~AvailabilityManagerAssignmentList() {}
+    virtual ~AvailabilityManagerAssignmentList() = default;
 
     //@}
 

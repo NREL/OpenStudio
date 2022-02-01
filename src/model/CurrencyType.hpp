@@ -50,7 +50,7 @@ namespace model {
   {
 
    public:
-    virtual ~CurrencyType() {}
+    virtual ~CurrencyType() = default;
 
     /** @name Getters */
     //@{

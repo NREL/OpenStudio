@@ -51,7 +51,7 @@ namespace model {
 
       AirflowNetworkComponent_Impl(const AirflowNetworkComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~AirflowNetworkComponent_Impl() {}
+      virtual ~AirflowNetworkComponent_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -53,7 +53,7 @@ namespace model {
 
       FuelFactors_Impl(const FuelFactors_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FuelFactors_Impl() {}
+      virtual ~FuelFactors_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

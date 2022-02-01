@@ -51,7 +51,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ConstructionBase() {}
+    virtual ~ConstructionBase() = default;
 
     //@}
     /** @name Getters */

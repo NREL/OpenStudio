@@ -57,7 +57,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeReheat() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeReheat() = default;
 
     //@}
 

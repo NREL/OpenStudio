@@ -56,7 +56,7 @@ namespace model {
       ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl(const ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl& other,
                                                                  Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl() {}
+      virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl() = default;
 
       //@}
       /** @name Getters */

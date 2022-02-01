@@ -55,7 +55,7 @@ namespace model {
     AirflowNetworkHorizontalOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
                                     double slopingPlaneAngle, double dischargeCoefficient);
 
-    virtual ~AirflowNetworkHorizontalOpening() {}
+    virtual ~AirflowNetworkHorizontalOpening() = default;
 
     //@}
 

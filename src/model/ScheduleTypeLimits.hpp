@@ -55,7 +55,7 @@ namespace model {
 
     explicit ScheduleTypeLimits(const Model& model);
 
-    virtual ~ScheduleTypeLimits() {}
+    virtual ~ScheduleTypeLimits() = default;
 
     //@}
 

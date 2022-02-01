@@ -52,7 +52,7 @@ namespace model {
 
       CoolingTowerPerformanceYorkCalc_Impl(const CoolingTowerPerformanceYorkCalc_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoolingTowerPerformanceYorkCalc_Impl() {}
+      virtual ~CoolingTowerPerformanceYorkCalc_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

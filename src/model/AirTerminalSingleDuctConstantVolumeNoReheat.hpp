@@ -64,7 +64,7 @@ namespace model {
    *  model.  The object is fully initialized with all companion objects. */
     AirTerminalSingleDuctConstantVolumeNoReheat(const Model& model, Schedule& availabilitySchedule);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeNoReheat() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeNoReheat() = default;
 
     //@}
 

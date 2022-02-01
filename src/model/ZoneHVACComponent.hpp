@@ -53,7 +53,7 @@ namespace model {
   class MODEL_API ZoneHVACComponent : public HVACComponent
   {
    public:
-    virtual ~ZoneHVACComponent() {}
+    virtual ~ZoneHVACComponent() = default;
 
     /** Returns the inlet port.  For a ZoneHVACComponent this port is typically connected
    *  to a zone exhaust node. **/

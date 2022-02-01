@@ -82,7 +82,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~PlanarSurface() {}
+    virtual ~PlanarSurface() = default;
 
     //@}
     /** @name Getters */

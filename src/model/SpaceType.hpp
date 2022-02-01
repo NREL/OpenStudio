@@ -73,7 +73,7 @@ namespace model {
 
     explicit SpaceType(const Model& model);
 
-    virtual ~SpaceType() {}
+    virtual ~SpaceType() = default;
 
     //@}
 

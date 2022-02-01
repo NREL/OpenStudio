@@ -54,7 +54,7 @@ namespace model {
     /** Sets all coefficients to 0.0 and sets the range for x to [0.0,1.0]. */
     explicit CurveDoubleExponentialDecay(const Model& model);
 
-    virtual ~CurveDoubleExponentialDecay() {}
+    virtual ~CurveDoubleExponentialDecay() = default;
 
     //@}
 

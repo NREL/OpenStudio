@@ -60,7 +60,7 @@ namespace model {
       ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl(const ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl() {}
+      virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

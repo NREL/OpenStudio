@@ -54,7 +54,7 @@ namespace model {
                    double backSideSlatBeamSolarReflectance = 0.5, double frontSideSlatDiffuseSolarReflectance = 0.5,
                    double backSideSlatDiffuseSolarReflectance = 0.5, double slatBeamVisibleTransmittance = 0.0);
 
-    virtual ~Blind() {}
+    virtual ~Blind() = default;
 
     //@}
 

@@ -58,7 +58,7 @@ namespace model {
 
     ScheduleFile(const ExternalFile& externalfile, int column = 1, int rowsToSkip = 0);
 
-    virtual ~ScheduleFile() {}
+    virtual ~ScheduleFile() = default;
 
     //@}
 

@@ -58,7 +58,7 @@ namespace model {
 
     explicit WaterHeaterMixed(const Model& model);
 
-    virtual ~WaterHeaterMixed() {}
+    virtual ~WaterHeaterMixed() = default;
 
     //@}
 

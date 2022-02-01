@@ -58,7 +58,7 @@ namespace detail {
 
     WorkspaceObjectOrder_Impl(const std::vector<IddObjectType>& iddOrder, const ObjectGetter& objectGetter);
 
-    virtual ~WorkspaceObjectOrder_Impl() {}
+    virtual ~WorkspaceObjectOrder_Impl() = default;
 
     // GETTERS AND SETTERS
 
@@ -173,7 +173,7 @@ class Workspace;  // forward declaration
 class UTILITIES_API WorkspaceObjectOrder
 {
  public:
-  virtual ~WorkspaceObjectOrder() {}
+  virtual ~WorkspaceObjectOrder() = default;
 
   // GETTERS AND SETTERS
 

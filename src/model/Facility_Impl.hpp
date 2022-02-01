@@ -62,7 +62,7 @@ namespace model {
 
       Facility_Impl(const Facility_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Facility_Impl() {}
+      virtual ~Facility_Impl() = default;
 
       //@}
 

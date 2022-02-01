@@ -54,7 +54,7 @@ namespace model {
 
     explicit RefrigerationSubcoolerLiquidSuction(const Model& model);
 
-    virtual ~RefrigerationSubcoolerLiquidSuction() {}
+    virtual ~RefrigerationSubcoolerLiquidSuction() = default;
 
     //@}
 

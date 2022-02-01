@@ -82,7 +82,7 @@ namespace model {
     */
     explicit TableMultiVariableLookup(const Model& model, int numberofIndependentVariables);
 
-    virtual ~TableMultiVariableLookup() {}
+    virtual ~TableMultiVariableLookup() = default;
 
     //@}
 

@@ -77,7 +77,7 @@ namespace model {
   class MODEL_API HVACComponent : public ParentObject
   {
    public:
-    virtual ~HVACComponent() {}
+    virtual ~HVACComponent() = default;
 
     /** Returns the optional Loop object that the HVAC component is attached to.
    *  If the component is part of an outdoor air system, the containing AirLoopHVAC will be returned.

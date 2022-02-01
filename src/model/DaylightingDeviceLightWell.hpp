@@ -58,7 +58,7 @@ namespace model {
 
     explicit DaylightingDeviceLightWell(const SubSurface& subSurface);
 
-    virtual ~DaylightingDeviceLightWell() {}
+    virtual ~DaylightingDeviceLightWell() = default;
 
     //@}
     /** @name Static Methods */

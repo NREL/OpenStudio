@@ -56,7 +56,7 @@ namespace model {
       // Clone copy constructor.
       Glazing_Impl(const Glazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Glazing_Impl() {}
+      virtual ~Glazing_Impl() = default;
 
       //@}
 

@@ -63,7 +63,7 @@ namespace model {
 
       RefrigerationWalkIn_Impl(const RefrigerationWalkIn_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationWalkIn_Impl() {}
+      virtual ~RefrigerationWalkIn_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

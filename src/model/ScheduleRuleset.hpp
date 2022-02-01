@@ -66,7 +66,7 @@ namespace model {
   *  and assigns it to be the defaultDaySchedule(). */
     ScheduleRuleset(const Model& model, double value);
 
-    virtual ~ScheduleRuleset() {}
+    virtual ~ScheduleRuleset() = default;
 
     //@}
 

@@ -102,7 +102,7 @@ namespace model {
    *  Any unwrapped IDD types will be wrapped with GenericModelObject. */
     explicit Model(const openstudio::Workspace& workspace);
 
-    virtual ~Model() {}
+    virtual ~Model() = default;
 
     //@}
     /** @name Getters */

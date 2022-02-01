@@ -54,7 +54,7 @@ namespace model {
   class MODEL_API ShadowCalculation : public ModelObject
   {
    public:
-    virtual ~ShadowCalculation() {}
+    virtual ~ShadowCalculation() = default;
 
     /** @name Static Methods */
     //@{

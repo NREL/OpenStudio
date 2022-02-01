@@ -61,7 +61,7 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorFuelEquipment() {}
+    virtual ~ExteriorFuelEquipment() = default;
 
     //@}
 

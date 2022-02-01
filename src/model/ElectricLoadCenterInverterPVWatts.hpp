@@ -55,7 +55,7 @@ namespace model {
 
     explicit ElectricLoadCenterInverterPVWatts(const Model& model);
 
-    virtual ~ElectricLoadCenterInverterPVWatts() {}
+    virtual ~ElectricLoadCenterInverterPVWatts() = default;
 
     //@}
 

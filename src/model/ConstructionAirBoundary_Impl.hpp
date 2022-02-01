@@ -54,7 +54,7 @@ namespace model {
 
       ConstructionAirBoundary_Impl(const ConstructionAirBoundary_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ConstructionAirBoundary_Impl() {}
+      virtual ~ConstructionAirBoundary_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

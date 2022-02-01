@@ -54,7 +54,7 @@ namespace model {
                                                                    const std::string& actuatedComponentControlType,
                                                                    const std::string& fMUVariableName, double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportToActuator() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportToActuator() = default;
 
     //@}
 

@@ -52,7 +52,7 @@ namespace model {
 
       ScheduleFixedInterval_Impl(const ScheduleFixedInterval_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleFixedInterval_Impl() {}
+      virtual ~ScheduleFixedInterval_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

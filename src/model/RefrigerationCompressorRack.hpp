@@ -59,7 +59,7 @@ namespace model {
 
     explicit RefrigerationCompressorRack(const Model& model);
 
-    virtual ~RefrigerationCompressorRack() {}
+    virtual ~RefrigerationCompressorRack() = default;
 
     //@}
 

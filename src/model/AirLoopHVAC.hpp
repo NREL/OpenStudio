@@ -84,7 +84,7 @@ namespace model {
    */
     explicit AirLoopHVAC(Model& model, bool dualDuct = false);
 
-    virtual ~AirLoopHVAC() {}
+    virtual ~AirLoopHVAC() = default;
 
     boost::optional<double> designSupplyAirFlowRate() const;
 

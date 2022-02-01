@@ -55,7 +55,7 @@ namespace model {
       PlantEquipmentOperationOutdoorDewpointDifference_Impl(const PlantEquipmentOperationOutdoorDewpointDifference_Impl& other, Model_Impl* model,
                                                             bool keepHandle);
 
-      virtual ~PlantEquipmentOperationOutdoorDewpointDifference_Impl() {}
+      virtual ~PlantEquipmentOperationOutdoorDewpointDifference_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

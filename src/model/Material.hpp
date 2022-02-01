@@ -54,7 +54,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Material() {}
+    virtual ~Material() = default;
 
     //@}
     /** @name Getters */

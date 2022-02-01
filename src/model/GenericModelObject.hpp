@@ -57,7 +57,7 @@ namespace model {
   class MODEL_API GenericModelObject : public ModelObject
   {
    public:
-    virtual ~GenericModelObject() {}
+    virtual ~GenericModelObject() = default;
 
    protected:
     /// @cond

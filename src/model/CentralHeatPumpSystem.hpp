@@ -59,7 +59,7 @@ namespace model {
    */
     explicit CentralHeatPumpSystem(const Model& model);
 
-    virtual ~CentralHeatPumpSystem() {}
+    virtual ~CentralHeatPumpSystem() = default;
 
     //@}
 

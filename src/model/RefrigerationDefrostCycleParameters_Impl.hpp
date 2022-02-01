@@ -54,7 +54,7 @@ namespace model {
 
       RefrigerationDefrostCycleParameters_Impl(const RefrigerationDefrostCycleParameters_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationDefrostCycleParameters_Impl() {}
+      virtual ~RefrigerationDefrostCycleParameters_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

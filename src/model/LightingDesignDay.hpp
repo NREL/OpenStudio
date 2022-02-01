@@ -56,7 +56,7 @@ namespace model {
 
     LightingDesignDay(const std::string& cieSkyModel, const openstudio::Date& date, const Model& model);
 
-    virtual ~LightingDesignDay() {}
+    virtual ~LightingDesignDay() = default;
 
     //@}
     /** @name Static Methods */

@@ -61,7 +61,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Site() {}
+    virtual ~Site() = default;
 
     //@}
     /** @name Static Methods */

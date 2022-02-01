@@ -48,7 +48,7 @@ namespace model {
   class MODEL_API ExteriorLoadDefinition : public ResourceObject
   {
    public:
-    virtual ~ExteriorLoadDefinition() {}
+    virtual ~ExteriorLoadDefinition() = default;
 
     /** Returns all instances (ExteriorLoad) of this definition. */
     std::vector<ExteriorLoadInstance> instances() const;

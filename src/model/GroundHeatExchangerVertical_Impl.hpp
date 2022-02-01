@@ -50,7 +50,7 @@ namespace model {
 
       GroundHeatExchangerVertical_Impl(const GroundHeatExchangerVertical_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GroundHeatExchangerVertical_Impl() {}
+      virtual ~GroundHeatExchangerVertical_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

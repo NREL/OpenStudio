@@ -74,7 +74,7 @@ namespace model {
 
     explicit AirflowNetworkDuctViewFactors(const Model& model);
 
-    virtual ~AirflowNetworkDuctViewFactors() {}
+    virtual ~AirflowNetworkDuctViewFactors() = default;
 
     //@}
 

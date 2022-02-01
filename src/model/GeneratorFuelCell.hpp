@@ -85,7 +85,7 @@ namespace model {
 
     explicit GeneratorFuelCell(const Model& model);
 
-    virtual ~GeneratorFuelCell() {}
+    virtual ~GeneratorFuelCell() = default;
 
     //@}
 

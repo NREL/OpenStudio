@@ -51,7 +51,7 @@ namespace model {
       Timestep_Impl(const Timestep_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~Timestep_Impl() {}
+      virtual ~Timestep_Impl() = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;

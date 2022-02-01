@@ -60,7 +60,7 @@ namespace model {
     // ETH@20110615 This constructor should probably be protected, with Model (etc.) as a friend.
     ComponentWatcher(ComponentData& componentData);
 
-    virtual ~ComponentWatcher() {}
+    virtual ~ComponentWatcher() = default;
 
     //@}
     /** @name Getters */

@@ -58,7 +58,7 @@ namespace model {
     ZoneHVACWaterToAirHeatPump(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil,
                                HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-    virtual ~ZoneHVACWaterToAirHeatPump() {}
+    virtual ~ZoneHVACWaterToAirHeatPump() = default;
 
     //@}
 

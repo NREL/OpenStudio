@@ -63,7 +63,7 @@ namespace model {
    * for this object to be ForwardTranslated, so you will have to do it manually and use setCoolingCoil and/or setHeatingCoil */
     AirTerminalSingleDuctConstantVolumeFourPipeBeam(const Model& model);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam() = default;
 
     //@}
 

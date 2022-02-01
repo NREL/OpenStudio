@@ -56,7 +56,7 @@ namespace model {
 
     explicit CoilCoolingFourPipeBeam(const Model& model);
 
-    virtual ~CoilCoolingFourPipeBeam() {}
+    virtual ~CoilCoolingFourPipeBeam() = default;
 
     //@}
 

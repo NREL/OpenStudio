@@ -52,7 +52,7 @@ namespace model {
 
     explicit CoilCoolingCooledBeam(const Model& model);
 
-    virtual ~CoilCoolingCooledBeam() {}
+    virtual ~CoilCoolingCooledBeam() = default;
 
     //@}
 

@@ -79,7 +79,7 @@ namespace model {
 
     explicit EnergyManagementSystemMeteredOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
-    virtual ~EnergyManagementSystemMeteredOutputVariable() {}
+    virtual ~EnergyManagementSystemMeteredOutputVariable() = default;
 
     //@}
 

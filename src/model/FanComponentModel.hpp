@@ -66,7 +66,7 @@ namespace model {
                                const Curve& normalizedDimensionlessAirflowCurveNonStallRegion,
                                const Curve& normalizedDimensionlessAirflowCurveStallRegion);
 
-    virtual ~FanComponentModel() {}
+    virtual ~FanComponentModel() = default;
 
     //@}
 

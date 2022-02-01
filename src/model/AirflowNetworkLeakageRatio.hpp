@@ -52,7 +52,7 @@ namespace model {
 
     explicit AirflowNetworkLeakageRatio(const Model& model);
 
-    virtual ~AirflowNetworkLeakageRatio() {}
+    virtual ~AirflowNetworkLeakageRatio() = default;
 
     //@}
 

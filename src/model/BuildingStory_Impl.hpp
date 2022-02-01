@@ -62,7 +62,7 @@ namespace model {
 
       BuildingStory_Impl(const BuildingStory_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~BuildingStory_Impl() {}
+      virtual ~BuildingStory_Impl() = default;
 
       //@}
 

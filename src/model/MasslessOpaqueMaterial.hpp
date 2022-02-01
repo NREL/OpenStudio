@@ -52,7 +52,7 @@ namespace model {
 
     explicit MasslessOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thermalResistance = 0.1);
 
-    virtual ~MasslessOpaqueMaterial() {}
+    virtual ~MasslessOpaqueMaterial() = default;
 
     //@}
 

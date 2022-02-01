@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputControlFiles() {}
+    virtual ~OutputControlFiles() = default;
 
     //@}
 

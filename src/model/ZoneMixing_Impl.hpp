@@ -55,7 +55,7 @@ namespace model {
 
       ZoneMixing_Impl(const ZoneMixing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneMixing_Impl() {}
+      virtual ~ZoneMixing_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

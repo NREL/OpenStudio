@@ -66,7 +66,7 @@ namespace model {
    *  model. */
     SetpointManagerScheduled(const Model& model, const std::string& controlVariable, Schedule& setpointSchedule);
 
-    virtual ~SetpointManagerScheduled() {}
+    virtual ~SetpointManagerScheduled() = default;
 
     //@}
 

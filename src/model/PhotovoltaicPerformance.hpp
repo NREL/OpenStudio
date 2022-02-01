@@ -48,7 +48,7 @@ namespace model {
    public:
     PhotovoltaicPerformance(IddObjectType type, const Model& model);
 
-    virtual ~PhotovoltaicPerformance() {}
+    virtual ~PhotovoltaicPerformance() = default;
 
    protected:
     friend class Model;

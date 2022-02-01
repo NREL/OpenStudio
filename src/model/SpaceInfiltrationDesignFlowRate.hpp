@@ -54,7 +54,7 @@ namespace model {
 
     explicit SpaceInfiltrationDesignFlowRate(const Model& model);
 
-    virtual ~SpaceInfiltrationDesignFlowRate() {}
+    virtual ~SpaceInfiltrationDesignFlowRate() = default;
 
     //@}
     /** @name Static Methods */

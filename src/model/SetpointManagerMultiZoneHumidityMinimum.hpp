@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerMultiZoneHumidityMinimum(const Model& model);
 
-    virtual ~SetpointManagerMultiZoneHumidityMinimum() {}
+    virtual ~SetpointManagerMultiZoneHumidityMinimum() = default;
 
     //@}
 

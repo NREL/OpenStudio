@@ -52,7 +52,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ScheduleInterval() {}
+    virtual ~ScheduleInterval() = default;
 
     //@}
 

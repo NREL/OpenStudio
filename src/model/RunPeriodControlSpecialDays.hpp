@@ -64,7 +64,7 @@ namespace model {
     RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
                                 const openstudio::MonthOfYear& monthOfYear, Model& model);
 
-    virtual ~RunPeriodControlSpecialDays() {}
+    virtual ~RunPeriodControlSpecialDays() = default;
 
     /** @name Static Methods */
     //@{

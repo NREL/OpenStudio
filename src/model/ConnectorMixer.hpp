@@ -54,7 +54,7 @@ namespace model {
     /** Constructs a new Mixer object and places it inside the model. */
     explicit ConnectorMixer(const Model& model);
 
-    virtual ~ConnectorMixer() {}
+    virtual ~ConnectorMixer() = default;
 
     unsigned outletPort() const override;
 

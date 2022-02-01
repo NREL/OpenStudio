@@ -55,7 +55,7 @@ namespace model {
     //@{
     explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string& internalDataType);
 
-    virtual ~EnergyManagementSystemInternalVariable() {}
+    virtual ~EnergyManagementSystemInternalVariable() = default;
 
     //@}
 

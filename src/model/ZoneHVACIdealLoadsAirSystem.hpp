@@ -56,7 +56,7 @@ namespace model {
 
     explicit ZoneHVACIdealLoadsAirSystem(const Model& model);
 
-    virtual ~ZoneHVACIdealLoadsAirSystem() {}
+    virtual ~ZoneHVACIdealLoadsAirSystem() = default;
 
     //@}
 

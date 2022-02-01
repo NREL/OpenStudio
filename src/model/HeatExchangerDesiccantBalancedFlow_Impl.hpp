@@ -56,7 +56,7 @@ namespace model {
 
       HeatExchangerDesiccantBalancedFlow_Impl(const HeatExchangerDesiccantBalancedFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeatExchangerDesiccantBalancedFlow_Impl() {}
+      virtual ~HeatExchangerDesiccantBalancedFlow_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

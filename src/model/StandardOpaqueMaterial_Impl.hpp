@@ -55,7 +55,7 @@ namespace model {
 
       StandardOpaqueMaterial_Impl(const StandardOpaqueMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~StandardOpaqueMaterial_Impl() {}
+      virtual ~StandardOpaqueMaterial_Impl() = default;
 
       //@}
 

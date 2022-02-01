@@ -57,7 +57,7 @@ namespace model {
 
     explicit ZoneHVACUnitVentilator(const Model& model, const HVACComponent& supplyAirFan);
 
-    virtual ~ZoneHVACUnitVentilator() {}
+    virtual ~ZoneHVACUnitVentilator() = default;
 
     //@}
 

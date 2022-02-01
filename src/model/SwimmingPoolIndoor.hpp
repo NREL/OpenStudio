@@ -56,7 +56,7 @@ namespace model {
 
     explicit SwimmingPoolIndoor(const Model& model, const Surface& floorSurface);
 
-    virtual ~SwimmingPoolIndoor() {}
+    virtual ~SwimmingPoolIndoor() = default;
 
     //@}
 

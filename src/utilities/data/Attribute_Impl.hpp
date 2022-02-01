@@ -90,7 +90,7 @@ namespace detail {
     Attribute_Impl(const Attribute_Impl& other);
 
     // Destructor
-    virtual ~Attribute_Impl() {}
+    virtual ~Attribute_Impl() = default;
 
     openstudio::UUID uuid() const;
 

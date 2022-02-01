@@ -56,7 +56,7 @@ namespace model {
                                        Schedule& coolingLowWaterTemperatureSchedule, Schedule& coolingHighControlTemperatureSchedule,
                                        Schedule& coolingLowControlTemperatureSchedule);
 
-    virtual ~CoilCoolingLowTempRadiantConstFlow() {}
+    virtual ~CoilCoolingLowTempRadiantConstFlow() = default;
 
     //virtual unsigned inletPort() const;
 

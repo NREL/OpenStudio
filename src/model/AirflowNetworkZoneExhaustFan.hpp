@@ -53,7 +53,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkZoneExhaustFan() {}
+    virtual ~AirflowNetworkZoneExhaustFan() = default;
 
     //@}
 

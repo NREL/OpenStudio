@@ -53,7 +53,7 @@ namespace model {
 
       BoilerHotWater_Impl(const BoilerHotWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~BoilerHotWater_Impl() {}
+      virtual ~BoilerHotWater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

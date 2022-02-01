@@ -60,7 +60,7 @@ namespace model {
     AirLoopHVACUnitaryHeatPumpAirToAir(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyFan, HVACComponent& heatingCoil,
                                        HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() {}
+    virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() = default;
 
     //@}
 

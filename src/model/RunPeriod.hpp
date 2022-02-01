@@ -51,7 +51,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RunPeriod() {}
+    virtual ~RunPeriod() = default;
 
     //@}
     /** @name Getters */

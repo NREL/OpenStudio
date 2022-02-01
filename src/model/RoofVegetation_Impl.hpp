@@ -52,7 +52,7 @@ namespace model {
 
       RoofVegetation_Impl(const RoofVegetation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RoofVegetation_Impl() {}
+      virtual ~RoofVegetation_Impl() = default;
 
       //@}
 

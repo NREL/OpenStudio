@@ -54,7 +54,7 @@ namespace model {
                    double visibleReflectance = 0.5, double thermalHemisphericalEmissivity = 0.9, double thermalTransmittance = 0.0,
                    double thickness = 0.005, double conductivity = 0.1);
 
-    virtual ~Shade() {}
+    virtual ~Shade() = default;
 
     //@}
 

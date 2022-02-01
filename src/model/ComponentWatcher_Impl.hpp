@@ -56,7 +56,7 @@ namespace model {
 
       ComponentWatcher_Impl(ComponentData& componentData);
 
-      virtual ~ComponentWatcher_Impl() {}
+      virtual ~ComponentWatcher_Impl() = default;
 
       //@}
       /** @name Getters */

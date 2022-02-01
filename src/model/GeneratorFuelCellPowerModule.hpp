@@ -70,7 +70,7 @@ namespace model {
 
     explicit GeneratorFuelCellPowerModule(const Model& model);
 
-    virtual ~GeneratorFuelCellPowerModule() {}
+    virtual ~GeneratorFuelCellPowerModule() = default;
 
     //@}
 

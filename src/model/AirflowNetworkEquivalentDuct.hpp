@@ -73,7 +73,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkEquivalentDuct() {}
+    virtual ~AirflowNetworkEquivalentDuct() = default;
 
     //@}
 

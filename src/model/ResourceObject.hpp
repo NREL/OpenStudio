@@ -65,7 +65,7 @@ namespace model {
    *  If excludeChildren is true then children of this object do not contribute to the use count.*/
     unsigned nonResourceObjectUseCount(bool excludeChildren = false) const;
 
-    virtual ~ResourceObject() {}
+    virtual ~ResourceObject() = default;
 
    protected:
     /** @name Constructors and Destructors */

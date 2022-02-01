@@ -67,7 +67,7 @@ namespace model {
 
       boost::optional<ModelExtensibleGroup> getGroupForModelObject(const ModelObject& modelObject) const;
 
-      virtual ~ZoneHVACEquipmentList_Impl() {}
+      virtual ~ZoneHVACEquipmentList_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

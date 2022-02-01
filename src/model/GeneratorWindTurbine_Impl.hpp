@@ -52,7 +52,7 @@ namespace model {
 
       GeneratorWindTurbine_Impl(const GeneratorWindTurbine_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorWindTurbine_Impl() {}
+      virtual ~GeneratorWindTurbine_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

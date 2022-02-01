@@ -55,7 +55,7 @@ namespace model {
 
     explicit ElectricLoadCenterInverterSimple(const Model& model);
 
-    virtual ~ElectricLoadCenterInverterSimple() {}
+    virtual ~ElectricLoadCenterInverterSimple() = default;
 
     //@}
 

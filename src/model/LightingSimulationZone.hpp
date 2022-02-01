@@ -57,7 +57,7 @@ namespace model {
 
     explicit LightingSimulationZone(const Model& model);
 
-    virtual ~LightingSimulationZone() {}
+    virtual ~LightingSimulationZone() = default;
 
     //@}
     /** @name Static Methods */

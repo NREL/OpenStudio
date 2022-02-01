@@ -195,7 +195,7 @@ class UTILITIES_API Attribute
             const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // Destructor
-  virtual ~Attribute() {}
+  virtual ~Attribute() = default;
 
   // constructor from xml, throws if required arguments are missing
   explicit Attribute(const pugi::xml_node& element);

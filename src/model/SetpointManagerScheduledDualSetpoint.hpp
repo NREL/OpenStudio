@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerScheduledDualSetpoint(const Model& model);
 
-    virtual ~SetpointManagerScheduledDualSetpoint() {}
+    virtual ~SetpointManagerScheduledDualSetpoint() = default;
 
     //@}
 

@@ -51,7 +51,7 @@ namespace model {
 
     explicit OutputEnvironmentalImpactFactors(const Model& model);
 
-    virtual ~OutputEnvironmentalImpactFactors() {}
+    virtual ~OutputEnvironmentalImpactFactors() = default;
 
     //@}
 

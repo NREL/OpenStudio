@@ -56,7 +56,7 @@ namespace model {
     AirflowNetworkEffectiveLeakageArea(const Model& model, double effectiveLeakageArea, double dischargeCoefficient,
                                        double referencePressureDifference, double massFlowExponent);
 
-    virtual ~AirflowNetworkEffectiveLeakageArea() {}
+    virtual ~AirflowNetworkEffectiveLeakageArea() = default;
 
     //@}
 

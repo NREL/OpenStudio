@@ -49,7 +49,7 @@ namespace model {
    public:
     AirflowNetworkComponent(IddObjectType type, const Model& model);
 
-    virtual ~AirflowNetworkComponent() {}
+    virtual ~AirflowNetworkComponent() = default;
 
     //std::vector<openstudio::IdfObject> remove();
 

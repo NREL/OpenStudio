@@ -53,7 +53,7 @@ namespace model {
     /** Initializes \f$c_1 = c_2 = 0.0,\ c_3 = 1.0,\ xmin = 0,\ xmax = 1\f$ */
     explicit CurveQuadratic(const Model& model);
 
-    virtual ~CurveQuadratic() {}
+    virtual ~CurveQuadratic() = default;
 
     //@}
 

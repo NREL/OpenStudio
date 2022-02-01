@@ -54,7 +54,7 @@ namespace model {
 
       PipeOutdoor_Impl(const PipeOutdoor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PipeOutdoor_Impl() {}
+      virtual ~PipeOutdoor_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

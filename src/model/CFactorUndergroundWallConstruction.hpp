@@ -51,7 +51,7 @@ namespace model {
     /** TODO default values should be reviewed */
     explicit CFactorUndergroundWallConstruction(const Model& model, double cFactor = 0.1, double height = 0.1);
 
-    virtual ~CFactorUndergroundWallConstruction() {}
+    virtual ~CFactorUndergroundWallConstruction() = default;
 
     double cFactor() const;
     bool setCFactor(double cFactor);

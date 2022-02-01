@@ -54,7 +54,7 @@ namespace model {
 
     explicit ScheduleWeek(const Model& model);
 
-    virtual ~ScheduleWeek() {}
+    virtual ~ScheduleWeek() = default;
 
     //@}
 

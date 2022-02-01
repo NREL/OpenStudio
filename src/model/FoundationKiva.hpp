@@ -85,7 +85,7 @@ namespace model {
 
     explicit FoundationKiva(Model& model);
 
-    virtual ~FoundationKiva() {}
+    virtual ~FoundationKiva() = default;
 
     //@}
 

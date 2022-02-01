@@ -55,7 +55,7 @@ namespace model {
   {
 
    public:
-    virtual ~SetpointManagerSingleZoneReheat() {}
+    virtual ~SetpointManagerSingleZoneReheat() = default;
 
     /** Constructs a new SetpointManagerSingleZoneReheat object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.

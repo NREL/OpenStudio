@@ -54,7 +54,7 @@ namespace model {
 
     explicit ZoneControlContaminantController(const Model& model);
 
-    virtual ~ZoneControlContaminantController() {}
+    virtual ~ZoneControlContaminantController() = default;
 
     //@}
 

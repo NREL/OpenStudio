@@ -62,7 +62,7 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorLights(const ExteriorLightsDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorLights() {}
+    virtual ~ExteriorLights() = default;
 
     //@}
 

@@ -121,7 +121,7 @@ class UTILITIES_API Unit
    *  there is no entry for scaleAbbreviation in ScaleFactory. */
   Unit(const std::string& scaleAbbreviation, const std::string& prettyString = "");
 
-  virtual ~Unit() {}
+  virtual ~Unit() = default;
 
   /** Deep copy constructor. */
   Unit clone() const;

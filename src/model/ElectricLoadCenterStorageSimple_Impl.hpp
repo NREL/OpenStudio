@@ -54,7 +54,7 @@ namespace model {
 
       ElectricLoadCenterStorageSimple_Impl(const ElectricLoadCenterStorageSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterStorageSimple_Impl() {}
+      virtual ~ElectricLoadCenterStorageSimple_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

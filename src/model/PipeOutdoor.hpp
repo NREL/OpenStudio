@@ -55,7 +55,7 @@ namespace model {
 
     explicit PipeOutdoor(const Model& model);
 
-    virtual ~PipeOutdoor() {}
+    virtual ~PipeOutdoor() = default;
 
     //@}
 

@@ -60,7 +60,7 @@ namespace model {
     AirflowNetworkCrack(const Model& model, double massFlowCoefficient, double massFlowExponent,
                         const AirflowNetworkReferenceCrackConditions& referenceCrackConditions);
 
-    virtual ~AirflowNetworkCrack() {}
+    virtual ~AirflowNetworkCrack() = default;
 
     //@}
 

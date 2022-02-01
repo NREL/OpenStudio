@@ -54,7 +54,7 @@ namespace model {
 
     explicit SizingZone(const Model& model, const ThermalZone& thermalZone);
 
-    virtual ~SizingZone() {}
+    virtual ~SizingZone() = default;
 
     //@}
 

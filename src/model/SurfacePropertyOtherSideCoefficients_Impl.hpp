@@ -54,7 +54,7 @@ namespace model {
 
       SurfacePropertyOtherSideCoefficients_Impl(const SurfacePropertyOtherSideCoefficients_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyOtherSideCoefficients_Impl() {}
+      virtual ~SurfacePropertyOtherSideCoefficients_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

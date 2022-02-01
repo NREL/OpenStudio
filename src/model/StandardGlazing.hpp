@@ -54,7 +54,7 @@ namespace model {
 
     explicit StandardGlazing(const Model& model, const std::string& opticalDataType = "SpectralAverage", double thickness = 0.1);
 
-    virtual ~StandardGlazing() {}
+    virtual ~StandardGlazing() = default;
 
     //@}
     /** @name Static Methods */

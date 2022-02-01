@@ -55,7 +55,7 @@ namespace model {
 
     ZoneHVACUnitHeater(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil);
 
-    virtual ~ZoneHVACUnitHeater() {}
+    virtual ~ZoneHVACUnitHeater() = default;
 
     static IddObjectType iddObjectType();
 

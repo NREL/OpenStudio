@@ -71,7 +71,7 @@ namespace model {
     explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType, const Space& space);
 
-    virtual ~EnergyManagementSystemActuator() {}
+    virtual ~EnergyManagementSystemActuator() = default;
 
     //@}
 

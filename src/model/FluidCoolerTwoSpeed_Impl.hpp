@@ -53,7 +53,7 @@ namespace model {
 
       FluidCoolerTwoSpeed_Impl(const FluidCoolerTwoSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FluidCoolerTwoSpeed_Impl() {}
+      virtual ~FluidCoolerTwoSpeed_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

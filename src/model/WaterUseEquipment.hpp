@@ -54,7 +54,7 @@ namespace model {
    public:
     explicit WaterUseEquipment(const WaterUseEquipmentDefinition& waterUseEquipmentDefinition);
 
-    virtual ~WaterUseEquipment() {}
+    virtual ~WaterUseEquipment() = default;
 
     static IddObjectType iddObjectType();
 

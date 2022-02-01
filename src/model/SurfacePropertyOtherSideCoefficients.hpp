@@ -54,7 +54,7 @@ namespace model {
 
     explicit SurfacePropertyOtherSideCoefficients(const Model& model);
 
-    virtual ~SurfacePropertyOtherSideCoefficients() {}
+    virtual ~SurfacePropertyOtherSideCoefficients() = default;
 
     //@}
 

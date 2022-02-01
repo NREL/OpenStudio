@@ -53,7 +53,7 @@ namespace model {
 
       DistrictHeating_Impl(const DistrictHeating_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DistrictHeating_Impl() {}
+      virtual ~DistrictHeating_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

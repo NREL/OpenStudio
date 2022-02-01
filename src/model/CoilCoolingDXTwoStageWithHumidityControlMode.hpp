@@ -56,7 +56,7 @@ namespace model {
 
     explicit CoilCoolingDXTwoStageWithHumidityControlMode(const Model& model);
 
-    virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() {}
+    virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() = default;
 
     //@}
 

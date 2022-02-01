@@ -52,7 +52,7 @@ namespace model {
 
       RefractionExtinctionGlazing_Impl(const RefractionExtinctionGlazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefractionExtinctionGlazing_Impl() {}
+      virtual ~RefractionExtinctionGlazing_Impl() = default;
 
       //@}
 

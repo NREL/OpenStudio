@@ -55,7 +55,7 @@ namespace model {
       AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl(const AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl& other, Model_Impl* model,
                                                          bool keepHandle);
 
-      virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl() {}
+      virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

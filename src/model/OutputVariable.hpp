@@ -59,7 +59,7 @@ namespace model {
   class MODEL_API OutputVariable : public ModelObject
   {
    public:
-    virtual ~OutputVariable() {}
+    virtual ~OutputVariable() = default;
 
     /** @name Constructors and Destructors */
     //@{

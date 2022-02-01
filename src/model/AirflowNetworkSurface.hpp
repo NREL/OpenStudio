@@ -70,7 +70,7 @@ namespace model {
     /** Construct a surface with a model subsurface to be linked to and a leakage component. */
     //AirflowNetworkSurface(const Model& model, const SubSurface &surface, const AirflowNetworkComponent &component);
 
-    virtual ~AirflowNetworkSurface() {}
+    virtual ~AirflowNetworkSurface() = default;
 
     //@}
 

@@ -53,7 +53,7 @@ namespace model {
    public:
     explicit ZoneHVACBaseboardConvectiveElectric(const Model& model);
 
-    virtual ~ZoneHVACBaseboardConvectiveElectric() {}
+    virtual ~ZoneHVACBaseboardConvectiveElectric() = default;
 
     static IddObjectType iddObjectType();
 

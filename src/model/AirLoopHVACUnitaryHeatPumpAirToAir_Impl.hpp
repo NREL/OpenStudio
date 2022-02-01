@@ -60,7 +60,7 @@ namespace model {
 
       AirLoopHVACUnitaryHeatPumpAirToAir_Impl(const AirLoopHVACUnitaryHeatPumpAirToAir_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVACUnitaryHeatPumpAirToAir_Impl() {}
+      virtual ~AirLoopHVACUnitaryHeatPumpAirToAir_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

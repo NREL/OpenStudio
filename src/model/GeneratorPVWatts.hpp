@@ -58,7 +58,7 @@ namespace model {
 
     explicit GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity);
 
-    virtual ~GeneratorPVWatts() {}
+    virtual ~GeneratorPVWatts() = default;
 
     //@}
 

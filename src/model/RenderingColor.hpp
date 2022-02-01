@@ -66,7 +66,7 @@ namespace model {
 
     explicit RenderingColor(const Model& model);
 
-    virtual ~RenderingColor() {}
+    virtual ~RenderingColor() = default;
 
     static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
 

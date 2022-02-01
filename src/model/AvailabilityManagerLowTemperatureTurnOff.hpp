@@ -55,7 +55,7 @@ namespace model {
 
     explicit AvailabilityManagerLowTemperatureTurnOff(const Model& model);
 
-    virtual ~AvailabilityManagerLowTemperatureTurnOff() {}
+    virtual ~AvailabilityManagerLowTemperatureTurnOff() = default;
 
     //@}
 

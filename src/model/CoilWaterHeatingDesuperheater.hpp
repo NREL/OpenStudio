@@ -56,7 +56,7 @@ namespace model {
 
     explicit CoilWaterHeatingDesuperheater(const Model& model, Schedule& setpointTemperatureSchedule);
 
-    virtual ~CoilWaterHeatingDesuperheater() {}
+    virtual ~CoilWaterHeatingDesuperheater() = default;
 
     //@}
 

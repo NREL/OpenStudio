@@ -55,7 +55,7 @@ namespace model {
       CoilHeatingGas_Impl(const CoilHeatingGas_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~CoilHeatingGas_Impl() {}
+      virtual ~CoilHeatingGas_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

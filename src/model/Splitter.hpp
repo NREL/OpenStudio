@@ -44,7 +44,7 @@ namespace model {
   class MODEL_API Splitter : public HVACComponent
   {
    public:
-    virtual ~Splitter() {}
+    virtual ~Splitter() = default;
 
     /** Returns the inlet port to the splitter. */
     virtual unsigned inletPort() const;

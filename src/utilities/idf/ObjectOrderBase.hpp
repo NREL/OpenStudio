@@ -61,7 +61,7 @@ class UTILITIES_API ObjectOrderBase
   /** A user-specified order of IddObjectTypes is established on construction. */
   ObjectOrderBase(const IddObjectTypeVector& iddOrder);
 
-  virtual ~ObjectOrderBase() {}
+  virtual ~ObjectOrderBase() = default;
 
   // GETTERS AND SETTERS
 

@@ -52,7 +52,7 @@ namespace model {
       // clone copy constructor
       ParentObject_Impl(const ParentObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ParentObject_Impl() {}
+      virtual ~ParentObject_Impl() = default;
 
       /// return direct child objects in the hierarchy
       virtual std::vector<ModelObject> children() const;

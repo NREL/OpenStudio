@@ -55,7 +55,7 @@ namespace model {
 
       SurfaceControlMovableInsulation_Impl(const SurfaceControlMovableInsulation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfaceControlMovableInsulation_Impl() {}
+      virtual ~SurfaceControlMovableInsulation_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

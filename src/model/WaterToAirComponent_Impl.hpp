@@ -51,7 +51,7 @@ namespace model {
 
       WaterToAirComponent_Impl(const WaterToAirComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~WaterToAirComponent_Impl() {}
+      virtual ~WaterToAirComponent_Impl() = default;
 
       virtual boost::optional<ModelObject> airInletModelObject() const;
 

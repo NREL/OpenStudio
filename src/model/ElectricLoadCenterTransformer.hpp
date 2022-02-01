@@ -56,7 +56,7 @@ namespace model {
 
     explicit ElectricLoadCenterTransformer(const Model& model);
 
-    virtual ~ElectricLoadCenterTransformer() {}
+    virtual ~ElectricLoadCenterTransformer() = default;
 
     //@}
 

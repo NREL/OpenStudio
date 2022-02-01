@@ -56,7 +56,7 @@ namespace model {
 
     explicit People(const PeopleDefinition& peopleDefinition);
 
-    virtual ~People() {}
+    virtual ~People() = default;
 
     //@}
 

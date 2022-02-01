@@ -53,7 +53,7 @@ namespace model {
 
     explicit AvailabilityManagerScheduledOn(const Model& model);
 
-    virtual ~AvailabilityManagerScheduledOn() {}
+    virtual ~AvailabilityManagerScheduledOn() = default;
 
     //@}
 

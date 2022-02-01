@@ -56,7 +56,7 @@ namespace model {
 
     explicit PumpVariableSpeed(const Model& model);
 
-    virtual ~PumpVariableSpeed() {}
+    virtual ~PumpVariableSpeed() = default;
 
     //@}
 

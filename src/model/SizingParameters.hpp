@@ -50,7 +50,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SizingParameters() {}
+    virtual ~SizingParameters() = default;
 
     //@}
     /** @name Static Methods */

@@ -147,7 +147,7 @@ class UTILITIES_API Workspace
    *  model::Components). */
   void swap(Workspace& other);
 
-  virtual ~Workspace() {}
+  virtual ~Workspace() = default;
 
   //@}
   /** @name Getters */

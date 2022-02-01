@@ -55,7 +55,7 @@ namespace model {
 
       CoilSystemIntegratedHeatPumpAirSource_Impl(const CoilSystemIntegratedHeatPumpAirSource_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilSystemIntegratedHeatPumpAirSource_Impl() {}
+      virtual ~CoilSystemIntegratedHeatPumpAirSource_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

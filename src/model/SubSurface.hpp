@@ -71,7 +71,7 @@ namespace model {
 
     explicit SubSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~SubSurface() {}
+    virtual ~SubSurface() = default;
 
     //@}
     /** @name Static Methods */

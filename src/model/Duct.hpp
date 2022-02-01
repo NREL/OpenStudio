@@ -50,7 +50,7 @@ namespace model {
 
     explicit Duct(const Model& model);
 
-    virtual ~Duct() {}
+    virtual ~Duct() = default;
 
     //@}
 

@@ -51,7 +51,7 @@ namespace model {
 
       AirflowNetworkSpecifiedFlowRate_Impl(const AirflowNetworkSpecifiedFlowRate_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkSpecifiedFlowRate_Impl() {}
+      virtual ~AirflowNetworkSpecifiedFlowRate_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

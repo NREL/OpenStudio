@@ -62,7 +62,7 @@ namespace model {
 
     explicit FanOnOff(const Model& model);
 
-    virtual ~FanOnOff() {}
+    virtual ~FanOnOff() = default;
 
     //@}
 

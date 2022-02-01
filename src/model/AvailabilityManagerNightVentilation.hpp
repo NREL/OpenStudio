@@ -55,7 +55,7 @@ namespace model {
 
     explicit AvailabilityManagerNightVentilation(const Model& model);
 
-    virtual ~AvailabilityManagerNightVentilation() {}
+    virtual ~AvailabilityManagerNightVentilation() = default;
 
     //@}
 

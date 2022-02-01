@@ -62,7 +62,7 @@ namespace model {
                                                 Curve& heatingCOPFunctionofAirFlowFractionCurve, Curve& heatingCOPFunctionofWaterFlowFractionCurve,
                                                 Curve& partLoadFractionCorrelationCurve);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPump() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPump() = default;
 
     //@}
 

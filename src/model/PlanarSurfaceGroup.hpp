@@ -50,7 +50,7 @@ namespace model {
   class MODEL_API PlanarSurfaceGroup : public ParentObject
   {
    public:
-    virtual ~PlanarSurfaceGroup() {}
+    virtual ~PlanarSurfaceGroup() = default;
 
     /** @name Getters */
     //@{

@@ -56,7 +56,7 @@ namespace model {
 
     explicit EnergyManagementSystemConstructionIndexVariable(const Model& model);
 
-    virtual ~EnergyManagementSystemConstructionIndexVariable() {}
+    virtual ~EnergyManagementSystemConstructionIndexVariable() = default;
 
     //@}
 

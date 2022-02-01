@@ -61,7 +61,7 @@ namespace model {
                                                    const HVACComponent& scdwhWaterHeatingCoil, const StraightComponent& shdwhHeatingCoil,
                                                    const HVACComponent& shdwhWaterHeatingCoil);
 
-    virtual ~CoilSystemIntegratedHeatPumpAirSource() {}
+    virtual ~CoilSystemIntegratedHeatPumpAirSource() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
 
     explicit HeaderedPumpsConstantSpeed(const Model& model);
 
-    virtual ~HeaderedPumpsConstantSpeed() {}
+    virtual ~HeaderedPumpsConstantSpeed() = default;
 
     //@}
 

@@ -79,7 +79,7 @@ namespace model {
 
     explicit FanSystemModel(const Model& model);
 
-    virtual ~FanSystemModel() {}
+    virtual ~FanSystemModel() = default;
 
     //@}
 

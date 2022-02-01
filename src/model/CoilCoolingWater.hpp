@@ -71,7 +71,7 @@ namespace model {
 
     CoilCoolingWater(const Model& model);
 
-    virtual ~CoilCoolingWater() {}
+    virtual ~CoilCoolingWater() = default;
 
     //@}
 

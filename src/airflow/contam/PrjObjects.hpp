@@ -1603,7 +1603,7 @@ namespace contam {
       UNKNOWN
     };
     /** Destroy the object. */
-    virtual ~ControlNode() {}
+    virtual ~ControlNode() = default;
     /** Write the object to a string. */
     virtual std::string write() = 0;
     /** Convert an input string into a control node type enum. */

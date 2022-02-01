@@ -59,7 +59,7 @@ namespace model {
                                                                    const std::string& fMUInstanceName, const std::string& fMUVariableName,
                                                                    double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() = default;
 
     //@}
 

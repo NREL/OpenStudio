@@ -61,7 +61,7 @@ namespace model {
 
     explicit CoilHeatingDXSingleSpeed(const Model& model);
 
-    virtual ~CoilHeatingDXSingleSpeed() {}
+    virtual ~CoilHeatingDXSingleSpeed() = default;
 
     //@}
 

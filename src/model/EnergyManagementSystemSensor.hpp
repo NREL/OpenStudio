@@ -67,7 +67,7 @@ namespace model {
 
     explicit EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName);
 
-    virtual ~EnergyManagementSystemSensor() {}
+    virtual ~EnergyManagementSystemSensor() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
 
     explicit GeneratorFuelCellAuxiliaryHeater(const Model& model);
 
-    virtual ~GeneratorFuelCellAuxiliaryHeater() {}
+    virtual ~GeneratorFuelCellAuxiliaryHeater() = default;
 
     //@}
 

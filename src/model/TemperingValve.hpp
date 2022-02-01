@@ -53,7 +53,7 @@ namespace model {
 
     explicit TemperingValve(const Model& model);
 
-    virtual ~TemperingValve() {}
+    virtual ~TemperingValve() = default;
 
     //@}
 

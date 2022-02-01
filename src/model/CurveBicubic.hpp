@@ -53,7 +53,7 @@ namespace model {
     /** Initializes all coefficients to 0.0, and bounds x and y within [0.0,1.0]. */
     explicit CurveBicubic(const Model& model);
 
-    virtual ~CurveBicubic() {}
+    virtual ~CurveBicubic() = default;
 
     //@}
 

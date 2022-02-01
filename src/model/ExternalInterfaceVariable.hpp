@@ -52,7 +52,7 @@ namespace model {
 
     explicit ExternalInterfaceVariable(const Model& model, const std::string& variableName, double initialValue);
 
-    virtual ~ExternalInterfaceVariable() {}
+    virtual ~ExternalInterfaceVariable() = default;
 
     //@}
 

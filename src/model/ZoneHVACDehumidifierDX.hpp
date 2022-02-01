@@ -59,7 +59,7 @@ namespace model {
     explicit ZoneHVACDehumidifierDX(const Model& model, const Curve& waterRemovalCurve, const Curve& energyFactorCurve,
                                     const Curve& partLoadFractionCurve);
 
-    virtual ~ZoneHVACDehumidifierDX() {}
+    virtual ~ZoneHVACDehumidifierDX() = default;
 
     //@}
 

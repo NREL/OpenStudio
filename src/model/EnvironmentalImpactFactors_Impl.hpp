@@ -51,7 +51,7 @@ namespace model {
 
       EnvironmentalImpactFactors_Impl(const EnvironmentalImpactFactors_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnvironmentalImpactFactors_Impl() {}
+      virtual ~EnvironmentalImpactFactors_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

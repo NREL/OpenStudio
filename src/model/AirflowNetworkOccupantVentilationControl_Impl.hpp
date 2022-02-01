@@ -55,7 +55,7 @@ namespace model {
 
       AirflowNetworkOccupantVentilationControl_Impl(const AirflowNetworkOccupantVentilationControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkOccupantVentilationControl_Impl() {}
+      virtual ~AirflowNetworkOccupantVentilationControl_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

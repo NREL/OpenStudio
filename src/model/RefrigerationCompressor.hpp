@@ -55,7 +55,7 @@ namespace model {
 
     explicit RefrigerationCompressor(const Model& model);
 
-    virtual ~RefrigerationCompressor() {}
+    virtual ~RefrigerationCompressor() = default;
 
     //@}
 

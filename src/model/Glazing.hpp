@@ -48,7 +48,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Glazing() {}
+    virtual ~Glazing() = default;
 
     //@}
    protected:

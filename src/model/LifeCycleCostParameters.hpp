@@ -55,7 +55,7 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~LifeCycleCostParameters() {}
+    virtual ~LifeCycleCostParameters() = default;
 
     //@}
     /** @name Getters */

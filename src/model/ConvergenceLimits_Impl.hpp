@@ -51,7 +51,7 @@ namespace model {
 
       ConvergenceLimits_Impl(const ConvergenceLimits_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ConvergenceLimits_Impl() {}
+      virtual ~ConvergenceLimits_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

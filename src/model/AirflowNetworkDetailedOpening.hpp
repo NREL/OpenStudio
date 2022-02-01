@@ -111,7 +111,7 @@ namespace model {
     AirflowNetworkDetailedOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed,
                                   std::vector<DetailedOpeningFactorData>& openingFactors);
 
-    virtual ~AirflowNetworkDetailedOpening() {}
+    virtual ~AirflowNetworkDetailedOpening() = default;
 
     //@}
 

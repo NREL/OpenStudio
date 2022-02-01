@@ -55,7 +55,7 @@ namespace model {
     //@{
     explicit AirLoopHVACDedicatedOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& oaSystem);
 
-    virtual ~AirLoopHVACDedicatedOutdoorAirSystem() {}
+    virtual ~AirLoopHVACDedicatedOutdoorAirSystem() = default;
 
     //@}
 

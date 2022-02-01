@@ -54,7 +54,7 @@ namespace model {
 
     explicit AvailabilityManagerDifferentialThermostat(const Model& model);
 
-    virtual ~AvailabilityManagerDifferentialThermostat() {}
+    virtual ~AvailabilityManagerDifferentialThermostat() = default;
 
     //@}
 

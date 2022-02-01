@@ -54,7 +54,7 @@ namespace model {
 
     explicit RefrigerationCondenserCascade(const Model& model);
 
-    virtual ~RefrigerationCondenserCascade() {}
+    virtual ~RefrigerationCondenserCascade() = default;
 
     //@}
 

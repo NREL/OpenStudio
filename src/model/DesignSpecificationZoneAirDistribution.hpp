@@ -51,7 +51,7 @@ namespace model {
    public:
     explicit DesignSpecificationZoneAirDistribution(const Model& model);
 
-    virtual ~DesignSpecificationZoneAirDistribution() {}
+    virtual ~DesignSpecificationZoneAirDistribution() = default;
 
     static IddObjectType iddObjectType();
 

@@ -59,7 +59,7 @@ namespace model {
 
     explicit Construction(const ModelPartitionMaterial& modelPartitionMaterial);
 
-    virtual ~Construction() {}
+    virtual ~Construction() = default;
 
     //@}
     /** @name Static Methods */

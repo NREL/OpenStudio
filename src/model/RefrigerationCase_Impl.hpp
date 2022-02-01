@@ -62,7 +62,7 @@ namespace model {
 
       RefrigerationCase_Impl(const RefrigerationCase_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCase_Impl() {}
+      virtual ~RefrigerationCase_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

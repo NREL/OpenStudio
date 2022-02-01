@@ -87,7 +87,7 @@ namespace model {
     explicit GeneratorFuelCellAirSupply(const Model& model, const Node& airInletNode, const CurveQuadratic& electricPowerCurve,
                                         const CurveQuadratic& fuelRateCurve, const CurveCubic& blowerPowerCurve);
 
-    virtual ~GeneratorFuelCellAirSupply() {}
+    virtual ~GeneratorFuelCellAirSupply() = default;
 
     //@}
 

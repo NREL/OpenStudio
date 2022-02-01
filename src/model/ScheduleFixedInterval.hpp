@@ -52,7 +52,7 @@ namespace model {
 
     explicit ScheduleFixedInterval(const Model& model);
 
-    virtual ~ScheduleFixedInterval() {}
+    virtual ~ScheduleFixedInterval() = default;
 
     //@}
 

@@ -52,7 +52,7 @@ namespace model {
   class MODEL_API AirflowNetworkSimulationControl : public ParentObject
   {
    public:
-    virtual ~AirflowNetworkSimulationControl() {}
+    virtual ~AirflowNetworkSimulationControl() = default;
 
     //@}
     /** @name Static Methods */

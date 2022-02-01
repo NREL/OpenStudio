@@ -65,7 +65,7 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~WeatherFile() {}
+    virtual ~WeatherFile() = default;
 
     //@}
     /** @name Static Methods */

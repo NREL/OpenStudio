@@ -55,7 +55,7 @@ namespace model {
       ClimateZones_Impl(const ClimateZones_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ClimateZones_Impl() {}
+      virtual ~ClimateZones_Impl() = default;
 
       //@}
       /** @name Getters */

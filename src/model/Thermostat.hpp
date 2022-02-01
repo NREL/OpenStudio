@@ -48,7 +48,7 @@ namespace model {
   class MODEL_API Thermostat : public ModelObject
   {
    public:
-    virtual ~Thermostat() {}
+    virtual ~Thermostat() = default;
 
     boost::optional<ThermalZone> thermalZone() const;
 

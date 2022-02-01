@@ -59,7 +59,7 @@ namespace model {
 
     explicit ShadingSurfaceGroup(const Model& model);
 
-    virtual ~ShadingSurfaceGroup() {}
+    virtual ~ShadingSurfaceGroup() = default;
 
     //@}
     /** @name Static Methods */

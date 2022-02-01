@@ -47,7 +47,7 @@ namespace model {
   class MODEL_API SpaceItem : public ModelObject
   {
    public:
-    virtual ~SpaceItem() {}
+    virtual ~SpaceItem() = default;
 
     /// Returns the parent Space.
     boost::optional<Space> space() const;

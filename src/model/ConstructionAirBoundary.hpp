@@ -56,7 +56,7 @@ namespace model {
 
     explicit ConstructionAirBoundary(const Model& model);
 
-    virtual ~ConstructionAirBoundary() {}
+    virtual ~ConstructionAirBoundary() = default;
 
     //@}
 

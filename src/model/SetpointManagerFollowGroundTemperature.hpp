@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerFollowGroundTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowGroundTemperature() {}
+    virtual ~SetpointManagerFollowGroundTemperature() = default;
 
     //@}
 

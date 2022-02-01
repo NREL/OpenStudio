@@ -44,7 +44,7 @@ namespace model {
   class MODEL_API Mixer : public HVACComponent
   {
    public:
-    virtual ~Mixer() {}
+    virtual ~Mixer() = default;
 
     /** Returns the outlet port to the zone mixer. */
     virtual unsigned outletPort() const;

@@ -55,7 +55,7 @@ namespace model {
 
     explicit DaylightingDeviceShelf(const SubSurface& subSurface);
 
-    virtual ~DaylightingDeviceShelf() {}
+    virtual ~DaylightingDeviceShelf() = default;
 
     //@}
     /** @name Static Methods */

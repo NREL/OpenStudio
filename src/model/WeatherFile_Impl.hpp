@@ -60,7 +60,7 @@ namespace model {
 
       WeatherFile_Impl(const WeatherFile_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WeatherFile_Impl() {}
+      virtual ~WeatherFile_Impl() = default;
 
       //@}
 

@@ -54,7 +54,7 @@ namespace model {
   class MODEL_API SpaceLoadDefinition : public ResourceObject
   {
    public:
-    virtual ~SpaceLoadDefinition() {}
+    virtual ~SpaceLoadDefinition() = default;
 
     /** Returns all instances of this definition. */
     std::vector<SpaceLoadInstance> instances() const;

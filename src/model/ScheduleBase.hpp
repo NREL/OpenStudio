@@ -56,7 +56,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ScheduleBase() {}
+    virtual ~ScheduleBase() = default;
 
     //@}
     /** @name Getters */

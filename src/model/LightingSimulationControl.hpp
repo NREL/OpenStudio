@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~LightingSimulationControl() {}
+    virtual ~LightingSimulationControl() = default;
 
     //@}
     /** @name Static Methods */

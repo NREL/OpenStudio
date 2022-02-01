@@ -55,7 +55,7 @@ namespace model {
 
     explicit AirTerminalDualDuctConstantVolume(const Model& model);
 
-    virtual ~AirTerminalDualDuctConstantVolume() {}
+    virtual ~AirTerminalDualDuctConstantVolume() = default;
 
     //@}
 

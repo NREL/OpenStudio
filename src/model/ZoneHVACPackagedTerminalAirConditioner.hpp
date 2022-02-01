@@ -56,7 +56,7 @@ namespace model {
     ZoneHVACPackagedTerminalAirConditioner(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan,
                                            HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
-    virtual ~ZoneHVACPackagedTerminalAirConditioner() {}
+    virtual ~ZoneHVACPackagedTerminalAirConditioner() = default;
 
     //@}
 

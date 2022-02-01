@@ -55,7 +55,7 @@ namespace model {
       CoilSystemCoolingWaterHeatExchangerAssisted_Impl(const CoilSystemCoolingWaterHeatExchangerAssisted_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~CoilSystemCoolingWaterHeatExchangerAssisted_Impl() {}
+      virtual ~CoilSystemCoolingWaterHeatExchangerAssisted_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

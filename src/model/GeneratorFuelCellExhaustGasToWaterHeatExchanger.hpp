@@ -58,7 +58,7 @@ namespace model {
 
     explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model, const Node& exhaustOutletAirNode);
 
-    virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() {}
+    virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() = default;
 
     //@}
 

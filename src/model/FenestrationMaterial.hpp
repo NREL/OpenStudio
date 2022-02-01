@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~FenestrationMaterial() {}
+    virtual ~FenestrationMaterial() = default;
 
     //@}
     /** @name Static Methods */

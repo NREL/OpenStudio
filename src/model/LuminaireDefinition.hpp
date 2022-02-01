@@ -53,7 +53,7 @@ namespace model {
 
     explicit LuminaireDefinition(const Model& model);
 
-    virtual ~LuminaireDefinition() {}
+    virtual ~LuminaireDefinition() = default;
 
     //@}
     /** @name Static Methods */

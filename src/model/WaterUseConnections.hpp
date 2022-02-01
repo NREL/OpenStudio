@@ -54,7 +54,7 @@ namespace model {
    public:
     explicit WaterUseConnections(const Model& model);
 
-    virtual ~WaterUseConnections() {}
+    virtual ~WaterUseConnections() = default;
 
     static IddObjectType iddObjectType();
 

@@ -53,7 +53,7 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorWaterEquipmentDefinition(const Model& model);
 
-    virtual ~ExteriorWaterEquipmentDefinition() {}
+    virtual ~ExteriorWaterEquipmentDefinition() = default;
 
     //@}
 

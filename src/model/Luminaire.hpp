@@ -59,7 +59,7 @@ namespace model {
 
     explicit Luminaire(const LuminaireDefinition& luminaireDefinition);
 
-    virtual ~Luminaire() {}
+    virtual ~Luminaire() = default;
 
     //@}
 

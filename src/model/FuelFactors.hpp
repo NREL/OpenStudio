@@ -54,7 +54,7 @@ namespace model {
 
     explicit FuelFactors(const Model& model);
 
-    virtual ~FuelFactors() {}
+    virtual ~FuelFactors() = default;
 
     //@}
 

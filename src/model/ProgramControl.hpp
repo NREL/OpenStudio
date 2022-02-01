@@ -51,7 +51,7 @@ namespace model {
 
     explicit ProgramControl(const Model& model);
 
-    virtual ~ProgramControl() {}
+    virtual ~ProgramControl() = default;
 
     //@}
 

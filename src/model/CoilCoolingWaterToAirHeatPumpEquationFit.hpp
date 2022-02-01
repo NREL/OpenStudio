@@ -60,7 +60,7 @@ namespace model {
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */
     CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
 
-    virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() {}
+    virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() = default;
 
     static IddObjectType iddObjectType();
 

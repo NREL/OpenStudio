@@ -53,7 +53,7 @@ namespace model {
 
       AirLoopHVACReturnPlenum_Impl(const AirLoopHVACReturnPlenum_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVACReturnPlenum_Impl() {}
+      virtual ~AirLoopHVACReturnPlenum_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

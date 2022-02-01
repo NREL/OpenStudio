@@ -52,7 +52,7 @@ namespace model {
 
     explicit WindowPropertyFrameAndDivider(const Model& model);
 
-    virtual ~WindowPropertyFrameAndDivider() {}
+    virtual ~WindowPropertyFrameAndDivider() = default;
 
     //@}
 

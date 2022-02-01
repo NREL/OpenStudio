@@ -63,7 +63,7 @@ namespace model {
                                        Schedule& heatingLowWaterTemperatureSchedule, Schedule& heatingHighControlTemperatureSchedule,
                                        Schedule& heatingLowControlTemperatureSchedule);
 
-    virtual ~CoilHeatingLowTempRadiantConstFlow() {}
+    virtual ~CoilHeatingLowTempRadiantConstFlow() = default;
 
     //@}
 

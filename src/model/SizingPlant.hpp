@@ -51,7 +51,7 @@ namespace model {
    public:
     explicit SizingPlant(const Model& model, const PlantLoop& plantLoop);
 
-    virtual ~SizingPlant() {}
+    virtual ~SizingPlant() = default;
 
     static IddObjectType iddObjectType();
 

@@ -57,7 +57,7 @@ namespace model {
 
     explicit ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule& availabilitySchedule, Schedule& heatingTemperatureSchedule);
 
-    virtual ~ZoneHVACLowTemperatureRadiantElectric() {}
+    virtual ~ZoneHVACLowTemperatureRadiantElectric() = default;
 
     //@}
 

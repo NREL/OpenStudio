@@ -111,7 +111,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ClimateZones() {}
+    virtual ~ClimateZones() = default;
 
     //@}
     /** @name Static Methods */

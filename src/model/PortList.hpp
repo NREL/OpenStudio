@@ -57,7 +57,7 @@ namespace model {
    public:
     explicit PortList(const HVACComponent& comp);
 
-    virtual ~PortList() {}
+    virtual ~PortList() = default;
 
     static IddObjectType iddObjectType();
 

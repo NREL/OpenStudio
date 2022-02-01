@@ -55,7 +55,7 @@ namespace model {
 
     explicit GeneratorFuelCellStackCooler(const Model& model);
 
-    virtual ~GeneratorFuelCellStackCooler() {}
+    virtual ~GeneratorFuelCellStackCooler() = default;
 
     //@}
 

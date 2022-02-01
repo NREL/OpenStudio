@@ -52,7 +52,7 @@ namespace model {
 
       CurveSigmoid_Impl(const CurveSigmoid_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveSigmoid_Impl() {}
+      virtual ~CurveSigmoid_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

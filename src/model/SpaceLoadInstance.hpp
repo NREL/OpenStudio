@@ -49,7 +49,7 @@ namespace model {
   class MODEL_API SpaceLoadInstance : public SpaceLoad
   {
    public:
-    virtual ~SpaceLoadInstance() {}
+    virtual ~SpaceLoadInstance() = default;
 
     /** Returns the definition of this instance. **/
     SpaceLoadDefinition definition() const;

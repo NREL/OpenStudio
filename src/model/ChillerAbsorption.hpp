@@ -52,7 +52,7 @@ namespace model {
 
     explicit ChillerAbsorption(const Model& model);
 
-    virtual ~ChillerAbsorption() {}
+    virtual ~ChillerAbsorption() = default;
 
     //@}
 

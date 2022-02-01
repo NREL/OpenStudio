@@ -54,7 +54,7 @@ namespace model {
       // Clone copy constructor.
       SpaceLoadDefinition_Impl(const SpaceLoadDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceLoadDefinition_Impl() {}
+      virtual ~SpaceLoadDefinition_Impl() = default;
 
       /// Removes the definition and all instances.
       virtual std::vector<openstudio::IdfObject> remove() override;

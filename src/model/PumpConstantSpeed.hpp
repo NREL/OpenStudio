@@ -53,7 +53,7 @@ namespace model {
    public:
     explicit PumpConstantSpeed(const Model& model);
 
-    virtual ~PumpConstantSpeed() {}
+    virtual ~PumpConstantSpeed() = default;
 
     static IddObjectType iddObjectType();
 

@@ -52,7 +52,7 @@ namespace model {
 
     CoilHeatingWaterBaseboard(const Model& model);
 
-    virtual ~CoilHeatingWaterBaseboard() {}
+    virtual ~CoilHeatingWaterBaseboard() = default;
 
     //@}
 

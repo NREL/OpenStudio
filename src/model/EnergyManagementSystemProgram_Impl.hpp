@@ -51,7 +51,7 @@ namespace model {
 
       EnergyManagementSystemProgram_Impl(const EnergyManagementSystemProgram_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemProgram_Impl() {}
+      virtual ~EnergyManagementSystemProgram_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

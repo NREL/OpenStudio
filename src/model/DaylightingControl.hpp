@@ -55,7 +55,7 @@ namespace model {
 
     explicit DaylightingControl(const Model& model);
 
-    virtual ~DaylightingControl() {}
+    virtual ~DaylightingControl() = default;
 
     //@}
     /** @name Static Methods */

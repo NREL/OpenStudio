@@ -63,7 +63,7 @@ namespace model {
 
     explicit GroundHeatExchangerVertical(const Model& model);
 
-    virtual ~GroundHeatExchangerVertical() {}
+    virtual ~GroundHeatExchangerVertical() = default;
 
     //@}
 

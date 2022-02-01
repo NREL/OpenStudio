@@ -59,7 +59,7 @@ namespace model {
 
     explicit HeatPumpPlantLoopEIRCooling(const Model& model);
 
-    virtual ~HeatPumpPlantLoopEIRCooling() {}
+    virtual ~HeatPumpPlantLoopEIRCooling() = default;
 
     //@}
 

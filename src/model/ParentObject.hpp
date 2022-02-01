@@ -48,7 +48,7 @@ namespace model {
   class MODEL_API ParentObject : public ModelObject
   {
    public:
-    virtual ~ParentObject() {}
+    virtual ~ParentObject() = default;
 
     /** @name Constructors and Destructors */
     //@{

@@ -55,7 +55,7 @@ namespace model {
 
       TableMultiVariableLookup_Impl(const TableMultiVariableLookup_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~TableMultiVariableLookup_Impl() {}
+      virtual ~TableMultiVariableLookup_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

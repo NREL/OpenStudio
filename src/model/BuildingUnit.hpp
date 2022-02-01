@@ -54,7 +54,7 @@ namespace model {
 
     explicit BuildingUnit(const Model& model);
 
-    virtual ~BuildingUnit() {}
+    virtual ~BuildingUnit() = default;
 
     //@}
 

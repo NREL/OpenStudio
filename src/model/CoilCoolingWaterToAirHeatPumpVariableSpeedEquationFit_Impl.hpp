@@ -57,7 +57,7 @@ namespace model {
       CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl& other,
                                                                  Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl() {}
+      virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

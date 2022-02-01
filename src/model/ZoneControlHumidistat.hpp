@@ -54,7 +54,7 @@ namespace model {
 
     explicit ZoneControlHumidistat(const Model& model);
 
-    virtual ~ZoneControlHumidistat() {}
+    virtual ~ZoneControlHumidistat() = default;
 
     //@}
 

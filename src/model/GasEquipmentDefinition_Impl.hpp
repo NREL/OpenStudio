@@ -54,7 +54,7 @@ namespace model {
 
       GasEquipmentDefinition_Impl(const GasEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GasEquipmentDefinition_Impl() {}
+      virtual ~GasEquipmentDefinition_Impl() = default;
 
       //@}
 

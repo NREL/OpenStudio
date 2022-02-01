@@ -56,7 +56,7 @@ namespace model {
 
     explicit ShadingSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~ShadingSurface() {}
+    virtual ~ShadingSurface() = default;
 
     //@}
     /** @name Static Methods */

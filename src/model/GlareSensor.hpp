@@ -55,7 +55,7 @@ namespace model {
 
     explicit GlareSensor(const Model& model);
 
-    virtual ~GlareSensor() {}
+    virtual ~GlareSensor() = default;
 
     //@}
     /** @name Static Methods */

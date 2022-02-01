@@ -54,7 +54,7 @@ namespace model {
 
     explicit HeatExchangerDesiccantBalancedFlowPerformanceDataType1(const Model& model);
 
-    virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1() {}
+    virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1() = default;
 
     //@}
 

@@ -70,7 +70,7 @@ namespace model {
     explicit AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule,
                                                   Schedule& minimumOutdoorVentilationAirSchedule);
 
-    virtual ~AvailabilityManagerHybridVentilation() {}
+    virtual ~AvailabilityManagerHybridVentilation() = default;
 
     //@}
 

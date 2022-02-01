@@ -57,7 +57,7 @@ namespace model {
                                                                    const std::string& fMUInstanceName, const std::string& fMUVariableName,
                                                                    double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImportToVariable() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToVariable() = default;
 
     //@}
 

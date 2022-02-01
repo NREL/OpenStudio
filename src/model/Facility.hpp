@@ -68,7 +68,7 @@ namespace model {
   {
 
    public:
-    virtual ~Facility() {}
+    virtual ~Facility() = default;
 
     static IddObjectType iddObjectType();
 

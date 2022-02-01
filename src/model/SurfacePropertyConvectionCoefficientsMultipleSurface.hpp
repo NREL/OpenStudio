@@ -54,7 +54,7 @@ namespace model {
 
     explicit SurfacePropertyConvectionCoefficientsMultipleSurface(const Model& model);
 
-    virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface() {}
+    virtual ~SurfacePropertyConvectionCoefficientsMultipleSurface() = default;
 
     //@}
 

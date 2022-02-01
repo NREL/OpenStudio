@@ -56,7 +56,7 @@ namespace model {
     explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model, const HVACComponent& fan, const HVACComponent& heatingCoil,
                                                           const HVACComponent& coolingCoil, const HVACComponent& supplementalHeatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() {}
+    virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() = default;
 
     //@}
 

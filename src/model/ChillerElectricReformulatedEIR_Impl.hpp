@@ -51,7 +51,7 @@ namespace model {
 
       ChillerElectricReformulatedEIR_Impl(const ChillerElectricReformulatedEIR_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerElectricReformulatedEIR_Impl() {}
+      virtual ~ChillerElectricReformulatedEIR_Impl() = default;
 
       /** @name Virtual Methods */
       //@{

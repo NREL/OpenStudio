@@ -62,7 +62,7 @@ namespace model {
     // Ctor with hydronicTubingLength autosized
     ZoneHVACLowTempRadiantConstFlow(const Model& model, Schedule& availabilitySchedule, HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
-    virtual ~ZoneHVACLowTempRadiantConstFlow() {}
+    virtual ~ZoneHVACLowTempRadiantConstFlow() = default;
 
     //@}
 

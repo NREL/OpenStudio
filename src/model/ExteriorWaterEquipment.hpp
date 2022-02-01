@@ -61,7 +61,7 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorWaterEquipment() {}
+    virtual ~ExteriorWaterEquipment() = default;
 
     //@}
 

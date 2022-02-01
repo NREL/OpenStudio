@@ -53,7 +53,7 @@ namespace model {
 
       CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl(const CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl() {}
+      virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

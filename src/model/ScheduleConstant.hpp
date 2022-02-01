@@ -50,7 +50,7 @@ namespace model {
     /** Creates new ScheduleConstant in model and sets its value to 0.0. */
     explicit ScheduleConstant(const Model& model);
 
-    virtual ~ScheduleConstant() {}
+    virtual ~ScheduleConstant() = default;
 
     //@}
 

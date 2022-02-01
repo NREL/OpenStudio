@@ -53,7 +53,7 @@ namespace model {
     /** Sets \f$c_1 = c_2 = c_4 = 1.0,\ c_3 = -1.0\f$, x within [-1.0,1.0]. */
     explicit CurveExponentialSkewNormal(const Model& model);
 
-    virtual ~CurveExponentialSkewNormal() {}
+    virtual ~CurveExponentialSkewNormal() = default;
 
     //@}
 

@@ -56,7 +56,7 @@ namespace model {
 
       ExteriorWaterEquipment_Impl(const ExteriorWaterEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExteriorWaterEquipment_Impl() {}
+      virtual ~ExteriorWaterEquipment_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

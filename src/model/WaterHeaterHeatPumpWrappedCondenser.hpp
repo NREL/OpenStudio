@@ -58,7 +58,7 @@ namespace model {
     explicit WaterHeaterHeatPumpWrappedCondenser(const Model& model, const ModelObject& dxCoil, const HVACComponent& tank, const HVACComponent& fan,
                                                  Schedule& compressorSetpointTemperatureSchedule, Schedule& inletAirMixerSchedule);
 
-    virtual ~WaterHeaterHeatPumpWrappedCondenser() {}
+    virtual ~WaterHeaterHeatPumpWrappedCondenser() = default;
 
     //@}
 

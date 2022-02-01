@@ -57,7 +57,7 @@ namespace model {
 
     explicit RefrigerationCondenserEvaporativeCooled(const Model& model);
 
-    virtual ~RefrigerationCondenserEvaporativeCooled() {}
+    virtual ~RefrigerationCondenserEvaporativeCooled() = default;
 
     //@}
 

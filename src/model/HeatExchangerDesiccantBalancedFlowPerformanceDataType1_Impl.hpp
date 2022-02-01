@@ -55,7 +55,7 @@ namespace model {
       HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl(const HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl& other,
                                                                   Model_Impl* model, bool keepHandle);
 
-      virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl() {}
+      virtual ~HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

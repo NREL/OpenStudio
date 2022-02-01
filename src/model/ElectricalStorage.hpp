@@ -51,7 +51,7 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
    public:
     ElectricalStorage(IddObjectType type, const Model& model);
 
-    virtual ~ElectricalStorage() {}
+    virtual ~ElectricalStorage() = default;
 
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 

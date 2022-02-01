@@ -56,7 +56,7 @@ namespace model {
       ZoneHVACBaseboardRadiantConvectiveElectric_Impl(const ZoneHVACBaseboardRadiantConvectiveElectric_Impl& other, Model_Impl* model,
                                                       bool keepHandle);
 
-      virtual ~ZoneHVACBaseboardRadiantConvectiveElectric_Impl() {}
+      virtual ~ZoneHVACBaseboardRadiantConvectiveElectric_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

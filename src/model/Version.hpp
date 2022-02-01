@@ -45,7 +45,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //{
 
-    virtual ~Version() {}
+    virtual ~Version() = default;
 
     //@}
 

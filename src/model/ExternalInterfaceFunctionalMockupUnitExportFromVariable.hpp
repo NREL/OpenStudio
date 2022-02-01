@@ -52,7 +52,7 @@ namespace model {
     explicit ExternalInterfaceFunctionalMockupUnitExportFromVariable(const Model& model, const std::string& outputVariableIndexKeyName,
                                                                      const std::string& outputVariableName, const std::string& fMUVariableName);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportFromVariable() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportFromVariable() = default;
 
     //@}
 

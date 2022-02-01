@@ -53,7 +53,7 @@ namespace model {
     /** Sets \f$c_1 = c_2 = c_3 = 0.0,\ c_4 = 1.0\f$, and sets the range for x at [0.0,1.0]. */
     explicit CurveCubic(const Model& model);
 
-    virtual ~CurveCubic() {}
+    virtual ~CurveCubic() = default;
 
     //@}
 

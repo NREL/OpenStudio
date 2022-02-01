@@ -46,7 +46,7 @@ namespace model {
     // constructor
     explicit WeatherFileConditionType(const Model& model);
 
-    virtual ~WeatherFileConditionType() {}
+    virtual ~WeatherFileConditionType() = default;
 
     static IddObjectType iddObjectType();
 

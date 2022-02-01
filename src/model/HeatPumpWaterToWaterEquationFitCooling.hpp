@@ -60,7 +60,7 @@ namespace model {
 
     explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model);
 
-    virtual ~HeatPumpWaterToWaterEquationFitCooling() {}
+    virtual ~HeatPumpWaterToWaterEquationFitCooling() = default;
 
     //@}
 

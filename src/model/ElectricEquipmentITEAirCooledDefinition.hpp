@@ -61,7 +61,7 @@ namespace model {
     /** Create ElectricEquipmentITEAirCooledDefinition with default curves **/
     explicit ElectricEquipmentITEAirCooledDefinition(const Model& model);
 
-    virtual ~ElectricEquipmentITEAirCooledDefinition() {}
+    virtual ~ElectricEquipmentITEAirCooledDefinition() = default;
 
     //@}
 

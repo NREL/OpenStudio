@@ -56,7 +56,7 @@ namespace model {
 
       AirflowNetworkZone_Impl(const AirflowNetworkZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkZone_Impl() {}
+      virtual ~AirflowNetworkZone_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -55,7 +55,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    virtual ~Timestep() {}
+    virtual ~Timestep() = default;
 
     //@}
     /** @name Getters */

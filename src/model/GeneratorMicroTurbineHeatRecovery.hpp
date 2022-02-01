@@ -56,7 +56,7 @@ namespace model {
     // Constructs a new GeneratorMicroTurbineHeatRecovery object in the model, given a GeneratorMicroTurbine
     explicit GeneratorMicroTurbineHeatRecovery(const Model& model, GeneratorMicroTurbine& mchp);
 
-    virtual ~GeneratorMicroTurbineHeatRecovery() {}
+    virtual ~GeneratorMicroTurbineHeatRecovery() = default;
 
     //@}
 

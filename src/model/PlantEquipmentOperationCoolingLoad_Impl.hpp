@@ -51,7 +51,7 @@ namespace model {
 
       PlantEquipmentOperationCoolingLoad_Impl(const PlantEquipmentOperationCoolingLoad_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlantEquipmentOperationCoolingLoad_Impl() {}
+      virtual ~PlantEquipmentOperationCoolingLoad_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

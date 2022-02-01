@@ -130,7 +130,7 @@ namespace contam {
     /** Construct a new, empty translator. */
     ForwardTranslator();
     /** Destroy the translator.*/
-    ~ForwardTranslator() {}
+    ~ForwardTranslator() = default;
 
     //@}
     /** @name Translation Functions */

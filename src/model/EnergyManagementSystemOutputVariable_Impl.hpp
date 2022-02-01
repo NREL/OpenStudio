@@ -51,7 +51,7 @@ namespace model {
 
       EnergyManagementSystemOutputVariable_Impl(const EnergyManagementSystemOutputVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemOutputVariable_Impl() {}
+      virtual ~EnergyManagementSystemOutputVariable_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

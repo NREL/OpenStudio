@@ -68,7 +68,7 @@ namespace model {
 
     explicit MaterialPropertyGlazingSpectralData(const Model& model);
 
-    virtual ~MaterialPropertyGlazingSpectralData() {}
+    virtual ~MaterialPropertyGlazingSpectralData() = default;
 
     //@}
 

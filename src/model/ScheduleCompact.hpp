@@ -56,7 +56,7 @@ namespace model {
     /** Creates a ScheduleCompact with constantValue applied to the entire year, if
    *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty
    *  ScheduleCompact. */
-    virtual ~ScheduleCompact() {}
+    virtual ~ScheduleCompact() = default;
 
     //@}
 

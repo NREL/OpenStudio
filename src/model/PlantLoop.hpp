@@ -68,7 +68,7 @@ namespace model {
    */
     explicit PlantLoop(Model& model);
 
-    virtual ~PlantLoop() {}
+    virtual ~PlantLoop() = default;
 
     static std::vector<std::string> loadDistributionSchemeValues();
 

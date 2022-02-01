@@ -55,7 +55,7 @@ namespace model {
       // Clone copy constructor.
       SpaceLoad_Impl(const SpaceLoad_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceLoad_Impl() {}
+      virtual ~SpaceLoad_Impl() = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;

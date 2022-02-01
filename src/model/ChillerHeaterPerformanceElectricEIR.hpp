@@ -60,7 +60,7 @@ namespace model {
                                                  const Curve& chillerHeaterClgEIRFPLR, const Curve& chillerHeaterHtgCapFT,
                                                  const Curve& chillerHeaterHtgEIRFT, const Curve& chillerHeaterHtgEIRFPLR);
 
-    virtual ~ChillerHeaterPerformanceElectricEIR() {}
+    virtual ~ChillerHeaterPerformanceElectricEIR() = default;
 
     //@}
 

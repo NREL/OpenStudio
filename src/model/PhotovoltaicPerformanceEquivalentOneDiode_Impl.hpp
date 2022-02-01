@@ -51,7 +51,7 @@ namespace model {
 
       PhotovoltaicPerformanceEquivalentOneDiode_Impl(const PhotovoltaicPerformanceEquivalentOneDiode_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PhotovoltaicPerformanceEquivalentOneDiode_Impl() {}
+      virtual ~PhotovoltaicPerformanceEquivalentOneDiode_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

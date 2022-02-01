@@ -53,7 +53,7 @@ namespace model {
 
     explicit DefaultSurfaceConstructions(const Model& model);
 
-    virtual ~DefaultSurfaceConstructions() {}
+    virtual ~DefaultSurfaceConstructions() = default;
 
     //@}
     /** @name Static Methods */

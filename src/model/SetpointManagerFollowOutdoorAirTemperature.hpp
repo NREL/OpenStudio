@@ -61,7 +61,7 @@ namespace model {
    *  model. */
     explicit SetpointManagerFollowOutdoorAirTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowOutdoorAirTemperature() {}
+    virtual ~SetpointManagerFollowOutdoorAirTemperature() = default;
 
     //@}
 

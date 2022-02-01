@@ -55,7 +55,7 @@ namespace model {
 
     explicit HeaderedPumpsVariableSpeed(const Model& model);
 
-    virtual ~HeaderedPumpsVariableSpeed() {}
+    virtual ~HeaderedPumpsVariableSpeed() = default;
 
     //@}
 

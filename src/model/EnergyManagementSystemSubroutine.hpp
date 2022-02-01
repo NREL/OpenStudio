@@ -51,7 +51,7 @@ namespace model {
 
     explicit EnergyManagementSystemSubroutine(const Model& model);
 
-    virtual ~EnergyManagementSystemSubroutine() {}
+    virtual ~EnergyManagementSystemSubroutine() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
     /** Construct a specified flow rate object with a specified airflow value. */
     AirflowNetworkSpecifiedFlowRate(const Model& model, double airFlowValue);
 
-    virtual ~AirflowNetworkSpecifiedFlowRate() {}
+    virtual ~AirflowNetworkSpecifiedFlowRate() = default;
 
     //@}
 

@@ -60,7 +60,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     FahrenheitUnit_Impl(const std::string& scaleAbbreviation, int FExp = 0, const std::string& prettyString = "");
 
-    virtual ~FahrenheitUnit_Impl() {}
+    virtual ~FahrenheitUnit_Impl() = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

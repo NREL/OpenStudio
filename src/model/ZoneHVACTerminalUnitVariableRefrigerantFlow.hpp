@@ -59,7 +59,7 @@ namespace model {
     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, const CoilCoolingDXVariableRefrigerantFlow& coolingCoil,
                                                          const CoilHeatingDXVariableRefrigerantFlow& heatingCoil, const HVACComponent& fan);
 
-    virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() {}
+    virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() = default;
 
     static IddObjectType iddObjectType();
 

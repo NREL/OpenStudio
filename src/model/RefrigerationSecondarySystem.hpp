@@ -59,7 +59,7 @@ namespace model {
 
     explicit RefrigerationSecondarySystem(const Model& model);
 
-    virtual ~RefrigerationSecondarySystem() {}
+    virtual ~RefrigerationSecondarySystem() = default;
 
     //@}
 

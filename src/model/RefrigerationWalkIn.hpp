@@ -62,7 +62,7 @@ namespace model {
 
     explicit RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule);
 
-    virtual ~RefrigerationWalkIn() {}
+    virtual ~RefrigerationWalkIn() = default;
 
     //@}
 

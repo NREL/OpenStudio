@@ -63,7 +63,7 @@ namespace model {
    */
     explicit AirLoopHVACOutdoorAirSystem(Model& model, const ControllerOutdoorAir& controller);
 
-    virtual ~AirLoopHVACOutdoorAirSystem() {}
+    virtual ~AirLoopHVACOutdoorAirSystem() = default;
 
     /** Returns the return air port of the outdoor air system. */
     unsigned returnAirPort() const;

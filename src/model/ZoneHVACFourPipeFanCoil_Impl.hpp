@@ -54,7 +54,7 @@ namespace model {
 
       ZoneHVACFourPipeFanCoil_Impl(const ZoneHVACFourPipeFanCoil_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACFourPipeFanCoil_Impl() {}
+      virtual ~ZoneHVACFourPipeFanCoil_Impl() = default;
 
       //@}
 

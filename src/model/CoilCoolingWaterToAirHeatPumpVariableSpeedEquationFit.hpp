@@ -57,7 +57,7 @@ namespace model {
 
     explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model, const Curve& partLoadFraction);
 
-    virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit() {}
+    virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit() = default;
 
     //@}
 

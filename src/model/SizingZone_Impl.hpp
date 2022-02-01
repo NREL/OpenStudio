@@ -54,7 +54,7 @@ namespace model {
 
       SizingZone_Impl(const SizingZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SizingZone_Impl() {}
+      virtual ~SizingZone_Impl() = default;
 
       //@}
 

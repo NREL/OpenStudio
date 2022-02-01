@@ -52,7 +52,7 @@ namespace model {
 
       GasMixture_Impl(const GasMixture_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GasMixture_Impl() {}
+      virtual ~GasMixture_Impl() = default;
 
       //@}
 

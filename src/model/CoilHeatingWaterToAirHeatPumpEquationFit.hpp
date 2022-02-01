@@ -60,7 +60,7 @@ namespace model {
 
     CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
 
-    virtual ~CoilHeatingWaterToAirHeatPumpEquationFit() {}
+    virtual ~CoilHeatingWaterToAirHeatPumpEquationFit() = default;
 
     //@}
 

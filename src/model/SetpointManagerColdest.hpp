@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerColdest(const Model& model);
 
-    virtual ~SetpointManagerColdest() {}
+    virtual ~SetpointManagerColdest() = default;
 
     //@}
 

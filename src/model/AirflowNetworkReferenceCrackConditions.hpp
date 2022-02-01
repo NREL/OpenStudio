@@ -54,7 +54,7 @@ namespace model {
     /** Construct a reference crack conditions object with specified temperature, pressure, and barometric pressure. */
     AirflowNetworkReferenceCrackConditions(const Model& model, double temperature, double barometricPressure, double humidityRatio);
 
-    virtual ~AirflowNetworkReferenceCrackConditions() {}
+    virtual ~AirflowNetworkReferenceCrackConditions() = default;
 
     //@}
 

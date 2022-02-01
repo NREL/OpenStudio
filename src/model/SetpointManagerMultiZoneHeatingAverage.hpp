@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerMultiZoneHeatingAverage(const Model& model);
 
-    virtual ~SetpointManagerMultiZoneHeatingAverage() {}
+    virtual ~SetpointManagerMultiZoneHeatingAverage() = default;
 
     //@}
 

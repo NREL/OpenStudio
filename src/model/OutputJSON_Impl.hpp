@@ -51,7 +51,7 @@ namespace model {
 
       OutputJSON_Impl(const OutputJSON_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputJSON_Impl() {}
+      virtual ~OutputJSON_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

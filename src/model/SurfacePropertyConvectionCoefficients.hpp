@@ -61,7 +61,7 @@ namespace model {
 
     explicit SurfacePropertyConvectionCoefficients(const InternalMass& surface);
 
-    virtual ~SurfacePropertyConvectionCoefficients() {}
+    virtual ~SurfacePropertyConvectionCoefficients() = default;
 
     //@}
 

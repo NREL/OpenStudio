@@ -56,7 +56,7 @@ namespace model {
 
     explicit SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model);
 
-    virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() {}
+    virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() = default;
 
     //@}
 

@@ -52,7 +52,7 @@ namespace model {
 
       OtherEquipmentDefinition_Impl(const OtherEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OtherEquipmentDefinition_Impl() {}
+      virtual ~OtherEquipmentDefinition_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

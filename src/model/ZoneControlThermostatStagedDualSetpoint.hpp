@@ -54,7 +54,7 @@ namespace model {
 
     explicit ZoneControlThermostatStagedDualSetpoint(const Model& model);
 
-    virtual ~ZoneControlThermostatStagedDualSetpoint() {}
+    virtual ~ZoneControlThermostatStagedDualSetpoint() = default;
 
     //@}
 

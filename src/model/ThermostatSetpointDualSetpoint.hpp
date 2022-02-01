@@ -51,7 +51,7 @@ namespace model {
 
     explicit ThermostatSetpointDualSetpoint(const Model& model);
 
-    virtual ~ThermostatSetpointDualSetpoint() {}
+    virtual ~ThermostatSetpointDualSetpoint() = default;
 
     //@}
 

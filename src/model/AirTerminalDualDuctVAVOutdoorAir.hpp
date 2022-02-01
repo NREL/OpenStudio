@@ -56,7 +56,7 @@ namespace model {
 
     explicit AirTerminalDualDuctVAVOutdoorAir(const Model& model);
 
-    virtual ~AirTerminalDualDuctVAVOutdoorAir() {}
+    virtual ~AirTerminalDualDuctVAVOutdoorAir() = default;
 
     //@}
 

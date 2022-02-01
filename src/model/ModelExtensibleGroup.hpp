@@ -53,7 +53,7 @@ namespace model {
   class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup
   {
    public:
-    virtual ~ModelExtensibleGroup() {}
+    virtual ~ModelExtensibleGroup() = default;
 
     /** @name Template Methods */
     //@{

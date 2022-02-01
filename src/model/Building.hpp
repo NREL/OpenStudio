@@ -72,7 +72,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Building() {}
+    virtual ~Building() = default;
 
     //@}
 

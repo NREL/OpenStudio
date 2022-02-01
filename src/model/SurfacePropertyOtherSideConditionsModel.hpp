@@ -51,7 +51,7 @@ namespace model {
 
     explicit SurfacePropertyOtherSideConditionsModel(const Model& model);
 
-    virtual ~SurfacePropertyOtherSideConditionsModel() {}
+    virtual ~SurfacePropertyOtherSideConditionsModel() = default;
 
     //@}
 

@@ -53,7 +53,7 @@ namespace model {
 
       AvailabilityManagerHighTemperatureTurnOn_Impl(const AvailabilityManagerHighTemperatureTurnOn_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerHighTemperatureTurnOn_Impl() {}
+      virtual ~AvailabilityManagerHighTemperatureTurnOn_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

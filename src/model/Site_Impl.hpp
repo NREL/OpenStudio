@@ -66,7 +66,7 @@ namespace model {
 
       Site_Impl(const Site_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Site_Impl() {}
+      virtual ~Site_Impl() = default;
 
       //@}
 

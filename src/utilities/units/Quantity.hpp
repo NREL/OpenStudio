@@ -56,7 +56,7 @@ class UTILITIES_API Quantity
 
   Quantity& operator=(const Quantity& q);
 
-  virtual ~Quantity(){};
+  virtual ~Quantity() = default;
 
   //@}
   /** @name Value */

@@ -55,7 +55,7 @@ namespace model {
 
     explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model);
 
-    virtual ~EnergyManagementSystemCurveOrTableIndexVariable() {}
+    virtual ~EnergyManagementSystemCurveOrTableIndexVariable() = default;
 
     //@}
 

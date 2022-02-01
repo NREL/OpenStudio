@@ -49,7 +49,7 @@ namespace model {
   class MODEL_API ExteriorLoadInstance : public ModelObject
   {
    public:
-    virtual ~ExteriorLoadInstance() {}
+    virtual ~ExteriorLoadInstance() = default;
 
     /** Returns the definition of this instance. **/
     ExteriorLoadDefinition definition() const;

@@ -66,7 +66,7 @@ namespace model {
   class MODEL_API SimulationControl : public ParentObject
   {
    public:
-    virtual ~SimulationControl() {}
+    virtual ~SimulationControl() = default;
 
     //@}
     /** @name Static Methods */

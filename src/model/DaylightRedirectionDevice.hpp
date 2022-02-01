@@ -54,7 +54,7 @@ namespace model {
 
     explicit DaylightRedirectionDevice(const Model& model);
 
-    virtual ~DaylightRedirectionDevice() {}
+    virtual ~DaylightRedirectionDevice() = default;
 
     //@}
 

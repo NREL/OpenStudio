@@ -55,7 +55,7 @@ namespace model {
 
       RefrigerationGasCoolerAirCooled_Impl(const RefrigerationGasCoolerAirCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationGasCoolerAirCooled_Impl() {}
+      virtual ~RefrigerationGasCoolerAirCooled_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

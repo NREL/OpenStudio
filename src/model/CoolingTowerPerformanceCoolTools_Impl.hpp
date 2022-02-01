@@ -52,7 +52,7 @@ namespace model {
 
       CoolingTowerPerformanceCoolTools_Impl(const CoolingTowerPerformanceCoolTools_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoolingTowerPerformanceCoolTools_Impl() {}
+      virtual ~CoolingTowerPerformanceCoolTools_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -55,7 +55,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~YearDescription() {}
+    virtual ~YearDescription() = default;
 
     //@}
     /** @name Static Methods */

@@ -64,7 +64,7 @@ namespace model {
 
     explicit PlantComponentUserDefined(const Model& model);
 
-    virtual ~PlantComponentUserDefined() {}
+    virtual ~PlantComponentUserDefined() = default;
 
     //@}
 

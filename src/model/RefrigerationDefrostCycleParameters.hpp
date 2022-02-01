@@ -51,7 +51,7 @@ namespace model {
 
     explicit RefrigerationDefrostCycleParameters(const Model& model);
 
-    virtual ~RefrigerationDefrostCycleParameters() {}
+    virtual ~RefrigerationDefrostCycleParameters() = default;
 
     //@}
 

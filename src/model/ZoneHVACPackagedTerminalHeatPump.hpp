@@ -57,7 +57,7 @@ namespace model {
     ZoneHVACPackagedTerminalHeatPump(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil,
                                      HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-    virtual ~ZoneHVACPackagedTerminalHeatPump() {}
+    virtual ~ZoneHVACPackagedTerminalHeatPump() = default;
 
     //@}
 

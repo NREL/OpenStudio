@@ -53,7 +53,7 @@ namespace model {
 
       PeopleDefinition_Impl(const PeopleDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PeopleDefinition_Impl() {}
+      virtual ~PeopleDefinition_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

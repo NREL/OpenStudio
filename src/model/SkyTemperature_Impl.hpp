@@ -50,7 +50,7 @@ namespace model {
       SkyTemperature_Impl(const SkyTemperature_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~SkyTemperature_Impl() {}
+      virtual ~SkyTemperature_Impl() = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;

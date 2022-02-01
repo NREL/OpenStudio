@@ -51,7 +51,7 @@ namespace model {
 
     explicit PlantEquipmentOperationCoolingLoad(const Model& model);
 
-    virtual ~PlantEquipmentOperationCoolingLoad() {}
+    virtual ~PlantEquipmentOperationCoolingLoad() = default;
 
     //@}
 

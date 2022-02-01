@@ -55,7 +55,7 @@ namespace model {
 
     explicit ZoneHVACEnergyRecoveryVentilatorController(const Model& model);
 
-    virtual ~ZoneHVACEnergyRecoveryVentilatorController() {}
+    virtual ~ZoneHVACEnergyRecoveryVentilatorController() = default;
 
     //@}
 

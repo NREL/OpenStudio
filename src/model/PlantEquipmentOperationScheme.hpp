@@ -48,7 +48,7 @@ namespace model {
    public:
     PlantEquipmentOperationScheme(IddObjectType type, const Model& model);
 
-    virtual ~PlantEquipmentOperationScheme() {}
+    virtual ~PlantEquipmentOperationScheme() = default;
 
     boost::optional<PlantLoop> plantLoop() const;
 

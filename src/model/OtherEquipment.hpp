@@ -55,7 +55,7 @@ namespace model {
 
     explicit OtherEquipment(const OtherEquipmentDefinition& definition);
 
-    virtual ~OtherEquipment() {}
+    virtual ~OtherEquipment() = default;
 
     //@}
 

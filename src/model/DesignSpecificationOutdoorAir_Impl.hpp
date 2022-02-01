@@ -55,7 +55,7 @@ namespace model {
 
       DesignSpecificationOutdoorAir_Impl(const DesignSpecificationOutdoorAir_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DesignSpecificationOutdoorAir_Impl() {}
+      virtual ~DesignSpecificationOutdoorAir_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

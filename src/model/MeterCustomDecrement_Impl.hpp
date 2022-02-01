@@ -56,7 +56,7 @@ namespace model {
       MeterCustomDecrement_Impl(const MeterCustomDecrement_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~MeterCustomDecrement_Impl() {}
+      virtual ~MeterCustomDecrement_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

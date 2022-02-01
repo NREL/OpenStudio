@@ -51,7 +51,7 @@ namespace model {
 
       PlantEquipmentOperationOutdoorWetBulb_Impl(const PlantEquipmentOperationOutdoorWetBulb_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlantEquipmentOperationOutdoorWetBulb_Impl() {}
+      virtual ~PlantEquipmentOperationOutdoorWetBulb_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

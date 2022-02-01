@@ -46,7 +46,7 @@ namespace model {
     // constructor
     explicit WeatherFileDays(const Model& model);
 
-    virtual ~WeatherFileDays() {}
+    virtual ~WeatherFileDays() = default;
 
     static IddObjectType iddObjectType();
 

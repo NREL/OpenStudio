@@ -51,7 +51,7 @@ namespace model {
 
       ExternalInterfaceSchedule_Impl(const ExternalInterfaceSchedule_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalInterfaceSchedule_Impl() {}
+      virtual ~ExternalInterfaceSchedule_Impl() = default;
 
       //@}
       /** @name Getters */

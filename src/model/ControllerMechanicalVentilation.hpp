@@ -51,7 +51,7 @@ namespace model {
    public:
     explicit ControllerMechanicalVentilation(const Model& model);
 
-    virtual ~ControllerMechanicalVentilation() {}
+    virtual ~ControllerMechanicalVentilation() = default;
 
     static IddObjectType iddObjectType();
 

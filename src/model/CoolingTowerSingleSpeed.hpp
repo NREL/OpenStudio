@@ -55,7 +55,7 @@ namespace model {
 
     explicit CoolingTowerSingleSpeed(const Model& model);
 
-    virtual ~CoolingTowerSingleSpeed() {}
+    virtual ~CoolingTowerSingleSpeed() = default;
 
     //@}
 

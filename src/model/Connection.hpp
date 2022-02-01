@@ -47,7 +47,7 @@ namespace model {
     // constructor
     explicit Connection(const Model& model);
 
-    virtual ~Connection() {}
+    virtual ~Connection() = default;
 
     boost::optional<ModelObject> sourceObject() const;
 

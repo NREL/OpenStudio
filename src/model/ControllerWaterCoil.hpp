@@ -56,7 +56,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ControllerWaterCoil() {}
+    virtual ~ControllerWaterCoil() = default;
 
     //@}
     /** @name Static Methods */

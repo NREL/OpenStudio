@@ -88,7 +88,7 @@ namespace model {
     /// the space inherits that by default.
     explicit Space(const Model& model);
 
-    virtual ~Space() {}
+    virtual ~Space() = default;
 
     //@}
 

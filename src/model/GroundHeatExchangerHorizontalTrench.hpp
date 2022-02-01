@@ -52,7 +52,7 @@ namespace model {
 
     explicit GroundHeatExchangerHorizontalTrench(const Model& model);
 
-    virtual ~GroundHeatExchangerHorizontalTrench() {}
+    virtual ~GroundHeatExchangerHorizontalTrench() = default;
 
     //@}
 

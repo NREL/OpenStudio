@@ -61,7 +61,7 @@ namespace model {
 
     explicit RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule);
 
-    virtual ~RefrigerationCase() {}
+    virtual ~RefrigerationCase() = default;
 
     //@}
 

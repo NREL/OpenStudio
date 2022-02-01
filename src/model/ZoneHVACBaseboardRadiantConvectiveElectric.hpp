@@ -55,7 +55,7 @@ namespace model {
 
     explicit ZoneHVACBaseboardRadiantConvectiveElectric(const Model& model);
 
-    virtual ~ZoneHVACBaseboardRadiantConvectiveElectric() {}
+    virtual ~ZoneHVACBaseboardRadiantConvectiveElectric() = default;
 
     //@}
 

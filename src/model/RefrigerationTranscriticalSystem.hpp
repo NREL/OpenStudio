@@ -58,7 +58,7 @@ namespace model {
 
     explicit RefrigerationTranscriticalSystem(const Model& model);
 
-    virtual ~RefrigerationTranscriticalSystem() {}
+    virtual ~RefrigerationTranscriticalSystem() = default;
 
     //@}
 

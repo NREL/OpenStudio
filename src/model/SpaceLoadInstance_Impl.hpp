@@ -55,7 +55,7 @@ namespace model {
       // Clone copy constructor.
       SpaceLoadInstance_Impl(const SpaceLoadInstance_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceLoadInstance_Impl() {}
+      virtual ~SpaceLoadInstance_Impl() = default;
 
       /** Returns the definition of this instance. */
       SpaceLoadDefinition definition() const;

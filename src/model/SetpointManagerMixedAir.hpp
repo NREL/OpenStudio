@@ -53,7 +53,7 @@ namespace model {
   class MODEL_API SetpointManagerMixedAir : public SetpointManager
   {
    public:
-    virtual ~SetpointManagerMixedAir() {}
+    virtual ~SetpointManagerMixedAir() = default;
 
     /** Constructs a new SetpointManagerMixedAir object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.

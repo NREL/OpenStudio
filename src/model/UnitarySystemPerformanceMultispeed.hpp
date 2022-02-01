@@ -88,7 +88,7 @@ namespace model {
     //@{
     explicit UnitarySystemPerformanceMultispeed(const Model& model);
 
-    virtual ~UnitarySystemPerformanceMultispeed() {}
+    virtual ~UnitarySystemPerformanceMultispeed() = default;
     //@}
 
     static IddObjectType iddObjectType();

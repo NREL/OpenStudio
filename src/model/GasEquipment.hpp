@@ -55,7 +55,7 @@ namespace model {
 
     explicit GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition);
 
-    virtual ~GasEquipment() {}
+    virtual ~GasEquipment() = default;
 
     //@}
 

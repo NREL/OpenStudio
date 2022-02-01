@@ -55,7 +55,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~StandardsInformationConstruction() {}
+    virtual ~StandardsInformationConstruction() = default;
 
     //@}
     /** @name Static Methods */

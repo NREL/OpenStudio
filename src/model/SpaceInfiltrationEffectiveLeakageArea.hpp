@@ -54,7 +54,7 @@ namespace model {
 
     explicit SpaceInfiltrationEffectiveLeakageArea(const Model& model);
 
-    virtual ~SpaceInfiltrationEffectiveLeakageArea() {}
+    virtual ~SpaceInfiltrationEffectiveLeakageArea() = default;
 
     //@}
 

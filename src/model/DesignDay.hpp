@@ -324,7 +324,7 @@ namespace model {
 
     //@}
 
-    virtual ~DesignDay() {}
+    virtual ~DesignDay() = default;
 
    protected:
     friend class Model;

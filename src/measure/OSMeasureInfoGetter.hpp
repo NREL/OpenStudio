@@ -117,7 +117,7 @@ namespace measure {
   class MEASURE_API OSMeasureInfoGetter
   {
    public:
-    virtual ~OSMeasureInfoGetter() {}
+    virtual ~OSMeasureInfoGetter() = default;
 
     virtual OSMeasureInfo getInfo(const BCLMeasure& measure) = 0;
 

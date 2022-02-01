@@ -53,7 +53,7 @@ namespace model {
    public:
     explicit CoilCoolingDXVariableRefrigerantFlow(const Model& model);
 
-    virtual ~CoilCoolingDXVariableRefrigerantFlow() {}
+    virtual ~CoilCoolingDXVariableRefrigerantFlow() = default;
 
     static IddObjectType iddObjectType();
 

@@ -52,7 +52,7 @@ namespace model {
 
       CurveDoubleExponentialDecay_Impl(const CurveDoubleExponentialDecay_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveDoubleExponentialDecay_Impl() {}
+      virtual ~CurveDoubleExponentialDecay_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

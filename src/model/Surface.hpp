@@ -76,7 +76,7 @@ namespace model {
 
     explicit Surface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~Surface() {}
+    virtual ~Surface() = default;
 
     //@}
     /** @name Static Methods */

@@ -54,7 +54,7 @@ namespace model {
     /** Initializes /f$c_1 = c_2 = c_3 = 1.0,\ xmin = 0.0,\ xmax = 1.0/f$ */
     explicit CurveRectangularHyperbola2(const Model& model);
 
-    virtual ~CurveRectangularHyperbola2() {}
+    virtual ~CurveRectangularHyperbola2() = default;
 
     //@}
 

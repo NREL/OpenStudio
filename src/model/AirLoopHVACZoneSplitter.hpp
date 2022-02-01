@@ -57,7 +57,7 @@ namespace model {
     /** Constructs a new AirLoopHVACZoneSplitter object and places it inside the model. */
     explicit AirLoopHVACZoneSplitter(const Model& model);
 
-    virtual ~AirLoopHVACZoneSplitter() {}
+    virtual ~AirLoopHVACZoneSplitter() = default;
 
     /// Returns the IddObjectType.
     static IddObjectType iddObjectType();

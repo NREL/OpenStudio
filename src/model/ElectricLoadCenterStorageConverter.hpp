@@ -57,7 +57,7 @@ namespace model {
 
     explicit ElectricLoadCenterStorageConverter(const Model& model);
 
-    virtual ~ElectricLoadCenterStorageConverter() {}
+    virtual ~ElectricLoadCenterStorageConverter() = default;
 
     //@}
 

@@ -56,7 +56,7 @@ namespace model {
    public:
     PlantEquipmentOperationRangeBasedScheme(IddObjectType type, const Model& model);
 
-    virtual ~PlantEquipmentOperationRangeBasedScheme() {}
+    virtual ~PlantEquipmentOperationRangeBasedScheme() = default;
 
     friend class openstudio::IdfObject;
 

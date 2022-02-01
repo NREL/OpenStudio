@@ -54,7 +54,7 @@ namespace model {
 
     explicit AvailabilityManagerHighTemperatureTurnOn(const Model& model);
 
-    virtual ~AvailabilityManagerHighTemperatureTurnOn() {}
+    virtual ~AvailabilityManagerHighTemperatureTurnOn() = default;
 
     //@}
 

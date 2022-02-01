@@ -66,7 +66,7 @@ class IdfFixture : public ::testing::Test
   static openstudio::ImfFile imfFile;
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  virtual ~IdfFixture() {}
+  virtual ~IdfFixture() = default;
 };
 
 #endif  // UTILITIES_IDF_TEST_IDFFIXTURE_HPP

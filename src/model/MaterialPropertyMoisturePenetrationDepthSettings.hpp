@@ -57,7 +57,7 @@ namespace model {
                                                               double moistureEquationCoefficientC, double moistureEquationCoefficientD,
                                                               double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor);
 
-    virtual ~MaterialPropertyMoisturePenetrationDepthSettings() {}
+    virtual ~MaterialPropertyMoisturePenetrationDepthSettings() = default;
 
     //@}
 

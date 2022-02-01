@@ -57,7 +57,7 @@ namespace model {
 
     explicit InteriorPartitionSurfaceGroup(const Model& model);
 
-    virtual ~InteriorPartitionSurfaceGroup() {}
+    virtual ~InteriorPartitionSurfaceGroup() = default;
 
     //@}
     /** @name Static Methods */

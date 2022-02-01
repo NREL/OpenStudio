@@ -61,7 +61,7 @@ namespace model {
     // This constructor defaults the availabilitySchedule to alwaysOnDiscrete, and **does not set any heating nor cooling coil**
     explicit ZoneHVACLowTempRadiantVarFlow(const Model& model);
 
-    virtual ~ZoneHVACLowTempRadiantVarFlow() {}
+    virtual ~ZoneHVACLowTempRadiantVarFlow() = default;
 
     //@}
 

@@ -64,7 +64,7 @@ namespace model {
     ZoneHVACFourPipeFanCoil(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& coolingCoil,
                             HVACComponent& heatingCoil);
 
-    virtual ~ZoneHVACFourPipeFanCoil() {}
+    virtual ~ZoneHVACFourPipeFanCoil() = default;
 
     //@}
 

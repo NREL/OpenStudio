@@ -62,7 +62,7 @@ class UTILITIES_API UpdateManager
   UpdateManager(const std::string& appName, const std::string& url);
 
   // virtual destructor
-  virtual ~UpdateManager() {}
+  virtual ~UpdateManager() = default;
 
   /// returns the application name
   std::string appName() const;

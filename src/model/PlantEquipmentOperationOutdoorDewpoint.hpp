@@ -51,7 +51,7 @@ namespace model {
 
     explicit PlantEquipmentOperationOutdoorDewpoint(const Model& model);
 
-    virtual ~PlantEquipmentOperationOutdoorDewpoint() {}
+    virtual ~PlantEquipmentOperationOutdoorDewpoint() = default;
 
     //@}
 

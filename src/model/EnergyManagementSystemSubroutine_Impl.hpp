@@ -51,7 +51,7 @@ namespace model {
 
       EnergyManagementSystemSubroutine_Impl(const EnergyManagementSystemSubroutine_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemSubroutine_Impl() {}
+      virtual ~EnergyManagementSystemSubroutine_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

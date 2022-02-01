@@ -52,7 +52,7 @@ namespace model {
 
     explicit RoofVegetation(const Model& model, const std::string& roughness = "Smooth");
 
-    virtual ~RoofVegetation() {}
+    virtual ~RoofVegetation() = default;
 
     //@}
 

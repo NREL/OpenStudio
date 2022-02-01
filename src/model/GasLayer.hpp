@@ -50,7 +50,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~GasLayer() {}
+    virtual ~GasLayer() = default;
 
     //@}
    protected:

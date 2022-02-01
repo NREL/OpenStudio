@@ -54,7 +54,7 @@ namespace model {
     /** Construct a constant pressure drop object. */
     AirflowNetworkConstantPressureDrop(const Model& model, double pressureDrop);
 
-    virtual ~AirflowNetworkConstantPressureDrop() {}
+    virtual ~AirflowNetworkConstantPressureDrop() = default;
 
     //@}
 

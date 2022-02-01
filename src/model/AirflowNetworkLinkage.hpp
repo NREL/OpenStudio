@@ -52,7 +52,7 @@ namespace model {
 
     AirflowNetworkLinkage(IddObjectType type, const Model& model);
 
-    virtual ~AirflowNetworkLinkage() {}
+    virtual ~AirflowNetworkLinkage() = default;
 
     //@}
     /** @name Virtual Methods */

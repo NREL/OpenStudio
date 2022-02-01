@@ -51,7 +51,7 @@ namespace model {
 
     explicit PlantEquipmentOperationOutdoorRelativeHumidity(const Model& model);
 
-    virtual ~PlantEquipmentOperationOutdoorRelativeHumidity() {}
+    virtual ~PlantEquipmentOperationOutdoorRelativeHumidity() = default;
 
     //@}
 

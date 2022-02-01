@@ -56,7 +56,7 @@ namespace model {
 
     explicit SolarCollectorFlatPlateWater(const Model& model);
 
-    virtual ~SolarCollectorFlatPlateWater() {}
+    virtual ~SolarCollectorFlatPlateWater() = default;
 
     //@}
 

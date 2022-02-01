@@ -54,7 +54,7 @@ namespace model {
 
       CoilHeatingDesuperheater_Impl(const CoilHeatingDesuperheater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingDesuperheater_Impl() {}
+      virtual ~CoilHeatingDesuperheater_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

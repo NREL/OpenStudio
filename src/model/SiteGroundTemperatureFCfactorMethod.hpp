@@ -53,7 +53,7 @@ namespace model {
 
     explicit SiteGroundTemperatureFCfactorMethod(Model& model);
 
-    virtual ~SiteGroundTemperatureFCfactorMethod() {}
+    virtual ~SiteGroundTemperatureFCfactorMethod() = default;
 
     //@}
     /** @name Static Methods */

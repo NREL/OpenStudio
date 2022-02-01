@@ -51,7 +51,7 @@ namespace model {
    public:
     explicit SetpointManagerWarmest(const Model& model);
 
-    virtual ~SetpointManagerWarmest() {}
+    virtual ~SetpointManagerWarmest() = default;
 
     static IddObjectType iddObjectType();
 

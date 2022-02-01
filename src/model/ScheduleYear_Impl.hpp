@@ -56,7 +56,7 @@ namespace model {
 
       ScheduleYear_Impl(const ScheduleYear_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleYear_Impl() {}
+      virtual ~ScheduleYear_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

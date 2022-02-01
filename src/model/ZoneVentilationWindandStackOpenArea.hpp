@@ -54,7 +54,7 @@ namespace model {
 
     explicit ZoneVentilationWindandStackOpenArea(const Model& model);
 
-    virtual ~ZoneVentilationWindandStackOpenArea() {}
+    virtual ~ZoneVentilationWindandStackOpenArea() = default;
 
     //@}
 

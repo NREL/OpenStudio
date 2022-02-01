@@ -56,7 +56,7 @@ namespace model {
 
     explicit SteamEquipment(const SteamEquipmentDefinition& definition);
 
-    virtual ~SteamEquipment() {}
+    virtual ~SteamEquipment() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
     explicit ExternalInterfaceActuator(const ModelObject& modelObject, const std::string actuatedComponentType,
                                        const std::string actuatedComponentControlType);
 
-    virtual ~ExternalInterfaceActuator() {}
+    virtual ~ExternalInterfaceActuator() = default;
 
     //@}
 

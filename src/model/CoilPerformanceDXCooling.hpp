@@ -59,7 +59,7 @@ namespace model {
                                       const Curve& coolingCapacityFunctionofFlowFraction, const Curve& energyInputRatioFunctionofTemperature,
                                       const Curve& energyInputRatioFunctionofFlowFraction, const Curve& partLoadFractionCorrelation);
 
-    virtual ~CoilPerformanceDXCooling() {}
+    virtual ~CoilPerformanceDXCooling() = default;
 
     //@}
 

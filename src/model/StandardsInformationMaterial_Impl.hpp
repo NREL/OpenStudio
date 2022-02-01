@@ -56,7 +56,7 @@ namespace model {
 
       StandardsInformationMaterial_Impl(const StandardsInformationMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~StandardsInformationMaterial_Impl() {}
+      virtual ~StandardsInformationMaterial_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

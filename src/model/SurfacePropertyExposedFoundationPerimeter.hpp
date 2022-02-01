@@ -54,7 +54,7 @@ namespace model {
 
     explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface, std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
 
-    virtual ~SurfacePropertyExposedFoundationPerimeter() {}
+    virtual ~SurfacePropertyExposedFoundationPerimeter() = default;
 
     //@}
 

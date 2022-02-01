@@ -51,7 +51,7 @@ namespace model {
 
     explicit ThermochromicGlazing(const Model& model, double opticalDataTemperature = 80.0);
 
-    virtual ~ThermochromicGlazing() {}
+    virtual ~ThermochromicGlazing() = default;
 
     //@}
 

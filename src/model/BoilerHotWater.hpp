@@ -55,7 +55,7 @@ namespace model {
 
     explicit BoilerHotWater(const Model& model);
 
-    virtual ~BoilerHotWater() {}
+    virtual ~BoilerHotWater() = default;
 
     //@}
 

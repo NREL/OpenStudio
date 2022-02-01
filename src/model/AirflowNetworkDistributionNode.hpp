@@ -65,7 +65,7 @@ namespace model {
 
     AirflowNetworkDistributionNode(const Model& model);
 
-    virtual ~AirflowNetworkDistributionNode() {}
+    virtual ~AirflowNetworkDistributionNode() = default;
 
     //@}
 

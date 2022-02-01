@@ -115,7 +115,7 @@ namespace model {
       /** Swaps underlying data between this workspace and other. */
       virtual void swap(Workspace& other) override;
 
-      virtual ~Model_Impl() {}
+      virtual ~Model_Impl() = default;
 
       /** Creates ComponentWatchers for each ComponentData object. Should be called as part of
      *  construction from IdfFile or Workspace. */

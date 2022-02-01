@@ -51,7 +51,7 @@ namespace model {
 
     explicit InfraredTransparentMaterial(const Model& model);
 
-    virtual ~InfraredTransparentMaterial() {}
+    virtual ~InfraredTransparentMaterial() = default;
 
     //@}
 

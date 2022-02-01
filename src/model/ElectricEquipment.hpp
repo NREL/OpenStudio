@@ -56,7 +56,7 @@ namespace model {
 
     explicit ElectricEquipment(const ElectricEquipmentDefinition& electricEquipmentDefinition);
 
-    virtual ~ElectricEquipment() {}
+    virtual ~ElectricEquipment() = default;
 
     //@}
 

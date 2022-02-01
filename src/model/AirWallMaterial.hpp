@@ -51,7 +51,7 @@ namespace model {
 
     explicit AirWallMaterial(const Model& model);
 
-    virtual ~AirWallMaterial() {}
+    virtual ~AirWallMaterial() = default;
 
     //@}
 

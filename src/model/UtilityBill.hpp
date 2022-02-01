@@ -163,7 +163,7 @@ namespace model {
 
     explicit UtilityBill(const FuelType& fuelType, const Model& model);
 
-    virtual ~UtilityBill() {}
+    virtual ~UtilityBill() = default;
 
     //@}
 

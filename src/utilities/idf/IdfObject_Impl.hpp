@@ -82,7 +82,7 @@ namespace detail {
     IdfObject_Impl(const Handle& handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
                    const StringVector& fieldComments);
 
-    virtual ~IdfObject_Impl() {}
+    virtual ~IdfObject_Impl() = default;
 
     //@}
     /** @name Getters */

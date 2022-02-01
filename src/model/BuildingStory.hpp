@@ -61,7 +61,7 @@ namespace model {
 
     explicit BuildingStory(const Model& model);
 
-    virtual ~BuildingStory() {}
+    virtual ~BuildingStory() = default;
 
     //@}
 

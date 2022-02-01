@@ -51,7 +51,7 @@ namespace model {
 
     explicit EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName);
 
-    virtual ~EnergyManagementSystemGlobalVariable() {}
+    virtual ~EnergyManagementSystemGlobalVariable() = default;
 
     //@}
 

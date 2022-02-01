@@ -55,7 +55,7 @@ namespace model {
 
     explicit CoilCoolingDXCurveFitSpeed(const Model& model);
 
-    virtual ~CoilCoolingDXCurveFitSpeed() {}
+    virtual ~CoilCoolingDXCurveFitSpeed() = default;
 
     //@}
 

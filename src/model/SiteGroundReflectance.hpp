@@ -50,7 +50,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SiteGroundReflectance() {}
+    virtual ~SiteGroundReflectance() = default;
 
     //@}
     /** @name Static Methods */

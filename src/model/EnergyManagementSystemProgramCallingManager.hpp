@@ -52,7 +52,7 @@ namespace model {
 
     explicit EnergyManagementSystemProgramCallingManager(const Model& model);
 
-    virtual ~EnergyManagementSystemProgramCallingManager() {}
+    virtual ~EnergyManagementSystemProgramCallingManager() = default;
 
     //@}
 

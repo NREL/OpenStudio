@@ -54,7 +54,7 @@ namespace model {
 
     explicit SetpointManagerOutdoorAirPretreat(const Model& model);
 
-    virtual ~SetpointManagerOutdoorAirPretreat() {}
+    virtual ~SetpointManagerOutdoorAirPretreat() = default;
 
     //@}
 

@@ -58,7 +58,7 @@ namespace model {
 
     explicit RefrigerationAirChiller(const Model& model, Schedule& defrostSchedule);
 
-    virtual ~RefrigerationAirChiller() {}
+    virtual ~RefrigerationAirChiller() = default;
 
     //@}
 

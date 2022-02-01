@@ -58,7 +58,7 @@ namespace model {
       // Clone copy constructor.
       Material_Impl(const Material_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Material_Impl() {}
+      virtual ~Material_Impl() = default;
 
       //@}
       /** @name Getters */

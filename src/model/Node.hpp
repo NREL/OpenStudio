@@ -72,7 +72,7 @@ namespace model {
    */
     explicit Node(const Model& model);
 
-    virtual ~Node() {}
+    virtual ~Node() = default;
 
     std::vector<SetpointManager> setpointManagers() const;
 

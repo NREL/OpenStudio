@@ -56,7 +56,7 @@ namespace model {
 
     explicit LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule);
 
-    virtual ~LoadProfilePlant() {}
+    virtual ~LoadProfilePlant() = default;
 
     //@}
 

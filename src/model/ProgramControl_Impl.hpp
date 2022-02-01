@@ -54,7 +54,7 @@ namespace model {
 
       ProgramControl_Impl(const ProgramControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ProgramControl_Impl() {}
+      virtual ~ProgramControl_Impl() = default;
 
       //@}
 

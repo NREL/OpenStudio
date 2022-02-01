@@ -52,7 +52,7 @@ namespace model {
 
       SizingParameters_Impl(const SizingParameters_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SizingParameters_Impl() {}
+      virtual ~SizingParameters_Impl() = default;
 
       //@}
 

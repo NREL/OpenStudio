@@ -56,7 +56,7 @@ namespace model {
 
     ZoneHVACBaseboardConvectiveWater(const Model& model, Schedule& availabilitySchedule, StraightComponent& heatingCoilBaseboard);
 
-    virtual ~ZoneHVACBaseboardConvectiveWater() {}
+    virtual ~ZoneHVACBaseboardConvectiveWater() = default;
 
     //@}
 

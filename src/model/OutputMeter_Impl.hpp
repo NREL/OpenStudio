@@ -63,7 +63,7 @@ namespace model {
 
       OutputMeter_Impl(const OutputMeter_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputMeter_Impl() {}
+      virtual ~OutputMeter_Impl() = default;
 
       //@}
 

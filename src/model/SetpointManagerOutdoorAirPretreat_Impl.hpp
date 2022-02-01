@@ -53,7 +53,7 @@ namespace model {
 
       SetpointManagerOutdoorAirPretreat_Impl(const SetpointManagerOutdoorAirPretreat_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerOutdoorAirPretreat_Impl() {}
+      virtual ~SetpointManagerOutdoorAirPretreat_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

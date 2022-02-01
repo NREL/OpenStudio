@@ -104,7 +104,7 @@ class UTILITIES_API GPDUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   GPDUnit(const std::string& scaleAbbreviation, const GPDExpnt& exponents = GPDExpnt(), const std::string& prettyString = "");
 
-  virtual ~GPDUnit() {}
+  virtual ~GPDUnit() = default;
 
   //@}
  protected:

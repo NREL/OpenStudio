@@ -52,7 +52,7 @@ namespace model {
 
     explicit PhotovoltaicPerformanceEquivalentOneDiode(const Model& model);
 
-    virtual ~PhotovoltaicPerformanceEquivalentOneDiode() {}
+    virtual ~PhotovoltaicPerformanceEquivalentOneDiode() = default;
 
     //@}
 

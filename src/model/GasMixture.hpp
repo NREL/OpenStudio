@@ -55,7 +55,7 @@ namespace model {
                         std::string gas1Type = "Air", double gas1Fraction = .97, std::string gas2Type = "Argon", double gas2Fraction = 0.01,
                         std::string gas3Type = "Krypton", double gas3Fraction = 0.01, std::string gas4Type = "Xenon", double gas4Fraction = 0.01);
 
-    virtual ~GasMixture() {}
+    virtual ~GasMixture() = default;
 
     //@}
     /** @name Static Methods */

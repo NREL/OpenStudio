@@ -53,7 +53,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ComponentData() {}
+    virtual ~ComponentData() = default;
 
     //@}
 

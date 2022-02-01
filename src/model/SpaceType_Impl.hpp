@@ -79,7 +79,7 @@ namespace model {
 
       SpaceType_Impl(const SpaceType_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceType_Impl() {}
+      virtual ~SpaceType_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

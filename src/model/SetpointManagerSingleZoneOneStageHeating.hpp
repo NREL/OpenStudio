@@ -55,7 +55,7 @@ namespace model {
 
     explicit SetpointManagerSingleZoneOneStageHeating(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneOneStageHeating() {}
+    virtual ~SetpointManagerSingleZoneOneStageHeating() = default;
 
     //@}
 

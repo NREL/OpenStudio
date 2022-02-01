@@ -51,7 +51,7 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~LifeCycleCostUsePriceEscalation() {}
+    virtual ~LifeCycleCostUsePriceEscalation() = default;
 
     /// Constructs a new LifeCycleCostUsePriceEscalation object in the model.
     explicit LifeCycleCostUsePriceEscalation(const Model& model);

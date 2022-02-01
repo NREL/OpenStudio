@@ -66,7 +66,7 @@ namespace model {
     /// This constructor is preferred for all configurations other than switchable glazing.
     explicit ShadingControl(const ShadingMaterial& shadingMaterial);
 
-    virtual ~ShadingControl() {}
+    virtual ~ShadingControl() = default;
 
     //@}
 

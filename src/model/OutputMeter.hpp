@@ -66,7 +66,7 @@ namespace model {
 
     explicit OutputMeter(const Model& model);
 
-    virtual ~OutputMeter() {}
+    virtual ~OutputMeter() = default;
 
     virtual std::vector<openstudio::IdfObject> remove();
 

@@ -53,7 +53,7 @@ namespace model {
 
       CoilSystemCoolingDXHeatExchangerAssisted_Impl(const CoilSystemCoolingDXHeatExchangerAssisted_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilSystemCoolingDXHeatExchangerAssisted_Impl() {}
+      virtual ~CoilSystemCoolingDXHeatExchangerAssisted_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

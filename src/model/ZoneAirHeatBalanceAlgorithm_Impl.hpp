@@ -56,7 +56,7 @@ namespace model {
       ZoneAirHeatBalanceAlgorithm_Impl(const ZoneAirHeatBalanceAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ZoneAirHeatBalanceAlgorithm_Impl() {}
+      virtual ~ZoneAirHeatBalanceAlgorithm_Impl() = default;
 
       //@}
 

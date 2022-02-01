@@ -52,7 +52,7 @@ namespace model {
 
       CurveBiquadratic_Impl(const CurveBiquadratic_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveBiquadratic_Impl() {}
+      virtual ~CurveBiquadratic_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

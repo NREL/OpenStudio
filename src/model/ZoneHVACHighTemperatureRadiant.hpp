@@ -55,7 +55,7 @@ namespace model {
 
     explicit ZoneHVACHighTemperatureRadiant(const Model& model);
 
-    virtual ~ZoneHVACHighTemperatureRadiant() {}
+    virtual ~ZoneHVACHighTemperatureRadiant() = default;
 
     //@}
 

@@ -55,7 +55,7 @@ namespace model {
 
     explicit ZoneMixing(const ThermalZone& thermalZone);
 
-    virtual ~ZoneMixing() {}
+    virtual ~ZoneMixing() = default;
 
     //@}
 

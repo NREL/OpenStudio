@@ -57,7 +57,7 @@ namespace model {
 
     explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger);
 
-    virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() {}
+    virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() = default;
 
     //@}
 

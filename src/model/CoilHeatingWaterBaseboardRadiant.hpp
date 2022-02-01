@@ -52,7 +52,7 @@ namespace model {
 
     explicit CoilHeatingWaterBaseboardRadiant(const Model& model);
 
-    virtual ~CoilHeatingWaterBaseboardRadiant() {}
+    virtual ~CoilHeatingWaterBaseboardRadiant() = default;
 
     //@}
 

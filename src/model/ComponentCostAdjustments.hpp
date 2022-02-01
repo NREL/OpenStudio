@@ -56,7 +56,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ComponentCostAdjustments() {}
+    virtual ~ComponentCostAdjustments() = default;
 
     //@}
     /** @name Getters */

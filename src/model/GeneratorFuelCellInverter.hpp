@@ -57,7 +57,7 @@ namespace model {
 
     explicit GeneratorFuelCellInverter(const Model& model, const CurveQuadratic& powerCurve);
 
-    virtual ~GeneratorFuelCellInverter() {}
+    virtual ~GeneratorFuelCellInverter() = default;
 
     //@}
 

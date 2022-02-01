@@ -54,7 +54,7 @@ namespace model {
       OutsideSurfaceConvectionAlgorithm_Impl(const OutsideSurfaceConvectionAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~OutsideSurfaceConvectionAlgorithm_Impl() {}
+      virtual ~OutsideSurfaceConvectionAlgorithm_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

@@ -54,7 +54,7 @@ namespace model {
 
     explicit DistrictHeating(const Model& model);
 
-    virtual ~DistrictHeating() {}
+    virtual ~DistrictHeating() = default;
 
     //@}
 

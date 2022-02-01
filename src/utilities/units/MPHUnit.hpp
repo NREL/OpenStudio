@@ -101,7 +101,7 @@ class UTILITIES_API MPHUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   MPHUnit(const std::string& scaleAbbreviation, const MPHExpnt& exponents = MPHExpnt(), const std::string& prettyString = "");
 
-  virtual ~MPHUnit() {}
+  virtual ~MPHUnit() = default;
 
   //@}
  protected:

@@ -65,7 +65,7 @@ namespace model {
 
     explicit GeneratorMicroTurbine(const Model& model);
 
-    virtual ~GeneratorMicroTurbine() {}
+    virtual ~GeneratorMicroTurbine() = default;
 
     virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const;
 

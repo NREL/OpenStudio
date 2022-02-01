@@ -51,7 +51,7 @@ namespace model {
    public:
     explicit ZoneHVACEquipmentList(const ThermalZone& thermalZone);
 
-    virtual ~ZoneHVACEquipmentList() {}
+    virtual ~ZoneHVACEquipmentList() = default;
 
     static IddObjectType iddObjectType();
 

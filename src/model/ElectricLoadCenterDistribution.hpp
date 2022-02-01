@@ -64,7 +64,7 @@ namespace model {
 
     explicit ElectricLoadCenterDistribution(const Model& model);
 
-    virtual ~ElectricLoadCenterDistribution() {}
+    virtual ~ElectricLoadCenterDistribution() = default;
 
     //@}
 

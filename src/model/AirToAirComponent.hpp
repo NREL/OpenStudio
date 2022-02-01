@@ -53,7 +53,7 @@ namespace model {
    public:
     AirToAirComponent(IddObjectType type, const Model& model);
 
-    virtual ~AirToAirComponent() {}
+    virtual ~AirToAirComponent() = default;
 
     /** Returns the primary air stream inlet port.
    *

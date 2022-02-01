@@ -54,7 +54,7 @@ namespace model {
 
       LightsDefinition_Impl(const LightsDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LightsDefinition_Impl() {}
+      virtual ~LightsDefinition_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

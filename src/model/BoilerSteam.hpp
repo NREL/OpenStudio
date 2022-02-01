@@ -50,7 +50,7 @@ namespace model {
    public:
     explicit BoilerSteam(const Model& model);
 
-    virtual ~BoilerSteam() {}
+    virtual ~BoilerSteam() = default;
 
     static IddObjectType iddObjectType();
 

@@ -54,7 +54,7 @@ namespace model {
 
     explicit DesignSpecificationOutdoorAir(const Model& model);
 
-    virtual ~DesignSpecificationOutdoorAir() {}
+    virtual ~DesignSpecificationOutdoorAir() = default;
 
     //@}
 

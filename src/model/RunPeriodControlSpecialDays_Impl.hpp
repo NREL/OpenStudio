@@ -56,7 +56,7 @@ namespace model {
       RunPeriodControlSpecialDays_Impl(const RunPeriodControlSpecialDays_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~RunPeriodControlSpecialDays_Impl() {}
+      virtual ~RunPeriodControlSpecialDays_Impl() = default;
 
       Date startDate() const;
       unsigned duration() const;

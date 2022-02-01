@@ -56,7 +56,7 @@ namespace model {
 
       ScheduleFile_Impl(const ScheduleFile_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleFile_Impl() {}
+      virtual ~ScheduleFile_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

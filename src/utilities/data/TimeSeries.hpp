@@ -64,7 +64,7 @@ namespace detail {
 
     TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
 
-    ~TimeSeries_Impl() {}
+    ~TimeSeries_Impl() = default;
 
     openstudio::OptionalTime intervalLength() const;
 
@@ -214,7 +214,7 @@ class UTILITIES_API TimeSeries
   TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
 
   /// Virtual destructor
-  ~TimeSeries() {}
+  ~TimeSeries() = default;
 
   //@}
   /** @name Getters */

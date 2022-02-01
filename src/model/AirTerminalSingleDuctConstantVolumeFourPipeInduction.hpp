@@ -55,7 +55,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() = default;
 
     //@}
 

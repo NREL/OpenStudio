@@ -53,7 +53,7 @@ namespace model {
     /** Initializes all coefficients to 0.0, and sets the bounds on x and y to [0.0,1.0]. */
     explicit CurveBiquadratic(const Model& model);
 
-    virtual ~CurveBiquadratic() {}
+    virtual ~CurveBiquadratic() = default;
 
     //@}
 

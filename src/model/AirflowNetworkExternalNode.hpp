@@ -57,7 +57,7 @@ namespace model {
     /** Construct an external node with a specified wind pressure curve. */
     explicit AirflowNetworkExternalNode(const Model& model, const Curve& curve);
 
-    virtual ~AirflowNetworkExternalNode() {}
+    virtual ~AirflowNetworkExternalNode() = default;
 
     //@}
 

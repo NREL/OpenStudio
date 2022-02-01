@@ -52,7 +52,7 @@ namespace model {
 
     explicit SimpleGlazing(const Model& model, double uFactor = 0.1, double solarHeatGainCoefficient = 0.1);
 
-    virtual ~SimpleGlazing() {}
+    virtual ~SimpleGlazing() = default;
 
     //@}
 

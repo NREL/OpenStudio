@@ -51,7 +51,7 @@ namespace model {
    public:
     Inverter(IddObjectType type, const Model& model);
 
-    virtual ~Inverter() {}
+    virtual ~Inverter() = default;
 
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 

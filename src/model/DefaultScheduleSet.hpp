@@ -75,7 +75,7 @@ namespace model {
 
     explicit DefaultScheduleSet(const Model& model);
 
-    virtual ~DefaultScheduleSet() {}
+    virtual ~DefaultScheduleSet() = default;
 
     //@}
     /** @name Static Methods */

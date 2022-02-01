@@ -55,7 +55,7 @@ namespace model {
 
     explicit AvailabilityManagerOptimumStart(const Model& model);
 
-    virtual ~AvailabilityManagerOptimumStart() {}
+    virtual ~AvailabilityManagerOptimumStart() = default;
 
     //@}
 

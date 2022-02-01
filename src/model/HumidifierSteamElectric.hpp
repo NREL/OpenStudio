@@ -54,7 +54,7 @@ namespace model {
 
     explicit HumidifierSteamElectric(const Model& model);
 
-    virtual ~HumidifierSteamElectric() {}
+    virtual ~HumidifierSteamElectric() = default;
 
     //@}
 

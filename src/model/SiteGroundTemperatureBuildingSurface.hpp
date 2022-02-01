@@ -53,7 +53,7 @@ namespace model {
 
     explicit SiteGroundTemperatureBuildingSurface(Model& model);
 
-    virtual ~SiteGroundTemperatureBuildingSurface() {}
+    virtual ~SiteGroundTemperatureBuildingSurface() = default;
 
     //@}
     /** @name Static Methods */

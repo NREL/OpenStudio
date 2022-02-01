@@ -52,7 +52,7 @@ namespace model {
       ScheduleCompact_Impl(const ScheduleCompact_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ScheduleCompact_Impl() {}
+      virtual ~ScheduleCompact_Impl() = default;
 
       //@}
       /** @name Getters */

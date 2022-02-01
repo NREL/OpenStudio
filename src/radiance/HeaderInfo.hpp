@@ -48,7 +48,7 @@ namespace radiance {
     HeaderInfo(const std::string& line1, const std::string& line2);
 
     /// virtual destructor
-    virtual ~HeaderInfo() {}
+    virtual ~HeaderInfo() = default;
 
     /// get the x points corresponding to illuminance matrix columns in meters
     openstudio::Vector xVector() const {

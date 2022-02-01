@@ -51,7 +51,7 @@ namespace model {
 
     explicit FFactorGroundFloorConstruction(const Model& model, double fFactor = 0.1, double area = 0.1, double perimeterExposed = 0.1);
 
-    virtual ~FFactorGroundFloorConstruction() {}
+    virtual ~FFactorGroundFloorConstruction() = default;
 
     double fFactor() const;
     bool setFFactor(double fFactor);

@@ -51,7 +51,7 @@ namespace model {
 
     explicit ModelObjectList(const Model& model);
 
-    virtual ~ModelObjectList() {}
+    virtual ~ModelObjectList() = default;
 
     //@}
 

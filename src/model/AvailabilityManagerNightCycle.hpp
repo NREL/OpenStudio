@@ -54,7 +54,7 @@ namespace model {
    public:
     explicit AvailabilityManagerNightCycle(const Model& model);
 
-    virtual ~AvailabilityManagerNightCycle() {}
+    virtual ~AvailabilityManagerNightCycle() = default;
 
     static IddObjectType iddObjectType();
 

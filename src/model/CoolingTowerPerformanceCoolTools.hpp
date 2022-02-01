@@ -52,7 +52,7 @@ namespace model {
 
     explicit CoolingTowerPerformanceCoolTools(const Model& model);
 
-    virtual ~CoolingTowerPerformanceCoolTools() {}
+    virtual ~CoolingTowerPerformanceCoolTools() = default;
 
     //@}
 

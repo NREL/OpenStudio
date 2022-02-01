@@ -52,7 +52,7 @@ namespace model {
 
     explicit Gas(const Model& model, std::string gasType = "Air", double thickness = 0.003);
 
-    virtual ~Gas() {}
+    virtual ~Gas() = default;
 
     //@}
     /** @name Static Methods */

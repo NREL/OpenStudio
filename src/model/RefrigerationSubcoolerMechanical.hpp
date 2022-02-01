@@ -54,7 +54,7 @@ namespace model {
 
     explicit RefrigerationSubcoolerMechanical(const Model& model);
 
-    virtual ~RefrigerationSubcoolerMechanical() {}
+    virtual ~RefrigerationSubcoolerMechanical() = default;
 
     //@}
 

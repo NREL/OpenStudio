@@ -52,7 +52,7 @@ namespace model {
    public:
     WaterToWaterComponent(IddObjectType type, const Model& model);
 
-    virtual ~WaterToWaterComponent() {}
+    virtual ~WaterToWaterComponent() = default;
 
     /** Returns the supply inlet port. **/
     virtual unsigned supplyInletPort() const;

@@ -52,7 +52,7 @@ namespace model {
 
     explicit GeneratorWindTurbine(const Model& model);
 
-    virtual ~GeneratorWindTurbine() {}
+    virtual ~GeneratorWindTurbine() = default;
 
     //@}
 

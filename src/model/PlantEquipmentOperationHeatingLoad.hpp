@@ -51,7 +51,7 @@ namespace model {
 
     explicit PlantEquipmentOperationHeatingLoad(const Model& model);
 
-    virtual ~PlantEquipmentOperationHeatingLoad() {}
+    virtual ~PlantEquipmentOperationHeatingLoad() = default;
 
     //@}
 

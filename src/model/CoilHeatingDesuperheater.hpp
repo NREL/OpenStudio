@@ -63,7 +63,7 @@ namespace model {
 
     explicit CoilHeatingDesuperheater(const Model& model);
 
-    virtual ~CoilHeatingDesuperheater() {}
+    virtual ~CoilHeatingDesuperheater() = default;
 
     //@}
 

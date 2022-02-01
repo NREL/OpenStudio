@@ -57,7 +57,7 @@ namespace model {
 
     explicit InternalMass(const InternalMassDefinition& internalMassDefinition);
 
-    virtual ~InternalMass() {}
+    virtual ~InternalMass() = default;
 
     //@}
 
