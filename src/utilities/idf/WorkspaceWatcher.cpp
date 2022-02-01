@@ -44,7 +44,6 @@ WorkspaceWatcher::WorkspaceWatcher(const Workspace& workspace) : m_enabled(true)
   wsImpl.get()->detail::Workspace_Impl::removeWorkspaceObject.connect<WorkspaceWatcher, &WorkspaceWatcher::objectRemove>(this);
 }
 
-WorkspaceWatcher::~WorkspaceWatcher() {}
 
 bool WorkspaceWatcher::enabled() const {
   return m_enabled;

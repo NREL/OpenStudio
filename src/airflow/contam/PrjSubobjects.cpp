@@ -49,7 +49,6 @@ namespace contam {
 
   WeatherData::WeatherData(const WeatherData& other) : m_impl(other.m_impl) {}
 
-  WeatherData::~WeatherData() {}
 
   WeatherData& WeatherData::operator=(const WeatherData& other) {
     m_impl = other.m_impl;
@@ -178,7 +177,6 @@ namespace contam {
 
   Icon::Icon(const Icon& other) : m_impl(other.m_impl) {}
 
-  Icon::~Icon() {}
 
   Icon& Icon::operator=(const Icon& other) {
     m_impl = other.m_impl;

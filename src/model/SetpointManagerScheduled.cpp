@@ -65,7 +65,6 @@ namespace model {
     SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(const SetpointManagerScheduled_Impl& other, Model_Impl* model, bool keepHandles)
       : SetpointManager_Impl(other, model, keepHandles) {}
 
-    SetpointManagerScheduled_Impl::~SetpointManagerScheduled_Impl() {}
 
     const std::vector<std::string>& SetpointManagerScheduled_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;

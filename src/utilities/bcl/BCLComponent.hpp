@@ -66,7 +66,7 @@ class UTILITIES_API BCLComponent
   //@{
 
   /// Virtual destructor
-  virtual ~BCLComponent();
+  virtual ~BCLComponent() = default;
 
   //@}
   /** @name Getters */

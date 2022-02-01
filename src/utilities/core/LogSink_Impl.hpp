@@ -48,7 +48,7 @@ namespace detail {
   {
    public:
     /// destructor
-    virtual ~LogSink_Impl();
+    virtual ~LogSink_Impl() = default;
 
     /// is the sink enabled
     bool isEnabled() const;

@@ -51,7 +51,7 @@ class UTILITIES_API ScaleFactorySingleton
 
  public:
   /// Destructor.
-  ~ScaleFactorySingleton();
+  ~ScaleFactorySingleton() = default;
 
   /** Store a scale callback function for future lookup using the scale exponent or
    *  abbreviation. By default, SI scales are registered during factory construction. */

@@ -46,7 +46,7 @@ namespace model {
 
       ConnectorSplitter_Impl(const ConnectorSplitter_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ConnectorSplitter_Impl();
+      virtual ~ConnectorSplitter_Impl() = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

@@ -67,7 +67,7 @@ class UTILITIES_API PointLatLon
   PointLatLon(const PointLatLon& other);
 
   /// destructor
-  ~PointLatLon();
+  ~PointLatLon() = default;
 
   /// get lat
   double lat() const;

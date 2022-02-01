@@ -68,7 +68,7 @@ namespace model {
       SimulationControl_Impl(const SimulationControl_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~SimulationControl_Impl();
+      virtual ~SimulationControl_Impl() = default;
 
       //@}
       /** @name Getters */

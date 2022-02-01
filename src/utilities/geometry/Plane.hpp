@@ -61,7 +61,7 @@ class UTILITIES_API Plane
   Plane(const std::vector<Point3d>& points);
 
   /// virtual destructor
-  virtual ~Plane();
+  virtual ~Plane() = default;
 
   /// get the outward normal of this plane
   Vector3d outwardNormal() const;

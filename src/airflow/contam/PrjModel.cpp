@@ -52,7 +52,6 @@ namespace contam {
 
   IndexModel::IndexModel(const IndexModel& other) : m_impl(other.m_impl) {}
 
-  IndexModel::~IndexModel() {}
 
   IndexModel& IndexModel::operator=(const IndexModel& other) {
     m_impl = other.m_impl;

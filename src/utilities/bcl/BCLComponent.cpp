@@ -130,7 +130,6 @@ BCLComponent::BCLComponent(const openstudio::path& dir) : m_directory(dir) {
   }
 }
 
-BCLComponent::~BCLComponent() {}
 
 std::string BCLComponent::uid() const {
   return m_uid;

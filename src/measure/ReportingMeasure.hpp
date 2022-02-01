@@ -52,7 +52,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ReportingMeasure();
+    virtual ~ReportingMeasure() = default;
 
     //@}
     /** @name Getters */

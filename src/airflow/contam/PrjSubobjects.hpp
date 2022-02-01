@@ -60,7 +60,7 @@ namespace contam {
     /** Create a new object from another object */
     WeatherData(const WeatherData& other);
     /** Destroy the object */
-    ~WeatherData();
+    ~WeatherData() = default;
 
     //@}
     /** @name Operators */
@@ -158,7 +158,7 @@ namespace contam {
     /** Create a new object from another object. */
     Icon(const Icon& other);
     /** Destroy the object. */
-    ~Icon();
+    ~Icon() = default;
 
     //@}
     /** @name Operators */

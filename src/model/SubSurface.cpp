@@ -108,7 +108,6 @@ namespace model {
     SubSurface_Impl::SubSurface_Impl(const SubSurface_Impl& other, Model_Impl* model, bool keepHandle)
       : PlanarSurface_Impl(other, model, keepHandle) {}
 
-    SubSurface_Impl::~SubSurface_Impl() {}
 
     boost::optional<ParentObject> SubSurface_Impl::parent() const {
       return boost::optional<ParentObject>(this->surface());

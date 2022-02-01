@@ -56,7 +56,7 @@ namespace model {
       ControllerOutdoorAir_Impl(const ControllerOutdoorAir_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ControllerOutdoorAir_Impl();
+      virtual ~ControllerOutdoorAir_Impl() = default;
 
       // Get all output variable names that could be associated with this object.
       virtual const std::vector<std::string>& outputVariableNames() const override;

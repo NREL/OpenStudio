@@ -49,7 +49,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~EnergyPlusMeasure();
+    virtual ~EnergyPlusMeasure() = default;
 
     //@}
     /** @name Getters */

@@ -52,7 +52,7 @@ class UTILITIES_API WorkspaceWatcher
  public:
   WorkspaceWatcher(const Workspace& workspace);
 
-  virtual ~WorkspaceWatcher();
+  virtual ~WorkspaceWatcher() = default;
 
   /// is the watcher currently enabled
   bool enabled() const;

@@ -68,7 +68,7 @@ namespace model {
 
       Surface_Impl(const Surface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Surface_Impl();
+      virtual ~Surface_Impl() = default;
 
       //@}
 

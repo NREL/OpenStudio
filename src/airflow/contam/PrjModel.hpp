@@ -79,7 +79,7 @@ namespace contam {
     /** Creates a new PRJ model from another PRJ model. */
     IndexModel(const IndexModel& other);
     /** Destroy the model. */
-    ~IndexModel();
+    ~IndexModel() = default;
 
     //@}
     /** @name Operators */

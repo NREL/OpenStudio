@@ -45,7 +45,6 @@ namespace detail {
       m_skipEnergyPlusPreprocess(false),
       m_cleanup(true) {}
 
-  RunOptions_Impl::~RunOptions_Impl() {}
 
   void RunOptions_Impl::onUpdate() {
     this->onChange.nano_emit();
@@ -275,7 +274,6 @@ RunOptions::RunOptions() : m_impl(std::shared_ptr<detail::RunOptions_Impl>(new d
   OS_ASSERT(getImpl<detail::RunOptions_Impl>());
 }
 
-RunOptions::~RunOptions() {}
 
 boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
   boost::optional<RunOptions> result;

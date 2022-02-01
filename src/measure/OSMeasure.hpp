@@ -50,7 +50,7 @@ namespace measure {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OSMeasure();
+    virtual ~OSMeasure() = default;
 
     //@}
     /** @name Getters */

@@ -44,7 +44,7 @@ namespace contam {
    public:
     explicit Reader(openstudio::filesystem::ifstream& file);
     explicit Reader(const std::string& string, int starting = 0);
-    ~Reader();
+    ~Reader() = default;
 
     double readDouble();
     std::string readString();

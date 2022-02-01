@@ -57,7 +57,6 @@ namespace model {
     Connection_Impl::Connection_Impl(const Connection_Impl& other, Model_Impl* model, bool keepHandle) : ModelObject_Impl(other, model, keepHandle) {}
 
     // virtual destructor
-    Connection_Impl::~Connection_Impl() {}
 
     // Get all output variable names that could be associated with this object.
     const std::vector<std::string>& Connection_Impl::outputVariableNames() const {

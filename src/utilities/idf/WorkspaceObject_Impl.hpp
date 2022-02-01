@@ -131,7 +131,7 @@ namespace detail {
     /** Complete copy construction process by updating pointer handles. */
     virtual void initializeOnClone(const HandleMap& oldNewHandleMap);
 
-    virtual ~WorkspaceObject_Impl();
+    virtual ~WorkspaceObject_Impl() = default;
 
     /// remove the object from the workspace
     /// return std::vector<IdfObject> containing any removed object(s)

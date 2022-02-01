@@ -41,7 +41,6 @@ namespace detail {
                                          boost::optional<std::string> newValue)
     : m_index(index), m_oldValue(oldValue), m_newValue(newValue) {}
 
-  IdfObjectDiff_Impl::~IdfObjectDiff_Impl() {}
 
   boost::optional<unsigned> IdfObjectDiff_Impl::index() const {
     return m_index;

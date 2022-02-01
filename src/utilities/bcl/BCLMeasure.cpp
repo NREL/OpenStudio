@@ -391,7 +391,6 @@ BCLMeasure::BCLMeasure(const openstudio::path& dir) : m_directory(openstudio::fi
   }
 }
 
-BCLMeasure::~BCLMeasure() {}
 
 std::string BCLMeasure::makeClassName(const std::string& name) {
   std::string str(name);

@@ -82,7 +82,6 @@ namespace model {
       : HVACComponent_Impl(other, model, keepHandle) {}
 
     // virtual destructor
-    AirLoopHVACOutdoorAirSystem_Impl::~AirLoopHVACOutdoorAirSystem_Impl() {}
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> AirLoopHVACOutdoorAirSystem_Impl::parent() const {

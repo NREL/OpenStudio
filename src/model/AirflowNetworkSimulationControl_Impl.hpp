@@ -54,7 +54,7 @@ namespace model {
       AirflowNetworkSimulationControl_Impl(const AirflowNetworkSimulationControl_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~AirflowNetworkSimulationControl_Impl();
+      virtual ~AirflowNetworkSimulationControl_Impl() = default;
 
       //@}
       /** @name Virtual Methods */

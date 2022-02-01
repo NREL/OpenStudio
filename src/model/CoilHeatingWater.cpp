@@ -95,7 +95,6 @@ namespace model {
     CoilHeatingWater_Impl::CoilHeatingWater_Impl(const CoilHeatingWater_Impl& other, Model_Impl* model, bool keepHandle)
       : WaterToAirComponent_Impl(other, model, keepHandle) {}
 
-    CoilHeatingWater_Impl::~CoilHeatingWater_Impl() {}
 
     const std::vector<std::string>& CoilHeatingWater_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{"Heating Coil Heating Energy", "Heating Coil Source Side Heat Transfer Energy",

@@ -77,7 +77,7 @@ class UTILITIES_API RemoteBCL : public BCL
   //@{
 
   /// Virtual destructor
-  virtual ~RemoteBCL();
+  virtual ~RemoteBCL() = default;
 
   //@}
   /** @name Inherited members */

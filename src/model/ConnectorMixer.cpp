@@ -55,7 +55,6 @@ namespace model {
     ConnectorMixer_Impl::ConnectorMixer_Impl(const ConnectorMixer_Impl& other, Model_Impl* model, bool keepHandle)
       : Mixer_Impl(other, model, keepHandle) {}
 
-    ConnectorMixer_Impl::~ConnectorMixer_Impl() {}
 
     const std::vector<std::string>& ConnectorMixer_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;

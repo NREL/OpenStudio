@@ -51,7 +51,7 @@ class WorkflowStepResult;
 class UTILITIES_API WorkflowStep
 {
  public:
-  virtual ~WorkflowStep();
+  virtual ~WorkflowStep() = default;
 
   /// Construct from JSON formatted string
   static boost::optional<WorkflowStep> fromString(const std::string& s);

@@ -71,7 +71,6 @@ namespace model {
     Node_Impl::Node_Impl(const Node_Impl& other, Model_Impl* model, bool keepHandle) : StraightComponent_Impl(other, model, keepHandle) {}
 
     // virtual destructor
-    Node_Impl::~Node_Impl() {}
 
     // Get all output variable names that could be associated with this object.
     const std::vector<std::string>& Node_Impl::outputVariableNames() const {

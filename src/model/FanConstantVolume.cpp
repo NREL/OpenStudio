@@ -87,7 +87,6 @@ namespace model {
     FanConstantVolume_Impl::FanConstantVolume_Impl(const FanConstantVolume_Impl& other, Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {}
 
-    FanConstantVolume_Impl::~FanConstantVolume_Impl() {}
 
     const std::vector<std::string>& FanConstantVolume_Impl::outputVariableNames() const {
       static const std::vector<std::string> results{"Fan Electricity Rate", "Fan Rise in Air Temperature", "Fan Heat Gain to Air",

@@ -173,7 +173,6 @@ namespace sdd {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  ForwardTranslator::~ForwardTranslator() {}
 
   bool ForwardTranslator::modelToSDD(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar) {
     m_progressBar = progressBar;

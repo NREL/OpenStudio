@@ -56,7 +56,7 @@ class UTILITIES_API IdfObjectWatcher : public Nano::Observer
   IdfObjectWatcher(const IdfObject& idfObject);
 
   /// virtual destructor
-  virtual ~IdfObjectWatcher();
+  virtual ~IdfObjectWatcher() = default;
 
   /// is the watcher currently enabled
   bool enabled() const;

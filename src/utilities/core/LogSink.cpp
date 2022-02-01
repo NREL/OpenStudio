@@ -45,7 +45,6 @@ namespace detail {
 
   LogSink_Impl::LogSink_Impl() : m_mutex{}, m_threadId{}, m_sink{boost::shared_ptr<LogSinkBackend>(new LogSinkBackend())} {}
 
-  LogSink_Impl::~LogSink_Impl() {}
 
   bool LogSink_Impl::isEnabled() const {
     return Logger::instance().findSink(m_sink);

@@ -60,7 +60,7 @@ class UTILITIES_API RunOptions
  public:
   RunOptions();
 
-  virtual ~RunOptions();
+  virtual ~RunOptions() = default;
 
   /// Construct from JSON formatted string
   static boost::optional<RunOptions> fromString(const std::string& s);

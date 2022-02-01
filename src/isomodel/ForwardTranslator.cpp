@@ -168,7 +168,6 @@ namespace isomodel {
     m_logSink.setChannelRegex(boost::regex("openstudio\\.isomodel()\\.ForwardTranslator()"));
   }
 
-  ForwardTranslator::~ForwardTranslator() {}
 
   UserModel ForwardTranslator::translateModel(const openstudio::model::Model& t_model) {
     m_logSink.resetStringStream();

@@ -120,7 +120,7 @@ class UTILITIES_API BCLMeasure
   //@{
 
   /// Virtual destructor
-  virtual ~BCLMeasure();
+  virtual ~BCLMeasure() = default;
 
   //@}
   /** @name Getters */

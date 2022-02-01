@@ -48,7 +48,7 @@ namespace detail {
    public:
     RunOptions_Impl();
 
-    virtual ~RunOptions_Impl();
+    virtual ~RunOptions_Impl() = default;
 
     std::string string() const;
 

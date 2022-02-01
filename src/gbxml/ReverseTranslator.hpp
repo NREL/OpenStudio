@@ -63,7 +63,7 @@ namespace gbxml {
    public:
     ReverseTranslator();
 
-    virtual ~ReverseTranslator();
+    virtual ~ReverseTranslator() = default;
 
     boost::optional<openstudio::model::Model> loadModel(const openstudio::path& path, ProgressBar* progressBar = nullptr);
 

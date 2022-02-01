@@ -77,7 +77,7 @@ namespace sdd {
    public:
     ForwardTranslator();
 
-    virtual ~ForwardTranslator();
+    virtual ~ForwardTranslator() = default;
 
     bool modelToSDD(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar = nullptr);
 

@@ -54,7 +54,6 @@ SqlFile::SqlFile(const openstudio::path& t_path, const openstudio::EpwFile& t_ep
   }
 }
 
-SqlFile::~SqlFile() {}
 
 void SqlFile::createIndexes() {
   if (m_impl) {

@@ -74,7 +74,6 @@ namespace model {
     CoilCoolingWater_Impl::CoilCoolingWater_Impl(const CoilCoolingWater_Impl& other, Model_Impl* model, bool keepHandle)
       : WaterToAirComponent_Impl(other, model, keepHandle) {}
 
-    CoilCoolingWater_Impl::~CoilCoolingWater_Impl() {}
 
     const std::vector<std::string>& CoilCoolingWater_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{"Cooling Coil Total Cooling Energy",

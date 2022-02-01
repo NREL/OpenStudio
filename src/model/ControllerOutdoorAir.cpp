@@ -79,7 +79,6 @@ namespace model {
       : ParentObject_Impl(other, model, keepHandle) {}
 
     // virtual destructor
-    ControllerOutdoorAir_Impl::~ControllerOutdoorAir_Impl() {}
 
     // Get all output variable names that could be associated with this object.
     const std::vector<std::string>& ControllerOutdoorAir_Impl::outputVariableNames() const {

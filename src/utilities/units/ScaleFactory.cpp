@@ -39,7 +39,6 @@
 
 namespace openstudio {
 
-ScaleFactorySingleton::~ScaleFactorySingleton() {}
 
 bool ScaleFactorySingleton::registerScale(ScaleConstant scale) {
 

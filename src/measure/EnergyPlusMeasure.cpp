@@ -38,7 +38,6 @@
 namespace openstudio {
 namespace measure {
 
-  EnergyPlusMeasure::~EnergyPlusMeasure() {}
 
   std::vector<OSArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const {
     return OSArgumentVector();
