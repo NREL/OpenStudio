@@ -87,7 +87,12 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~ModelObject() {}
+    virtual ~ModelObject() = default;
+
+    ModelObject(const ModelObject& other) = default;
+    ModelObject(ModelObject&& other) = default;
+    ModelObject& operator=(const ModelObject&) = default;
+    ModelObject& operator=(ModelObject&&) = default;
 
     /** Creates a deep copy of this object, placing it in this object's model(). Virtual
    *  implementation. */
@@ -108,7 +113,7 @@ namespace model {
     //@{
 
     /** Method for creating sharable Model snippets. Creates a Component with this ModelObject as
-   *  the primary object. Uses the clone(Model&) method to select Component contents. */
+     *  the primary object. Uses the clone(Model&) method to select Component contents. */
     Component createComponent() const;
 
     //@}
@@ -125,7 +130,7 @@ namespace model {
     std::vector<ResourceObject> resources() const;
 
     /** Get all objects of type T that point to this object. This method is preferred over the
-   *  WorkspaceObject equivalent, as its use does not require knowledge of the IddObjectType. */
+     *  WorkspaceObject equivalent, as its use does not require knowledge of the IddObjectType. */
     template <typename T>
     std::vector<T> getModelObjectSources() const {
       std::vector<T> result;
@@ -140,12 +145,12 @@ namespace model {
     }
 
     /** Get all objects of type T that point to this object. Preferred usage (do not use with
-   *  abstract classes):
-   *
-   *  \code
-   *  PeopleVector myZonesPeople = zone.getModelObjectSources<People>(People::iddObjectType());
+     *  abstract classes):
+     *
+     *  \code
+     *  PeopleVector myZonesPeople = zone.getModelObjectSources<People>(People::iddObjectType());
 
-   *  \endcode */
+     *  \endcode */
     template <typename T>
     std::vector<T> getModelObjectSources(IddObjectType iddObjectType) const {
       std::vector<T> result;
@@ -169,7 +174,7 @@ namespace model {
     }
 
     /** Get all objects of type T to which this object points. This method is preferred over the
-   *  WorkspaceObject equivalent, as its use does not require knowledge of the IddObjectType. */
+     *  WorkspaceObject equivalent, as its use does not require knowledge of the IddObjectType. */
     template <typename T>
     std::vector<T> getModelObjectTargets() const {
       std::vector<T> result;
@@ -184,8 +189,8 @@ namespace model {
     }
 
     /** Get all output variables names that could be associated with this object. These variables
-   *   may or may not be available for each simulation, need to check report variable dictionary
-   *   to see if the variable is available. Each concrete class should override this method.*/
+     *   may or may not be available for each simulation, need to check report variable dictionary
+     *   to see if the variable is available. Each concrete class should override this method.*/
     const std::vector<std::string>& outputVariableNames() const;
 
     /** Get all output variables associated with this object, must run simulation to generate data. */
@@ -195,21 +200,21 @@ namespace model {
     boost::optional<openstudio::TimeSeries> getData(const OutputVariable& variable, const std::string& envPeriod) const;
 
     /** Returns the list of all LifeCycleCosts that refer to this object.
-   */
+    */
     std::vector<LifeCycleCost> lifeCycleCosts() const;
 
     /** Removes all LifeCycleCosts that refer to this object. Returns removed objects.
-   */
+    */
     std::vector<IdfObject> removeLifeCycleCosts();
 
     /** This is a virtual function that will tell you the type of iddObject you
-   * are dealing with. While not labeled virtual here, it IS virtual in the
-   * impl.
-   */
+     * are dealing with. While not labeled virtual here, it IS virtual in the
+     * impl.
+     */
     IddObjectType iddObjectType() const;
 
     /** Returns this object's additional properties, constructing a new object if necessary.
-  *   This method will throw if called on an AddditionalProperties object. */
+     *   This method will throw if called on an AddditionalProperties object. */
     AdditionalProperties additionalProperties() const;
 
     /** Returns true if this object has additional properties. */
@@ -238,19 +243,19 @@ namespace model {
     bool operator!=(const ModelObject& other) const;
 
     /** Return the ScheduleTypeKeys indicating how schedule is used in this object. If schedule is not directly
-   *  used by this object, return value will be .empty(). Used to maintain compatibility between schedule's
-   *  ScheduleTypeLimits and how schedule is used by other objects. */
+     *  used by this object, return value will be .empty(). Used to maintain compatibility between schedule's
+     *  ScheduleTypeLimits and how schedule is used by other objects. */
     std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
     /** Gets the autosized component value from the sql file **/
     boost::optional<double> getAutosizedValue(const std::string& valueName, const std::string& unitString) const;
 
     /** Return the names of the available ems actuators.
-  */
+    */
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
 
     /** Return the names of the available ems internal variables.
-  */
+    */
     virtual std::vector<std::string> emsInternalVariableNames() const;
 
     //@}

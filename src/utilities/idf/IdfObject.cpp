@@ -2010,13 +2010,11 @@ namespace detail {
 
 // CONSTRUCTORS
 
-IdfObject::IdfObject(IddObjectType type, bool fastName) {
-  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type, fastName));
+IdfObject::IdfObject(IddObjectType type, bool fastName) : m_impl(std::make_shared<detail::IdfObject_Impl>(type, fastName)) {
   OS_ASSERT(m_impl);
 }
 
-IdfObject::IdfObject(const IddObject& iddObject, bool fastName) {
-  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject, fastName));
+IdfObject::IdfObject(const IddObject& iddObject, bool fastName) : m_impl(std::make_shared<detail::IdfObject_Impl>(iddObject, fastName)) {
   OS_ASSERT(m_impl);
 }
 
@@ -2028,8 +2026,21 @@ IdfObject::IdfObject(const IdfObject& other) : m_impl(other.m_impl) {
   OS_ASSERT(m_impl);
 }
 
+IdfObject& IdfObject::operator=(const IdfObject& other) {
+  m_impl = other.m_impl;
+  OS_ASSERT(m_impl);
+  return *this;
+}
+
+IdfObject::IdfObject(IdfObject&& other) noexcept : m_impl(std::move(other.m_impl)) {}
+
+IdfObject& IdfObject::operator=(IdfObject&& other) noexcept {
+  m_impl = std::move(other.m_impl);
+  return *this;
+}
+
 IdfObject IdfObject::clone(bool keepHandle) const {
-  IdfObject copy(std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(*m_impl, keepHandle)));
+  IdfObject copy(std::make_shared<detail::IdfObject_Impl>(*m_impl, keepHandle));
   return copy;
 }
 

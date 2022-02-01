@@ -56,7 +56,13 @@ class UTILITIES_API WorkspaceObject : public IdfObject
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~WorkspaceObject() {}
+  // TODO: virtual dtor, but no copy ctor / assignment nor move ones... The move ones will **not** be declared/defaulted
+  virtual ~WorkspaceObject() = default;
+
+  WorkspaceObject(const WorkspaceObject& other) = default;
+  WorkspaceObject(WorkspaceObject&& other) = default;
+  WorkspaceObject& operator=(const WorkspaceObject&) = default;
+  WorkspaceObject& operator=(WorkspaceObject&&) = default;
 
   /** Removes the object from the Workspace. Returns an IdfObjectVector of all removed object(s). */
   // TODO: Replace return type with undo struct including connections.

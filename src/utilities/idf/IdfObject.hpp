@@ -102,11 +102,26 @@ class UTILITIES_API IdfObject
    *  otherwise no name is assigned.*/
   explicit IdfObject(const IddObject&, bool fastName = false);
 
+  // TODO: virtual destructor is bad news for performance, do we need it? AFAIK none of the destructors in the chain do actual resource cleanup?
+  // Perhaps for nano signal slots though...? That means the move ctor and move assignment operator are deleted...
+  virtual ~IdfObject() = default;
+
+  // If we can get by without the OS_ASSERT(m_impl) in these, we could just default all of them
+  // IdfObject(const IdfObject& other) = default;
+  // IdfObject(IdfObject&& other) = default;
+  // IdfObject& operator=(const IdfObject&) = default;
+  // IdfObject& operator=(IdfObject&&) = default;
+
   /** Copy constructor. Shares data with other, so changes made by either copy affects the data of
    *  both. */
   IdfObject(const IdfObject& other);
 
-  virtual ~IdfObject() {}
+  // Move constructor. Must be noexcept to offer strong guarantee and have STL use it for move (std::move_if_noexcept)
+  IdfObject(IdfObject&& other) noexcept;
+
+  // Asignment operators, following the rule of 5/6
+  IdfObject& operator=(const IdfObject& other);
+  IdfObject& operator=(IdfObject&& other) noexcept;
 
   /** Creates a deep copy of this object. This object and the newly created object do not share
    *  data, and the new object is always unlocked. */
