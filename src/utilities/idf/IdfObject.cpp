@@ -427,7 +427,8 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setString(unsigned index, const std::string& value) {
-    bool result = IdfObject_Impl::setString(index, value, true);
+    //bool result = IdfObject_Impl::setString(index, value, true);
+    bool result = IdfObject_Impl::setString(index, value, false);
     if (result) {
       this->emitChangeSignals();
     }
