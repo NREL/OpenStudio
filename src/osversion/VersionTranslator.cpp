@@ -1461,7 +1461,7 @@ namespace osversion {
     IdfFile targetIdf(idd_0_10_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_0_9_6.objects()) {
+    for (IdfObject& object : idf_0_9_6.objects()) {
 
       if (object.iddObject().name() == "OS:RadianceParameters") {
         boost::optional<std::string> value = object.getString(14);
@@ -1471,9 +1471,9 @@ namespace osversion {
         } else {
           IdfObject newParameters = object.clone(true);
           newParameters.setString(14, "");
-          m_refactored.emplace_back(object, newParameters);
 
           ss << newParameters;
+          m_refactored.emplace_back(std::move(object), std::move(newParameters));
         }
       } else {
         ss << object;
@@ -1916,7 +1916,7 @@ namespace osversion {
         boost::optional<std::string> inletPortListString = object.getString(9);
         boost::optional<std::string> exhaustPortListString = object.getString(10);
 
-        for (const IdfObject& object2 : idf_0_11_5.objects()) {
+        for (IdfObject& object2 : idf_0_11_5.objects()) {
 
           if (object2.iddObject().name() == "OS:PortList") {
 
@@ -1950,9 +1950,8 @@ namespace osversion {
                   }
                 }
 
-                m_refactored.emplace_back(object2, newPortList);
-
                 ss << newPortList;
+                m_refactored.emplace_back(std::move(object2), std::move(newPortList));
               }
             }
           }
@@ -1982,7 +1981,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_0_2.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_0_1.objects()) {
+    for (IdfObject& object : idf_1_0_1.objects()) {
 
       if (object.iddObject().name() == "OS:Boiler:HotWater") {
 
@@ -1993,9 +1992,8 @@ namespace osversion {
 
           newBoiler.setString(15, "LeavingSetpointModulated");
 
-          m_refactored.emplace_back(object, newBoiler);
-
           ss << newBoiler;
+          m_refactored.emplace_back(std::move(object), std::move(newBoiler));
 
         } else {
 
@@ -2010,9 +2008,8 @@ namespace osversion {
 
           newChiller.setString(15, "LeavingSetpointModulated");
 
-          m_refactored.emplace_back(object, newChiller);
-
           ss << newChiller;
+          m_refactored.emplace_back(std::move(object), std::move(newChiller));
 
         } else {
 
@@ -2037,7 +2034,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_0_3.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_0_2.objects()) {
+    for (IdfObject& object : idf_1_0_2.objects()) {
 
       if (object.iddObject().name() == "OS:RadianceParameters") {
         boost::optional<std::string> value = object.getString(14);
@@ -2051,9 +2048,8 @@ namespace osversion {
             newParameters.setString(14, "2306");
           }
 
-          m_refactored.emplace_back(object, newParameters);
-
           ss << newParameters;
+          m_refactored.emplace_back(std::move(object), std::move(newParameters));
         } else {
           ss << object;
         }
@@ -2079,7 +2075,7 @@ namespace osversion {
     boost::optional<std::string> buildingTypeValue;
     boost::optional<IdfObject> buildingObject;
 
-    for (const IdfObject& object : idf_1_2_2.objects()) {
+    for (IdfObject& object : idf_1_2_2.objects()) {
 
       if (object.iddObject().name() == "OS:StandardsInformation:Construction") {
         boost::optional<std::string> value = object.getString(2);  // Intended Surface Type
@@ -2091,8 +2087,8 @@ namespace osversion {
           } else {
             newObject.setString(2, "ExteriorFloor");
           }
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
         } else {
           ss << object;
         }
@@ -2198,8 +2194,8 @@ namespace osversion {
         OS_ASSERT(test);
       }
 
-      m_refactored.emplace_back(*buildingObject, newBuildingObject);
       ss << newBuildingObject;
+      m_refactored.emplace_back(std::move(*buildingObject), std::move(newBuildingObject));
     }
 
     return ss.str();
@@ -2214,7 +2210,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_3_5.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_3_4.objects()) {
+    for (IdfObject& object : idf_1_3_4.objects()) {
 
       if (object.iddObject().name() == "OS:Refrigeration:WalkIn") {
 
@@ -2228,9 +2224,8 @@ namespace osversion {
           OS_ASSERT(test);
         }
 
-        m_refactored.emplace_back(object, newWalkin);
-
         ss << newWalkin;
+        m_refactored.emplace_back(std::move(object), std::move(newWalkin));
 
       } else {
 
@@ -2250,10 +2245,10 @@ namespace osversion {
     IdfFile targetIdf(idd_1_5_4.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_5_3.objects()) {
+    for (IdfObject& object : idf_1_5_3.objects()) {
       if (object.iddObject().name() == "OS:TimeDependentValuation") {
         // put the object in the untranslated list
-        m_untranslated.push_back(object);
+        m_untranslated.emplace_back(std::move(object));
       } else {
         ss << object;
       }
@@ -2271,7 +2266,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_7_2.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_7_1.objects()) {
+    for (IdfObject& object : idf_1_7_1.objects()) {
       if (object.iddObject().name() == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
         auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
         OS_ASSERT(iddObject);
@@ -2289,8 +2284,8 @@ namespace osversion {
         }
         newObject.setDouble(11, 0.1);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (object.iddObject().name() == "OS:EvaporativeCooler:Indirect:ResearchSpecial") {
         auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Indirect:ResearchSpecial");
         OS_ASSERT(iddObject);
@@ -2309,8 +2304,8 @@ namespace osversion {
         newObject.setDouble(22, 0.1);
         newObject.setDouble(24, 1.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2328,7 +2323,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_7_5.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_7_4.objects()) {
+    for (IdfObject& object : idf_1_7_4.objects()) {
       if (object.iddObject().name() == "OS:Sizing:System") {
         auto iddObject = idd_1_7_5.getObject("OS:Sizing:System");
         OS_ASSERT(iddObject);
@@ -2358,8 +2353,8 @@ namespace osversion {
         newObject.setDouble(36, 1.0);
         newObject.setString(37, "OnOff");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (object.iddObject().name() == "OS:Sizing:Plant") {
         auto iddObject = idd_1_7_5.getObject("OS:Sizing:Plant");
         OS_ASSERT(iddObject);
@@ -2375,8 +2370,8 @@ namespace osversion {
         newObject.setInt(6, 1);
         newObject.setString(7, "None");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (object.iddObject().name() == "OS:DistrictCooling") {
         IdfObject newObject = object.clone(true);
 
@@ -2384,8 +2379,8 @@ namespace osversion {
           newObject.setString(4, "Autosize");
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (object.iddObject().name() == "OS:DistrictHeating") {
         IdfObject newObject = object.clone(true);
 
@@ -2393,8 +2388,8 @@ namespace osversion {
           newObject.setString(4, "Autosize");
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (object.iddObject().name() == "OS:Humidifier:Steam:Electric") {
         IdfObject newObject = object.clone(true);
 
@@ -2402,8 +2397,8 @@ namespace osversion {
           newObject.setString(4, "Autosize");
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2421,7 +2416,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_8_4.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_8_3.objects()) {
+    for (IdfObject& object : idf_1_8_3.objects()) {
       auto iddname = object.iddObject().name();
       if (iddname == "OS:PlantLoop") {
         auto iddObject = idd_1_8_4.getObject("OS:PlantLoop");
@@ -2440,8 +2435,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:AirLoopHVAC") {
         auto iddObject = idd_1_8_4.getObject("OS:AirLoopHVAC");
         OS_ASSERT(iddObject);
@@ -2500,8 +2495,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:AvailabilityManager:Scheduled") {
         m_deprecated.push_back(object);
       } else if (iddname == "OS:AvailabilityManagerAssignmentList") {
@@ -2585,7 +2580,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_9_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_8_5.objects()) {
+    for (IdfObject& object : idf_1_8_5.objects()) {
       auto iddname = object.iddObject().name();
       if (iddname == "OS:SpaceInfiltration:EffectiveLeakageArea") {
         auto iddObject = idd_1_9_0.getObject("OS:SpaceInfiltration:EffectiveLeakageArea");
@@ -2601,8 +2596,8 @@ namespace osversion {
             newObject.setString(i, s.get());
           }
         }
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2620,7 +2615,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_9_3.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_9_2.objects()) {
+    for (IdfObject& object : idf_1_9_2.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
@@ -2644,7 +2639,7 @@ namespace osversion {
           }
         }
         ss << newObject;
-        m_refactored.emplace_back(object, newObject);
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneAirMassFlowConservation") {
         auto iddObject = idd_1_9_3.getObject("OS:ZoneAirMassFlowConservation");
@@ -2668,7 +2663,7 @@ namespace osversion {
         }
         // new field Infiltration Balancing Zones is defaulted to MixingSourceZonesOnly
         ss << newObject;
-        m_refactored.emplace_back(object, newObject);
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
         auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
         OS_ASSERT(iddObject);
@@ -2682,8 +2677,8 @@ namespace osversion {
 
         newObject.setString(18, "No");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
         auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
         OS_ASSERT(iddObject);
@@ -2697,8 +2692,8 @@ namespace osversion {
 
         newObject.setString(10, "No");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2716,7 +2711,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_9_5.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_9_4.objects()) {
+    for (IdfObject& object : idf_1_9_4.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Controller:WaterCoil") {
@@ -2766,8 +2761,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2785,7 +2780,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_10_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_9_5.objects()) {
+    for (IdfObject& object : idf_1_9_5.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
@@ -2808,8 +2803,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
         auto iddObject = idd_1_10_0.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
         OS_ASSERT(iddObject);
@@ -2831,8 +2826,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2853,7 +2848,7 @@ namespace osversion {
 
     auto zones = idf_1_10_1.getObjectsByType(idf_1_10_1.iddFile().getObject("OS:ThermalZone").get());
 
-    for (const IdfObject& object : idf_1_10_1.objects()) {
+    for (IdfObject& object : idf_1_10_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:ThermostatSetpoint:DualSetpoint") {
@@ -2915,8 +2910,8 @@ namespace osversion {
         newObject.setString(26, "Autosize");
         newObject.setString(27, "Autosize");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2954,7 +2949,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_10_6.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_10_5.objects()) {
+    for (IdfObject& object : idf_1_10_5.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:PlantLoop") {
@@ -2978,8 +2973,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -2997,7 +2992,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_11_4.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_11_3.objects()) {
+    for (IdfObject& object : idf_1_11_3.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Coil:Heating:Water:Baseboard") {
@@ -3020,8 +3015,8 @@ namespace osversion {
         newObject.setDouble(4, 0.0);
         newObject.setDouble(5, 0.8);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -3039,7 +3034,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_11_5.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_11_4.objects()) {
+    for (IdfObject& object : idf_1_11_4.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Coil:Heating:DX:SingleSpeed") {
@@ -3063,8 +3058,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -3082,7 +3077,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_12_1.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_12_0.objects()) {
+    for (IdfObject& object : idf_1_12_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Meter") {
@@ -3097,8 +3092,8 @@ namespace osversion {
           ++newi;
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -3114,7 +3109,7 @@ namespace osversion {
     IdfFile targetIdf(idd_1_12_4.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_1_12_3.objects()) {
+    for (IdfObject& object : idf_1_12_3.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
@@ -3135,8 +3130,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -3152,7 +3147,7 @@ namespace osversion {
     IdfFile targetIdf(idd_2_1_1.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_2_1_0.objects()) {
+    for (IdfObject& object : idf_2_1_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:WaterHeater:Stratified") {
@@ -3171,8 +3166,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Heating") {
         auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Heating");
         IdfObject newObject(iddObject.get());
@@ -3186,8 +3181,8 @@ namespace osversion {
         newObject.setDouble(21, 1.0);
         newObject.setString(22, "");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Cooling") {
         auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Cooling");
         IdfObject newObject(iddObject.get());
@@ -3201,8 +3196,8 @@ namespace osversion {
         newObject.setDouble(21, 1.0);
         newObject.setString(22, "");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -3218,7 +3213,7 @@ namespace osversion {
     IdfFile targetIdf(idd_2_1_2.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_2_1_1.objects()) {
+    for (IdfObject& object : idf_2_1_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:PlantLoop") {
@@ -3238,8 +3233,8 @@ namespace osversion {
           ++newi;
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:ZoneHVAC:FourPipeFanCoil") {
         auto iddObject = idd_2_1_2.getObject("OS:ZoneHVAC:FourPipeFanCoil");
         IdfObject newObject(iddObject.get());
@@ -3254,8 +3249,8 @@ namespace osversion {
         newObject.setString(23, "Autosize");
         newObject.setString(24, "Autosize");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
@@ -3273,7 +3268,7 @@ namespace osversion {
 
     boost::optional<std::string> value;
 
-    for (const IdfObject& object : idf_2_3_0.objects()) {
+    for (IdfObject& object : idf_2_3_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Pump:ConstantSpeed") {
@@ -3290,8 +3285,8 @@ namespace osversion {
         newObject.setString(17, "348701.1");
         newObject.setString(18, "1.282051282");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:Pump:VariableSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:Pump:VariableSpeed");
         IdfObject newObject(iddObject.get());
@@ -3308,8 +3303,8 @@ namespace osversion {
         newObject.setString(28, "1.282051282");
         newObject.setString(29, "0.0");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:CoolingTower:SingleSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:SingleSpeed");
         IdfObject newObject(iddObject.get());
@@ -3330,8 +3325,8 @@ namespace osversion {
         newObject.setString(36, "Autosize");
         newObject.setString(37, "General");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:CoolingTower:TwoSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:TwoSpeed");
         IdfObject newObject(iddObject.get());
@@ -3348,8 +3343,8 @@ namespace osversion {
         newObject.setString(44, "Autosize");
         newObject.setString(45, "General");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:CoolingTower:VariableSpeed") {
         auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:VariableSpeed");
         IdfObject newObject(iddObject.get());
@@ -3362,8 +3357,8 @@ namespace osversion {
 
         newObject.setString(31, "General");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Chiller:Electric:EIR") {
         auto iddObject = idd_2_3_1.getObject("OS:Chiller:Electric:EIR");
@@ -3381,8 +3376,8 @@ namespace osversion {
           newObject.setString(19, "AirCooled");
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:AirLoopHVAC") {
         auto iddObject = idd_2_3_1.getObject("OS:AirLoopHVAC");
         IdfObject newObject(iddObject.get());
@@ -3558,7 +3553,7 @@ namespace osversion {
 
     boost::optional<std::string> value;
 
-    for (const IdfObject& object : idf_2_4_1.objects()) {
+    for (IdfObject& object : idf_2_4_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:BuildingUnit") {
@@ -3571,8 +3566,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         iddObject = idd_2_4_2.getObject("OS:AdditionalProperties");
         IdfObject additionalProperties(iddObject.get());
@@ -3600,8 +3595,8 @@ namespace osversion {
         }
         newObject.setString(18, "General");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Boiler:Steam") {
         auto iddObject = idd_2_4_2.getObject("OS:Boiler:Steam");
@@ -3614,8 +3609,8 @@ namespace osversion {
         }
         newObject.setString(16, "General");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:WaterHeater:Mixed") {
         auto iddObject = idd_2_4_2.getObject("OS:WaterHeater:Mixed");
@@ -3635,8 +3630,8 @@ namespace osversion {
         // End Use Subcategory
         newObject.setString(42, "General");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Chiller:Electric:EIR") {
         auto iddObject = idd_2_4_2.getObject("OS:Chiller:Electric:EIR");
@@ -3660,8 +3655,8 @@ namespace osversion {
         // endUseSubcategory
         newObject.setString(34, "General");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Default case
       } else {
@@ -3681,7 +3676,7 @@ namespace osversion {
 
     boost::optional<std::string> value;
 
-    for (const IdfObject& object : idf_2_4_3.objects()) {
+    for (IdfObject& object : idf_2_4_3.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:AirflowNetworkZone") {
@@ -3717,8 +3712,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Default case
       } else {
@@ -3759,7 +3754,7 @@ namespace osversion {
       }
     }
 
-    for (const IdfObject& object : idf_2_6_0.objects()) {
+    for (IdfObject& object : idf_2_6_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:ThermalZone") {
@@ -3806,8 +3801,8 @@ namespace osversion {
           // it needs to specify a port on the PortList instead of the ThermalZone now
           newConnection.setString(2, c->second.newPortListHandle);
           newConnection.setUnsigned(3, 3);
-          m_refactored.emplace_back(object, newConnection);
           ss << newConnection;
+          m_refactored.emplace_back(std::move(object), std::move(newConnection));
         } else {
           ss << object;
         }
@@ -3827,7 +3822,7 @@ namespace osversion {
     IdfFile targetIdf(idd_2_6_2.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_2_6_1.objects()) {
+    for (IdfObject& object : idf_2_6_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial") {
@@ -3857,8 +3852,8 @@ namespace osversion {
           newObject.setDouble(16, 99);
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
         // In 2.6.2, a field "Load Distribution Scheme" was inserted right after the thermal zone
@@ -3878,8 +3873,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else {
         ss << object;
@@ -3920,7 +3915,7 @@ namespace osversion {
       }
     }
 
-    for (const IdfObject& object : idf_2_6_2.objects()) {
+    for (IdfObject& object : idf_2_6_2.objects()) {
       auto iddname = object.iddObject().name();
 
       // ATU:SingleDuct:Uncontrolled got made obsolete by ATU:SingleDuct:ConstantVolume:NoReheat in E+ 9.0.0
@@ -3984,8 +3979,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Connection") {
         // No-Op for now
@@ -4016,8 +4011,8 @@ namespace osversion {
 
         // Field is optional string, so leave it empty
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:SpaceType") {
         // Added a field "Standards Template" at position 6
@@ -4039,8 +4034,8 @@ namespace osversion {
 
         // Field is optional string, so leave it empty
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else {
         ss << object;
@@ -4050,7 +4045,7 @@ namespace osversion {
     // Do a second pass, though you'd expect connections to be after the objects it connects, technically it's possible that it wouldn't
     // if the user moved objects manually inside the file
     // So I do want connectionInfos to be properly populated with newNodeHandle
-    for (const IdfObject& object : idf_2_6_2.objects()) {
+    for (IdfObject& object : idf_2_6_2.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Connection") {
@@ -4070,8 +4065,8 @@ namespace osversion {
           // And it connects to the "Inlet Port" of the name (field 2 of the node)
           newConnection.setString(4, c->second.newNodeHandle);
           newConnection.setUnsigned(5, 2);
-          m_refactored.emplace_back(object, newConnection);
           ss << newConnection;
+          m_refactored.emplace_back(std::move(object), std::move(newConnection));
         }
       }
     }
@@ -4087,7 +4082,7 @@ namespace osversion {
     IdfFile targetIdf(idd_2_7_1.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_2_7_0.objects()) {
+    for (IdfObject& object : idf_2_7_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Sizing:System") {
@@ -4104,8 +4099,8 @@ namespace osversion {
                       << "It was replaced by 'Total' instead for object with handle '" << newObject.getString(0).get()
                       << "'. Please review carefully.");
 
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
         } else {
           // Nothing to do here
           ss << object;
@@ -4126,7 +4121,7 @@ namespace osversion {
     IdfFile targetIdf(idd_2_7_2.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_2_7_1.objects()) {
+    for (IdfObject& object : idf_2_7_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:WeatherFile") {
@@ -4136,8 +4131,8 @@ namespace osversion {
         if (value && (value.get().rfind("file://", 0) == 0)) {
           IdfObject newObject = object.clone(true);
           newObject.setString(10, value.get().substr(7));
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
         } else {
           // Nothing to do here
           ss << object;
@@ -4151,8 +4146,8 @@ namespace osversion {
         if (value && (value.get().rfind("file://", 0) == 0)) {
           IdfObject newObject = object.clone(true);
           newObject.setString(2, value.get().substr(7));
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
         } else {
           // Nothing to do here
           ss << object;
@@ -4178,8 +4173,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
@@ -4198,7 +4193,7 @@ namespace osversion {
     IdfFile targetIdf(idd_2_9_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_2_8_1.objects()) {
+    for (IdfObject& object : idf_2_8_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Foundation:Kiva") {
@@ -4217,8 +4212,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Schedule:FixedInterval") {
         auto iddObject = idd_2_9_0.getObject("OS:Schedule:FixedInterval");
@@ -4236,8 +4231,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
         auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:EquipmentList");
@@ -4284,8 +4279,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ThermalStorage:Ice:Detailed") {
         auto iddObject = idd_2_9_0.getObject("OS:ThermalStorage:Ice:Detailed");
@@ -4349,8 +4344,8 @@ namespace osversion {
            *}
            */
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass") {
         auto iddObject = idd_2_9_0.getObject("OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass");
@@ -4404,8 +4399,8 @@ namespace osversion {
         ss << newConnection;
 
         // Register refactored
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
       } else if ((iddname == "OS:HeaderedPumps:ConstantSpeed") || (iddname == "OS:HeaderedPumps:VariableSpeed")) {
@@ -4438,8 +4433,8 @@ namespace osversion {
         }
 
         // Register refactored
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
@@ -4502,7 +4497,7 @@ namespace osversion {
       }
     }  // End locating or creating alwaysOnDiscreteSchedule
 
-    for (const IdfObject& object : idf_2_9_0.objects()) {
+    for (IdfObject& object : idf_2_9_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:AvailabilityManager:NightCycle") {
@@ -4518,8 +4513,8 @@ namespace osversion {
         // Applicability Schedule
         newObject.setString(2, alwaysOnDiscreteSchedule->getString(0).get());
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
@@ -4588,7 +4583,7 @@ namespace osversion {
       }
     };
 
-    for (const IdfObject& object : idf_2_9_1.objects()) {
+    for (IdfObject& object : idf_2_9_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (fuelTypeRenamesMap.find(iddname) != fuelTypeRenamesMap.end()) {
@@ -4619,8 +4614,8 @@ namespace osversion {
             replaceForField(object, newObject, it->second);
           }
 
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
         } else {
           // No-op
           ss << object;
@@ -4655,8 +4650,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Schedule:Rule") {
         auto iddObject = idd_3_0_0.getObject(iddname);
@@ -4673,8 +4668,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Note: OS:ScheduleRuleset got a new optional field at the end, so no-op
         // } else if (iddname == "OS:Schedule:Ruleset") {
@@ -4697,8 +4692,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ClimateZones") {
         auto iddObject = idd_3_0_0.getObject(iddname);
@@ -4717,8 +4712,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Boiler:HotWater") {
         auto iddObject = idd_3_0_0.getObject(iddname);
@@ -4740,8 +4735,8 @@ namespace osversion {
         // Fuel Type: renames
         replaceForField(object, newObject, 2);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Chiller:Electric:EIR") {
         auto iddObject = idd_3_0_0.getObject(iddname);
@@ -4790,8 +4785,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ShadowCalculation") {
         auto iddObject = idd_3_0_0.getObject(iddname);
@@ -4845,8 +4840,8 @@ namespace osversion {
         // Disable Self-Shading From Shading Zone Groups to Other Zones
         newObject.setString(10, "No");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Sizing:Zone") {
         auto iddObject = idd_3_0_0.getObject(iddname);
@@ -4872,8 +4867,8 @@ namespace osversion {
         // Two fields were plain added to the end: Design Zone Secondary Recirculation Fraction,
         // and  Design Minimum Zone Ventilation Efficiency, but both are optional (has default) so no-op there
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
         // Note #3687 was originally planned for 2.9.0 inclusion, so VT was there. But it was only merged to develop3 and hence relased in 3.0.0
@@ -4897,8 +4892,8 @@ namespace osversion {
         newObject.setDouble(25, 21.0);
 
         // Register refactored
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
@@ -4917,7 +4912,7 @@ namespace osversion {
     IdfFile targetIdf(idd_3_0_1.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_3_0_0.objects()) {
+    for (IdfObject& object : idf_3_0_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
@@ -4940,8 +4935,8 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(15, -25.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode") {
         // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
@@ -4963,8 +4958,9 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(15, -25.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
         // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 7 (0-indexed)
@@ -4986,8 +4982,8 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(7, -25.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Coil:Cooling:DX:VariableSpeed") {
         // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
@@ -5009,8 +5005,8 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(15, -25.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
         // Inserted 'Unit Internal Static Air Pressure' at field 7
@@ -5039,8 +5035,8 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(23, -25.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
@@ -5664,7 +5660,7 @@ namespace osversion {
       }
     }
 
-    for (const IdfObject& object : idf_3_0_1.objects()) {
+    for (IdfObject& object : idf_3_0_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:AvailabilityManager:HybridVentilation") {
@@ -5685,8 +5681,8 @@ namespace osversion {
         // Minimum Ventilation Time
         newObject.setDouble(18, 0.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:AirLoopHVAC") {
 
@@ -5709,8 +5705,8 @@ namespace osversion {
         // Set new field per IDD default, same as Model Ctor, since it was made required-field
         newObject.setDouble(6, 1.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Construction:InternalSource") {
 
@@ -5734,8 +5730,8 @@ namespace osversion {
         // If we made it required-field, set new field per IDD default, same as Model Ctor
         // newObject.setDouble(6, 0.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:Electric") {
 
@@ -5754,8 +5750,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:WaterHeater:HeatPump") {
 
@@ -5777,8 +5773,8 @@ namespace osversion {
         // Made it a required-field with the E+ IDD default value set in Ctor, so set it here too
         newObject.setDouble(16, 48.89);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow") {
 
@@ -5830,8 +5826,8 @@ namespace osversion {
         // newObject.setDouble(8, 0.35);
         // newObject.setDouble(10, 0.8);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow") {
 
@@ -5875,8 +5871,8 @@ namespace osversion {
         // newObject.setDouble(10, 0.35);
         // newObject.setString(23, "HalfFlowPower");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Output:Meter") {
 
@@ -5907,8 +5903,8 @@ namespace osversion {
 
           newObject.setName(name);
 
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
         }
 
       } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")
@@ -5947,8 +5943,8 @@ namespace osversion {
             LOG(Trace, "Replacing " << variableName << " with " << it->second << " for " << object.nameString());
             newObject.setString(variableNameIndex, it->second);
 
-            m_refactored.emplace_back(object, newObject);
             ss << newObject;
+            m_refactored.emplace_back(std::move(object), std::move(newObject));
           }
         } else {
           // No-op
@@ -6011,8 +6007,8 @@ namespace osversion {
             }
           }
 
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
         }
 
         // Note: Would have needed to do UtilityCost:Tariff for Fuel Type renames too, but not wrapped
@@ -6041,8 +6037,8 @@ namespace osversion {
           newObject.pushExtensibleGroup(StringVector(1u, subSurfaceHandleIt->second));
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:SubSurface") {
 
@@ -6061,8 +6057,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
@@ -6120,7 +6116,7 @@ namespace osversion {
       return curveQuintLinear;
     };
 
-    for (const IdfObject& object : idf_3_1_0.objects()) {
+    for (IdfObject& object : idf_3_1_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if ((iddname == "OS:Coil:Heating:LowTemperatureRadiant:VariableFlow") || (iddname == "OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow")) {
@@ -6156,8 +6152,8 @@ namespace osversion {
         newObject.setDouble(4, 0.0);
         newObject.setDouble(5, 1.0);
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if ((iddname == "OS:Connection") || (iddname == "OS:PortList")) {
         // Deleted the 'Name' field
@@ -6174,8 +6170,9 @@ namespace osversion {
             }
           }
         }
-        m_refactored.emplace_back(object, newObject);
+
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Construction:AirBoundary") {
 
@@ -6198,8 +6195,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneAirMassFlowConservation") {
 
@@ -6223,8 +6220,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
 
@@ -6241,8 +6238,8 @@ namespace osversion {
 
         newObject.setString(13, "DrawThrough");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
         auto iddObject = idd_3_2_0.getObject(iddname);
@@ -6310,16 +6307,16 @@ namespace osversion {
         newObject.setString(12, sensibleCoolingCapacityCurve.nameString());
         newObject.setString(13, coolingPowerConsumptionCurve.nameString());
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Register new Curve objects
-        m_new.push_back(totalCoolingCapacityCurve);
-        m_new.push_back(sensibleCoolingCapacityCurve);
-        m_new.push_back(coolingPowerConsumptionCurve);
         ss << totalCoolingCapacityCurve;
         ss << sensibleCoolingCapacityCurve;
         ss << coolingPowerConsumptionCurve;
+        m_new.emplace_back(std::move(totalCoolingCapacityCurve));
+        m_new.emplace_back(std::move(sensibleCoolingCapacityCurve));
+        m_new.emplace_back(std::move(coolingPowerConsumptionCurve));
 
       } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit") {
         auto iddObject = idd_3_2_0.getObject(iddname);
@@ -6366,14 +6363,14 @@ namespace osversion {
         newObject.setString(10, heatingCapacityCurve.nameString());
         newObject.setString(11, heatingPowerConsumptionCurve.nameString());
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Register new Curve objects
-        m_new.push_back(heatingCapacityCurve);
-        m_new.push_back(heatingPowerConsumptionCurve);
         ss << heatingCapacityCurve;
         ss << heatingPowerConsumptionCurve;
+        m_new.emplace_back(std::move(heatingCapacityCurve));
+        m_new.emplace_back(std::move(heatingPowerConsumptionCurve));
 
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Cooling") {
         auto iddObject = idd_3_2_0.getObject(iddname);
@@ -6428,14 +6425,14 @@ namespace osversion {
         newObject.setString(10, coolingCapacityCurve.nameString());
         newObject.setString(11, coolingCompressorPowerCurve.nameString());
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Register new Curve objects
-        m_new.push_back(coolingCapacityCurve);
-        m_new.push_back(coolingCompressorPowerCurve);
         ss << coolingCapacityCurve;
         ss << coolingCompressorPowerCurve;
+        m_new.emplace_back(std::move(coolingCapacityCurve));
+        m_new.emplace_back(std::move(coolingCompressorPowerCurve));
 
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Heating") {
         auto iddObject = idd_3_2_0.getObject(iddname);
@@ -6490,14 +6487,14 @@ namespace osversion {
         newObject.setString(10, heatingCapacityCurve.nameString());
         newObject.setString(11, heatingCompressorPowerCurve.nameString());
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // Register new Curve objects
-        m_new.push_back(heatingCapacityCurve);
-        m_new.push_back(heatingCompressorPowerCurve);
         ss << heatingCapacityCurve;
         ss << heatingCompressorPowerCurve;
+        m_new.emplace_back(std::move(heatingCapacityCurve));
+        m_new.emplace_back(std::move(heatingCompressorPowerCurve));
 
         // No-op
       } else {
@@ -6541,8 +6538,8 @@ namespace osversion {
         newObject.setDouble(5, 1.0);
 
         // Register new WaterHeater:Sizing objects
-        m_new.push_back(newObject);
         ss << newObject;
+        m_new.emplace_back(std::move(newObject));
 
         // No-op
       } else {
@@ -6562,7 +6559,7 @@ namespace osversion {
     IdfFile targetIdf(idd_3_3_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_3_2_1.objects()) {
+    for (IdfObject& object : idf_3_2_1.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:AirTerminal:SingleDuct:InletSideMixer") {
@@ -6585,8 +6582,8 @@ namespace osversion {
         newObject.setString(5, "Yes");
         newObject.setString(6, "CurrentOccupancy");
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:GroundHeatExchanger:Vertical") {
 
@@ -6610,8 +6607,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if ((iddname == "OS:Controller:MechanicalVentilation") || (iddname == "OS:Sizing:System")) {
 
@@ -6638,8 +6635,8 @@ namespace osversion {
             }
           }
 
-          m_refactored.emplace_back(object, newObject);
           ss << newObject;
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         } else {
           // Nothing to do since there's no rename to perform
@@ -6687,8 +6684,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
@@ -6708,7 +6705,7 @@ namespace osversion {
     IdfFile targetIdf(idd_3_3_1.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idf_3_3_0.objects()) {
+    for (IdfObject& object : idf_3_3_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Coil:Heating:DX:MultiSpeed") {
@@ -6738,8 +6735,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
         auto iddObject = idd_3_3_1.getObject(iddname);
         IdfObject newObject(iddObject.get());
@@ -6757,8 +6754,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.emplace_back(object, newObject);
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ModelObjectList") {
 
