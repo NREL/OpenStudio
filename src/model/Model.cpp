@@ -228,7 +228,7 @@ namespace model {
       boost::optional<Building> result = this->model().getOptionalUniqueModelObject<Building>();
       if (result) {
         m_cachedBuilding = result;
-        result->getImpl<Building_Impl>().get()->Building_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedBuilding>(
+        result->getImpl<Building_Impl>()->Building_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedBuilding>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -244,7 +244,6 @@ namespace model {
       if (result) {
         m_cachedFoundationKivaSettings = result;
         result->getImpl<FoundationKivaSettings_Impl>()
-          .get()
           ->FoundationKivaSettings_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFoundationKivaSettings>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -261,7 +260,6 @@ namespace model {
       if (result) {
         m_cachedOutputControlFiles = result;
         result->getImpl<OutputControlFiles_Impl>()
-          .get()
           ->OutputControlFiles_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputControlFiles>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -278,7 +276,6 @@ namespace model {
       if (result) {
         m_cachedOutputTableSummaryReports = result;
         result->getImpl<OutputTableSummaryReports_Impl>()
-          .get()
           ->OutputTableSummaryReports_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputTableSummaryReports>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -295,7 +292,6 @@ namespace model {
       if (result) {
         m_cachedLifeCycleCostParameters = result;
         result->getImpl<LifeCycleCostParameters_Impl>()
-          .get()
           ->LifeCycleCostParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedLifeCycleCostParameters>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -311,7 +307,7 @@ namespace model {
       boost::optional<RunPeriod> result = this->model().getOptionalUniqueModelObject<RunPeriod>();
       if (result) {
         m_cachedRunPeriod = result;
-        result->getImpl<RunPeriod_Impl>().get()->RunPeriod_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRunPeriod>(
+        result->getImpl<RunPeriod_Impl>()->RunPeriod_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRunPeriod>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -327,7 +323,6 @@ namespace model {
       if (result) {
         m_cachedYearDescription = result;
         result->getImpl<YearDescription_Impl>()
-          .get()
           ->YearDescription_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedYearDescription>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -344,7 +339,6 @@ namespace model {
       if (result) {
         m_cachedPerformancePrecisionTradeoffs = result;
         result->getImpl<PerformancePrecisionTradeoffs_Impl>()
-          .get()
           ->PerformancePrecisionTradeoffs_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedPerformancePrecisionTradeoffs>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
@@ -488,7 +482,7 @@ namespace model {
       boost::optional<WeatherFile> result = this->model().getOptionalUniqueModelObject<WeatherFile>();
       if (result) {
         m_cachedWeatherFile = result;
-        result->getImpl<WeatherFile_Impl>().get()->WeatherFile_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedWeatherFile>(
+        result->getImpl<WeatherFile_Impl>()->WeatherFile_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedWeatherFile>(
           const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
@@ -908,8 +902,7 @@ namespace model {
     void Model_Impl::mf_createComponentWatcher(ComponentData& componentData) {
       try {
         ComponentWatcher watcher(componentData);
-        watcher.getImpl().get()->ComponentWatcher_Impl::obsolete.connect<Model_Impl, &Model_Impl::obsoleteComponentWatcher>(
-          this);  // #HASHTAG Problem?
+        watcher.getImpl()->ComponentWatcher_Impl::obsolete.connect<Model_Impl, &Model_Impl::obsoleteComponentWatcher>(this);  // #HASHTAG Problem?
         m_componentWatchers.push_back(watcher);
       } catch (...) {
         componentData.remove();
@@ -998,7 +991,6 @@ namespace model {
           modelObj->autosize();
         }
       }
-      return;
     }
 
     void Model_Impl::applySizingValues() {
@@ -1033,7 +1025,6 @@ namespace model {
           modelObj->applySizingValues();
         }
       }
-      return;
     }
 
   }  // namespace detail
@@ -1113,7 +1104,7 @@ namespace model {
     return result;
   }
 
-  Model::Model(std::shared_ptr<detail::Model_Impl> p) : Workspace(std::move(p)) {}
+  Model::Model(std::shared_ptr<detail::Model_Impl> impl) : Workspace(std::move(impl)) {}
 
   boost::optional<Building> Model::building() const {
     return getImpl<detail::Model_Impl>()->building();
@@ -1337,20 +1328,20 @@ namespace model {
     std::vector<Surface> searchResults;
 
     // add Version
-    Version version = model.getUniqueModelObject<Version>();
+    auto version = model.getUniqueModelObject<Version>();
 
     // add SimulationControl
-    SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
+    auto simulationControl = model.getUniqueModelObject<SimulationControl>();
     simulationControl.setDoZoneSizingCalculation(true);
     simulationControl.setDoSystemSizingCalculation(true);
     simulationControl.setRunSimulationforSizingPeriods(false);
     simulationControl.setRunSimulationforWeatherFileRunPeriods(true);
 
     // add Timestep
-    Timestep timestep = model.getUniqueModelObject<Timestep>();
+    auto timestep = model.getUniqueModelObject<Timestep>();
 
     // add RunPeriod
-    RunPeriod runPeriod = model.getUniqueModelObject<RunPeriod>();
+    auto runPeriod = model.getUniqueModelObject<RunPeriod>();
     runPeriod.setBeginMonth(1);
     runPeriod.setBeginDayOfMonth(1);
     runPeriod.setEndMonth(12);
@@ -1363,22 +1354,22 @@ namespace model {
     runPeriod.setNumTimePeriodRepeats(1);
 
     // add SurfaceConvectionAlgorithmInside
-    InsideSurfaceConvectionAlgorithm insideSurfaceConvectionAlgorithm = model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
+    auto insideSurfaceConvectionAlgorithm = model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
 
     // add SurfaceConvectionAlgorithmOutside
-    OutsideSurfaceConvectionAlgorithm outsideSurfaceConvectionAlgorithm = model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+    auto outsideSurfaceConvectionAlgorithm = model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
 
     // add HeatBalanceAlgorithm
-    HeatBalanceAlgorithm heatBalanceAlgorithm = model.getUniqueModelObject<HeatBalanceAlgorithm>();
+    auto heatBalanceAlgorithm = model.getUniqueModelObject<HeatBalanceAlgorithm>();
 
     // add ZoneAirHeatBalanceAlgorithm
-    ZoneAirHeatBalanceAlgorithm zoneAirHeatBalanceAlgorithm = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+    auto zoneAirHeatBalanceAlgorithm = model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
 
     // add ConvergenceLimits
-    ConvergenceLimits convergenceLimits = model.getUniqueModelObject<ConvergenceLimits>();
+    auto convergenceLimits = model.getUniqueModelObject<ConvergenceLimits>();
 
     // add ShadowCalculation
-    ShadowCalculation shadowCalculation = model.getUniqueModelObject<ShadowCalculation>();
+    auto shadowCalculation = model.getUniqueModelObject<ShadowCalculation>();
 
     // add Site
     Site site = model.getUniqueModelObject<Site>();
@@ -1388,7 +1379,7 @@ namespace model {
     site.setElevation(190.0);
 
     // add SiteGroundTemperatureBuildingSurface
-    SiteGroundTemperatureBuildingSurface groundTemp = model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+    auto groundTemp = model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
     groundTemp.setJanuaryGroundTemperature(19.527);
     groundTemp.setFebruaryGroundTemperature(19.502);
     groundTemp.setMarchGroundTemperature(19.536);
@@ -1403,7 +1394,7 @@ namespace model {
     groundTemp.setDecemberGroundTemperature(19.633);
 
     // add SiteGroundTemperatureDeep
-    SiteGroundTemperatureDeep groundTempDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
+    auto groundTempDeep = model.getUniqueModelObject<SiteGroundTemperatureDeep>();
     groundTempDeep.setJanuaryDeepGroundTemperature(19.527);
     groundTempDeep.setFebruaryDeepGroundTemperature(19.502);
     groundTempDeep.setMarchDeepGroundTemperature(19.536);
@@ -1418,7 +1409,7 @@ namespace model {
     groundTempDeep.setDecemberDeepGroundTemperature(19.633);
 
     // add SiteWaterMainsTemperature
-    SiteWaterMainsTemperature waterTemp = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+    auto waterTemp = model.getUniqueModelObject<SiteWaterMainsTemperature>();
     waterTemp.setAnnualAverageOutdoorAirTemperature(9.69);
     waterTemp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(28.10);
 
@@ -1457,12 +1448,12 @@ namespace model {
 
     // add schedules
     addExampleSchedules(model);
-    OS_ASSERT(model.getConcreteModelObjects<DefaultScheduleSet>().size() >= 1);
+    OS_ASSERT(!model.getConcreteModelObjects<DefaultScheduleSet>().empty());
     DefaultScheduleSet defaultScheduleSet = model.getConcreteModelObjects<DefaultScheduleSet>()[0];
 
     // add constructions
     addExampleConstructions(model);
-    OS_ASSERT(model.getConcreteModelObjects<DefaultConstructionSet>().size() >= 1);
+    OS_ASSERT(!model.getConcreteModelObjects<DefaultConstructionSet>().empty());
     DefaultConstructionSet defaultConstructionSet = model.getConcreteModelObjects<DefaultConstructionSet>()[0];
 
     // add a space type
@@ -1487,10 +1478,10 @@ namespace model {
     people.setSpaceType(spaceType);
 
     // create the facility
-    Facility facility = model.getUniqueModelObject<Facility>();
+    auto facility = model.getUniqueModelObject<Facility>();
 
     // create the building
-    Building building = model.getUniqueModelObject<Building>();
+    auto building = model.getUniqueModelObject<Building>();
     building.setSpaceType(spaceType);
     building.setDefaultConstructionSet(defaultConstructionSet);
     building.setDefaultScheduleSet(defaultScheduleSet);
@@ -1544,16 +1535,13 @@ namespace model {
     space1->setThermalZone(thermalZone);
     space1->setBuildingStory(buildingStory);
 
-    ModelObject clone = space1->clone(model);
-    Space space2 = clone.cast<Space>();
+    auto space2 = space1->clone(model).cast<Space>();
     space2.setXOrigin(10);
 
-    clone = space1->clone(model);
-    Space space3 = clone.cast<Space>();
+    auto space3 = space1->clone(model).cast<Space>();
     space3.setYOrigin(10);
 
-    clone = space1->clone(model);
-    Space space4 = clone.cast<Space>();
+    auto space4 = space1->clone(model).cast<Space>();
     space4.setXOrigin(10);
     space4.setYOrigin(10);
 
@@ -1567,7 +1555,7 @@ namespace model {
 
     // find south wall
     searchResults = space1->findSurfaces(180.0, 180.0, 90.0, 90.0);
-    OS_ASSERT(searchResults.size() >= 1);
+    OS_ASSERT(!searchResults.empty());
 
     // add door
     SubSurface door(doorPoints, model);
@@ -1583,7 +1571,7 @@ namespace model {
 
     // find east wall
     searchResults = space2.findSurfaces(90.0, 90.0, 90.0, 90.0);
-    OS_ASSERT(searchResults.size() >= 1);
+    OS_ASSERT(!searchResults.empty());
 
     // add window
     SubSurface window(windowPoints, model);
@@ -1786,22 +1774,16 @@ namespace model {
     setpointMMA4.addToNode(evapOutletNode);
 
     // add some example variables
-    int i = 1;
     for (const std::string& variableName : thermalZone.outputVariableNames()) {
       OutputVariable(variableName, model);
-      if (++i > 2) {
-        break;
-      }
+      break;
     }
 
     // add some example variables
-    i = 1;
     for (const Surface& surface : model.getConcreteModelObjects<Surface>()) {
       for (const std::string& variableName : surface.outputVariableNames()) {
         OutputVariable(variableName, model);
-        if (++i > 2) {
-          break;
-        }
+        break;
       }
       break;
     }
