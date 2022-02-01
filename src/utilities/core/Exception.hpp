@@ -46,8 +46,11 @@ class UTILITIES_API Exception : public std::exception
   /// Needed for rb_raise support in swig
   Exception(const char* msg) : m_msg(msg) {}
 
-  /// virtual destructor, no throw
-  virtual ~Exception() throw() {}
+  Exception(const Exception&) = default;
+  Exception& operator=(const Exception&) = default;
+  Exception(Exception&&) = default;
+  Exception& operator=(Exception&&) = default;
+  virtual ~Exception() noexcept override = default;
 
   /// return the message
   virtual const std::string& message() const {
@@ -55,7 +58,7 @@ class UTILITIES_API Exception : public std::exception
   }
 
   /// return the message
-  virtual const char* what() const throw() {
+  virtual const char* what() const noexcept override {
     return m_msg.c_str();
   }
 

@@ -301,7 +301,7 @@ namespace boost
     std::string str() const;
     int compare(regex&) const;
     // swap
-    void swap(regex&) throw();
+    void swap(regex&) noexcept;
   };
 }
 
