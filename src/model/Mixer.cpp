@@ -126,7 +126,7 @@ namespace model {
       return result;
     }
 
-    std::vector<HVACComponent> Mixer_Impl::edges(const boost::optional<HVACComponent>&  /*prev*/) {
+    std::vector<HVACComponent> Mixer_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
       std::vector<HVACComponent> edges;
       if (auto edgeModelObject = this->outletModelObject()) {
         if (auto edgeObject = edgeModelObject->optionalCast<HVACComponent>()) {

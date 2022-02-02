@@ -225,13 +225,13 @@ namespace model {
       return std::numeric_limits<unsigned>::max();
     }
 
-    unsigned AirTerminalDualDuctVAV_Impl::newInletPortAfterBranch(unsigned  /*branchIndex*/) {
+    unsigned AirTerminalDualDuctVAV_Impl::newInletPortAfterBranch(unsigned /*branchIndex*/) {
       LOG(Warn, "newInletPortAfterBranch is not supported for " << briefDescription() << " .");
       LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
       return std::numeric_limits<unsigned>::max();
     }
 
-    void AirTerminalDualDuctVAV_Impl::removePortForBranch(unsigned  /*branchIndex*/) {
+    void AirTerminalDualDuctVAV_Impl::removePortForBranch(unsigned /*branchIndex*/) {
       LOG(Warn, "removePortForBranch is not supported for " << briefDescription() << " .");
       LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
     }

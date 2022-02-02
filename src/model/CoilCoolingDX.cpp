@@ -148,7 +148,7 @@ namespace model {
       return boost::none;
     }
 
-    bool CoilCoolingDX_Impl::addToNode(Node&  /*node*/) {
+    bool CoilCoolingDX_Impl::addToNode(Node& /*node*/) {
       // Only meant to be in a AirLoopHVACUnitarySystem
       return false;
     }

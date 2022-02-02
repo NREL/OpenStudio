@@ -939,19 +939,19 @@ namespace model {
       m_cachedOutputTableSummaryReports.reset();
     }
 
-    void Model_Impl::clearCachedLifeCycleCostParameters(const Handle&  /*handle*/) {
+    void Model_Impl::clearCachedLifeCycleCostParameters(const Handle& /*handle*/) {
       m_cachedLifeCycleCostParameters.reset();
     }
 
-    void Model_Impl::clearCachedRunPeriod(const Handle&  /*handle*/) {
+    void Model_Impl::clearCachedRunPeriod(const Handle& /*handle*/) {
       m_cachedRunPeriod.reset();
     }
 
-    void Model_Impl::clearCachedYearDescription(const Handle&  /*handle*/) {
+    void Model_Impl::clearCachedYearDescription(const Handle& /*handle*/) {
       m_cachedYearDescription.reset();
     }
 
-    void Model_Impl::clearCachedWeatherFile(const Handle&  /*handle*/) {
+    void Model_Impl::clearCachedWeatherFile(const Handle& /*handle*/) {
       m_cachedWeatherFile.reset();
     }
 
