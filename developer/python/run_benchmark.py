@@ -140,9 +140,14 @@ def find_skip_rows(results_file: Path) -> int:
     skiprows (int): the number of lines to skip when read_csv is called
     """
     skiprows = 0
+    search_str = 'name,iterations,'
     with open(results_file, 'r') as f:
-        while ('name,iterations,' not in f.readline()):
-            skiprows += 1
+        content = f.read()
+    if search_str not in content:
+        return None
+    lines = content.splitlines()
+    while (search_str not in lines[skiprows]):
+        skiprows += 1
 
     return skiprows
 
@@ -172,7 +177,11 @@ def run_bench(bench_exe: Path,
         cmd = shlex.split(
             f'{bench_exe} --benchmark_out_format=csv'
             f' --benchmark_out="{results_file}"')
-        subprocess.check_call(cmd)
+        try:
+            subprocess.check_call(cmd)
+        except subprocess.CalledProcessError:
+            print(f'ERROR RUNNING {bench_exe}')
+            return
 
         # Prepend branch + Sha
         branch, sha = get_branch_and_sha()
