@@ -51,6 +51,7 @@ PointLatLon::PointLatLon(const PointLatLon& other) : m_storage(other.m_storage) 
   m_localCartesianConverter.reset();
 }
 
+PointLatLon::~PointLatLon() = default;
 
 /// get lat
 double PointLatLon::lat() const {
