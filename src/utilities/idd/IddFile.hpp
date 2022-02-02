@@ -61,7 +61,7 @@ class UTILITIES_API IddFile
   //@{
 
   /** Default constructor returns an IddFile with no version, no header, and no objects. */
-  IddFile() = default;  // Must be provided because we declared a (private) one
+  IddFile();
 
   /** Copy constructor returns an IddFile that shares its data with other. */
   // IddFile(const IddFile& other);

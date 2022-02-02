@@ -364,7 +364,8 @@ namespace detail {
 
 // CONSTRUCTORS
 
-// IddFile::IddFile() : m_impl(std::make_shared<detail::IddFile_Impl>()) {}
+IddFile::IddFile() : m_impl(std::make_shared<detail::IddFile_Impl>()) {}
+
 //
 // IddFile::IddFile(const IddFile& other) : m_impl(other.m_impl) {}
 // IddFile& IddFile::operator=(const IddFile& other) {
