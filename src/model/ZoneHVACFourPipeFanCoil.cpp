@@ -71,15 +71,15 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACFourPipeFanCoil_Impl::clone(Model model) const {
-      ZoneHVACFourPipeFanCoil fourPipeFanCoilClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACFourPipeFanCoil>();
+      auto fourPipeFanCoilClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACFourPipeFanCoil>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       fourPipeFanCoilClone.setSupplyAirFan(supplyFanClone);
 
@@ -100,7 +100,7 @@ namespace model {
         }
       }
 
-      return fourPipeFanCoilClone;
+      return std::move(fourPipeFanCoilClone);
     }
 
     std::vector<IdfObject> ZoneHVACFourPipeFanCoil_Impl::remove() {

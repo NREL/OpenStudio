@@ -427,9 +427,7 @@ namespace model {
     }
 
     ModelObject BoilerHotWater_Impl::clone(Model model) const {
-      BoilerHotWater newBoiler = StraightComponent_Impl::clone(model).cast<BoilerHotWater>();
-
-      return newBoiler;
+      return StraightComponent_Impl::clone(model);
     }
 
     boost::optional<double> BoilerHotWater_Impl::autosizedNominalCapacity() const {

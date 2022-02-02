@@ -172,12 +172,12 @@ namespace model {
     }
 
     ModelObject StraightComponent_Impl::clone(Model model) const {
-      StraightComponent mo = HVACComponent_Impl::clone(model).cast<StraightComponent>();
+      auto mo = HVACComponent_Impl::clone(model).cast<StraightComponent>();
 
       mo.setString(mo.inletPort(), "");
       mo.setString(mo.outletPort(), "");
 
-      return mo;
+      return std::move(mo);
     }
 
   }  // namespace detail

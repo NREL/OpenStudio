@@ -95,7 +95,6 @@ namespace model {
     CoilHeatingWater_Impl::CoilHeatingWater_Impl(const CoilHeatingWater_Impl& other, Model_Impl* model, bool keepHandle)
       : WaterToAirComponent_Impl(other, model, keepHandle) {}
 
-
     const std::vector<std::string>& CoilHeatingWater_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{"Heating Coil Heating Energy", "Heating Coil Source Side Heat Transfer Energy",
                                                    "Heating Coil Heating Rate", "Heating Coil U Factor Times Area Value"};
@@ -137,13 +136,11 @@ namespace model {
         return WaterToAirComponent_Impl::remove();
       }
 
-      return std::vector<IdfObject>();
+      return {};
     }
 
     ModelObject CoilHeatingWater_Impl::clone(Model model) const {
-      CoilHeatingWater newCoil = WaterToAirComponent_Impl::clone(model).optionalCast<CoilHeatingWater>().get();
-
-      return newCoil;
+      return WaterToAirComponent_Impl::clone(model);
     }
 
     IddObjectType CoilHeatingWater_Impl::iddObjectType() const {
@@ -161,9 +158,10 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingWater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_WaterFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("CoilHeatingWater", "Availability"));
+        result.emplace_back("CoilHeatingWater", "Availability");
       }
       return result;
     }

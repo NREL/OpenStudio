@@ -131,9 +131,10 @@ namespace model {
     std::vector<ScheduleTypeKey> FanOnOff_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_OnOffFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("FanOnOff", "Availability"));
+        result.emplace_back("FanOnOff", "Availability");
       }
       return result;
     }
@@ -325,9 +326,8 @@ namespace model {
     }
 
     ModelObject FanOnOff_Impl::clone(Model model) const {
-      FanOnOff newFan = ModelObject_Impl::clone(model).cast<FanOnOff>();
-
-      return newFan;
+      // TODO: why is this calling ModelObject_Impl::clone and not StraightComponent_Impl::clone?
+      return ModelObject_Impl::clone(model);
     }
 
     // Fan:OnOff can not be added to an AirLoopHVAC.
