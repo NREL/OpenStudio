@@ -41,7 +41,11 @@
 
 #include "../utilities/units/Unit.hpp"
 #include <unordered_map>
-#include <pugixml.hpp>
+
+namespace pugi {
+class xml_node;
+class xml_document;
+}  // namespace pugi
 
 namespace openstudio {
 
@@ -60,7 +64,7 @@ namespace gbxml {
    public:
     ReverseTranslator();
 
-    virtual ~ReverseTranslator() = default;
+    ~ReverseTranslator();
 
     boost::optional<openstudio::model::Model> loadModel(const openstudio::path& path, ProgressBar* progressBar = nullptr);
 

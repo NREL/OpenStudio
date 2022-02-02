@@ -43,7 +43,10 @@
 #include "../model/ConstructionBase.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 
-#include <pugixml.hpp>
+namespace pugi {
+class xml_node;
+class xml_document;
+}  // namespace pugi
 
 namespace openstudio {
 
@@ -69,7 +72,7 @@ namespace sdd {
     // If masterAutosize = true the translator will ignore choices in the sdd file and forcibly autosize the entire model.
     ReverseTranslator(bool masterAutosize = false);
 
-    virtual ~ReverseTranslator() = default;
+    ~ReverseTranslator();
 
     boost::optional<openstudio::model::Model> loadModel(const openstudio::path& path, ProgressBar* progressBar = nullptr);
 

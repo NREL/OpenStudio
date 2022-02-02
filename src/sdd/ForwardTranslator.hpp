@@ -40,7 +40,11 @@
 #include "../model/ModelObject.hpp"
 
 #include <map>
-#include <pugixml.hpp>
+
+namespace pugi {
+class xml_node;
+class xml_document;
+}  // namespace pugi
 
 namespace openstudio {
 
@@ -73,7 +77,7 @@ namespace sdd {
    public:
     ForwardTranslator();
 
-    virtual ~ForwardTranslator() = default;
+    ~ForwardTranslator();
 
     bool modelToSDD(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar = nullptr);
 

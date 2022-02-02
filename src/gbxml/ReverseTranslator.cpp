@@ -93,6 +93,8 @@ namespace gbxml {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
+  ReverseTranslator::~ReverseTranslator() = default;
+
   boost::optional<openstudio::model::Model> ReverseTranslator::loadModel(const openstudio::path& path, ProgressBar* progressBar) {
     m_progressBar = progressBar;
 

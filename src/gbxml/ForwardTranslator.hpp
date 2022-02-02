@@ -43,7 +43,11 @@
 #include "../model/ModelObject.hpp"
 
 #include <map>
-#include <pugixml.hpp>
+
+namespace pugi {
+class xml_node;
+class xml_document;
+}  // namespace pugi
 
 namespace openstudio {
 
@@ -72,7 +76,7 @@ namespace gbxml {
    public:
     ForwardTranslator();
 
-    virtual ~ForwardTranslator() = default;
+    ~ForwardTranslator();
 
     // Save the GbXML to a file
     bool modelToGbXML(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar = nullptr);
