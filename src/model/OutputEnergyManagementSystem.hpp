@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputEnergyManagementSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputEnergyManagementSystem(const OutputEnergyManagementSystem& other) = default;
+    OutputEnergyManagementSystem(OutputEnergyManagementSystem&& other) = default;
+    OutputEnergyManagementSystem& operator=(const OutputEnergyManagementSystem&) = default;
+    OutputEnergyManagementSystem& operator=(OutputEnergyManagementSystem&&) = default;
 
     //@}
 

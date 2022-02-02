@@ -54,6 +54,11 @@ namespace model {
     explicit CurveLinear(const Model& model);
 
     virtual ~CurveLinear() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveLinear(const CurveLinear& other) = default;
+    CurveLinear(CurveLinear&& other) = default;
+    CurveLinear& operator=(const CurveLinear&) = default;
+    CurveLinear& operator=(CurveLinear&&) = default;
 
     //@}
 

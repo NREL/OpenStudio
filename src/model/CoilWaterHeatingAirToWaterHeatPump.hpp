@@ -63,6 +63,11 @@ namespace model {
                                                 Curve& partLoadFractionCorrelationCurve);
 
     virtual ~CoilWaterHeatingAirToWaterHeatPump() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilWaterHeatingAirToWaterHeatPump(const CoilWaterHeatingAirToWaterHeatPump& other) = default;
+    CoilWaterHeatingAirToWaterHeatPump(CoilWaterHeatingAirToWaterHeatPump&& other) = default;
+    CoilWaterHeatingAirToWaterHeatPump& operator=(const CoilWaterHeatingAirToWaterHeatPump&) = default;
+    CoilWaterHeatingAirToWaterHeatPump& operator=(CoilWaterHeatingAirToWaterHeatPump&&) = default;
 
     //@}
 

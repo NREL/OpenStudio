@@ -56,6 +56,11 @@ namespace model {
     //@{
 
     virtual ~YearDescription() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    YearDescription(const YearDescription& other) = default;
+    YearDescription(YearDescription&& other) = default;
+    YearDescription& operator=(const YearDescription&) = default;
+    YearDescription& operator=(YearDescription&&) = default;
 
     //@}
     /** @name Static Methods */

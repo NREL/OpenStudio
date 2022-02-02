@@ -62,6 +62,11 @@ namespace model {
     ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition, Schedule& schedule);
 
     virtual ~ExteriorFuelEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorFuelEquipment(const ExteriorFuelEquipment& other) = default;
+    ExteriorFuelEquipment(ExteriorFuelEquipment&& other) = default;
+    ExteriorFuelEquipment& operator=(const ExteriorFuelEquipment&) = default;
+    ExteriorFuelEquipment& operator=(ExteriorFuelEquipment&&) = default;
 
     //@}
 

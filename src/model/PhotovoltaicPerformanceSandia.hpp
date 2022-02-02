@@ -71,6 +71,11 @@ namespace model {
     static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
     virtual ~PhotovoltaicPerformanceSandia() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PhotovoltaicPerformanceSandia(const PhotovoltaicPerformanceSandia& other) = default;
+    PhotovoltaicPerformanceSandia(PhotovoltaicPerformanceSandia&& other) = default;
+    PhotovoltaicPerformanceSandia& operator=(const PhotovoltaicPerformanceSandia&) = default;
+    PhotovoltaicPerformanceSandia& operator=(PhotovoltaicPerformanceSandia&&) = default;
 
     //@}
 

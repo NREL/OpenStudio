@@ -65,6 +65,11 @@ namespace model {
     explicit DaylightingDeviceTubular(const SubSurface& dome, const SubSurface& diffuser, const ConstructionBase& construction);
 
     virtual ~DaylightingDeviceTubular() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightingDeviceTubular(const DaylightingDeviceTubular& other) = default;
+    DaylightingDeviceTubular(DaylightingDeviceTubular&& other) = default;
+    DaylightingDeviceTubular& operator=(const DaylightingDeviceTubular&) = default;
+    DaylightingDeviceTubular& operator=(DaylightingDeviceTubular&&) = default;
 
     //@}
     /** @name Static Methods */

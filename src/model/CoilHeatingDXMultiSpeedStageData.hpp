@@ -61,6 +61,11 @@ namespace model {
                                               const Curve& wasteHeatFunctionofTemperature);
 
     virtual ~CoilHeatingDXMultiSpeedStageData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingDXMultiSpeedStageData(const CoilHeatingDXMultiSpeedStageData& other) = default;
+    CoilHeatingDXMultiSpeedStageData(CoilHeatingDXMultiSpeedStageData&& other) = default;
+    CoilHeatingDXMultiSpeedStageData& operator=(const CoilHeatingDXMultiSpeedStageData&) = default;
+    CoilHeatingDXMultiSpeedStageData& operator=(CoilHeatingDXMultiSpeedStageData&&) = default;
 
     //@}
 

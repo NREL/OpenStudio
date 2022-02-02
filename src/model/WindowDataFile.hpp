@@ -51,6 +51,11 @@ namespace model {
     explicit WindowDataFile(const Model& model);
 
     virtual ~WindowDataFile() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WindowDataFile(const WindowDataFile& other) = default;
+    WindowDataFile(WindowDataFile&& other) = default;
+    WindowDataFile& operator=(const WindowDataFile&) = default;
+    WindowDataFile& operator=(WindowDataFile&&) = default;
 
     //@}
     /** @name Static Methods */

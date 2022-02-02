@@ -76,6 +76,11 @@ namespace model {
     explicit DefaultScheduleSet(const Model& model);
 
     virtual ~DefaultScheduleSet() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DefaultScheduleSet(const DefaultScheduleSet& other) = default;
+    DefaultScheduleSet(DefaultScheduleSet&& other) = default;
+    DefaultScheduleSet& operator=(const DefaultScheduleSet&) = default;
+    DefaultScheduleSet& operator=(DefaultScheduleSet&&) = default;
 
     //@}
     /** @name Static Methods */

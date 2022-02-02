@@ -54,6 +54,11 @@ namespace model {
     explicit PumpConstantSpeed(const Model& model);
 
     virtual ~PumpConstantSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PumpConstantSpeed(const PumpConstantSpeed& other) = default;
+    PumpConstantSpeed(PumpConstantSpeed&& other) = default;
+    PumpConstantSpeed& operator=(const PumpConstantSpeed&) = default;
+    PumpConstantSpeed& operator=(PumpConstantSpeed&&) = default;
 
     static IddObjectType iddObjectType();
 

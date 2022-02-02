@@ -46,6 +46,11 @@ namespace model {
     //{
 
     virtual ~Version() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Version(const Version& other) = default;
+    Version(Version&& other) = default;
+    Version& operator=(const Version&) = default;
+    Version& operator=(Version&&) = default;
 
     //@}
 

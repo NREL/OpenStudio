@@ -62,6 +62,11 @@ namespace model {
     explicit ZoneHVACLowTempRadiantVarFlow(const Model& model);
 
     virtual ~ZoneHVACLowTempRadiantVarFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACLowTempRadiantVarFlow(const ZoneHVACLowTempRadiantVarFlow& other) = default;
+    ZoneHVACLowTempRadiantVarFlow(ZoneHVACLowTempRadiantVarFlow&& other) = default;
+    ZoneHVACLowTempRadiantVarFlow& operator=(const ZoneHVACLowTempRadiantVarFlow&) = default;
+    ZoneHVACLowTempRadiantVarFlow& operator=(ZoneHVACLowTempRadiantVarFlow&&) = default;
 
     //@}
 

@@ -62,6 +62,11 @@ namespace model {
     explicit RefrigerationCase(const Model& model, Schedule& caseDefrostSchedule);
 
     virtual ~RefrigerationCase() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCase(const RefrigerationCase& other) = default;
+    RefrigerationCase(RefrigerationCase&& other) = default;
+    RefrigerationCase& operator=(const RefrigerationCase&) = default;
+    RefrigerationCase& operator=(RefrigerationCase&&) = default;
 
     //@}
 

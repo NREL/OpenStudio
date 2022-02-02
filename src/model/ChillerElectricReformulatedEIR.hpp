@@ -64,6 +64,11 @@ namespace model {
     explicit ChillerElectricReformulatedEIR(const Model& model);
 
     virtual ~ChillerElectricReformulatedEIR() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerElectricReformulatedEIR(const ChillerElectricReformulatedEIR& other) = default;
+    ChillerElectricReformulatedEIR(ChillerElectricReformulatedEIR&& other) = default;
+    ChillerElectricReformulatedEIR& operator=(const ChillerElectricReformulatedEIR&) = default;
+    ChillerElectricReformulatedEIR& operator=(ChillerElectricReformulatedEIR&&) = default;
 
     //@}
 

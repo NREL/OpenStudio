@@ -58,6 +58,11 @@ namespace model {
   {
    public:
     virtual ~GenericModelObject() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GenericModelObject(const GenericModelObject& other) = default;
+    GenericModelObject(GenericModelObject&& other) = default;
+    GenericModelObject& operator=(const GenericModelObject&) = default;
+    GenericModelObject& operator=(GenericModelObject&&) = default;
 
    protected:
     /// @cond

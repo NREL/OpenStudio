@@ -57,6 +57,11 @@ namespace model {
                                                           const HVACComponent& coolingCoil, const HVACComponent& supplementalHeatingCoil);
 
     virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed& other) = default;
+    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed&& other) = default;
+    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed& operator=(const AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed&) = default;
+    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed& operator=(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed&&) = default;
 
     //@}
 

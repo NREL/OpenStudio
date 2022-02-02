@@ -57,6 +57,11 @@ namespace model {
     explicit RefrigerationCondenserAirCooled(const Model& model);
 
     virtual ~RefrigerationCondenserAirCooled() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCondenserAirCooled(const RefrigerationCondenserAirCooled& other) = default;
+    RefrigerationCondenserAirCooled(RefrigerationCondenserAirCooled&& other) = default;
+    RefrigerationCondenserAirCooled& operator=(const RefrigerationCondenserAirCooled&) = default;
+    RefrigerationCondenserAirCooled& operator=(RefrigerationCondenserAirCooled&&) = default;
 
     //@}
 

@@ -57,6 +57,11 @@ namespace model {
     explicit AirLoopHVACZoneMixer(const Model& model);
 
     virtual ~AirLoopHVACZoneMixer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACZoneMixer(const AirLoopHVACZoneMixer& other) = default;
+    AirLoopHVACZoneMixer(AirLoopHVACZoneMixer&& other) = default;
+    AirLoopHVACZoneMixer& operator=(const AirLoopHVACZoneMixer&) = default;
+    AirLoopHVACZoneMixer& operator=(AirLoopHVACZoneMixer&&) = default;
 
     unsigned outletPort() const override;
 

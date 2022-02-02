@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~FenestrationMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FenestrationMaterial(const FenestrationMaterial& other) = default;
+    FenestrationMaterial(FenestrationMaterial&& other) = default;
+    FenestrationMaterial& operator=(const FenestrationMaterial&) = default;
+    FenestrationMaterial& operator=(FenestrationMaterial&&) = default;
 
     //@}
     /** @name Static Methods */

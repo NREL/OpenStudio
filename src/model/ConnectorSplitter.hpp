@@ -55,6 +55,11 @@ namespace model {
     explicit ConnectorSplitter(const Model& model);
 
     virtual ~ConnectorSplitter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConnectorSplitter(const ConnectorSplitter& other) = default;
+    ConnectorSplitter(ConnectorSplitter&& other) = default;
+    ConnectorSplitter& operator=(const ConnectorSplitter&) = default;
+    ConnectorSplitter& operator=(ConnectorSplitter&&) = default;
 
     /** Returns the inlet port to the splitter. */
     unsigned inletPort() const override;

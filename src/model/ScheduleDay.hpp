@@ -61,6 +61,11 @@ namespace model {
     ScheduleDay(const Model& model, double value);
 
     virtual ~ScheduleDay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleDay(const ScheduleDay& other) = default;
+    ScheduleDay(ScheduleDay&& other) = default;
+    ScheduleDay& operator=(const ScheduleDay&) = default;
+    ScheduleDay& operator=(ScheduleDay&&) = default;
 
     //@}
 

@@ -55,6 +55,11 @@ namespace model {
     explicit RefrigerationSubcoolerLiquidSuction(const Model& model);
 
     virtual ~RefrigerationSubcoolerLiquidSuction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationSubcoolerLiquidSuction(const RefrigerationSubcoolerLiquidSuction& other) = default;
+    RefrigerationSubcoolerLiquidSuction(RefrigerationSubcoolerLiquidSuction&& other) = default;
+    RefrigerationSubcoolerLiquidSuction& operator=(const RefrigerationSubcoolerLiquidSuction&) = default;
+    RefrigerationSubcoolerLiquidSuction& operator=(RefrigerationSubcoolerLiquidSuction&&) = default;
 
     //@}
 

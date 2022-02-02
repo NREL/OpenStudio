@@ -54,6 +54,11 @@ namespace model {
     //@{
 
     virtual ~AirflowNetworkOutdoorAirflow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkOutdoorAirflow(const AirflowNetworkOutdoorAirflow& other) = default;
+    AirflowNetworkOutdoorAirflow(AirflowNetworkOutdoorAirflow&& other) = default;
+    AirflowNetworkOutdoorAirflow& operator=(const AirflowNetworkOutdoorAirflow&) = default;
+    AirflowNetworkOutdoorAirflow& operator=(AirflowNetworkOutdoorAirflow&&) = default;
 
     //@}
 

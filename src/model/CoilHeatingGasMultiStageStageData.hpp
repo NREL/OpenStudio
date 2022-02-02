@@ -54,6 +54,11 @@ namespace model {
     explicit CoilHeatingGasMultiStageStageData(const Model& model);
 
     virtual ~CoilHeatingGasMultiStageStageData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingGasMultiStageStageData(const CoilHeatingGasMultiStageStageData& other) = default;
+    CoilHeatingGasMultiStageStageData(CoilHeatingGasMultiStageStageData&& other) = default;
+    CoilHeatingGasMultiStageStageData& operator=(const CoilHeatingGasMultiStageStageData&) = default;
+    CoilHeatingGasMultiStageStageData& operator=(CoilHeatingGasMultiStageStageData&&) = default;
 
     //@}
 

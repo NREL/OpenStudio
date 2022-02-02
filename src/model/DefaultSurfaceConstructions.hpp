@@ -54,6 +54,11 @@ namespace model {
     explicit DefaultSurfaceConstructions(const Model& model);
 
     virtual ~DefaultSurfaceConstructions() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DefaultSurfaceConstructions(const DefaultSurfaceConstructions& other) = default;
+    DefaultSurfaceConstructions(DefaultSurfaceConstructions&& other) = default;
+    DefaultSurfaceConstructions& operator=(const DefaultSurfaceConstructions&) = default;
+    DefaultSurfaceConstructions& operator=(DefaultSurfaceConstructions&&) = default;
 
     //@}
     /** @name Static Methods */

@@ -52,6 +52,11 @@ namespace model {
     explicit ThermostatSetpointDualSetpoint(const Model& model);
 
     virtual ~ThermostatSetpointDualSetpoint() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& other) = default;
+    ThermostatSetpointDualSetpoint(ThermostatSetpointDualSetpoint&& other) = default;
+    ThermostatSetpointDualSetpoint& operator=(const ThermostatSetpointDualSetpoint&) = default;
+    ThermostatSetpointDualSetpoint& operator=(ThermostatSetpointDualSetpoint&&) = default;
 
     //@}
 

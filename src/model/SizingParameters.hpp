@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~SizingParameters() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SizingParameters(const SizingParameters& other) = default;
+    SizingParameters(SizingParameters&& other) = default;
+    SizingParameters& operator=(const SizingParameters&) = default;
+    SizingParameters& operator=(SizingParameters&&) = default;
 
     //@}
     /** @name Static Methods */

@@ -63,6 +63,11 @@ namespace model {
     explicit RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule);
 
     virtual ~RefrigerationWalkIn() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationWalkIn(const RefrigerationWalkIn& other) = default;
+    RefrigerationWalkIn(RefrigerationWalkIn&& other) = default;
+    RefrigerationWalkIn& operator=(const RefrigerationWalkIn&) = default;
+    RefrigerationWalkIn& operator=(RefrigerationWalkIn&&) = default;
 
     //@}
 

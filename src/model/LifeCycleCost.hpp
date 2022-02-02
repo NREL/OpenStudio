@@ -60,6 +60,11 @@ namespace model {
     explicit LifeCycleCost(const ModelObject& modelObject);
 
     virtual ~LifeCycleCost() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LifeCycleCost(const LifeCycleCost& other) = default;
+    LifeCycleCost(LifeCycleCost&& other) = default;
+    LifeCycleCost& operator=(const LifeCycleCost&) = default;
+    LifeCycleCost& operator=(LifeCycleCost&&) = default;
 
     //@}
     /** @name Static Methods */

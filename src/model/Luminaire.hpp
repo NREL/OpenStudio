@@ -60,6 +60,11 @@ namespace model {
     explicit Luminaire(const LuminaireDefinition& luminaireDefinition);
 
     virtual ~Luminaire() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Luminaire(const Luminaire& other) = default;
+    Luminaire(Luminaire&& other) = default;
+    Luminaire& operator=(const Luminaire&) = default;
+    Luminaire& operator=(Luminaire&&) = default;
 
     //@}
 

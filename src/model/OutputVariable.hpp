@@ -60,6 +60,11 @@ namespace model {
   {
    public:
     virtual ~OutputVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputVariable(const OutputVariable& other) = default;
+    OutputVariable(OutputVariable&& other) = default;
+    OutputVariable& operator=(const OutputVariable&) = default;
+    OutputVariable& operator=(OutputVariable&&) = default;
 
     /** @name Constructors and Destructors */
     //@{

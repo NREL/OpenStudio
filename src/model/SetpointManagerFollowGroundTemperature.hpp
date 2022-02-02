@@ -55,6 +55,11 @@ namespace model {
     explicit SetpointManagerFollowGroundTemperature(const Model& model);
 
     virtual ~SetpointManagerFollowGroundTemperature() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerFollowGroundTemperature(const SetpointManagerFollowGroundTemperature& other) = default;
+    SetpointManagerFollowGroundTemperature(SetpointManagerFollowGroundTemperature&& other) = default;
+    SetpointManagerFollowGroundTemperature& operator=(const SetpointManagerFollowGroundTemperature&) = default;
+    SetpointManagerFollowGroundTemperature& operator=(SetpointManagerFollowGroundTemperature&&) = default;
 
     //@}
 

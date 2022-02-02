@@ -68,6 +68,11 @@ namespace model {
     explicit EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName);
 
     virtual ~EnergyManagementSystemSensor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemSensor(const EnergyManagementSystemSensor& other) = default;
+    EnergyManagementSystemSensor(EnergyManagementSystemSensor&& other) = default;
+    EnergyManagementSystemSensor& operator=(const EnergyManagementSystemSensor&) = default;
+    EnergyManagementSystemSensor& operator=(EnergyManagementSystemSensor&&) = default;
 
     //@}
 

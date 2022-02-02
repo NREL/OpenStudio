@@ -57,6 +57,11 @@ namespace model {
                                        double referencePressureDifference, double massFlowExponent);
 
     virtual ~AirflowNetworkEffectiveLeakageArea() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkEffectiveLeakageArea(const AirflowNetworkEffectiveLeakageArea& other) = default;
+    AirflowNetworkEffectiveLeakageArea(AirflowNetworkEffectiveLeakageArea&& other) = default;
+    AirflowNetworkEffectiveLeakageArea& operator=(const AirflowNetworkEffectiveLeakageArea&) = default;
+    AirflowNetworkEffectiveLeakageArea& operator=(AirflowNetworkEffectiveLeakageArea&&) = default;
 
     //@}
 

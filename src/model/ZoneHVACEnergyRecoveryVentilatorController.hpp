@@ -56,6 +56,11 @@ namespace model {
     explicit ZoneHVACEnergyRecoveryVentilatorController(const Model& model);
 
     virtual ~ZoneHVACEnergyRecoveryVentilatorController() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACEnergyRecoveryVentilatorController(const ZoneHVACEnergyRecoveryVentilatorController& other) = default;
+    ZoneHVACEnergyRecoveryVentilatorController(ZoneHVACEnergyRecoveryVentilatorController&& other) = default;
+    ZoneHVACEnergyRecoveryVentilatorController& operator=(const ZoneHVACEnergyRecoveryVentilatorController&) = default;
+    ZoneHVACEnergyRecoveryVentilatorController& operator=(ZoneHVACEnergyRecoveryVentilatorController&&) = default;
 
     //@}
 

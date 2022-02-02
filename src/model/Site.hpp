@@ -62,6 +62,11 @@ namespace model {
     //@{
 
     virtual ~Site() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Site(const Site& other) = default;
+    Site(Site&& other) = default;
+    Site& operator=(const Site&) = default;
+    Site& operator=(Site&&) = default;
 
     //@}
     /** @name Static Methods */

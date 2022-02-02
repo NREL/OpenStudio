@@ -51,6 +51,11 @@ namespace model {
     explicit BoilerSteam(const Model& model);
 
     virtual ~BoilerSteam() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    BoilerSteam(const BoilerSteam& other) = default;
+    BoilerSteam(BoilerSteam&& other) = default;
+    BoilerSteam& operator=(const BoilerSteam&) = default;
+    BoilerSteam& operator=(BoilerSteam&&) = default;
 
     static IddObjectType iddObjectType();
 

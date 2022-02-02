@@ -56,6 +56,11 @@ namespace model {
                                     double slopingPlaneAngle, double dischargeCoefficient);
 
     virtual ~AirflowNetworkHorizontalOpening() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkHorizontalOpening(const AirflowNetworkHorizontalOpening& other) = default;
+    AirflowNetworkHorizontalOpening(AirflowNetworkHorizontalOpening&& other) = default;
+    AirflowNetworkHorizontalOpening& operator=(const AirflowNetworkHorizontalOpening&) = default;
+    AirflowNetworkHorizontalOpening& operator=(AirflowNetworkHorizontalOpening&&) = default;
 
     //@}
 

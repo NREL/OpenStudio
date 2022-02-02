@@ -75,6 +75,11 @@ namespace model {
     explicit AirflowNetworkDuctViewFactors(const Model& model);
 
     virtual ~AirflowNetworkDuctViewFactors() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkDuctViewFactors(const AirflowNetworkDuctViewFactors& other) = default;
+    AirflowNetworkDuctViewFactors(AirflowNetworkDuctViewFactors&& other) = default;
+    AirflowNetworkDuctViewFactors& operator=(const AirflowNetworkDuctViewFactors&) = default;
+    AirflowNetworkDuctViewFactors& operator=(AirflowNetworkDuctViewFactors&&) = default;
 
     //@}
 

@@ -55,6 +55,11 @@ namespace model {
     explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData(const Model& model);
 
     virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData& other) = default;
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData&& other) = default;
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData& operator=(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData&) = default;
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData& operator=(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData&&) = default;
 
     //@}
 

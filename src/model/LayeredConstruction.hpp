@@ -54,6 +54,11 @@ namespace model {
     //@{
 
     virtual ~LayeredConstruction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LayeredConstruction(const LayeredConstruction& other) = default;
+    LayeredConstruction(LayeredConstruction&& other) = default;
+    LayeredConstruction& operator=(const LayeredConstruction&) = default;
+    LayeredConstruction& operator=(LayeredConstruction&&) = default;
 
     //@}
     /** @name Static Methods */

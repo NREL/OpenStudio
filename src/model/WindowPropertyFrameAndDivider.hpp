@@ -53,6 +53,11 @@ namespace model {
     explicit WindowPropertyFrameAndDivider(const Model& model);
 
     virtual ~WindowPropertyFrameAndDivider() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& other) = default;
+    WindowPropertyFrameAndDivider(WindowPropertyFrameAndDivider&& other) = default;
+    WindowPropertyFrameAndDivider& operator=(const WindowPropertyFrameAndDivider&) = default;
+    WindowPropertyFrameAndDivider& operator=(WindowPropertyFrameAndDivider&&) = default;
 
     //@}
 

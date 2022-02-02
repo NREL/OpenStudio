@@ -49,6 +49,11 @@ namespace model {
   {
    public:
     virtual ~ExteriorLoadDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorLoadDefinition(const ExteriorLoadDefinition& other) = default;
+    ExteriorLoadDefinition(ExteriorLoadDefinition&& other) = default;
+    ExteriorLoadDefinition& operator=(const ExteriorLoadDefinition&) = default;
+    ExteriorLoadDefinition& operator=(ExteriorLoadDefinition&&) = default;
 
     /** Returns all instances (ExteriorLoad) of this definition. */
     std::vector<ExteriorLoadInstance> instances() const;

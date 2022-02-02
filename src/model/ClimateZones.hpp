@@ -112,6 +112,11 @@ namespace model {
     //@{
 
     virtual ~ClimateZones() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ClimateZones(const ClimateZones& other) = default;
+    ClimateZones(ClimateZones&& other) = default;
+    ClimateZones& operator=(const ClimateZones&) = default;
+    ClimateZones& operator=(ClimateZones&&) = default;
 
     //@}
     /** @name Static Methods */

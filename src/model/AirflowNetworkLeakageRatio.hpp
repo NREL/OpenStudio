@@ -53,6 +53,11 @@ namespace model {
     explicit AirflowNetworkLeakageRatio(const Model& model);
 
     virtual ~AirflowNetworkLeakageRatio() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkLeakageRatio(const AirflowNetworkLeakageRatio& other) = default;
+    AirflowNetworkLeakageRatio(AirflowNetworkLeakageRatio&& other) = default;
+    AirflowNetworkLeakageRatio& operator=(const AirflowNetworkLeakageRatio&) = default;
+    AirflowNetworkLeakageRatio& operator=(AirflowNetworkLeakageRatio&&) = default;
 
     //@}
 

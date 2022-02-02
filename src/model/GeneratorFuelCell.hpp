@@ -86,6 +86,11 @@ namespace model {
     explicit GeneratorFuelCell(const Model& model);
 
     virtual ~GeneratorFuelCell() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCell(const GeneratorFuelCell& other) = default;
+    GeneratorFuelCell(GeneratorFuelCell&& other) = default;
+    GeneratorFuelCell& operator=(const GeneratorFuelCell&) = default;
+    GeneratorFuelCell& operator=(GeneratorFuelCell&&) = default;
 
     //@}
 

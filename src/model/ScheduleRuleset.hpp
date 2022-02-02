@@ -67,6 +67,11 @@ namespace model {
     ScheduleRuleset(const Model& model, double value);
 
     virtual ~ScheduleRuleset() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleRuleset(const ScheduleRuleset& other) = default;
+    ScheduleRuleset(ScheduleRuleset&& other) = default;
+    ScheduleRuleset& operator=(const ScheduleRuleset&) = default;
+    ScheduleRuleset& operator=(ScheduleRuleset&&) = default;
 
     //@}
 

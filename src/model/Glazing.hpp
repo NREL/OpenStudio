@@ -49,6 +49,11 @@ namespace model {
     //@{
 
     virtual ~Glazing() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Glazing(const Glazing& other) = default;
+    Glazing(Glazing&& other) = default;
+    Glazing& operator=(const Glazing&) = default;
+    Glazing& operator=(Glazing&&) = default;
 
     //@}
    protected:

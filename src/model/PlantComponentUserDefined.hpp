@@ -65,6 +65,11 @@ namespace model {
     explicit PlantComponentUserDefined(const Model& model);
 
     virtual ~PlantComponentUserDefined() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantComponentUserDefined(const PlantComponentUserDefined& other) = default;
+    PlantComponentUserDefined(PlantComponentUserDefined&& other) = default;
+    PlantComponentUserDefined& operator=(const PlantComponentUserDefined&) = default;
+    PlantComponentUserDefined& operator=(PlantComponentUserDefined&&) = default;
 
     //@}
 

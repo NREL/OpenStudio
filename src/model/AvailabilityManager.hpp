@@ -49,6 +49,11 @@ namespace model {
     AvailabilityManager(IddObjectType type, const Model& model);
 
     virtual ~AvailabilityManager() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManager(const AvailabilityManager& other) = default;
+    AvailabilityManager(AvailabilityManager&& other) = default;
+    AvailabilityManager& operator=(const AvailabilityManager&) = default;
+    AvailabilityManager& operator=(AvailabilityManager&&) = default;
 
     boost::optional<Loop> loop() const;
 

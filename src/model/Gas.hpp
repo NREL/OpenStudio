@@ -53,6 +53,11 @@ namespace model {
     explicit Gas(const Model& model, std::string gasType = "Air", double thickness = 0.003);
 
     virtual ~Gas() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Gas(const Gas& other) = default;
+    Gas(Gas&& other) = default;
+    Gas& operator=(const Gas&) = default;
+    Gas& operator=(Gas&&) = default;
 
     //@}
     /** @name Static Methods */

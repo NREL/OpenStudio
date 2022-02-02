@@ -57,6 +57,11 @@ namespace model {
     explicit EnergyManagementSystemConstructionIndexVariable(const Model& model);
 
     virtual ~EnergyManagementSystemConstructionIndexVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemConstructionIndexVariable(const EnergyManagementSystemConstructionIndexVariable& other) = default;
+    EnergyManagementSystemConstructionIndexVariable(EnergyManagementSystemConstructionIndexVariable&& other) = default;
+    EnergyManagementSystemConstructionIndexVariable& operator=(const EnergyManagementSystemConstructionIndexVariable&) = default;
+    EnergyManagementSystemConstructionIndexVariable& operator=(EnergyManagementSystemConstructionIndexVariable&&) = default;
 
     //@}
 

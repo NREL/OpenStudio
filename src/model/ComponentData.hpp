@@ -54,6 +54,11 @@ namespace model {
     //@{
 
     virtual ~ComponentData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ComponentData(const ComponentData& other) = default;
+    ComponentData(ComponentData&& other) = default;
+    ComponentData& operator=(const ComponentData&) = default;
+    ComponentData& operator=(ComponentData&&) = default;
 
     //@}
 

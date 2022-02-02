@@ -53,6 +53,11 @@ namespace model {
     explicit CoolingTowerVariableSpeed(const Model& model);
 
     virtual ~CoolingTowerVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoolingTowerVariableSpeed(const CoolingTowerVariableSpeed& other) = default;
+    CoolingTowerVariableSpeed(CoolingTowerVariableSpeed&& other) = default;
+    CoolingTowerVariableSpeed& operator=(const CoolingTowerVariableSpeed&) = default;
+    CoolingTowerVariableSpeed& operator=(CoolingTowerVariableSpeed&&) = default;
 
     static IddObjectType iddObjectType();
 

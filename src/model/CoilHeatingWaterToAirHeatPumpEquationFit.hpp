@@ -61,6 +61,11 @@ namespace model {
     CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
 
     virtual ~CoilHeatingWaterToAirHeatPumpEquationFit() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingWaterToAirHeatPumpEquationFit(const CoilHeatingWaterToAirHeatPumpEquationFit& other) = default;
+    CoilHeatingWaterToAirHeatPumpEquationFit(CoilHeatingWaterToAirHeatPumpEquationFit&& other) = default;
+    CoilHeatingWaterToAirHeatPumpEquationFit& operator=(const CoilHeatingWaterToAirHeatPumpEquationFit&) = default;
+    CoilHeatingWaterToAirHeatPumpEquationFit& operator=(CoilHeatingWaterToAirHeatPumpEquationFit&&) = default;
 
     //@}
 

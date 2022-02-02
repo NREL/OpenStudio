@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputDebuggingData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputDebuggingData(const OutputDebuggingData& other) = default;
+    OutputDebuggingData(OutputDebuggingData&& other) = default;
+    OutputDebuggingData& operator=(const OutputDebuggingData&) = default;
+    OutputDebuggingData& operator=(OutputDebuggingData&&) = default;
 
     //@}
 

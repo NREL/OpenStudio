@@ -59,6 +59,11 @@ namespace model {
                                                  Schedule& compressorSetpointTemperatureSchedule, Schedule& inletAirMixerSchedule);
 
     virtual ~WaterHeaterHeatPumpWrappedCondenser() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterHeaterHeatPumpWrappedCondenser(const WaterHeaterHeatPumpWrappedCondenser& other) = default;
+    WaterHeaterHeatPumpWrappedCondenser(WaterHeaterHeatPumpWrappedCondenser&& other) = default;
+    WaterHeaterHeatPumpWrappedCondenser& operator=(const WaterHeaterHeatPumpWrappedCondenser&) = default;
+    WaterHeaterHeatPumpWrappedCondenser& operator=(WaterHeaterHeatPumpWrappedCondenser&&) = default;
 
     //@}
 

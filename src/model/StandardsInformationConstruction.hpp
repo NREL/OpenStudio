@@ -56,6 +56,11 @@ namespace model {
     //@{
 
     virtual ~StandardsInformationConstruction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StandardsInformationConstruction(const StandardsInformationConstruction& other) = default;
+    StandardsInformationConstruction(StandardsInformationConstruction&& other) = default;
+    StandardsInformationConstruction& operator=(const StandardsInformationConstruction&) = default;
+    StandardsInformationConstruction& operator=(StandardsInformationConstruction&&) = default;
 
     //@}
     /** @name Static Methods */

@@ -63,6 +63,11 @@ namespace model {
     ExteriorLights(const ExteriorLightsDefinition& definition, Schedule& schedule);
 
     virtual ~ExteriorLights() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorLights(const ExteriorLights& other) = default;
+    ExteriorLights(ExteriorLights&& other) = default;
+    ExteriorLights& operator=(const ExteriorLights&) = default;
+    ExteriorLights& operator=(ExteriorLights&&) = default;
 
     //@}
 

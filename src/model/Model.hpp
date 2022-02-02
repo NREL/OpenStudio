@@ -103,6 +103,11 @@ namespace model {
     explicit Model(const openstudio::Workspace& workspace);
 
     virtual ~Model() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Model(const Model& other) = default;
+    Model(Model&& other) = default;
+    Model& operator=(const Model&) = default;
+    Model& operator=(Model&&) = default;
 
     //@}
     /** @name Getters */

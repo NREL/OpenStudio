@@ -56,6 +56,11 @@ namespace model {
     explicit AvailabilityManagerOptimumStart(const Model& model);
 
     virtual ~AvailabilityManagerOptimumStart() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerOptimumStart(const AvailabilityManagerOptimumStart& other) = default;
+    AvailabilityManagerOptimumStart(AvailabilityManagerOptimumStart&& other) = default;
+    AvailabilityManagerOptimumStart& operator=(const AvailabilityManagerOptimumStart&) = default;
+    AvailabilityManagerOptimumStart& operator=(AvailabilityManagerOptimumStart&&) = default;
 
     //@}
 

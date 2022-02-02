@@ -53,6 +53,11 @@ namespace model {
     //@{
 
     virtual ~SiteWaterMainsTemperature() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SiteWaterMainsTemperature(const SiteWaterMainsTemperature& other) = default;
+    SiteWaterMainsTemperature(SiteWaterMainsTemperature&& other) = default;
+    SiteWaterMainsTemperature& operator=(const SiteWaterMainsTemperature&) = default;
+    SiteWaterMainsTemperature& operator=(SiteWaterMainsTemperature&&) = default;
 
     //@}
 

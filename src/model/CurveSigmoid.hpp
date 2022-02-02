@@ -54,6 +54,11 @@ namespace model {
     explicit CurveSigmoid(const Model& model);
 
     virtual ~CurveSigmoid() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveSigmoid(const CurveSigmoid& other) = default;
+    CurveSigmoid(CurveSigmoid&& other) = default;
+    CurveSigmoid& operator=(const CurveSigmoid&) = default;
+    CurveSigmoid& operator=(CurveSigmoid&&) = default;
 
     //@}
 

@@ -51,6 +51,11 @@ namespace model {
     explicit AirLoopHVACSupplyPlenum(const Model& model);
 
     virtual ~AirLoopHVACSupplyPlenum() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACSupplyPlenum(const AirLoopHVACSupplyPlenum& other) = default;
+    AirLoopHVACSupplyPlenum(AirLoopHVACSupplyPlenum&& other) = default;
+    AirLoopHVACSupplyPlenum& operator=(const AirLoopHVACSupplyPlenum&) = default;
+    AirLoopHVACSupplyPlenum& operator=(AirLoopHVACSupplyPlenum&&) = default;
 
     static IddObjectType iddObjectType();
 

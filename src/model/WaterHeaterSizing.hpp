@@ -55,6 +55,11 @@ namespace model {
     //@{
 
     virtual ~WaterHeaterSizing() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterHeaterSizing(const WaterHeaterSizing& other) = default;
+    WaterHeaterSizing(WaterHeaterSizing&& other) = default;
+    WaterHeaterSizing& operator=(const WaterHeaterSizing&) = default;
+    WaterHeaterSizing& operator=(WaterHeaterSizing&&) = default;
 
     //@}
 

@@ -49,6 +49,11 @@ namespace model {
   {
    public:
     virtual ~Thermostat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Thermostat(const Thermostat& other) = default;
+    Thermostat(Thermostat&& other) = default;
+    Thermostat& operator=(const Thermostat&) = default;
+    Thermostat& operator=(Thermostat&&) = default;
 
     boost::optional<ThermalZone> thermalZone() const;
 

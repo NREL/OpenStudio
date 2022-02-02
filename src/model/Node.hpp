@@ -73,6 +73,11 @@ namespace model {
     explicit Node(const Model& model);
 
     virtual ~Node() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Node(const Node& other) = default;
+    Node(Node&& other) = default;
+    Node& operator=(const Node&) = default;
+    Node& operator=(Node&&) = default;
 
     std::vector<SetpointManager> setpointManagers() const;
 

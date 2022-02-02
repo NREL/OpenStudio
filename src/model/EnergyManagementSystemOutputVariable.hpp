@@ -79,6 +79,11 @@ namespace model {
     explicit EnergyManagementSystemOutputVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
     virtual ~EnergyManagementSystemOutputVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemOutputVariable(const EnergyManagementSystemOutputVariable& other) = default;
+    EnergyManagementSystemOutputVariable(EnergyManagementSystemOutputVariable&& other) = default;
+    EnergyManagementSystemOutputVariable& operator=(const EnergyManagementSystemOutputVariable&) = default;
+    EnergyManagementSystemOutputVariable& operator=(EnergyManagementSystemOutputVariable&&) = default;
 
     //@}
 

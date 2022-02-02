@@ -55,6 +55,11 @@ namespace model {
     explicit ConnectorMixer(const Model& model);
 
     virtual ~ConnectorMixer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConnectorMixer(const ConnectorMixer& other) = default;
+    ConnectorMixer(ConnectorMixer&& other) = default;
+    ConnectorMixer& operator=(const ConnectorMixer&) = default;
+    ConnectorMixer& operator=(ConnectorMixer&&) = default;
 
     unsigned outletPort() const override;
 

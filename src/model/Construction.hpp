@@ -60,6 +60,11 @@ namespace model {
     explicit Construction(const ModelPartitionMaterial& modelPartitionMaterial);
 
     virtual ~Construction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Construction(const Construction& other) = default;
+    Construction(Construction&& other) = default;
+    Construction& operator=(const Construction&) = default;
+    Construction& operator=(Construction&&) = default;
 
     //@}
     /** @name Static Methods */

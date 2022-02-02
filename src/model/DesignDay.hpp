@@ -325,6 +325,11 @@ namespace model {
     //@}
 
     virtual ~DesignDay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DesignDay(const DesignDay& other) = default;
+    DesignDay(DesignDay&& other) = default;
+    DesignDay& operator=(const DesignDay&) = default;
+    DesignDay& operator=(DesignDay&&) = default;
 
    protected:
     friend class Model;

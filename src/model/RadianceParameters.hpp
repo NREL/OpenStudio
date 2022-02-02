@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~RadianceParameters() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RadianceParameters(const RadianceParameters& other) = default;
+    RadianceParameters(RadianceParameters&& other) = default;
+    RadianceParameters& operator=(const RadianceParameters&) = default;
+    RadianceParameters& operator=(RadianceParameters&&) = default;
 
     //@}
 

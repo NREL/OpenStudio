@@ -54,6 +54,11 @@ namespace model {
     //@{
 
     virtual ~SolarCollectorPerformanceFlatPlate() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorPerformanceFlatPlate(const SolarCollectorPerformanceFlatPlate& other) = default;
+    SolarCollectorPerformanceFlatPlate(SolarCollectorPerformanceFlatPlate&& other) = default;
+    SolarCollectorPerformanceFlatPlate& operator=(const SolarCollectorPerformanceFlatPlate&) = default;
+    SolarCollectorPerformanceFlatPlate& operator=(SolarCollectorPerformanceFlatPlate&&) = default;
 
     //@}
 

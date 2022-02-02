@@ -49,6 +49,11 @@ namespace model {
     PlantEquipmentOperationScheme(IddObjectType type, const Model& model);
 
     virtual ~PlantEquipmentOperationScheme() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& other) = default;
+    PlantEquipmentOperationScheme(PlantEquipmentOperationScheme&& other) = default;
+    PlantEquipmentOperationScheme& operator=(const PlantEquipmentOperationScheme&) = default;
+    PlantEquipmentOperationScheme& operator=(PlantEquipmentOperationScheme&&) = default;
 
     boost::optional<PlantLoop> plantLoop() const;
 

@@ -112,6 +112,11 @@ namespace model {
                                   std::vector<DetailedOpeningFactorData>& openingFactors);
 
     virtual ~AirflowNetworkDetailedOpening() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkDetailedOpening(const AirflowNetworkDetailedOpening& other) = default;
+    AirflowNetworkDetailedOpening(AirflowNetworkDetailedOpening&& other) = default;
+    AirflowNetworkDetailedOpening& operator=(const AirflowNetworkDetailedOpening&) = default;
+    AirflowNetworkDetailedOpening& operator=(AirflowNetworkDetailedOpening&&) = default;
 
     //@}
 

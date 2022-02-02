@@ -57,6 +57,11 @@ namespace model {
     explicit SwimmingPoolIndoor(const Model& model, const Surface& floorSurface);
 
     virtual ~SwimmingPoolIndoor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SwimmingPoolIndoor(const SwimmingPoolIndoor& other) = default;
+    SwimmingPoolIndoor(SwimmingPoolIndoor&& other) = default;
+    SwimmingPoolIndoor& operator=(const SwimmingPoolIndoor&) = default;
+    SwimmingPoolIndoor& operator=(SwimmingPoolIndoor&&) = default;
 
     //@}
 

@@ -57,6 +57,11 @@ namespace model {
     //@{
 
     virtual ~HeatBalanceAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatBalanceAlgorithm(const HeatBalanceAlgorithm& other) = default;
+    HeatBalanceAlgorithm(HeatBalanceAlgorithm&& other) = default;
+    HeatBalanceAlgorithm& operator=(const HeatBalanceAlgorithm&) = default;
+    HeatBalanceAlgorithm& operator=(HeatBalanceAlgorithm&&) = default;
 
     //@}
     /** @name Static Methods */

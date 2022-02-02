@@ -55,6 +55,11 @@ namespace model {
     AirflowNetworkReferenceCrackConditions(const Model& model, double temperature, double barometricPressure, double humidityRatio);
 
     virtual ~AirflowNetworkReferenceCrackConditions() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkReferenceCrackConditions(const AirflowNetworkReferenceCrackConditions& other) = default;
+    AirflowNetworkReferenceCrackConditions(AirflowNetworkReferenceCrackConditions&& other) = default;
+    AirflowNetworkReferenceCrackConditions& operator=(const AirflowNetworkReferenceCrackConditions&) = default;
+    AirflowNetworkReferenceCrackConditions& operator=(AirflowNetworkReferenceCrackConditions&&) = default;
 
     //@}
 

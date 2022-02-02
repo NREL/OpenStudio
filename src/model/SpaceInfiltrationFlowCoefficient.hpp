@@ -54,6 +54,11 @@ namespace model {
     explicit SpaceInfiltrationFlowCoefficient(const Model& model);
 
     virtual ~SpaceInfiltrationFlowCoefficient() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceInfiltrationFlowCoefficient(const SpaceInfiltrationFlowCoefficient& other) = default;
+    SpaceInfiltrationFlowCoefficient(SpaceInfiltrationFlowCoefficient&& other) = default;
+    SpaceInfiltrationFlowCoefficient& operator=(const SpaceInfiltrationFlowCoefficient&) = default;
+    SpaceInfiltrationFlowCoefficient& operator=(SpaceInfiltrationFlowCoefficient&&) = default;
 
     //@}
 

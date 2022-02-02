@@ -54,6 +54,11 @@ namespace model {
   {
    public:
     virtual ~ModelExtensibleGroup() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ModelExtensibleGroup(const ModelExtensibleGroup& other) = default;
+    ModelExtensibleGroup(ModelExtensibleGroup&& other) = default;
+    ModelExtensibleGroup& operator=(const ModelExtensibleGroup&) = default;
+    ModelExtensibleGroup& operator=(ModelExtensibleGroup&&) = default;
 
     /** @name Template Methods */
     //@{

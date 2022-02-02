@@ -56,6 +56,11 @@ namespace model {
     explicit RefrigerationWalkInZoneBoundary(const Model& model);
 
     virtual ~RefrigerationWalkInZoneBoundary() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationWalkInZoneBoundary(const RefrigerationWalkInZoneBoundary& other) = default;
+    RefrigerationWalkInZoneBoundary(RefrigerationWalkInZoneBoundary&& other) = default;
+    RefrigerationWalkInZoneBoundary& operator=(const RefrigerationWalkInZoneBoundary&) = default;
+    RefrigerationWalkInZoneBoundary& operator=(RefrigerationWalkInZoneBoundary&&) = default;
 
     //@}
 

@@ -67,6 +67,11 @@ namespace model {
     explicit OutputMeter(const Model& model);
 
     virtual ~OutputMeter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputMeter(const OutputMeter& other) = default;
+    OutputMeter(OutputMeter&& other) = default;
+    OutputMeter& operator=(const OutputMeter&) = default;
+    OutputMeter& operator=(OutputMeter&&) = default;
 
     virtual std::vector<openstudio::IdfObject> remove();
 

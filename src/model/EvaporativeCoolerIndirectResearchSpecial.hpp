@@ -56,6 +56,11 @@ namespace model {
     explicit EvaporativeCoolerIndirectResearchSpecial(const Model& model);
 
     virtual ~EvaporativeCoolerIndirectResearchSpecial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EvaporativeCoolerIndirectResearchSpecial(const EvaporativeCoolerIndirectResearchSpecial& other) = default;
+    EvaporativeCoolerIndirectResearchSpecial(EvaporativeCoolerIndirectResearchSpecial&& other) = default;
+    EvaporativeCoolerIndirectResearchSpecial& operator=(const EvaporativeCoolerIndirectResearchSpecial&) = default;
+    EvaporativeCoolerIndirectResearchSpecial& operator=(EvaporativeCoolerIndirectResearchSpecial&&) = default;
 
     //@}
 

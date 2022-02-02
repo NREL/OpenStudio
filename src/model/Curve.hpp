@@ -53,6 +53,11 @@ namespace model {
     //@{
 
     virtual ~Curve() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Curve(const Curve& other) = default;
+    Curve(Curve&& other) = default;
+    Curve& operator=(const Curve&) = default;
+    Curve& operator=(Curve&&) = default;
 
     //@}
     /** @name Other */

@@ -57,6 +57,11 @@ namespace model {
     explicit CoilHeatingFourPipeBeam(const Model& model);
 
     virtual ~CoilHeatingFourPipeBeam() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingFourPipeBeam(const CoilHeatingFourPipeBeam& other) = default;
+    CoilHeatingFourPipeBeam(CoilHeatingFourPipeBeam&& other) = default;
+    CoilHeatingFourPipeBeam& operator=(const CoilHeatingFourPipeBeam&) = default;
+    CoilHeatingFourPipeBeam& operator=(CoilHeatingFourPipeBeam&&) = default;
 
     //@}
 

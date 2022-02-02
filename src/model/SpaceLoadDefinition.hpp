@@ -55,6 +55,11 @@ namespace model {
   {
    public:
     virtual ~SpaceLoadDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceLoadDefinition(const SpaceLoadDefinition& other) = default;
+    SpaceLoadDefinition(SpaceLoadDefinition&& other) = default;
+    SpaceLoadDefinition& operator=(const SpaceLoadDefinition&) = default;
+    SpaceLoadDefinition& operator=(SpaceLoadDefinition&&) = default;
 
     /** Returns all instances of this definition. */
     std::vector<SpaceLoadInstance> instances() const;

@@ -54,6 +54,11 @@ namespace model {
     explicit CurveRectangularHyperbola1(const Model& model);
 
     virtual ~CurveRectangularHyperbola1() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveRectangularHyperbola1(const CurveRectangularHyperbola1& other) = default;
+    CurveRectangularHyperbola1(CurveRectangularHyperbola1&& other) = default;
+    CurveRectangularHyperbola1& operator=(const CurveRectangularHyperbola1&) = default;
+    CurveRectangularHyperbola1& operator=(CurveRectangularHyperbola1&&) = default;
 
     //@}
 

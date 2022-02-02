@@ -58,6 +58,11 @@ namespace model {
     explicit OtherEquipmentDefinition(const Model& model);
 
     virtual ~OtherEquipmentDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OtherEquipmentDefinition(const OtherEquipmentDefinition& other) = default;
+    OtherEquipmentDefinition(OtherEquipmentDefinition&& other) = default;
+    OtherEquipmentDefinition& operator=(const OtherEquipmentDefinition&) = default;
+    OtherEquipmentDefinition& operator=(OtherEquipmentDefinition&&) = default;
 
     //@}
 

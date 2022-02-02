@@ -62,6 +62,11 @@ namespace model {
                                                    const HVACComponent& shdwhWaterHeatingCoil);
 
     virtual ~CoilSystemIntegratedHeatPumpAirSource() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilSystemIntegratedHeatPumpAirSource(const CoilSystemIntegratedHeatPumpAirSource& other) = default;
+    CoilSystemIntegratedHeatPumpAirSource(CoilSystemIntegratedHeatPumpAirSource&& other) = default;
+    CoilSystemIntegratedHeatPumpAirSource& operator=(const CoilSystemIntegratedHeatPumpAirSource&) = default;
+    CoilSystemIntegratedHeatPumpAirSource& operator=(CoilSystemIntegratedHeatPumpAirSource&&) = default;
 
     //@}
 

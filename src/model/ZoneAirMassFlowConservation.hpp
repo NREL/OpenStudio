@@ -52,6 +52,11 @@ namespace model {
     //@{
 
     virtual ~ZoneAirMassFlowConservation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneAirMassFlowConservation(const ZoneAirMassFlowConservation& other) = default;
+    ZoneAirMassFlowConservation(ZoneAirMassFlowConservation&& other) = default;
+    ZoneAirMassFlowConservation& operator=(const ZoneAirMassFlowConservation&) = default;
+    ZoneAirMassFlowConservation& operator=(ZoneAirMassFlowConservation&&) = default;
 
     //@}
 

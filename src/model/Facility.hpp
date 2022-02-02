@@ -69,6 +69,11 @@ namespace model {
 
    public:
     virtual ~Facility() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Facility(const Facility& other) = default;
+    Facility(Facility&& other) = default;
+    Facility& operator=(const Facility&) = default;
+    Facility& operator=(Facility&&) = default;
 
     static IddObjectType iddObjectType();
 

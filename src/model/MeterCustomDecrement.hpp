@@ -55,6 +55,11 @@ namespace model {
     explicit MeterCustomDecrement(const Model& model, const std::string& sourceMeterName);
 
     virtual ~MeterCustomDecrement() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    MeterCustomDecrement(const MeterCustomDecrement& other) = default;
+    MeterCustomDecrement(MeterCustomDecrement&& other) = default;
+    MeterCustomDecrement& operator=(const MeterCustomDecrement&) = default;
+    MeterCustomDecrement& operator=(MeterCustomDecrement&&) = default;
 
     //@}
 

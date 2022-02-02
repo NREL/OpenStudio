@@ -53,6 +53,11 @@ namespace model {
     //@{
 
     virtual ~ModelPartitionMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ModelPartitionMaterial(const ModelPartitionMaterial& other) = default;
+    ModelPartitionMaterial(ModelPartitionMaterial&& other) = default;
+    ModelPartitionMaterial& operator=(const ModelPartitionMaterial&) = default;
+    ModelPartitionMaterial& operator=(ModelPartitionMaterial&&) = default;
 
     //@}
    protected:

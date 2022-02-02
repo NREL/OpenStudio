@@ -56,6 +56,11 @@ namespace model {
 
    public:
     virtual ~SetpointManagerSingleZoneReheat() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerSingleZoneReheat(const SetpointManagerSingleZoneReheat& other) = default;
+    SetpointManagerSingleZoneReheat(SetpointManagerSingleZoneReheat&& other) = default;
+    SetpointManagerSingleZoneReheat& operator=(const SetpointManagerSingleZoneReheat&) = default;
+    SetpointManagerSingleZoneReheat& operator=(SetpointManagerSingleZoneReheat&&) = default;
 
     /** Constructs a new SetpointManagerSingleZoneReheat object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.

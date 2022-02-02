@@ -55,6 +55,11 @@ namespace model {
     explicit DistrictHeating(const Model& model);
 
     virtual ~DistrictHeating() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DistrictHeating(const DistrictHeating& other) = default;
+    DistrictHeating(DistrictHeating&& other) = default;
+    DistrictHeating& operator=(const DistrictHeating&) = default;
+    DistrictHeating& operator=(DistrictHeating&&) = default;
 
     //@}
 

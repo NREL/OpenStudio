@@ -59,6 +59,11 @@ namespace model {
                                                       const double batteryMass, const double batterySurfaceArea);
 
     virtual ~ElectricLoadCenterStorageLiIonNMCBattery() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterStorageLiIonNMCBattery(const ElectricLoadCenterStorageLiIonNMCBattery& other) = default;
+    ElectricLoadCenterStorageLiIonNMCBattery(ElectricLoadCenterStorageLiIonNMCBattery&& other) = default;
+    ElectricLoadCenterStorageLiIonNMCBattery& operator=(const ElectricLoadCenterStorageLiIonNMCBattery&) = default;
+    ElectricLoadCenterStorageLiIonNMCBattery& operator=(ElectricLoadCenterStorageLiIonNMCBattery&&) = default;
 
     //@}
 

@@ -64,6 +64,11 @@ namespace model {
                                        Schedule& heatingLowControlTemperatureSchedule);
 
     virtual ~CoilHeatingLowTempRadiantConstFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingLowTempRadiantConstFlow(const CoilHeatingLowTempRadiantConstFlow& other) = default;
+    CoilHeatingLowTempRadiantConstFlow(CoilHeatingLowTempRadiantConstFlow&& other) = default;
+    CoilHeatingLowTempRadiantConstFlow& operator=(const CoilHeatingLowTempRadiantConstFlow&) = default;
+    CoilHeatingLowTempRadiantConstFlow& operator=(CoilHeatingLowTempRadiantConstFlow&&) = default;
 
     //@}
 

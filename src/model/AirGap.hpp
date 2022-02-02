@@ -53,6 +53,11 @@ namespace model {
     explicit AirGap(const Model& model, double thermalResistance = 0.1);
 
     virtual ~AirGap() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirGap(const AirGap& other) = default;
+    AirGap(AirGap&& other) = default;
+    AirGap& operator=(const AirGap&) = default;
+    AirGap& operator=(AirGap&&) = default;
 
     //@}
 

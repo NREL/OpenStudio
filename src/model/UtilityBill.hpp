@@ -164,6 +164,11 @@ namespace model {
     explicit UtilityBill(const FuelType& fuelType, const Model& model);
 
     virtual ~UtilityBill() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    UtilityBill(const UtilityBill& other) = default;
+    UtilityBill(UtilityBill&& other) = default;
+    UtilityBill& operator=(const UtilityBill&) = default;
+    UtilityBill& operator=(UtilityBill&&) = default;
 
     //@}
 

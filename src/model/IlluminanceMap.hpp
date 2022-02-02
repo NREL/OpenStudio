@@ -62,6 +62,11 @@ namespace model {
     explicit IlluminanceMap(const Model& model);
 
     virtual ~IlluminanceMap() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    IlluminanceMap(const IlluminanceMap& other) = default;
+    IlluminanceMap(IlluminanceMap&& other) = default;
+    IlluminanceMap& operator=(const IlluminanceMap&) = default;
+    IlluminanceMap& operator=(IlluminanceMap&&) = default;
 
     //@}
     /** @name Static Methods */

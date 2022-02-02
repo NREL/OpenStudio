@@ -63,6 +63,11 @@ namespace model {
     explicit CurveFunctionalPressureDrop(const Model& model);
 
     virtual ~CurveFunctionalPressureDrop() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveFunctionalPressureDrop(const CurveFunctionalPressureDrop& other) = default;
+    CurveFunctionalPressureDrop(CurveFunctionalPressureDrop&& other) = default;
+    CurveFunctionalPressureDrop& operator=(const CurveFunctionalPressureDrop&) = default;
+    CurveFunctionalPressureDrop& operator=(CurveFunctionalPressureDrop&&) = default;
 
     //@}
 

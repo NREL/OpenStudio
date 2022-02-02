@@ -88,6 +88,11 @@ namespace model {
                                         const CurveQuadratic& fuelRateCurve, const CurveCubic& blowerPowerCurve);
 
     virtual ~GeneratorFuelCellAirSupply() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellAirSupply(const GeneratorFuelCellAirSupply& other) = default;
+    GeneratorFuelCellAirSupply(GeneratorFuelCellAirSupply&& other) = default;
+    GeneratorFuelCellAirSupply& operator=(const GeneratorFuelCellAirSupply&) = default;
+    GeneratorFuelCellAirSupply& operator=(GeneratorFuelCellAirSupply&&) = default;
 
     //@}
 

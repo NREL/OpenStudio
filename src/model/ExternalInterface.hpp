@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~ExternalInterface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterface(const ExternalInterface& other) = default;
+    ExternalInterface(ExternalInterface&& other) = default;
+    ExternalInterface& operator=(const ExternalInterface&) = default;
+    ExternalInterface& operator=(ExternalInterface&&) = default;
 
     //@}
 

@@ -56,6 +56,11 @@ namespace model {
     explicit GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition);
 
     virtual ~GasEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GasEquipment(const GasEquipment& other) = default;
+    GasEquipment(GasEquipment&& other) = default;
+    GasEquipment& operator=(const GasEquipment&) = default;
+    GasEquipment& operator=(GasEquipment&&) = default;
 
     //@}
 

@@ -49,6 +49,11 @@ namespace model {
     PhotovoltaicPerformance(IddObjectType type, const Model& model);
 
     virtual ~PhotovoltaicPerformance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PhotovoltaicPerformance(const PhotovoltaicPerformance& other) = default;
+    PhotovoltaicPerformance(PhotovoltaicPerformance&& other) = default;
+    PhotovoltaicPerformance& operator=(const PhotovoltaicPerformance&) = default;
+    PhotovoltaicPerformance& operator=(PhotovoltaicPerformance&&) = default;
 
    protected:
     friend class Model;

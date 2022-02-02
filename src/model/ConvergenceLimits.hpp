@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~ConvergenceLimits() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConvergenceLimits(const ConvergenceLimits& other) = default;
+    ConvergenceLimits(ConvergenceLimits&& other) = default;
+    ConvergenceLimits& operator=(const ConvergenceLimits&) = default;
+    ConvergenceLimits& operator=(ConvergenceLimits&&) = default;
 
     //@}
 

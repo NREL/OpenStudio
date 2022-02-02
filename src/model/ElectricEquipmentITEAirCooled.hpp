@@ -58,6 +58,11 @@ namespace model {
     explicit ElectricEquipmentITEAirCooled(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
     virtual ~ElectricEquipmentITEAirCooled() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricEquipmentITEAirCooled(const ElectricEquipmentITEAirCooled& other) = default;
+    ElectricEquipmentITEAirCooled(ElectricEquipmentITEAirCooled&& other) = default;
+    ElectricEquipmentITEAirCooled& operator=(const ElectricEquipmentITEAirCooled&) = default;
+    ElectricEquipmentITEAirCooled& operator=(ElectricEquipmentITEAirCooled&&) = default;
 
     //@}
 

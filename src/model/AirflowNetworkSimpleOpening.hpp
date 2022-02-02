@@ -58,6 +58,11 @@ namespace model {
                                 double minimumDensityDifferenceforTwoWayFlow, double dischargeCoefficient);
 
     virtual ~AirflowNetworkSimpleOpening() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkSimpleOpening(const AirflowNetworkSimpleOpening& other) = default;
+    AirflowNetworkSimpleOpening(AirflowNetworkSimpleOpening&& other) = default;
+    AirflowNetworkSimpleOpening& operator=(const AirflowNetworkSimpleOpening&) = default;
+    AirflowNetworkSimpleOpening& operator=(AirflowNetworkSimpleOpening&&) = default;
 
     //@}
 

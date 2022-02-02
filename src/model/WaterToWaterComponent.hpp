@@ -53,6 +53,11 @@ namespace model {
     WaterToWaterComponent(IddObjectType type, const Model& model);
 
     virtual ~WaterToWaterComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterToWaterComponent(const WaterToWaterComponent& other) = default;
+    WaterToWaterComponent(WaterToWaterComponent&& other) = default;
+    WaterToWaterComponent& operator=(const WaterToWaterComponent&) = default;
+    WaterToWaterComponent& operator=(WaterToWaterComponent&&) = default;
 
     /** Returns the supply inlet port. **/
     virtual unsigned supplyInletPort() const;

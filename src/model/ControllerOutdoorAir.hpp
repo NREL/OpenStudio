@@ -56,6 +56,11 @@ namespace model {
     explicit ControllerOutdoorAir(const Model& model);
 
     virtual ~ControllerOutdoorAir() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ControllerOutdoorAir(const ControllerOutdoorAir& other) = default;
+    ControllerOutdoorAir(ControllerOutdoorAir&& other) = default;
+    ControllerOutdoorAir& operator=(const ControllerOutdoorAir&) = default;
+    ControllerOutdoorAir& operator=(ControllerOutdoorAir&&) = default;
 
     static IddObjectType iddObjectType();
 

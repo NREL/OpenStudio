@@ -52,6 +52,11 @@ namespace model {
     explicit ZoneHVACEquipmentList(const ThermalZone& thermalZone);
 
     virtual ~ZoneHVACEquipmentList() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACEquipmentList(const ZoneHVACEquipmentList& other) = default;
+    ZoneHVACEquipmentList(ZoneHVACEquipmentList&& other) = default;
+    ZoneHVACEquipmentList& operator=(const ZoneHVACEquipmentList&) = default;
+    ZoneHVACEquipmentList& operator=(ZoneHVACEquipmentList&&) = default;
 
     static IddObjectType iddObjectType();
 

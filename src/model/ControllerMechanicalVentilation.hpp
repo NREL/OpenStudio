@@ -52,6 +52,11 @@ namespace model {
     explicit ControllerMechanicalVentilation(const Model& model);
 
     virtual ~ControllerMechanicalVentilation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ControllerMechanicalVentilation(const ControllerMechanicalVentilation& other) = default;
+    ControllerMechanicalVentilation(ControllerMechanicalVentilation&& other) = default;
+    ControllerMechanicalVentilation& operator=(const ControllerMechanicalVentilation&) = default;
+    ControllerMechanicalVentilation& operator=(ControllerMechanicalVentilation&&) = default;
 
     static IddObjectType iddObjectType();
 

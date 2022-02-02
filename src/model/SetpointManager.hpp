@@ -53,6 +53,11 @@ namespace model {
     //@{
 
     virtual ~SetpointManager() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManager(const SetpointManager& other) = default;
+    SetpointManager(SetpointManager&& other) = default;
+    SetpointManager& operator=(const SetpointManager&) = default;
+    SetpointManager& operator=(SetpointManager&&) = default;
 
     //@}
 

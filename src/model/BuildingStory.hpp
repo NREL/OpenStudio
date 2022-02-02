@@ -62,6 +62,11 @@ namespace model {
     explicit BuildingStory(const Model& model);
 
     virtual ~BuildingStory() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    BuildingStory(const BuildingStory& other) = default;
+    BuildingStory(BuildingStory&& other) = default;
+    BuildingStory& operator=(const BuildingStory&) = default;
+    BuildingStory& operator=(BuildingStory&&) = default;
 
     //@}
 

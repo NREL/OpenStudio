@@ -52,6 +52,11 @@ namespace model {
     explicit InfraredTransparentMaterial(const Model& model);
 
     virtual ~InfraredTransparentMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    InfraredTransparentMaterial(const InfraredTransparentMaterial& other) = default;
+    InfraredTransparentMaterial(InfraredTransparentMaterial&& other) = default;
+    InfraredTransparentMaterial& operator=(const InfraredTransparentMaterial&) = default;
+    InfraredTransparentMaterial& operator=(InfraredTransparentMaterial&&) = default;
 
     //@}
 

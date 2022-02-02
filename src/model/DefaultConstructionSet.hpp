@@ -57,6 +57,11 @@ namespace model {
     explicit DefaultConstructionSet(const Model& model);
 
     virtual ~DefaultConstructionSet() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DefaultConstructionSet(const DefaultConstructionSet& other) = default;
+    DefaultConstructionSet(DefaultConstructionSet&& other) = default;
+    DefaultConstructionSet& operator=(const DefaultConstructionSet&) = default;
+    DefaultConstructionSet& operator=(DefaultConstructionSet&&) = default;
 
     //@}
     /** @name Static Methods */

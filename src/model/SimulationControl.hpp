@@ -67,6 +67,11 @@ namespace model {
   {
    public:
     virtual ~SimulationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SimulationControl(const SimulationControl& other) = default;
+    SimulationControl(SimulationControl&& other) = default;
+    SimulationControl& operator=(const SimulationControl&) = default;
+    SimulationControl& operator=(SimulationControl&&) = default;
 
     //@}
     /** @name Static Methods */

@@ -117,6 +117,11 @@ waterCoolingCoil.addToSplitter( plantLoop.demandSplitter() );
   {
    public:
     virtual ~Loop() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Loop(const Loop& other) = default;
+    Loop(Loop&& other) = default;
+    Loop& operator=(const Loop&) = default;
+    Loop& operator=(Loop&&) = default;
 
     virtual Node supplyInletNode() const;
 

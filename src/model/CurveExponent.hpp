@@ -54,6 +54,11 @@ namespace model {
     explicit CurveExponent(const Model& model);
 
     virtual ~CurveExponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveExponent(const CurveExponent& other) = default;
+    CurveExponent(CurveExponent&& other) = default;
+    CurveExponent& operator=(const CurveExponent&) = default;
+    CurveExponent& operator=(CurveExponent&&) = default;
 
     //@}
 

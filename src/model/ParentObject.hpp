@@ -49,6 +49,11 @@ namespace model {
   {
    public:
     virtual ~ParentObject() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ParentObject(const ParentObject& other) = default;
+    ParentObject(ParentObject&& other) = default;
+    ParentObject& operator=(const ParentObject&) = default;
+    ParentObject& operator=(ParentObject&&) = default;
 
     /** @name Constructors and Destructors */
     //@{

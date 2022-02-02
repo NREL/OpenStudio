@@ -57,6 +57,11 @@ namespace model {
     explicit CoilWaterHeatingDesuperheater(const Model& model, Schedule& setpointTemperatureSchedule);
 
     virtual ~CoilWaterHeatingDesuperheater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilWaterHeatingDesuperheater(const CoilWaterHeatingDesuperheater& other) = default;
+    CoilWaterHeatingDesuperheater(CoilWaterHeatingDesuperheater&& other) = default;
+    CoilWaterHeatingDesuperheater& operator=(const CoilWaterHeatingDesuperheater&) = default;
+    CoilWaterHeatingDesuperheater& operator=(CoilWaterHeatingDesuperheater&&) = default;
 
     //@}
 

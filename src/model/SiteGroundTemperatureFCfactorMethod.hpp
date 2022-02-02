@@ -54,6 +54,11 @@ namespace model {
     explicit SiteGroundTemperatureFCfactorMethod(Model& model);
 
     virtual ~SiteGroundTemperatureFCfactorMethod() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SiteGroundTemperatureFCfactorMethod(const SiteGroundTemperatureFCfactorMethod& other) = default;
+    SiteGroundTemperatureFCfactorMethod(SiteGroundTemperatureFCfactorMethod&& other) = default;
+    SiteGroundTemperatureFCfactorMethod& operator=(const SiteGroundTemperatureFCfactorMethod&) = default;
+    SiteGroundTemperatureFCfactorMethod& operator=(SiteGroundTemperatureFCfactorMethod&&) = default;
 
     //@}
     /** @name Static Methods */

@@ -83,6 +83,11 @@ namespace model {
     //@{
 
     virtual ~PlanarSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlanarSurface(const PlanarSurface& other) = default;
+    PlanarSurface(PlanarSurface&& other) = default;
+    PlanarSurface& operator=(const PlanarSurface&) = default;
+    PlanarSurface& operator=(PlanarSurface&&) = default;
 
     //@}
     /** @name Getters */

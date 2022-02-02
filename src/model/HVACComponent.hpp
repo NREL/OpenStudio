@@ -78,6 +78,11 @@ namespace model {
   {
    public:
     virtual ~HVACComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HVACComponent(const HVACComponent& other) = default;
+    HVACComponent(HVACComponent&& other) = default;
+    HVACComponent& operator=(const HVACComponent&) = default;
+    HVACComponent& operator=(HVACComponent&&) = default;
 
     /** Returns the optional Loop object that the HVAC component is attached to.
    *  If the component is part of an outdoor air system, the containing AirLoopHVAC will be returned.

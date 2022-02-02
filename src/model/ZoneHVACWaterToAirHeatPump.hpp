@@ -59,6 +59,11 @@ namespace model {
                                HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
     virtual ~ZoneHVACWaterToAirHeatPump() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACWaterToAirHeatPump(const ZoneHVACWaterToAirHeatPump& other) = default;
+    ZoneHVACWaterToAirHeatPump(ZoneHVACWaterToAirHeatPump&& other) = default;
+    ZoneHVACWaterToAirHeatPump& operator=(const ZoneHVACWaterToAirHeatPump&) = default;
+    ZoneHVACWaterToAirHeatPump& operator=(ZoneHVACWaterToAirHeatPump&&) = default;
 
     //@}
 

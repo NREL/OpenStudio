@@ -54,6 +54,11 @@ namespace model {
   {
    public:
     virtual ~SetpointManagerMixedAir() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerMixedAir(const SetpointManagerMixedAir& other) = default;
+    SetpointManagerMixedAir(SetpointManagerMixedAir&& other) = default;
+    SetpointManagerMixedAir& operator=(const SetpointManagerMixedAir&) = default;
+    SetpointManagerMixedAir& operator=(SetpointManagerMixedAir&&) = default;
 
     /** Constructs a new SetpointManagerMixedAir object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.

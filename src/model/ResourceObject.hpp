@@ -66,6 +66,11 @@ namespace model {
     unsigned nonResourceObjectUseCount(bool excludeChildren = false) const;
 
     virtual ~ResourceObject() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ResourceObject(const ResourceObject& other) = default;
+    ResourceObject(ResourceObject&& other) = default;
+    ResourceObject& operator=(const ResourceObject&) = default;
+    ResourceObject& operator=(ResourceObject&&) = default;
 
    protected:
     /** @name Constructors and Destructors */

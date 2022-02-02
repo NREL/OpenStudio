@@ -59,6 +59,11 @@ namespace model {
     explicit GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity);
 
     virtual ~GeneratorPVWatts() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorPVWatts(const GeneratorPVWatts& other) = default;
+    GeneratorPVWatts(GeneratorPVWatts&& other) = default;
+    GeneratorPVWatts& operator=(const GeneratorPVWatts&) = default;
+    GeneratorPVWatts& operator=(GeneratorPVWatts&&) = default;
 
     //@}
 

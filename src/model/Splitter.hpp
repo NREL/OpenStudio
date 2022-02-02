@@ -45,6 +45,11 @@ namespace model {
   {
    public:
     virtual ~Splitter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Splitter(const Splitter& other) = default;
+    Splitter(Splitter&& other) = default;
+    Splitter& operator=(const Splitter&) = default;
+    Splitter& operator=(Splitter&&) = default;
 
     /** Returns the inlet port to the splitter. */
     virtual unsigned inletPort() const;

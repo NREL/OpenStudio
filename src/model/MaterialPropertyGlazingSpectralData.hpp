@@ -69,6 +69,11 @@ namespace model {
     explicit MaterialPropertyGlazingSpectralData(const Model& model);
 
     virtual ~MaterialPropertyGlazingSpectralData() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    MaterialPropertyGlazingSpectralData(const MaterialPropertyGlazingSpectralData& other) = default;
+    MaterialPropertyGlazingSpectralData(MaterialPropertyGlazingSpectralData&& other) = default;
+    MaterialPropertyGlazingSpectralData& operator=(const MaterialPropertyGlazingSpectralData&) = default;
+    MaterialPropertyGlazingSpectralData& operator=(MaterialPropertyGlazingSpectralData&&) = default;
 
     //@}
 

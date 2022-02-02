@@ -63,6 +63,11 @@ namespace model {
     explicit FanOnOff(const Model& model);
 
     virtual ~FanOnOff() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanOnOff(const FanOnOff& other) = default;
+    FanOnOff(FanOnOff&& other) = default;
+    FanOnOff& operator=(const FanOnOff&) = default;
+    FanOnOff& operator=(FanOnOff&&) = default;
 
     //@}
 

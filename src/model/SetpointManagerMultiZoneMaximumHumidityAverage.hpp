@@ -55,6 +55,11 @@ namespace model {
     explicit SetpointManagerMultiZoneMaximumHumidityAverage(const Model& model);
 
     virtual ~SetpointManagerMultiZoneMaximumHumidityAverage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerMultiZoneMaximumHumidityAverage(const SetpointManagerMultiZoneMaximumHumidityAverage& other) = default;
+    SetpointManagerMultiZoneMaximumHumidityAverage(SetpointManagerMultiZoneMaximumHumidityAverage&& other) = default;
+    SetpointManagerMultiZoneMaximumHumidityAverage& operator=(const SetpointManagerMultiZoneMaximumHumidityAverage&) = default;
+    SetpointManagerMultiZoneMaximumHumidityAverage& operator=(SetpointManagerMultiZoneMaximumHumidityAverage&&) = default;
 
     //@}
 

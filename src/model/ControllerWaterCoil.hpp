@@ -57,6 +57,11 @@ namespace model {
     //@{
 
     virtual ~ControllerWaterCoil() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ControllerWaterCoil(const ControllerWaterCoil& other) = default;
+    ControllerWaterCoil(ControllerWaterCoil&& other) = default;
+    ControllerWaterCoil& operator=(const ControllerWaterCoil&) = default;
+    ControllerWaterCoil& operator=(ControllerWaterCoil&&) = default;
 
     //@}
     /** @name Static Methods */

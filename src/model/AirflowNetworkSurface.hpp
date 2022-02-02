@@ -71,6 +71,11 @@ namespace model {
     //AirflowNetworkSurface(const Model& model, const SubSurface &surface, const AirflowNetworkComponent &component);
 
     virtual ~AirflowNetworkSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkSurface(const AirflowNetworkSurface& other) = default;
+    AirflowNetworkSurface(AirflowNetworkSurface&& other) = default;
+    AirflowNetworkSurface& operator=(const AirflowNetworkSurface&) = default;
+    AirflowNetworkSurface& operator=(AirflowNetworkSurface&&) = default;
 
     //@}
 

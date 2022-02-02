@@ -58,6 +58,11 @@ namespace model {
                                                 const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
 
     virtual ~HeatExchangerDesiccantBalancedFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatExchangerDesiccantBalancedFlow(const HeatExchangerDesiccantBalancedFlow& other) = default;
+    HeatExchangerDesiccantBalancedFlow(HeatExchangerDesiccantBalancedFlow&& other) = default;
+    HeatExchangerDesiccantBalancedFlow& operator=(const HeatExchangerDesiccantBalancedFlow&) = default;
+    HeatExchangerDesiccantBalancedFlow& operator=(HeatExchangerDesiccantBalancedFlow&&) = default;
 
     static IddObjectType iddObjectType();
 

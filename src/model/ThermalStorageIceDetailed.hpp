@@ -56,6 +56,11 @@ namespace model {
     explicit ThermalStorageIceDetailed(const Model& model);
 
     virtual ~ThermalStorageIceDetailed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermalStorageIceDetailed(const ThermalStorageIceDetailed& other) = default;
+    ThermalStorageIceDetailed(ThermalStorageIceDetailed&& other) = default;
+    ThermalStorageIceDetailed& operator=(const ThermalStorageIceDetailed&) = default;
+    ThermalStorageIceDetailed& operator=(ThermalStorageIceDetailed&&) = default;
 
     //@}
 

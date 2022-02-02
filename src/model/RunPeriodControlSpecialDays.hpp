@@ -65,6 +65,11 @@ namespace model {
                                 const openstudio::MonthOfYear& monthOfYear, Model& model);
 
     virtual ~RunPeriodControlSpecialDays() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RunPeriodControlSpecialDays(const RunPeriodControlSpecialDays& other) = default;
+    RunPeriodControlSpecialDays(RunPeriodControlSpecialDays&& other) = default;
+    RunPeriodControlSpecialDays& operator=(const RunPeriodControlSpecialDays&) = default;
+    RunPeriodControlSpecialDays& operator=(RunPeriodControlSpecialDays&&) = default;
 
     /** @name Static Methods */
     //@{

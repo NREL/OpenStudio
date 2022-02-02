@@ -57,6 +57,11 @@ namespace model {
     explicit PipeAdiabatic(const Model& model);
 
     virtual ~PipeAdiabatic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PipeAdiabatic(const PipeAdiabatic& other) = default;
+    PipeAdiabatic(PipeAdiabatic&& other) = default;
+    PipeAdiabatic& operator=(const PipeAdiabatic&) = default;
+    PipeAdiabatic& operator=(PipeAdiabatic&&) = default;
 
     unsigned inletPort() const;
 

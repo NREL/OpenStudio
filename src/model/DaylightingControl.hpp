@@ -56,6 +56,11 @@ namespace model {
     explicit DaylightingControl(const Model& model);
 
     virtual ~DaylightingControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightingControl(const DaylightingControl& other) = default;
+    DaylightingControl(DaylightingControl&& other) = default;
+    DaylightingControl& operator=(const DaylightingControl&) = default;
+    DaylightingControl& operator=(DaylightingControl&&) = default;
 
     //@}
     /** @name Static Methods */

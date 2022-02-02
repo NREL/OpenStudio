@@ -57,6 +57,11 @@ namespace model {
     LightingDesignDay(const std::string& cieSkyModel, const openstudio::Date& date, const Model& model);
 
     virtual ~LightingDesignDay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LightingDesignDay(const LightingDesignDay& other) = default;
+    LightingDesignDay(LightingDesignDay&& other) = default;
+    LightingDesignDay& operator=(const LightingDesignDay&) = default;
+    LightingDesignDay& operator=(LightingDesignDay&&) = default;
 
     //@}
     /** @name Static Methods */

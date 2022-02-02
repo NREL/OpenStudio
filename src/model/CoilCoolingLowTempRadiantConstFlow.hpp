@@ -57,6 +57,11 @@ namespace model {
                                        Schedule& coolingLowControlTemperatureSchedule);
 
     virtual ~CoilCoolingLowTempRadiantConstFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingLowTempRadiantConstFlow(const CoilCoolingLowTempRadiantConstFlow& other) = default;
+    CoilCoolingLowTempRadiantConstFlow(CoilCoolingLowTempRadiantConstFlow&& other) = default;
+    CoilCoolingLowTempRadiantConstFlow& operator=(const CoilCoolingLowTempRadiantConstFlow&) = default;
+    CoilCoolingLowTempRadiantConstFlow& operator=(CoilCoolingLowTempRadiantConstFlow&&) = default;
 
     //virtual unsigned inletPort() const;
 

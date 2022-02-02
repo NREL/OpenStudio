@@ -53,6 +53,11 @@ namespace model {
     Generator(IddObjectType type, const Model& model);
 
     virtual ~Generator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Generator(const Generator& other) = default;
+    Generator(Generator&& other) = default;
+    Generator& operator=(const Generator&) = default;
+    Generator& operator=(Generator&&) = default;
 
     std::string generatorObjectType() const;
 

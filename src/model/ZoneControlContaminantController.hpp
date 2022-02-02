@@ -55,6 +55,11 @@ namespace model {
     explicit ZoneControlContaminantController(const Model& model);
 
     virtual ~ZoneControlContaminantController() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneControlContaminantController(const ZoneControlContaminantController& other) = default;
+    ZoneControlContaminantController(ZoneControlContaminantController&& other) = default;
+    ZoneControlContaminantController& operator=(const ZoneControlContaminantController&) = default;
+    ZoneControlContaminantController& operator=(ZoneControlContaminantController&&) = default;
 
     //@}
 

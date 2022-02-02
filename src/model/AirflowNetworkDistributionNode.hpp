@@ -66,6 +66,11 @@ namespace model {
     AirflowNetworkDistributionNode(const Model& model);
 
     virtual ~AirflowNetworkDistributionNode() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkDistributionNode(const AirflowNetworkDistributionNode& other) = default;
+    AirflowNetworkDistributionNode(AirflowNetworkDistributionNode&& other) = default;
+    AirflowNetworkDistributionNode& operator=(const AirflowNetworkDistributionNode&) = default;
+    AirflowNetworkDistributionNode& operator=(AirflowNetworkDistributionNode&&) = default;
 
     //@}
 

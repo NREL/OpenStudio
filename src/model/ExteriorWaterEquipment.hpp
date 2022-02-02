@@ -62,6 +62,11 @@ namespace model {
     ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition, Schedule& schedule);
 
     virtual ~ExteriorWaterEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorWaterEquipment(const ExteriorWaterEquipment& other) = default;
+    ExteriorWaterEquipment(ExteriorWaterEquipment&& other) = default;
+    ExteriorWaterEquipment& operator=(const ExteriorWaterEquipment&) = default;
+    ExteriorWaterEquipment& operator=(ExteriorWaterEquipment&&) = default;
 
     //@}
 

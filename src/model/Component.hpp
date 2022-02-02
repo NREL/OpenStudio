@@ -65,6 +65,11 @@ namespace model {
     explicit Component(const openstudio::IdfFile& idfFile);
 
     virtual ~Component() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Component(const Component& other) = default;
+    Component(Component&& other) = default;
+    Component& operator=(const Component&) = default;
+    Component& operator=(Component&&) = default;
 
     //@}
     /** @name Getters */

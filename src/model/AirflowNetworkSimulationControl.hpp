@@ -53,6 +53,11 @@ namespace model {
   {
    public:
     virtual ~AirflowNetworkSimulationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkSimulationControl(const AirflowNetworkSimulationControl& other) = default;
+    AirflowNetworkSimulationControl(AirflowNetworkSimulationControl&& other) = default;
+    AirflowNetworkSimulationControl& operator=(const AirflowNetworkSimulationControl&) = default;
+    AirflowNetworkSimulationControl& operator=(AirflowNetworkSimulationControl&&) = default;
 
     //@}
     /** @name Static Methods */

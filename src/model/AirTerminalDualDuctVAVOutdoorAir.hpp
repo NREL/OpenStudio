@@ -57,6 +57,11 @@ namespace model {
     explicit AirTerminalDualDuctVAVOutdoorAir(const Model& model);
 
     virtual ~AirTerminalDualDuctVAVOutdoorAir() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalDualDuctVAVOutdoorAir(const AirTerminalDualDuctVAVOutdoorAir& other) = default;
+    AirTerminalDualDuctVAVOutdoorAir(AirTerminalDualDuctVAVOutdoorAir&& other) = default;
+    AirTerminalDualDuctVAVOutdoorAir& operator=(const AirTerminalDualDuctVAVOutdoorAir&) = default;
+    AirTerminalDualDuctVAVOutdoorAir& operator=(AirTerminalDualDuctVAVOutdoorAir&&) = default;
 
     //@}
 

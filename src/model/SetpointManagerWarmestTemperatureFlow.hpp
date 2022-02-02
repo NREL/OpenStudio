@@ -55,6 +55,11 @@ namespace model {
     explicit SetpointManagerWarmestTemperatureFlow(const Model& model);
 
     virtual ~SetpointManagerWarmestTemperatureFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerWarmestTemperatureFlow(const SetpointManagerWarmestTemperatureFlow& other) = default;
+    SetpointManagerWarmestTemperatureFlow(SetpointManagerWarmestTemperatureFlow&& other) = default;
+    SetpointManagerWarmestTemperatureFlow& operator=(const SetpointManagerWarmestTemperatureFlow&) = default;
+    SetpointManagerWarmestTemperatureFlow& operator=(SetpointManagerWarmestTemperatureFlow&&) = default;
 
     //@}
 

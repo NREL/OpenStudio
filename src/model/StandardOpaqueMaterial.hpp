@@ -54,6 +54,11 @@ namespace model {
                                     double density = 0.1, double specificHeat = 1400);
 
     virtual ~StandardOpaqueMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StandardOpaqueMaterial(const StandardOpaqueMaterial& other) = default;
+    StandardOpaqueMaterial(StandardOpaqueMaterial&& other) = default;
+    StandardOpaqueMaterial& operator=(const StandardOpaqueMaterial&) = default;
+    StandardOpaqueMaterial& operator=(StandardOpaqueMaterial&&) = default;
 
     //@}
 

@@ -56,6 +56,11 @@ namespace model {
     explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model);
 
     virtual ~EnergyManagementSystemCurveOrTableIndexVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemCurveOrTableIndexVariable(const EnergyManagementSystemCurveOrTableIndexVariable& other) = default;
+    EnergyManagementSystemCurveOrTableIndexVariable(EnergyManagementSystemCurveOrTableIndexVariable&& other) = default;
+    EnergyManagementSystemCurveOrTableIndexVariable& operator=(const EnergyManagementSystemCurveOrTableIndexVariable&) = default;
+    EnergyManagementSystemCurveOrTableIndexVariable& operator=(EnergyManagementSystemCurveOrTableIndexVariable&&) = default;
 
     //@}
 

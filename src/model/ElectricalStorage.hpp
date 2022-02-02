@@ -52,6 +52,11 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
     ElectricalStorage(IddObjectType type, const Model& model);
 
     virtual ~ElectricalStorage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricalStorage(const ElectricalStorage& other) = default;
+    ElectricalStorage(ElectricalStorage&& other) = default;
+    ElectricalStorage& operator=(const ElectricalStorage&) = default;
+    ElectricalStorage& operator=(ElectricalStorage&&) = default;
 
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 

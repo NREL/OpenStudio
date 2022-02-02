@@ -53,6 +53,11 @@ namespace model {
     explicit SimpleGlazing(const Model& model, double uFactor = 0.1, double solarHeatGainCoefficient = 0.1);
 
     virtual ~SimpleGlazing() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SimpleGlazing(const SimpleGlazing& other) = default;
+    SimpleGlazing(SimpleGlazing&& other) = default;
+    SimpleGlazing& operator=(const SimpleGlazing&) = default;
+    SimpleGlazing& operator=(SimpleGlazing&&) = default;
 
     //@}
 

@@ -53,6 +53,11 @@ namespace model {
     explicit ChillerAbsorption(const Model& model);
 
     virtual ~ChillerAbsorption() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ChillerAbsorption(const ChillerAbsorption& other) = default;
+    ChillerAbsorption(ChillerAbsorption&& other) = default;
+    ChillerAbsorption& operator=(const ChillerAbsorption&) = default;
+    ChillerAbsorption& operator=(ChillerAbsorption&&) = default;
 
     //@}
 

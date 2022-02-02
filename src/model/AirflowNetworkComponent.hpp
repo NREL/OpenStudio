@@ -50,6 +50,11 @@ namespace model {
     AirflowNetworkComponent(IddObjectType type, const Model& model);
 
     virtual ~AirflowNetworkComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkComponent(const AirflowNetworkComponent& other) = default;
+    AirflowNetworkComponent(AirflowNetworkComponent&& other) = default;
+    AirflowNetworkComponent& operator=(const AirflowNetworkComponent&) = default;
+    AirflowNetworkComponent& operator=(AirflowNetworkComponent&&) = default;
 
     //std::vector<openstudio::IdfObject> remove();
 

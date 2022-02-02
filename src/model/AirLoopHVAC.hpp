@@ -85,6 +85,11 @@ namespace model {
     explicit AirLoopHVAC(Model& model, bool dualDuct = false);
 
     virtual ~AirLoopHVAC() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVAC(const AirLoopHVAC& other) = default;
+    AirLoopHVAC(AirLoopHVAC&& other) = default;
+    AirLoopHVAC& operator=(const AirLoopHVAC&) = default;
+    AirLoopHVAC& operator=(AirLoopHVAC&&) = default;
 
     boost::optional<double> designSupplyAirFlowRate() const;
 

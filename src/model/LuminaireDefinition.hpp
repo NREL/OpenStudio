@@ -54,6 +54,11 @@ namespace model {
     explicit LuminaireDefinition(const Model& model);
 
     virtual ~LuminaireDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LuminaireDefinition(const LuminaireDefinition& other) = default;
+    LuminaireDefinition(LuminaireDefinition&& other) = default;
+    LuminaireDefinition& operator=(const LuminaireDefinition&) = default;
+    LuminaireDefinition& operator=(LuminaireDefinition&&) = default;
 
     //@}
     /** @name Static Methods */

@@ -56,6 +56,11 @@ namespace model {
     //@{
 
     virtual ~RunPeriodControlDaylightSavingTime() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RunPeriodControlDaylightSavingTime(const RunPeriodControlDaylightSavingTime& other) = default;
+    RunPeriodControlDaylightSavingTime(RunPeriodControlDaylightSavingTime&& other) = default;
+    RunPeriodControlDaylightSavingTime& operator=(const RunPeriodControlDaylightSavingTime&) = default;
+    RunPeriodControlDaylightSavingTime& operator=(RunPeriodControlDaylightSavingTime&&) = default;
 
     //@}
     /** @name Static Methods */

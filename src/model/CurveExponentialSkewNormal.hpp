@@ -54,6 +54,11 @@ namespace model {
     explicit CurveExponentialSkewNormal(const Model& model);
 
     virtual ~CurveExponentialSkewNormal() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveExponentialSkewNormal(const CurveExponentialSkewNormal& other) = default;
+    CurveExponentialSkewNormal(CurveExponentialSkewNormal&& other) = default;
+    CurveExponentialSkewNormal& operator=(const CurveExponentialSkewNormal&) = default;
+    CurveExponentialSkewNormal& operator=(CurveExponentialSkewNormal&&) = default;
 
     //@}
 

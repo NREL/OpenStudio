@@ -54,6 +54,11 @@ namespace model {
     explicit CurveFanPressureRise(const Model& model);
 
     virtual ~CurveFanPressureRise() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveFanPressureRise(const CurveFanPressureRise& other) = default;
+    CurveFanPressureRise(CurveFanPressureRise&& other) = default;
+    CurveFanPressureRise& operator=(const CurveFanPressureRise&) = default;
+    CurveFanPressureRise& operator=(CurveFanPressureRise&&) = default;
 
     //@}
 

@@ -60,6 +60,11 @@ namespace model {
                                     const Curve& partLoadFractionCurve);
 
     virtual ~ZoneHVACDehumidifierDX() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACDehumidifierDX(const ZoneHVACDehumidifierDX& other) = default;
+    ZoneHVACDehumidifierDX(ZoneHVACDehumidifierDX&& other) = default;
+    ZoneHVACDehumidifierDX& operator=(const ZoneHVACDehumidifierDX&) = default;
+    ZoneHVACDehumidifierDX& operator=(ZoneHVACDehumidifierDX&&) = default;
 
     //@}
 

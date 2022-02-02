@@ -53,6 +53,11 @@ namespace model {
     explicit AirTerminalSingleDuctInletSideMixer(const Model& model);
 
     virtual ~AirTerminalSingleDuctInletSideMixer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirTerminalSingleDuctInletSideMixer(const AirTerminalSingleDuctInletSideMixer& other) = default;
+    AirTerminalSingleDuctInletSideMixer(AirTerminalSingleDuctInletSideMixer&& other) = default;
+    AirTerminalSingleDuctInletSideMixer& operator=(const AirTerminalSingleDuctInletSideMixer&) = default;
+    AirTerminalSingleDuctInletSideMixer& operator=(AirTerminalSingleDuctInletSideMixer&&) = default;
 
     //@}
 

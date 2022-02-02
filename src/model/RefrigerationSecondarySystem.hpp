@@ -60,6 +60,11 @@ namespace model {
     explicit RefrigerationSecondarySystem(const Model& model);
 
     virtual ~RefrigerationSecondarySystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationSecondarySystem(const RefrigerationSecondarySystem& other) = default;
+    RefrigerationSecondarySystem(RefrigerationSecondarySystem&& other) = default;
+    RefrigerationSecondarySystem& operator=(const RefrigerationSecondarySystem&) = default;
+    RefrigerationSecondarySystem& operator=(RefrigerationSecondarySystem&&) = default;
 
     //@}
 

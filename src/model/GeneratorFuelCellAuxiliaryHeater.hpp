@@ -56,6 +56,11 @@ namespace model {
     explicit GeneratorFuelCellAuxiliaryHeater(const Model& model);
 
     virtual ~GeneratorFuelCellAuxiliaryHeater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellAuxiliaryHeater(const GeneratorFuelCellAuxiliaryHeater& other) = default;
+    GeneratorFuelCellAuxiliaryHeater(GeneratorFuelCellAuxiliaryHeater&& other) = default;
+    GeneratorFuelCellAuxiliaryHeater& operator=(const GeneratorFuelCellAuxiliaryHeater&) = default;
+    GeneratorFuelCellAuxiliaryHeater& operator=(GeneratorFuelCellAuxiliaryHeater&&) = default;
 
     //@}
 

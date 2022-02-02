@@ -56,6 +56,11 @@ namespace model {
                                        const std::string actuatedComponentControlType);
 
     virtual ~ExternalInterfaceActuator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceActuator(const ExternalInterfaceActuator& other) = default;
+    ExternalInterfaceActuator(ExternalInterfaceActuator&& other) = default;
+    ExternalInterfaceActuator& operator=(const ExternalInterfaceActuator&) = default;
+    ExternalInterfaceActuator& operator=(ExternalInterfaceActuator&&) = default;
 
     //@}
 

@@ -58,6 +58,11 @@ namespace model {
     explicit InternalMass(const InternalMassDefinition& internalMassDefinition);
 
     virtual ~InternalMass() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    InternalMass(const InternalMass& other) = default;
+    InternalMass(InternalMass&& other) = default;
+    InternalMass& operator=(const InternalMass&) = default;
+    InternalMass& operator=(InternalMass&&) = default;
 
     //@}
 

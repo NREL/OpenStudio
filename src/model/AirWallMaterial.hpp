@@ -52,6 +52,11 @@ namespace model {
     explicit AirWallMaterial(const Model& model);
 
     virtual ~AirWallMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirWallMaterial(const AirWallMaterial& other) = default;
+    AirWallMaterial(AirWallMaterial&& other) = default;
+    AirWallMaterial& operator=(const AirWallMaterial&) = default;
+    AirWallMaterial& operator=(AirWallMaterial&&) = default;
 
     //@}
 

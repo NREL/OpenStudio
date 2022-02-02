@@ -56,6 +56,11 @@ namespace model {
     explicit HeatExchangerFluidToFluid(const Model& model);
 
     virtual ~HeatExchangerFluidToFluid() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatExchangerFluidToFluid(const HeatExchangerFluidToFluid& other) = default;
+    HeatExchangerFluidToFluid(HeatExchangerFluidToFluid&& other) = default;
+    HeatExchangerFluidToFluid& operator=(const HeatExchangerFluidToFluid&) = default;
+    HeatExchangerFluidToFluid& operator=(HeatExchangerFluidToFluid&&) = default;
 
     //@}
 

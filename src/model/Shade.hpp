@@ -55,6 +55,11 @@ namespace model {
                    double thickness = 0.005, double conductivity = 0.1);
 
     virtual ~Shade() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Shade(const Shade& other) = default;
+    Shade(Shade&& other) = default;
+    Shade& operator=(const Shade&) = default;
+    Shade& operator=(Shade&&) = default;
 
     //@}
 

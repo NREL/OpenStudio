@@ -56,6 +56,11 @@ namespace model {
     explicit ElectricLoadCenterStorageSimple(const Model& model);
 
     virtual ~ElectricLoadCenterStorageSimple() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterStorageSimple(const ElectricLoadCenterStorageSimple& other) = default;
+    ElectricLoadCenterStorageSimple(ElectricLoadCenterStorageSimple&& other) = default;
+    ElectricLoadCenterStorageSimple& operator=(const ElectricLoadCenterStorageSimple&) = default;
+    ElectricLoadCenterStorageSimple& operator=(ElectricLoadCenterStorageSimple&&) = default;
 
     //@}
 

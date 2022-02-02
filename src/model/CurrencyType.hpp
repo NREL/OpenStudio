@@ -51,6 +51,11 @@ namespace model {
 
    public:
     virtual ~CurrencyType() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurrencyType(const CurrencyType& other) = default;
+    CurrencyType(CurrencyType&& other) = default;
+    CurrencyType& operator=(const CurrencyType&) = default;
+    CurrencyType& operator=(CurrencyType&&) = default;
 
     /** @name Getters */
     //@{

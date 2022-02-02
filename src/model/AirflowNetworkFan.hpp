@@ -60,6 +60,11 @@ namespace model {
     //@{
 
     virtual ~AirflowNetworkFan() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkFan(const AirflowNetworkFan& other) = default;
+    AirflowNetworkFan(AirflowNetworkFan&& other) = default;
+    AirflowNetworkFan& operator=(const AirflowNetworkFan&) = default;
+    AirflowNetworkFan& operator=(AirflowNetworkFan&&) = default;
 
     //@}
 

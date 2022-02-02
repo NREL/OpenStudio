@@ -48,6 +48,11 @@ namespace model {
     explicit Connection(const Model& model);
 
     virtual ~Connection() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Connection(const Connection& other) = default;
+    Connection(Connection&& other) = default;
+    Connection& operator=(const Connection&) = default;
+    Connection& operator=(Connection&&) = default;
 
     boost::optional<ModelObject> sourceObject() const;
 

@@ -66,6 +66,11 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
     virtual ~WeatherFile() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WeatherFile(const WeatherFile& other) = default;
+    WeatherFile(WeatherFile&& other) = default;
+    WeatherFile& operator=(const WeatherFile&) = default;
+    WeatherFile& operator=(WeatherFile&&) = default;
 
     //@}
     /** @name Static Methods */

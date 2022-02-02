@@ -47,6 +47,11 @@ namespace model {
     explicit WeatherFileDays(const Model& model);
 
     virtual ~WeatherFileDays() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WeatherFileDays(const WeatherFileDays& other) = default;
+    WeatherFileDays(WeatherFileDays&& other) = default;
+    WeatherFileDays& operator=(const WeatherFileDays&) = default;
+    WeatherFileDays& operator=(WeatherFileDays&&) = default;
 
     static IddObjectType iddObjectType();
 

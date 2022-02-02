@@ -53,6 +53,11 @@ namespace model {
     AirflowNetworkLinkage(IddObjectType type, const Model& model);
 
     virtual ~AirflowNetworkLinkage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkLinkage(const AirflowNetworkLinkage& other) = default;
+    AirflowNetworkLinkage(AirflowNetworkLinkage&& other) = default;
+    AirflowNetworkLinkage& operator=(const AirflowNetworkLinkage&) = default;
+    AirflowNetworkLinkage& operator=(AirflowNetworkLinkage&&) = default;
 
     //@}
     /** @name Virtual Methods */

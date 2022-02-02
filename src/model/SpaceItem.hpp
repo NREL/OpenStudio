@@ -48,6 +48,11 @@ namespace model {
   {
    public:
     virtual ~SpaceItem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceItem(const SpaceItem& other) = default;
+    SpaceItem(SpaceItem&& other) = default;
+    SpaceItem& operator=(const SpaceItem&) = default;
+    SpaceItem& operator=(SpaceItem&&) = default;
 
     /// Returns the parent Space.
     boost::optional<Space> space() const;

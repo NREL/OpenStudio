@@ -52,6 +52,11 @@ namespace model {
     explicit PlantEquipmentOperationCoolingLoad(const Model& model);
 
     virtual ~PlantEquipmentOperationCoolingLoad() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationCoolingLoad(const PlantEquipmentOperationCoolingLoad& other) = default;
+    PlantEquipmentOperationCoolingLoad(PlantEquipmentOperationCoolingLoad&& other) = default;
+    PlantEquipmentOperationCoolingLoad& operator=(const PlantEquipmentOperationCoolingLoad&) = default;
+    PlantEquipmentOperationCoolingLoad& operator=(PlantEquipmentOperationCoolingLoad&&) = default;
 
     //@}
 

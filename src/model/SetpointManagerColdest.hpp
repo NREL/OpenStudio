@@ -55,6 +55,11 @@ namespace model {
     explicit SetpointManagerColdest(const Model& model);
 
     virtual ~SetpointManagerColdest() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerColdest(const SetpointManagerColdest& other) = default;
+    SetpointManagerColdest(SetpointManagerColdest&& other) = default;
+    SetpointManagerColdest& operator=(const SetpointManagerColdest&) = default;
+    SetpointManagerColdest& operator=(SetpointManagerColdest&&) = default;
 
     //@}
 

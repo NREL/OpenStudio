@@ -58,6 +58,11 @@ namespace model {
     explicit ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials);
 
     virtual ~ConstructionWithInternalSource() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConstructionWithInternalSource(const ConstructionWithInternalSource& other) = default;
+    ConstructionWithInternalSource(ConstructionWithInternalSource&& other) = default;
+    ConstructionWithInternalSource& operator=(const ConstructionWithInternalSource&) = default;
+    ConstructionWithInternalSource& operator=(ConstructionWithInternalSource&&) = default;
 
     /// The source is located after layer number.  Must be >= 1 and <= numLayers-1.
     /// Defaults to 1.

@@ -54,6 +54,11 @@ namespace model {
   {
    public:
     virtual ~ZoneHVACComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACComponent(const ZoneHVACComponent& other) = default;
+    ZoneHVACComponent(ZoneHVACComponent&& other) = default;
+    ZoneHVACComponent& operator=(const ZoneHVACComponent&) = default;
+    ZoneHVACComponent& operator=(ZoneHVACComponent&&) = default;
 
     /** Returns the inlet port.  For a ZoneHVACComponent this port is typically connected
    *  to a zone exhaust node. **/

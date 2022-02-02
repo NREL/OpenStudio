@@ -54,6 +54,11 @@ namespace model {
     explicit CurveQuartic(const Model& model);
 
     virtual ~CurveQuartic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveQuartic(const CurveQuartic& other) = default;
+    CurveQuartic(CurveQuartic&& other) = default;
+    CurveQuartic& operator=(const CurveQuartic&) = default;
+    CurveQuartic& operator=(CurveQuartic&&) = default;
 
     //@}
 

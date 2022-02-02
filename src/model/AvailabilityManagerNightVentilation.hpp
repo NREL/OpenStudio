@@ -56,6 +56,11 @@ namespace model {
     explicit AvailabilityManagerNightVentilation(const Model& model);
 
     virtual ~AvailabilityManagerNightVentilation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerNightVentilation(const AvailabilityManagerNightVentilation& other) = default;
+    AvailabilityManagerNightVentilation(AvailabilityManagerNightVentilation&& other) = default;
+    AvailabilityManagerNightVentilation& operator=(const AvailabilityManagerNightVentilation&) = default;
+    AvailabilityManagerNightVentilation& operator=(AvailabilityManagerNightVentilation&&) = default;
 
     //@}
 

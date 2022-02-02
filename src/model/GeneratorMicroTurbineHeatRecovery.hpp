@@ -57,6 +57,11 @@ namespace model {
     explicit GeneratorMicroTurbineHeatRecovery(const Model& model, GeneratorMicroTurbine& mchp);
 
     virtual ~GeneratorMicroTurbineHeatRecovery() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& other) = default;
+    GeneratorMicroTurbineHeatRecovery(GeneratorMicroTurbineHeatRecovery&& other) = default;
+    GeneratorMicroTurbineHeatRecovery& operator=(const GeneratorMicroTurbineHeatRecovery&) = default;
+    GeneratorMicroTurbineHeatRecovery& operator=(GeneratorMicroTurbineHeatRecovery&&) = default;
 
     //@}
 

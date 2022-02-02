@@ -59,6 +59,11 @@ namespace model {
     explicit DaylightingDeviceLightWell(const SubSurface& subSurface);
 
     virtual ~DaylightingDeviceLightWell() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    DaylightingDeviceLightWell(const DaylightingDeviceLightWell& other) = default;
+    DaylightingDeviceLightWell(DaylightingDeviceLightWell&& other) = default;
+    DaylightingDeviceLightWell& operator=(const DaylightingDeviceLightWell&) = default;
+    DaylightingDeviceLightWell& operator=(DaylightingDeviceLightWell&&) = default;
 
     //@}
     /** @name Static Methods */

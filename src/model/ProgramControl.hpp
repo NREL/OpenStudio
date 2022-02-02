@@ -52,6 +52,11 @@ namespace model {
     explicit ProgramControl(const Model& model);
 
     virtual ~ProgramControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ProgramControl(const ProgramControl& other) = default;
+    ProgramControl(ProgramControl&& other) = default;
+    ProgramControl& operator=(const ProgramControl&) = default;
+    ProgramControl& operator=(ProgramControl&&) = default;
 
     //@}
 

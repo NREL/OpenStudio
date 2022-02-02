@@ -56,6 +56,11 @@ namespace model {
     explicit CoilCoolingDX(const Model& model, const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
 
     virtual ~CoilCoolingDX() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDX(const CoilCoolingDX& other) = default;
+    CoilCoolingDX(CoilCoolingDX&& other) = default;
+    CoilCoolingDX& operator=(const CoilCoolingDX&) = default;
+    CoilCoolingDX& operator=(CoilCoolingDX&&) = default;
 
     //@}
 

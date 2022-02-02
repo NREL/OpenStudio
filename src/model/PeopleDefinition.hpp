@@ -55,6 +55,11 @@ namespace model {
     explicit PeopleDefinition(const Model& model);
 
     virtual ~PeopleDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PeopleDefinition(const PeopleDefinition& other) = default;
+    PeopleDefinition(PeopleDefinition&& other) = default;
+    PeopleDefinition& operator=(const PeopleDefinition&) = default;
+    PeopleDefinition& operator=(PeopleDefinition&&) = default;
 
     //@}
 

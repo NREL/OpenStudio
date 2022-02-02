@@ -57,6 +57,11 @@ namespace model {
     explicit SolarCollectorFlatPlateWater(const Model& model);
 
     virtual ~SolarCollectorFlatPlateWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorFlatPlateWater(const SolarCollectorFlatPlateWater& other) = default;
+    SolarCollectorFlatPlateWater(SolarCollectorFlatPlateWater&& other) = default;
+    SolarCollectorFlatPlateWater& operator=(const SolarCollectorFlatPlateWater&) = default;
+    SolarCollectorFlatPlateWater& operator=(SolarCollectorFlatPlateWater&&) = default;
 
     //@}
 

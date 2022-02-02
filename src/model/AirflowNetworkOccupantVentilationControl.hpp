@@ -59,6 +59,11 @@ namespace model {
     AirflowNetworkOccupantVentilationControl(const Model& model, const Curve& curve);
 
     virtual ~AirflowNetworkOccupantVentilationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& other) = default;
+    AirflowNetworkOccupantVentilationControl(AirflowNetworkOccupantVentilationControl&& other) = default;
+    AirflowNetworkOccupantVentilationControl& operator=(const AirflowNetworkOccupantVentilationControl&) = default;
+    AirflowNetworkOccupantVentilationControl& operator=(AirflowNetworkOccupantVentilationControl&&) = default;
 
     //@}
 

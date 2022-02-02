@@ -58,6 +58,11 @@ namespace model {
     explicit ZoneHVACUnitVentilator(const Model& model, const HVACComponent& supplyAirFan);
 
     virtual ~ZoneHVACUnitVentilator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACUnitVentilator(const ZoneHVACUnitVentilator& other) = default;
+    ZoneHVACUnitVentilator(ZoneHVACUnitVentilator&& other) = default;
+    ZoneHVACUnitVentilator& operator=(const ZoneHVACUnitVentilator&) = default;
+    ZoneHVACUnitVentilator& operator=(ZoneHVACUnitVentilator&&) = default;
 
     //@}
 

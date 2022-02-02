@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~ZoneAirHeatBalanceAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneAirHeatBalanceAlgorithm(const ZoneAirHeatBalanceAlgorithm& other) = default;
+    ZoneAirHeatBalanceAlgorithm(ZoneAirHeatBalanceAlgorithm&& other) = default;
+    ZoneAirHeatBalanceAlgorithm& operator=(const ZoneAirHeatBalanceAlgorithm&) = default;
+    ZoneAirHeatBalanceAlgorithm& operator=(ZoneAirHeatBalanceAlgorithm&&) = default;
 
     //@}
 

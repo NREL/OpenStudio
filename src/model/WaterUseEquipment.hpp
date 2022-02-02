@@ -55,6 +55,11 @@ namespace model {
     explicit WaterUseEquipment(const WaterUseEquipmentDefinition& waterUseEquipmentDefinition);
 
     virtual ~WaterUseEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterUseEquipment(const WaterUseEquipment& other) = default;
+    WaterUseEquipment(WaterUseEquipment&& other) = default;
+    WaterUseEquipment& operator=(const WaterUseEquipment&) = default;
+    WaterUseEquipment& operator=(WaterUseEquipment&&) = default;
 
     static IddObjectType iddObjectType();
 

@@ -56,6 +56,11 @@ namespace model {
     explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string& internalDataType);
 
     virtual ~EnergyManagementSystemInternalVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemInternalVariable(const EnergyManagementSystemInternalVariable& other) = default;
+    EnergyManagementSystemInternalVariable(EnergyManagementSystemInternalVariable&& other) = default;
+    EnergyManagementSystemInternalVariable& operator=(const EnergyManagementSystemInternalVariable&) = default;
+    EnergyManagementSystemInternalVariable& operator=(EnergyManagementSystemInternalVariable&&) = default;
 
     //@}
 

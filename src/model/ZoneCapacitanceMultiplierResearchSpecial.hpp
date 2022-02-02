@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~ZoneCapacitanceMultiplierResearchSpecial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneCapacitanceMultiplierResearchSpecial(const ZoneCapacitanceMultiplierResearchSpecial& other) = default;
+    ZoneCapacitanceMultiplierResearchSpecial(ZoneCapacitanceMultiplierResearchSpecial&& other) = default;
+    ZoneCapacitanceMultiplierResearchSpecial& operator=(const ZoneCapacitanceMultiplierResearchSpecial&) = default;
+    ZoneCapacitanceMultiplierResearchSpecial& operator=(ZoneCapacitanceMultiplierResearchSpecial&&) = default;
 
     //@}
 

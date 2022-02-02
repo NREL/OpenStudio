@@ -54,6 +54,11 @@ namespace model {
     //@{
 
     virtual ~SolarCollectorPerformanceIntegralCollectorStorage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorPerformanceIntegralCollectorStorage(const SolarCollectorPerformanceIntegralCollectorStorage& other) = default;
+    SolarCollectorPerformanceIntegralCollectorStorage(SolarCollectorPerformanceIntegralCollectorStorage&& other) = default;
+    SolarCollectorPerformanceIntegralCollectorStorage& operator=(const SolarCollectorPerformanceIntegralCollectorStorage&) = default;
+    SolarCollectorPerformanceIntegralCollectorStorage& operator=(SolarCollectorPerformanceIntegralCollectorStorage&&) = default;
 
     //@}
 

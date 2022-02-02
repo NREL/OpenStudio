@@ -55,6 +55,11 @@ namespace model {
     explicit WaterUseConnections(const Model& model);
 
     virtual ~WaterUseConnections() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterUseConnections(const WaterUseConnections& other) = default;
+    WaterUseConnections(WaterUseConnections&& other) = default;
+    WaterUseConnections& operator=(const WaterUseConnections&) = default;
+    WaterUseConnections& operator=(WaterUseConnections&&) = default;
 
     static IddObjectType iddObjectType();
 

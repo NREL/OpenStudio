@@ -45,6 +45,11 @@ namespace model {
   {
    public:
     virtual ~Mixer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Mixer(const Mixer& other) = default;
+    Mixer(Mixer&& other) = default;
+    Mixer& operator=(const Mixer&) = default;
+    Mixer& operator=(Mixer&&) = default;
 
     /** Returns the outlet port to the zone mixer. */
     virtual unsigned outletPort() const;

@@ -52,6 +52,11 @@ namespace model {
     explicit CFactorUndergroundWallConstruction(const Model& model, double cFactor = 0.1, double height = 0.1);
 
     virtual ~CFactorUndergroundWallConstruction() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CFactorUndergroundWallConstruction(const CFactorUndergroundWallConstruction& other) = default;
+    CFactorUndergroundWallConstruction(CFactorUndergroundWallConstruction&& other) = default;
+    CFactorUndergroundWallConstruction& operator=(const CFactorUndergroundWallConstruction&) = default;
+    CFactorUndergroundWallConstruction& operator=(CFactorUndergroundWallConstruction&&) = default;
 
     double cFactor() const;
     bool setCFactor(double cFactor);

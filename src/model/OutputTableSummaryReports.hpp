@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~OutputTableSummaryReports() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputTableSummaryReports(const OutputTableSummaryReports& other) = default;
+    OutputTableSummaryReports(OutputTableSummaryReports&& other) = default;
+    OutputTableSummaryReports& operator=(const OutputTableSummaryReports&) = default;
+    OutputTableSummaryReports& operator=(OutputTableSummaryReports&&) = default;
 
     //@}
 

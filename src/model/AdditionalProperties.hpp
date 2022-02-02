@@ -52,6 +52,11 @@ namespace model {
     //@{
 
     virtual ~AdditionalProperties() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AdditionalProperties(const AdditionalProperties& other) = default;
+    AdditionalProperties(AdditionalProperties&& other) = default;
+    AdditionalProperties& operator=(const AdditionalProperties&) = default;
+    AdditionalProperties& operator=(AdditionalProperties&&) = default;
 
     //@}
 

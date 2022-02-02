@@ -60,6 +60,11 @@ namespace model {
     explicit HeatPumpPlantLoopEIRCooling(const Model& model);
 
     virtual ~HeatPumpPlantLoopEIRCooling() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatPumpPlantLoopEIRCooling(const HeatPumpPlantLoopEIRCooling& other) = default;
+    HeatPumpPlantLoopEIRCooling(HeatPumpPlantLoopEIRCooling&& other) = default;
+    HeatPumpPlantLoopEIRCooling& operator=(const HeatPumpPlantLoopEIRCooling&) = default;
+    HeatPumpPlantLoopEIRCooling& operator=(HeatPumpPlantLoopEIRCooling&&) = default;
 
     //@}
 

@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OpaqueMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OpaqueMaterial(const OpaqueMaterial& other) = default;
+    OpaqueMaterial(OpaqueMaterial&& other) = default;
+    OpaqueMaterial& operator=(const OpaqueMaterial&) = default;
+    OpaqueMaterial& operator=(OpaqueMaterial&&) = default;
 
     //@}
     /** @name Getters */

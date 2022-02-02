@@ -53,6 +53,11 @@ namespace model {
     explicit CoilHeatingDXVariableRefrigerantFlow(const Model& model);
 
     virtual ~CoilHeatingDXVariableRefrigerantFlow() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingDXVariableRefrigerantFlow(const CoilHeatingDXVariableRefrigerantFlow& other) = default;
+    CoilHeatingDXVariableRefrigerantFlow(CoilHeatingDXVariableRefrigerantFlow&& other) = default;
+    CoilHeatingDXVariableRefrigerantFlow& operator=(const CoilHeatingDXVariableRefrigerantFlow&) = default;
+    CoilHeatingDXVariableRefrigerantFlow& operator=(CoilHeatingDXVariableRefrigerantFlow&&) = default;
 
     static IddObjectType iddObjectType();
 

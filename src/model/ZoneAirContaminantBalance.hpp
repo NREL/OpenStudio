@@ -52,6 +52,11 @@ namespace model {
     //@{
 
     virtual ~ZoneAirContaminantBalance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneAirContaminantBalance(const ZoneAirContaminantBalance& other) = default;
+    ZoneAirContaminantBalance(ZoneAirContaminantBalance&& other) = default;
+    ZoneAirContaminantBalance& operator=(const ZoneAirContaminantBalance&) = default;
+    ZoneAirContaminantBalance& operator=(ZoneAirContaminantBalance&&) = default;
 
     //@}
 

@@ -67,6 +67,11 @@ namespace model {
                                const Curve& normalizedDimensionlessAirflowCurveStallRegion);
 
     virtual ~FanComponentModel() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanComponentModel(const FanComponentModel& other) = default;
+    FanComponentModel(FanComponentModel&& other) = default;
+    FanComponentModel& operator=(const FanComponentModel&) = default;
+    FanComponentModel& operator=(FanComponentModel&&) = default;
 
     //@}
 

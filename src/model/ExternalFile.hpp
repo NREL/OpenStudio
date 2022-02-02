@@ -55,6 +55,11 @@ namespace model {
     //@{
 
     virtual ~ExternalFile() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalFile(const ExternalFile& other) = default;
+    ExternalFile(ExternalFile&& other) = default;
+    ExternalFile& operator=(const ExternalFile&) = default;
+    ExternalFile& operator=(ExternalFile&&) = default;
 
     //@}
 

@@ -57,6 +57,11 @@ namespace model {
     explicit ScheduleYear(const Model& model);
 
     virtual ~ScheduleYear() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleYear(const ScheduleYear& other) = default;
+    ScheduleYear(ScheduleYear&& other) = default;
+    ScheduleYear& operator=(const ScheduleYear&) = default;
+    ScheduleYear& operator=(ScheduleYear&&) = default;
 
     //@}
 

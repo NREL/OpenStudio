@@ -57,6 +57,11 @@ namespace model {
     PlantEquipmentOperationRangeBasedScheme(IddObjectType type, const Model& model);
 
     virtual ~PlantEquipmentOperationRangeBasedScheme() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantEquipmentOperationRangeBasedScheme(const PlantEquipmentOperationRangeBasedScheme& other) = default;
+    PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationRangeBasedScheme&& other) = default;
+    PlantEquipmentOperationRangeBasedScheme& operator=(const PlantEquipmentOperationRangeBasedScheme&) = default;
+    PlantEquipmentOperationRangeBasedScheme& operator=(PlantEquipmentOperationRangeBasedScheme&&) = default;
 
     friend class openstudio::IdfObject;
 

@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~PerformancePrecisionTradeoffs() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PerformancePrecisionTradeoffs(const PerformancePrecisionTradeoffs& other) = default;
+    PerformancePrecisionTradeoffs(PerformancePrecisionTradeoffs&& other) = default;
+    PerformancePrecisionTradeoffs& operator=(const PerformancePrecisionTradeoffs&) = default;
+    PerformancePrecisionTradeoffs& operator=(PerformancePrecisionTradeoffs&&) = default;
 
     //@}
 

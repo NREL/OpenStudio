@@ -52,6 +52,11 @@ namespace model {
     Inverter(IddObjectType type, const Model& model);
 
     virtual ~Inverter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Inverter(const Inverter& other) = default;
+    Inverter(Inverter&& other) = default;
+    Inverter& operator=(const Inverter&) = default;
+    Inverter& operator=(Inverter&&) = default;
 
     boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 

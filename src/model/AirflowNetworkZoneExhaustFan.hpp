@@ -54,6 +54,11 @@ namespace model {
     //@{
 
     virtual ~AirflowNetworkZoneExhaustFan() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkZoneExhaustFan(const AirflowNetworkZoneExhaustFan& other) = default;
+    AirflowNetworkZoneExhaustFan(AirflowNetworkZoneExhaustFan&& other) = default;
+    AirflowNetworkZoneExhaustFan& operator=(const AirflowNetworkZoneExhaustFan&) = default;
+    AirflowNetworkZoneExhaustFan& operator=(AirflowNetworkZoneExhaustFan&&) = default;
 
     //@}
 

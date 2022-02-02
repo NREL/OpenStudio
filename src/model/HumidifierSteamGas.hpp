@@ -56,6 +56,11 @@ namespace model {
     explicit HumidifierSteamGas(const Model& model);
 
     virtual ~HumidifierSteamGas() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HumidifierSteamGas(const HumidifierSteamGas& other) = default;
+    HumidifierSteamGas(HumidifierSteamGas&& other) = default;
+    HumidifierSteamGas& operator=(const HumidifierSteamGas&) = default;
+    HumidifierSteamGas& operator=(HumidifierSteamGas&&) = default;
 
     //@}
 

@@ -56,6 +56,11 @@ namespace model {
     explicit ScheduleTypeLimits(const Model& model);
 
     virtual ~ScheduleTypeLimits() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleTypeLimits(const ScheduleTypeLimits& other) = default;
+    ScheduleTypeLimits(ScheduleTypeLimits&& other) = default;
+    ScheduleTypeLimits& operator=(const ScheduleTypeLimits&) = default;
+    ScheduleTypeLimits& operator=(ScheduleTypeLimits&&) = default;
 
     //@}
 

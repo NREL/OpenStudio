@@ -55,6 +55,11 @@ namespace model {
     explicit EvaporativeFluidCoolerSingleSpeed(const Model& model);
 
     virtual ~EvaporativeFluidCoolerSingleSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EvaporativeFluidCoolerSingleSpeed(const EvaporativeFluidCoolerSingleSpeed& other) = default;
+    EvaporativeFluidCoolerSingleSpeed(EvaporativeFluidCoolerSingleSpeed&& other) = default;
+    EvaporativeFluidCoolerSingleSpeed& operator=(const EvaporativeFluidCoolerSingleSpeed&) = default;
+    EvaporativeFluidCoolerSingleSpeed& operator=(EvaporativeFluidCoolerSingleSpeed&&) = default;
 
     //@}
 

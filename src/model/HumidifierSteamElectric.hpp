@@ -55,6 +55,11 @@ namespace model {
     explicit HumidifierSteamElectric(const Model& model);
 
     virtual ~HumidifierSteamElectric() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HumidifierSteamElectric(const HumidifierSteamElectric& other) = default;
+    HumidifierSteamElectric(HumidifierSteamElectric&& other) = default;
+    HumidifierSteamElectric& operator=(const HumidifierSteamElectric&) = default;
+    HumidifierSteamElectric& operator=(HumidifierSteamElectric&&) = default;
 
     //@}
 

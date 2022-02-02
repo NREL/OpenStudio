@@ -73,6 +73,11 @@ namespace model {
     //@{
 
     virtual ~Building() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Building(const Building& other) = default;
+    Building(Building&& other) = default;
+    Building& operator=(const Building&) = default;
+    Building& operator=(Building&&) = default;
 
     //@}
 

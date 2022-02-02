@@ -52,6 +52,11 @@ namespace model {
     explicit SetpointManagerWarmest(const Model& model);
 
     virtual ~SetpointManagerWarmest() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerWarmest(const SetpointManagerWarmest& other) = default;
+    SetpointManagerWarmest(SetpointManagerWarmest&& other) = default;
+    SetpointManagerWarmest& operator=(const SetpointManagerWarmest&) = default;
+    SetpointManagerWarmest& operator=(SetpointManagerWarmest&&) = default;
 
     static IddObjectType iddObjectType();
 

@@ -56,6 +56,11 @@ namespace model {
     ZoneHVACUnitHeater(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil);
 
     virtual ~ZoneHVACUnitHeater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACUnitHeater(const ZoneHVACUnitHeater& other) = default;
+    ZoneHVACUnitHeater(ZoneHVACUnitHeater&& other) = default;
+    ZoneHVACUnitHeater& operator=(const ZoneHVACUnitHeater&) = default;
+    ZoneHVACUnitHeater& operator=(ZoneHVACUnitHeater&&) = default;
 
     static IddObjectType iddObjectType();
 

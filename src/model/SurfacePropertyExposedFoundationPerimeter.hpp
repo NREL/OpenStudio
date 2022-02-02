@@ -55,6 +55,11 @@ namespace model {
     explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface, std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
 
     virtual ~SurfacePropertyExposedFoundationPerimeter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfacePropertyExposedFoundationPerimeter(const SurfacePropertyExposedFoundationPerimeter& other) = default;
+    SurfacePropertyExposedFoundationPerimeter(SurfacePropertyExposedFoundationPerimeter&& other) = default;
+    SurfacePropertyExposedFoundationPerimeter& operator=(const SurfacePropertyExposedFoundationPerimeter&) = default;
+    SurfacePropertyExposedFoundationPerimeter& operator=(SurfacePropertyExposedFoundationPerimeter&&) = default;
 
     //@}
 

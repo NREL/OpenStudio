@@ -74,6 +74,11 @@ namespace model {
     explicit SpaceType(const Model& model);
 
     virtual ~SpaceType() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceType(const SpaceType& other) = default;
+    SpaceType(SpaceType&& other) = default;
+    SpaceType& operator=(const SpaceType&) = default;
+    SpaceType& operator=(SpaceType&&) = default;
 
     //@}
 

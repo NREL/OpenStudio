@@ -55,6 +55,11 @@ namespace model {
     explicit AvailabilityManagerHighTemperatureTurnOn(const Model& model);
 
     virtual ~AvailabilityManagerHighTemperatureTurnOn() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerHighTemperatureTurnOn(const AvailabilityManagerHighTemperatureTurnOn& other) = default;
+    AvailabilityManagerHighTemperatureTurnOn(AvailabilityManagerHighTemperatureTurnOn&& other) = default;
+    AvailabilityManagerHighTemperatureTurnOn& operator=(const AvailabilityManagerHighTemperatureTurnOn&) = default;
+    AvailabilityManagerHighTemperatureTurnOn& operator=(AvailabilityManagerHighTemperatureTurnOn&&) = default;
 
     //@}
 

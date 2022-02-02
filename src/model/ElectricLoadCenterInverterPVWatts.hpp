@@ -56,6 +56,11 @@ namespace model {
     explicit ElectricLoadCenterInverterPVWatts(const Model& model);
 
     virtual ~ElectricLoadCenterInverterPVWatts() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricLoadCenterInverterPVWatts(const ElectricLoadCenterInverterPVWatts& other) = default;
+    ElectricLoadCenterInverterPVWatts(ElectricLoadCenterInverterPVWatts&& other) = default;
+    ElectricLoadCenterInverterPVWatts& operator=(const ElectricLoadCenterInverterPVWatts&) = default;
+    ElectricLoadCenterInverterPVWatts& operator=(ElectricLoadCenterInverterPVWatts&&) = default;
 
     //@}
 

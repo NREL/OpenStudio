@@ -69,6 +69,11 @@ namespace model {
     CoilHeatingWater(const Model& model);
 
     virtual ~CoilHeatingWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilHeatingWater(const CoilHeatingWater& other) = default;
+    CoilHeatingWater(CoilHeatingWater&& other) = default;
+    CoilHeatingWater& operator=(const CoilHeatingWater&) = default;
+    CoilHeatingWater& operator=(CoilHeatingWater&&) = default;
 
     //@}
 

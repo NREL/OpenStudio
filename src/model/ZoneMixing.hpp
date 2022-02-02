@@ -56,6 +56,11 @@ namespace model {
     explicit ZoneMixing(const ThermalZone& thermalZone);
 
     virtual ~ZoneMixing() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneMixing(const ZoneMixing& other) = default;
+    ZoneMixing(ZoneMixing&& other) = default;
+    ZoneMixing& operator=(const ZoneMixing&) = default;
+    ZoneMixing& operator=(ZoneMixing&&) = default;
 
     //@}
 

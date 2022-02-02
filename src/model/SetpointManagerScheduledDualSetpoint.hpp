@@ -55,6 +55,11 @@ namespace model {
     explicit SetpointManagerScheduledDualSetpoint(const Model& model);
 
     virtual ~SetpointManagerScheduledDualSetpoint() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerScheduledDualSetpoint(const SetpointManagerScheduledDualSetpoint& other) = default;
+    SetpointManagerScheduledDualSetpoint(SetpointManagerScheduledDualSetpoint&& other) = default;
+    SetpointManagerScheduledDualSetpoint& operator=(const SetpointManagerScheduledDualSetpoint&) = default;
+    SetpointManagerScheduledDualSetpoint& operator=(SetpointManagerScheduledDualSetpoint&&) = default;
 
     //@}
 

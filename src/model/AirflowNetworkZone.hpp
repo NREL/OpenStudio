@@ -59,6 +59,11 @@ namespace model {
     //@{
 
     virtual ~AirflowNetworkZone() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkZone(const AirflowNetworkZone& other) = default;
+    AirflowNetworkZone(AirflowNetworkZone&& other) = default;
+    AirflowNetworkZone& operator=(const AirflowNetworkZone&) = default;
+    AirflowNetworkZone& operator=(AirflowNetworkZone&&) = default;
 
     //@}
 

@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputControlFiles() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputControlFiles(const OutputControlFiles& other) = default;
+    OutputControlFiles(OutputControlFiles&& other) = default;
+    OutputControlFiles& operator=(const OutputControlFiles&) = default;
+    OutputControlFiles& operator=(OutputControlFiles&&) = default;
 
     //@}
 

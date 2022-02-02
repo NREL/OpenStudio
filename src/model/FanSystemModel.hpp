@@ -80,6 +80,11 @@ namespace model {
     explicit FanSystemModel(const Model& model);
 
     virtual ~FanSystemModel() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FanSystemModel(const FanSystemModel& other) = default;
+    FanSystemModel(FanSystemModel&& other) = default;
+    FanSystemModel& operator=(const FanSystemModel&) = default;
+    FanSystemModel& operator=(FanSystemModel&&) = default;
 
     //@}
 

@@ -60,6 +60,11 @@ namespace model {
     explicit CurveTriquadratic(const Model& model);
 
     virtual ~CurveTriquadratic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveTriquadratic(const CurveTriquadratic& other) = default;
+    CurveTriquadratic(CurveTriquadratic&& other) = default;
+    CurveTriquadratic& operator=(const CurveTriquadratic&) = default;
+    CurveTriquadratic& operator=(CurveTriquadratic&&) = default;
 
     //@}
 

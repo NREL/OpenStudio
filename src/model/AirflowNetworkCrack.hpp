@@ -61,6 +61,11 @@ namespace model {
                         const AirflowNetworkReferenceCrackConditions& referenceCrackConditions);
 
     virtual ~AirflowNetworkCrack() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkCrack(const AirflowNetworkCrack& other) = default;
+    AirflowNetworkCrack(AirflowNetworkCrack&& other) = default;
+    AirflowNetworkCrack& operator=(const AirflowNetworkCrack&) = default;
+    AirflowNetworkCrack& operator=(AirflowNetworkCrack&&) = default;
 
     //@}
 

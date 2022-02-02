@@ -53,6 +53,11 @@ namespace model {
     explicit CoilCoolingCooledBeam(const Model& model);
 
     virtual ~CoilCoolingCooledBeam() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingCooledBeam(const CoilCoolingCooledBeam& other) = default;
+    CoilCoolingCooledBeam(CoilCoolingCooledBeam&& other) = default;
+    CoilCoolingCooledBeam& operator=(const CoilCoolingCooledBeam&) = default;
+    CoilCoolingCooledBeam& operator=(CoilCoolingCooledBeam&&) = default;
 
     //@}
 

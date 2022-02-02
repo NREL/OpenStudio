@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~StandardsInformationMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StandardsInformationMaterial(const StandardsInformationMaterial& other) = default;
+    StandardsInformationMaterial(StandardsInformationMaterial&& other) = default;
+    StandardsInformationMaterial& operator=(const StandardsInformationMaterial&) = default;
+    StandardsInformationMaterial& operator=(StandardsInformationMaterial&&) = default;
 
     //@}
 

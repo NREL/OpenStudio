@@ -53,6 +53,11 @@ namespace model {
     explicit SetpointManagerOutdoorAirReset(const Model& model);
 
     virtual ~SetpointManagerOutdoorAirReset() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SetpointManagerOutdoorAirReset(const SetpointManagerOutdoorAirReset& other) = default;
+    SetpointManagerOutdoorAirReset(SetpointManagerOutdoorAirReset&& other) = default;
+    SetpointManagerOutdoorAirReset& operator=(const SetpointManagerOutdoorAirReset&) = default;
+    SetpointManagerOutdoorAirReset& operator=(SetpointManagerOutdoorAirReset&&) = default;
 
     static IddObjectType iddObjectType();
 

@@ -64,6 +64,11 @@ namespace model {
     explicit GroundHeatExchangerVertical(const Model& model);
 
     virtual ~GroundHeatExchangerVertical() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GroundHeatExchangerVertical(const GroundHeatExchangerVertical& other) = default;
+    GroundHeatExchangerVertical(GroundHeatExchangerVertical&& other) = default;
+    GroundHeatExchangerVertical& operator=(const GroundHeatExchangerVertical&) = default;
+    GroundHeatExchangerVertical& operator=(GroundHeatExchangerVertical&&) = default;
 
     //@}
 

@@ -58,6 +58,11 @@ namespace model {
     explicit CoilCoolingDXMultiSpeed(const Model& model);
 
     virtual ~CoilCoolingDXMultiSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CoilCoolingDXMultiSpeed(const CoilCoolingDXMultiSpeed& other) = default;
+    CoilCoolingDXMultiSpeed(CoilCoolingDXMultiSpeed&& other) = default;
+    CoilCoolingDXMultiSpeed& operator=(const CoilCoolingDXMultiSpeed&) = default;
+    CoilCoolingDXMultiSpeed& operator=(CoilCoolingDXMultiSpeed&&) = default;
 
     //@}
 

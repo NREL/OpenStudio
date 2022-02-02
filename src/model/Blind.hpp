@@ -55,6 +55,11 @@ namespace model {
                    double backSideSlatDiffuseSolarReflectance = 0.5, double slatBeamVisibleTransmittance = 0.0);
 
     virtual ~Blind() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Blind(const Blind& other) = default;
+    Blind(Blind&& other) = default;
+    Blind& operator=(const Blind&) = default;
+    Blind& operator=(Blind&&) = default;
 
     //@}
 

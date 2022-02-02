@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~GasLayer() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GasLayer(const GasLayer& other) = default;
+    GasLayer(GasLayer&& other) = default;
+    GasLayer& operator=(const GasLayer&) = default;
+    GasLayer& operator=(GasLayer&&) = default;
 
     //@}
    protected:

@@ -58,6 +58,11 @@ namespace model {
                                                               double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor);
 
     virtual ~MaterialPropertyMoisturePenetrationDepthSettings() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    MaterialPropertyMoisturePenetrationDepthSettings(const MaterialPropertyMoisturePenetrationDepthSettings& other) = default;
+    MaterialPropertyMoisturePenetrationDepthSettings(MaterialPropertyMoisturePenetrationDepthSettings&& other) = default;
+    MaterialPropertyMoisturePenetrationDepthSettings& operator=(const MaterialPropertyMoisturePenetrationDepthSettings&) = default;
+    MaterialPropertyMoisturePenetrationDepthSettings& operator=(MaterialPropertyMoisturePenetrationDepthSettings&&) = default;
 
     //@}
 

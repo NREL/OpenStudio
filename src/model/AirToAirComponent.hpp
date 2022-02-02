@@ -54,6 +54,11 @@ namespace model {
     AirToAirComponent(IddObjectType type, const Model& model);
 
     virtual ~AirToAirComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirToAirComponent(const AirToAirComponent& other) = default;
+    AirToAirComponent(AirToAirComponent&& other) = default;
+    AirToAirComponent& operator=(const AirToAirComponent&) = default;
+    AirToAirComponent& operator=(AirToAirComponent&&) = default;
 
     /** Returns the primary air stream inlet port.
    *

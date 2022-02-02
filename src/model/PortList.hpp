@@ -58,6 +58,11 @@ namespace model {
     explicit PortList(const HVACComponent& comp);
 
     virtual ~PortList() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PortList(const PortList& other) = default;
+    PortList(PortList&& other) = default;
+    PortList& operator=(const PortList&) = default;
+    PortList& operator=(PortList&&) = default;
 
     static IddObjectType iddObjectType();
 

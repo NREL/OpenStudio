@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~LightingSimulationControl() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LightingSimulationControl(const LightingSimulationControl& other) = default;
+    LightingSimulationControl(LightingSimulationControl&& other) = default;
+    LightingSimulationControl& operator=(const LightingSimulationControl&) = default;
+    LightingSimulationControl& operator=(LightingSimulationControl&&) = default;
 
     //@}
     /** @name Static Methods */

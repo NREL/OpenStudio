@@ -67,6 +67,11 @@ namespace model {
     explicit RenderingColor(const Model& model);
 
     virtual ~RenderingColor() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RenderingColor(const RenderingColor& other) = default;
+    RenderingColor(RenderingColor&& other) = default;
+    RenderingColor& operator=(const RenderingColor&) = default;
+    RenderingColor& operator=(RenderingColor&&) = default;
 
     static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
 

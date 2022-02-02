@@ -55,6 +55,11 @@ namespace model {
     explicit ElectricEquipmentDefinition(const Model& model);
 
     virtual ~ElectricEquipmentDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ElectricEquipmentDefinition(const ElectricEquipmentDefinition& other) = default;
+    ElectricEquipmentDefinition(ElectricEquipmentDefinition&& other) = default;
+    ElectricEquipmentDefinition& operator=(const ElectricEquipmentDefinition&) = default;
+    ElectricEquipmentDefinition& operator=(ElectricEquipmentDefinition&&) = default;
 
     //@}
     /** @name Static Methods */

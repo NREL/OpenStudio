@@ -53,6 +53,11 @@ namespace model {
     explicit SizingSystem(const Model& model, const AirLoopHVAC& airLoopHVAC);
 
     virtual ~SizingSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SizingSystem(const SizingSystem& other) = default;
+    SizingSystem(SizingSystem&& other) = default;
+    SizingSystem& operator=(const SizingSystem&) = default;
+    SizingSystem& operator=(SizingSystem&&) = default;
 
     static IddObjectType iddObjectType();
 

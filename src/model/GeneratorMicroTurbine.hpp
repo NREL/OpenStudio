@@ -66,6 +66,11 @@ namespace model {
     explicit GeneratorMicroTurbine(const Model& model);
 
     virtual ~GeneratorMicroTurbine() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorMicroTurbine(const GeneratorMicroTurbine& other) = default;
+    GeneratorMicroTurbine(GeneratorMicroTurbine&& other) = default;
+    GeneratorMicroTurbine& operator=(const GeneratorMicroTurbine&) = default;
+    GeneratorMicroTurbine& operator=(GeneratorMicroTurbine&&) = default;
 
     virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const;
 

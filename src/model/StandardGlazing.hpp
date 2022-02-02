@@ -55,6 +55,11 @@ namespace model {
     explicit StandardGlazing(const Model& model, const std::string& opticalDataType = "SpectralAverage", double thickness = 0.1);
 
     virtual ~StandardGlazing() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    StandardGlazing(const StandardGlazing& other) = default;
+    StandardGlazing(StandardGlazing&& other) = default;
+    StandardGlazing& operator=(const StandardGlazing&) = default;
+    StandardGlazing& operator=(StandardGlazing&&) = default;
 
     //@}
     /** @name Static Methods */

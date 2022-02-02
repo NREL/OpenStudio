@@ -50,6 +50,11 @@ namespace model {
   {
    public:
     virtual ~ExteriorLoadInstance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExteriorLoadInstance(const ExteriorLoadInstance& other) = default;
+    ExteriorLoadInstance(ExteriorLoadInstance&& other) = default;
+    ExteriorLoadInstance& operator=(const ExteriorLoadInstance&) = default;
+    ExteriorLoadInstance& operator=(ExteriorLoadInstance&&) = default;
 
     /** Returns the definition of this instance. **/
     ExteriorLoadDefinition definition() const;

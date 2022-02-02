@@ -52,6 +52,11 @@ namespace model {
   {
    public:
     virtual ~InsideSurfaceConvectionAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    InsideSurfaceConvectionAlgorithm(const InsideSurfaceConvectionAlgorithm& other) = default;
+    InsideSurfaceConvectionAlgorithm(InsideSurfaceConvectionAlgorithm&& other) = default;
+    InsideSurfaceConvectionAlgorithm& operator=(const InsideSurfaceConvectionAlgorithm&) = default;
+    InsideSurfaceConvectionAlgorithm& operator=(InsideSurfaceConvectionAlgorithm&&) = default;
 
     /** @name Static Methods */
     //@{

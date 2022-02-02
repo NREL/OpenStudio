@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputJSON() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputJSON(const OutputJSON& other) = default;
+    OutputJSON(OutputJSON&& other) = default;
+    OutputJSON& operator=(const OutputJSON&) = default;
+    OutputJSON& operator=(OutputJSON&&) = default;
 
     //@}
 

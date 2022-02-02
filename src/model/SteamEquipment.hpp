@@ -57,6 +57,11 @@ namespace model {
     explicit SteamEquipment(const SteamEquipmentDefinition& definition);
 
     virtual ~SteamEquipment() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SteamEquipment(const SteamEquipment& other) = default;
+    SteamEquipment(SteamEquipment&& other) = default;
+    SteamEquipment& operator=(const SteamEquipment&) = default;
+    SteamEquipment& operator=(SteamEquipment&&) = default;
 
     //@}
 

@@ -57,6 +57,11 @@ namespace model {
                                                                      const std::string& fMUInstanceName, const std::string& fMUVariableName);
 
     virtual ~ExternalInterfaceFunctionalMockupUnitImportFromVariable() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceFunctionalMockupUnitImportFromVariable(const ExternalInterfaceFunctionalMockupUnitImportFromVariable& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportFromVariable(ExternalInterfaceFunctionalMockupUnitImportFromVariable&& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportFromVariable& operator=(const ExternalInterfaceFunctionalMockupUnitImportFromVariable&) = default;
+    ExternalInterfaceFunctionalMockupUnitImportFromVariable& operator=(ExternalInterfaceFunctionalMockupUnitImportFromVariable&&) = default;
 
     //@}
 

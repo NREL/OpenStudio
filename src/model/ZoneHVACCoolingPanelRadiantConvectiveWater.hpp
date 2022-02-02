@@ -56,6 +56,11 @@ namespace model {
     explicit ZoneHVACCoolingPanelRadiantConvectiveWater(const Model& model);
 
     virtual ~ZoneHVACCoolingPanelRadiantConvectiveWater() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACCoolingPanelRadiantConvectiveWater(const ZoneHVACCoolingPanelRadiantConvectiveWater& other) = default;
+    ZoneHVACCoolingPanelRadiantConvectiveWater(ZoneHVACCoolingPanelRadiantConvectiveWater&& other) = default;
+    ZoneHVACCoolingPanelRadiantConvectiveWater& operator=(const ZoneHVACCoolingPanelRadiantConvectiveWater&) = default;
+    ZoneHVACCoolingPanelRadiantConvectiveWater& operator=(ZoneHVACCoolingPanelRadiantConvectiveWater&&) = default;
 
     //@}
 

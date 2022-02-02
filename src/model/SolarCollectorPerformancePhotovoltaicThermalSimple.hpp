@@ -55,6 +55,11 @@ namespace model {
     //@{
 
     virtual ~SolarCollectorPerformancePhotovoltaicThermalSimple() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorPerformancePhotovoltaicThermalSimple(const SolarCollectorPerformancePhotovoltaicThermalSimple& other) = default;
+    SolarCollectorPerformancePhotovoltaicThermalSimple(SolarCollectorPerformancePhotovoltaicThermalSimple&& other) = default;
+    SolarCollectorPerformancePhotovoltaicThermalSimple& operator=(const SolarCollectorPerformancePhotovoltaicThermalSimple&) = default;
+    SolarCollectorPerformancePhotovoltaicThermalSimple& operator=(SolarCollectorPerformancePhotovoltaicThermalSimple&&) = default;
 
     //@}
 

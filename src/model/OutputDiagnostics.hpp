@@ -50,6 +50,11 @@ namespace model {
     //@{
 
     virtual ~OutputDiagnostics() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputDiagnostics(const OutputDiagnostics& other) = default;
+    OutputDiagnostics(OutputDiagnostics&& other) = default;
+    OutputDiagnostics& operator=(const OutputDiagnostics&) = default;
+    OutputDiagnostics& operator=(OutputDiagnostics&&) = default;
 
     //@}
 

@@ -54,6 +54,11 @@ namespace model {
     explicit HeatExchangerAirToAirSensibleAndLatent(const Model& model);
 
     virtual ~HeatExchangerAirToAirSensibleAndLatent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    HeatExchangerAirToAirSensibleAndLatent(const HeatExchangerAirToAirSensibleAndLatent& other) = default;
+    HeatExchangerAirToAirSensibleAndLatent(HeatExchangerAirToAirSensibleAndLatent&& other) = default;
+    HeatExchangerAirToAirSensibleAndLatent& operator=(const HeatExchangerAirToAirSensibleAndLatent&) = default;
+    HeatExchangerAirToAirSensibleAndLatent& operator=(HeatExchangerAirToAirSensibleAndLatent&&) = default;
 
     static IddObjectType iddObjectType();
 

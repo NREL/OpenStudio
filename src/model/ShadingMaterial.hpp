@@ -49,6 +49,11 @@ namespace model {
     //@{
 
     virtual ~ShadingMaterial() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ShadingMaterial(const ShadingMaterial& other) = default;
+    ShadingMaterial(ShadingMaterial&& other) = default;
+    ShadingMaterial& operator=(const ShadingMaterial&) = default;
+    ShadingMaterial& operator=(ShadingMaterial&&) = default;
 
     //@}
    protected:

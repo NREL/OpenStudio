@@ -56,6 +56,11 @@ namespace model {
     explicit LightsDefinition(const Model& model);
 
     virtual ~LightsDefinition() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    LightsDefinition(const LightsDefinition& other) = default;
+    LightsDefinition(LightsDefinition&& other) = default;
+    LightsDefinition& operator=(const LightsDefinition&) = default;
+    LightsDefinition& operator=(LightsDefinition&&) = default;
 
     //@}
 

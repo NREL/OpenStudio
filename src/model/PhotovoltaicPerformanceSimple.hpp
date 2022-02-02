@@ -55,6 +55,11 @@ namespace model {
     explicit PhotovoltaicPerformanceSimple(const Model& model);
 
     virtual ~PhotovoltaicPerformanceSimple() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PhotovoltaicPerformanceSimple(const PhotovoltaicPerformanceSimple& other) = default;
+    PhotovoltaicPerformanceSimple(PhotovoltaicPerformanceSimple&& other) = default;
+    PhotovoltaicPerformanceSimple& operator=(const PhotovoltaicPerformanceSimple&) = default;
+    PhotovoltaicPerformanceSimple& operator=(PhotovoltaicPerformanceSimple&&) = default;
 
     //@}
 

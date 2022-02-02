@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~SiteGroundReflectance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SiteGroundReflectance(const SiteGroundReflectance& other) = default;
+    SiteGroundReflectance(SiteGroundReflectance&& other) = default;
+    SiteGroundReflectance& operator=(const SiteGroundReflectance&) = default;
+    SiteGroundReflectance& operator=(SiteGroundReflectance&&) = default;
 
     //@}
     /** @name Static Methods */

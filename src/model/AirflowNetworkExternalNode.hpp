@@ -58,6 +58,11 @@ namespace model {
     explicit AirflowNetworkExternalNode(const Model& model, const Curve& curve);
 
     virtual ~AirflowNetworkExternalNode() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkExternalNode(const AirflowNetworkExternalNode& other) = default;
+    AirflowNetworkExternalNode(AirflowNetworkExternalNode&& other) = default;
+    AirflowNetworkExternalNode& operator=(const AirflowNetworkExternalNode&) = default;
+    AirflowNetworkExternalNode& operator=(AirflowNetworkExternalNode&&) = default;
 
     //@}
 

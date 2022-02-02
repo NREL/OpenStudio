@@ -55,6 +55,11 @@ namespace model {
     explicit BuildingUnit(const Model& model);
 
     virtual ~BuildingUnit() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    BuildingUnit(const BuildingUnit& other) = default;
+    BuildingUnit(BuildingUnit&& other) = default;
+    BuildingUnit& operator=(const BuildingUnit&) = default;
+    BuildingUnit& operator=(BuildingUnit&&) = default;
 
     //@}
 

@@ -53,6 +53,11 @@ namespace model {
     explicit RoofVegetation(const Model& model, const std::string& roughness = "Smooth");
 
     virtual ~RoofVegetation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RoofVegetation(const RoofVegetation& other) = default;
+    RoofVegetation(RoofVegetation&& other) = default;
+    RoofVegetation& operator=(const RoofVegetation&) = default;
+    RoofVegetation& operator=(RoofVegetation&&) = default;
 
     //@}
 

@@ -52,6 +52,11 @@ namespace model {
   {
    public:
     virtual ~OutsideSurfaceConvectionAlgorithm() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutsideSurfaceConvectionAlgorithm(const OutsideSurfaceConvectionAlgorithm& other) = default;
+    OutsideSurfaceConvectionAlgorithm(OutsideSurfaceConvectionAlgorithm&& other) = default;
+    OutsideSurfaceConvectionAlgorithm& operator=(const OutsideSurfaceConvectionAlgorithm&) = default;
+    OutsideSurfaceConvectionAlgorithm& operator=(OutsideSurfaceConvectionAlgorithm&&) = default;
 
     /** @name Static Methods */
     //@{

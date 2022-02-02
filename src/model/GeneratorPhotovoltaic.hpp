@@ -69,6 +69,11 @@ namespace model {
     static GeneratorPhotovoltaic fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
     virtual ~GeneratorPhotovoltaic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorPhotovoltaic(const GeneratorPhotovoltaic& other) = default;
+    GeneratorPhotovoltaic(GeneratorPhotovoltaic&& other) = default;
+    GeneratorPhotovoltaic& operator=(const GeneratorPhotovoltaic&) = default;
+    GeneratorPhotovoltaic& operator=(GeneratorPhotovoltaic&&) = default;
 
     //@}
 

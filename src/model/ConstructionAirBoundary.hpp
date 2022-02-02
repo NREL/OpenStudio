@@ -57,6 +57,11 @@ namespace model {
     explicit ConstructionAirBoundary(const Model& model);
 
     virtual ~ConstructionAirBoundary() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConstructionAirBoundary(const ConstructionAirBoundary& other) = default;
+    ConstructionAirBoundary(ConstructionAirBoundary&& other) = default;
+    ConstructionAirBoundary& operator=(const ConstructionAirBoundary&) = default;
+    ConstructionAirBoundary& operator=(ConstructionAirBoundary&&) = default;
 
     //@}
 

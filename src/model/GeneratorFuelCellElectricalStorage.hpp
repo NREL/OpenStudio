@@ -55,6 +55,11 @@ namespace model {
     explicit GeneratorFuelCellElectricalStorage(const Model& model);
 
     virtual ~GeneratorFuelCellElectricalStorage() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellElectricalStorage(const GeneratorFuelCellElectricalStorage& other) = default;
+    GeneratorFuelCellElectricalStorage(GeneratorFuelCellElectricalStorage&& other) = default;
+    GeneratorFuelCellElectricalStorage& operator=(const GeneratorFuelCellElectricalStorage&) = default;
+    GeneratorFuelCellElectricalStorage& operator=(GeneratorFuelCellElectricalStorage&&) = default;
 
     //@}
 

@@ -55,6 +55,11 @@ namespace model {
     explicit RefrigerationCondenserCascade(const Model& model);
 
     virtual ~RefrigerationCondenserCascade() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationCondenserCascade(const RefrigerationCondenserCascade& other) = default;
+    RefrigerationCondenserCascade(RefrigerationCondenserCascade&& other) = default;
+    RefrigerationCondenserCascade& operator=(const RefrigerationCondenserCascade&) = default;
+    RefrigerationCondenserCascade& operator=(RefrigerationCondenserCascade&&) = default;
 
     //@}
 

@@ -60,6 +60,11 @@ namespace model {
                                                                    double initialValue);
 
     virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ExternalInterfaceFunctionalMockupUnitImportToActuator(const ExternalInterfaceFunctionalMockupUnitImportToActuator& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToActuator(ExternalInterfaceFunctionalMockupUnitImportToActuator&& other) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToActuator& operator=(const ExternalInterfaceFunctionalMockupUnitImportToActuator&) = default;
+    ExternalInterfaceFunctionalMockupUnitImportToActuator& operator=(ExternalInterfaceFunctionalMockupUnitImportToActuator&&) = default;
 
     //@}
 

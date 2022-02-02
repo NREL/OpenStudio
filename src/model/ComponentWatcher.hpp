@@ -61,6 +61,11 @@ namespace model {
     ComponentWatcher(ComponentData& componentData);
 
     virtual ~ComponentWatcher() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ComponentWatcher(const ComponentWatcher& other) = default;
+    ComponentWatcher(ComponentWatcher&& other) = default;
+    ComponentWatcher& operator=(const ComponentWatcher&) = default;
+    ComponentWatcher& operator=(ComponentWatcher&&) = default;
 
     //@}
     /** @name Getters */

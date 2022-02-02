@@ -58,6 +58,11 @@ namespace model {
     explicit AirLoopHVACUnitarySystem(const Model& model);
 
     virtual ~AirLoopHVACUnitarySystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACUnitarySystem(const AirLoopHVACUnitarySystem& other) = default;
+    AirLoopHVACUnitarySystem(AirLoopHVACUnitarySystem&& other) = default;
+    AirLoopHVACUnitarySystem& operator=(const AirLoopHVACUnitarySystem&) = default;
+    AirLoopHVACUnitarySystem& operator=(AirLoopHVACUnitarySystem&&) = default;
 
     //@}
 

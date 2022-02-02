@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~FoundationKivaSettings() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FoundationKivaSettings(const FoundationKivaSettings& other) = default;
+    FoundationKivaSettings(FoundationKivaSettings&& other) = default;
+    FoundationKivaSettings& operator=(const FoundationKivaSettings&) = default;
+    FoundationKivaSettings& operator=(FoundationKivaSettings&&) = default;
 
     //@}
 

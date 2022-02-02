@@ -55,6 +55,11 @@ namespace model {
     //@{
 
     virtual ~Material() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Material(const Material& other) = default;
+    Material(Material&& other) = default;
+    Material& operator=(const Material&) = default;
+    Material& operator=(Material&&) = default;
 
     //@}
     /** @name Getters */

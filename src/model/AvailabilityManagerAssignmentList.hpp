@@ -64,6 +64,11 @@ namespace model {
     explicit AvailabilityManagerAssignmentList(const Loop& loop);
 
     virtual ~AvailabilityManagerAssignmentList() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AvailabilityManagerAssignmentList(const AvailabilityManagerAssignmentList& other) = default;
+    AvailabilityManagerAssignmentList(AvailabilityManagerAssignmentList&& other) = default;
+    AvailabilityManagerAssignmentList& operator=(const AvailabilityManagerAssignmentList&) = default;
+    AvailabilityManagerAssignmentList& operator=(AvailabilityManagerAssignmentList&&) = default;
 
     //@}
 

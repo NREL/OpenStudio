@@ -57,6 +57,11 @@ namespace model {
    *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty
    *  ScheduleCompact. */
     virtual ~ScheduleCompact() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleCompact(const ScheduleCompact& other) = default;
+    ScheduleCompact(ScheduleCompact&& other) = default;
+    ScheduleCompact& operator=(const ScheduleCompact&) = default;
+    ScheduleCompact& operator=(ScheduleCompact&&) = default;
 
     //@}
 

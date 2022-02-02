@@ -44,6 +44,11 @@ namespace model {
   {
    public:
     virtual ~SizingPeriod() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SizingPeriod(const SizingPeriod& other) = default;
+    SizingPeriod(SizingPeriod&& other) = default;
+    SizingPeriod& operator=(const SizingPeriod&) = default;
+    SizingPeriod& operator=(SizingPeriod&&) = default;
 
     // ensure that this object does not contain the date 2/29
     void ensureNoLeapDays();

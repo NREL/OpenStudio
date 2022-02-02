@@ -50,6 +50,11 @@ namespace model {
   {
    public:
     virtual ~SpaceLoadInstance() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SpaceLoadInstance(const SpaceLoadInstance& other) = default;
+    SpaceLoadInstance(SpaceLoadInstance&& other) = default;
+    SpaceLoadInstance& operator=(const SpaceLoadInstance&) = default;
+    SpaceLoadInstance& operator=(SpaceLoadInstance&&) = default;
 
     /** Returns the definition of this instance. **/
     SpaceLoadDefinition definition() const;

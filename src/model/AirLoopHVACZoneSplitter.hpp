@@ -58,6 +58,11 @@ namespace model {
     explicit AirLoopHVACZoneSplitter(const Model& model);
 
     virtual ~AirLoopHVACZoneSplitter() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACZoneSplitter(const AirLoopHVACZoneSplitter& other) = default;
+    AirLoopHVACZoneSplitter(AirLoopHVACZoneSplitter&& other) = default;
+    AirLoopHVACZoneSplitter& operator=(const AirLoopHVACZoneSplitter&) = default;
+    AirLoopHVACZoneSplitter& operator=(AirLoopHVACZoneSplitter&&) = default;
 
     /// Returns the IddObjectType.
     static IddObjectType iddObjectType();

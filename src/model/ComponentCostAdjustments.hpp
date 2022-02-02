@@ -57,6 +57,11 @@ namespace model {
     //@{
 
     virtual ~ComponentCostAdjustments() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ComponentCostAdjustments(const ComponentCostAdjustments& other) = default;
+    ComponentCostAdjustments(ComponentCostAdjustments&& other) = default;
+    ComponentCostAdjustments& operator=(const ComponentCostAdjustments&) = default;
+    ComponentCostAdjustments& operator=(ComponentCostAdjustments&&) = default;
 
     //@}
     /** @name Getters */

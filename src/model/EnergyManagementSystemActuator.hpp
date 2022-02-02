@@ -72,6 +72,11 @@ namespace model {
                                             const std::string& actuatedComponentControlType, const Space& space);
 
     virtual ~EnergyManagementSystemActuator() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    EnergyManagementSystemActuator(const EnergyManagementSystemActuator& other) = default;
+    EnergyManagementSystemActuator(EnergyManagementSystemActuator&& other) = default;
+    EnergyManagementSystemActuator& operator=(const EnergyManagementSystemActuator&) = default;
+    EnergyManagementSystemActuator& operator=(EnergyManagementSystemActuator&&) = default;
 
     //@}
 

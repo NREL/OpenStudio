@@ -55,6 +55,11 @@ namespace model {
     explicit RefrigerationSubcoolerMechanical(const Model& model);
 
     virtual ~RefrigerationSubcoolerMechanical() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RefrigerationSubcoolerMechanical(const RefrigerationSubcoolerMechanical& other) = default;
+    RefrigerationSubcoolerMechanical(RefrigerationSubcoolerMechanical&& other) = default;
+    RefrigerationSubcoolerMechanical& operator=(const RefrigerationSubcoolerMechanical&) = default;
+    RefrigerationSubcoolerMechanical& operator=(RefrigerationSubcoolerMechanical&&) = default;
 
     //@}
 

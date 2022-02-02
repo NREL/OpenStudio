@@ -64,6 +64,11 @@ namespace model {
     explicit AirLoopHVACOutdoorAirSystem(Model& model, const ControllerOutdoorAir& controller);
 
     virtual ~AirLoopHVACOutdoorAirSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& other) = default;
+    AirLoopHVACOutdoorAirSystem(AirLoopHVACOutdoorAirSystem&& other) = default;
+    AirLoopHVACOutdoorAirSystem& operator=(const AirLoopHVACOutdoorAirSystem&) = default;
+    AirLoopHVACOutdoorAirSystem& operator=(AirLoopHVACOutdoorAirSystem&&) = default;
 
     /** Returns the return air port of the outdoor air system. */
     unsigned returnAirPort() const;

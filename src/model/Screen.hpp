@@ -54,6 +54,11 @@ namespace model {
                     double screenMaterialSpacing = 0.00157, double screenMaterialDiameter = 0.000381);
 
     virtual ~Screen() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Screen(const Screen& other) = default;
+    Screen(Screen&& other) = default;
+    Screen& operator=(const Screen&) = default;
+    Screen& operator=(Screen&&) = default;
 
     //@}
 

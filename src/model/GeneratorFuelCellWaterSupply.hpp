@@ -67,6 +67,11 @@ namespace model {
                                           const Node& waterTempNode, const std::string& waterTempMode);
 
     virtual ~GeneratorFuelCellWaterSupply() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelCellWaterSupply(const GeneratorFuelCellWaterSupply& other) = default;
+    GeneratorFuelCellWaterSupply(GeneratorFuelCellWaterSupply&& other) = default;
+    GeneratorFuelCellWaterSupply& operator=(const GeneratorFuelCellWaterSupply&) = default;
+    GeneratorFuelCellWaterSupply& operator=(GeneratorFuelCellWaterSupply&&) = default;
 
     //@}
 

@@ -52,6 +52,11 @@ namespace model {
     explicit SurfacePropertyOtherSideConditionsModel(const Model& model);
 
     virtual ~SurfacePropertyOtherSideConditionsModel() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfacePropertyOtherSideConditionsModel(const SurfacePropertyOtherSideConditionsModel& other) = default;
+    SurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel&& other) = default;
+    SurfacePropertyOtherSideConditionsModel& operator=(const SurfacePropertyOtherSideConditionsModel&) = default;
+    SurfacePropertyOtherSideConditionsModel& operator=(SurfacePropertyOtherSideConditionsModel&&) = default;
 
     //@}
 

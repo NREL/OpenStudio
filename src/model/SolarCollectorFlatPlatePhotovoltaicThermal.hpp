@@ -57,6 +57,11 @@ namespace model {
     explicit SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model);
 
     virtual ~SolarCollectorFlatPlatePhotovoltaicThermal() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SolarCollectorFlatPlatePhotovoltaicThermal(const SolarCollectorFlatPlatePhotovoltaicThermal& other) = default;
+    SolarCollectorFlatPlatePhotovoltaicThermal(SolarCollectorFlatPlatePhotovoltaicThermal&& other) = default;
+    SolarCollectorFlatPlatePhotovoltaicThermal& operator=(const SolarCollectorFlatPlatePhotovoltaicThermal&) = default;
+    SolarCollectorFlatPlatePhotovoltaicThermal& operator=(SolarCollectorFlatPlatePhotovoltaicThermal&&) = default;
 
     //@}
 

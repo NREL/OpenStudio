@@ -51,6 +51,11 @@ namespace model {
     explicit ScheduleConstant(const Model& model);
 
     virtual ~ScheduleConstant() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleConstant(const ScheduleConstant& other) = default;
+    ScheduleConstant(ScheduleConstant&& other) = default;
+    ScheduleConstant& operator=(const ScheduleConstant&) = default;
+    ScheduleConstant& operator=(ScheduleConstant&&) = default;
 
     //@}
 

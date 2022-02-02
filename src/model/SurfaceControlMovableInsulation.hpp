@@ -58,6 +58,11 @@ namespace model {
     explicit SurfaceControlMovableInsulation(const Surface& surface, const Material& material);
 
     virtual ~SurfaceControlMovableInsulation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SurfaceControlMovableInsulation(const SurfaceControlMovableInsulation& other) = default;
+    SurfaceControlMovableInsulation(SurfaceControlMovableInsulation&& other) = default;
+    SurfaceControlMovableInsulation& operator=(const SurfaceControlMovableInsulation&) = default;
+    SurfaceControlMovableInsulation& operator=(SurfaceControlMovableInsulation&&) = default;
 
     //@}
 

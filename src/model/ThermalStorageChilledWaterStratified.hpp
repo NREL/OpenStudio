@@ -56,6 +56,11 @@ namespace model {
     explicit ThermalStorageChilledWaterStratified(const Model& model);
 
     virtual ~ThermalStorageChilledWaterStratified() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ThermalStorageChilledWaterStratified(const ThermalStorageChilledWaterStratified& other) = default;
+    ThermalStorageChilledWaterStratified(ThermalStorageChilledWaterStratified&& other) = default;
+    ThermalStorageChilledWaterStratified& operator=(const ThermalStorageChilledWaterStratified&) = default;
+    ThermalStorageChilledWaterStratified& operator=(ThermalStorageChilledWaterStratified&&) = default;
 
     //@}
 

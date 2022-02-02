@@ -55,6 +55,11 @@ namespace model {
   {
    public:
     virtual ~WaterToAirComponent() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    WaterToAirComponent(const WaterToAirComponent& other) = default;
+    WaterToAirComponent(WaterToAirComponent&& other) = default;
+    WaterToAirComponent& operator=(const WaterToAirComponent&) = default;
+    WaterToAirComponent& operator=(WaterToAirComponent&&) = default;
 
     /** Returns the air inlet port. **/
     virtual unsigned airInletPort() const;

@@ -53,6 +53,11 @@ namespace model {
     //@{
 
     virtual ~ScheduleInterval() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ScheduleInterval(const ScheduleInterval& other) = default;
+    ScheduleInterval(ScheduleInterval&& other) = default;
+    ScheduleInterval& operator=(const ScheduleInterval&) = default;
+    ScheduleInterval& operator=(ScheduleInterval&&) = default;
 
     //@}
 

@@ -54,6 +54,11 @@ namespace model {
     explicit CurveExponentialDecay(const Model& model);
 
     virtual ~CurveExponentialDecay() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveExponentialDecay(const CurveExponentialDecay& other) = default;
+    CurveExponentialDecay(CurveExponentialDecay&& other) = default;
+    CurveExponentialDecay& operator=(const CurveExponentialDecay&) = default;
+    CurveExponentialDecay& operator=(CurveExponentialDecay&&) = default;
 
     //@}
 

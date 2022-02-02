@@ -57,6 +57,11 @@ namespace model {
     explicit ZoneHVACIdealLoadsAirSystem(const Model& model);
 
     virtual ~ZoneHVACIdealLoadsAirSystem() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ZoneHVACIdealLoadsAirSystem(const ZoneHVACIdealLoadsAirSystem& other) = default;
+    ZoneHVACIdealLoadsAirSystem(ZoneHVACIdealLoadsAirSystem&& other) = default;
+    ZoneHVACIdealLoadsAirSystem& operator=(const ZoneHVACIdealLoadsAirSystem&) = default;
+    ZoneHVACIdealLoadsAirSystem& operator=(ZoneHVACIdealLoadsAirSystem&&) = default;
 
     //@}
 

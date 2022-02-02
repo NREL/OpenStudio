@@ -54,6 +54,11 @@ namespace model {
     explicit CurveBicubic(const Model& model);
 
     virtual ~CurveBicubic() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    CurveBicubic(const CurveBicubic& other) = default;
+    CurveBicubic(CurveBicubic&& other) = default;
+    CurveBicubic& operator=(const CurveBicubic&) = default;
+    CurveBicubic& operator=(CurveBicubic&&) = default;
 
     //@}
 

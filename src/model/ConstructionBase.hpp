@@ -52,6 +52,11 @@ namespace model {
     //@{
 
     virtual ~ConstructionBase() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ConstructionBase(const ConstructionBase& other) = default;
+    ConstructionBase(ConstructionBase&& other) = default;
+    ConstructionBase& operator=(const ConstructionBase&) = default;
+    ConstructionBase& operator=(ConstructionBase&&) = default;
 
     //@}
     /** @name Getters */

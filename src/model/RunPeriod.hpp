@@ -52,6 +52,11 @@ namespace model {
     //@{
 
     virtual ~RunPeriod() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    RunPeriod(const RunPeriod& other) = default;
+    RunPeriod(RunPeriod&& other) = default;
+    RunPeriod& operator=(const RunPeriod&) = default;
+    RunPeriod& operator=(RunPeriod&&) = default;
 
     //@}
     /** @name Getters */

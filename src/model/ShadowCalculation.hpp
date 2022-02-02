@@ -55,6 +55,11 @@ namespace model {
   {
    public:
     virtual ~ShadowCalculation() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    ShadowCalculation(const ShadowCalculation& other) = default;
+    ShadowCalculation(ShadowCalculation&& other) = default;
+    ShadowCalculation& operator=(const ShadowCalculation&) = default;
+    ShadowCalculation& operator=(ShadowCalculation&&) = default;
 
     /** @name Static Methods */
     //@{

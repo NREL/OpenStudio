@@ -57,6 +57,11 @@ namespace model {
     explicit PumpVariableSpeed(const Model& model);
 
     virtual ~PumpVariableSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PumpVariableSpeed(const PumpVariableSpeed& other) = default;
+    PumpVariableSpeed(PumpVariableSpeed&& other) = default;
+    PumpVariableSpeed& operator=(const PumpVariableSpeed&) = default;
+    PumpVariableSpeed& operator=(PumpVariableSpeed&&) = default;
 
     //@}
 

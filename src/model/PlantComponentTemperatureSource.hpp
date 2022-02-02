@@ -55,6 +55,11 @@ namespace model {
     explicit PlantComponentTemperatureSource(const Model& model);
 
     virtual ~PlantComponentTemperatureSource() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    PlantComponentTemperatureSource(const PlantComponentTemperatureSource& other) = default;
+    PlantComponentTemperatureSource(PlantComponentTemperatureSource&& other) = default;
+    PlantComponentTemperatureSource& operator=(const PlantComponentTemperatureSource&) = default;
+    PlantComponentTemperatureSource& operator=(PlantComponentTemperatureSource&&) = default;
 
     //@}
 

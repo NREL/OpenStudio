@@ -55,6 +55,11 @@ namespace model {
     explicit FluidCoolerTwoSpeed(const Model& model);
 
     virtual ~FluidCoolerTwoSpeed() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    FluidCoolerTwoSpeed(const FluidCoolerTwoSpeed& other) = default;
+    FluidCoolerTwoSpeed(FluidCoolerTwoSpeed&& other) = default;
+    FluidCoolerTwoSpeed& operator=(const FluidCoolerTwoSpeed&) = default;
+    FluidCoolerTwoSpeed& operator=(FluidCoolerTwoSpeed&&) = default;
 
     //@}
 

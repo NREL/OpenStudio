@@ -62,6 +62,11 @@ namespace model {
     //@{
 
     virtual ~Schedule() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    Schedule(const Schedule& other) = default;
+    Schedule(Schedule&& other) = default;
+    Schedule& operator=(const Schedule&) = default;
+    Schedule& operator=(Schedule&&) = default;
 
     //@}
    protected:

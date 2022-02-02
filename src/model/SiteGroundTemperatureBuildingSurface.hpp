@@ -54,6 +54,11 @@ namespace model {
     explicit SiteGroundTemperatureBuildingSurface(Model& model);
 
     virtual ~SiteGroundTemperatureBuildingSurface() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SiteGroundTemperatureBuildingSurface(const SiteGroundTemperatureBuildingSurface& other) = default;
+    SiteGroundTemperatureBuildingSurface(SiteGroundTemperatureBuildingSurface&& other) = default;
+    SiteGroundTemperatureBuildingSurface& operator=(const SiteGroundTemperatureBuildingSurface&) = default;
+    SiteGroundTemperatureBuildingSurface& operator=(SiteGroundTemperatureBuildingSurface&&) = default;
 
     //@}
     /** @name Static Methods */

@@ -82,6 +82,11 @@ namespace model {
     explicit GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve);
 
     virtual ~GeneratorFuelSupply() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    GeneratorFuelSupply(const GeneratorFuelSupply& other) = default;
+    GeneratorFuelSupply(GeneratorFuelSupply&& other) = default;
+    GeneratorFuelSupply& operator=(const GeneratorFuelSupply&) = default;
+    GeneratorFuelSupply& operator=(GeneratorFuelSupply&&) = default;
 
     //@}
 

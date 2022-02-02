@@ -51,6 +51,11 @@ namespace model {
     //@{
 
     virtual ~OutputControlReportingTolerances() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    OutputControlReportingTolerances(const OutputControlReportingTolerances& other) = default;
+    OutputControlReportingTolerances(OutputControlReportingTolerances&& other) = default;
+    OutputControlReportingTolerances& operator=(const OutputControlReportingTolerances&) = default;
+    OutputControlReportingTolerances& operator=(OutputControlReportingTolerances&&) = default;
 
     //@}
 

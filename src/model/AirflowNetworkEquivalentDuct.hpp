@@ -74,6 +74,11 @@ namespace model {
     //@{
 
     virtual ~AirflowNetworkEquivalentDuct() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AirflowNetworkEquivalentDuct(const AirflowNetworkEquivalentDuct& other) = default;
+    AirflowNetworkEquivalentDuct(AirflowNetworkEquivalentDuct&& other) = default;
+    AirflowNetworkEquivalentDuct& operator=(const AirflowNetworkEquivalentDuct&) = default;
+    AirflowNetworkEquivalentDuct& operator=(AirflowNetworkEquivalentDuct&&) = default;
 
     //@}
 

@@ -47,6 +47,11 @@ namespace model {
     explicit SkyTemperature(const Model& model);
 
     virtual ~SkyTemperature() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    SkyTemperature(const SkyTemperature& other) = default;
+    SkyTemperature(SkyTemperature&& other) = default;
+    SkyTemperature& operator=(const SkyTemperature&) = default;
+    SkyTemperature& operator=(SkyTemperature&&) = default;
 
     static IddObjectType iddObjectType();
 
