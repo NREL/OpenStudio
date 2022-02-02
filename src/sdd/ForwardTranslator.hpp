@@ -40,11 +40,7 @@
 #include "../model/ModelObject.hpp"
 
 #include <map>
-
-namespace pugi {
-class xml_node;
-class xml_document;
-}  // namespace pugi
+#include <pugixml.hpp>
 
 namespace openstudio {
 

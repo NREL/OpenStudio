@@ -154,7 +154,6 @@ namespace sdd {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-
   boost::optional<openstudio::model::Model> ReverseTranslator::loadModel(const openstudio::path& path, ProgressBar* progressBar) {
 
     m_path = path;
@@ -190,25 +189,17 @@ namespace sdd {
 
   std::vector<LogMessage> ReverseTranslator::warnings() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() == Warn; });
     return result;
   }
 
   std::vector<LogMessage> ReverseTranslator::errors() const {
     std::vector<LogMessage> result;
-
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-
+    std::vector<LogMessage> allMessages = m_logSink.logMessages();
+    std::copy_if(allMessages.cbegin(), allMessages.cend(), std::back_inserter(result),
+                 [](const auto& logMessage) { return logMessage.logLevel() > Warn; });
     return result;
   }
 
@@ -272,10 +263,10 @@ namespace sdd {
     // Shading Model
     std::string solDistribution = projectElement.child("SolDistribution").text().as_string();
     if (istringEqual("FullExterior", solDistribution)) {
-      model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+      auto simulationControl = result->getUniqueModelObject<model::SimulationControl>();
       simulationControl.setSolarDistribution("FullExterior");
     } else if (istringEqual("MinimalShadowing", solDistribution)) {
-      model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+      auto simulationControl = result->getUniqueModelObject<model::SimulationControl>();
       simulationControl.setSolarDistribution("MinimalShadowing");
     }
 
@@ -285,7 +276,7 @@ namespace sdd {
       m_autosize = false;
     }
 
-    model::SizingParameters sp = result->getUniqueModelObject<model::SizingParameters>();
+    auto sp = result->getUniqueModelObject<model::SizingParameters>();
     sp.setHeatingSizingFactor(1.0);
     sp.setCoolingSizingFactor(1.0);
 
@@ -508,7 +499,7 @@ namespace sdd {
 
     // translate shadingSurfaces
     std::vector<pugi::xml_node> exteriorShadingElements = makeVectorOfChildren(projectElement, "ExtShdgObj");
-    if (exteriorShadingElements.size() > 0) {
+    if (!exteriorShadingElements.empty()) {
       model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
       shadingSurfaceGroup.setName("Site ShadingGroup");
       shadingSurfaceGroup.setShadingSurfaceType("Site");
@@ -522,7 +513,7 @@ namespace sdd {
       }
     }
 
-    openstudio::model::Facility facility = result->getUniqueModelObject<openstudio::model::Facility>();
+    auto facility = result->getUniqueModelObject<openstudio::model::Facility>();
 
     // translate the building
     pugi::xml_node buildingElement = projectElement.child("Bldg");
@@ -810,12 +801,12 @@ namespace sdd {
     pugi::xml_node numTimeStepsPerHrElement = projectElement.child("NumTimeStepsPerHr");
     boost::optional<int> _numTimeStepsPerHr = lexicalCastToInt(numTimeStepsPerHrElement);
     if (_numTimeStepsPerHr) {
-      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+      auto timestep = result->getUniqueModelObject<model::Timestep>();
       timestep.setNumberOfTimestepsPerHour(_numTimeStepsPerHr.get());
     } else {
       LOG(Warn, "Cannot cast NumTimeStepsPerHr to an integer, NumTimeStepsPerHr: [" << numTimeStepsPerHrElement.text().as_string()
                                                                                     << "]. Defaulting to 4/hr.");
-      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+      auto timestep = result->getUniqueModelObject<model::Timestep>();
       timestep.setNumberOfTimestepsPerHour(4);
     }
 
@@ -1638,7 +1629,7 @@ namespace sdd {
       var.setReportingFrequency(interval);
     }
 
-    model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
+    auto rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
     rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
     rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
 
@@ -1700,7 +1691,7 @@ namespace sdd {
       return boost::none;
     }
 
-    model::SimulationControl simulationControl = model.getUniqueModelObject<model::SimulationControl>();
+    auto simulationControl = model.getUniqueModelObject<model::SimulationControl>();
 
     simulationControl.setMaximumNumberofWarmupDays(50);
 
@@ -1781,7 +1772,7 @@ namespace sdd {
     }
 
     // set lat, lon, elev
-    model::Site site = model.getUniqueModelObject<model::Site>();
+    auto site = model.getUniqueModelObject<model::Site>();
 
     // DLM: what about time zone and terrain?
 
@@ -1808,7 +1799,7 @@ namespace sdd {
     if (wtrMnTempSchRefElement) {
       boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(wtrMnTempSchRefElement.text().as_string());
       if (schedule) {
-        model::SiteWaterMainsTemperature waterMains = model.getUniqueModelObject<model::SiteWaterMainsTemperature>();
+        auto waterMains = model.getUniqueModelObject<model::SiteWaterMainsTemperature>();
         waterMains.setTemperatureSchedule(*schedule);
         return waterMains;
       }
