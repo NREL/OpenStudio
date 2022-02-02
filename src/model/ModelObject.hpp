@@ -89,11 +89,6 @@ namespace model {
     //@{
     virtual ~ModelObject() = default;
 
-    ModelObject(const ModelObject& other) = default;
-    ModelObject(ModelObject&& other) = default;
-    ModelObject& operator=(const ModelObject&) = default;
-    ModelObject& operator=(ModelObject&&) = default;
-
     /** Creates a deep copy of this object, placing it in this object's model(). Virtual
    *  implementation. */
     ModelObject clone() const;
