@@ -82,12 +82,12 @@ namespace model {
 
       // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
       GeneratorFuelCell fs = fuelCell();
-      GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+      auto fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
       // We get the clone of the parent generator's GeneratorFuelCellStackCooler so we can return that
       GeneratorFuelCellStackCooler hxClone = fsClone.stackCooler().get();
 
-      return hxClone;
+      return std::move(hxClone);
     }
 
     std::vector<IddObjectType> GeneratorFuelCellStackCooler_Impl::allowableChildTypes() const {

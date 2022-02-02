@@ -73,10 +73,7 @@ namespace model {
       : WaterToAirComponent_Impl(other, model, keepHandle) {}
 
     ModelObject CoilCoolingWaterToAirHeatPumpEquationFit_Impl::clone(Model model) const {
-      CoilCoolingWaterToAirHeatPumpEquationFit newCoil =
-        WaterToAirComponent_Impl::clone(model).optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>().get();
-
-      return newCoil;
+      return WaterToAirComponent_Impl::clone(model);
     }
 
     const std::vector<std::string>& CoilCoolingWaterToAirHeatPumpEquationFit_Impl::outputVariableNames() const {

@@ -614,8 +614,7 @@ namespace model {
     }
 
     ModelObject AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::clone(Model model) const {
-      AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed modelObjectClone =
-        ModelObject_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
       if (boost::optional<HVACComponent> supplyFan = this->supplyAirFan()) {
         modelObjectClone.setSupplyAirFan(supplyFan->clone(model).cast<HVACComponent>());
@@ -630,7 +629,7 @@ namespace model {
         modelObjectClone.setSupplementalHeatingCoil(supplementalHeatingCoil->clone(model).cast<HVACComponent>());
       }
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::children() const {

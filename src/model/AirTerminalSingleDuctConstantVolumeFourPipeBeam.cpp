@@ -195,20 +195,19 @@ namespace model {
 
     /* Clone this + any cooling and heating coils */
     ModelObject AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::clone(Model model) const {
-      AirTerminalSingleDuctConstantVolumeFourPipeBeam airTerminalCVFourPipeBeamClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+      auto airTerminalCVFourPipeBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
       if (boost::optional<HVACComponent> cc = coolingCoil()) {
-        HVACComponent coilCoolingClone = cc->clone(model).cast<HVACComponent>();
+        auto coilCoolingClone = cc->clone(model).cast<HVACComponent>();
         airTerminalCVFourPipeBeamClone.setCoolingCoil(coilCoolingClone);
       }
 
       if (boost::optional<HVACComponent> hc = heatingCoil()) {
-        HVACComponent coilHeatingClone = hc->clone(model).cast<HVACComponent>();
+        auto coilHeatingClone = hc->clone(model).cast<HVACComponent>();
         airTerminalCVFourPipeBeamClone.setHeatingCoil(coilHeatingClone);
       }
 
-      return airTerminalCVFourPipeBeamClone;
+      return std::move(airTerminalCVFourPipeBeamClone);
     }
 
     /* Children are the (optional) subclasses corresponding to the cooling and heating water side */

@@ -924,7 +924,6 @@ namespace model {
   }
 
   bool BillingPeriod::setStartDate(const Date& startDate) {
-    Date currentStartDate = this->startDate();
     Date currentEndDate = this->endDate();
 
     /* If startDate is before endDate then endDate is retained.
@@ -951,7 +950,6 @@ namespace model {
 
   bool BillingPeriod::setEndDate(const Date& endDate) {
     Date currentStartDate = this->startDate();
-    Date currentEndDate = this->endDate();
 
     unsigned currentNumberOfDays = this->numberOfDays();
 

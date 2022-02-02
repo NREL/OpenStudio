@@ -97,11 +97,11 @@ namespace model {
       // Clone all AVMs and populate the clone
       std::vector<AvailabilityManager> avmVector = availabilityManagers();
       for (const AvailabilityManager& avm : avmVector) {
-        AvailabilityManager avmClone = avm.clone(model).cast<AvailabilityManager>();
+        auto avmClone = avm.clone(model).cast<AvailabilityManager>();
         bool ok = avmListClone.addAvailabilityManager(avmClone);
         OS_ASSERT(ok);
       }
-      return avmListClone;
+      return std::move(avmListClone);
     }
 
     unsigned AvailabilityManagerAssignmentList_Impl::availabilityManagerPriority(const AvailabilityManager& avm) const {

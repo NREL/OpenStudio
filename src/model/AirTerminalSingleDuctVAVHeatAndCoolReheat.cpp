@@ -387,16 +387,15 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::clone(Model model) const {
-      AirTerminalSingleDuctVAVHeatAndCoolReheat modelObjectClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
 
       HVACComponent coil = this->reheatCoil();
 
-      HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
+      auto coilClone = coil.clone(model).cast<HVACComponent>();
 
       modelObjectClone.setReheatCoil(coilClone);
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosizedMaximumAirFlowRate() const {

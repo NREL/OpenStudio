@@ -227,7 +227,7 @@ namespace model {
         }
       }
 
-      return oaclone;
+      return std::move(oaclone);
     }
 
     std::vector<IdfObject> AirLoopHVACOutdoorAirSystem_Impl::remove() {

@@ -74,7 +74,6 @@ namespace model {
     CoilCoolingWater_Impl::CoilCoolingWater_Impl(const CoilCoolingWater_Impl& other, Model_Impl* model, bool keepHandle)
       : WaterToAirComponent_Impl(other, model, keepHandle) {}
 
-
     const std::vector<std::string>& CoilCoolingWater_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{"Cooling Coil Total Cooling Energy",
                                                    "Cooling Coil Sensible Cooling Energy",
@@ -354,9 +353,7 @@ namespace model {
     }
 
     ModelObject CoilCoolingWater_Impl::clone(Model model) const {
-      CoilCoolingWater newCoil = WaterToAirComponent_Impl::clone(model).optionalCast<CoilCoolingWater>().get();
-
-      return newCoil;
+      return WaterToAirComponent_Impl::clone(model);
     }
 
     unsigned CoilCoolingWater_Impl::airInletPort() const {

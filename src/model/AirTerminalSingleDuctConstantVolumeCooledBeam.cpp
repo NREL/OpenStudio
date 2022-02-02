@@ -236,14 +236,13 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::clone(Model model) const {
-      AirTerminalSingleDuctConstantVolumeCooledBeam airTerminalCVCooledBeamClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+      auto airTerminalCVCooledBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
-      HVACComponent coilCoolingClone = this->coilCoolingCooledBeam().clone(model).cast<HVACComponent>();
+      auto coilCoolingClone = this->coilCoolingCooledBeam().clone(model).cast<HVACComponent>();
 
       airTerminalCVCooledBeamClone.setCoolingCoil(coilCoolingClone);
 
-      return airTerminalCVCooledBeamClone;
+      return std::move(airTerminalCVCooledBeamClone);
     }
 
     std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::children() const {

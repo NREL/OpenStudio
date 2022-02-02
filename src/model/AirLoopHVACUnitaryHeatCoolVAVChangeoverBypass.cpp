@@ -434,12 +434,11 @@ namespace model {
     }
 
     ModelObject AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::clone(Model model) const {
-      AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitaryClone =
-        StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+      auto unitaryClone = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
-      HVACComponent heatingCoilClone = this->heatingCoil().clone(model).cast<HVACComponent>();
-      HVACComponent coolingCoilClone = this->coolingCoil().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = this->heatingCoil().clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = this->coolingCoil().clone(model).cast<HVACComponent>();
 
       unitaryClone.setSupplyAirFan(supplyFanClone);
       unitaryClone.setHeatingCoil(heatingCoilClone);
@@ -454,7 +453,7 @@ namespace model {
       Node node(model);
       model.connect(unitaryClone, this->plenumorMixerAirPort(), node, node.inletPort());
 
-      return unitaryClone;
+      return std::move(unitaryClone);
     }
 
     std::vector<IdfObject> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::remove() {

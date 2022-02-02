@@ -243,7 +243,6 @@ namespace model {
     : ModelObject(RunPeriodControlSpecialDays::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RunPeriodControlSpecialDays_Impl>());
     getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(monthOfYear, day);
-    Date test = this->startDate();
   }
 
   RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
@@ -251,7 +250,6 @@ namespace model {
     : ModelObject(RunPeriodControlSpecialDays::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RunPeriodControlSpecialDays_Impl>());
     getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(nth, dayOfWeek, monthOfYear);
-    Date test = this->startDate();
   }
 
   std::vector<std::string> RunPeriodControlSpecialDays::specialDayTypeValues() {

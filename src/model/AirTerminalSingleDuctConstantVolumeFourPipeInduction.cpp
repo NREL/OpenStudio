@@ -228,21 +228,20 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::clone(Model model) const {
-      AirTerminalSingleDuctConstantVolumeFourPipeInduction airTerminalCVFourPipeInductionClone =
-        StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+      auto airTerminalCVFourPipeInductionClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
 
       if (boost::optional<HVACComponent> coolingCoil = this->coolingCoil()) {
-        HVACComponent coilCoolingClone = coolingCoil->clone(model).cast<HVACComponent>();
+        auto coilCoolingClone = coolingCoil->clone(model).cast<HVACComponent>();
         airTerminalCVFourPipeInductionClone.setCoolingCoil(coilCoolingClone);
       }
 
-      HVACComponent coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
+      auto coilHeatingClone = this->heatingCoil().clone(model).cast<HVACComponent>();
       airTerminalCVFourPipeInductionClone.setHeatingCoil(coilHeatingClone);
 
       // Reset the inducedAirInletPort (inletPort and outletPort are already handled by the StraightComponent_Impl::clone() method)
       airTerminalCVFourPipeInductionClone.setString(airTerminalCVFourPipeInductionClone.inducedAirInletPort(), "");
 
-      return airTerminalCVFourPipeInductionClone;
+      return std::move(airTerminalCVFourPipeInductionClone);
     }
 
     std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::children() const {

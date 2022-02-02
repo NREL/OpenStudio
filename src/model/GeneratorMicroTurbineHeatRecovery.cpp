@@ -89,21 +89,21 @@ namespace model {
 
       // We call the parent generator's Clone method which will clone both the mchp and mchpHR
       GeneratorMicroTurbine mchp = generatorMicroTurbine();
-      GeneratorMicroTurbine mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
+      auto mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
 
       // We get the clone of the parent generator's MTHR so we can return that
       GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpClone.generatorMicroTurbineHeatRecovery().get();
 
-      return mchpHRClone;
+      return std::move(mchpHRClone);
     }
 
     std::vector<IddObjectType> GeneratorMicroTurbineHeatRecovery_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Curve_Bicubic);
-      result.push_back(IddObjectType::OS_Curve_Biquadratic);
-      result.push_back(IddObjectType::OS_Curve_Cubic);
-      result.push_back(IddObjectType::OS_Curve_Quadratic);
-      return result;
+      return {
+        IddObjectType::OS_Curve_Bicubic,
+        IddObjectType::OS_Curve_Biquadratic,
+        IddObjectType::OS_Curve_Cubic,
+        IddObjectType::OS_Curve_Quadratic,
+      };
     }
 
     // Returns the children objects (max of 4 curves)

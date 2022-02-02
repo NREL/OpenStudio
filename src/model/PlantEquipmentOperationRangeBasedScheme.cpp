@@ -317,7 +317,7 @@ namespace model {
         }
       }
 
-      return clone;
+      return std::move(clone);
     }
 
   }  // namespace detail

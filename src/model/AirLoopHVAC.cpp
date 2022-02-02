@@ -727,7 +727,7 @@ namespace model {
     }
 
     ModelObject AirLoopHVAC_Impl::clone(Model model) const {
-      AirLoopHVAC airLoopClone = Loop_Impl::clone(model).cast<AirLoopHVAC>();
+      auto airLoopClone = Loop_Impl::clone(model).cast<AirLoopHVAC>();
 
       airLoopClone.setString(supplyInletPort(), "");
       airLoopClone.setString(supplyOutletPortA(), "");
@@ -745,7 +745,7 @@ namespace model {
       }
 
       {
-        AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
+        auto avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
         avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
         airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
       }
@@ -868,7 +868,7 @@ namespace model {
         airLoopClone.addBranchForHVACComponent(termclone);
       }
 
-      return airLoopClone;
+      return std::move(airLoopClone);
     }
 
     std::vector<HVACComponent> AirLoopHVAC_Impl::terminals() const {
