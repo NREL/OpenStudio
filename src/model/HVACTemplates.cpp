@@ -119,7 +119,7 @@ namespace openstudio {
 
 namespace model {
 
-  Schedule makeSchedule(Model& model, std::string name = "Hot_Water_Temperature", double targetTemperature = 67.0) {
+  Schedule makeSchedule(Model& model, const std::string& name = "Hot_Water_Temperature", double targetTemperature = 67.0) {
     //Make a time stamp to use in multiple places
     Time osTime = Time(0, 24, 0, 0);
 
@@ -175,17 +175,12 @@ namespace model {
   }
 
   void addSystemType1(Model& model, std::vector<ThermalZone> zones) {
-    std::vector<model::ThermalZone> zonesToAddTo;
 
-    for (const auto& zone : zones) {
-      if (zone.model() == model) {
-        zonesToAddTo.push_back(zone);
-      }
-    }
+    zones.erase(std::remove_if(zones.begin(), zones.end(), [&](const auto& zone) { return zone.model() != model; }), zones.end());
 
     // Hot Water Plant
 
-    if (!zonesToAddTo.empty()) {
+    if (!zones.empty()) {
       PlantLoop hotWaterPlant(model);
       hotWaterPlant.setName("Hot Water Loop");
       SizingPlant sizingPlant = hotWaterPlant.sizingPlant();
@@ -227,7 +222,7 @@ namespace model {
 
       hotWaterSPM.addToNode(hotWaterOutletNode);
 
-      for (auto& zone : zonesToAddTo) {
+      for (auto& zone : zones) {
         model::ZoneHVACPackagedTerminalAirConditioner ptac = addSystemType1(model);
 
         ptac.addToThermalZone(zone);
@@ -291,8 +286,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
@@ -356,8 +351,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
@@ -859,8 +854,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");
@@ -920,8 +915,8 @@ namespace model {
     sizingSystem.setCentralCoolingDesignSupplyAirTemperature(12.8);
     sizingSystem.setCentralHeatingDesignSupplyAirTemperature(40.0);
     sizingSystem.setSizingOption("NonCoincident");
-    sizingSystem.setAllOutdoorAirinCooling("No");
-    sizingSystem.setAllOutdoorAirinHeating("No");
+    sizingSystem.setAllOutdoorAirinCooling(false);
+    sizingSystem.setAllOutdoorAirinHeating(false);
     sizingSystem.setCentralCoolingDesignSupplyAirHumidityRatio(0.0085);
     sizingSystem.setCentralHeatingDesignSupplyAirHumidityRatio(0.0080);
     sizingSystem.setCoolingDesignAirFlowMethod("DesignDay");

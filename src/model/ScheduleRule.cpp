@@ -320,7 +320,7 @@ namespace model {
     }
 
     bool ScheduleRule_Impl::applyWeekdays() const {
-      return (this->applyMonday() && this->applyTuesday() && this - applyWednesday() && this->applyThursday() && this->applyFriday());
+      return (this->applyMonday() && this->applyTuesday() && this->applyWednesday() && this->applyThursday() && this->applyFriday());
     }
 
     bool ScheduleRule_Impl::applyWeekends() const {
@@ -332,7 +332,7 @@ namespace model {
     }
 
     bool ScheduleRule_Impl::setApplyWeekdays(bool applyWeekdays) {
-      return (this->setApplyMonday(applyWeekdays) && this->setApplyTuesday(applyWeekdays) && this - setApplyWednesday(applyWeekdays)
+      return (this->setApplyMonday(applyWeekdays) && this->setApplyTuesday(applyWeekdays) && this->setApplyWednesday(applyWeekdays)
               && this->setApplyThursday(applyWeekdays) && this->setApplyFriday(applyWeekdays));
     }
 
@@ -394,9 +394,7 @@ namespace model {
       result = setString(OS_Schedule_RuleFields::EndDay, "", false);
       OS_ASSERT(result);
 
-      std::vector<std::string> values;
-      values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
-      values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
+      std::vector<std::string> values{std::to_string(date.monthOfYear().value()), std::to_string(date.dayOfMonth())};
 
       auto group = pushExtensibleGroup(values, true).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());

@@ -350,8 +350,7 @@ namespace model {
       // Dual duct terminals are derived from Mixer
       bool terminalIsDualDuct = airTerminal.optionalCast<Mixer>().has_value();
 
-      // NOT XOR
-      bool result = !(loopIsDualDuct ^ terminalIsDualDuct);
+      bool result = loopIsDualDuct == terminalIsDualDuct;
       if (!result) {
         LOG(Warn, "Cannot assign " << airTerminal.nameString() << " to " << briefDescription() << " since it is of incorrect type, loop is "
                                    << (loopIsDualDuct ? "dual duct." : "single duct."));

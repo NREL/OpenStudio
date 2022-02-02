@@ -323,10 +323,7 @@ namespace model {
     }
 
     bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingDesignCapacity(double coolingDesignCapacity) {
-      bool result(false);
-      if (coolingDesignCapacity) {
-        result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, coolingDesignCapacity);
-      }
+      bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, coolingDesignCapacity);
       return result;
     }
 

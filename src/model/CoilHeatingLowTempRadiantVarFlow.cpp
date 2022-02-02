@@ -284,10 +284,7 @@ namespace model {
     }
 
     bool CoilHeatingLowTempRadiantVarFlow_Impl::setHeatingDesignCapacity(double heatingDesignCapacity) {
-      bool result(false);
-      if (heatingDesignCapacity) {
-        result = setDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, heatingDesignCapacity);
-      }
+      bool result = setDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, heatingDesignCapacity);
       return result;
     }
 
