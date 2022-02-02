@@ -4985,7 +4985,7 @@ namespace sdd {
       if (openstudio::istringEqual(fluidSegTypeElement.text().as_string(), "secondarysupply")) {
         pugi::xml_node pumpElement = fluidSegElement.child("Pump");
 
-        if (pumpElement && !openstudio::istringEqual(typeElement.text().as_string(), "ServiceHotWater")) {
+        if ((pumpElement != nullptr) && !openstudio::istringEqual(typeElement.text().as_string(), "ServiceHotWater")) {
           boost::optional<model::ModelObject> mo = translatePump(pumpElement, model);
 
           if (mo) {

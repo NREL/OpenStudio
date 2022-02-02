@@ -966,7 +966,7 @@ namespace contam {
       int ncontaminants = contaminants().size();
       int nctm = ncontaminants * (m_zones.size() - start);
       std::string string = ANY_TO_STR(nctm) + " ! initial zone concentrations:\n";
-      if (nctm) {
+      if (nctm != 0) {
         for (unsigned i = start; i < m_zones.size(); i++) {
           string += ANY_TO_STR(i + offset);
           for (unsigned j = 0; j < (unsigned)ncontaminants; j++) {

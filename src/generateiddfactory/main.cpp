@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     boost::program_options::notify(vm);
 
     // provide help message
-    if (vm.count("help")) {
+    if (vm.count("help") != 0u) {
       std::cout << opts;
       std::cout << "In addition to an outdir, at least one name,path IDD pair is required." << '\n';
       return 0;

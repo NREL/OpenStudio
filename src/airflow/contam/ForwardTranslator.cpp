@@ -285,25 +285,25 @@ namespace contam {
     int nr;
     // Exterior walls
     nr = model.airflowElementNrByName(wallExt[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["exterior"] = nr;
     // Interior walls
     nr = model.airflowElementNrByName(wallInt[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["interior"] = nr;
     // Floors
     nr = model.airflowElementNrByName(floor[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["floor"] = nr;
     // Roof
     nr = model.airflowElementNrByName(roof[index]);
-    if (!nr) {
+    if (nr == 0) {
       return false;
     }
     afeMap["roof"] = nr;
@@ -536,7 +536,7 @@ namespace contam {
           break;
         }
       }
-      if (levelNr) {
+      if (levelNr != 0) {
         zone.setPl(levelNr);
       } else {
         LOG(Error, "Unable to set level for zone '" << thermalZone.name().get() << "', translation aborted");
@@ -737,7 +737,7 @@ namespace contam {
                   nr = it->second;
                 }
                 // There really should not be a case of missing number here, but it is better to be safe
-                if (!nr) {
+                if (nr == 0) {
                   LOG(Error, "Supply node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                   continue;
                 }
@@ -760,7 +760,7 @@ namespace contam {
                     nr = it->second;
                   }
                   // There really should not be a case of missing number here, but it is better to be safe
-                  if (!nr) {
+                  if (nr == 0) {
                     LOG(Error, "Failed to find return path for zone '" << thermalZone.name().get() << "'");
                     continue;
                   }
@@ -796,7 +796,7 @@ namespace contam {
                     nr = it->second;
                   }
                   // There really should not be a case of missing number here, but it is better to be safe
-                  if (!nr) {
+                  if (nr == 0) {
                     LOG(Error, "Return node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                     continue;
                   }
@@ -836,7 +836,7 @@ namespace contam {
             if (its != m_pathMap.end()) {
               supplyNr = its->second;
             }
-            if (supplyNr) {
+            if (supplyNr != 0) {
               m_prjModel.airflowPaths()[supplyNr - 1].setFahs(std::to_string(flowRate));
             }
 
@@ -845,7 +845,7 @@ namespace contam {
             if (itr != m_pathMap.end()) {
               returnNr = itr->second;
             }
-            if (returnNr) {
+            if (returnNr != 0) {
               m_prjModel.airflowPaths()[returnNr - 1].setFahs(std::to_string(m_returnSupplyRatio * flowRate));
             }
           }
@@ -936,7 +936,7 @@ namespace contam {
     contam::AirflowPath path;
     // Use the lookup table to get the zone info
     int zoneNr;
-    if (!(zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap"))) {
+    if ((zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap")) == 0) {
       // Maybe this needs a warning?
       return false;
     }
@@ -979,7 +979,7 @@ namespace contam {
     contam::AirflowPath path;
     // Use the lookup table to get the zone info
     int zoneNr;
-    if (!(zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap"))) {
+    if ((zoneNr = tableLookup(m_zoneMap, zone.handle(), "zoneMap")) == 0) {
       // Maybe this needs a warning?
       return false;
     }

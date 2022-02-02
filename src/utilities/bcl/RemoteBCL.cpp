@@ -858,9 +858,9 @@ std::vector<BCLSearchResult> RemoteBCL::processSearchResponse(const RemoteQueryR
     auto componentElement = result.first_child();
 
     //Basic check to see if it's non-empty
-    while (componentElement.child("name")) {
+    while (componentElement.child("name") != nullptr) {
       //Skip components without a uid or version_id
-      if (componentElement.child("uuid") && componentElement.child("vuuid")) {
+      if ((componentElement.child("uuid") != nullptr) && (componentElement.child("vuuid") != nullptr)) {
         BCLSearchResult searchResult(componentElement);
         searchResults.push_back(searchResult);
       }

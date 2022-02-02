@@ -556,7 +556,7 @@ namespace sdd {
       pugi::xml_node occLatHtRtElement = element.child("OccLatHtRt");
       pugi::xml_node occSchRefElement = element.child("OccSchRef");
 
-      if (occDensElement && (occDensElement.text().as_double() > 0)) {
+      if ((occDensElement != nullptr) && (occDensElement.text().as_double() > 0)) {
         if (occSensHtRtElement && occLatHtRtElement) {
 
           openstudio::Quantity peopleDensityIP(occDensElement.text().as_double() / 1000.0,
@@ -751,7 +751,7 @@ namespace sdd {
       pugi::xml_node intLtgRegHtGnSpcFracSimElement = element.child("IntLtgRegHtGnSpcFracSim");
       pugi::xml_node intLtgRegHtGnRadFracSimElement = element.child("IntLtgRegHtGnRadFracSim");
       pugi::xml_node intLtgRegEndUseElement = element.child("IntLtgRegEndUseCat");
-      if (intLPDRegSimElement && (intLPDRegSimElement.text().as_double() > 0)) {
+      if ((intLPDRegSimElement != nullptr) && (intLPDRegSimElement.text().as_double() > 0)) {
 
         openstudio::Quantity lightingDensityIP(intLPDRegSimElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity lightingDensitySI = QuantityConverter::instance().convert(lightingDensityIP, whSys);
@@ -802,7 +802,7 @@ namespace sdd {
       pugi::xml_node intLtgNonRegHtGnSpcFracSimElement = element.child("IntLtgNonRegHtGnSpcFracSim");
       pugi::xml_node intLtgNonRegHtGnRadFracSimElement = element.child("IntLtgNonRegHtGnRadFracSim");
       pugi::xml_node intLtgNonRegEndUseElement = element.child("IntLtgNonRegEndUseCat");
-      if (intLPDNonRegSimElement && (intLPDNonRegSimElement.text().as_double() > 0)) {
+      if ((intLPDNonRegSimElement != nullptr) && (intLPDNonRegSimElement.text().as_double() > 0)) {
 
         openstudio::Quantity lightingDensityIP(intLPDNonRegSimElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity lightingDensitySI = QuantityConverter::instance().convert(lightingDensityIP, whSys);
@@ -863,7 +863,7 @@ namespace sdd {
       pugi::xml_node recptRadFracElement = element.child("RecptRadFrac");
       pugi::xml_node recptLatFracElement = element.child("RecptLatFrac");
       pugi::xml_node recptLostFracElement = element.child("RecptLostFrac");
-      if (recptPwrDensElement && (recptPwrDensElement.text().as_double() > 0)) {
+      if ((recptPwrDensElement != nullptr) && (recptPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity electricalDensityIP(recptPwrDensElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
@@ -915,7 +915,7 @@ namespace sdd {
       pugi::xml_node gasEqpRadFracElement = element.child("GasEqpRadFrac");
       pugi::xml_node gasEqpLatFracElement = element.child("GasEqpLatFrac");
       pugi::xml_node gasEqpLostFracElement = element.child("GasEqpLostFrac");
-      if (gasEqpPwrDensElement && (gasEqpPwrDensElement.text().as_double() > 0)) {
+      if ((gasEqpPwrDensElement != nullptr) && (gasEqpPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity gasDensityIP(gasEqpPwrDensElement.text().as_double(), openstudio::createUnit("Btu/h*ft^2").get());
         OptionalQuantity gasDensitySI = QuantityConverter::instance().convert(gasDensityIP, whSys);
@@ -966,7 +966,7 @@ namespace sdd {
       pugi::xml_node procElecRadFracElement = element.child("ProcElecRadFrac");
       pugi::xml_node procElecLatFracElement = element.child("ProcElecLatFrac");
       pugi::xml_node procElecLostFracElement = element.child("ProcElecLostFrac");
-      if (procElecPwrDensElement && (procElecPwrDensElement.text().as_double() > 0)) {
+      if ((procElecPwrDensElement != nullptr) && (procElecPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity electricalDensityIP(procElecPwrDensElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
@@ -1017,7 +1017,7 @@ namespace sdd {
       pugi::xml_node commRfrgRadFracElement = element.child("CommRfrgRadFrac");
       pugi::xml_node commRfrgLatFracElement = element.child("CommRfrgLatFrac");
       pugi::xml_node commRfrgLostFracElement = element.child("CommRfrgLostFrac");
-      if (commRfrgEPDElement && (commRfrgEPDElement.text().as_double() > 0)) {
+      if ((commRfrgEPDElement != nullptr) && (commRfrgEPDElement.text().as_double() > 0)) {
 
         openstudio::Quantity electricalDensityIP(commRfrgEPDElement.text().as_double(), openstudio::createUnit("W/ft^2").get());
         OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
@@ -1068,7 +1068,7 @@ namespace sdd {
       pugi::xml_node elevRadFracElement = element.child("ElevRadFrac");
       pugi::xml_node elevLatFracElement = element.child("ElevLatFrac");
       pugi::xml_node elevLostFracElement = element.child("ElevLostFrac");
-      if (elevPwrElement && (elevPwrElement.text().as_double() > 0)) {
+      if ((elevPwrElement != nullptr) && (elevPwrElement.text().as_double() > 0)) {
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Elevator Definition");
@@ -1114,7 +1114,7 @@ namespace sdd {
       pugi::xml_node escalRadFracElement = element.child("EscalRadFrac");
       pugi::xml_node escalLatFracElement = element.child("EscalLatFrac");
       pugi::xml_node escalLostFracElement = element.child("EscalLostFrac");
-      if (escalPwrElement && (escalPwrElement.text().as_double() > 0)) {
+      if ((escalPwrElement != nullptr) && (escalPwrElement.text().as_double() > 0)) {
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
         electricEquipmentDefinition.setName(name + " Escalator Definition");
@@ -1160,7 +1160,7 @@ namespace sdd {
       pugi::xml_node procGasRadFracElement = element.child("ProcGasRadFrac");
       pugi::xml_node procGasLatFracElement = element.child("ProcGasLatFrac");
       pugi::xml_node procGasLostFracElement = element.child("ProcGasLostFrac");
-      if (procGasPwrDensElement && (procGasPwrDensElement.text().as_double() > 0)) {
+      if (bool(procGasPwrDensElement) && (procGasPwrDensElement.text().as_double() > 0)) {
 
         openstudio::Quantity gasDensityIP(procGasPwrDensElement.text().as_double(), openstudio::createUnit("Btu/h*ft^2").get());
         OptionalQuantity gasDensitySI = QuantityConverter::instance().convert(gasDensityIP, whSys);

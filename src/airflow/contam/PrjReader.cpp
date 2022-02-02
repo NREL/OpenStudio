@@ -54,7 +54,7 @@ namespace contam {
   }
 
   std::string Reader::readString() {
-    while (1) {
+    while (true) {
       while (m_entries.empty()) {
         std::string input;
         std::getline(m_stream, input);
@@ -169,7 +169,7 @@ namespace contam {
 
   std::string Reader::readSection() {
     std::string section;
-    while (1) {
+    while (true) {
       std::string input;
       std::getline(m_stream, input);
       if (!m_stream) {
