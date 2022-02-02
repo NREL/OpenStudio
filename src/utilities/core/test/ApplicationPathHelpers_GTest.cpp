@@ -77,7 +77,7 @@ BOOL IsElevated() {
 }
 #else
 bool IsElevated() {
-  return 1;
+  return true;
 }
 #endif
 

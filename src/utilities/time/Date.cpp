@@ -90,7 +90,7 @@ MonthOfYear monthOfYear(const std::string& month) {
 /// convert unsigned to MonthOfYear
 MonthOfYear monthOfYear(unsigned month) {
   if (month >= 1 && month <= 12) {
-    return {month - (1 - MonthOfYear::Jan)};
+    return {static_cast<int>(month - (1 - MonthOfYear::Jan))};
   } else {
     return {MonthOfYear::NotAMonth};
   }
@@ -301,7 +301,7 @@ Date& Date::operator-=(const Time& time) {
 /// time duration
 Time Date::operator-(const Date& date) const {
   boost::gregorian::date_duration duration((m_impl) - (date.m_impl));
-  return {duration.days()};
+  return {static_cast<double>(duration.days())};
 }
 
 /// equality operator

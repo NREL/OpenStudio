@@ -1016,7 +1016,7 @@ std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, 
 // cppcheck-suppress constParameter
 bool LocalBCL::addComponent(BCLComponent& component) {
   //Check for uid
-  if (m_db && !component.uid().empty() && !component.versionId().empty()) {
+  if ((m_db != nullptr) && !component.uid().empty() && !component.versionId().empty()) {
 
     // Start a transaction, so we can handle failures without messing up the database
     if (!beginTransaction()) {
@@ -1130,7 +1130,7 @@ bool LocalBCL::addComponent(BCLComponent& component) {
 // cppcheck-suppress constParameter
 bool LocalBCL::removeComponent(BCLComponent& component) {
   // if uid is empty or not found in database return false
-  if (!m_db || component.uid().empty() || component.versionId().empty()) {
+  if ((m_db == nullptr) || component.uid().empty() || component.versionId().empty()) {
     return false;
   }
 
@@ -1203,7 +1203,7 @@ bool LocalBCL::removeComponent(BCLComponent& component) {
 bool LocalBCL::addMeasure(BCLMeasure& measure) {
 
   // if uid is empty or not found in database return false
-  if (!m_db || measure.uid().empty() || measure.versionId().empty()) {
+  if ((m_db == nullptr) || measure.uid().empty() || measure.versionId().empty()) {
     return false;
   }
 
@@ -1313,7 +1313,7 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
 // cppcheck-suppress constParameter
 bool LocalBCL::removeMeasure(BCLMeasure& measure) {
   // if uid is empty
-  if (!m_db || measure.uid().empty() || measure.versionId().empty()) {
+  if ((m_db == nullptr) || measure.uid().empty() || measure.versionId().empty()) {
     return false;
   }
 

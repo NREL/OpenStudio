@@ -1593,7 +1593,7 @@ static double stringToDouble(const std::string& string, bool* ok) {
 }
 
 Date EpwDataPoint::date() const {
-  return {MonthOfYear(m_month), m_day, m_year};
+  return {MonthOfYear(m_month), static_cast<unsigned int>(m_day), m_year};
 }
 
 void EpwDataPoint::setDate(Date date) {

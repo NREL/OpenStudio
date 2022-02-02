@@ -223,7 +223,7 @@ int RemoteBCL::checkForComponentUpdates() {
   for (const BCLComponent& component : LocalBCL::instance().components()) {
     // can't start another request until last one is done
     if (m_httpResponse && !m_httpResponse->is_done()) {
-      return false;
+      return 0;
     }
 
     m_lastSearch.clear();
@@ -264,7 +264,7 @@ int RemoteBCL::checkForMeasureUpdates() {
   for (const BCLMeasure& measure : LocalBCL::instance().measures()) {
     // can't start another request until last one is done
     if (m_httpResponse && !m_httpResponse->is_done()) {
-      return false;
+      return 0;
     }
 
     m_lastSearch.clear();

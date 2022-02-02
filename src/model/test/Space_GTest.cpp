@@ -2670,19 +2670,19 @@ TEST_F(ModelFixture, Issue_2560) {
   // Verify that the floor surfaces on space 1 are matched
   auto space1Surfaces = sp1->surfaces();
 
-  auto it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 1"; });
+  auto it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](const Surface& s) { return s.nameString() == "Surface 1"; });
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   auto s = it->adjacentSurface();
   EXPECT_EQ(s->nameString(), "Surface 18");
 
-  it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 27"; });
+  it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](const Surface& s) { return s.nameString() == "Surface 27"; });
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   s = it->adjacentSurface();
   EXPECT_EQ(s->nameString(), "Surface 12");
 
-  it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 28"; });
+  it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](const Surface& s) { return s.nameString() == "Surface 28"; });
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   s = it->adjacentSurface();
@@ -2825,7 +2825,9 @@ TEST_F(ModelFixture, ExposedPerimeter) {
     double exposedPerimeter = 0;
     int nOverlaps = 0;
     boost::optional<Space> space = surface.space();
-    if (!space) continue;
+    if (!space) {
+      continue;
+    }
     std::string spacename = space->name().value();
     Transformation spaceTransformation = space->transformation();
     Point3dVector points = spaceTransformation * surface.vertices();

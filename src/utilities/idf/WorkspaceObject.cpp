@@ -721,7 +721,7 @@ namespace detail {
 
   unsigned WorkspaceObject_Impl::numSources() const {
     if (m_handle.isNull()) {
-      return false;
+      return 0u;
     }
     if (m_targetData) {
       return m_targetData->reversePointers.size();

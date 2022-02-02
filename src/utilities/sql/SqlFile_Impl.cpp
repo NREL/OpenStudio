@@ -1098,7 +1098,7 @@ namespace detail {
       }
     }
 
-    if (totalCost) {
+    if (totalCost != 0.0) {
       return totalCost;
     }
 
