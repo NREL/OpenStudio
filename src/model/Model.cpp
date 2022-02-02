@@ -532,7 +532,7 @@ namespace model {
 
       schedule.setValue(0.0);
 
-      return schedule;
+      return std::move(schedule);
     }
 
     std::string Model_Impl::alwaysOffDiscreteScheduleName() const {
@@ -582,7 +582,7 @@ namespace model {
 
       schedule.setValue(1.0);
 
-      return schedule;
+      return std::move(schedule);
     }
 
     std::string Model_Impl::alwaysOnDiscreteScheduleName() const {
@@ -632,7 +632,7 @@ namespace model {
 
       schedule.setValue(1.0);
 
-      return schedule;
+      return std::move(schedule);
     }
 
     std::string Model_Impl::alwaysOnContinuousScheduleName() const {

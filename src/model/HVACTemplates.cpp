@@ -124,26 +124,26 @@ namespace model {
     Time osTime = Time(0, 24, 0, 0);
 
     //Schedule Ruleset
-    ScheduleRuleset TempSchedule = ScheduleRuleset(model);
-    TempSchedule.setName(name);
+    ScheduleRuleset tempSchedule = ScheduleRuleset(model);
+    tempSchedule.setName(name);
 
     //Winter Design Day
-    ScheduleDay TempScheduleWinter = ScheduleDay(model);
-    TempSchedule.setWinterDesignDaySchedule(TempScheduleWinter);
-    TempSchedule.winterDesignDaySchedule().setName(name + "_Winter_Design_Day");
-    TempSchedule.winterDesignDaySchedule().addValue(osTime, targetTemperature);
+    ScheduleDay tempScheduleWinter = ScheduleDay(model);
+    tempSchedule.setWinterDesignDaySchedule(tempScheduleWinter);
+    tempSchedule.winterDesignDaySchedule().setName(name + "_Winter_Design_Day");
+    tempSchedule.winterDesignDaySchedule().addValue(osTime, targetTemperature);
 
     //Summer Design Day
-    ScheduleDay TempScheduleSummer = ScheduleDay(model);
-    TempSchedule.setSummerDesignDaySchedule(TempScheduleSummer);
-    TempSchedule.summerDesignDaySchedule().setName(name + "_Summer_Design_Day");
-    TempSchedule.summerDesignDaySchedule().addValue(osTime, targetTemperature);
+    ScheduleDay tempScheduleSummer = ScheduleDay(model);
+    tempSchedule.setSummerDesignDaySchedule(tempScheduleSummer);
+    tempSchedule.summerDesignDaySchedule().setName(name + "_Summer_Design_Day");
+    tempSchedule.summerDesignDaySchedule().addValue(osTime, targetTemperature);
 
     //All other days
-    TempSchedule.defaultDaySchedule().setName(name + "_Default");
-    TempSchedule.defaultDaySchedule().addValue(osTime, targetTemperature);
+    tempSchedule.defaultDaySchedule().setName(name + "_Default");
+    tempSchedule.defaultDaySchedule().addValue(osTime, targetTemperature);
 
-    return TempSchedule;
+    return std::move(tempSchedule);
   }
 
   Schedule deckTempSchedule(Model& model) {

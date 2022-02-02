@@ -61,6 +61,10 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
+    Schedule(const Schedule&) = default;
+    Schedule& operator=(const Schedule&) = default;
+    Schedule(Schedule&&) = default;
+    Schedule& operator=(Schedule&&) = default;
     virtual ~Schedule() = default;
 
     //@}

@@ -64,7 +64,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FuelFactors) {
     ScheduleConstant sch(m);
     sch.setValue(1.0);
     sch.setName(name);
-    return sch;
+    return std::move(sch);
   };
 
   EXPECT_TRUE(fuelFactors.setExistingFuelResourceName("Electricity"));

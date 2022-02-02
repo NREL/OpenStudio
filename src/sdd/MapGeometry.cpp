@@ -1808,7 +1808,7 @@ namespace sdd {
     schedule.setName(scheduleName);
 
     m_shadingScheduleMap.insert(std::make_pair(trans, schedule));
-    return schedule;
+    return std::move(schedule);
   }
 
   boost::optional<pugi::xml_node> ForwardTranslator::translateBuilding(const openstudio::model::Building& building, pugi::xml_node& root) {
