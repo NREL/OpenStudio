@@ -51,7 +51,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SiteWaterMainsTemperature) {
       Model model;
 
       // create a site water mains temperature object to use
-      SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+      auto siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
       exit(0);
     },
@@ -61,7 +61,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SiteWaterMainsTemperature) {
   Model model;
 
   // create a site water mains temperature object to use
-  SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+  auto siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
   EXPECT_EQ("CorrelationFromWeatherFile", siteWater.calculationMethod());
   EXPECT_FALSE(siteWater.temperatureSchedule());
@@ -75,7 +75,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SetGetFields) {
   Model model;
 
   // create a site water mains temperature object to use
-  SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+  auto siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
   // set the fields
   siteWater.setCalculationMethod("Correlation");
@@ -119,13 +119,13 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_Clone) {
   Model model;
 
   // create a site water mains temperature object to use
-  SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+  auto siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
   // change some of the fields
   siteWater.setAnnualAverageOutdoorAirTemperature(45);
 
   // clone it into the same model
-  SiteWaterMainsTemperature siteWaterClone = siteWater.clone(model).cast<SiteWaterMainsTemperature>();
+  auto siteWaterClone = siteWater.clone(model).cast<SiteWaterMainsTemperature>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteWater, siteWaterClone);
   ASSERT_TRUE(siteWaterClone.annualAverageOutdoorAirTemperature());
@@ -133,7 +133,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_Clone) {
 
   // clone it into a different model
   Model model2;
-  SiteWaterMainsTemperature siteWaterClone2 = siteWaterClone.clone(model2).cast<SiteWaterMainsTemperature>();
+  auto siteWaterClone2 = siteWaterClone.clone(model2).cast<SiteWaterMainsTemperature>();
   ASSERT_TRUE(siteWaterClone2.annualAverageOutdoorAirTemperature());
   EXPECT_EQ(45, siteWaterClone2.annualAverageOutdoorAirTemperature().get());
 }
@@ -142,7 +142,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_Clone) {
 TEST_F(ModelFixture, SiteWaterMainsTemperature_Remove) {
   Model model;
   auto size = model.modelObjects().size();
-  SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+  auto siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
   EXPECT_FALSE(siteWater.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
 }

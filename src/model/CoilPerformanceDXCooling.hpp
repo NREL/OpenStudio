@@ -206,7 +206,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilPerformanceDXCooling_Impl ImplType;
+    using ImplType = detail::CoilPerformanceDXCooling_Impl;
 
     explicit CoilPerformanceDXCooling(std::shared_ptr<detail::CoilPerformanceDXCooling_Impl> impl);
 
@@ -220,10 +220,10 @@ namespace model {
   };
 
   /** \relates CoilPerformanceDXCooling*/
-  typedef boost::optional<CoilPerformanceDXCooling> OptionalCoilPerformanceDXCooling;
+  using OptionalCoilPerformanceDXCooling = boost::optional<CoilPerformanceDXCooling>;
 
   /** \relates CoilPerformanceDXCooling*/
-  typedef std::vector<CoilPerformanceDXCooling> CoilPerformanceDXCoolingVector;
+  using CoilPerformanceDXCoolingVector = std::vector<CoilPerformanceDXCooling>;
 
 }  // namespace model
 }  // namespace openstudio

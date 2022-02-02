@@ -164,7 +164,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::DefaultScheduleSet_Impl ImplType;
+    using ImplType = detail::DefaultScheduleSet_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -177,10 +177,10 @@ namespace model {
   };
 
   /** \relates DefaultScheduleSet*/
-  typedef boost::optional<DefaultScheduleSet> OptionalDefaultScheduleSet;
+  using OptionalDefaultScheduleSet = boost::optional<DefaultScheduleSet>;
 
   /** \relates DefaultScheduleSet*/
-  typedef std::vector<DefaultScheduleSet> DefaultScheduleSetVector;
+  using DefaultScheduleSetVector = std::vector<DefaultScheduleSet>;
 
 }  // namespace model
 }  // namespace openstudio

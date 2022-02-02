@@ -181,7 +181,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_SurfaceAssign) {
   generator.setSurface(shadingsurface);
   EXPECT_TRUE(generator.surface());
   boost::optional<PlanarSurface> optplanarsurface = generator.surface();
-  ShadingSurface shadingsurface2 = optplanarsurface.get().cast<ShadingSurface>();
+  auto shadingsurface2 = optplanarsurface.get().cast<ShadingSurface>();
   shadingsurface2.remove();
   EXPECT_EQ(0, model.getConcreteModelObjects<ShadingSurface>().size());
   EXPECT_FALSE(generator.surface());
@@ -194,14 +194,14 @@ TEST_F(ModelFixture, GeneratorPVWatts_Clone) {
   generator.setSystemLosses(0.1);
 
   // clone it into the same model
-  GeneratorPVWatts generatorClone = generator.clone(model).cast<GeneratorPVWatts>();
+  auto generatorClone = generator.clone(model).cast<GeneratorPVWatts>();
   ASSERT_FALSE(generatorClone.isSystemLossesDefaulted());
   ASSERT_EQ(0.1, generatorClone.systemLosses());
   ASSERT_TRUE(generatorClone.isModuleTypeDefaulted());
 
   // clone it into a different model
   Model model2;
-  GeneratorPVWatts generatorClone2 = generator.clone(model2).cast<GeneratorPVWatts>();
+  auto generatorClone2 = generator.clone(model2).cast<GeneratorPVWatts>();
   ASSERT_FALSE(generatorClone2.isSystemLossesDefaulted());
   ASSERT_EQ(0.1, generatorClone2.systemLosses());
   ASSERT_TRUE(generatorClone2.isModuleTypeDefaulted());

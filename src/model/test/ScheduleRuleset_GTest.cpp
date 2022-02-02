@@ -613,7 +613,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone) {
   Model model2;
 
   ModelObject modelObject = schedule.clone(model2);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
   ASSERT_NO_THROW(schedule2.scheduleRules()[0].daySchedule());
   ASSERT_NO_THROW(schedule2.scheduleRules()[1].daySchedule());
@@ -635,7 +635,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone2) {
   ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
 
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
 
@@ -669,7 +669,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone3) {
   ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
 
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
 
@@ -714,7 +714,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone4) {
   ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
-  ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
+  auto schedule2 = modelObject.cast<ScheduleRuleset>();
 
   ASSERT_EQ(4u, schedule2.scheduleRules().size());
 

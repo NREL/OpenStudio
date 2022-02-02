@@ -91,7 +91,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_HeatExchanger_FluidToFluidFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("HeatExchangerFluidToFluid", "Availability"));
       }
@@ -468,7 +469,7 @@ namespace model {
   }
 
   IddObjectType HeatExchangerFluidToFluid::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid);
+    return {IddObjectType::OS_HeatExchanger_FluidToFluid};
   }
 
   std::vector<std::string> HeatExchangerFluidToFluid::heatExchangeModelTypeValues() {

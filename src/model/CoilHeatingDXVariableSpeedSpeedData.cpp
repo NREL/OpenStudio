@@ -280,7 +280,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXVariableSpeedSpeedData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableSpeed_SpeedData);
+    return {IddObjectType::OS_Coil_Heating_DX_VariableSpeed_SpeedData};
   }
 
   double CoilHeatingDXVariableSpeedSpeedData::referenceUnitGrossRatedHeatingCapacity() const {

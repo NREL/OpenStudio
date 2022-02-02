@@ -106,7 +106,7 @@ TEST_F(ModelFixture, ExteriorWaterEquipment_SettersGetters) {
   EXPECT_EQ(alwaysOn.handle(), waterEq.schedule().handle());
 
   // Facility
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
   EXPECT_EQ(facility.handle(), waterEq.facility().handle());
 }
 

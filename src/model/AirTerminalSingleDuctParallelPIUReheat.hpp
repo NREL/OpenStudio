@@ -155,7 +155,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctParallelPIUReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctParallelPIUReheat_Impl;
 
     friend class Model;
 
@@ -170,10 +170,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctParallelPIUReheat*/
-  typedef boost::optional<AirTerminalSingleDuctParallelPIUReheat> OptionalAirTerminalSingleDuctParallelPIUReheat;
+  using OptionalAirTerminalSingleDuctParallelPIUReheat = boost::optional<AirTerminalSingleDuctParallelPIUReheat>;
 
   /** \relates AirTerminalSingleDuctParallelPIUReheat*/
-  typedef std::vector<AirTerminalSingleDuctParallelPIUReheat> AirTerminalSingleDuctParallelPIUReheatVector;
+  using AirTerminalSingleDuctParallelPIUReheatVector = std::vector<AirTerminalSingleDuctParallelPIUReheat>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -135,7 +135,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::BuildingStory_Impl ImplType;
+    using ImplType = detail::BuildingStory_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -148,10 +148,10 @@ namespace model {
   };
 
   /** \relates BuildingStory*/
-  typedef boost::optional<BuildingStory> OptionalBuildingStory;
+  using OptionalBuildingStory = boost::optional<BuildingStory>;
 
   /** \relates BuildingStory*/
-  typedef std::vector<BuildingStory> BuildingStoryVector;
+  using BuildingStoryVector = std::vector<BuildingStory>;
 
 }  // namespace model
 }  // namespace openstudio

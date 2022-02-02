@@ -78,7 +78,7 @@ namespace model {
   }
 
   IddObjectType PlantEquipmentOperationHeatingLoad::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_HeatingLoad);
+    return {IddObjectType::OS_PlantEquipmentOperation_HeatingLoad};
   }
 
   /// @cond

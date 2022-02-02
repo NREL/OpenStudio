@@ -160,7 +160,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeaderedPumpsConstantSpeed_Impl ImplType;
+    using ImplType = detail::HeaderedPumpsConstantSpeed_Impl;
 
     explicit HeaderedPumpsConstantSpeed(std::shared_ptr<detail::HeaderedPumpsConstantSpeed_Impl> impl);
 
@@ -174,10 +174,10 @@ namespace model {
   };
 
   /** \relates HeaderedPumpsConstantSpeed*/
-  typedef boost::optional<HeaderedPumpsConstantSpeed> OptionalHeaderedPumpsConstantSpeed;
+  using OptionalHeaderedPumpsConstantSpeed = boost::optional<HeaderedPumpsConstantSpeed>;
 
   /** \relates HeaderedPumpsConstantSpeed*/
-  typedef std::vector<HeaderedPumpsConstantSpeed> HeaderedPumpsConstantSpeedVector;
+  using HeaderedPumpsConstantSpeedVector = std::vector<HeaderedPumpsConstantSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

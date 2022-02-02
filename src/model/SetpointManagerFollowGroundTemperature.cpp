@@ -158,7 +158,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerFollowGroundTemperature::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_FollowGroundTemperature);
+    return {IddObjectType::OS_SetpointManager_FollowGroundTemperature};
   }
 
   std::vector<std::string> SetpointManagerFollowGroundTemperature::controlVariableValues() {

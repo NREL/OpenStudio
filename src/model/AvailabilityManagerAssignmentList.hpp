@@ -153,7 +153,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerAssignmentList_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerAssignmentList_Impl;
 
     explicit AvailabilityManagerAssignmentList(const Model& model);
     explicit AvailabilityManagerAssignmentList(std::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl);
@@ -170,10 +170,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerAssignmentList*/
-  typedef boost::optional<AvailabilityManagerAssignmentList> OptionalAvailabilityManagerAssignmentList;
+  using OptionalAvailabilityManagerAssignmentList = boost::optional<AvailabilityManagerAssignmentList>;
 
   /** \relates AvailabilityManagerAssignmentList*/
-  typedef std::vector<AvailabilityManagerAssignmentList> AvailabilityManagerAssignmentListVector;
+  using AvailabilityManagerAssignmentListVector = std::vector<AvailabilityManagerAssignmentList>;
 
 }  // namespace model
 }  // namespace openstudio

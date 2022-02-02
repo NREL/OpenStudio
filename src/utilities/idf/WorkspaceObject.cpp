@@ -171,7 +171,7 @@ namespace detail {
   }
 
   Workspace WorkspaceObject_Impl::workspace() const {
-    return Workspace(workspaceImpl()->shared_from_this());
+    return {workspaceImpl()->shared_from_this()};
   }
 
   boost::optional<std::string> WorkspaceObject_Impl::getString(unsigned index, bool returnDefault, bool returnUninitializedEmpty) const {
@@ -544,7 +544,8 @@ namespace detail {
 
       Handle oldHandle = setPointerImpl(index, targetHandle);
 
-      OptionalString oldValue, newValue;
+      OptionalString oldValue;
+      OptionalString newValue;
       if (iddObject().hasHandleField()) {
         oldValue = toString(oldHandle);
         newValue = toString(targetHandle);
@@ -966,7 +967,7 @@ namespace detail {
 
         if (oIddField && oIddField->isObjectListField() && diff.optionalCast<WorkspaceObjectDiff>()) {
 
-          WorkspaceObjectDiff workspaceObjectDiff = diff.cast<WorkspaceObjectDiff>();
+          auto workspaceObjectDiff = diff.cast<WorkspaceObjectDiff>();
 
           Handle newHandle;
           if (workspaceObjectDiff.newHandle()) {
@@ -1158,7 +1159,7 @@ namespace detail {
 
     WorkspaceObjectVector candidates = m_workspace->getObjectsByName(name);
 
-    if (candidates.size() == 0) {
+    if (candidates.empty()) {
       return boost::none;
     }
     if (candidates.size() == 1) {

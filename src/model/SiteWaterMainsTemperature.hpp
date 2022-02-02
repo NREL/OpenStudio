@@ -100,7 +100,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteWaterMainsTemperature_Impl ImplType;
+    using ImplType = detail::SiteWaterMainsTemperature_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -116,10 +116,10 @@ namespace model {
   };
 
   /** \relates SiteWaterMainsTemperature*/
-  typedef boost::optional<SiteWaterMainsTemperature> OptionalSiteWaterMainsTemperature;
+  using OptionalSiteWaterMainsTemperature = boost::optional<SiteWaterMainsTemperature>;
 
   /** \relates SiteWaterMainsTemperature*/
-  typedef std::vector<SiteWaterMainsTemperature> SiteWaterMainsTemperatureVector;
+  using SiteWaterMainsTemperatureVector = std::vector<SiteWaterMainsTemperature>;
 
 }  // namespace model
 }  // namespace openstudio

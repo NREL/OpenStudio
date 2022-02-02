@@ -541,7 +541,7 @@ namespace model {
   }
 
   IddObjectType CoolingTowerPerformanceYorkCalc::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoolingTowerPerformance_YorkCalc);
+    return {IddObjectType::OS_CoolingTowerPerformance_YorkCalc};
   }
 
   double CoolingTowerPerformanceYorkCalc::minimumInletAirWetBulbTemperature() const {

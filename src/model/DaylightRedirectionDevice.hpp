@@ -85,7 +85,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightRedirectionDevice_Impl ImplType;
+    using ImplType = detail::DaylightRedirectionDevice_Impl;
 
     explicit DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl);
 
@@ -99,10 +99,10 @@ namespace model {
   };
 
   /** \relates DaylightRedirectionDevice*/
-  typedef boost::optional<DaylightRedirectionDevice> OptionalDaylightRedirectionDevice;
+  using OptionalDaylightRedirectionDevice = boost::optional<DaylightRedirectionDevice>;
 
   /** \relates DaylightRedirectionDevice*/
-  typedef std::vector<DaylightRedirectionDevice> DaylightRedirectionDeviceVector;
+  using DaylightRedirectionDeviceVector = std::vector<DaylightRedirectionDevice>;
 
 }  // namespace model
 }  // namespace openstudio

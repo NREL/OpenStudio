@@ -276,7 +276,7 @@ namespace model {
         return WaterToAirComponent_Impl::remove();
       }
 
-      return std::vector<IdfObject>();
+      return {};
     }
 
     boost::optional<HVACComponent> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::containingHVACComponent() const {
@@ -463,7 +463,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit);
+    return {IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit};
   }
 
   int CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::nominalSpeedLevel() const {

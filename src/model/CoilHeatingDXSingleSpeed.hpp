@@ -226,7 +226,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::CoilHeatingDXSingleSpeed_Impl ImplType;
+    using ImplType = detail::CoilHeatingDXSingleSpeed_Impl;
 
     friend class detail::CoilHeatingDXSingleSpeed_Impl;
 
@@ -241,10 +241,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingDXSingleSpeed*/
-  typedef boost::optional<CoilHeatingDXSingleSpeed> OptionalCoilHeatingDXSingleSpeed;
+  using OptionalCoilHeatingDXSingleSpeed = boost::optional<CoilHeatingDXSingleSpeed>;
 
   /** \relates CoilHeatingDXSingleSpeed*/
-  typedef std::vector<CoilHeatingDXSingleSpeed> CoilHeatingDXSingleSpeedVector;
+  using CoilHeatingDXSingleSpeedVector = std::vector<CoilHeatingDXSingleSpeed>;
 
 }  // namespace model
 

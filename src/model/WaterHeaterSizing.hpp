@@ -175,7 +175,7 @@ namespace model {
     explicit WaterHeaterSizing(const WaterToWaterComponent& waterHeater);
     bool setWaterHeater(const WaterToWaterComponent& waterHeater);
 
-    typedef detail::WaterHeaterSizing_Impl ImplType;
+    using ImplType = detail::WaterHeaterSizing_Impl;
 
     explicit WaterHeaterSizing(std::shared_ptr<detail::WaterHeaterSizing_Impl> impl);
 
@@ -189,10 +189,10 @@ namespace model {
   };
 
   /** \relates WaterHeaterSizing*/
-  typedef boost::optional<WaterHeaterSizing> OptionalWaterHeaterSizing;
+  using OptionalWaterHeaterSizing = boost::optional<WaterHeaterSizing>;
 
   /** \relates WaterHeaterSizing*/
-  typedef std::vector<WaterHeaterSizing> WaterHeaterSizingVector;
+  using WaterHeaterSizingVector = std::vector<WaterHeaterSizing>;
 
 }  // namespace model
 }  // namespace openstudio

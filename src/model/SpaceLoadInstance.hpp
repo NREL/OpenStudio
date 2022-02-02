@@ -87,7 +87,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SpaceLoadInstance_Impl ImplType;
+    using ImplType = detail::SpaceLoadInstance_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -102,10 +102,10 @@ namespace model {
   };
 
   /** \relates SpaceLoadInstance */
-  typedef boost::optional<SpaceLoadInstance> OptionalSpaceLoadInstance;
+  using OptionalSpaceLoadInstance = boost::optional<SpaceLoadInstance>;
 
   /** \relates SpaceLoadInstance */
-  typedef std::vector<SpaceLoadInstance> SpaceLoadInstanceVector;
+  using SpaceLoadInstanceVector = std::vector<SpaceLoadInstance>;
 
 }  // namespace model
 }  // namespace openstudio

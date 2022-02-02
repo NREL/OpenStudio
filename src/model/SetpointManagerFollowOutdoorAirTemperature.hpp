@@ -107,7 +107,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SetpointManagerFollowOutdoorAirTemperature_Impl ImplType;
+    using ImplType = detail::SetpointManagerFollowOutdoorAirTemperature_Impl;
 
     explicit SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
 

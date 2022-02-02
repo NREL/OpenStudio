@@ -134,7 +134,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_Clone) {
   outputTableSummaryReports.addSummaryReport("ClimaticDataSummary");
 
   // clone it into the same model
-  OutputTableSummaryReports outputTableSummaryReportsClone = outputTableSummaryReports.clone(model).cast<OutputTableSummaryReports>();
+  auto outputTableSummaryReportsClone = outputTableSummaryReports.clone(model).cast<OutputTableSummaryReports>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputTableSummaryReports, outputTableSummaryReportsClone);
   ASSERT_EQ(1, outputTableSummaryReportsClone.numberofSummaryReports());
@@ -142,7 +142,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_Clone) {
 
   // clone it into a different model
   Model model2;
-  OutputTableSummaryReports outputTableSummaryReportsClone2 = outputTableSummaryReports.clone(model2).cast<OutputTableSummaryReports>();
+  auto outputTableSummaryReportsClone2 = outputTableSummaryReports.clone(model2).cast<OutputTableSummaryReports>();
   ASSERT_EQ(1, outputTableSummaryReportsClone2.numberofSummaryReports());
   EXPECT_EQ("ClimaticDataSummary", outputTableSummaryReportsClone2.summaryReports()[0]);
 }
@@ -164,6 +164,6 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OtherMethods) {
   ASSERT_EQ(1, outputTableSummaryReports.numberofSummaryReports());
   EXPECT_EQ("AllSummary", outputTableSummaryReports.summaryReports()[0]);
 
-  EXPECT_TRUE(outputTableSummaryReports.summaryReportValues().size() > 0);
-  EXPECT_TRUE(outputTableSummaryReports.validSummaryReportValues().size() > 0);
+  EXPECT_TRUE(!outputTableSummaryReports.summaryReportValues().empty());
+  EXPECT_TRUE(!outputTableSummaryReports.validSummaryReportValues().empty());
 }

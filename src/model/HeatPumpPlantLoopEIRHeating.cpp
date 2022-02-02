@@ -460,7 +460,7 @@ namespace model {
   }
 
   IddObjectType HeatPumpPlantLoopEIRHeating::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating);
+    return {IddObjectType::OS_HeatPump_PlantLoop_EIR_Heating};
   }
 
   std::vector<std::string> HeatPumpPlantLoopEIRHeating::condenserTypeValues() {

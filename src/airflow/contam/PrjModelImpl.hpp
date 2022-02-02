@@ -333,7 +333,7 @@ namespace contam {
       bool addAirflowElement(T element) {
         auto copy = new T;
         *copy = element;
-        AirflowElement* pointer = dynamic_cast<AirflowElement*>(copy);
+        auto* pointer = dynamic_cast<AirflowElement*>(copy);
         if (pointer) {
           copy->setNr(m_airflowElements.size() + 1);
           m_airflowElements.push_back(std::shared_ptr<AirflowElement>(pointer));
@@ -349,7 +349,7 @@ namespace contam {
         if (nr > 0 && (unsigned)nr <= m_airflowElements.size()) {
           auto copy = new T;
           *copy = element;
-          AirflowElement* pointer = dynamic_cast<AirflowElement*>(copy);
+          auto* pointer = dynamic_cast<AirflowElement*>(copy);
           if (pointer) {
             copy->setNr(nr);
             //m_airflowElements.replace(nr - 1, std::shared_ptr<AirflowElement>(pointer));
@@ -377,7 +377,7 @@ namespace contam {
       bool addControlNode(T element, bool sequence = true) {
         auto copy = new T;
         *copy = element;
-        ControlNode* pointer = dynamic_cast<ControlNode*>(copy);
+        auto* pointer = dynamic_cast<ControlNode*>(copy);
         if (pointer) {
           copy->setNr(m_controlNodes.size() + 1);
           if (sequence) {

@@ -209,7 +209,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_Clone) {
 
     ModelObject clone = collector.clone(model);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlatePhotovoltaicThermal>());
-    SolarCollectorFlatPlatePhotovoltaicThermal collector2 = clone.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+    auto collector2 = clone.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
     SolarCollectorPerformancePhotovoltaicThermalSimple performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());
@@ -251,7 +251,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_Clone) {
     Model model2;
     ModelObject clone = collector.clone(model2);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlatePhotovoltaicThermal>());
-    SolarCollectorFlatPlatePhotovoltaicThermal collector2 = clone.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+    auto collector2 = clone.cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
     SolarCollectorPerformancePhotovoltaicThermalSimple performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());

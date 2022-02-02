@@ -255,7 +255,7 @@ Plane::Plane(double a, double b, double c, double d) : m_a(a), m_b(b), m_c(c), m
 }
 
 Vector3d Plane::outwardNormal() const {
-  return Vector3d(m_a, m_b, m_c);
+  return {m_a, m_b, m_c};
 }
 
 bool Plane::parallel(const Plane& other, double tol) const {
@@ -284,7 +284,7 @@ bool Plane::reverseEqual(const Plane& other, double tol) const {
 }
 
 Plane Plane::reversePlane() const {
-  return Plane(-m_a, -m_b, -m_c, -m_d);
+  return {-m_a, -m_b, -m_c, -m_d};
 }
 
 Point3d Plane::project(const Point3d& point) const {
@@ -301,7 +301,7 @@ Point3d Plane::project(const Point3d& point) const {
   double y = v - m_b * ratio;
   double z = w - m_c * ratio;
 
-  return Point3d(x, y, z);
+  return {x, y, z};
 }
 
 std::vector<Point3d> Plane::project(const std::vector<Point3d>& points) const {

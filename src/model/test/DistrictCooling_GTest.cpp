@@ -118,14 +118,14 @@ TEST_F(ModelFixture, DistrictCooling_Clone) {
   testObject.setNominalCapacity(1234);
 
   //clone into the same model
-  DistrictCooling testObjectClone = testObject.clone(m).cast<DistrictCooling>();
+  auto testObjectClone = testObject.clone(m).cast<DistrictCooling>();
   auto capacity = testObjectClone.nominalCapacity();
   ASSERT_TRUE(capacity);
   ASSERT_EQ(1234, capacity.get());
 
   //clone into another model
   Model m2;
-  DistrictCooling testObjectClone2 = testObject.clone(m2).cast<DistrictCooling>();
+  auto testObjectClone2 = testObject.clone(m2).cast<DistrictCooling>();
 
   capacity = testObjectClone2.nominalCapacity();
   ASSERT_TRUE(capacity);
@@ -157,7 +157,7 @@ TEST_F(ModelFixture, DistrictCooling_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  DistrictCooling testObjectClone = testObject.clone(m).cast<DistrictCooling>();
+  auto testObjectClone = testObject.clone(m).cast<DistrictCooling>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

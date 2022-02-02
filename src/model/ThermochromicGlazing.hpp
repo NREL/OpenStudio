@@ -79,7 +79,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermochromicGlazing_Impl ImplType;
+    using ImplType = detail::ThermochromicGlazing_Impl;
 
     explicit ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
 
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates ThermochromicGlazing*/
-  typedef boost::optional<ThermochromicGlazing> OptionalThermochromicGlazing;
+  using OptionalThermochromicGlazing = boost::optional<ThermochromicGlazing>;
 
   /** \relates ThermochromicGlazing*/
-  typedef std::vector<ThermochromicGlazing> ThermochromicGlazingVector;
+  using ThermochromicGlazingVector = std::vector<ThermochromicGlazing>;
 
 }  // namespace model
 }  // namespace openstudio

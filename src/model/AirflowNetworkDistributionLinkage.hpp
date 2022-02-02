@@ -101,7 +101,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkDistributionLinkage_Impl ImplType;
+    using ImplType = detail::AirflowNetworkDistributionLinkage_Impl;
 
     explicit AirflowNetworkDistributionLinkage(std::shared_ptr<detail::AirflowNetworkDistributionLinkage_Impl> impl);
 
@@ -115,10 +115,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkDistributionLinkage*/
-  typedef boost::optional<AirflowNetworkDistributionLinkage> OptionalAirflowNetworkDistributionLinkage;
+  using OptionalAirflowNetworkDistributionLinkage = boost::optional<AirflowNetworkDistributionLinkage>;
 
   /** \relates AirflowNetworkDistributionLinkage*/
-  typedef std::vector<AirflowNetworkDistributionLinkage> AirflowNetworkDistributionLinkageVector;
+  using AirflowNetworkDistributionLinkageVector = std::vector<AirflowNetworkDistributionLinkage>;
 
 }  // namespace model
 }  // namespace openstudio

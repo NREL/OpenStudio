@@ -123,7 +123,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXVariableSpeedSpeedData_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXVariableSpeedSpeedData_Impl;
 
     explicit CoilCoolingDXVariableSpeedSpeedData(std::shared_ptr<detail::CoilCoolingDXVariableSpeedSpeedData_Impl> impl);
 
@@ -137,10 +137,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXVariableSpeedSpeedData*/
-  typedef boost::optional<CoilCoolingDXVariableSpeedSpeedData> OptionalCoilCoolingDXVariableSpeedSpeedData;
+  using OptionalCoilCoolingDXVariableSpeedSpeedData = boost::optional<CoilCoolingDXVariableSpeedSpeedData>;
 
   /** \relates CoilCoolingDXVariableSpeedSpeedData*/
-  typedef std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeedSpeedDataVector;
+  using CoilCoolingDXVariableSpeedSpeedDataVector = std::vector<CoilCoolingDXVariableSpeedSpeedData>;
 
 }  // namespace model
 }  // namespace openstudio

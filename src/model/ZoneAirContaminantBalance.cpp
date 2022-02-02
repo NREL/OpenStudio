@@ -98,7 +98,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneAirContaminantBalance_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneAirContaminantBalanceFields::OutdoorCarbonDioxideScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneAirContaminantBalance", "Outdoor Carbon Dioxide"));
       }
@@ -167,7 +168,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType ZoneAirContaminantBalance::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneAirContaminantBalance);
+    return {IddObjectType::OS_ZoneAirContaminantBalance};
   }
 
   bool ZoneAirContaminantBalance::carbonDioxideConcentration() const {

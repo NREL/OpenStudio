@@ -428,7 +428,7 @@ namespace model {
     friend class openstudio::IdfObject;
 
     /// @cond
-    typedef detail::CoilCoolingDXTwoSpeed_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXTwoSpeed_Impl;
 
     explicit CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> impl);
 
@@ -438,10 +438,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXTwoSpeed */
-  typedef boost::optional<CoilCoolingDXTwoSpeed> OptionalCoilCoolingDXTwoSpeed;
+  using OptionalCoilCoolingDXTwoSpeed = boost::optional<CoilCoolingDXTwoSpeed>;
 
   /** \relates CoilCoolingDXTwoSpeed */
-  typedef std::vector<CoilCoolingDXTwoSpeed> CoilCoolingDXTwoSpeedVector;
+  using CoilCoolingDXTwoSpeedVector = std::vector<CoilCoolingDXTwoSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

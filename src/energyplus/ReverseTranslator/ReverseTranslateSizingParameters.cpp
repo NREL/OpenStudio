@@ -46,7 +46,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    SizingParameters mo = m_model.getUniqueModelObject<SizingParameters>();
+    auto mo = m_model.getUniqueModelObject<SizingParameters>();
 
     boost::optional<double> value = workspaceObject.getDouble(Sizing_ParametersFields::HeatingSizingFactor);
     if (value) {

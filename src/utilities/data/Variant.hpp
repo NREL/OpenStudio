@@ -99,10 +99,10 @@ class UTILITIES_API Variant
 };
 
 /** \relates Variant */
-typedef std::optional<Variant> OptionalVariant;
+using OptionalVariant = std::optional<Variant>;
 
 /** \relates Variant */
-typedef std::vector<Variant> VariantVector;
+using VariantVector = std::vector<Variant>;
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Variant& variant);
 

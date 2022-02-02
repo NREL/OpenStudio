@@ -192,7 +192,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationTranscriticalSystem_Impl ImplType;
+    using ImplType = detail::RefrigerationTranscriticalSystem_Impl;
 
     explicit RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
 
@@ -206,10 +206,10 @@ namespace model {
   };
 
   /** \relates RefrigerationTranscriticalSystem*/
-  typedef boost::optional<RefrigerationTranscriticalSystem> OptionalRefrigerationTranscriticalSystem;
+  using OptionalRefrigerationTranscriticalSystem = boost::optional<RefrigerationTranscriticalSystem>;
 
   /** \relates RefrigerationTranscriticalSystem*/
-  typedef std::vector<RefrigerationTranscriticalSystem> RefrigerationTranscriticalSystemVector;
+  using RefrigerationTranscriticalSystemVector = std::vector<RefrigerationTranscriticalSystem>;
 
 }  // namespace model
 }  // namespace openstudio

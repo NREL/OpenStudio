@@ -47,7 +47,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    Timestep mo = m_model.getUniqueModelObject<Timestep>();
+    auto mo = m_model.getUniqueModelObject<Timestep>();
 
     boost::optional<int> i = workspaceObject.getInt(TimestepFields::NumberofTimestepsperHour);
     if (i) {

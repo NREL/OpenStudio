@@ -79,7 +79,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemGlobalVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemGlobalVariable_Impl;
 
     explicit EnergyManagementSystemGlobalVariable(std::shared_ptr<detail::EnergyManagementSystemGlobalVariable_Impl> impl);
 
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemGlobalVariable*/
-  typedef boost::optional<EnergyManagementSystemGlobalVariable> OptionalEnergyManagementSystemGlobalVariable;
+  using OptionalEnergyManagementSystemGlobalVariable = boost::optional<EnergyManagementSystemGlobalVariable>;
 
   /** \relates EnergyManagementSystemGlobalVariable*/
-  typedef std::vector<EnergyManagementSystemGlobalVariable> EnergyManagementSystemGlobalVariableVector;
+  using EnergyManagementSystemGlobalVariableVector = std::vector<EnergyManagementSystemGlobalVariable>;
 
 }  // namespace model
 }  // namespace openstudio

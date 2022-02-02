@@ -83,16 +83,16 @@ namespace model {
     ModelObject ZoneHVACWaterToAirHeatPump_Impl::clone(Model model) const {
       auto wahpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACWaterToAirHeatPump>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
       auto t_supplementalHeatingCoil = supplementalHeatingCoil();
-      HVACComponent supplementalHeatingCoilClone = t_supplementalHeatingCoil.clone(model).cast<HVACComponent>();
+      auto supplementalHeatingCoilClone = t_supplementalHeatingCoil.clone(model).cast<HVACComponent>();
 
       wahpClone.setSupplyAirFan(supplyFanClone);
 
@@ -168,7 +168,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACWaterToAirHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACWaterToAirHeatPump", "Availability"));
       }
@@ -943,7 +944,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACWaterToAirHeatPump::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump);
+    return {IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump};
   }
 
   std::vector<std::string> ZoneHVACWaterToAirHeatPump::fanPlacementValues() {

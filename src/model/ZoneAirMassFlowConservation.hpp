@@ -122,7 +122,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneAirMassFlowConservation_Impl ImplType;
+    using ImplType = detail::ZoneAirMassFlowConservation_Impl;
 
     explicit ZoneAirMassFlowConservation(std::shared_ptr<detail::ZoneAirMassFlowConservation_Impl> impl);
 
@@ -138,10 +138,10 @@ namespace model {
   };
 
   /** \relates ZoneAirMassFlowConservation*/
-  typedef boost::optional<ZoneAirMassFlowConservation> OptionalZoneAirMassFlowConservation;
+  using OptionalZoneAirMassFlowConservation = boost::optional<ZoneAirMassFlowConservation>;
 
   /** \relates ZoneAirMassFlowConservation*/
-  typedef std::vector<ZoneAirMassFlowConservation> ZoneAirMassFlowConservationVector;
+  using ZoneAirMassFlowConservationVector = std::vector<ZoneAirMassFlowConservation>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -251,7 +251,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationSecondarySystem_Impl ImplType;
+    using ImplType = detail::RefrigerationSecondarySystem_Impl;
 
     explicit RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl);
 
@@ -265,10 +265,10 @@ namespace model {
   };
 
   /** \relates RefrigerationSecondarySystem*/
-  typedef boost::optional<RefrigerationSecondarySystem> OptionalRefrigerationSecondarySystem;
+  using OptionalRefrigerationSecondarySystem = boost::optional<RefrigerationSecondarySystem>;
 
   /** \relates RefrigerationSecondarySystem*/
-  typedef std::vector<RefrigerationSecondarySystem> RefrigerationSecondarySystemVector;
+  using RefrigerationSecondarySystemVector = std::vector<RefrigerationSecondarySystem>;
 
 }  // namespace model
 }  // namespace openstudio

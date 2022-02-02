@@ -134,7 +134,7 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_addToNode) {
   EXPECT_TRUE(rack.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  RefrigerationCompressorRack rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
+  auto rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
   demandOutletNode = plantLoop.demandOutletNode();
 
   EXPECT_TRUE(rackClone.addToNode(demandOutletNode));
@@ -249,11 +249,11 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_Clone) {
   RefrigerationCompressorRack rack = RefrigerationCompressorRack(model);
   rack.setDesignCompressorRackCOP(3.0);
 
-  RefrigerationCompressorRack rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
+  auto rackClone = rack.clone(model).cast<RefrigerationCompressorRack>();
   EXPECT_EQ(3.0, rackClone.designCompressorRackCOP());
 
   Model model2;
-  RefrigerationCompressorRack rackClone2 = rack.clone(model2).cast<RefrigerationCompressorRack>();
+  auto rackClone2 = rack.clone(model2).cast<RefrigerationCompressorRack>();
   EXPECT_EQ(3.0, rackClone2.designCompressorRackCOP());
 }
 

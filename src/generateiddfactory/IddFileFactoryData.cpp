@@ -100,7 +100,8 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
   }
 
   std::stringstream header;
-  std::string line, trimLine;
+  std::string line;
+  std::string trimLine;
   boost::smatch matches;
   int lineNum = 1;
   std::shared_ptr<IddFactoryOutFile>& cxxFile = outFiles.iddFactoryIddFileCxxs[iddFileIndex];

@@ -129,7 +129,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveCubic_Impl ImplType;
+    using ImplType = detail::CurveCubic_Impl;
 
     explicit CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl);
 
@@ -144,10 +144,10 @@ namespace model {
   };
 
   /** \relates CurveCubic*/
-  typedef boost::optional<CurveCubic> OptionalCurveCubic;
+  using OptionalCurveCubic = boost::optional<CurveCubic>;
 
   /** \relates CurveCubic*/
-  typedef std::vector<CurveCubic> CurveCubicVector;
+  using CurveCubicVector = std::vector<CurveCubic>;
 
 }  // namespace model
 }  // namespace openstudio

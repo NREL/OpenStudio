@@ -289,7 +289,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationAirChiller_Impl ImplType;
+    using ImplType = detail::RefrigerationAirChiller_Impl;
 
     explicit RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl);
 
@@ -303,10 +303,10 @@ namespace model {
   };
 
   /** \relates RefrigerationAirChiller*/
-  typedef boost::optional<RefrigerationAirChiller> OptionalRefrigerationAirChiller;
+  using OptionalRefrigerationAirChiller = boost::optional<RefrigerationAirChiller>;
 
   /** \relates RefrigerationAirChiller*/
-  typedef std::vector<RefrigerationAirChiller> RefrigerationAirChillerVector;
+  using RefrigerationAirChillerVector = std::vector<RefrigerationAirChiller>;
 
 }  // namespace model
 }  // namespace openstudio

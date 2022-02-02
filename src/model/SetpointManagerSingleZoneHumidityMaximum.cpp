@@ -79,7 +79,7 @@ namespace model {
           ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
           if (!modelObjectVector.empty()) {
             ModelObject mo = modelObjectVector.front();
-            ThermalZone thermalZone = mo.cast<ThermalZone>();
+            auto thermalZone = mo.cast<ThermalZone>();
             this->setControlZone(thermalZone);
           }
           return true;
@@ -143,7 +143,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerSingleZoneHumidityMaximum::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum);
+    return {IddObjectType::OS_SetpointManager_SingleZone_Humidity_Maximum};
   }
 
   std::vector<std::string> SetpointManagerSingleZoneHumidityMaximum::controlVariableValues() {

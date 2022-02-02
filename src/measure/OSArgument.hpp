@@ -97,7 +97,7 @@ OPENSTUDIO_ENUM( OSDomainType,
 
   /** Preserves old name for OSArgumentType. \deprecated */
   // TODO: JM 2018-11-28: Time to remove no?
-  typedef OSArgumentType UserScriptArgumentType;
+  using UserScriptArgumentType = OSArgumentType;
 
   /** OSArgument is an argument to an OSMeasure. **/
   class MEASURE_API OSArgument
@@ -415,7 +415,7 @@ OPENSTUDIO_ENUM( OSDomainType,
     // Note JM 2018-11-28:
     // typedef for the std::variant we will use for value, default value, and domain
     // we add std::monostate to allow the variant to be empty basically
-    typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
+    using OSArgumentVariant = std::variant<std::monostate, bool, double, int, std::string, openstudio::path>;
 
     bool setStringInternal(OSArgumentVariant& variant, const std::string& value);
 
@@ -444,16 +444,16 @@ OPENSTUDIO_ENUM( OSDomainType,
   };
 
   /** \relates OSArgument */
-  typedef boost::optional<OSArgument> OptionalOSArgument;
+  using OptionalOSArgument = boost::optional<OSArgument>;
 
   /** \relates OSArgument */
-  typedef std::vector<OSArgument> OSArgumentVector;
+  using OSArgumentVector = std::vector<OSArgument>;
 
   /** \relates OSArgument */
-  typedef std::map<std::string, OSArgument> OSArgumentMap;
+  using OSArgumentMap = std::map<std::string, OSArgument>;
 
   /** \relates OSArgument */
-  typedef std::pair<openstudio::path, std::vector<OSArgument>> UserScriptInfo;
+  using UserScriptInfo = std::pair<openstudio::path, std::vector<OSArgument>>;
 
   /** Prints argument data to ostream for debugging purposes. \relates OSArgument */
   MEASURE_API std::ostream& operator<<(std::ostream& os, const OSArgument& arg);

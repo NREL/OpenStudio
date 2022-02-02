@@ -88,7 +88,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneControlHumidistat_Impl ImplType;
+    using ImplType = detail::ZoneControlHumidistat_Impl;
 
     explicit ZoneControlHumidistat(std::shared_ptr<detail::ZoneControlHumidistat_Impl> impl);
 
@@ -102,10 +102,10 @@ namespace model {
   };
 
   /** \relates ZoneControlHumidistat*/
-  typedef boost::optional<ZoneControlHumidistat> OptionalZoneControlHumidistat;
+  using OptionalZoneControlHumidistat = boost::optional<ZoneControlHumidistat>;
 
   /** \relates ZoneControlHumidistat*/
-  typedef std::vector<ZoneControlHumidistat> ZoneControlHumidistatVector;
+  using ZoneControlHumidistatVector = std::vector<ZoneControlHumidistat>;
 
 }  // namespace model
 }  // namespace openstudio

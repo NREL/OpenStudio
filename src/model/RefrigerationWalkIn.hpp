@@ -340,7 +340,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationWalkIn_Impl ImplType;
+    using ImplType = detail::RefrigerationWalkIn_Impl;
 
     explicit RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl);
 
@@ -354,10 +354,10 @@ namespace model {
   };
 
   /** \relates RefrigerationWalkIn*/
-  typedef boost::optional<RefrigerationWalkIn> OptionalRefrigerationWalkIn;
+  using OptionalRefrigerationWalkIn = boost::optional<RefrigerationWalkIn>;
 
   /** \relates RefrigerationWalkIn*/
-  typedef std::vector<RefrigerationWalkIn> RefrigerationWalkInVector;
+  using RefrigerationWalkInVector = std::vector<RefrigerationWalkIn>;
 
 }  // namespace model
 }  // namespace openstudio

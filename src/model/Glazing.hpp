@@ -53,7 +53,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Glazing_Impl ImplType;
+    using ImplType = detail::Glazing_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -69,10 +69,10 @@ namespace model {
   };
 
   /** \relates Glazing */
-  typedef boost::optional<Glazing> OptionalGlazing;
+  using OptionalGlazing = boost::optional<Glazing>;
 
   /** \relates Glazing */
-  typedef std::vector<Glazing> GlazingVector;
+  using GlazingVector = std::vector<Glazing>;
 
 }  // namespace model
 }  // namespace openstudio

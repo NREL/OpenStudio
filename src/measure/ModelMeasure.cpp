@@ -36,15 +36,15 @@
 namespace openstudio {
 namespace measure {
 
-  std::vector<OSArgument> ModelMeasure::arguments(const openstudio::model::Model& model) const {
-    return OSArgumentVector();
+  std::vector<OSArgument> ModelMeasure::arguments(const openstudio::model::Model& /*model*/) const {
+    return {};
   }
 
   std::vector<OSOutput> ModelMeasure::outputs() const {
-    return OSOutputVector();
+    return {};
   }
 
-  bool ModelMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+  bool ModelMeasure::run(openstudio::model::Model& /*model*/, OSRunner& runner, const std::map<std::string, OSArgument>& /*user_arguments*/) const {
     runner.prepareForMeasureRun(*this);
     return true;
   }

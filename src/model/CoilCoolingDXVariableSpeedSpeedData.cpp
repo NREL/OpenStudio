@@ -342,7 +342,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXVariableSpeedSpeedData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_VariableSpeed_SpeedData);
+    return {IddObjectType::OS_Coil_Cooling_DX_VariableSpeed_SpeedData};
   }
 
   double CoilCoolingDXVariableSpeedSpeedData::referenceUnitGrossRatedTotalCoolingCapacity() const {

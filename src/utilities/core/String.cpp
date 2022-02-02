@@ -38,7 +38,7 @@ namespace openstudio {
 
 /** char* to std::string. */
 std::string toString(const char* s) {
-  return std::string(s);
+  return {s};
 }
 
 /** string to std::string. */

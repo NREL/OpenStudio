@@ -48,10 +48,10 @@
 #  pragma warning(pop)
 #endif
 
-typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
-typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
+using BoostPoint = boost::geometry::model::d2::point_xy<double>;
+using BoostPolygon = boost::geometry::model::polygon<BoostPoint>;
+using BoostRing = boost::geometry::model::ring<BoostPoint>;
+using BoostMultiPolygon = boost::geometry::model::multi_polygon<BoostPolygon>;
 
 using namespace std;
 using namespace boost;
@@ -114,7 +114,8 @@ std::vector<Point3d> makeRectangleDown(double xmin, double ymin, double width, d
 }
 
 TEST_F(GeometryFixture, BoostGeometry_Polygon1) {
-  BoostPolygon blue, yellow;
+  BoostPolygon blue;
+  BoostPolygon yellow;
 
   // blue
   boost::geometry::read_wkt("POLYGON((-11.379200508 -12.0396003048 , -11.379200508 12.0395996952 , 3.555999492 12.0395996952 , 3.555999492 "
@@ -2044,7 +2045,7 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
     {250, 50, 0},
   };
   overlap = p.overlap(line);
-  ASSERT_TRUE(overlap.size() == 0);
+  ASSERT_TRUE(overlap.empty());
 
   // 8 - No overlap
   line = {
@@ -2052,7 +2053,7 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
     {250, 250, 0},
   };
   overlap = p.overlap(line);
-  ASSERT_TRUE(overlap.size() == 0);
+  ASSERT_TRUE(overlap.empty());
 
   // 9 - No overlap (External corner to 90 deg on external edge)
   line = {
@@ -2060,7 +2061,7 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
     {220, 160, 0},
   };
   overlap = p.overlap(line);
-  ASSERT_TRUE(overlap.size() == 0);
+  ASSERT_TRUE(overlap.empty());
 }
 
 // core and perimeter with the south perimeter subdivided into 4

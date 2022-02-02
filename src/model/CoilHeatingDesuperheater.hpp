@@ -129,7 +129,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingDesuperheater_Impl ImplType;
+    using ImplType = detail::CoilHeatingDesuperheater_Impl;
 
     explicit CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl);
 
@@ -143,10 +143,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingDesuperheater*/
-  typedef boost::optional<CoilHeatingDesuperheater> OptionalCoilHeatingDesuperheater;
+  using OptionalCoilHeatingDesuperheater = boost::optional<CoilHeatingDesuperheater>;
 
   /** \relates CoilHeatingDesuperheater*/
-  typedef std::vector<CoilHeatingDesuperheater> CoilHeatingDesuperheaterVector;
+  using CoilHeatingDesuperheaterVector = std::vector<CoilHeatingDesuperheater>;
 
 }  // namespace model
 }  // namespace openstudio

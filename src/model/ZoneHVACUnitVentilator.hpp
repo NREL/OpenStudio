@@ -167,7 +167,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACUnitVentilator_Impl ImplType;
+    using ImplType = detail::ZoneHVACUnitVentilator_Impl;
 
     explicit ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACUnitVentilator_Impl> impl);
 
@@ -181,10 +181,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACUnitVentilator*/
-  typedef boost::optional<ZoneHVACUnitVentilator> OptionalZoneHVACUnitVentilator;
+  using OptionalZoneHVACUnitVentilator = boost::optional<ZoneHVACUnitVentilator>;
 
   /** \relates ZoneHVACUnitVentilator*/
-  typedef std::vector<ZoneHVACUnitVentilator> ZoneHVACUnitVentilatorVector;
+  using ZoneHVACUnitVentilatorVector = std::vector<ZoneHVACUnitVentilator>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -132,7 +132,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl ImplType;
+    using ImplType = detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl;
 
     explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(
       std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl> impl);
@@ -147,12 +147,12 @@ namespace model {
   };
 
   /** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
-  typedef boost::optional<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>
-    OptionalCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
+  using OptionalCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData =
+    boost::optional<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>;
 
   /** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData*/
-  typedef std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>
-    CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedDataVector;
+  using CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedDataVector =
+    std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>;
 
 }  // namespace model
 }  // namespace openstudio

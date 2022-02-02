@@ -102,7 +102,7 @@ namespace model {
   }
 
   IddObjectType PlantEquipmentOperationOutdoorDewpointDifference::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpointDifference);
+    return {IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpointDifference};
   }
 
   boost::optional<Node> PlantEquipmentOperationOutdoorDewpointDifference::referenceTemperatureNode() const {

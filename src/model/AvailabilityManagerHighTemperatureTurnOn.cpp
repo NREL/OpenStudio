@@ -103,7 +103,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerHighTemperatureTurnOn::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn);
+    return {IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn};
   }
 
   boost::optional<Node> AvailabilityManagerHighTemperatureTurnOn::sensorNode() const {

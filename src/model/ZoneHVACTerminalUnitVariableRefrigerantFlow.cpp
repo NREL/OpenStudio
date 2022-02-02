@@ -101,7 +101,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAvailabilityschedule) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACTerminalUnitVariableRefrigerantFlow", "Terminal Unit Availability schedule"));
       }
@@ -541,7 +542,7 @@ namespace model {
       ModelObject terminalClone = ZoneHVACComponent_Impl::clone(model);
 
       if (auto fan = supplyAirFan()) {
-        HVACComponent fanClone = fan->clone(model).cast<HVACComponent>();
+        auto fanClone = fan->clone(model).cast<HVACComponent>();
         terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fanClone);
       }
 
@@ -854,7 +855,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    return {IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow};
   }
 
   std::vector<std::string> ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFanPlacementValues() {

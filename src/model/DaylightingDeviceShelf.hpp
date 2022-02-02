@@ -92,7 +92,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightingDeviceShelf_Impl ImplType;
+    using ImplType = detail::DaylightingDeviceShelf_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -106,10 +106,10 @@ namespace model {
   };
 
   /** \relates DaylightingDeviceShelf*/
-  typedef boost::optional<DaylightingDeviceShelf> OptionalDaylightingDeviceShelf;
+  using OptionalDaylightingDeviceShelf = boost::optional<DaylightingDeviceShelf>;
 
   /** \relates DaylightingDeviceShelf*/
-  typedef std::vector<DaylightingDeviceShelf> DaylightingDeviceShelfVector;
+  using DaylightingDeviceShelfVector = std::vector<DaylightingDeviceShelf>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -116,7 +116,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FenestrationMaterial_Impl ImplType;
+    using ImplType = detail::FenestrationMaterial_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -132,10 +132,10 @@ namespace model {
   };
 
   /** \relates FenestrationMaterial */
-  typedef boost::optional<FenestrationMaterial> OptionalFenestrationMaterial;
+  using OptionalFenestrationMaterial = boost::optional<FenestrationMaterial>;
 
   /** \relates FenestrationMaterial */
-  typedef std::vector<FenestrationMaterial> FenestrationMaterialVector;
+  using FenestrationMaterialVector = std::vector<FenestrationMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

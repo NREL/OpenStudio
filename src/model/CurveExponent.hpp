@@ -125,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveExponent_Impl ImplType;
+    using ImplType = detail::CurveExponent_Impl;
 
     explicit CurveExponent(std::shared_ptr<detail::CurveExponent_Impl> impl);
 
@@ -140,10 +140,10 @@ namespace model {
   };
 
   /** \relates CurveExponent*/
-  typedef boost::optional<CurveExponent> OptionalCurveExponent;
+  using OptionalCurveExponent = boost::optional<CurveExponent>;
 
   /** \relates CurveExponent*/
-  typedef std::vector<CurveExponent> CurveExponentVector;
+  using CurveExponentVector = std::vector<CurveExponent>;
 
 }  // namespace model
 }  // namespace openstudio

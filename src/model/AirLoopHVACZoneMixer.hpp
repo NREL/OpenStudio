@@ -85,7 +85,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirLoopHVACZoneMixer_Impl ImplType;
+    using ImplType = detail::AirLoopHVACZoneMixer_Impl;
 
     explicit AirLoopHVACZoneMixer(std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl);
 
@@ -98,10 +98,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACZoneMixer */
-  typedef boost::optional<AirLoopHVACZoneMixer> OptionalAirLoopHVACZoneMixer;
+  using OptionalAirLoopHVACZoneMixer = boost::optional<AirLoopHVACZoneMixer>;
 
   /** \relates AirLoopHVACZoneMixer */
-  typedef std::vector<AirLoopHVACZoneMixer> AirLoopHVACZoneMixerVector;
+  using AirLoopHVACZoneMixerVector = std::vector<AirLoopHVACZoneMixer>;
 
 }  // namespace model
 }  // namespace openstudio

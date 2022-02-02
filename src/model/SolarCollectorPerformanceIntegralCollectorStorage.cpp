@@ -439,7 +439,7 @@ namespace model {
   }
 
   IddObjectType SolarCollectorPerformanceIntegralCollectorStorage::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollectorPerformance_IntegralCollectorStorage);
+    return {IddObjectType::OS_SolarCollectorPerformance_IntegralCollectorStorage};
   }
 
   std::vector<std::string> SolarCollectorPerformanceIntegralCollectorStorage::iCSCollectorTypeValues() {

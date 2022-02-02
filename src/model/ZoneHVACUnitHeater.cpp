@@ -70,10 +70,10 @@ namespace model {
     ModelObject ZoneHVACUnitHeater_Impl::clone(Model model) const {
       auto unitHeaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitHeater>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       unitHeaterClone.setSupplyAirFan(supplyFanClone);
 
@@ -113,7 +113,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACUnitHeater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
 
       if (std::find(b, e, OS_ZoneHVAC_UnitHeaterFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACUnitHeater", "Availability"));
@@ -426,7 +427,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACUnitHeater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_UnitHeater);
+    return {IddObjectType::OS_ZoneHVAC_UnitHeater};
   }
 
   std::vector<std::string> ZoneHVACUnitHeater::fanControlTypeValues() {

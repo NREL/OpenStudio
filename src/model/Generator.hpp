@@ -72,7 +72,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::Generator_Impl ImplType;
+    using ImplType = detail::Generator_Impl;
 
     explicit Generator(std::shared_ptr<detail::Generator_Impl> impl);
 
@@ -82,9 +82,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<Generator> OptionalGenerator;
+  using OptionalGenerator = boost::optional<Generator>;
 
-  typedef std::vector<Generator> GeneratorVector;
+  using GeneratorVector = std::vector<Generator>;
 
 }  // namespace model
 }  // namespace openstudio

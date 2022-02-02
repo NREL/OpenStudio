@@ -126,10 +126,10 @@ class UTILITIES_API BCLComponent
 };
 
 /** \relates BCLComponent */
-typedef boost::optional<BCLComponent> OptionalBCLComponent;
+using OptionalBCLComponent = boost::optional<BCLComponent>;
 
 /** \relates BCLComponent */
-typedef std::vector<BCLComponent> BCLComponentVector;
+using BCLComponentVector = std::vector<BCLComponent>;
 
 }  // namespace openstudio
 

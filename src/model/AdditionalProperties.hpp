@@ -118,7 +118,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::AdditionalProperties_Impl ImplType;
+    using ImplType = detail::AdditionalProperties_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -138,10 +138,10 @@ namespace model {
   };
 
   /** \relates AdditionalProperties */
-  typedef boost::optional<AdditionalProperties> OptionalAdditionalProperties;
+  using OptionalAdditionalProperties = boost::optional<AdditionalProperties>;
 
   /** \relates AdditionalProperties */
-  typedef std::vector<AdditionalProperties> AdditionalPropertiesVector;
+  using AdditionalPropertiesVector = std::vector<AdditionalProperties>;
 
 }  // namespace model
 

@@ -197,7 +197,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACPackagedTerminalAirConditioner_Impl ImplType;
+    using ImplType = detail::ZoneHVACPackagedTerminalAirConditioner_Impl;
 
     explicit ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl);
 
@@ -212,10 +212,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACPackagedTerminalAirConditioner*/
-  typedef boost::optional<ZoneHVACPackagedTerminalAirConditioner> OptionalZoneHVACPackagedTerminalAirConditioner;
+  using OptionalZoneHVACPackagedTerminalAirConditioner = boost::optional<ZoneHVACPackagedTerminalAirConditioner>;
 
   /** \relates ZoneHVACPackagedTerminalAirConditioner*/
-  typedef std::vector<ZoneHVACPackagedTerminalAirConditioner> ZoneHVACPackagedTerminalAirConditionerVector;
+  using ZoneHVACPackagedTerminalAirConditionerVector = std::vector<ZoneHVACPackagedTerminalAirConditioner>;
 
 }  // namespace model
 }  // namespace openstudio

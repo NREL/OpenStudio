@@ -281,7 +281,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::SubSurface_Impl ImplType;
+    using ImplType = detail::SubSurface_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -301,10 +301,10 @@ namespace model {
                                                          const boost::optional<ConstructionBase>& construction);
 
   /** \relates SubSurface*/
-  typedef boost::optional<SubSurface> OptionalSubSurface;
+  using OptionalSubSurface = boost::optional<SubSurface>;
 
   /** \relates SubSurface*/
-  typedef std::vector<SubSurface> SubSurfaceVector;
+  using SubSurfaceVector = std::vector<SubSurface>;
 
 }  // namespace model
 }  // namespace openstudio

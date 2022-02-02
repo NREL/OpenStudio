@@ -76,7 +76,7 @@ namespace model {
   }
 
   IddObjectType AirWallMaterial::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material_AirWall);
+    return {IddObjectType::OS_Material_AirWall};
   }
 
   /// @cond

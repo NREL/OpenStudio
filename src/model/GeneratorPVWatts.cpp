@@ -78,7 +78,7 @@ namespace model {
       return GeneratorPVWatts::iddObjectType();
     }
 
-    std::vector<ScheduleTypeKey> GeneratorPVWatts_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+    std::vector<ScheduleTypeKey> GeneratorPVWatts_Impl::getScheduleTypeKeys(const Schedule& /*schedule*/) const {
       std::vector<ScheduleTypeKey> result;
       return result;
     }
@@ -302,7 +302,7 @@ namespace model {
   }
 
   IddObjectType GeneratorPVWatts::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_PVWatts);
+    return {IddObjectType::OS_Generator_PVWatts};
   }
 
   std::string GeneratorPVWatts::pvWattsVersion() const {

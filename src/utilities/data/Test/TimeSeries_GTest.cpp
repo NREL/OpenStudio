@@ -121,7 +121,7 @@ TEST_F(DataFixture, TimeSeries_IntervalConstructor) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
     double periodMiddle = (numPeriods - 0.5) * interval.totalDays();
@@ -189,7 +189,7 @@ TEST_F(DataFixture, TimeSeries_DetailedConstructor_FirstReport) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 1, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
@@ -262,7 +262,7 @@ TEST_F(DataFixture, TimeSeries_DetailedConstructor_Start) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 1, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
@@ -340,7 +340,7 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_FirstReport) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 1, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
@@ -417,7 +417,7 @@ TEST_F(DataFixture, TimeSeries_SecondsConstructor_Start) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 1, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
@@ -498,7 +498,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_std_vector_FirstReport) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 3, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
@@ -575,7 +575,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_std_vector_Start) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 3, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
@@ -656,7 +656,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_FirstReport) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 3, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();
@@ -733,7 +733,7 @@ TEST_F(DataFixture, TimeSeries_DaysConstructor_Vector_Start) {
 
   // check values
   for (unsigned i = 0; i < numValues; ++i) {
-    double numPeriods = (double)i;
+    auto numPeriods = (double)i;
     Time interval(0, 3, 0, 0);
     double lastPeriodEnd = (numPeriods - 1.0) * interval.totalDays();
     double periodBegin = (numPeriods - 0.99) * interval.totalDays();

@@ -81,7 +81,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDXCurveFitPerformance_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingSchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXCurveFitPerformance", "Evaporative Condenser Basin Heater Operating Schedule"));
       }
@@ -112,7 +113,7 @@ namespace model {
     std::vector<IdfObject> CoilCoolingDXCurveFitPerformance_Impl::remove() {
       if (!coilCoolingDXs().empty()) {
         LOG(Warn, "Cannot remove object because it is used by at least one CoilCoolingDX as a required field");
-        return std::vector<IdfObject>();
+        return {};
       }
       return ResourceObject_Impl::remove();
     }
@@ -314,7 +315,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXCurveFitPerformance::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance);
+    return {IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance};
   }
 
   std::vector<std::string> CoilCoolingDXCurveFitPerformance::capacityControlMethodValues() {

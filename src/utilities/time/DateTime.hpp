@@ -167,10 +167,10 @@ class UTILITIES_API DateTime
 };
 
 /// optional DateTime
-typedef boost::optional<DateTime> OptionalDateTime;
+using OptionalDateTime = boost::optional<DateTime>;
 
 /// vector of DateTime
-typedef std::vector<DateTime> DateTimeVector;
+using DateTimeVector = std::vector<DateTime>;
 
 // std::ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const DateTime& dateTime);

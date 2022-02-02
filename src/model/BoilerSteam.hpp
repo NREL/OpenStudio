@@ -122,7 +122,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::BoilerSteam_Impl ImplType;
+    using ImplType = detail::BoilerSteam_Impl;
 
     explicit BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl);
 
@@ -138,10 +138,10 @@ namespace model {
   };
 
   /** \relates BoilerSteam*/
-  typedef boost::optional<BoilerSteam> OptionalBoilerSteam;
+  using OptionalBoilerSteam = boost::optional<BoilerSteam>;
 
   /** \relates BoilerSteam*/
-  typedef std::vector<BoilerSteam> BoilerSteamVector;
+  using BoilerSteamVector = std::vector<BoilerSteam>;
 
 }  // namespace model
 }  // namespace openstudio

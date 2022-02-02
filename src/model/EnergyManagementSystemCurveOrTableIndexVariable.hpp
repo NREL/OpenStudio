@@ -79,7 +79,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl;
 
     explicit EnergyManagementSystemCurveOrTableIndexVariable(std::shared_ptr<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl> impl);
 
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
-  typedef boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> OptionalEnergyManagementSystemCurveOrTableIndexVariable;
+  using OptionalEnergyManagementSystemCurveOrTableIndexVariable = boost::optional<EnergyManagementSystemCurveOrTableIndexVariable>;
 
   /** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
-  typedef std::vector<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemCurveOrTableIndexVariableVector;
+  using EnergyManagementSystemCurveOrTableIndexVariableVector = std::vector<EnergyManagementSystemCurveOrTableIndexVariable>;
 
 }  // namespace model
 }  // namespace openstudio

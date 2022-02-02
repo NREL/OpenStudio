@@ -71,7 +71,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::InfraredTransparentMaterial_Impl ImplType;
+    using ImplType = detail::InfraredTransparentMaterial_Impl;
 
     explicit InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
 
@@ -85,10 +85,10 @@ namespace model {
   };
 
   /** \relates InfraredTransparentMaterial*/
-  typedef boost::optional<InfraredTransparentMaterial> OptionalInfraredTransparentMaterial;
+  using OptionalInfraredTransparentMaterial = boost::optional<InfraredTransparentMaterial>;
 
   /** \relates InfraredTransparentMaterial*/
-  typedef std::vector<InfraredTransparentMaterial> InfraredTransparentMaterialVector;
+  using InfraredTransparentMaterialVector = std::vector<InfraredTransparentMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

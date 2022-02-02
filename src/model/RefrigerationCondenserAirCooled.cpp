@@ -330,7 +330,7 @@ namespace model {
       std::vector<RefrigerationSystem> systems =
         getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
 
-      if (systems.size() > 0u) {
+      if (!systems.empty()) {
         if (systems.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
         }

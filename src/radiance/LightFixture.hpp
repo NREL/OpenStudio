@@ -49,7 +49,7 @@ namespace radiance {
   };
 
   // vector of LightFixture
-  typedef std::vector<LightFixture> LightFixtureVector;
+  using LightFixtureVector = std::vector<LightFixture>;
 
 }  // namespace radiance
 }  // namespace openstudio

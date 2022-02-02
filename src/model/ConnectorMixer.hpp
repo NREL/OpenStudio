@@ -71,7 +71,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::ConnectorMixer_Impl ImplType;
+    using ImplType = detail::ConnectorMixer_Impl;
 
     friend class Model;
 
@@ -86,7 +86,7 @@ namespace model {
   };
 
   /** \relates ConnectorMixer */
-  typedef boost::optional<ConnectorMixer> OptionalConnectorMixer;
+  using OptionalConnectorMixer = boost::optional<ConnectorMixer>;
 
 }  // namespace model
 

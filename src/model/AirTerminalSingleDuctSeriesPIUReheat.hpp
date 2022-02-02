@@ -142,7 +142,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctSeriesPIUReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctSeriesPIUReheat_Impl;
 
     explicit AirTerminalSingleDuctSeriesPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl> impl);
 
@@ -156,10 +156,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctSeriesPIUReheat*/
-  typedef boost::optional<AirTerminalSingleDuctSeriesPIUReheat> OptionalAirTerminalSingleDuctSeriesPIUReheat;
+  using OptionalAirTerminalSingleDuctSeriesPIUReheat = boost::optional<AirTerminalSingleDuctSeriesPIUReheat>;
 
   /** \relates AirTerminalSingleDuctSeriesPIUReheat*/
-  typedef std::vector<AirTerminalSingleDuctSeriesPIUReheat> AirTerminalSingleDuctSeriesPIUReheatVector;
+  using AirTerminalSingleDuctSeriesPIUReheatVector = std::vector<AirTerminalSingleDuctSeriesPIUReheat>;
 
 }  // namespace model
 }  // namespace openstudio

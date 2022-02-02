@@ -147,7 +147,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfacePropertyConvectionCoefficients_Impl ImplType;
+    using ImplType = detail::SurfacePropertyConvectionCoefficients_Impl;
 
     explicit SurfacePropertyConvectionCoefficients(std::shared_ptr<detail::SurfacePropertyConvectionCoefficients_Impl> impl);
 
@@ -161,10 +161,10 @@ namespace model {
   };
 
   /** \relates SurfacePropertyConvectionCoefficients*/
-  typedef boost::optional<SurfacePropertyConvectionCoefficients> OptionalSurfacePropertyConvectionCoefficients;
+  using OptionalSurfacePropertyConvectionCoefficients = boost::optional<SurfacePropertyConvectionCoefficients>;
 
   /** \relates SurfacePropertyConvectionCoefficients*/
-  typedef std::vector<SurfacePropertyConvectionCoefficients> SurfacePropertyConvectionCoefficientsVector;
+  using SurfacePropertyConvectionCoefficientsVector = std::vector<SurfacePropertyConvectionCoefficients>;
 
 }  // namespace model
 }  // namespace openstudio

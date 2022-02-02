@@ -96,7 +96,7 @@ namespace model {
       return result;
     }
 
-    bool ConstructionWithInternalSource_Impl::setLayer(const ModelPartitionMaterial& modelPartitionMaterial) {
+    bool ConstructionWithInternalSource_Impl::setLayer(const ModelPartitionMaterial& /*modelPartitionMaterial*/) {
       return false;
     }
 

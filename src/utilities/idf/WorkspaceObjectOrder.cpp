@@ -86,8 +86,9 @@ namespace detail {
     }
     if (index < m_directOrder->size()) {
       auto it = m_directOrder->begin();
-      for (unsigned i = 0; i < index; ++i, ++it)
+      for (unsigned i = 0; i < index; ++i, ++it) {
         ;
+      }
       m_directOrder->insert(it, handle);
       return true;
     } else {

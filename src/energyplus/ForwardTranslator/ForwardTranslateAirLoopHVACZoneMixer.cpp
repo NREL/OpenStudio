@@ -59,7 +59,9 @@ namespace energyplus {
     temp = modelObject.outletModelObject();
     if (temp) {
       optS = temp->name();
-      if (optS) idfObject.setString(openstudio::AirLoopHVAC_ZoneMixerFields::OutletNodeName, *optS);
+      if (optS) {
+        idfObject.setString(openstudio::AirLoopHVAC_ZoneMixerFields::OutletNodeName, *optS);
+      }
     }
     ///////////////////////////////////////////////////////////////////////////
     // Field: Inlet 1-N Node Name ///////////////////////////////////////////////

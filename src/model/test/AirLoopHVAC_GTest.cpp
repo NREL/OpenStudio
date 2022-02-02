@@ -606,7 +606,7 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal) {
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
-  AirTerminalSingleDuctConstantVolumeNoReheat term2 = singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+  auto term2 = singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, term2));
 
@@ -1166,16 +1166,16 @@ TEST_F(ModelFixture, AirLoopHVAC_AvailabilityManagers) {
   ASSERT_EQ(8u, a.availabilityManagers().size());
   a.setNightCycleControlType("CycleOnControlZone");
   ASSERT_EQ(9u, a.availabilityManagers().size());
-  AvailabilityManagerNightCycle avm_nc2 = a.availabilityManagers()[8].cast<AvailabilityManagerNightCycle>();
+  auto avm_nc2 = a.availabilityManagers()[8].cast<AvailabilityManagerNightCycle>();
   ASSERT_EQ("CycleOnControlZone", avm_nc2.controlType());
 
   // Test Clone, same model
-  AirLoopHVAC a2 = a.clone(m).cast<AirLoopHVAC>();
+  auto a2 = a.clone(m).cast<AirLoopHVAC>();
   ASSERT_EQ(9u, a2.availabilityManagers().size());
 
   // Test Clone, different model
   Model m2;
-  AirLoopHVAC a3 = a.clone(m2).cast<AirLoopHVAC>();
+  auto a3 = a.clone(m2).cast<AirLoopHVAC>();
   ASSERT_EQ(9u, a3.availabilityManagers().size());
 
   // reset shouldn't affect the clone
@@ -1468,7 +1468,7 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone) {
   EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
 
   // Clone
-  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
 
   EXPECT_EQ(10u, m.getConcreteModelObjects<Node>().size());
   EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
@@ -1502,7 +1502,7 @@ TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone) {
   EXPECT_EQ(6u, a.components(openstudio::IddObjectType::OS_Node).size());
 
   // Clone
-  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
 
   EXPECT_EQ(12u, m.getConcreteModelObjects<Node>().size());
 
@@ -1636,7 +1636,7 @@ TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone_WithComponents) {
   EXPECT_EQ(5u, m.getModelObjects<Mixer>().size());
 
   // Clone
-  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
 
   EXPECT_EQ(8u, m.getModelObjects<Splitter>().size());
   EXPECT_EQ(6u, m.getModelObjects<Mixer>().size());

@@ -93,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerSingleZoneCooling_Impl ImplType;
+    using ImplType = detail::SetpointManagerSingleZoneCooling_Impl;
 
     explicit SetpointManagerSingleZoneCooling(std::shared_ptr<detail::SetpointManagerSingleZoneCooling_Impl> impl);
 
@@ -107,10 +107,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerSingleZoneCooling*/
-  typedef boost::optional<SetpointManagerSingleZoneCooling> OptionalSetpointManagerSingleZoneCooling;
+  using OptionalSetpointManagerSingleZoneCooling = boost::optional<SetpointManagerSingleZoneCooling>;
 
   /** \relates SetpointManagerSingleZoneCooling*/
-  typedef std::vector<SetpointManagerSingleZoneCooling> SetpointManagerSingleZoneCoolingVector;
+  using SetpointManagerSingleZoneCoolingVector = std::vector<SetpointManagerSingleZoneCooling>;
 
 }  // namespace model
 }  // namespace openstudio

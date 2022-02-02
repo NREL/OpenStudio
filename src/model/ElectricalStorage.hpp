@@ -68,7 +68,7 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
 
     /// @cond
 
-    typedef detail::ElectricalStorage_Impl ImplType;
+    using ImplType = detail::ElectricalStorage_Impl;
 
     explicit ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> impl);
 
@@ -78,9 +78,9 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
     /// @endcond
   };
 
-  typedef boost::optional<ElectricalStorage> OptionalElectricalStorage;
+  using OptionalElectricalStorage = boost::optional<ElectricalStorage>;
 
-  typedef std::vector<ElectricalStorage> ElectricalStorageVector;
+  using ElectricalStorageVector = std::vector<ElectricalStorage>;
 
 }  // namespace model
 }  // namespace openstudio

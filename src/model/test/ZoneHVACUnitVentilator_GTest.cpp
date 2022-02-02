@@ -80,7 +80,7 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithDefaultData) {
   Model model;
   ZoneHVACUnitVentilator testObject(model);
 
-  ZoneHVACUnitVentilator testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
+  auto testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
 
   EXPECT_TRUE(testObjectClone.isMaximumSupplyAirFlowRateAutosized());
   EXPECT_EQ("VariablePercent", testObjectClone.outdoorAirControlType());
@@ -109,7 +109,7 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithCustomData) {
   testObject.setCoolingCoil(coolingCoil);
   testObject.setCoolingConvergenceTolerance(999);
 
-  ZoneHVACUnitVentilator testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
+  auto testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
 
   EXPECT_FALSE(testObjectClone.isMaximumSupplyAirFlowRateAutosized());
   EXPECT_DOUBLE_EQ(999, testObjectClone.maximumSupplyAirFlowRate().get());
@@ -135,11 +135,11 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelsWithDefaultData) {
   Model model;
   ZoneHVACUnitVentilator testObject(model);
 
-  ZoneHVACUnitVentilator testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
+  auto testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
 
   Model model2;
 
-  ZoneHVACUnitVentilator testObjectClone2 = testObject.clone(model2).cast<ZoneHVACUnitVentilator>();
+  auto testObjectClone2 = testObject.clone(model2).cast<ZoneHVACUnitVentilator>();
 
   EXPECT_TRUE(testObjectClone.isMaximumSupplyAirFlowRateAutosized());
   EXPECT_EQ("VariablePercent", testObjectClone.outdoorAirControlType());
@@ -172,10 +172,10 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelWithCustomData) {
   testObject.setCoolingCoil(coolingCoil);
   testObject.setCoolingConvergenceTolerance(999);
 
-  ZoneHVACUnitVentilator testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
+  auto testObjectClone = testObject.clone(model).cast<ZoneHVACUnitVentilator>();
 
   Model model2;
-  ZoneHVACUnitVentilator testObjectClone2 = testObject.clone(model2).cast<ZoneHVACUnitVentilator>();
+  auto testObjectClone2 = testObject.clone(model2).cast<ZoneHVACUnitVentilator>();
 
   EXPECT_FALSE(testObjectClone2.isMaximumSupplyAirFlowRateAutosized());
   EXPECT_DOUBLE_EQ(999, testObjectClone2.maximumSupplyAirFlowRate().get());

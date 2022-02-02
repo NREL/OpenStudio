@@ -798,7 +798,7 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface2) {
   EXPECT_NEAR(0.03, roof.skylightToProjectedFloorRatio(), 0.001);
 }
 
-void checkExpectedSkylightRatios(const Model& model, double expectedRoofArea, double expectedSkylightRatio, double tol) {
+void checkExpectedSkylightRatios(const Model& model, double /*expectedRoofArea*/, double expectedSkylightRatio, double tol) {
   double totalGrossRoofArea = 0.0;
   double totalSkylightArea = 0.0;
   for (const auto& surface : model.getModelObjects<Surface>()) {
@@ -1242,7 +1242,7 @@ TEST_F(ModelFixture, SubSurface_Clone) {
   ShadingControl shadingControl(blind);
   s1.setShadingControl(shadingControl);
 
-  SubSurface s2 = s1.clone(model).cast<SubSurface>();
+  auto s2 = s1.clone(model).cast<SubSurface>();
   EXPECT_TRUE(s2.surfacePropertyConvectionCoefficients());
   EXPECT_TRUE(s2.shadingControl());
 }

@@ -196,11 +196,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
       EXPECT_EQ("Sequential", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
       ASSERT_EQ(2u, _wo->extensibleGroups().size());
       {
-        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        auto w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ(subSurfaceA.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
       }
       {
-        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+        auto w_eg = _wo->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ(subSurfaceB.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
       }
     }
@@ -230,7 +230,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
       EXPECT_EQ("Group", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
       ASSERT_EQ(1u, _wo->extensibleGroups().size());
       {
-        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        auto w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
         EXPECT_EQ(subSurfaceA.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
       }
     }

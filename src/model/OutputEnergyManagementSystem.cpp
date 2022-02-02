@@ -131,7 +131,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputEnergyManagementSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_EnergyManagementSystem);
+    return {IddObjectType::OS_Output_EnergyManagementSystem};
   }
 
   std::vector<std::string> OutputEnergyManagementSystem::actuatorAvailabilityDictionaryReportingValues() {

@@ -134,7 +134,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorPhotovoltaic_Impl ImplType;
+    using ImplType = detail::GeneratorPhotovoltaic_Impl;
 
     GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance);
 
@@ -150,10 +150,10 @@ namespace model {
   };
 
   /** \relates GeneratorPhotovoltaic*/
-  typedef boost::optional<GeneratorPhotovoltaic> OptionalGeneratorPhotovoltaic;
+  using OptionalGeneratorPhotovoltaic = boost::optional<GeneratorPhotovoltaic>;
 
   /** \relates GeneratorPhotovoltaic*/
-  typedef std::vector<GeneratorPhotovoltaic> GeneratorPhotovoltaicVector;
+  using GeneratorPhotovoltaicVector = std::vector<GeneratorPhotovoltaic>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -131,7 +131,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricEquipment_Impl ImplType;
+    using ImplType = detail::ElectricEquipment_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -144,10 +144,10 @@ namespace model {
   };
 
   /** \relates ElectricEquipment*/
-  typedef boost::optional<ElectricEquipment> OptionalElectricEquipment;
+  using OptionalElectricEquipment = boost::optional<ElectricEquipment>;
 
   /** \relates ElectricEquipment*/
-  typedef std::vector<ElectricEquipment> ElectricEquipmentVector;
+  using ElectricEquipmentVector = std::vector<ElectricEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -81,7 +81,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACUnitVentilator_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator", "Availability"));
       }
@@ -547,7 +548,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACUnitVentilator::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_UnitVentilator);
+    return {IddObjectType::OS_ZoneHVAC_UnitVentilator};
   }
 
   std::vector<std::string> ZoneHVACUnitVentilator::outdoorAirControlTypeValues() {

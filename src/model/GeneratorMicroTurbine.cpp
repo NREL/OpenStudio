@@ -125,7 +125,7 @@ namespace model {
       // If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
       if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery()) {
         // Call the BaseClass (ModelObject) clone method to avoid circular references
-        GeneratorMicroTurbineHeatRecovery mchpHRClone =
+        auto mchpHRClone =
           mchpHR->getImpl<detail::GeneratorMicroTurbineHeatRecovery_Impl>()->ModelObject_Impl::clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
         newCHP.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery(mchpHRClone);
       }
@@ -203,7 +203,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Generator_MicroTurbineFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("GeneratorMicroTurbine", "Availability"));
       }
@@ -791,7 +792,7 @@ namespace model {
   }
 
   IddObjectType GeneratorMicroTurbine::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_MicroTurbine);
+    return {IddObjectType::OS_Generator_MicroTurbine};
   }
 
   // TODO: standardize on either fooValues or validFooValues

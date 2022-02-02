@@ -309,10 +309,10 @@ class UTILITIES_API TimeSeries
 };
 
 // optional TimeSeries
-typedef boost::optional<TimeSeries> OptionalTimeSeries;
+using OptionalTimeSeries = boost::optional<TimeSeries>;
 
 // vector of TimeSeries
-typedef std::vector<TimeSeries> TimeSeriesVector;
+using TimeSeriesVector = std::vector<TimeSeries>;
 
 /** double * TimeSeries */
 UTILITIES_API TimeSeries operator*(double d, const TimeSeries& series);

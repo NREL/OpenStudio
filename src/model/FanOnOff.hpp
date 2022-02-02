@@ -145,7 +145,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanOnOff_Impl ImplType;
+    using ImplType = detail::FanOnOff_Impl;
 
     explicit FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl);
 
@@ -159,10 +159,10 @@ namespace model {
   };
 
   /** \relates FanOnOff*/
-  typedef boost::optional<FanOnOff> OptionalFanOnOff;
+  using OptionalFanOnOff = boost::optional<FanOnOff>;
 
   /** \relates FanOnOff*/
-  typedef std::vector<FanOnOff> FanOnOffVector;
+  using FanOnOffVector = std::vector<FanOnOff>;
 
 }  // namespace model
 }  // namespace openstudio

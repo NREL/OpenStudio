@@ -189,7 +189,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl ImplType;
+    using ImplType = detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
 
     explicit AirLoopHVACUnitaryHeatPumpAirToAir(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl);
 
@@ -204,10 +204,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
-  typedef boost::optional<AirLoopHVACUnitaryHeatPumpAirToAir> OptionalAirLoopHVACUnitaryHeatPumpAirToAir;
+  using OptionalAirLoopHVACUnitaryHeatPumpAirToAir = boost::optional<AirLoopHVACUnitaryHeatPumpAirToAir>;
 
   /** \relates AirLoopHVACUnitaryHeatPumpAirToAir*/
-  typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> AirLoopHVACUnitaryHeatPumpAirToAirVector;
+  using AirLoopHVACUnitaryHeatPumpAirToAirVector = std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>;
 
 }  // namespace model
 }  // namespace openstudio

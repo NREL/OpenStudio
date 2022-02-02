@@ -1194,7 +1194,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   // Start with a base model, put some climate zone in there
   // Add a Climate Zone to model1 only
   Model model;
-  ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
+  auto czs = model.getUniqueModelObject<ClimateZones>();
   ClimateZone cz = czs.setClimateZone(ClimateZones::ashraeInstitutionName(), "4A");
   EXPECT_EQ(1, czs.numClimateZones());
   EXPECT_EQ(1, czs.climateZones().size());

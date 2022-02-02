@@ -143,7 +143,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SwimmingPoolIndoor_Impl ImplType;
+    using ImplType = detail::SwimmingPoolIndoor_Impl;
 
     explicit SwimmingPoolIndoor(std::shared_ptr<detail::SwimmingPoolIndoor_Impl> impl);
 
@@ -157,10 +157,10 @@ namespace model {
   };
 
   /** \relates SwimmingPoolIndoor*/
-  typedef boost::optional<SwimmingPoolIndoor> OptionalSwimmingPoolIndoor;
+  using OptionalSwimmingPoolIndoor = boost::optional<SwimmingPoolIndoor>;
 
   /** \relates SwimmingPoolIndoor*/
-  typedef std::vector<SwimmingPoolIndoor> SwimmingPoolIndoorVector;
+  using SwimmingPoolIndoorVector = std::vector<SwimmingPoolIndoor>;
 
 }  // namespace model
 }  // namespace openstudio

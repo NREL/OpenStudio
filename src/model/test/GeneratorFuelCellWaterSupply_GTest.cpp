@@ -129,7 +129,7 @@ TEST_F(ModelFixture, FuelCellWaterSupply4) {
 
 TEST_F(ModelFixture, FuelCellWaterSupply5) {
   Model model;
-  SiteWaterMainsTemperature wmt = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+  auto wmt = model.getUniqueModelObject<SiteWaterMainsTemperature>();
   wmt.setAnnualAverageOutdoorAirTemperature(10);
   wmt.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(11);
   CurveQuadratic curveQuadratic(model);

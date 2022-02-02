@@ -79,7 +79,7 @@ namespace model {
 
       // loop through extensible groups
       for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
-        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        auto group = idfGroup.cast<ModelExtensibleGroup>();
         // get object pointed to by extensible group
         // unit test checks that both layered constructions have extensible groups of size 1
         // implementation must change if that test starts failing
@@ -103,7 +103,7 @@ namespace model {
 
       IdfExtensibleGroup idfGroup = getExtensibleGroup(layerIndex);
       OS_ASSERT(!idfGroup.empty());
-      ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+      auto group = idfGroup.cast<ModelExtensibleGroup>();
       OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
       if (!oMaterial) {
         LOG_AND_THROW("There is no material at layerIndex " << layerIndex << " in " << briefDescription() << ".");
@@ -161,7 +161,7 @@ namespace model {
       if ((model().strictnessLevel() < StrictnessLevel::Final) || LayeredConstruction::layersAreValid(layers)) {
         IdfExtensibleGroup idfGroup = insertExtensibleGroup(layerIndex, StringVector());
         OS_ASSERT(!idfGroup.empty());
-        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        auto group = idfGroup.cast<ModelExtensibleGroup>();
         bool ok = group.setPointer(0, material.handle());
         OS_ASSERT(ok);
         return true;
@@ -184,7 +184,7 @@ namespace model {
       MaterialVector layers = this->layers();
       layers[layerIndex] = material;
       if ((model().strictnessLevel() < StrictnessLevel::Final) || LayeredConstruction::layersAreValid(layers)) {
-        ModelExtensibleGroup group = getExtensibleGroup(layerIndex).cast<ModelExtensibleGroup>();
+        auto group = getExtensibleGroup(layerIndex).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
         bool ok = group.setPointer(0, material.handle());
         OS_ASSERT(ok);
@@ -216,7 +216,7 @@ namespace model {
         clearExtensibleGroups();
         for (const Material& material : materials) {
           OS_ASSERT(material.model() == model());
-          ModelExtensibleGroup group = pushExtensibleGroup(StringVector(), false).cast<ModelExtensibleGroup>();
+          auto group = pushExtensibleGroup(StringVector(), false).cast<ModelExtensibleGroup>();
           OS_ASSERT(!group.empty());
           bool ok = group.setPointer(0, material.handle());
           OS_ASSERT(ok);
@@ -233,7 +233,7 @@ namespace model {
         return false;
       }
       clearExtensibleGroups();
-      ModelExtensibleGroup group = pushExtensibleGroup(StringVector(), false).cast<ModelExtensibleGroup>();
+      auto group = pushExtensibleGroup(StringVector(), false).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
       bool ok = group.setPointer(0, modelPartitionMaterial.handle());
       OS_ASSERT(ok);
@@ -245,7 +245,7 @@ namespace model {
         FenestrationMaterialVector fenestrationLayers = castVector<FenestrationMaterial>(layers());
         // can only set if one layer == SimpleGlazing
         if ((fenestrationLayers.size() == 1) && (fenestrationLayers[0].optionalCast<SimpleGlazing>())) {
-          SimpleGlazing simpleGlazing = fenestrationLayers[0].cast<SimpleGlazing>();
+          auto simpleGlazing = fenestrationLayers[0].cast<SimpleGlazing>();
           return simpleGlazing.setUFactor(value);
         }
       }
@@ -287,7 +287,7 @@ namespace model {
         StandardsInformationConstruction stdsInfo = standardsInformation();
         OptionalMaterial oMaterial = stdsInfo.perturbableLayer();
         if (oMaterial && thermalConductance()) {
-          OpaqueMaterial perturbableLayer = oMaterial->cast<OpaqueMaterial>();
+          auto perturbableLayer = oMaterial->cast<OpaqueMaterial>();
           // calculate required resistance of perturbableLayer
           double desiredResistance = 1.0 / value;
           double currentResistance = 1.0 / thermalConductance().get();
@@ -408,7 +408,7 @@ namespace model {
 
     bool LayeredConstruction_Impl::isGreenRoof() const {
       MaterialVector layers = this->layers();
-      if ((layers.size() > 0) && (layers[0].optionalCast<RoofVegetation>())) {
+      if ((!layers.empty()) && (layers[0].optionalCast<RoofVegetation>())) {
         return true;
       }
       return false;
@@ -468,7 +468,7 @@ namespace model {
 
       // loop through extensible groups
       for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
-        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        auto group = idfGroup.cast<ModelExtensibleGroup>();
         OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
         if (!oMaterial) {
           result.push_back(group.groupIndex());  // non-Material object referenced
@@ -559,7 +559,7 @@ namespace model {
 
     boost::optional<double> LayeredConstruction_Impl::interiorVisibleAbsorptance() const {
       MaterialVector layers = this->layers();
-      if (layers.size() > 0) {
+      if (!layers.empty()) {
         return layers.back().interiorVisibleAbsorptance();
       }
       return boost::none;
@@ -567,7 +567,7 @@ namespace model {
 
     boost::optional<double> LayeredConstruction_Impl::exteriorVisibleAbsorptance() const {
       MaterialVector layers = this->layers();
-      if (layers.size() > 0) {
+      if (!layers.empty()) {
         return layers.front().exteriorVisibleAbsorptance();
       }
       return boost::none;
@@ -658,7 +658,7 @@ RowName = '";
     void LayeredConstruction_Impl::ensureUniqueLayers() {
       // loop through extensible groups
       for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
-        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        auto group = idfGroup.cast<ModelExtensibleGroup>();
         // get object pointed to by extensible group
         // unit test checks that both layered constructions have extensible groups of size 1
         // implementation must change if that test starts failing
@@ -862,7 +862,7 @@ RowName = '";
     }
 
     // Rule 1 -- Cannot end on an AirGap.
-    if ((opaqueMaterials.size() > 0) && (!previousWasNonAirGap)) {
+    if ((!opaqueMaterials.empty()) && (!previousWasNonAirGap)) {
       LOG(Info,
           "Proposed OpaqueMaterials are invalid because an AirGap at layer " << opaqueMaterials.size() << " is the last layer in the construction.");
       return false;
@@ -930,7 +930,7 @@ RowName = '";
     }
 
     // Rule 3
-    if ((fenestrationMaterials.size() > 0) && (!previousWasNonGasLayer)) {
+    if ((!fenestrationMaterials.empty()) && (!previousWasNonGasLayer)) {
       return false;
     }
     if (!gasLayerEnclosed) {

@@ -49,7 +49,7 @@ namespace model {
     void ensureNoLeapDays();
 
    protected:
-    typedef detail::SizingPeriod_Impl ImplType;
+    using ImplType = detail::SizingPeriod_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -64,10 +64,10 @@ namespace model {
   };
 
   /** \relates SizingPeriod */
-  typedef boost::optional<SizingPeriod> OptionalSizingPeriod;
+  using OptionalSizingPeriod = boost::optional<SizingPeriod>;
 
   /** \relates SizingPeriod */
-  typedef std::vector<SizingPeriod> SizingPeriodVector;
+  using SizingPeriodVector = std::vector<SizingPeriod>;
 
 }  // namespace model
 }  // namespace openstudio

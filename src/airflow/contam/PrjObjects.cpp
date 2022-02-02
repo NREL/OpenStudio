@@ -416,7 +416,7 @@ namespace contam {
 
   Species::Species() : m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl)) {}
 
-  Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string Cp, std::string name, std::string desc)
+  Species::Species(std::string molwt, std::string Dm, std::string ccdef, std::string /*Cp*/, std::string name, std::string desc)
     : m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl)) {
     m_impl->setMolwt(molwt);
     m_impl->setDm(Dm);
@@ -425,7 +425,7 @@ namespace contam {
     m_impl->setDesc(desc);
   }
 
-  Species::Species(double molwt, double Dm, double ccdef, double Cp, std::string name, std::string desc)
+  Species::Species(double molwt, double Dm, double ccdef, double /*Cp*/, std::string name, std::string desc)
     : m_impl(std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl)) {
     m_impl->setMolwt(molwt);
     m_impl->setDm(Dm);
@@ -2515,8 +2515,11 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     ControlNode::Type type[37] = {CT_SNS, CT_SCH, CT_SET, CT_CVF, CT_DVF, CT_LOG, CT_PAS, CT_MOD, CT_HYS, CT_ABS, CT_BIN, CT_DLS, CT_DLX,
                                   CT_INT, CT_RAV, CT_INV, CT_AND, CT_OR,  CT_XOR, CT_ADD, CT_SUB, CT_MUL, CT_DIV, CT_SUM, CT_AVG, CT_MAX,
                                   CT_MIN, CT_LLS, CT_ULS, CT_LBS, CT_UBS, CT_LLC, CT_ULC, CT_PC1, CT_PI1, CT_SUP, CT_SPH};
-    for (int i = 0; i < 37; i++)
-      if (string == tags[i]) return type[i];
+    for (int i = 0; i < 37; i++) {
+      if (string == tags[i]) {
+        return type[i];
+      }
+    }
     return ControlNode::UNKNOWN;
   }
 
@@ -2525,7 +2528,7 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     int nr = input.read<int>();
     std::string dataType = input.readString();
     int seqnr = input.read<int>();
-    unsigned int flags = input.read<unsigned int>();
+    auto flags = input.read<unsigned int>();
     int inreq = input.read<int>();
     int n1 = input.read<int>();
     int n2 = input.read<int>();
@@ -2534,13 +2537,13 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     int kind = convertTag(dataType);
     switch (kind) {
       case ControlNode::CT_CVF: {
-        CvfDat* obj = new CvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
+        auto* obj = new CvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
         obj->readDetails(input);
         out = static_cast<ControlNode*>(obj);
         break;
       }
       case ControlNode::CT_DVF: {
-        DvfDat* obj = new DvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
+        auto* obj = new DvfDat(nr, seqnr, flags, inreq, n1, n2, name, desc);
         obj->readDetails(input);
         out = static_cast<ControlNode*>(obj);
         break;

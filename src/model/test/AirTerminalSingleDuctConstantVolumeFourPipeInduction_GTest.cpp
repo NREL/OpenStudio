@@ -93,8 +93,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_addToN
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone =
-    testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
@@ -160,8 +159,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
   plantLoop.addDemandBranchForComponent(heatingCoil);
   plantLoop.addDemandBranchForComponent(coolingCoil);
 
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone =
-    testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   ASSERT_NO_THROW(testObjectClone.heatingCoil());
   ASSERT_TRUE(testObjectClone.coolingCoil());
   EXPECT_FALSE(testObjectClone.airLoopHVAC());
@@ -171,8 +169,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
 
   Model m2;
 
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone2 =
-    testObject.clone(m2).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  auto testObjectClone2 = testObject.clone(m2).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   ASSERT_NO_THROW(testObjectClone2.heatingCoil());
   ASSERT_TRUE(testObjectClone2.coolingCoil());
   EXPECT_FALSE(testObjectClone.airLoopHVAC());

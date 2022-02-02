@@ -149,7 +149,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ControllerWaterCoil_Impl ImplType;
+    using ImplType = detail::ControllerWaterCoil_Impl;
 
     friend class detail::ControllerWaterCoil_Impl;
 
@@ -172,10 +172,10 @@ namespace model {
   };
 
   /** \relates ControllerWaterCoil*/
-  typedef boost::optional<ControllerWaterCoil> OptionalControllerWaterCoil;
+  using OptionalControllerWaterCoil = boost::optional<ControllerWaterCoil>;
 
   /** \relates ControllerWaterCoil*/
-  typedef std::vector<ControllerWaterCoil> ControllerWaterCoilVector;
+  using ControllerWaterCoilVector = std::vector<ControllerWaterCoil>;
 
 }  // namespace model
 

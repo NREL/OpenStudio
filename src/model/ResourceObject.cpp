@@ -133,7 +133,7 @@ namespace model {
     std::deque<ModelObject> objectQueue;
     objectQueue.push_back(object);
 
-    while (objectQueue.size() > 0) {
+    while (!objectQueue.empty()) {
       ModelObject currentObject(objectQueue[0]);
       objectQueue.pop_front();
       for (const ResourceObject& resource : currentObject.resources()) {
@@ -156,7 +156,7 @@ namespace model {
     std::deque<ModelObject> objectQueue;
     objectQueue.push_back(object);
 
-    while (objectQueue.size() > 0) {
+    while (!objectQueue.empty()) {
       ModelObject currentObject(objectQueue[0]);
       objectQueue.pop_front();
       for (const ResourceObject& resource : currentObject.resources()) {

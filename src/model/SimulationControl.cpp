@@ -91,7 +91,7 @@ namespace model {
     // return the parent object in the hierarchy
     boost::optional<ParentObject> SimulationControl_Impl::parent() const {
       // Simulation is highest level, there is no parent
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -501,8 +501,7 @@ namespace model {
         for (const RunPeriod& runPeriod : runPeriods) {
           if (runPeriod.isAnnual() && !runPeriod.isRepeated()) {
             std::string rpName = runPeriod.name().get();
-            StringVector::const_iterator it =
-              std::find_if(environmentPeriods.begin(), environmentPeriods.end(), std::bind(istringEqual, rpName, std::placeholders::_1));
+            auto it = std::find_if(environmentPeriods.begin(), environmentPeriods.end(), std::bind(istringEqual, rpName, std::placeholders::_1));
             if (it != environmentPeriods.end()) {
               result.push_back(*it);
             }
@@ -515,8 +514,7 @@ namespace model {
             OptionalString os = oWeatherFile->environmentName();
             if (os) {
               std::string candidate = *os;
-              StringVector::const_iterator it =
-                std::find_if(environmentPeriods.begin(), environmentPeriods.end(), std::bind(istringEqual, candidate, std::placeholders::_1));
+              auto it = std::find_if(environmentPeriods.begin(), environmentPeriods.end(), std::bind(istringEqual, candidate, std::placeholders::_1));
               if (it != environmentPeriods.end()) {
                 result.push_back(*it);
               }
@@ -536,7 +534,7 @@ namespace model {
         for (const RunPeriod& runPeriod : runPeriods) {
           if (runPeriod.isPartialYear()) {
             std::string rpName = runPeriod.name().get();
-            StringVector::const_iterator it = std::find(environmentPeriods.begin(), environmentPeriods.end(), rpName);
+            auto it = std::find(environmentPeriods.begin(), environmentPeriods.end(), rpName);
             if (it != environmentPeriods.end()) {
               result.push_back(*it);
             }
@@ -555,7 +553,7 @@ namespace model {
         for (const RunPeriod& runPeriod : runPeriods) {
           if (runPeriod.isRepeated()) {
             std::string rpName = runPeriod.name().get();
-            StringVector::const_iterator it = std::find(environmentPeriods.begin(), environmentPeriods.end(), rpName);
+            auto it = std::find(environmentPeriods.begin(), environmentPeriods.end(), rpName);
             if (it != environmentPeriods.end()) {
               result.push_back(*it);
             }
@@ -615,7 +613,7 @@ namespace model {
   SimulationControl::SimulationControl(std::shared_ptr<detail::SimulationControl_Impl> impl) : ParentObject(std::move(impl)) {}
 
   IddObjectType SimulationControl::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SimulationControl);
+    return {IddObjectType::OS_SimulationControl};
   }
 
   std::vector<std::string> SimulationControl::validSolarDistributionValues() {

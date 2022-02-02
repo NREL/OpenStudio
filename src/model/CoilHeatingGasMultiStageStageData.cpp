@@ -186,7 +186,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingGasMultiStageStageData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage_StageData);
+    return {IddObjectType::OS_Coil_Heating_Gas_MultiStage_StageData};
   }
 
   double CoilHeatingGasMultiStageStageData::gasBurnerEfficiency() const {

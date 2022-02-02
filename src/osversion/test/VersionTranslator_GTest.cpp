@@ -192,7 +192,7 @@ void testExampleComponent(int major, int minor) {
         ASSERT_NO_THROW(contents.primaryComponentObject());
         model::ModelObject prime = contents.primaryComponentObject();
         ASSERT_TRUE(prime.optionalCast<model::Construction>());
-        model::Construction construction = prime.cast<model::Construction>();
+        auto construction = prime.cast<model::Construction>();
         EXPECT_FALSE(construction.layers().empty());
         // make sure save and load is ok
         componentPath = it->path() / toPath("example_updated.osc");
@@ -1108,7 +1108,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
 
   EXPECT_EQ(3u, c.extensibleGroups().size());
   for (const IdfExtensibleGroup& eg : c.extensibleGroups()) {
-    WorkspaceExtensibleGroup w_eg = eg.cast<WorkspaceExtensibleGroup>();
+    auto w_eg = eg.cast<WorkspaceExtensibleGroup>();
     ASSERT_TRUE(w_eg.getTarget(0));
     EXPECT_EQ("OS:Material", w_eg.getTarget(0).get().iddObject().name());
   }
@@ -1265,7 +1265,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   EXPECT_EQ("Sequential", sc.getString(13, false, true).get());
   ASSERT_EQ(1u, sc.numExtensibleGroups());
 
-  WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(w_eg.getTarget(0));
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
 }

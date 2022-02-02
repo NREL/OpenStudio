@@ -71,7 +71,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::PipeAdiabatic_Impl ImplType;
+    using ImplType = detail::PipeAdiabatic_Impl;
 
     explicit PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> impl);
 
@@ -82,10 +82,10 @@ namespace model {
   };
 
   /** \relates PipeAdiabatic */
-  typedef boost::optional<PipeAdiabatic> OptionalPipeAdiabatic;
+  using OptionalPipeAdiabatic = boost::optional<PipeAdiabatic>;
 
   /** \relates PipeAdiabatic */
-  typedef std::vector<PipeAdiabatic> PipeAdiabaticVector;
+  using PipeAdiabaticVector = std::vector<PipeAdiabatic>;
 
 }  // namespace model
 }  // namespace openstudio

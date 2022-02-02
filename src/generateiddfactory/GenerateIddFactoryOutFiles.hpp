@@ -36,7 +36,7 @@
 
 namespace openstudio {
 
-typedef openstudio::filesystem::path path;
+using path = openstudio::filesystem::path;
 
 class IddFileFactoryData;
 

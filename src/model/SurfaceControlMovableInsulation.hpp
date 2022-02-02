@@ -99,7 +99,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfaceControlMovableInsulation_Impl ImplType;
+    using ImplType = detail::SurfaceControlMovableInsulation_Impl;
 
     explicit SurfaceControlMovableInsulation(std::shared_ptr<detail::SurfaceControlMovableInsulation_Impl> impl);
 
@@ -113,10 +113,10 @@ namespace model {
   };
 
   /** \relates SurfaceControlMovableInsulation*/
-  typedef boost::optional<SurfaceControlMovableInsulation> OptionalSurfaceControlMovableInsulation;
+  using OptionalSurfaceControlMovableInsulation = boost::optional<SurfaceControlMovableInsulation>;
 
   /** \relates SurfaceControlMovableInsulation*/
-  typedef std::vector<SurfaceControlMovableInsulation> SurfaceControlMovableInsulationVector;
+  using SurfaceControlMovableInsulationVector = std::vector<SurfaceControlMovableInsulation>;
 
 }  // namespace model
 }  // namespace openstudio

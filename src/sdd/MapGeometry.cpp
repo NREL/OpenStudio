@@ -177,7 +177,7 @@ namespace sdd {
 
     // translate shadingSurfaces
     std::vector<pugi::xml_node> exteriorShadingElements = makeVectorOfChildren(element, "ExtShdgObj");
-    if (exteriorShadingElements.size() > 0) {
+    if (!exteriorShadingElements.empty()) {
       model::ShadingSurfaceGroup shadingSurfaceGroup(model);
       shadingSurfaceGroup.setName("Building ShadingGroup");
       shadingSurfaceGroup.setShadingSurfaceType("Building");
@@ -1392,9 +1392,9 @@ namespace sdd {
       boost::optional<model::ConstructionBase> construction = surface.construction();
       if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()) {
         // clone the existing FFactor construction, set perimeter, and assign to this surface
-        model::FFactorGroundFloorConstruction fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
+        auto fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
         model::Model model = fFactorConstruction.model();
-        model::FFactorGroundFloorConstruction clone = fFactorConstruction.clone(model).cast<model::FFactorGroundFloorConstruction>();
+        auto clone = fFactorConstruction.clone(model).cast<model::FFactorGroundFloorConstruction>();
 
         std::string cloneName = name + " " + fFactorConstruction.name().get();
         clone.setName(cloneName);
@@ -1416,9 +1416,9 @@ namespace sdd {
       boost::optional<model::ConstructionBase> construction = surface.construction();
       if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()) {
         // clone the existing CFactorUndergroundWallConstruction, set height, and assign to this surface
-        model::CFactorUndergroundWallConstruction cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
+        auto cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
         model::Model model = cFactorConstruction.model();
-        model::CFactorUndergroundWallConstruction clone = cFactorConstruction.clone(model).cast<model::CFactorUndergroundWallConstruction>();
+        auto clone = cFactorConstruction.clone(model).cast<model::CFactorUndergroundWallConstruction>();
 
         std::string cloneName = name + " " + cFactorConstruction.name().get();
         clone.setName(cloneName);
@@ -1800,7 +1800,7 @@ namespace sdd {
       return it->second;
     }
 
-    std::string description = boost::lexical_cast<std::string>(trans);
+    auto description = boost::lexical_cast<std::string>(trans);
     std::string scheduleName = "Shading Schedule " + description;
 
     // create a schedule with these properties
@@ -1930,12 +1930,12 @@ namespace sdd {
       }
     }
 
-    if (spacesWithoutStory.size() > 0) {
+    if (!spacesWithoutStory.empty()) {
       spacesWithoutStory.pop_back();
       LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated:" << spacesWithoutStory);
     }
 
-    if (spacesWithoutZone.size() > 0) {
+    if (!spacesWithoutZone.empty()) {
       // DLM: desired workflow is to assign thermal zones in cbecc
       // DLM: Kyle, we will have to think about if we want to warn about this or not
       //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
@@ -1953,7 +1953,7 @@ namespace sdd {
       }
     }
 
-    if (surfacesWithoutSpace.size() > 0) {
+    if (!surfacesWithoutSpace.empty()) {
       surfacesWithoutSpace.pop_back();
       LOG(Warn, "Model contains surfaces which are not assigned to a space, these have not been translated:" << surfacesWithoutSpace);
     }
@@ -1968,7 +1968,7 @@ namespace sdd {
       }
     }
 
-    if (subSurfacesWithoutSurface.size() > 0) {
+    if (!subSurfacesWithoutSurface.empty()) {
       subSurfacesWithoutSurface.pop_back();
       LOG(Warn, "Model contains sub surfaces which are not assigned to a surface, these have not been translated:" << subSurfacesWithoutSurface);
     }
@@ -2408,7 +2408,7 @@ namespace sdd {
       // DLM: for now we will get the exposed perimeter from the FFactor construction
       // this assumes one construction per surface, I don't really like this, maybe we can do better later
       if (construction && construction->optionalCast<model::FFactorGroundFloorConstruction>()) {
-        model::FFactorGroundFloorConstruction fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
+        auto fFactorConstruction = construction->cast<model::FFactorGroundFloorConstruction>();
         // check assumption of one surface per FFactor construction
         if (fFactorConstruction.getModelObjectSources<model::Surface>().size() == 1) {
           double perimeterExposedSI = fFactorConstruction.perimeterExposed();
@@ -2430,7 +2430,7 @@ namespace sdd {
       // DLM: for now we will get the height from the CFactor construction
       // this assumes one construction per surface, I don't really like this, maybe we can do better later
       if (construction && construction->optionalCast<model::CFactorUndergroundWallConstruction>()) {
-        model::CFactorUndergroundWallConstruction cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
+        auto cFactorConstruction = construction->cast<model::CFactorUndergroundWallConstruction>();
         // check assumption of one surface per CFactor construction
         if (cFactorConstruction.getModelObjectSources<model::Surface>().size() == 1) {
           double heightSI = cFactorConstruction.height();
@@ -2688,7 +2688,7 @@ namespace sdd {
         if (!layers.empty()) {
 
           if (layers[0].optionalCast<model::StandardOpaqueMaterial>()) {
-            model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+            auto outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
             if (!outerMaterial.isSolarAbsorptanceDefaulted()) {
               boost::optional<double> test = outerMaterial.solarReflectance();
               if (test) {
@@ -2704,7 +2704,7 @@ namespace sdd {
           }
 
           if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()) {
-            model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
+            auto outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
             if (!outerMaterial.isSolarAbsorptanceDefaulted()) {
               boost::optional<double> test = outerMaterial.solarReflectance();
               if (test) {

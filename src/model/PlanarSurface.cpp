@@ -320,11 +320,11 @@ namespace model {
       return boost::none;
     }
 
-    bool PlanarSurface_Impl::setUFactor(double value) {
+    bool PlanarSurface_Impl::setUFactor(double /*value*/) {
       return false;
     }
 
-    bool PlanarSurface_Impl::setThermalConductance(double value) {
+    bool PlanarSurface_Impl::setThermalConductance(double /*value*/) {
       return false;
     }
 
@@ -817,7 +817,7 @@ namespace model {
 
       OptionalPlanarSurfaceGroup group = planarSurface.planarSurfaceGroup();
       if (group) {
-        std::map<PlanarSurfaceGroup, Transformation>::const_iterator it = siteTransformationMap.find(*group);
+        auto it = siteTransformationMap.find(*group);
 
         if (it != siteTransformationMap.end()) {
           siteTransformation = it->second;

@@ -86,7 +86,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceSchedule_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceSchedule_Impl;
 
     explicit ExternalInterfaceSchedule(std::shared_ptr<detail::ExternalInterfaceSchedule_Impl> impl);
 
@@ -100,10 +100,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceSchedule*/
-  typedef boost::optional<ExternalInterfaceSchedule> OptionalExternalInterfaceSchedule;
+  using OptionalExternalInterfaceSchedule = boost::optional<ExternalInterfaceSchedule>;
 
   /** \relates ExternalInterfaceSchedule*/
-  typedef std::vector<ExternalInterfaceSchedule> ExternalInterfaceScheduleVector;
+  using ExternalInterfaceScheduleVector = std::vector<ExternalInterfaceSchedule>;
 
 }  // namespace model
 }  // namespace openstudio

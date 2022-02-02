@@ -116,7 +116,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::SetpointManagerOutdoorAirReset_Impl ImplType;
+    using ImplType = detail::SetpointManagerOutdoorAirReset_Impl;
 
     explicit SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
 
@@ -131,10 +131,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerOutdoorAirReset*/
-  typedef boost::optional<SetpointManagerOutdoorAirReset> OptionalSetpointManagerOutdoorAirReset;
+  using OptionalSetpointManagerOutdoorAirReset = boost::optional<SetpointManagerOutdoorAirReset>;
 
   /** \relates SetpointManagerOutdoorAirReset*/
-  typedef std::vector<SetpointManagerOutdoorAirReset> SetpointManagerOutdoorAirResetVector;
+  using SetpointManagerOutdoorAirResetVector = std::vector<SetpointManagerOutdoorAirReset>;
 
 }  // namespace model
 }  // namespace openstudio

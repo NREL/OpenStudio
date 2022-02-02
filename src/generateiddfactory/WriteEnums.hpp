@@ -150,7 +150,7 @@ void writeEnumFast(std::ostream& t_os, const std::string& t_name, const Containe
 template <typename Container>
 void writeEnum(std::ostream& t_os, const std::string& t_name, const Container& t_values) {
   // write IddObjectType enum. is very large, so split into 7 groups.
-  unsigned groupSize = static_cast<unsigned>(std::ceil(static_cast<double>(t_values.size()) / 7.0));
+  auto groupSize = static_cast<unsigned>(std::ceil(static_cast<double>(t_values.size()) / 7.0));
   unsigned n = 0;  // number of objects written so far--will start with Catchall and UserCustom
   t_os << "OPENSTUDIO_ENUM7( " << t_name << " ," << '\n';
 

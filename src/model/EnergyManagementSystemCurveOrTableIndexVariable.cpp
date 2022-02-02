@@ -110,7 +110,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable);
+    return {IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable};
   }
 
   ModelObject EnergyManagementSystemCurveOrTableIndexVariable::curveOrTableObject() const {

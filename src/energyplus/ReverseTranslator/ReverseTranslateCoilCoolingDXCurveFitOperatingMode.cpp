@@ -132,7 +132,7 @@ namespace energyplus {
     }
 
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
       OptionalWorkspaceObject target = workspaceGroup.getTarget(Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::SpeedName);
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
 

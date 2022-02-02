@@ -40,7 +40,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_GettersSetters) {
 
   Model m;
-  ZoneCapacitanceMultiplierResearchSpecial zcap = m.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+  auto zcap = m.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
 
   // Temperature Capacity Multiplier:  Double
   // Check Idd default: 1.0

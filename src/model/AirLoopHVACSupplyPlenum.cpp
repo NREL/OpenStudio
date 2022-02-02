@@ -87,7 +87,7 @@ namespace model {
         resetThermalZone();
         result = true;
       } else if ((!thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACSupplyPlenum())
-                 && (!thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum()) && (thermalZone->equipment().size() == 0)
+                 && (!thermalZone->getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum()) && (thermalZone->equipment().empty())
                  && (!thermalZone->useIdealAirLoads())) {
         result = setPointer(OS_AirLoopHVAC_SupplyPlenumFields::ThermalZone, thermalZone.get().handle());
       }
@@ -194,7 +194,7 @@ namespace model {
 
       // Create a new node and connect the plenum
       if (result) {
-        AirLoopHVACSupplyPlenum thisObject = getObject<AirLoopHVACSupplyPlenum>();
+        auto thisObject = getObject<AirLoopHVACSupplyPlenum>();
 
         if (currentAirLoopHVAC) {
           splitter->removePortForBranch(splitter->branchIndexForOutletModelObject(oldOutletModelObject.get()));
@@ -282,7 +282,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVACSupplyPlenum::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC_SupplyPlenum);
+    return {IddObjectType::OS_AirLoopHVAC_SupplyPlenum};
   }
 
   boost::optional<ThermalZone> AirLoopHVACSupplyPlenum::thermalZone() const {

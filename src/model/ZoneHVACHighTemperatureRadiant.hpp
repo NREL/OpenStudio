@@ -140,7 +140,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneHVACHighTemperatureRadiant_Impl ImplType;
+    using ImplType = detail::ZoneHVACHighTemperatureRadiant_Impl;
 
     explicit ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl);
 
@@ -154,10 +154,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACHighTemperatureRadiant*/
-  typedef boost::optional<ZoneHVACHighTemperatureRadiant> OptionalZoneHVACHighTemperatureRadiant;
+  using OptionalZoneHVACHighTemperatureRadiant = boost::optional<ZoneHVACHighTemperatureRadiant>;
 
   /** \relates ZoneHVACHighTemperatureRadiant*/
-  typedef std::vector<ZoneHVACHighTemperatureRadiant> ZoneHVACHighTemperatureRadiantVector;
+  using ZoneHVACHighTemperatureRadiantVector = std::vector<ZoneHVACHighTemperatureRadiant>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -193,7 +193,7 @@ namespace model {
   }
 
   IddObjectType SizingPlant::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Sizing_Plant);
+    return {IddObjectType::OS_Sizing_Plant};
   }
 
   std::vector<std::string> SizingPlant::loopTypeValues() {

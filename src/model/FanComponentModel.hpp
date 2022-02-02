@@ -272,7 +272,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanComponentModel_Impl ImplType;
+    using ImplType = detail::FanComponentModel_Impl;
 
     explicit FanComponentModel(std::shared_ptr<detail::FanComponentModel_Impl> impl);
 
@@ -286,10 +286,10 @@ namespace model {
   };
 
   /** \relates FanComponentModel*/
-  typedef boost::optional<FanComponentModel> OptionalFanComponentModel;
+  using OptionalFanComponentModel = boost::optional<FanComponentModel>;
 
   /** \relates FanComponentModel*/
-  typedef std::vector<FanComponentModel> FanComponentModelVector;
+  using FanComponentModelVector = std::vector<FanComponentModel>;
 
 }  // namespace model
 }  // namespace openstudio

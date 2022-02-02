@@ -83,7 +83,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SetpointManagerOutdoorAirReset_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SetpointManager_OutdoorAirResetFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SetpointManagerOutdoorAirReset", "Setpoint Manager Outdoor Air Reset"));
       }
@@ -340,7 +341,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerOutdoorAirReset::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_OutdoorAirReset);
+    return {IddObjectType::OS_SetpointManager_OutdoorAirReset};
   }
 
   std::vector<std::string> SetpointManagerOutdoorAirReset::controlVariableValues() {

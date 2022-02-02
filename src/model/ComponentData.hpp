@@ -109,7 +109,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ComponentData_Impl ImplType;
+    using ImplType = detail::ComponentData_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -126,10 +126,10 @@ namespace model {
   };
 
   /** \relates ComponentData */
-  typedef boost::optional<ComponentData> OptionalComponentData;
+  using OptionalComponentData = boost::optional<ComponentData>;
 
   /** \relates ComponentData */
-  typedef std::vector<ComponentData> ComponentDataVector;
+  using ComponentDataVector = std::vector<ComponentData>;
 
 }  // namespace model
 }  // namespace openstudio

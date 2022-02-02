@@ -93,7 +93,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneVentilationWindandStackOpenArea_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea", "Opening Area Fraction Schedule"));
       }
@@ -379,7 +380,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneVentilationWindandStackOpenArea_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -449,7 +450,7 @@ namespace model {
   }
 
   IddObjectType ZoneVentilationWindandStackOpenArea::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneVentilation_WindandStackOpenArea);
+    return {IddObjectType::OS_ZoneVentilation_WindandStackOpenArea};
   }
 
   double ZoneVentilationWindandStackOpenArea::openingArea() const {

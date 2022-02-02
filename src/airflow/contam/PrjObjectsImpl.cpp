@@ -182,11 +182,12 @@ namespace contam {
                 + ANY_TO_STR(m_pl) + ' ' + ANY_TO_STR(m_relHt) + ' ' + ANY_TO_STR(m_Vol) + ' ' + ANY_TO_STR(m_T0) + ' ' + ANY_TO_STR(m_P0) + ' '
                 + m_name + ' ' + ANY_TO_STR(m_color) + ' ' + ANY_TO_STR(m_u_Ht) + ' ' + ANY_TO_STR(m_u_V) + ' ' + ANY_TO_STR(m_u_T) + ' '
                 + ANY_TO_STR(m_u_P) + ' ' + ANY_TO_STR(m_cdaxis) + ' ' + ANY_TO_STR(m_cfd);
-      if (m_cfd)
+      if (m_cfd) {
         string += ' ' + m_cfdname;
-      else if (m_cdaxis)
+      } else if (m_cdaxis) {
         string += ANY_TO_STR(m_X1) + ' ' + ANY_TO_STR(m_Y1) + ' ' + ANY_TO_STR(m_H1) + ' ' + ANY_TO_STR(m_X2) + ' ' + ANY_TO_STR(m_Y2) + ' '
                   + ANY_TO_STR(m_H2) + ' ' + ANY_TO_STR(m_celldx) + ' ' + ANY_TO_STR(m_axialD) + ' ' + ANY_TO_STR(m_u_aD) + ' ' + ANY_TO_STR(m_u_L);
+      }
       return string + '\n';
     }
 
@@ -483,10 +484,11 @@ namespace contam {
     }
 
     void ZoneImpl::setVariablePressure(bool b) {
-      if (b)
+      if (b) {
         m_flags |= ZoneFlags::VAR_P;
-      else
+      } else {
         m_flags &= ZoneFlags::NVAR_P;
+      }
     }
 
     bool ZoneImpl::variablePressure() const {
@@ -494,10 +496,11 @@ namespace contam {
     }
 
     void ZoneImpl::setVariableContaminants(bool b) {
-      if (b)
+      if (b) {
         m_flags |= ZoneFlags::VAR_C;
-      else
+      } else {
         m_flags &= ZoneFlags::NVAR_C;
+      }
     }
 
     bool ZoneImpl::variableContaminants() const {
@@ -505,10 +508,11 @@ namespace contam {
     }
 
     void ZoneImpl::setSystem(bool b) {
-      if (b)
+      if (b) {
         m_flags |= ZoneFlags::SYS_N;
-      else
+      } else {
         m_flags &= ZoneFlags::NSYS_N;
+      }
     }
 
     bool ZoneImpl::system() const {
@@ -1404,10 +1408,11 @@ namespace contam {
     }
 
     void AirflowPathImpl::setWindPressure(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::WIND;
-      else
+      } else {
         m_flags &= 0xFFFE;
+      }
     }
 
     bool AirflowPathImpl::windPressure() {
@@ -1415,10 +1420,11 @@ namespace contam {
     }
 
     void AirflowPathImpl::setSystem(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_S;
-      else
+      } else {
         m_flags &= 0xFFF7;
+      }
     }
 
     bool AirflowPathImpl::system() {
@@ -1426,10 +1432,11 @@ namespace contam {
     }
 
     void AirflowPathImpl::setExhaust(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_X;
-      else
+      } else {
         m_flags &= 0xFFBF;
+      }
     }
 
     bool AirflowPathImpl::exhaust() {
@@ -1437,10 +1444,11 @@ namespace contam {
     }
 
     void AirflowPathImpl::setRecirculation(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_R;
-      else
+      } else {
         m_flags &= 0xFFEF;
+      }
     }
 
     bool AirflowPathImpl::recirculation() {
@@ -1448,10 +1456,11 @@ namespace contam {
     }
 
     void AirflowPathImpl::setOutsideAir(bool b) {
-      if (b)
+      if (b) {
         m_flags |= PathFlags::AHS_O;
-      else
+      } else {
         m_flags &= 0xFFDF;
+      }
     }
 
     bool AirflowPathImpl::outsideAir() {
@@ -1942,12 +1951,14 @@ namespace contam {
                 + ANY_TO_STR(m_expsave) + ' ' + ANY_TO_STR(m_ebwsave) + ' ' + ANY_TO_STR(m_zaasave) + ' ' + ANY_TO_STR(m_zbwsave) + '\n';
       string += ANY_TO_STR(m_rzfsave) + ' ' + ANY_TO_STR(m_rzmsave) + ' ' + ANY_TO_STR(m_rz1save) + ' ' + ANY_TO_STR(m_csmsave) + ' '
                 + ANY_TO_STR(m_srfsave) + ' ' + ANY_TO_STR(m_logsave) + '\n';
-      for (int i = 0; i < 16; i++)
+      for (int i = 0; i < 16; i++) {
         string += ANY_TO_STR(m_save[i]) + ' ';
+      }
       string += '\n';
       string += ANY_TO_STR((int)m_rvals.size()) + '\n';
-      for (unsigned int i = 0; i < m_rvals.size(); i++)
+      for (unsigned int i = 0; i < m_rvals.size(); i++) {
         string += ANY_TO_STR(m_rvals[i]) + ' ';
+      }
       string += '\n';
       string += ANY_TO_STR(m_BldgFlowZ) + ' ' + ANY_TO_STR(m_BldgFlowD) + ' ' + ANY_TO_STR(m_BldgFlowC) + '\n';
       string += ANY_TO_STR(m_cfd_ctype) + ' ' + ANY_TO_STR(m_cfd_convcpl) + ' ' + ANY_TO_STR(m_cfd_var) + ' ' + ANY_TO_STR(m_cfd_zref) + ' '

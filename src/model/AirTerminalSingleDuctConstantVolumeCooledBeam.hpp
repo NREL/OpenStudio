@@ -185,7 +185,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeCooledBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl> impl);
 
@@ -199,10 +199,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeCooledBeam> OptionalAirTerminalSingleDuctConstantVolumeCooledBeam;
+  using OptionalAirTerminalSingleDuctConstantVolumeCooledBeam = boost::optional<AirTerminalSingleDuctConstantVolumeCooledBeam>;
 
   /** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam> AirTerminalSingleDuctConstantVolumeCooledBeamVector;
+  using AirTerminalSingleDuctConstantVolumeCooledBeamVector = std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -447,7 +447,7 @@ namespace detail {
     boost::optional<Attribute> result;
     if (hasValue() && m_valueType == AttributeValueType::AttributeVector) {
       std::vector<Attribute> children = this->valueAsAttributeVector();
-      std::vector<Attribute>::const_iterator it = std::find_if(children.begin(), children.end(), FindChildByName(name));
+      auto it = std::find_if(children.begin(), children.end(), FindChildByName(name));
       if (it != children.end()) {
         result = *it;
       }

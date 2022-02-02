@@ -118,7 +118,7 @@ namespace sdd {
       bool wasFastNaming = model.fastNaming();
       model.setFastNaming(false);
 
-      unsigned n = (unsigned)materials.size();
+      auto n = (unsigned)materials.size();
       construction.ensureUniqueLayers();
       materials = construction.layers();  // DLM: get materials again in case new ones were cloned
 
@@ -138,7 +138,7 @@ namespace sdd {
         pugi::xml_node intVisAbsElement = element.child("IntVisAbs");
 
         if (materials[0].optionalCast<model::StandardOpaqueMaterial>()) {
-          model::StandardOpaqueMaterial extMaterial = materials[0].cast<model::StandardOpaqueMaterial>();
+          auto extMaterial = materials[0].cast<model::StandardOpaqueMaterial>();
 
           std::string roughness = "MediumRough";
           if (extRoughnessElement) {
@@ -158,7 +158,7 @@ namespace sdd {
             extMaterial.setVisibleAbsorptance(extVisAbsElement.text().as_double());
           }
         } else if (materials[0].optionalCast<model::MasslessOpaqueMaterial>()) {
-          model::MasslessOpaqueMaterial extMaterial = materials[0].cast<model::MasslessOpaqueMaterial>();
+          auto extMaterial = materials[0].cast<model::MasslessOpaqueMaterial>();
 
           std::string roughness = "MediumRough";
           if (extRoughnessElement) {
@@ -182,7 +182,7 @@ namespace sdd {
         // DLM: if only one layer use properties from exterior material
         if (n > 1) {
           if (materials[n - 1].optionalCast<model::StandardOpaqueMaterial>()) {
-            model::StandardOpaqueMaterial intMaterial = materials[n - 1].cast<model::StandardOpaqueMaterial>();
+            auto intMaterial = materials[n - 1].cast<model::StandardOpaqueMaterial>();
 
             if (intThrmlAbsElement) {
               intMaterial.setThermalAbsorptance(intThrmlAbsElement.text().as_double());
@@ -196,7 +196,7 @@ namespace sdd {
               intMaterial.setVisibleAbsorptance(intVisAbsElement.text().as_double());
             }
           } else if (materials[n - 1].optionalCast<model::MasslessOpaqueMaterial>()) {
-            model::MasslessOpaqueMaterial intMaterial = materials[n - 1].cast<model::MasslessOpaqueMaterial>();
+            auto intMaterial = materials[n - 1].cast<model::MasslessOpaqueMaterial>();
 
             if (intThrmlAbsElement) {
               intMaterial.setThermalAbsorptance(intThrmlAbsElement.text().as_double());
@@ -543,7 +543,7 @@ Visible Absorptance, IDD default of 0.7
     boost::optional<pugi::xml_node> result;
 
     if (constructionBase.optionalCast<model::LayeredConstruction>()) {
-      model::LayeredConstruction construction = constructionBase.cast<model::LayeredConstruction>();
+      auto construction = constructionBase.cast<model::LayeredConstruction>();
       model::StandardsInformationConstruction info = constructionBase.standardsInformation();
 
       // TODO: unused
@@ -628,7 +628,7 @@ Visible Absorptance, IDD default of 0.7
         // DLM: warn?
       }
 
-      unsigned n = (unsigned)layers.size();
+      auto n = (unsigned)layers.size();
       if (n > 0) {
 
         std::string extRoughness;
@@ -640,13 +640,13 @@ Visible Absorptance, IDD default of 0.7
         boost::optional<double> intVisibleAbsorptance;
 
         if (layers[0].optionalCast<model::StandardOpaqueMaterial>()) {
-          model::StandardOpaqueMaterial extMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+          auto extMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
           extRoughness = extMaterial.roughness();
           extSolarAbsorptance = extMaterial.solarAbsorptance();
           extThermalAbsorptance = extMaterial.thermalAbsorptance();
           extVisibleAbsorptance = extMaterial.visibleAbsorptance();
         } else if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()) {
-          model::MasslessOpaqueMaterial extMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
+          auto extMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
           extRoughness = extMaterial.roughness();
           extSolarAbsorptance = extMaterial.solarAbsorptance();
           extThermalAbsorptance = extMaterial.thermalAbsorptance();
@@ -654,12 +654,12 @@ Visible Absorptance, IDD default of 0.7
         }
 
         if (layers[n - 1].optionalCast<model::StandardOpaqueMaterial>()) {
-          model::StandardOpaqueMaterial intMaterial = layers[n - 1].cast<model::StandardOpaqueMaterial>();
+          auto intMaterial = layers[n - 1].cast<model::StandardOpaqueMaterial>();
           intSolarAbsorptance = intMaterial.solarAbsorptance();
           intThermalAbsorptance = intMaterial.thermalAbsorptance();
           intVisibleAbsorptance = intMaterial.visibleAbsorptance();
         } else if (layers[n - 1].optionalCast<model::MasslessOpaqueMaterial>()) {
-          model::MasslessOpaqueMaterial intMaterial = layers[n - 1].cast<model::MasslessOpaqueMaterial>();
+          auto intMaterial = layers[n - 1].cast<model::MasslessOpaqueMaterial>();
           intSolarAbsorptance = intMaterial.solarAbsorptance();
           intThermalAbsorptance = intMaterial.thermalAbsorptance();
           intVisibleAbsorptance = intMaterial.visibleAbsorptance();
@@ -727,7 +727,7 @@ Visible Absorptance, IDD default of 0.7
 
     } else if (constructionBase.optionalCast<model::FFactorGroundFloorConstruction>()) {
       // DLM: I think this is out of date
-      model::FFactorGroundFloorConstruction construction = constructionBase.cast<model::FFactorGroundFloorConstruction>();
+      auto construction = constructionBase.cast<model::FFactorGroundFloorConstruction>();
 
       result = root.append_child("ConsAssm");
 
@@ -762,7 +762,7 @@ Visible Absorptance, IDD default of 0.7
 
     } else if (constructionBase.optionalCast<model::CFactorUndergroundWallConstruction>()) {
       // DLM: I think this is out of date
-      model::CFactorUndergroundWallConstruction construction = constructionBase.cast<model::CFactorUndergroundWallConstruction>();
+      auto construction = constructionBase.cast<model::CFactorUndergroundWallConstruction>();
 
       result = root.append_child("ConsAssm");
 
@@ -809,7 +809,7 @@ Visible Absorptance, IDD default of 0.7
     UnitSystem btuSys(UnitSystem::BTU);
 
     if (constructionBase.optionalCast<model::Construction>()) {
-      model::Construction construction = constructionBase.cast<model::Construction>();
+      auto construction = constructionBase.cast<model::Construction>();
       model::StandardsInformationConstruction info = constructionBase.standardsInformation();
 
       result = root.append_child("DrCons");
@@ -835,7 +835,7 @@ Visible Absorptance, IDD default of 0.7
       if (layers.size() == 1) {
         if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()) {
 
-          model::MasslessOpaqueMaterial material = layers[0].cast<model::MasslessOpaqueMaterial>();
+          auto material = layers[0].cast<model::MasslessOpaqueMaterial>();
 
           // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
           Quantity uFactorSI(material.thermalConductance(), WhUnit(WhExpnt(1, 0, -2, -1)));
@@ -895,7 +895,7 @@ Visible Absorptance, IDD default of 0.7
     UnitSystem btuSys(UnitSystem::BTU);
 
     if (constructionBase.optionalCast<model::Construction>()) {
-      model::Construction construction = constructionBase.cast<model::Construction>();
+      auto construction = constructionBase.cast<model::Construction>();
       model::StandardsInformationConstruction info = constructionBase.standardsInformation();
 
       result = root.append_child("FenCons");
@@ -1047,7 +1047,7 @@ Visible Absorptance, IDD default of 0.7
       if (layers.size() == 1) {
         if (layers[0].optionalCast<model::SimpleGlazing>()) {
 
-          model::SimpleGlazing simpleGlazing = layers[0].cast<model::SimpleGlazing>();
+          auto simpleGlazing = layers[0].cast<model::SimpleGlazing>();
 
           shgc = simpleGlazing.solarHeatGainCoefficient();
 
@@ -1229,7 +1229,7 @@ Visible Absorptance, IDD default of 0.7
       if (compositeFramingMaterial && istringEqual("Metal", *compositeFramingMaterial)) {
         std::string value = compositeCavityInsulation.get();
         try {
-          double valueNum = boost::lexical_cast<double>(value);
+          auto valueNum = boost::lexical_cast<double>(value);
           value = "R-" + std::to_string(valueNum);
         } catch (const boost::bad_lexical_cast&) {
         }

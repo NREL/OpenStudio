@@ -87,7 +87,7 @@ TEST_F(ModelFixture, OpaqueMaterial_AirGap_Constructors) {
   EXPECT_TRUE(airGap.iddObject().type() == IddObjectType::OS_Material_AirGap);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   airGaps = modelClone.getModelObjects<AirGap>();
   ASSERT_EQ(static_cast<unsigned>(1), airGaps.size());
@@ -107,7 +107,7 @@ TEST_F(ModelFixture, OpaqueMaterial_MasslessOpaqueMaterial_Constructors) {
   EXPECT_TRUE(masslessMaterial.iddObject().type() == IddObjectType::OS_Material_NoMass);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   masslessMaterials = modelClone.getModelObjects<MasslessOpaqueMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), masslessMaterials.size());
@@ -127,7 +127,7 @@ TEST_F(ModelFixture, OpaqueMaterial_RoofVegetation_Constructors) {
   EXPECT_TRUE(greenRoof.iddObject().type() == IddObjectType::OS_Material_RoofVegetation);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   greenRoofs = modelClone.getModelObjects<RoofVegetation>();
   ASSERT_EQ(static_cast<unsigned>(1), greenRoofs.size());
@@ -147,7 +147,7 @@ TEST_F(ModelFixture, OpaqueMaterial_StandardOpaqueMaterial_Constructors) {
   EXPECT_TRUE(material.iddObject().type() == IddObjectType::OS_Material);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   materials = modelClone.getModelObjects<StandardOpaqueMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), materials.size());

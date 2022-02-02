@@ -86,7 +86,7 @@ namespace model {
 
     //@}
    protected:
-    typedef detail::ScheduleCompact_Impl ImplType;
+    using ImplType = detail::ScheduleCompact_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -99,10 +99,10 @@ namespace model {
   };
 
   /** \relates ScheduleCompact */
-  typedef boost::optional<ScheduleCompact> OptionalScheduleCompact;
+  using OptionalScheduleCompact = boost::optional<ScheduleCompact>;
 
   /** \relates ScheduleCompact */
-  typedef std::vector<ScheduleCompact> ScheduleCompactVector;
+  using ScheduleCompactVector = std::vector<ScheduleCompact>;
 
 }  // namespace model
 }  // namespace openstudio

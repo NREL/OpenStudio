@@ -120,7 +120,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::HeatBalanceAlgorithm_Impl ImplType;
+    using ImplType = detail::HeatBalanceAlgorithm_Impl;
 
     friend class detail::HeatBalanceAlgorithm_Impl;
     friend class Model;
@@ -137,10 +137,10 @@ namespace model {
   };
 
   /** \relates HeatBalanceAlgorithm*/
-  typedef boost::optional<HeatBalanceAlgorithm> OptionalHeatBalanceAlgorithm;
+  using OptionalHeatBalanceAlgorithm = boost::optional<HeatBalanceAlgorithm>;
 
   /** \relates HeatBalanceAlgorithm*/
-  typedef std::vector<HeatBalanceAlgorithm> HeatBalanceAlgorithmVector;
+  using HeatBalanceAlgorithmVector = std::vector<HeatBalanceAlgorithm>;
 
 }  // namespace model
 }  // namespace openstudio

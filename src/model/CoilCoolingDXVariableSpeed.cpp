@@ -131,7 +131,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilCoolingDXVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_VariableSpeedFields::BasinHeaterOperatingScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXVariableSpeed", "Basin Heater Operating"));
       }
@@ -764,7 +765,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_VariableSpeed);
+    return {IddObjectType::OS_Coil_Cooling_DX_VariableSpeed};
   }
 
   std::vector<std::string> CoilCoolingDXVariableSpeed::condenserTypeValues() {

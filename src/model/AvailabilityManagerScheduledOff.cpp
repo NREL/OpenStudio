@@ -73,7 +73,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AvailabilityManagerScheduledOff_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AvailabilityManager_ScheduledOffFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AvailabilityManagerScheduledOff", "Availability Manager Scheduled Off"));
       }
@@ -110,7 +111,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerScheduledOff::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManager_ScheduledOff);
+    return {IddObjectType::OS_AvailabilityManager_ScheduledOff};
   }
 
   Schedule AvailabilityManagerScheduledOff::schedule() const {

@@ -158,12 +158,12 @@ TEST_F(ModelFixture, SurfaceControlMovableInsulation_Clone) {
   mi.setInsulationType("Inside");
 
   // clone it into the same model
-  SurfaceControlMovableInsulation miClone = mi.clone(model).cast<SurfaceControlMovableInsulation>();
+  auto miClone = mi.clone(model).cast<SurfaceControlMovableInsulation>();
   EXPECT_EQ("Inside", miClone.insulationType());
 
   // clone it into a different model
   Model model2;
-  SurfaceControlMovableInsulation miClone2 = mi.clone(model2).cast<SurfaceControlMovableInsulation>();
+  auto miClone2 = mi.clone(model2).cast<SurfaceControlMovableInsulation>();
   EXPECT_EQ("Inside", miClone2.insulationType());
 }
 

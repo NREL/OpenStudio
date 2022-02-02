@@ -81,7 +81,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ExteriorLoadInstance_Impl ImplType;
+    using ImplType = detail::ExteriorLoadInstance_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -96,10 +96,10 @@ namespace model {
   };
 
   /** \relates ExteriorLoadInstance */
-  typedef boost::optional<ExteriorLoadInstance> OptionalExteriorLoadInstance;
+  using OptionalExteriorLoadInstance = boost::optional<ExteriorLoadInstance>;
 
   /** \relates ExteriorLoadInstance */
-  typedef std::vector<ExteriorLoadInstance> ExteriorLoadInstanceVector;
+  using ExteriorLoadInstanceVector = std::vector<ExteriorLoadInstance>;
 
 }  // namespace model
 }  // namespace openstudio

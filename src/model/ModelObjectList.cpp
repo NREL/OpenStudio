@@ -123,7 +123,7 @@ namespace model {
 
       // DLM: should this class prevent duplicates in the list?
 
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
 
       bool ok = eg.setPointer(OS_ModelObjectListExtensibleFields::ModelObject, modelObject.handle());
 
@@ -191,7 +191,7 @@ namespace model {
   }
 
   IddObjectType ModelObjectList::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ModelObjectList);
+    return {IddObjectType::OS_ModelObjectList};
   }
 
   std::vector<IdfObject> ModelObjectList::remove() {

@@ -93,8 +93,8 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
     CoilCoolingLowTempRadiantVarFlow testCC(model, coolingControlTemperatureSchedule);
     CoilHeatingLowTempRadiantVarFlow testHC(model, heatingControlTemperatureSchedule);
 
-    HVACComponent testCC1 = testCC.cast<HVACComponent>();
-    HVACComponent testHC1 = testHC.cast<HVACComponent>();
+    auto testCC1 = testCC.cast<HVACComponent>();
+    auto testHC1 = testHC.cast<HVACComponent>();
 
     ZoneHVACLowTempRadiantVarFlow testRad(model, availabilitySched, testHC1, testCC1);
 

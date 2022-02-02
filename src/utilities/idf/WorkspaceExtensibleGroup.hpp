@@ -98,7 +98,7 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup
   //@}
 
  protected:
-  typedef detail::WorkspaceObject_Impl ImplType;
+  using ImplType = detail::WorkspaceObject_Impl;
 
   friend class IdfExtensibleGroup;
 

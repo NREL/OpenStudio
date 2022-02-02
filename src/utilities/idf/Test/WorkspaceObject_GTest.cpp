@@ -376,7 +376,7 @@ TEST_F(IdfFixture, WorkspaceObject_ClearGroups) {
   Workspace ws(epIdfFile);
   EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::None);
   WorkspaceObjectVector surfaces = ws.getObjectsByType(IddObjectType::BuildingSurface_Detailed);
-  ASSERT_TRUE(surfaces.size() > 0);
+  ASSERT_TRUE(!surfaces.empty());
   unsigned n = surfaces[0].numFields();
   surfaces[0].clearExtensibleGroups();
   EXPECT_TRUE(surfaces[0].numFields() < n);
@@ -385,7 +385,7 @@ TEST_F(IdfFixture, WorkspaceObject_ClearGroups) {
   ws = Workspace(epIdfFile);
   ws.setStrictnessLevel(StrictnessLevel::Final);
   surfaces = ws.getObjectsByType(IddObjectType::BuildingSurface_Detailed);
-  ASSERT_TRUE(surfaces.size() > 0);
+  ASSERT_TRUE(!surfaces.empty());
   n = surfaces[0].numFields();
   surfaces[0].clearExtensibleGroups();
   EXPECT_EQ(n, surfaces[0].numFields());

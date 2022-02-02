@@ -178,7 +178,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GroundHeatExchangerVertical_Impl ImplType;
+    using ImplType = detail::GroundHeatExchangerVertical_Impl;
 
     explicit GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl);
 
@@ -192,10 +192,10 @@ namespace model {
   };
 
   /** \relates GroundHeatExchangerVertical*/
-  typedef boost::optional<GroundHeatExchangerVertical> OptionalGroundHeatExchangerVertical;
+  using OptionalGroundHeatExchangerVertical = boost::optional<GroundHeatExchangerVertical>;
 
   /** \relates GroundHeatExchangerVertical*/
-  typedef std::vector<GroundHeatExchangerVertical> GroundHeatExchangerVerticalVector;
+  using GroundHeatExchangerVerticalVector = std::vector<GroundHeatExchangerVertical>;
 
 }  // namespace model
 }  // namespace openstudio

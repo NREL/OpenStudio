@@ -94,7 +94,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DefaultSurfaceConstructions_Impl ImplType;
+    using ImplType = detail::DefaultSurfaceConstructions_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -107,10 +107,10 @@ namespace model {
   };
 
   /** \relates DefaultSurfaceConstructions*/
-  typedef boost::optional<DefaultSurfaceConstructions> OptionalDefaultSurfaceConstructions;
+  using OptionalDefaultSurfaceConstructions = boost::optional<DefaultSurfaceConstructions>;
 
   /** \relates DefaultSurfaceConstructions*/
-  typedef std::vector<DefaultSurfaceConstructions> DefaultSurfaceConstructionsVector;
+  using DefaultSurfaceConstructionsVector = std::vector<DefaultSurfaceConstructions>;
 
 }  // namespace model
 }  // namespace openstudio

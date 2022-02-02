@@ -827,7 +827,7 @@ class UTILITIES_API SqlFile
 };
 
 /// optional SqlFile
-typedef boost::optional<SqlFile> OptionalSqlFile;
+using OptionalSqlFile = boost::optional<SqlFile>;
 
 }  // namespace openstudio
 

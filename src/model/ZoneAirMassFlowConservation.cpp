@@ -115,7 +115,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneAirMassFlowConservation_Impl::setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment) {
+    bool ZoneAirMassFlowConservation_Impl::setSourceZoneInfiltrationTreatment(const std::string& /*sourceZoneInfiltrationTreatment*/) {
       return false;
     }
 
@@ -144,11 +144,11 @@ namespace model {
   }  // namespace detail
 
   IddObjectType ZoneAirMassFlowConservation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneAirMassFlowConservation);
+    return {IddObjectType::OS_ZoneAirMassFlowConservation};
   }
 
   std::vector<std::string> ZoneAirMassFlowConservation::sourceZoneInfiltrationTreatmentValues() {
-    return std::vector<std::string>();
+    return {};
   }
 
   std::vector<std::string> ZoneAirMassFlowConservation::adjustZoneMixingandReturnForAirMassFlowBalanceValues() {

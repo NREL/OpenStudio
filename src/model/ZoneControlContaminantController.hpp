@@ -106,7 +106,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneControlContaminantController_Impl ImplType;
+    using ImplType = detail::ZoneControlContaminantController_Impl;
 
     explicit ZoneControlContaminantController(std::shared_ptr<detail::ZoneControlContaminantController_Impl> impl);
 
@@ -120,10 +120,10 @@ namespace model {
   };
 
   /** \relates ZoneControlContaminantController*/
-  typedef boost::optional<ZoneControlContaminantController> OptionalZoneControlContaminantController;
+  using OptionalZoneControlContaminantController = boost::optional<ZoneControlContaminantController>;
 
   /** \relates ZoneControlContaminantController*/
-  typedef std::vector<ZoneControlContaminantController> ZoneControlContaminantControllerVector;
+  using ZoneControlContaminantControllerVector = std::vector<ZoneControlContaminantController>;
 
 }  // namespace model
 }  // namespace openstudio

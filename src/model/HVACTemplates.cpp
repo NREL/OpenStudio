@@ -185,7 +185,7 @@ namespace model {
 
     // Hot Water Plant
 
-    if (zonesToAddTo.size() > 0) {
+    if (!zonesToAddTo.empty()) {
       PlantLoop hotWaterPlant(model);
       hotWaterPlant.setName("Hot Water Loop");
       SizingPlant sizingPlant = hotWaterPlant.sizingPlant();
@@ -403,11 +403,11 @@ namespace model {
 
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("Packaged Rooftop VAV with Reheat");
@@ -496,7 +496,7 @@ namespace model {
     Model tempModel;
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("Packaged Rooftop VAV with PFP Boxes and Reheat");
@@ -538,11 +538,11 @@ namespace model {
 
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _hotWaterSchedule = hotWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("VAV with Reheat");
@@ -763,9 +763,9 @@ namespace model {
     Model tempModel;
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
-    Schedule _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _chilledWaterSchedule = chilledWaterTempSchedule(tempModel).clone(model).cast<Schedule>();
 
-    Schedule _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
+    auto _deckTempSchedule = deckTempSchedule(tempModel).clone(model).cast<Schedule>();
 
     AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
     airLoopHVAC.setName("VAV with PFP Boxes and Reheat");
@@ -961,7 +961,7 @@ namespace model {
 
     Model tempModel;
     // Make a schedule at 140°F
-    Schedule shwSchedule = makeSchedule(tempModel, "SHW_Temperature_140F", 60).clone(model).cast<Schedule>();
+    auto shwSchedule = makeSchedule(tempModel, "SHW_Temperature_140F", 60).clone(model).cast<Schedule>();
 
     Schedule _alwaysOnSchedule = model.alwaysOnDiscreteSchedule();
 
@@ -1017,7 +1017,7 @@ namespace model {
     wh.setHeaterThermalEfficiency(0.80154340529419);
 
     // Set it to Ambient schedule, at 70°F
-    Schedule ambientSchedule = makeSchedule(tempModel, "Water Heater Ambient Temp Schedule - 70F", 21.11).clone(model).cast<Schedule>();
+    auto ambientSchedule = makeSchedule(tempModel, "Water Heater Ambient Temp Schedule - 70F", 21.11).clone(model).cast<Schedule>();
     wh.setAmbientTemperatureSchedule(ambientSchedule);
     wh.setAmbientTemperatureIndicator("Schedule");
 

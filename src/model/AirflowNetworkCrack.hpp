@@ -94,7 +94,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkCrack_Impl ImplType;
+    using ImplType = detail::AirflowNetworkCrack_Impl;
 
     explicit AirflowNetworkCrack(std::shared_ptr<detail::AirflowNetworkCrack_Impl> impl);
 
@@ -108,10 +108,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkCrack*/
-  typedef boost::optional<AirflowNetworkCrack> OptionalAirflowNetworkCrack;
+  using OptionalAirflowNetworkCrack = boost::optional<AirflowNetworkCrack>;
 
   /** \relates AirflowNetworkCrack*/
-  typedef std::vector<AirflowNetworkCrack> AirflowNetworkCrackVector;
+  using AirflowNetworkCrackVector = std::vector<AirflowNetworkCrack>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -80,7 +80,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl;
 
     explicit ExternalInterfaceFunctionalMockupUnitExportToVariable(
       std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl> impl);
@@ -95,10 +95,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportToVariable*/
-  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportToVariable> OptionalExternalInterfaceFunctionalMockupUnitExportToVariable;
+  using OptionalExternalInterfaceFunctionalMockupUnitExportToVariable = boost::optional<ExternalInterfaceFunctionalMockupUnitExportToVariable>;
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportToVariable*/
-  typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToVariable> ExternalInterfaceFunctionalMockupUnitExportToVariableVector;
+  using ExternalInterfaceFunctionalMockupUnitExportToVariableVector = std::vector<ExternalInterfaceFunctionalMockupUnitExportToVariable>;
 
 }  // namespace model
 }  // namespace openstudio

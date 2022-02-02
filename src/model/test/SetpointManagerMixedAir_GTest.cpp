@@ -197,7 +197,7 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_clone) {
   EXPECT_EQ(fan.inletModelObject()->cast<Node>(), testObject.fanInletNode().get());
   EXPECT_EQ(fan.outletModelObject()->cast<Node>(), testObject.fanOutletNode().get());
 
-  SetpointManagerMixedAir testObjectClone = testObject.clone(m).cast<SetpointManagerMixedAir>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMixedAir>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.fanInletNode());
   EXPECT_FALSE(testObjectClone.fanOutletNode());
@@ -218,7 +218,7 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_customDataClone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(supplyNode, testObject.setpointNode().get());
 
-  SetpointManagerMixedAir testObjectClone = testObject.clone(m).cast<SetpointManagerMixedAir>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMixedAir>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

@@ -313,7 +313,7 @@ namespace sdd {
   model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear& scheduleYear, const std::string& name) {
     model::Model model = scheduleYear.model();
 
-    model::ScheduleYear scheduleYearClone = scheduleYear.clone(model).cast<model::ScheduleYear>();
+    auto scheduleYearClone = scheduleYear.clone(model).cast<model::ScheduleYear>();
     scheduleYearClone.setName(name);
     scheduleYearClone.clearScheduleWeeks();
 
@@ -325,80 +325,80 @@ namespace sdd {
     int i = 1;
 
     for (const auto& scheduleWeek : scheduleWeeks) {
-      model::ScheduleWeek scheduleWeekClone = scheduleWeek.clone(model).cast<model::ScheduleWeek>();
+      auto scheduleWeekClone = scheduleWeek.clone(model).cast<model::ScheduleWeek>();
       scheduleWeekClone.setName(name + " Week " + openstudio::string_conversions::number(i));
       scheduleYearClone.addScheduleWeek(*dateIt, scheduleWeekClone);
 
       boost::optional<model::ScheduleDay> scheduleDay;
 
       if ((scheduleDay = scheduleWeek.sundaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Sunday");
         scheduleWeekClone.setSundaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.mondaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Monday");
         scheduleWeekClone.setMondaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.tuesdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Tuesday");
         scheduleWeekClone.setTuesdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.wednesdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Wednesday");
         scheduleWeekClone.setWednesdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.thursdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Thursday");
         scheduleWeekClone.setThursdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.fridaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Friday");
         scheduleWeekClone.setFridaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.saturdaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Saturday");
         scheduleWeekClone.setSaturdaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.holidaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Holiday");
         scheduleWeekClone.setHolidaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.summerDesignDaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Summer");
         scheduleWeekClone.setSummerDesignDaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.winterDesignDaySchedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Winter");
         scheduleWeekClone.setWinterDesignDaySchedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.customDay1Schedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Custom 1");
         scheduleWeekClone.setCustomDay1Schedule(s);
       }
 
       if ((scheduleDay = scheduleWeek.customDay2Schedule())) {
-        model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
+        auto s = scheduleDay->clone(model).cast<model::ScheduleDay>();
         s.setName(name + " Week " + openstudio::string_conversions::number(i) + " Custom 2");
         scheduleWeekClone.setCustomDay2Schedule(s);
       }
@@ -1230,7 +1230,7 @@ namespace sdd {
             if (boost::optional<model::ModelObject> mo = translateCoilCooling(airSegmentChildElement, model)) {
               lastComponent = mo;
 
-              model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
+              auto hvacComponent = mo->cast<model::HVACComponent>();
               hvacComponent.addToNode(dropNode.get());
 
               coolingComponents.push_back(mo.get());
@@ -1255,7 +1255,7 @@ namespace sdd {
             if (auto mo = translateCoilHeating(airSegmentChildElement, model)) {
               lastComponent = mo;
 
-              model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
+              auto hvacComponent = mo->cast<model::HVACComponent>();
               if (!hvacComponent.addToNode(dropNode.get())) {
                 LOG(Error, "Cannot add HVACComponent named '" << hvacComponent.nameString() << "' to node '" << dropNode->nameString()
                                                               << "' on AirLoopHVAC '" << airLoopHVAC.nameString());
@@ -1299,7 +1299,7 @@ namespace sdd {
             if (boost::optional<model::ModelObject> mo = translateEvapClr(airSegmentChildElement, model)) {
               lastComponent = mo;
 
-              model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
+              auto hvacComponent = mo->cast<model::HVACComponent>();
               hvacComponent.addToNode(dropNode.get());
 
               coolingComponents.push_back(mo.get());
@@ -4573,7 +4573,7 @@ namespace sdd {
         coil = model::CoilHeatingElectric(model, schedule);
         LOG(Warn, name << " is assigned a default electric heating coil.");
       }
-      model::HVACComponent hvacComponentCoil = coil->cast<model::HVACComponent>();
+      auto hvacComponentCoil = coil->cast<model::HVACComponent>();
 
       // Fan
       pugi::xml_node fanElement = trmlUnitElement.child("Fan");
@@ -4583,7 +4583,7 @@ namespace sdd {
         fan = model::FanConstantVolume(model, schedule);
         LOG(Warn, name << " is assigned a default constant volume fan.");
       }
-      model::HVACComponent hvacComponentFan = fan->cast<model::HVACComponent>();
+      auto hvacComponentFan = fan->cast<model::HVACComponent>();
 
       // Terminal
       model::AirTerminalSingleDuctSeriesPIUReheat terminal(model, hvacComponentFan, hvacComponentCoil);
@@ -4638,7 +4638,7 @@ namespace sdd {
         LOG(Warn, name << " is assigned a default electric heating coil.");
       }
 
-      model::HVACComponent hvacComponentCoil = coil->cast<model::HVACComponent>();
+      auto hvacComponentCoil = coil->cast<model::HVACComponent>();
 
       // Fan
 
@@ -4653,7 +4653,7 @@ namespace sdd {
         LOG(Warn, name << " is assigned a default constant volume fan.");
       }
 
-      model::HVACComponent hvacComponentFan = fan->cast<model::HVACComponent>();
+      auto hvacComponentFan = fan->cast<model::HVACComponent>();
 
       // Terminal
 
@@ -4949,7 +4949,7 @@ namespace sdd {
 
       std::vector<model::ModelObject> waterHeaters = plantLoop.supplyComponents(model::WaterHeaterMixed::iddObjectType());
 
-      if (waterHeaters.size() > 0) {
+      if (!waterHeaters.empty()) {
         waterHeater = waterHeaters.front().cast<model::WaterHeaterMixed>();
       }
 
@@ -4963,7 +4963,7 @@ namespace sdd {
         spm.addToNode(supplyOutletNode);
       }
 
-      if (waterHeaters.size() > 0) {
+      if (!waterHeaters.empty()) {
         model::PumpVariableSpeed pumpVariableSpeed(model);
 
         model::Node supplyInletNode = plantLoop.supplyInletNode();
@@ -5031,14 +5031,14 @@ namespace sdd {
 
       std::vector<model::ModelObject> variablePumps;
       variablePumps = plantLoop.supplyComponents(plantLoop.supplyInletNode(), plantLoop.supplySplitter(), model::PumpVariableSpeed::iddObjectType());
-      if (constantPumps.size() > 0) {
-        model::PumpConstantSpeed pump = constantPumps.front().cast<model::PumpConstantSpeed>();
+      if (!constantPumps.empty()) {
+        auto pump = constantPumps.front().cast<model::PumpConstantSpeed>();
         if (boost::optional<double> value = pump.ratedFlowRate()) {
           plantLoop.setMaximumLoopFlowRate(value.get());
           //plantLoop.setMinimumLoopFlowRate(value.get());
         }
-      } else if (variablePumps.size() > 0) {
-        model::PumpVariableSpeed pump = variablePumps.front().cast<model::PumpVariableSpeed>();
+      } else if (!variablePumps.empty()) {
+        auto pump = variablePumps.front().cast<model::PumpVariableSpeed>();
         if (boost::optional<double> value = pump.ratedFlowRate()) {
           plantLoop.setMaximumLoopFlowRate(value.get());
         }
@@ -5052,7 +5052,7 @@ namespace sdd {
         double flowRate = 0.0;
 
         constantPumps = plantLoop.supplyComponents(plantLoop.supplySplitter(), plantLoop.supplyMixer(), model::PumpConstantSpeed::iddObjectType());
-        if (constantPumps.size() > 0) {
+        if (!constantPumps.empty()) {
           for (auto it = constantPumps.begin(); it != constantPumps.end(); ++it) {
             if (boost::optional<double> ratedFlowRate = it->cast<model::PumpConstantSpeed>().ratedFlowRate()) {
               flowRate = flowRate + ratedFlowRate.get();
@@ -5063,7 +5063,7 @@ namespace sdd {
         }
 
         variablePumps = plantLoop.supplyComponents(plantLoop.supplySplitter(), plantLoop.supplyMixer(), model::PumpVariableSpeed::iddObjectType());
-        if (variablePumps.size() > 0) {
+        if (!variablePumps.empty()) {
           for (auto it = variablePumps.begin(); it != variablePumps.end(); ++it) {
             if (boost::optional<double> ratedFlowRate = it->cast<model::PumpVariableSpeed>().ratedFlowRate()) {
               flowRate = flowRate + ratedFlowRate.get();
@@ -5088,7 +5088,7 @@ namespace sdd {
     // Plant Operation Schemes
 
     std::vector<double> ldRngLims;
-    typedef std::vector<std::string> EquipmentList;
+    using EquipmentList = std::vector<std::string>;
     std::vector<EquipmentList> equipmentLists;
 
     // Lambda to sort two pugi::xml_node according to their 'index' attribute
@@ -8268,7 +8268,7 @@ namespace sdd {
     }
 
     LOG(Debug, "Couldn't locate the ZnSys element with name '" << znSysName << "'.");
-    return pugi::xml_node();
+    return {};
   }
 
   pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_node& znNameElement) {
@@ -8296,7 +8296,7 @@ namespace sdd {
 
     LOG(Debug, "Couldn't locate the TrmlUnit element for zoneName '" << zoneName << "'.");
 
-    return pugi::xml_node();
+    return {};
   }
 
   pugi::xml_node ReverseTranslator::findAirSysElement(const pugi::xml_node& airSyRefElement) {
@@ -8330,7 +8330,7 @@ namespace sdd {
 
     LOG(Debug, "Couldn't locate the AirSys element for airSysName '" << airSysName << "'.");
 
-    return pugi::xml_node();
+    return {};
   }
 
   boost::optional<pugi::xml_node> ForwardTranslator::translateAirLoopHVAC(const model::AirLoopHVAC& airLoop, pugi::xml_node& root) {
@@ -8444,10 +8444,11 @@ namespace sdd {
     std::string fanPos;
     auto inletComp = supplyOutletNode.inletModelObject();
     OS_ASSERT(inletComp);
-    if (inletComp->optionalCast<model::FanConstantVolume>() || inletComp->optionalCast<model::FanVariableVolume>())
+    if (inletComp->optionalCast<model::FanConstantVolume>() || inletComp->optionalCast<model::FanVariableVolume>()) {
       fanPos = "DrawThrough";
-    else
+    } else {
       fanPos = "BlowThrough";
+    }
     auto fanPosElement = result.append_child("FanPos");
     fanPosElement.text() = fanPos.c_str();
 

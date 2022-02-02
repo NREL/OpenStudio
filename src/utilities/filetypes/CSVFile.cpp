@@ -269,7 +269,7 @@ namespace detail {
   std::vector<DateTime> CSVFile_Impl::getColumnAsDateTimes(unsigned columnIndex) const {
     if (columnIndex >= m_numColumns) {
       LOG(Warn, "Column index " << columnIndex << " invalid for number of columns " << m_numColumns);
-      return std::vector<DateTime>();
+      return {};
     }
 
     std::vector<DateTime> result;
@@ -278,13 +278,13 @@ namespace detail {
     for (unsigned i = 0; i < numRows; ++i) {
       if (m_rows[i][columnIndex].variantType() != VariantType::String) {
         LOG(Warn, "Value at row " << i << " and column " << columnIndex << " is not a DateTime string");
-        return std::vector<DateTime>();
+        return {};
       }
 
       boost::optional<DateTime> dateTime = DateTime::fromISO8601(m_rows[i][columnIndex].valueAsString());
       if (!dateTime) {
         LOG(Warn, "Value at row " << i << " and column " << columnIndex << " is not a DateTime string");
-        return std::vector<DateTime>();
+        return {};
       }
       result.push_back(*dateTime);
     }
@@ -295,7 +295,7 @@ namespace detail {
   std::vector<double> CSVFile_Impl::getColumnAsDoubleVector(unsigned columnIndex) const {
     if (columnIndex >= m_numColumns) {
       LOG(Warn, "Column index " << columnIndex << " invalid for number of columns " << m_numColumns);
-      return std::vector<double>();
+      return {};
     }
 
     std::vector<double> result;
@@ -312,7 +312,7 @@ namespace detail {
 
       if (!value) {
         LOG(Warn, "Value at row " << i << " and column " << columnIndex << " is not a numeric value");
-        return std::vector<double>();
+        return {};
       }
       result.push_back(*value);
     }
@@ -323,7 +323,7 @@ namespace detail {
   std::vector<std::string> CSVFile_Impl::getColumnAsStringVector(unsigned columnIndex) const {
     if (columnIndex >= m_numColumns) {
       LOG(Warn, "Column index " << columnIndex << " invalid for number of columns " << m_numColumns);
-      return std::vector<std::string>();
+      return {};
     }
 
     std::vector<std::string> result;

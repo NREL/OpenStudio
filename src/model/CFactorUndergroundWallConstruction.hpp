@@ -68,7 +68,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CFactorUndergroundWallConstruction_Impl ImplType;
+    using ImplType = detail::CFactorUndergroundWallConstruction_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -82,10 +82,10 @@ namespace model {
   };
 
   /** \relates CFactorUndergroundWallConstruction */
-  typedef boost::optional<CFactorUndergroundWallConstruction> OptionalCFactorUndergroundWallConstruction;
+  using OptionalCFactorUndergroundWallConstruction = boost::optional<CFactorUndergroundWallConstruction>;
 
   /** \relates CFactorUndergroundWallConstruction */
-  typedef std::vector<CFactorUndergroundWallConstruction> CFactorUndergroundWallConstructionVector;
+  using CFactorUndergroundWallConstructionVector = std::vector<CFactorUndergroundWallConstruction>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -87,7 +87,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheatFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVHeatAndCoolNoReheat", "Availability Schedule"));
       }
@@ -224,7 +225,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctVAVHeatAndCoolNoReheat mo = this->getObject<AirTerminalSingleDuctVAVHeatAndCoolNoReheat>();
+                  auto mo = this->getObject<AirTerminalSingleDuctVAVHeatAndCoolNoReheat>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -241,7 +242,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
       boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
@@ -312,7 +313,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctVAVHeatAndCoolNoReheat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat};
   }
 
   boost::optional<Schedule> AirTerminalSingleDuctVAVHeatAndCoolNoReheat::availabilitySchedule() const {

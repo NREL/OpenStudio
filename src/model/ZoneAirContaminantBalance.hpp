@@ -87,7 +87,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneAirContaminantBalance_Impl ImplType;
+    using ImplType = detail::ZoneAirContaminantBalance_Impl;
 
     explicit ZoneAirContaminantBalance(std::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl);
 
@@ -103,10 +103,10 @@ namespace model {
   };
 
   /** \relates ZoneAirContaminantBalance*/
-  typedef boost::optional<ZoneAirContaminantBalance> OptionalZoneAirContaminantBalance;
+  using OptionalZoneAirContaminantBalance = boost::optional<ZoneAirContaminantBalance>;
 
   /** \relates ZoneAirContaminantBalance*/
-  typedef std::vector<ZoneAirContaminantBalance> ZoneAirContaminantBalanceVector;
+  using ZoneAirContaminantBalanceVector = std::vector<ZoneAirContaminantBalance>;
 
 }  // namespace model
 }  // namespace openstudio

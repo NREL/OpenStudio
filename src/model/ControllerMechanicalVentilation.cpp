@@ -83,7 +83,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Controller_MechanicalVentilationFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("ControllerMechanicalVentilation", "Availability Schedule"));
       }
@@ -224,7 +225,7 @@ namespace model {
   }
 
   IddObjectType ControllerMechanicalVentilation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Controller_MechanicalVentilation);
+    return {IddObjectType::OS_Controller_MechanicalVentilation};
   }
 
   std::vector<std::string> ControllerMechanicalVentilation::systemOutdoorAirMethodValues() {

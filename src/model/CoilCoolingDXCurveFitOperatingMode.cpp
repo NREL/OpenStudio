@@ -96,7 +96,7 @@ namespace model {
                              [this](const CoilCoolingDXCurveFitPerformance& perf) { return (perf.baseOperatingMode().handle() == this->handle()); });
       if (it != perfs.end()) {
         LOG(Warn, "Cannot remove object because it is used by at least one CoilCoolingDXCurveFitPerformance as a required field");
-        return std::vector<IdfObject>();
+        return {};
       }
       return ResourceObject_Impl::remove();
     }
@@ -488,7 +488,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXCurveFitOperatingMode::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode);
+    return {IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode};
   }
 
   std::vector<std::string> CoilCoolingDXCurveFitOperatingMode::condenserTypeValues() {

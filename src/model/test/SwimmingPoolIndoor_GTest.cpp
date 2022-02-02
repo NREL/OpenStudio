@@ -246,7 +246,7 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterInletNode());
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterOutletNode());
 
-  SwimmingPoolIndoor swimmingPoolIndoorClone = swimmingPoolIndoor.clone(m).cast<SwimmingPoolIndoor>();
+  auto swimmingPoolIndoorClone = swimmingPoolIndoor.clone(m).cast<SwimmingPoolIndoor>();
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 

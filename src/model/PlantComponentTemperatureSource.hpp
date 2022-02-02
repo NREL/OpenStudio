@@ -102,7 +102,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PlantComponentTemperatureSource_Impl ImplType;
+    using ImplType = detail::PlantComponentTemperatureSource_Impl;
 
     explicit PlantComponentTemperatureSource(std::shared_ptr<detail::PlantComponentTemperatureSource_Impl> impl);
 
@@ -116,10 +116,10 @@ namespace model {
   };
 
   /** \relates PlantComponentTemperatureSource*/
-  typedef boost::optional<PlantComponentTemperatureSource> OptionalPlantComponentTemperatureSource;
+  using OptionalPlantComponentTemperatureSource = boost::optional<PlantComponentTemperatureSource>;
 
   /** \relates PlantComponentTemperatureSource*/
-  typedef std::vector<PlantComponentTemperatureSource> PlantComponentTemperatureSourceVector;
+  using PlantComponentTemperatureSourceVector = std::vector<PlantComponentTemperatureSource>;
 
 }  // namespace model
 }  // namespace openstudio

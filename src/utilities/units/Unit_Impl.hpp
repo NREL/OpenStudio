@@ -180,7 +180,7 @@ namespace detail {
 
     //@}
    protected:
-    typedef std::pair<std::string, int> UnitElement;
+    using UnitElement = std::pair<std::string, int>;
     std::vector<UnitElement> m_units;
     ScaleConstant m_scale;
     std::string m_prettyString;

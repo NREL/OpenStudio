@@ -93,7 +93,7 @@ namespace model {
     friend class openstudio::detail::IdfObject_Impl;
 
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl> impl);
 
@@ -102,13 +102,13 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat> OptionalAirTerminalSingleDuctConstantVolumeNoReheat;
+  using OptionalAirTerminalSingleDuctConstantVolumeNoReheat = boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat>;
 
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeNoReheat> AirTerminalSingleDuctConstantVolumeNoReheatVector;
+  using AirTerminalSingleDuctConstantVolumeNoReheatVector = std::vector<AirTerminalSingleDuctConstantVolumeNoReheat>;
 
   // In E+ 9.0.0, ATU SingleDuctUncontrolled was renamed to SingleDuctConstantVolumeNoReheat
   // To be more consistent with the naming convention of others ATU. We typedef for backwards compatibility
-  typedef AirTerminalSingleDuctConstantVolumeNoReheat AirTerminalSingleDuctUncontrolled;
+  using AirTerminalSingleDuctUncontrolled = AirTerminalSingleDuctConstantVolumeNoReheat;
 
 }  // namespace model
 

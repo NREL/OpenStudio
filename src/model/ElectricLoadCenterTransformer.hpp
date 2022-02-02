@@ -220,7 +220,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterTransformer_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterTransformer_Impl;
 
     explicit ElectricLoadCenterTransformer(std::shared_ptr<detail::ElectricLoadCenterTransformer_Impl> impl);
 
@@ -234,10 +234,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterTransformer*/
-  typedef boost::optional<ElectricLoadCenterTransformer> OptionalElectricLoadCenterTransformer;
+  using OptionalElectricLoadCenterTransformer = boost::optional<ElectricLoadCenterTransformer>;
 
   /** \relates ElectricLoadCenterTransformer*/
-  typedef std::vector<ElectricLoadCenterTransformer> ElectricLoadCenterTransformerVector;
+  using ElectricLoadCenterTransformerVector = std::vector<ElectricLoadCenterTransformer>;
 
 }  // namespace model
 }  // namespace openstudio

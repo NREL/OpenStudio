@@ -166,7 +166,7 @@ namespace model {
   }
 
   IddObjectType SurfacePropertyExposedFoundationPerimeter::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
+    return {IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter};
   }
 
   std::string SurfacePropertyExposedFoundationPerimeter::surfaceName() const {

@@ -87,7 +87,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVHeatAndCoolReheat", "Availability Schedule"));
       }
@@ -307,7 +308,7 @@ namespace model {
                 _model.connect(this->getObject<ModelObject>(), outletPort(), node, node.inletPort());
 
                 if (thermalZone) {
-                  AirTerminalSingleDuctVAVHeatAndCoolReheat mo = this->getObject<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
+                  auto mo = this->getObject<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
 
                   thermalZone->addEquipment(mo);
                 }
@@ -324,7 +325,7 @@ namespace model {
 
     std::vector<IdfObject> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::remove() {
       Model _model = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
 
       HVACComponent _reheatCoil = reheatCoil();
 
@@ -443,7 +444,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalSingleDuctVAVHeatAndCoolReheat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat);
+    return {IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat};
   }
 
   boost::optional<Schedule> AirTerminalSingleDuctVAVHeatAndCoolReheat::availabilitySchedule() const {

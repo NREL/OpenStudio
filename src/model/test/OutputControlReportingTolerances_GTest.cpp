@@ -38,7 +38,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, OutputControlReportingTolerances_TolerancesGettersSetters) {
   Model model;
-  OutputControlReportingTolerances outputControlReportingTolerances = model.getUniqueModelObject<OutputControlReportingTolerances>();
+  auto outputControlReportingTolerances = model.getUniqueModelObject<OutputControlReportingTolerances>();
 
   EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeHeatingSetpointNotMet(1.16));
   EXPECT_DOUBLE_EQ(1.16, outputControlReportingTolerances.toleranceforTimeHeatingSetpointNotMet());

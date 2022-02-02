@@ -72,7 +72,7 @@ namespace model {
 
     //@}
    protected:
-    typedef detail::ScheduleConstant_Impl ImplType;
+    using ImplType = detail::ScheduleConstant_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -85,10 +85,10 @@ namespace model {
   };
 
   /** \relates ScheduleConstant */
-  typedef boost::optional<ScheduleConstant> OptionalScheduleConstant;
+  using OptionalScheduleConstant = boost::optional<ScheduleConstant>;
 
   /** \relates ScheduleConstant */
-  typedef std::vector<ScheduleConstant> ScheduleConstantVector;
+  using ScheduleConstantVector = std::vector<ScheduleConstant>;
 
 }  // namespace model
 }  // namespace openstudio

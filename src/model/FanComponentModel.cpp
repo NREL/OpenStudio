@@ -106,7 +106,8 @@ namespace model {
     std::vector<ScheduleTypeKey> FanComponentModel_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_ComponentModelFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FanComponentModel", "Availability"));
       }
@@ -1132,7 +1133,7 @@ namespace model {
   }
 
   IddObjectType FanComponentModel::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Fan_ComponentModel);
+    return {IddObjectType::OS_Fan_ComponentModel};
   }
 
   std::vector<std::string> FanComponentModel::vFDEfficiencyTypeValues() {

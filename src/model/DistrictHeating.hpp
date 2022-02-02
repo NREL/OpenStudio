@@ -90,7 +90,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DistrictHeating_Impl ImplType;
+    using ImplType = detail::DistrictHeating_Impl;
 
     explicit DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl);
 
@@ -106,10 +106,10 @@ namespace model {
   };
 
   /** \relates DistrictHeating*/
-  typedef boost::optional<DistrictHeating> OptionalDistrictHeating;
+  using OptionalDistrictHeating = boost::optional<DistrictHeating>;
 
   /** \relates DistrictHeating*/
-  typedef std::vector<DistrictHeating> DistrictHeatingVector;
+  using DistrictHeatingVector = std::vector<DistrictHeating>;
 
 }  // namespace model
 }  // namespace openstudio

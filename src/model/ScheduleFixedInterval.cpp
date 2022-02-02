@@ -166,7 +166,7 @@ namespace model {
         std::vector<std::string> temp;
         temp.push_back(toString(outOfRangeValue));
 
-        ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
       }
 
@@ -175,7 +175,7 @@ namespace model {
         std::vector<std::string> temp;
         temp.push_back(toString(values[i]));
 
-        ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
       }
 

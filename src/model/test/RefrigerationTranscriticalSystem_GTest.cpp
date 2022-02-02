@@ -95,7 +95,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithDefaultDa
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_DOUBLE_EQ(3500000.0, testObjectClone.receiverPressure());
   EXPECT_DOUBLE_EQ(0.4, testObjectClone.subcoolerEffectiveness());
@@ -141,7 +141,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomDat
   std::vector<RefrigerationCompressor> _highPressureCompressors = testObject.highPressureCompressors();
   std::vector<RefrigerationCompressor> _lowPressureCompressors = testObject.lowPressureCompressors();
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_FALSE(testObjectClone.mediumTemperatureSuctionPipingZone());
   EXPECT_FALSE(testObjectClone.lowTemperatureSuctionPipingZone());
@@ -178,11 +178,11 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelsWithDefaultD
   ThermalZone thermalZone(model);
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   Model model2;
 
-  RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_DOUBLE_EQ(3500000.0, testObjectClone2.receiverPressure());
   EXPECT_DOUBLE_EQ(0.4, testObjectClone2.subcoolerEffectiveness());
@@ -230,10 +230,10 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomDat
   std::vector<RefrigerationCompressor> _highPressureCompressors = testObject.highPressureCompressors();
   std::vector<RefrigerationCompressor> _lowPressureCompressors = testObject.lowPressureCompressors();
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
 
   Model model2;
-  RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
   EXPECT_FALSE(testObjectClone2.mediumTemperatureSuctionPipingZone());
   EXPECT_FALSE(testObjectClone2.lowTemperatureSuctionPipingZone());
@@ -279,14 +279,14 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirC
   std::vector<RefrigerationGasCoolerAirCooled> testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(1, testGasCoolers.size());
 
-  RefrigerationTranscriticalSystem testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationTranscriticalSystem>();
   EXPECT_NE(testObjectClone.refrigerationGasCooler().get().handle(), gasCooler.handle());
 
   testGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(2, testGasCoolers.size());
 
   Model model2;
-  RefrigerationTranscriticalSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationTranscriticalSystem>();
 
   testGasCoolers = model2.getModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(1, testGasCoolers.size());

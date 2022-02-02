@@ -165,7 +165,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerHybridVentilation_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerHybridVentilation_Impl;
 
     explicit AvailabilityManagerHybridVentilation(std::shared_ptr<detail::AvailabilityManagerHybridVentilation_Impl> impl);
 
@@ -179,10 +179,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerHybridVentilation*/
-  typedef boost::optional<AvailabilityManagerHybridVentilation> OptionalAvailabilityManagerHybridVentilation;
+  using OptionalAvailabilityManagerHybridVentilation = boost::optional<AvailabilityManagerHybridVentilation>;
 
   /** \relates AvailabilityManagerHybridVentilation*/
-  typedef std::vector<AvailabilityManagerHybridVentilation> AvailabilityManagerHybridVentilationVector;
+  using AvailabilityManagerHybridVentilationVector = std::vector<AvailabilityManagerHybridVentilation>;
 
 }  // namespace model
 }  // namespace openstudio

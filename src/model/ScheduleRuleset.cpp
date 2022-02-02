@@ -68,7 +68,7 @@ namespace model {
 
     ModelObject ScheduleRuleset_Impl::clone(Model model) const {
       ModelObject newScheduleRulesetAsModelObject = ModelObject_Impl::clone(model);
-      ScheduleRuleset newScheduleRuleset = newScheduleRulesetAsModelObject.cast<ScheduleRuleset>();
+      auto newScheduleRuleset = newScheduleRulesetAsModelObject.cast<ScheduleRuleset>();
 
       ModelObject newDefaultDaySchedule = defaultDaySchedule().clone(model);
       bool test = newScheduleRuleset.setPointer(OS_Schedule_RulesetFields::DefaultDayScheduleName, newDefaultDaySchedule.handle());
@@ -193,7 +193,7 @@ namespace model {
     }
 
     std::vector<double> ScheduleRuleset_Impl::values() const {
-      return DoubleVector();
+      return {};
     }
 
     bool ScheduleRuleset_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {

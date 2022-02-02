@@ -343,7 +343,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingWaterBaseboard::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Water_Baseboard);
+    return {IddObjectType::OS_Coil_Heating_Water_Baseboard};
   }
 
   std::vector<std::string> CoilHeatingWaterBaseboard::heatingDesignCapacityMethodValues() {

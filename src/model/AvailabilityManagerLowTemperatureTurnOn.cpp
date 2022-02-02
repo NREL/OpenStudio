@@ -103,7 +103,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerLowTemperatureTurnOn::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn);
+    return {IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn};
   }
 
   boost::optional<Node> AvailabilityManagerLowTemperatureTurnOn::sensorNode() const {

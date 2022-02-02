@@ -73,8 +73,8 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
 
-  CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
-  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+  auto cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
+  auto hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
 
   EXPECT_EQ(2u, a.supplyComponents().size());
 
@@ -119,8 +119,8 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
 
   // Create a CoilSystem, connected to an AirLoopHVAC, and with its coolingCoil connected to a PlantLoop
   CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
-  CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
-  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+  auto cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
+  auto hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
 
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
@@ -143,7 +143,7 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
   //EXPECT_EQ(coilSystem.plantLoop()->handle(), p.handle());
   //EXPECT_TRUE(hx.airLoopHVAC());
 
-  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
+  auto coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
 
   EXPECT_EQ(2u, m.getModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
   EXPECT_EQ(2u, m.getModelObjects<CoilCoolingWater>().size());

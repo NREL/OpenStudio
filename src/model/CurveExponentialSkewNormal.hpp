@@ -129,7 +129,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveExponentialSkewNormal_Impl ImplType;
+    using ImplType = detail::CurveExponentialSkewNormal_Impl;
 
     explicit CurveExponentialSkewNormal(std::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl);
 
@@ -144,10 +144,10 @@ namespace model {
   };
 
   /** \relates CurveExponentialSkewNormal*/
-  typedef boost::optional<CurveExponentialSkewNormal> OptionalCurveExponentialSkewNormal;
+  using OptionalCurveExponentialSkewNormal = boost::optional<CurveExponentialSkewNormal>;
 
   /** \relates CurveExponentialSkewNormal*/
-  typedef std::vector<CurveExponentialSkewNormal> CurveExponentialSkewNormalVector;
+  using CurveExponentialSkewNormalVector = std::vector<CurveExponentialSkewNormal>;
 
 }  // namespace model
 }  // namespace openstudio

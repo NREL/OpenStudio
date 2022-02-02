@@ -176,7 +176,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneMixing_Impl ImplType;
+    using ImplType = detail::ZoneMixing_Impl;
 
     explicit ZoneMixing(std::shared_ptr<detail::ZoneMixing_Impl> impl);
 
@@ -190,10 +190,10 @@ namespace model {
   };
 
   /** \relates ZoneMixing*/
-  typedef boost::optional<ZoneMixing> OptionalZoneMixing;
+  using OptionalZoneMixing = boost::optional<ZoneMixing>;
 
   /** \relates ZoneMixing*/
-  typedef std::vector<ZoneMixing> ZoneMixingVector;
+  using ZoneMixingVector = std::vector<ZoneMixing>;
 
 }  // namespace model
 }  // namespace openstudio

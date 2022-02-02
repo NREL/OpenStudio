@@ -173,7 +173,7 @@ namespace detail {
     return m_sink;
   }
 
-  void LogSink_Impl::updateFilter(const std::unique_lock<std::shared_mutex>& l) {
+  void LogSink_Impl::updateFilter(const std::unique_lock<std::shared_mutex>& /*l*/) {
     m_sink->reset_filter();
 
     LogLevel filterLogLevel = Trace;

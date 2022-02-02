@@ -223,7 +223,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::StandardGlazing_Impl ImplType;
+    using ImplType = detail::StandardGlazing_Impl;
 
     explicit StandardGlazing(std::shared_ptr<detail::StandardGlazing_Impl> impl);
 
@@ -237,10 +237,10 @@ namespace model {
   };
 
   /** \relates StandardGlazing*/
-  typedef boost::optional<StandardGlazing> OptionalStandardGlazing;
+  using OptionalStandardGlazing = boost::optional<StandardGlazing>;
 
   /** \relates StandardGlazing*/
-  typedef std::vector<StandardGlazing> StandardGlazingVector;
+  using StandardGlazingVector = std::vector<StandardGlazing>;
 
 }  // namespace model
 }  // namespace openstudio

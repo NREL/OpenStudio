@@ -104,7 +104,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ConstructionWithInternalSource_Impl ImplType;
+    using ImplType = detail::ConstructionWithInternalSource_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -117,10 +117,10 @@ namespace model {
   };
 
   /** \relates ConstructionWithInternalSource */
-  typedef boost::optional<ConstructionWithInternalSource> OptionalConstructionWithInternalSource;
+  using OptionalConstructionWithInternalSource = boost::optional<ConstructionWithInternalSource>;
 
   /** \relates ConstructionWithInternalSource */
-  typedef std::vector<ConstructionWithInternalSource> ConstructionWithInternalSourceVector;
+  using ConstructionWithInternalSourceVector = std::vector<ConstructionWithInternalSource>;
 
 }  // namespace model
 }  // namespace openstudio

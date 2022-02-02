@@ -51,7 +51,7 @@ namespace energyplus {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
-    if (modelObject.speeds().size() == 0) {
+    if (modelObject.speeds().empty()) {
       // TODO: if it has zero speed data, Log and don't translate
     }
     // Name

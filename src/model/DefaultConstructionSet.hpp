@@ -142,7 +142,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DefaultConstructionSet_Impl ImplType;
+    using ImplType = detail::DefaultConstructionSet_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -155,10 +155,10 @@ namespace model {
   };
 
   /** \relates DefaultConstructionSet*/
-  typedef boost::optional<DefaultConstructionSet> OptionalDefaultConstructionSet;
+  using OptionalDefaultConstructionSet = boost::optional<DefaultConstructionSet>;
 
   /** \relates DefaultConstructionSet*/
-  typedef std::vector<DefaultConstructionSet> DefaultConstructionSetVector;
+  using DefaultConstructionSetVector = std::vector<DefaultConstructionSet>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -154,7 +154,7 @@ namespace model {
     void applySizingValues();
 
    protected:
-    typedef detail::ControllerOutdoorAir_Impl ImplType;
+    using ImplType = detail::ControllerOutdoorAir_Impl;
 
     friend class Model;
 
@@ -180,9 +180,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.ControllerOutdoorAir");
   };
 
-  typedef boost::optional<ControllerOutdoorAir> OptionalControllerOutdoorAir;
+  using OptionalControllerOutdoorAir = boost::optional<ControllerOutdoorAir>;
 
-  typedef std::vector<ControllerOutdoorAir> ControllerOutdoorAirVector;
+  using ControllerOutdoorAirVector = std::vector<ControllerOutdoorAir>;
 
 }  // namespace model
 

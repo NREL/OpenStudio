@@ -137,7 +137,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACLowTemperatureRadiantElectric_Impl ImplType;
+    using ImplType = detail::ZoneHVACLowTemperatureRadiantElectric_Impl;
 
     explicit ZoneHVACLowTemperatureRadiantElectric(std::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl);
 
@@ -151,10 +151,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACLowTemperatureRadiantElectric*/
-  typedef boost::optional<ZoneHVACLowTemperatureRadiantElectric> OptionalZoneHVACLowTemperatureRadiantElectric;
+  using OptionalZoneHVACLowTemperatureRadiantElectric = boost::optional<ZoneHVACLowTemperatureRadiantElectric>;
 
   /** \relates ZoneHVACLowTemperatureRadiantElectric*/
-  typedef std::vector<ZoneHVACLowTemperatureRadiantElectric> ZoneHVACLowTemperatureRadiantElectricVector;
+  using ZoneHVACLowTemperatureRadiantElectricVector = std::vector<ZoneHVACLowTemperatureRadiantElectric>;
 
 }  // namespace model
 }  // namespace openstudio

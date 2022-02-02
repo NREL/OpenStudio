@@ -259,7 +259,7 @@ namespace detail {
     if (value) {
       if (!(istringEqual(*value, "") || istringEqual(*value, "autosize") || istringEqual(*value, "autocalculate"))) {
         try {
-          double temp = boost::lexical_cast<double>(*value);
+          auto temp = boost::lexical_cast<double>(*value);
           result = boost::numeric_cast<unsigned>(temp);
         } catch (const std::exception&) {
           LOG(Error, "Could not convert '" << *value << "' to unsigned");
@@ -275,7 +275,7 @@ namespace detail {
     if (value) {
       if (!(istringEqual(*value, "") || istringEqual(*value, "autosize") || istringEqual(*value, "autocalculate"))) {
         try {
-          double temp = boost::lexical_cast<double>(*value);
+          auto temp = boost::lexical_cast<double>(*value);
           result = boost::numeric_cast<int>(temp);
         } catch (const std::exception&) {
           LOG(Error, "Could not convert '" << *value << "' to int");
@@ -314,7 +314,7 @@ namespace detail {
     this->emitChangeSignals();
   }
 
-  void IdfObject_Impl::setComment(const std::string& comment, bool checkValidity) {
+  void IdfObject_Impl::setComment(const std::string& comment, bool /*checkValidity*/) {
     m_comment = makeComment(comment);
     m_diffs.push_back(IdfObjectDiff(boost::none, boost::none, boost::none));
   }
@@ -327,7 +327,7 @@ namespace detail {
     return result;
   }
 
-  bool IdfObject_Impl::setFieldComment(unsigned index, const std::string& cmnt, bool checkValidity) {
+  bool IdfObject_Impl::setFieldComment(unsigned index, const std::string& cmnt, bool /*checkValidity*/) {
     if (index < m_fields.size()) {
       if (index >= m_fieldComments.size()) {
         m_fieldComments.resize(index + 1);
@@ -350,7 +350,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<std::string> IdfObject_Impl::setName(const std::string& _newName, bool checkValidity) {
+  boost::optional<std::string> IdfObject_Impl::setName(const std::string& _newName, bool /*checkValidity*/) {
     std::string newName = encodeString(_newName);
 
     switch (m_iddObject.type().value()) {
@@ -529,7 +529,7 @@ namespace detail {
 
   bool IdfObject_Impl::setUnsigned(unsigned index, unsigned value, bool checkValidity) {
     try {
-      std::string str = boost::lexical_cast<std::string>(value);
+      auto str = boost::lexical_cast<std::string>(value);
       return setString(index, str, checkValidity);
     } catch (...) {
       return false;
@@ -546,7 +546,7 @@ namespace detail {
 
   bool IdfObject_Impl::setInt(unsigned index, int value, bool checkValidity) {
     try {
-      std::string str = boost::lexical_cast<std::string>(value);
+      auto str = boost::lexical_cast<std::string>(value);
       return setString(index, str, checkValidity);
     } catch (...) {
       return false;
@@ -787,7 +787,7 @@ namespace detail {
 
   /** Pops the final extensible group from the object, if possible. Returns the popped data if
    *  successful. Otherwise, the returned vector will be empty. */
-  std::vector<std::string> IdfObject_Impl::popExtensibleGroup(bool checkValidity) {
+  std::vector<std::string> IdfObject_Impl::popExtensibleGroup(bool /*checkValidity*/) {
 
     unsigned groupSize = m_iddObject.properties().numExtensible;
     unsigned numBeforePop = numFields();
@@ -867,7 +867,7 @@ namespace detail {
         // remove the diffs
         m_diffs.resize(diffSize);
 
-        return StringVector();
+        return {};
       }
     }
 
@@ -1629,7 +1629,8 @@ namespace detail {
     }
 
     unsigned n = m_fields.size();
-    unsigned nn = m_iddObject.numFields(), ne = m_iddObject.properties().numExtensible;
+    unsigned nn = m_iddObject.numFields();
+    unsigned ne = m_iddObject.properties().numExtensible;
     unsigned groupIndex = 1;
     while (nn + groupIndex * ne < n) {
       for (unsigned gi : groupIndices) {
@@ -1646,7 +1647,7 @@ namespace detail {
 
   // QUERY HELPERS
 
-  void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNames) const {
+  void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool /*checkNames*/) const {
     // field-level errors
     for (unsigned index = 0; index < m_fields.size(); ++index) {
       DataErrorVector fieldErrors = fieldDataIsValid(index, report.level());
@@ -1768,7 +1769,7 @@ namespace detail {
       // value should iequal one of the keys
       IddKeyVector keys = iddField.keys();
       NameFinder<IddKey> finder(m_fields[index]);
-      IddKeyVector::const_iterator loc = std::find_if(keys.begin(), keys.end(), finder);
+      auto loc = std::find_if(keys.begin(), keys.end(), finder);
       if (loc == keys.end()) {
         return false;
       }
@@ -1790,7 +1791,7 @@ namespace detail {
     if (fieldType == IddFieldType::IntegerType) {
       OptionalInt value = getInt(index);
       if (value) {
-        double fieldValue = static_cast<double>(*value);
+        auto fieldValue = static_cast<double>(*value);
         return withinBounds(fieldValue, iddField);
       }
     }

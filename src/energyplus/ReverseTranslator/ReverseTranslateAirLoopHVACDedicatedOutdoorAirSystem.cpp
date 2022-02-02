@@ -113,7 +113,7 @@ namespace energyplus {
     }
 
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
       OptionalWorkspaceObject target = workspaceGroup.getTarget(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName);
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
 

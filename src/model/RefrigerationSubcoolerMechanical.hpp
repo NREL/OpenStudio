@@ -91,7 +91,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationSubcoolerMechanical_Impl ImplType;
+    using ImplType = detail::RefrigerationSubcoolerMechanical_Impl;
 
     explicit RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl);
 
@@ -105,10 +105,10 @@ namespace model {
   };
 
   /** \relates RefrigerationSubcoolerMechanical*/
-  typedef boost::optional<RefrigerationSubcoolerMechanical> OptionalRefrigerationSubcoolerMechanical;
+  using OptionalRefrigerationSubcoolerMechanical = boost::optional<RefrigerationSubcoolerMechanical>;
 
   /** \relates RefrigerationSubcoolerMechanical*/
-  typedef std::vector<RefrigerationSubcoolerMechanical> RefrigerationSubcoolerMechanicalVector;
+  using RefrigerationSubcoolerMechanicalVector = std::vector<RefrigerationSubcoolerMechanical>;
 
 }  // namespace model
 }  // namespace openstudio

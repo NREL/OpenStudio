@@ -78,7 +78,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkConstantPressureDrop_Impl ImplType;
+    using ImplType = detail::AirflowNetworkConstantPressureDrop_Impl;
 
     explicit AirflowNetworkConstantPressureDrop(std::shared_ptr<detail::AirflowNetworkConstantPressureDrop_Impl> impl);
 
@@ -92,10 +92,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkConstantPressureDrop*/
-  typedef boost::optional<AirflowNetworkConstantPressureDrop> OptionalAirflowNetworkConstantPressureDrop;
+  using OptionalAirflowNetworkConstantPressureDrop = boost::optional<AirflowNetworkConstantPressureDrop>;
 
   /** \relates AirflowNetworkConstantPressureDrop*/
-  typedef std::vector<AirflowNetworkConstantPressureDrop> AirflowNetworkConstantPressureDropVector;
+  using AirflowNetworkConstantPressureDropVector = std::vector<AirflowNetworkConstantPressureDrop>;
 
 }  // namespace model
 }  // namespace openstudio

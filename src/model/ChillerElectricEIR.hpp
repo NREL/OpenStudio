@@ -300,7 +300,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerElectricEIR_Impl ImplType;
+    using ImplType = detail::ChillerElectricEIR_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -313,10 +313,10 @@ namespace model {
   };
 
   /** \relates ChillerElectricEIR*/
-  typedef boost::optional<ChillerElectricEIR> OptionalChillerElectricEIR;
+  using OptionalChillerElectricEIR = boost::optional<ChillerElectricEIR>;
 
   /** \relates ChillerElectricEIR*/
-  typedef std::vector<ChillerElectricEIR> ChillerElectricEIRVector;
+  using ChillerElectricEIRVector = std::vector<ChillerElectricEIR>;
 
 }  // namespace model
 

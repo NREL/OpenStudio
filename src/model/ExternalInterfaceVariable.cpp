@@ -119,7 +119,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_Variable);
+    return {IddObjectType::OS_ExternalInterface_Variable};
   }
 
   double ExternalInterfaceVariable::initialValue() const {

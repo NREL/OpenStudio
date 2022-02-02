@@ -112,7 +112,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CentralHeatPumpSystem_Impl ImplType;
+    using ImplType = detail::CentralHeatPumpSystem_Impl;
 
     explicit CentralHeatPumpSystem(std::shared_ptr<detail::CentralHeatPumpSystem_Impl> impl);
 
@@ -126,10 +126,10 @@ namespace model {
   };
 
   /** \relates CentralHeatPumpSystem*/
-  typedef boost::optional<CentralHeatPumpSystem> OptionalCentralHeatPumpSystem;
+  using OptionalCentralHeatPumpSystem = boost::optional<CentralHeatPumpSystem>;
 
   /** \relates CentralHeatPumpSystem*/
-  typedef std::vector<CentralHeatPumpSystem> CentralHeatPumpSystemVector;
+  using CentralHeatPumpSystemVector = std::vector<CentralHeatPumpSystem>;
 
 }  // namespace model
 }  // namespace openstudio

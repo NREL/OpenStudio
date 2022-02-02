@@ -131,7 +131,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OtherEquipmentDefinition_Impl ImplType;
+    using ImplType = detail::OtherEquipmentDefinition_Impl;
 
     friend class detail::OtherEquipmentDefinition_Impl;
     friend class openstudio::detail::IdfObject_Impl;
@@ -146,10 +146,10 @@ namespace model {
   };
 
   /** \relates OtherEquipmentDefinition*/
-  typedef boost::optional<OtherEquipmentDefinition> OptionalOtherEquipmentDefinition;
+  using OptionalOtherEquipmentDefinition = boost::optional<OtherEquipmentDefinition>;
 
   /** \relates OtherEquipmentDefinition*/
-  typedef std::vector<OtherEquipmentDefinition> OtherEquipmentDefinitionVector;
+  using OtherEquipmentDefinitionVector = std::vector<OtherEquipmentDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

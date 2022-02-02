@@ -125,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveRectangularHyperbola1_Impl ImplType;
+    using ImplType = detail::CurveRectangularHyperbola1_Impl;
 
     explicit CurveRectangularHyperbola1(std::shared_ptr<detail::CurveRectangularHyperbola1_Impl> impl);
 
@@ -140,10 +140,10 @@ namespace model {
   };
 
   /** \relates CurveRectangularHyperbola1*/
-  typedef boost::optional<CurveRectangularHyperbola1> OptionalCurveRectangularHyperbola1;
+  using OptionalCurveRectangularHyperbola1 = boost::optional<CurveRectangularHyperbola1>;
 
   /** \relates CurveRectangularHyperbola1*/
-  typedef std::vector<CurveRectangularHyperbola1> CurveRectangularHyperbola1Vector;
+  using CurveRectangularHyperbola1Vector = std::vector<CurveRectangularHyperbola1>;
 
 }  // namespace model
 }  // namespace openstudio

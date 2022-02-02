@@ -133,7 +133,7 @@ namespace model {
         //get extensibleGroup object
         auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         //make sure program line exists and insert
-        if (comments.size() > 0) {
+        if (!comments.empty()) {
           //remove whitespace at end of comments[0]
           boost::trim_right(comments[0]);
           //remove whitespace at beginning of comments[0]
@@ -204,7 +204,7 @@ namespace model {
       //split string on comment character !
       std::vector<std::string> comments = splitString(line_rn, '!');
       //make sure program line exists and insert
-      if (comments.size() > 0) {
+      if (!comments.empty()) {
         //remove whitespace at end of comments[0]
         boost::trim_right(comments[0]);
         //remove whitespace at beginning of comments[0]

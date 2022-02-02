@@ -167,7 +167,9 @@ namespace model {
       Model _model = node.model();
       boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
 
-      if (airLoopHVACOutdoorAirSystem()) return false;
+      if (airLoopHVACOutdoorAirSystem()) {
+        return false;
+      }
 
       if (oaSystem) {
         // The OA node that we will connect to
@@ -178,7 +180,7 @@ namespace model {
 
         Node outboardOANode = oaSystem->outboardOANode().get();
         Node outboardReliefNode = oaSystem->outboardReliefNode().get();
-        HVACComponent thisObject = getObject<HVACComponent>();
+        auto thisObject = getObject<HVACComponent>();
 
         // next / prev components are going to be assigned either the next downstream AirToAirComponent or the end of the air stream
         // The end of the air stream is either the OA systems itself or the outboard relief / supply nodes.

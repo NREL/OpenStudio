@@ -127,7 +127,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirConditionerVariableRefrigerantFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirConditioner_VariableRefrigerantFlowFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirConditionerVariableRefrigerantFlow", "Availability Schedule"));
       }
@@ -2398,7 +2399,7 @@ namespace model {
   }
 
   IddObjectType AirConditionerVariableRefrigerantFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow);
+    return {IddObjectType::OS_AirConditioner_VariableRefrigerantFlow};
   }
 
   std::vector<std::string> AirConditionerVariableRefrigerantFlow::heatingPerformanceCurveOutdoorTemperatureTypeValues() {

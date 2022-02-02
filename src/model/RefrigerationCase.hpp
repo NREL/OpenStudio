@@ -496,7 +496,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCase_Impl ImplType;
+    using ImplType = detail::RefrigerationCase_Impl;
 
     explicit RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl);
 
@@ -510,10 +510,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCase*/
-  typedef boost::optional<RefrigerationCase> OptionalRefrigerationCase;
+  using OptionalRefrigerationCase = boost::optional<RefrigerationCase>;
 
   /** \relates RefrigerationCase*/
-  typedef std::vector<RefrigerationCase> RefrigerationCaseVector;
+  using RefrigerationCaseVector = std::vector<RefrigerationCase>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -92,7 +92,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemProgramCallingManager_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemProgramCallingManager_Impl;
 
     explicit EnergyManagementSystemProgramCallingManager(std::shared_ptr<detail::EnergyManagementSystemProgramCallingManager_Impl> impl);
 
@@ -106,10 +106,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemProgramCallingManager*/
-  typedef boost::optional<EnergyManagementSystemProgramCallingManager> OptionalEnergyManagementSystemProgramCallingManager;
+  using OptionalEnergyManagementSystemProgramCallingManager = boost::optional<EnergyManagementSystemProgramCallingManager>;
 
   /** \relates EnergyManagementSystemProgramCallingManager*/
-  typedef std::vector<EnergyManagementSystemProgramCallingManager> EnergyManagementSystemProgramCallingManagerVector;
+  using EnergyManagementSystemProgramCallingManagerVector = std::vector<EnergyManagementSystemProgramCallingManager>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -80,7 +80,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerScheduledOff_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerScheduledOff_Impl;
 
     explicit AvailabilityManagerScheduledOff(std::shared_ptr<detail::AvailabilityManagerScheduledOff_Impl> impl);
 
@@ -94,10 +94,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerScheduledOff*/
-  typedef boost::optional<AvailabilityManagerScheduledOff> OptionalAvailabilityManagerScheduledOff;
+  using OptionalAvailabilityManagerScheduledOff = boost::optional<AvailabilityManagerScheduledOff>;
 
   /** \relates AvailabilityManagerScheduledOff*/
-  typedef std::vector<AvailabilityManagerScheduledOff> AvailabilityManagerScheduledOffVector;
+  using AvailabilityManagerScheduledOffVector = std::vector<AvailabilityManagerScheduledOff>;
 
 }  // namespace model
 }  // namespace openstudio

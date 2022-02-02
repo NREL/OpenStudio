@@ -110,8 +110,9 @@ std::vector<IdfObject> IdfFile::objects() const {
   IdfObjectVector result = m_objects;
   for (auto it = m_versionObjectIndices.rbegin(), itEnd = m_versionObjectIndices.rend(); it != itEnd; ++it) {
     auto oit = result.begin();
-    for (unsigned i = 0; i < *it; ++i, ++oit)
+    for (unsigned i = 0; i < *it; ++i, ++oit) {
       ;
+    }
     OS_ASSERT(oit->iddObject().isVersionObject()
               || ((oit->iddObject().type() == IddObjectType::Catchall) && (oit->numFields() > 0u)
                   && (boost::regex_match(oit->getString(0).get(), iddRegex::versionObjectName()))));
@@ -229,10 +230,10 @@ int IdfFile::removeObjects(const std::vector<IdfObject>& objects) {
 // QUERIES
 
 bool IdfFile::empty() const {
-  if (m_header != "") {
+  if (!m_header.empty()) {
     return false;
   }
-  if (objects().size() > 0) {
+  if (!objects().empty()) {
     return false;
   }
   return true;

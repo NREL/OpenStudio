@@ -64,7 +64,7 @@ namespace model {
 
     bool Schedule_Impl::candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const {
       ModelObjectVector users = getObject<Schedule>().getModelObjectSources<ModelObject>();
-      Schedule copyOfThis = getObject<Schedule>();
+      auto copyOfThis = getObject<Schedule>();
       for (const ModelObject& user : users) {
         std::vector<ScheduleTypeKey> keys = user.getScheduleTypeKeys(copyOfThis);
         // ETH@20120806 - Ideally would make the following OS_ASSERT, but is too
@@ -82,7 +82,7 @@ namespace model {
 
     bool Schedule_Impl::okToResetScheduleTypeLimits() const {
       // ok to zero out if all users are schedules
-      Schedule copyOfThis = getObject<Schedule>();
+      auto copyOfThis = getObject<Schedule>();
       for (const ModelObject& user : getObject<Schedule>().getModelObjectSources<ModelObject>()) {
         if (!user.getScheduleTypeKeys(copyOfThis).empty()) {
           return false;

@@ -61,7 +61,7 @@ void ModelFixture::testBooleanIddField(const openstudio::IddField& iddField, con
   openstudio::IddKeyVector keys = iddField.keys();
   EXPECT_EQ(2u, keys.size());
   openstudio::NameFinder<openstudio::IddKey> finder("Yes");
-  openstudio::IddKeyVector::const_iterator it = std::find_if(keys.begin(), keys.end(), finder);
+  auto it = std::find_if(keys.begin(), keys.end(), finder);
   EXPECT_FALSE(it == keys.end());
   finder = openstudio::NameFinder<openstudio::IddKey>("No");
   it = std::find_if(keys.begin(), keys.end(), finder);

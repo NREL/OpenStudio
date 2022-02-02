@@ -94,7 +94,7 @@ namespace model {
   }
 
   IddObjectType Duct::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Duct);
+    return {IddObjectType::OS_Duct};
   }
 
   /// @cond

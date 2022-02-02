@@ -77,7 +77,7 @@ namespace model {
       return ElectricLoadCenterInverterPVWatts::iddObjectType();
     }
 
-    std::vector<ScheduleTypeKey> ElectricLoadCenterInverterPVWatts_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+    std::vector<ScheduleTypeKey> ElectricLoadCenterInverterPVWatts_Impl::getScheduleTypeKeys(const Schedule& /*schedule*/) const {
       std::vector<ScheduleTypeKey> result;
       return result;
     }
@@ -86,7 +86,7 @@ namespace model {
       return boost::none;
     }
 
-    bool ElectricLoadCenterInverterPVWatts_Impl::setThermalZone(const ThermalZone& thermalZone) {
+    bool ElectricLoadCenterInverterPVWatts_Impl::setThermalZone(const ThermalZone& /*thermalZone*/) {
       return false;
     }
 
@@ -150,7 +150,7 @@ namespace model {
   }
 
   IddObjectType ElectricLoadCenterInverterPVWatts::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
+    return {IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts};
   }
 
   double ElectricLoadCenterInverterPVWatts::dcToACSizeRatio() const {

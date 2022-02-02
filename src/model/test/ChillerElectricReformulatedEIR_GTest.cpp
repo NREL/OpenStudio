@@ -299,7 +299,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToDemandNode1) {
 
   ASSERT_TRUE(mixer);
 
-  ASSERT_TRUE(chiller.remove().size() > 0);
+  ASSERT_TRUE(!chiller.remove().empty());
 
   EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }
@@ -342,7 +342,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToDemandNode2) {
 
   ASSERT_EQ(plantLoop.demandSplitter(), mo.get());
 
-  ASSERT_TRUE(chiller.remove().size() > 0);
+  ASSERT_TRUE(!chiller.remove().empty());
 
   EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }
@@ -393,7 +393,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToDemandNode3) {
 
   ASSERT_EQ(demandMixer, mo.get());
 
-  ASSERT_TRUE(chiller.remove().size() > 0);
+  ASSERT_TRUE(!chiller.remove().empty());
 
   EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }

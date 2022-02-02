@@ -94,7 +94,7 @@ namespace model {
 
     friend class openstudio::IdfObject;
 
-    typedef detail::AirLoopHVACZoneSplitter_Impl ImplType;
+    using ImplType = detail::AirLoopHVACZoneSplitter_Impl;
 
     explicit AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> impl);
 
@@ -105,10 +105,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACZoneSplitter */
-  typedef boost::optional<AirLoopHVACZoneSplitter> OptionalAirLoopHVACZoneSplitter;
+  using OptionalAirLoopHVACZoneSplitter = boost::optional<AirLoopHVACZoneSplitter>;
 
   /** \relates AirLoopHVACZoneSplitter */
-  typedef std::vector<AirLoopHVACZoneSplitter> AirLoopHVACZoneSplitterVector;
+  using AirLoopHVACZoneSplitterVector = std::vector<AirLoopHVACZoneSplitter>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -190,7 +190,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteGroundTemperatureBuildingSurface_Impl ImplType;
+    using ImplType = detail::SiteGroundTemperatureBuildingSurface_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -204,10 +204,10 @@ namespace model {
   };
 
   /** \relates SiteGroundTemperatureBuildingSurface*/
-  typedef boost::optional<SiteGroundTemperatureBuildingSurface> OptionalSiteGroundTemperatureBuildingSurface;
+  using OptionalSiteGroundTemperatureBuildingSurface = boost::optional<SiteGroundTemperatureBuildingSurface>;
 
   /** \relates SiteGroundTemperatureBuildingSurface*/
-  typedef std::vector<SiteGroundTemperatureBuildingSurface> SiteGroundTemperatureBuildingSurfaceVector;
+  using SiteGroundTemperatureBuildingSurfaceVector = std::vector<SiteGroundTemperatureBuildingSurface>;
 
 }  // namespace model
 }  // namespace openstudio

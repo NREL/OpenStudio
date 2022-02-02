@@ -135,7 +135,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctVAVNoReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctVAVNoReheat_Impl;
 
     explicit AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl);
 
@@ -149,10 +149,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctVAVNoReheat*/
-  typedef boost::optional<AirTerminalSingleDuctVAVNoReheat> OptionalAirTerminalSingleDuctVAVNoReheat;
+  using OptionalAirTerminalSingleDuctVAVNoReheat = boost::optional<AirTerminalSingleDuctVAVNoReheat>;
 
   /** \relates AirTerminalSingleDuctVAVNoReheat*/
-  typedef std::vector<AirTerminalSingleDuctVAVNoReheat> AirTerminalSingleDuctVAVNoReheatVector;
+  using AirTerminalSingleDuctVAVNoReheatVector = std::vector<AirTerminalSingleDuctVAVNoReheat>;
 
 }  // namespace model
 }  // namespace openstudio

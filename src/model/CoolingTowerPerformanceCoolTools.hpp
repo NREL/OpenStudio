@@ -239,7 +239,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::CoolingTowerPerformanceCoolTools_Impl ImplType;
+    using ImplType = detail::CoolingTowerPerformanceCoolTools_Impl;
 
     explicit CoolingTowerPerformanceCoolTools(std::shared_ptr<detail::CoolingTowerPerformanceCoolTools_Impl> impl);
 
@@ -254,10 +254,10 @@ namespace model {
   };
 
   /** \relates CoolingTowerPerformanceCoolTools*/
-  typedef boost::optional<CoolingTowerPerformanceCoolTools> OptionalCoolingTowerPerformanceCoolTools;
+  using OptionalCoolingTowerPerformanceCoolTools = boost::optional<CoolingTowerPerformanceCoolTools>;
 
   /** \relates CoolingTowerPerformanceCoolTools*/
-  typedef std::vector<CoolingTowerPerformanceCoolTools> CoolingTowerPerformanceCoolToolsVector;
+  using CoolingTowerPerformanceCoolToolsVector = std::vector<CoolingTowerPerformanceCoolTools>;
 
 }  // namespace model
 }  // namespace openstudio

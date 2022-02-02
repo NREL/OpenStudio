@@ -57,7 +57,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::PhotovoltaicPerformance_Impl ImplType;
+    using ImplType = detail::PhotovoltaicPerformance_Impl;
 
     explicit PhotovoltaicPerformance(std::shared_ptr<detail::PhotovoltaicPerformance_Impl> impl);
 
@@ -67,9 +67,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<PhotovoltaicPerformance> OptionalPhotovoltaicPerformance;
+  using OptionalPhotovoltaicPerformance = boost::optional<PhotovoltaicPerformance>;
 
-  typedef std::vector<PhotovoltaicPerformance> PhotovoltaicPerformanceVector;
+  using PhotovoltaicPerformanceVector = std::vector<PhotovoltaicPerformance>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -74,7 +74,7 @@ namespace model {
       return boost::none;
     }
 
-    bool Material_Impl::setThickness(double value) {
+    bool Material_Impl::setThickness(double /*value*/) {
       return false;
     }
 
@@ -96,7 +96,7 @@ namespace model {
       double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
       double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
       double coatingLayerWaterVaporDiffusionResistanceFactor) {
-      Material thisMaterial = getObject<Material>();
+      auto thisMaterial = getObject<Material>();
       std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds =
         thisMaterial.getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(
           MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());

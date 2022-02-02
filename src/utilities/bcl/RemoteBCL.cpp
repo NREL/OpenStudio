@@ -90,7 +90,9 @@ bool RemoteBCL::DownloadFile::open() {
 RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path) : m_fileName(std::move(t_path)) {}
 
 void RemoteBCL::DownloadFile::flush() {
-  if (m_ofs.good()) m_ofs.flush();
+  if (m_ofs.good()) {
+    m_ofs.flush();
+  }
 }
 
 const openstudio::path& RemoteBCL::DownloadFile::fileName() const noexcept {
@@ -121,7 +123,7 @@ RemoteBCL::RemoteBCL()
 /// Inherited members
 ///////////////////////////////////////////////////////////////////////////
 
-boost::optional<BCLComponent> RemoteBCL::getComponent(const std::string& uid, const std::string& versionId) const {
+boost::optional<BCLComponent> RemoteBCL::getComponent(const std::string& uid, const std::string& /*versionId*/) const {
   bool downloadStarted = const_cast<RemoteBCL*>(this)->downloadComponent(uid);
   if (downloadStarted) {
     return waitForComponentDownload();
@@ -129,7 +131,7 @@ boost::optional<BCLComponent> RemoteBCL::getComponent(const std::string& uid, co
   return boost::none;
 }
 
-boost::optional<BCLMeasure> RemoteBCL::getMeasure(const std::string& uid, const std::string& versionId) const {
+boost::optional<BCLMeasure> RemoteBCL::getMeasure(const std::string& uid, const std::string& /*versionId*/) const {
   bool downloadStarted = const_cast<RemoteBCL*>(this)->downloadMeasure(uid);
   if (downloadStarted) {
     return waitForMeasureDownload();
@@ -160,14 +162,14 @@ std::vector<BCLSearchResult> RemoteBCL::searchComponentLibrary(const std::string
   // Perform metaSearch first
   metaSearchComponentLibrary(searchTerm, componentType, "nrel_component");
   if (lastTotalResults() == 0) {
-    return std::vector<BCLSearchResult>();
+    return {};
   }
 
   bool searchStarted = const_cast<RemoteBCL*>(this)->startComponentLibrarySearch(searchTerm, componentType, "nrel_component", page);
   if (searchStarted) {
     return waitForSearch();
   }
-  return std::vector<BCLSearchResult>();
+  return {};
 }
 
 std::vector<BCLSearchResult> RemoteBCL::searchComponentLibrary(const std::string& searchTerm, const unsigned componentTypeTID,
@@ -175,14 +177,14 @@ std::vector<BCLSearchResult> RemoteBCL::searchComponentLibrary(const std::string
   // Perform metaSearch first
   metaSearchComponentLibrary(searchTerm, componentTypeTID, "nrel_component");
   if (lastTotalResults() == 0) {
-    return std::vector<BCLSearchResult>();
+    return {};
   }
 
   bool searchStarted = const_cast<RemoteBCL*>(this)->startComponentLibrarySearch(searchTerm, componentTypeTID, "nrel_component", page);
   if (searchStarted) {
     return waitForSearch();
   }
-  return std::vector<BCLSearchResult>();
+  return {};
 }
 
 std::vector<BCLSearchResult> RemoteBCL::searchMeasureLibrary(const std::string& searchTerm, const std::string& componentType,
@@ -190,14 +192,14 @@ std::vector<BCLSearchResult> RemoteBCL::searchMeasureLibrary(const std::string& 
   // Perform metaSearch first
   metaSearchComponentLibrary(searchTerm, componentType, "nrel_measure");
   if (lastTotalResults() == 0) {
-    return std::vector<BCLSearchResult>();
+    return {};
   }
 
   bool searchStarted = const_cast<RemoteBCL*>(this)->startComponentLibrarySearch(searchTerm, componentType, "nrel_measure", page);
   if (searchStarted) {
     return waitForSearch();
   }
-  return std::vector<BCLSearchResult>();
+  return {};
 }
 
 std::vector<BCLSearchResult> RemoteBCL::searchMeasureLibrary(const std::string& searchTerm, const unsigned componentTypeTID,
@@ -205,14 +207,14 @@ std::vector<BCLSearchResult> RemoteBCL::searchMeasureLibrary(const std::string& 
   // Perform metaSearch first
   metaSearchComponentLibrary(searchTerm, componentTypeTID, "nrel_measure");
   if (lastTotalResults() == 0) {
-    return std::vector<BCLSearchResult>();
+    return {};
   }
 
   bool searchStarted = const_cast<RemoteBCL*>(this)->startComponentLibrarySearch(searchTerm, componentTypeTID, "nrel_measure", page);
   if (searchStarted) {
     return waitForSearch();
   }
-  return std::vector<BCLSearchResult>();
+  return {};
 }
 
 int RemoteBCL::checkForComponentUpdates() {
@@ -248,7 +250,7 @@ int RemoteBCL::checkForComponentUpdates() {
                        });
 
     std::vector<BCLSearchResult> result = waitForSearch();
-    if (result.size() > 0 && result[0].versionId() != component.versionId()) {
+    if (!result.empty() && result[0].versionId() != component.versionId()) {
       m_componentsWithUpdates.push_back(result[0]);
     }
   }
@@ -289,7 +291,7 @@ int RemoteBCL::checkForMeasureUpdates() {
                        });
 
     std::vector<BCLSearchResult> result = waitForSearch();
-    if (result.size() > 0 && result[0].versionId() != measure.versionId()) {
+    if (!result.empty() && result[0].versionId() != measure.versionId()) {
       m_measuresWithUpdates.push_back(result[0]);
     }
   }
@@ -306,7 +308,7 @@ std::vector<BCLSearchResult> RemoteBCL::measuresWithUpdates() const {
 }
 
 void RemoteBCL::updateComponents() {
-  if (m_componentsWithUpdates.size() == 0) {
+  if (m_componentsWithUpdates.empty()) {
     checkForComponentUpdates();
   }
 
@@ -324,7 +326,7 @@ void RemoteBCL::updateComponents() {
 }
 
 void RemoteBCL::updateMeasures() {
-  if (m_measuresWithUpdates.size() == 0) {
+  if (m_measuresWithUpdates.empty()) {
     checkForMeasureUpdates();
   }
 
@@ -392,11 +394,11 @@ std::string RemoteBCL::remoteUrl() const {
 }
 
 std::string RemoteBCL::remoteProductionUrl() {
-  return std::string(REMOTE_PRODUCTION_SERVER);
+  return {REMOTE_PRODUCTION_SERVER};
 }
 
 std::string RemoteBCL::remoteDevelopmentUrl() {
-  return std::string(REMOTE_DEVELOPMENT_SERVER);
+  return {REMOTE_DEVELOPMENT_SERVER};
 }
 
 void RemoteBCL::useRemoteDevelopmentUrl() {
@@ -566,7 +568,7 @@ std::vector<BCLSearchResult> RemoteBCL::waitForSearch() const {
   if (waitForLock()) {
     return m_lastSearch;
   }
-  return std::vector<BCLSearchResult>();
+  return {};
 }
 
 std::vector<BCLSearchResult> RemoteBCL::waitForSearch(int) const {

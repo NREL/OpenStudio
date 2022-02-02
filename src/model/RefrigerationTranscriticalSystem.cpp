@@ -147,29 +147,29 @@ namespace model {
       auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationTranscriticalSystem>();
 
       if (boost::optional<ModelObjectList> mediumTemperatureCaseAndWalkinList = this->mediumTemperatureRefrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = mediumTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = mediumTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(
           caseAndWalkinListClone);
       }
 
       if (boost::optional<ModelObjectList> lowTemperatureCaseAndWalkinList = this->lowTemperatureRefrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = lowTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = lowTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowTemperatureRefrigeratedCaseAndWalkInList(
           caseAndWalkinListClone);
       }
 
       if (boost::optional<ModelObjectList> highPressureCompressorList = this->highPressureCompressorList()) {
-        ModelObjectList compressorListClone = highPressureCompressorList->clone(model).cast<ModelObjectList>();
+        auto compressorListClone = highPressureCompressorList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setHighPressureCompressorList(compressorListClone);
       }
 
       if (boost::optional<ModelObjectList> lowPressureCompressorList = this->lowPressureCompressorList()) {
-        ModelObjectList compressorListClone = lowPressureCompressorList->clone(model).cast<ModelObjectList>();
+        auto compressorListClone = lowPressureCompressorList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setLowPressureCompressorList(compressorListClone);
       }
 
       if (boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler = this->refrigerationGasCooler()) {
-        RefrigerationGasCoolerAirCooled refrigerationGasCoolerClone = refrigerationGasCooler->clone(model).cast<RefrigerationGasCoolerAirCooled>();
+        auto refrigerationGasCoolerClone = refrigerationGasCooler->clone(model).cast<RefrigerationGasCoolerAirCooled>();
         modelObjectClone.getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setRefrigerationGasCooler(refrigerationGasCoolerClone);
       }
 
@@ -608,7 +608,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationTranscriticalSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_TranscriticalSystem);
+    return {IddObjectType::OS_Refrigeration_TranscriticalSystem};
   }
 
   std::vector<std::string> RefrigerationTranscriticalSystem::refrigerationSystemWorkingFluidTypeValues() {

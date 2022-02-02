@@ -102,7 +102,7 @@ class UTILITIES_API SIUnit : public Unit
   //@}
  protected:
   /// @cond
-  typedef detail::SIUnit_Impl ImplType;
+  using ImplType = detail::SIUnit_Impl;
 
   explicit SIUnit(std::shared_ptr<detail::SIUnit_Impl> impl);
 
@@ -115,10 +115,10 @@ class UTILITIES_API SIUnit : public Unit
 };
 
 /** \relates SIUnit*/
-typedef boost::optional<SIUnit> OptionalSIUnit;
+using OptionalSIUnit = boost::optional<SIUnit>;
 
 /** \relates SIUnit*/
-typedef std::vector<SIUnit> SIUnitVector;
+using SIUnitVector = std::vector<SIUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

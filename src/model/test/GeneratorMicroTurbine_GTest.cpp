@@ -467,7 +467,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_Clone) {
   // Verify the setter is already done above...
 
   //Clone into the same model
-  GeneratorMicroTurbine mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
+  auto mchpClone = mchp.clone(model).cast<GeneratorMicroTurbine>();
 
   ASSERT_EQ(1, mchpClone.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
   ASSERT_EQ(2, mchpClone.electricalEfficiencyFunctionofTemperatureCurve().cast<CurveCubic>().coefficient1Constant());
@@ -477,7 +477,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_Clone) {
   GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
 
   // Clone in same model and verify that the mCHPHR is also cloned
-  GeneratorMicroTurbine mchpClone1 = mchp.clone(model).cast<GeneratorMicroTurbine>();
+  auto mchpClone1 = mchp.clone(model).cast<GeneratorMicroTurbine>();
   ASSERT_TRUE(mchpClone1.generatorMicroTurbineHeatRecovery());
   // Make sure it's not just pointing to the same one
   boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHRclone = mchpClone1.generatorMicroTurbineHeatRecovery();
@@ -485,7 +485,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_Clone) {
 
   //Clone into another model
   Model model2;
-  GeneratorMicroTurbine mchpClone2 = mchp.clone(model2).cast<GeneratorMicroTurbine>();
+  auto mchpClone2 = mchp.clone(model2).cast<GeneratorMicroTurbine>();
 
   // Check that curves have been carried with it
   ASSERT_EQ(1, mchpClone2.electricalPowerFunctionofTemperatureandElevationCurve().cast<CurveBiquadratic>().coefficient1Constant());
@@ -530,7 +530,7 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_HeatRecovery_addToNode) {
   EXPECT_TRUE(mchpHR.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  GeneratorMicroTurbineHeatRecovery mchpHRClone = mchpHR.clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
+  auto mchpHRClone = mchpHR.clone(model).cast<GeneratorMicroTurbineHeatRecovery>();
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_TRUE(mchpHRClone.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());

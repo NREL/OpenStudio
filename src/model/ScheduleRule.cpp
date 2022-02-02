@@ -104,7 +104,7 @@ namespace model {
     }
 
     std::vector<IdfObject> ScheduleRule_Impl::remove() {
-      ScheduleRule self = this->getObject<ScheduleRule>();
+      auto self = this->getObject<ScheduleRule>();
       ScheduleRuleset scheduleRuleset = this->scheduleRuleset();
       scheduleRuleset.moveToEnd(self);
 
@@ -398,7 +398,7 @@ namespace model {
       values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
       values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
 
-      ModelExtensibleGroup group = pushExtensibleGroup(values, true).cast<ModelExtensibleGroup>();
+      auto group = pushExtensibleGroup(values, true).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
 
       return true;

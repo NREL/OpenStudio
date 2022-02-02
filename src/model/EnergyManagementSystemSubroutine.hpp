@@ -87,7 +87,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemSubroutine_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemSubroutine_Impl;
 
     explicit EnergyManagementSystemSubroutine(std::shared_ptr<detail::EnergyManagementSystemSubroutine_Impl> impl);
 
@@ -101,10 +101,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemSubroutine*/
-  typedef boost::optional<EnergyManagementSystemSubroutine> OptionalEnergyManagementSystemSubroutine;
+  using OptionalEnergyManagementSystemSubroutine = boost::optional<EnergyManagementSystemSubroutine>;
 
   /** \relates EnergyManagementSystemSubroutine*/
-  typedef std::vector<EnergyManagementSystemSubroutine> EnergyManagementSystemSubroutineVector;
+  using EnergyManagementSystemSubroutineVector = std::vector<EnergyManagementSystemSubroutine>;
 
 }  // namespace model
 }  // namespace openstudio

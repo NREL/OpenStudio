@@ -125,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACDehumidifierDX_Impl ImplType;
+    using ImplType = detail::ZoneHVACDehumidifierDX_Impl;
 
     explicit ZoneHVACDehumidifierDX(std::shared_ptr<detail::ZoneHVACDehumidifierDX_Impl> impl);
 
@@ -139,10 +139,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACDehumidifierDX*/
-  typedef boost::optional<ZoneHVACDehumidifierDX> OptionalZoneHVACDehumidifierDX;
+  using OptionalZoneHVACDehumidifierDX = boost::optional<ZoneHVACDehumidifierDX>;
 
   /** \relates ZoneHVACDehumidifierDX*/
-  typedef std::vector<ZoneHVACDehumidifierDX> ZoneHVACDehumidifierDXVector;
+  using ZoneHVACDehumidifierDXVector = std::vector<ZoneHVACDehumidifierDX>;
 
 }  // namespace model
 }  // namespace openstudio

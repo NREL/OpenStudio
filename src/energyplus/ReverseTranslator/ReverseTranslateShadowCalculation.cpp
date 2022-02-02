@@ -53,7 +53,7 @@ namespace energyplus {
   boost::optional<model::ModelObject> ReverseTranslator::translateShadowCalculation(const WorkspaceObject& workspaceObject) {
     OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ShadowCalculation);
 
-    ShadowCalculation sc = m_model.getUniqueModelObject<ShadowCalculation>();
+    auto sc = m_model.getUniqueModelObject<ShadowCalculation>();
 
     OptionalString _s;
     OptionalInt _i;

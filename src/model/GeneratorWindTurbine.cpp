@@ -83,7 +83,8 @@ namespace model {
     std::vector<ScheduleTypeKey> GeneratorWindTurbine_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Generator_WindTurbineFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("GeneratorWindTurbine", "Availability"));
       }
@@ -411,7 +412,7 @@ namespace model {
   }
 
   IddObjectType GeneratorWindTurbine::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_WindTurbine);
+    return {IddObjectType::OS_Generator_WindTurbine};
   }
 
   std::string GeneratorWindTurbine::rotorType() const {

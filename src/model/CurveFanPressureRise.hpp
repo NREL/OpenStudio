@@ -117,7 +117,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveFanPressureRise_Impl ImplType;
+    using ImplType = detail::CurveFanPressureRise_Impl;
 
     explicit CurveFanPressureRise(std::shared_ptr<detail::CurveFanPressureRise_Impl> impl);
 
@@ -132,10 +132,10 @@ namespace model {
   };
 
   /** \relates CurveFanPressureRise*/
-  typedef boost::optional<CurveFanPressureRise> OptionalCurveFanPressureRise;
+  using OptionalCurveFanPressureRise = boost::optional<CurveFanPressureRise>;
 
   /** \relates CurveFanPressureRise*/
-  typedef std::vector<CurveFanPressureRise> CurveFanPressureRiseVector;
+  using CurveFanPressureRiseVector = std::vector<CurveFanPressureRise>;
 
 }  // namespace model
 }  // namespace openstudio

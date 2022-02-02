@@ -132,7 +132,7 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerFollowOutdoorAirTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowOutdoorAirTemperature>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_customDataClone)
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerFollowOutdoorAirTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowOutdoorAirTemperature>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

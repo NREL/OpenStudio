@@ -51,7 +51,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::WeatherFileDays_Impl ImplType;
+    using ImplType = detail::WeatherFileDays_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -64,10 +64,10 @@ namespace model {
   };
 
   /** \relates WeatherFileDays */
-  typedef boost::optional<WeatherFileDays> OptionalWeatherFileDays;
+  using OptionalWeatherFileDays = boost::optional<WeatherFileDays>;
 
   /** \relates WeatherFileDays */
-  typedef std::vector<WeatherFileDays> WeatherFileDaysVector;
+  using WeatherFileDaysVector = std::vector<WeatherFileDays>;
 
 }  // namespace model
 }  // namespace openstudio

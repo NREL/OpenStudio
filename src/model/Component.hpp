@@ -93,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Component_Impl ImplType;
+    using ImplType = detail::Component_Impl;
 
     friend class openstudio::Workspace;
     friend class openstudio::detail::Workspace_Impl;
@@ -117,10 +117,10 @@ namespace model {
   };
 
   /** \relates Component */
-  typedef boost::optional<Component> OptionalComponent;
+  using OptionalComponent = boost::optional<Component>;
 
   /** \relates Component */
-  typedef std::vector<Component> ComponentVector;
+  using ComponentVector = std::vector<Component>;
 
 }  // namespace model
 }  // namespace openstudio

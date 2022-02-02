@@ -63,7 +63,7 @@ std::vector<Scale> ScaleFactorySingleton::registeredScales() {
   std::vector<Scale>::iterator resultIter;
 
   ExponentLookupMap::const_iterator mapIter;
-  ExponentLookupMap::const_iterator mapEnd = m_exponentMap.end();
+  auto mapEnd = m_exponentMap.end();
   for (mapIter = m_exponentMap.begin(), resultIter = result.begin(); mapIter != mapEnd; ++mapIter, ++resultIter) {
     *resultIter = mapIter->second();  // copy registered scale into vector
   }
@@ -162,7 +162,7 @@ std::pair<std::string, std::string> extractScaleAbbreviation(const std::string& 
   // loop through scales and look for regex match
   for (const auto& scale : scales) {
     std::string abbr = scale.abbr;
-    if (abbr == "") {
+    if (abbr.empty()) {
       continue;
     }
     std::stringstream regexComposer;

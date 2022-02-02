@@ -165,7 +165,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::IlluminanceMap_Impl ImplType;
+    using ImplType = detail::IlluminanceMap_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -178,10 +178,10 @@ namespace model {
   };
 
   /** \relates IlluminanceMap*/
-  typedef boost::optional<IlluminanceMap> OptionalIlluminanceMap;
+  using OptionalIlluminanceMap = boost::optional<IlluminanceMap>;
 
   /** \relates IlluminanceMap*/
-  typedef std::vector<IlluminanceMap> IlluminanceMapVector;
+  using IlluminanceMapVector = std::vector<IlluminanceMap>;
 
 }  // namespace model
 }  // namespace openstudio

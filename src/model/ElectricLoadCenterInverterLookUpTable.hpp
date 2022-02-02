@@ -144,7 +144,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterInverterLookUpTable_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterInverterLookUpTable_Impl;
 
     explicit ElectricLoadCenterInverterLookUpTable(std::shared_ptr<detail::ElectricLoadCenterInverterLookUpTable_Impl> impl);
 
@@ -158,10 +158,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterInverterLookUpTable*/
-  typedef boost::optional<ElectricLoadCenterInverterLookUpTable> OptionalElectricLoadCenterInverterLookUpTable;
+  using OptionalElectricLoadCenterInverterLookUpTable = boost::optional<ElectricLoadCenterInverterLookUpTable>;
 
   /** \relates ElectricLoadCenterInverterLookUpTable*/
-  typedef std::vector<ElectricLoadCenterInverterLookUpTable> ElectricLoadCenterInverterLookUpTableVector;
+  using ElectricLoadCenterInverterLookUpTableVector = std::vector<ElectricLoadCenterInverterLookUpTable>;
 
 }  // namespace model
 }  // namespace openstudio

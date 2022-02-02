@@ -93,13 +93,13 @@ namespace model {
     ModelObject AirLoopHVACUnitaryHeatPumpAirToAir_Impl::clone(Model model) const {
       auto newUnitary = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-      HVACComponent newFan = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto newFan = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
-      HVACComponent newCoolingCoil = this->coolingCoil().clone(model).cast<HVACComponent>();
+      auto newCoolingCoil = this->coolingCoil().clone(model).cast<HVACComponent>();
 
-      HVACComponent newHeatingCoil = this->heatingCoil().clone(model).cast<HVACComponent>();
+      auto newHeatingCoil = this->heatingCoil().clone(model).cast<HVACComponent>();
 
-      HVACComponent newSupHeatingCoil = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
+      auto newSupHeatingCoil = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
 
       newUnitary.setCoolingCoil(newCoolingCoil);
 
@@ -124,7 +124,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirLoopHVACUnitaryHeatPumpAirToAir", "Availability"));
       }

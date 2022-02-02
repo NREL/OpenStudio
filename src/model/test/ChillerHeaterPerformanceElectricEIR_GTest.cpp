@@ -244,7 +244,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithoutModule) {
   ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   // Clone the ChillerHeater into the same model
-  ChillerHeaterPerformanceElectricEIR ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  auto ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
   Curve c1 = ch_heaterClone.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(2u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   // Check that it points to the same curve
@@ -252,7 +252,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithoutModule) {
 
   // Clone into another model
   Model model2;
-  ChillerHeaterPerformanceElectricEIR ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
+  auto ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(c.name(), c2.name());
@@ -269,7 +269,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithModule) {
   ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
 
   // Clone the ChillerHeater into the same model
-  ChillerHeaterPerformanceElectricEIR ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  auto ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
   Curve c1 = ch_heaterClone.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(2u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   // Check that it points to the same curve
@@ -280,7 +280,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithModule) {
 
   // Clone into another model
   Model model2;
-  ChillerHeaterPerformanceElectricEIR ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
+  auto ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
   ASSERT_EQ(c.name(), c2.name());

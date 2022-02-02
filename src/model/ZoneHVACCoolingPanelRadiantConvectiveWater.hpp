@@ -105,7 +105,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl ImplType;
+    using ImplType = detail::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl;
 
     explicit ZoneHVACCoolingPanelRadiantConvectiveWater(std::shared_ptr<detail::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl> impl);
 
@@ -119,10 +119,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACCoolingPanelRadiantConvectiveWater*/
-  typedef boost::optional<ZoneHVACCoolingPanelRadiantConvectiveWater> OptionalZoneHVACCoolingPanelRadiantConvectiveWater;
+  using OptionalZoneHVACCoolingPanelRadiantConvectiveWater = boost::optional<ZoneHVACCoolingPanelRadiantConvectiveWater>;
 
   /** \relates ZoneHVACCoolingPanelRadiantConvectiveWater*/
-  typedef std::vector<ZoneHVACCoolingPanelRadiantConvectiveWater> ZoneHVACCoolingPanelRadiantConvectiveWaterVector;
+  using ZoneHVACCoolingPanelRadiantConvectiveWaterVector = std::vector<ZoneHVACCoolingPanelRadiantConvectiveWater>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -38,7 +38,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateCurrencyType(CurrencyType& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateCurrencyType(CurrencyType& /*modelObject*/) {
     IdfObject idfObject(openstudio::IddObjectType::CurrencyType);
 
     m_idfObjects.push_back(idfObject);

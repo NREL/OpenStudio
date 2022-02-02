@@ -168,7 +168,8 @@ namespace model {
     std::vector<ScheduleTypeKey> FanSystemModel_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_SystemModelFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FanSystemModel", "Availability"));
       }
@@ -444,54 +445,74 @@ namespace model {
 
           // Technically these two **are** ZoneHVACComponents
           case openstudio::IddObjectType::OS_WaterHeater_HeatPump: {
-            WaterHeaterHeatPump component = elem.cast<WaterHeaterHeatPump>();
-            if (component.fan().handle() == this->handle()) return elem;
+            auto component = elem.cast<WaterHeaterHeatPump>();
+            if (component.fan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser: {
-            WaterHeaterHeatPumpWrappedCondenser component = elem.cast<WaterHeaterHeatPumpWrappedCondenser>();
-            if (component.fan().handle() == this->handle()) return elem;
+            auto component = elem.cast<WaterHeaterHeatPumpWrappedCondenser>();
+            if (component.fan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
 
           case openstudio::IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator: {
-            ZoneHVACEnergyRecoveryVentilator component = elem.cast<ZoneHVACEnergyRecoveryVentilator>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACEnergyRecoveryVentilator>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil: {
-            ZoneHVACFourPipeFanCoil component = elem.cast<ZoneHVACFourPipeFanCoil>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACFourPipeFanCoil>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner: {
-            ZoneHVACPackagedTerminalAirConditioner component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump: {
-            ZoneHVACPackagedTerminalHeatPump component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow: {
-            ZoneHVACTerminalUnitVariableRefrigerantFlow component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater: {
-            ZoneHVACUnitHeater component = elem.cast<ZoneHVACUnitHeater>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACUnitHeater>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator: {
-            ZoneHVACUnitVentilator component = elem.cast<ZoneHVACUnitVentilator>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACUnitVentilator>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump: {
-            ZoneHVACWaterToAirHeatPump component = elem.cast<ZoneHVACWaterToAirHeatPump>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACWaterToAirHeatPump>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           default: {
@@ -706,7 +727,7 @@ namespace model {
     bool FanSystemModel_Impl::addSpeedPrivate(double flowFraction, boost::optional<double> electricPowerFraction) {
       bool result;
       // Push an extensible group
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool temp = eg.setDouble(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction, flowFraction);
       bool ok = electricPowerFraction.is_initialized()
                   ? eg.setDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, electricPowerFraction.get())
@@ -868,7 +889,7 @@ namespace model {
   }
 
   IddObjectType FanSystemModel::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Fan_SystemModel);
+    return {IddObjectType::OS_Fan_SystemModel};
   }
 
   std::vector<std::string> FanSystemModel::speedControlMethodValues() {

@@ -97,7 +97,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ModelObject_Impl ImplType;
+    using ImplType = detail::ModelObject_Impl;
 
     friend class IdfExtensibleGroup;
 

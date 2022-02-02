@@ -53,7 +53,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ShadingMaterial_Impl ImplType;
+    using ImplType = detail::ShadingMaterial_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -69,10 +69,10 @@ namespace model {
   };
 
   /** \relates ShadingMaterial */
-  typedef boost::optional<ShadingMaterial> OptionalShadingMaterial;
+  using OptionalShadingMaterial = boost::optional<ShadingMaterial>;
 
   /** \relates ShadingMaterial */
-  typedef std::vector<ShadingMaterial> ShadingMaterialVector;
+  using ShadingMaterialVector = std::vector<ShadingMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

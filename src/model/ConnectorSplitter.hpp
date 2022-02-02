@@ -77,7 +77,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::ConnectorSplitter_Impl ImplType;
+    using ImplType = detail::ConnectorSplitter_Impl;
 
     friend class Model;
 
@@ -90,7 +90,7 @@ namespace model {
   };
 
   /** \relates ConnectorSplitter */
-  typedef boost::optional<ConnectorSplitter> OptionalConnectorSplitter;
+  using OptionalConnectorSplitter = boost::optional<ConnectorSplitter>;
 
 }  // namespace model
 }  // namespace openstudio

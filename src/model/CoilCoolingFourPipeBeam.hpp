@@ -116,7 +116,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingFourPipeBeam_Impl ImplType;
+    using ImplType = detail::CoilCoolingFourPipeBeam_Impl;
 
     explicit CoilCoolingFourPipeBeam(std::shared_ptr<detail::CoilCoolingFourPipeBeam_Impl> impl);
 
@@ -130,10 +130,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingFourPipeBeam*/
-  typedef boost::optional<CoilCoolingFourPipeBeam> OptionalCoilCoolingFourPipeBeam;
+  using OptionalCoilCoolingFourPipeBeam = boost::optional<CoilCoolingFourPipeBeam>;
 
   /** \relates CoilCoolingFourPipeBeam*/
-  typedef std::vector<CoilCoolingFourPipeBeam> CoilCoolingFourPipeBeamVector;
+  using CoilCoolingFourPipeBeamVector = std::vector<CoilCoolingFourPipeBeam>;
 
 }  // namespace model
 }  // namespace openstudio

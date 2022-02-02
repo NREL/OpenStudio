@@ -880,7 +880,7 @@ namespace model {
   }
 
   IddObjectType ChillerHeaterPerformanceElectricEIR::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR);
+    return {IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR};
   }
 
   std::vector<std::string> ChillerHeaterPerformanceElectricEIR::chilledWaterFlowModeTypeValues() {

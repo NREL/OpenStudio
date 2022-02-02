@@ -230,7 +230,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Gas_Impl ImplType;
+    using ImplType = detail::Gas_Impl;
 
     explicit Gas(std::shared_ptr<detail::Gas_Impl> impl);
 
@@ -244,10 +244,10 @@ namespace model {
   };
 
   /** \relates Gas*/
-  typedef boost::optional<Gas> OptionalGas;
+  using OptionalGas = boost::optional<Gas>;
 
   /** \relates Gas*/
-  typedef std::vector<Gas> GasVector;
+  using GasVector = std::vector<Gas>;
 
 }  // namespace model
 }  // namespace openstudio

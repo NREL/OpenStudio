@@ -113,7 +113,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
 
   EXPECT_EQ(1u, idf_coil.numExtensibleGroups());
 
-  WorkspaceExtensibleGroup w_eg = idf_coil.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg = idf_coil.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   EXPECT_EQ(400.0, w_eg.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedExtensibleFields::RatedWaterHeatingCapacityatSpeed, false).get());
   EXPECT_EQ(5.0, w_eg.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedExtensibleFields::RatedWaterHeatingCOPatSpeed, false).get());
   EXPECT_EQ(0.8, w_eg.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedExtensibleFields::RatedSensibleHeatRatioatSpeed, false).get());

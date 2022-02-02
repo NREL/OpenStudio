@@ -137,7 +137,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::BuildingUnit_Impl ImplType;
+    using ImplType = detail::BuildingUnit_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;

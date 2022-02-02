@@ -66,7 +66,7 @@ namespace model {
       }
     }
     LOG_AND_THROW("No '" << scheduleDisplayName << "' Schedule is registered for class " << className << ".");
-    return ScheduleType();
+    return {};
   }
 
   ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(const ScheduleType& scheduleType, Model& model) const {

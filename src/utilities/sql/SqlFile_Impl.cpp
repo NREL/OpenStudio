@@ -55,9 +55,9 @@ namespace detail {
 
   std::string columnText(const unsigned char* column) {
     if (column == nullptr) {
-      return std::string();
+      return {};
     }
-    return std::string(reinterpret_cast<const char*>(column));
+    return {reinterpret_cast<const char*>(column)};
   }
 
   SqlFile_Impl::SqlFile_Impl(const openstudio::path& path, const bool createIndexes)
@@ -71,7 +71,9 @@ namespace detail {
       m_path = openstudio::filesystem::canonical(m_path);
     }
     reopen();
-    if (createIndexes) this->createIndexes();
+    if (createIndexes) {
+      this->createIndexes();
+    }
   }
 
   SqlFile_Impl::SqlFile_Impl(const openstudio::path& t_path, const openstudio::EpwFile& t_epwFile, const openstudio::DateTime& t_simulationTime,
@@ -244,7 +246,9 @@ namespace detail {
     addSimulation(t_epwFile, t_simulationTime, t_calendar);
 
     reopen();
-    if (createIndexes) this->createIndexes();
+    if (createIndexes) {
+      this->createIndexes();
+    }
   }
 
   void SqlFile_Impl::removeIndexes() {
@@ -792,10 +796,15 @@ namespace detail {
   }
 
   void SqlFile_Impl::retrieveDataDictionary() {
-    std::string table, name, keyValue, units, rf;
+    std::string table;
+    std::string name;
+    std::string keyValue;
+    std::string units;
+    std::string rf;
 
     if (m_db) {
-      int dictionaryIndex, code;
+      int dictionaryIndex;
+      int code;
 
       std::stringstream s;
       sqlite3_stmt* sqlStmtPtr;
@@ -917,7 +926,9 @@ namespace detail {
                                   AND Units='hrs')";
     boost::optional<double> ret = execAndReturnFirstDouble(s);
 
-    if (ret) return ret;
+    if (ret) {
+      return ret;
+    }
 
     // Otherwise, let's try to calculate it:
     return execAndReturnFirstDouble(
@@ -1196,7 +1207,9 @@ namespace detail {
       "select rowname from TabularDataWithStrings where TableName = 'Tariff Summary' and (ColumnName = 'Qualified' and Value = 'Yes')");
     fuelTypeRowNames = execAndReturnVectorOfString(query);
 
-    if (!selectedRowNames || !qualifiedRowNames || !fuelTypeRowNames) return result;
+    if (!selectedRowNames || !qualifiedRowNames || !fuelTypeRowNames) {
+      return result;
+    }
 
     std::vector<std::string> names;
     for (unsigned i = 0; i < selectedRowNames->size(); i++) {
@@ -1216,7 +1229,9 @@ namespace detail {
         }
       }
     }
-    if (name.size() == 0) return result;
+    if (name.empty()) {
+      return result;
+    }
 
     query = "SELECT value from TabularDataWithStrings where ReportName = 'Tariff Report' and ReportForString = '";
     query += name;
@@ -1871,7 +1886,7 @@ namespace detail {
         boost::make_tuple(queryEnvPeriod, ReportingFrequency(ReportingFrequency::RunPeriod).valueName(), timeSeriesName, keyValue));
 
     if (iEpRfNKv == m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().end()) {
-      return boost::optional<double>();
+      return {};
     }
 
     std::stringstream s;
@@ -2073,7 +2088,10 @@ namespace detail {
   openstudio::DateTime SqlFile_Impl::firstDateTime(bool includeHourAndMinute, int envPeriodIndex) {
     // default until added to eplusout.sql from energy plus
     boost::optional<unsigned> year;
-    unsigned month = 1, day = 1, hour = 1, minute = 0;
+    unsigned month = 1;
+    unsigned day = 1;
+    unsigned hour = 1;
+    unsigned minute = 0;
 
     if (m_db) {
       std::stringstream s;
@@ -2120,7 +2138,10 @@ namespace detail {
   openstudio::DateTime SqlFile_Impl::lastDateTime(bool includeHourAndMinute, int envPeriodIndex) {
     // default until added to eplusout.sql from energy plus
     boost::optional<unsigned> year;
-    unsigned month = 1, day = 1, hour = 1, minute = 0;
+    unsigned month = 1;
+    unsigned day = 1;
+    unsigned hour = 1;
+    unsigned minute = 0;
 
     if (m_db) {
       std::stringstream s;
@@ -2369,7 +2390,10 @@ namespace detail {
       LOG(Debug, s2.str());
       while (code == SQLITE_ROW) {
         boost::optional<unsigned> year;
-        unsigned month, day, hour, minute;  //, simulationDay;
+        unsigned month;
+        unsigned day;
+        unsigned hour;
+        unsigned minute;  //, simulationDay;
 
         int b = 0;
         if (hasYear()) {
@@ -2464,7 +2488,9 @@ namespace detail {
 
   SqlFileTimeSeriesQueryVector SqlFile_Impl::expandQuery(const SqlFileTimeSeriesQuery& query) {
 
-    SqlFileTimeSeriesQueryVector result, temp1, temp2;
+    SqlFileTimeSeriesQueryVector result;
+    SqlFileTimeSeriesQueryVector temp1;
+    SqlFileTimeSeriesQueryVector temp2;
 
     // no work needed
     if (query.m_vetted) {
@@ -2521,7 +2547,7 @@ namespace detail {
       } else {
         std::string envName = envId.name().get();
         // check validity of name
-        StringVector::const_iterator it = std::find_if(envNames.begin(), envNames.end(), std::bind(istringEqual, envName, std::placeholders::_1));
+        auto it = std::find_if(envNames.begin(), envNames.end(), std::bind(istringEqual, envName, std::placeholders::_1));
         if (it != envNames.end()) {
           keepers.push_back(*it);
         }
@@ -2682,7 +2708,7 @@ namespace detail {
       if (expanded.size() == 1) {
         wquery = expanded[0];
       } else {
-        if (expanded.size() == 0) {
+        if (expanded.empty()) {
           LOG(Info, "Unable to return timeSeries based on query: " << '\n'
                                                                    << query << ", because there are no matching timeSeries in SqlFile "
                                                                    << toString(path()) << ".");
@@ -2733,8 +2759,14 @@ namespace detail {
     // TODO - unit test
 
     boost::optional<std::pair<DateTime, DateTime>> dstPeriod;
-    int startMonth = 0, startDay = 0, startHour = 0, startMinute = 0;
-    int endMonth = 0, endDay = 0, endHour = 0, endMinute = 0;
+    int startMonth = 0;
+    int startDay = 0;
+    int startHour = 0;
+    int startMinute = 0;
+    int endMonth = 0;
+    int endDay = 0;
+    int endHour = 0;
+    int endMinute = 0;
 
     if (m_db) {
 
@@ -2861,9 +2893,9 @@ namespace detail {
     boost::optional<std::string> refPt;
     boost::optional<int> mapIndex = illuminanceMapIndex(name);
 
-    if (mapIndex)
+    if (mapIndex) {
       refPt = illuminanceMapRefPt(*mapIndex, ptNum);
-    else
+    } else
       LOG(Error, "Unknown illuminance map '" << name << "'");
 
     return refPt;
@@ -2923,9 +2955,9 @@ namespace detail {
     boost::optional<double> minValue;
     boost::optional<int> mapIndex = illuminanceMapIndex(name);
 
-    if (mapIndex)
+    if (mapIndex) {
       minValue = illuminanceMapMinValue(*mapIndex);
-    else
+    } else
       LOG(Error, "Unknown illuminance map '" << name << "'");
 
     return minValue;
@@ -2945,7 +2977,9 @@ namespace detail {
     int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
     code = sqlite3_step(sqlStmtPtr);
 
-    if (code == SQLITE_ROW) minValue = sqlite3_column_double(sqlStmtPtr, 0);
+    if (code == SQLITE_ROW) {
+      minValue = sqlite3_column_double(sqlStmtPtr, 0);
+    }
 
     /// must finalize to prevent memory leaks
     sqlite3_finalize(sqlStmtPtr);
@@ -2958,9 +2992,9 @@ namespace detail {
     boost::optional<double> maxValue;
     boost::optional<int> mapIndex = illuminanceMapIndex(name);
 
-    if (mapIndex)
+    if (mapIndex) {
       maxValue = illuminanceMapMaxValue(*mapIndex);
-    else
+    } else
       LOG(Error, "Unknown illuminance map '" << name << "'");
 
     return maxValue;
@@ -2980,7 +3014,9 @@ namespace detail {
     int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
     code = sqlite3_step(sqlStmtPtr);
 
-    if (code == SQLITE_ROW) maxValue = sqlite3_column_double(sqlStmtPtr, 0);
+    if (code == SQLITE_ROW) {
+      maxValue = sqlite3_column_double(sqlStmtPtr, 0);
+    }
 
     /// must finalize to prevent memory leaks
     sqlite3_finalize(sqlStmtPtr);
@@ -2991,9 +3027,9 @@ namespace detail {
   void SqlFile_Impl::illuminanceMapMaxValue(const std::string& name, double& minValue, double& maxValue) const {
     boost::optional<int> mapIndex = illuminanceMapIndex(name);
 
-    if (mapIndex)
+    if (mapIndex) {
       illuminanceMapMaxValue(*mapIndex, minValue, maxValue);
-    else
+    } else
       LOG(Error, "Unknown illuminance map '" << name << "'");
   }
 
@@ -3023,9 +3059,9 @@ namespace detail {
     std::vector<std::string> names;
     boost::optional<int> mapIndex = illuminanceMapIndex(name);
 
-    if (mapIndex)
+    if (mapIndex) {
       names = illuminanceMapZoneNames(*mapIndex);
-    else
+    } else
       LOG(Error, "Unknown illuminance map '" << name << "'");
 
     return names;
@@ -3067,12 +3103,12 @@ namespace detail {
 
     if (!mapIndex) {
       LOG(Error, "Unknown illuminance map '" << name << "'");
-      return Vector();
+      return {};
     }
     boost::optional<int> timeIndex = illuminanceMapHourlyReportIndex(*mapIndex, dateTime);
     if (!timeIndex) {
       LOG(Error, "Unknown date and time '" << dateTime << "'");
-      return Vector();
+      return {};
     }
 
     Vector x(illuminanceMapX(*timeIndex));
@@ -3104,12 +3140,12 @@ namespace detail {
 
     if (!mapIndex) {
       LOG(Error, "Unknown illuminance map '" << name << "'");
-      return Vector();
+      return {};
     }
     boost::optional<int> timeIndex = illuminanceMapHourlyReportIndex(*mapIndex, dateTime);
     if (!timeIndex) {
       LOG(Error, "Unknown date and time '" << dateTime << "'");
-      return Vector();
+      return {};
     }
 
     Vector y(illuminanceMapY(*timeIndex));
@@ -3196,7 +3232,9 @@ namespace detail {
 
   boost::optional<DateTime> SqlFile_Impl::illuminanceMapDate(int hourlyReportIndex) const {
     boost::optional<unsigned> year;
-    unsigned month = 0, dayOfMonth = 0, hour = 0;
+    unsigned month = 0;
+    unsigned dayOfMonth = 0;
+    unsigned hour = 0;
     std::stringstream s;
     s << "SELECT ";
     if (hasYear()) {
@@ -3284,21 +3322,24 @@ namespace detail {
 
     if (!mapIndex) {
       LOG(Error, "Unknown illuminance map '" << name << "'");
-      return Matrix();
+      return {};
     }
 
     // find the HourlyReportIndex
     boost::optional<int> timeIndex = illuminanceMapHourlyReportIndex(*mapIndex, dateTime);
     if (!timeIndex) {
       LOG(Error, "Unknown date and time '" << dateTime << "'");
-      return Matrix();
+      return {};
     }
 
     return illuminanceMap(*timeIndex);
   }
 
   void SqlFile_Impl::illuminanceMap(int hourlyReportIndex, std::vector<double>& x, std::vector<double>& y, std::vector<double>& illuminance) const {
-    double xVal(0.0), yVal(0.0), yValPrevious(0.0), illuminanceVal(0.0);
+    double xVal(0.0);
+    double yVal(0.0);
+    double yValPrevious(0.0);
+    double illuminanceVal(0.0);
     bool yValChanged = false;
 
     std::stringstream statement;
@@ -3488,7 +3529,7 @@ namespace detail {
         if (envName && rf) {
           kvAvail = availableKeyValues(*envName, rf->valueDescription(), *tsName);
           for (const std::string& kv : keyValueNames) {
-            StringVector::const_iterator it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+            auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
             if (it != kvAvail.end()) {
               keepers.insert(*it);
             }
@@ -3498,7 +3539,7 @@ namespace detail {
           for (const ReportingFrequency& rf : rfSet) {
             kvAvail = availableKeyValues(*envName, rf.valueDescription(), *tsName);
             for (const std::string& kv : keyValueNames) {
-              StringVector::const_iterator it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+              auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
               if (it != kvAvail.end()) {
                 keepers.insert(*it);
               }
@@ -3509,7 +3550,7 @@ namespace detail {
           for (const std::string& envName : envNames) {
             kvAvail = availableKeyValues(envName, rf->valueDescription(), *tsName);
             for (const std::string& kv : keyValueNames) {
-              StringVector::const_iterator it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+              auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
               if (it != kvAvail.end()) {
                 keepers.insert(*it);
               }
@@ -3522,7 +3563,7 @@ namespace detail {
             for (const ReportingFrequency& rf : rfSet) {
               kvAvail = availableKeyValues(envName, rf.valueDescription(), *tsName);
               for (const std::string& kv : keyValueNames) {
-                StringVector::const_iterator it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+                auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
                 if (it != kvAvail.end()) {
                   keepers.insert(*it);
                   if (keepers.size() == keyValueNames.size()) {

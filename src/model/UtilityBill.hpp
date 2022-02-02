@@ -137,7 +137,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::UtilityBill_Impl ImplType;
+    using ImplType = detail::UtilityBill_Impl;
 
     friend class IdfExtensibleGroup;
     friend class detail::UtilityBill_Impl;
@@ -150,7 +150,7 @@ namespace model {
   };
 
   /** \relates BillingPeriod */
-  typedef std::vector<BillingPeriod> BillingPeriodVector;
+  using BillingPeriodVector = std::vector<BillingPeriod>;
 
   /** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'.
     This object allows the user to enter in actual fuel usage for model calibration.
@@ -274,7 +274,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::UtilityBill_Impl ImplType;
+    using ImplType = detail::UtilityBill_Impl;
 
     explicit UtilityBill(std::shared_ptr<detail::UtilityBill_Impl> impl);
 
@@ -288,10 +288,10 @@ namespace model {
   };
 
   /** \relates UtilityBill*/
-  typedef boost::optional<UtilityBill> OptionalUtilityBill;
+  using OptionalUtilityBill = boost::optional<UtilityBill>;
 
   /** \relates UtilityBill*/
-  typedef std::vector<UtilityBill> UtilityBillVector;
+  using UtilityBillVector = std::vector<UtilityBill>;
 
 }  // namespace model
 }  // namespace openstudio

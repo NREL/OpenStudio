@@ -41,7 +41,7 @@ static void Current(benchmark::State& state) {
     std::vector<ModelObject> result;
 
     for (auto& object : objects) {
-      ModelObject castObject = object.cast<ModelObject>();
+      auto castObject = object.cast<ModelObject>();
       result.push_back(castObject);
     }
 
@@ -63,7 +63,7 @@ static void Proposed(benchmark::State& state) {
     result.reserve(objects.size());
 
     for (auto& object : objects) {
-      ModelObject castObject = object.cast<ModelObject>();
+      auto castObject = object.cast<ModelObject>();
       result.push_back(castObject);
     }
 

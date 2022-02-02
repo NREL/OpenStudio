@@ -92,7 +92,7 @@ namespace model {
     Facility_Impl::Facility_Impl(const Facility_Impl& other, Model_Impl* model, bool keepHandle) : ParentObject_Impl(other, model, keepHandle) {}
 
     boost::optional<ParentObject> Facility_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     std::vector<ModelObject> Facility_Impl::children() const {
@@ -192,7 +192,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->totalSiteEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::netSiteEnergy() const {
@@ -200,7 +200,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->netSiteEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::totalSourceEnergy() const {
@@ -208,7 +208,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->totalSourceEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::netSourceEnergy() const {
@@ -216,7 +216,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->netSourceEnergy();
       }
-      return OptionalDouble();
+      return {};
     }
 
     // pass in "Electric", "NaturalGas", or "Other"
@@ -225,7 +225,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalCost(fuel);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::annualTotalCostPerBldgArea(const FuelType& fuel) const {
@@ -233,7 +233,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalCostPerBldgArea(fuel);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const {
@@ -242,7 +242,7 @@ namespace model {
         return mySqlFile->annualTotalCostPerNetConditionedBldgArea(fuel);
       }
 
-      return OptionalDouble();
+      return {};
     }
 
     boost::optional<double> Facility_Impl::annualTotalUtilityCost() const {
@@ -250,7 +250,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->annualTotalUtilityCost();
       }
-      return OptionalDouble();
+      return {};
     }
 
     boost::optional<double> Facility_Impl::annualElectricTotalCost() const {
@@ -283,7 +283,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->economicsEnergyCost();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::economicsVirtualRateGas() const {
@@ -306,7 +306,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->getElecOrGasUse(bGetGas);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::getElecOrGasCost(bool bGetGas) const {
@@ -314,7 +314,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->getElecOrGasCost(bGetGas);
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::gasUse() const {
@@ -363,7 +363,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityCooling() const {
@@ -371,7 +371,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityInteriorLighting() const {
@@ -379,7 +379,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityExteriorLighting() const {
@@ -387,7 +387,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityInteriorEquipment() const {
@@ -395,7 +395,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityExteriorEquipment() const {
@@ -403,7 +403,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityFans() const {
@@ -411,7 +411,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityPumps() const {
@@ -419,7 +419,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityHeatRejection() const {
@@ -427,7 +427,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityHumidification() const {
@@ -435,7 +435,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityHeatRecovery() const {
@@ -443,7 +443,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityWaterSystems() const {
@@ -451,7 +451,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityRefrigeration() const {
@@ -459,7 +459,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityGenerators() const {
@@ -467,7 +467,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::electricityTotalEndUses() const {
@@ -475,7 +475,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->electricityTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHeating() const {
@@ -483,7 +483,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasCooling() const {
@@ -491,7 +491,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasInteriorLighting() const {
@@ -499,7 +499,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasExteriorLighting() const {
@@ -507,7 +507,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasInteriorEquipment() const {
@@ -515,7 +515,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasExteriorEquipment() const {
@@ -523,7 +523,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasFans() const {
@@ -531,7 +531,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasPumps() const {
@@ -539,7 +539,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHeatRejection() const {
@@ -547,7 +547,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHumidification() const {
@@ -555,7 +555,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasHeatRecovery() const {
@@ -563,7 +563,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasWaterSystems() const {
@@ -571,7 +571,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasRefrigeration() const {
@@ -579,7 +579,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasGenerators() const {
@@ -587,7 +587,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::naturalGasTotalEndUses() const {
@@ -595,7 +595,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->naturalGasTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelHeating() const {
@@ -603,7 +603,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelCooling() const {
@@ -611,7 +611,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelInteriorLighting() const {
@@ -619,7 +619,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelExteriorLighting() const {
@@ -627,7 +627,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelInteriorEquipment() const {
@@ -635,7 +635,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelExteriorEquipment() const {
@@ -643,7 +643,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelFans() const {
@@ -651,7 +651,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelPumps() const {
@@ -659,7 +659,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelHeatRejection() const {
@@ -667,7 +667,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelHumidification() const {
@@ -675,7 +675,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelHeatRecovery() const {
@@ -683,7 +683,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelWaterSystems() const {
@@ -691,7 +691,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelRefrigeration() const {
@@ -699,7 +699,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelGenerators() const {
@@ -707,7 +707,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::otherFuelTotalEndUses() const {
@@ -715,7 +715,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->otherFuelTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHeating() const {
@@ -723,7 +723,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingCooling() const {
@@ -731,7 +731,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingInteriorLighting() const {
@@ -739,7 +739,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingExteriorLighting() const {
@@ -747,7 +747,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingInteriorEquipment() const {
@@ -755,7 +755,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingExteriorEquipment() const {
@@ -763,7 +763,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingFans() const {
@@ -771,7 +771,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingPumps() const {
@@ -779,7 +779,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHeatRejection() const {
@@ -787,7 +787,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHumidification() const {
@@ -795,7 +795,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingHeatRecovery() const {
@@ -803,7 +803,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingWaterSystems() const {
@@ -811,7 +811,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingRefrigeration() const {
@@ -819,7 +819,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingGenerators() const {
@@ -827,7 +827,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtCoolingTotalEndUses() const {
@@ -835,7 +835,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtCoolingTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHeating() const {
@@ -843,7 +843,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingCooling() const {
@@ -851,7 +851,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingInteriorLighting() const {
@@ -859,7 +859,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingExteriorLighting() const {
@@ -867,7 +867,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingInteriorEquipment() const {
@@ -875,7 +875,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingExteriorEquipment() const {
@@ -883,7 +883,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingFans() const {
@@ -891,7 +891,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingPumps() const {
@@ -899,7 +899,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHeatRejection() const {
@@ -907,7 +907,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHumidification() const {
@@ -915,7 +915,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingHeatRecovery() const {
@@ -923,7 +923,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingWaterSystems() const {
@@ -931,7 +931,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingRefrigeration() const {
@@ -939,7 +939,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingGenerators() const {
@@ -947,7 +947,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::districtHeatingTotalEndUses() const {
@@ -955,7 +955,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->districtHeatingTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHeating() const {
@@ -963,7 +963,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHeating();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterCooling() const {
@@ -971,7 +971,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterCooling();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterInteriorLighting() const {
@@ -979,7 +979,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterInteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterExteriorLighting() const {
@@ -987,7 +987,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterExteriorLighting();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterInteriorEquipment() const {
@@ -995,7 +995,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterInteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterExteriorEquipment() const {
@@ -1003,7 +1003,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterExteriorEquipment();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterFans() const {
@@ -1011,7 +1011,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterFans();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterPumps() const {
@@ -1019,7 +1019,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterPumps();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHeatRejection() const {
@@ -1027,7 +1027,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHeatRejection();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHumidification() const {
@@ -1035,7 +1035,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHumidification();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterHeatRecovery() const {
@@ -1043,7 +1043,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterHeatRecovery();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterWaterSystems() const {
@@ -1051,7 +1051,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterWaterSystems();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterRefrigeration() const {
@@ -1059,7 +1059,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterRefrigeration();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterGenerators() const {
@@ -1067,7 +1067,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterGenerators();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::waterTotalEndUses() const {
@@ -1075,7 +1075,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->waterTotalEndUses();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::hoursHeatingSetpointNotMet() const {
@@ -1083,7 +1083,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->hoursHeatingSetpointNotMet();
       }
-      return OptionalDouble();
+      return {};
     }
 
     OptionalDouble Facility_Impl::hoursCoolingSetpointNotMet() const {
@@ -1091,7 +1091,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->hoursCoolingSetpointNotMet();
       }
-      return OptionalDouble();
+      return {};
     }
 
     boost::optional<EndUses> Facility_Impl::endUses() const {
@@ -1099,7 +1099,7 @@ namespace model {
       if (mySqlFile && mySqlFile->connectionOpen()) {
         return mySqlFile->endUses();
       }
-      return boost::optional<EndUses>();
+      return {};
     }
 
     boost::optional<CalibrationResult> Facility_Impl::calibrationResult() const {

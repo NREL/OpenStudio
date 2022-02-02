@@ -326,7 +326,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::TableMultiVariableLookup_Impl ImplType;
+    using ImplType = detail::TableMultiVariableLookup_Impl;
 
     explicit TableMultiVariableLookup(std::shared_ptr<detail::TableMultiVariableLookup_Impl> impl);
 
@@ -340,13 +340,13 @@ namespace model {
   };
 
   /** \relates TableMultiVariableLookup*/
-  typedef boost::optional<TableMultiVariableLookup> OptionalTableMultiVariableLookup;
+  using OptionalTableMultiVariableLookup = boost::optional<TableMultiVariableLookup>;
 
   /** \relates TableMultiVariableLookup*/
-  typedef std::vector<TableMultiVariableLookup> TableMultiVariableLookupVector;
+  using TableMultiVariableLookupVector = std::vector<TableMultiVariableLookup>;
 
   /** \relates TableMultiVariableLookupPoint*/
-  typedef std::vector<TableMultiVariableLookupPoint> TableMultiVariableLookupPointVector;
+  using TableMultiVariableLookupPointVector = std::vector<TableMultiVariableLookupPoint>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -107,7 +107,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationCase_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_CaseFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationCase", "Availability"));
       }
@@ -620,7 +621,7 @@ namespace model {
 
     boost::optional<RefrigerationSystem> RefrigerationCase_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
+      auto refrigerationCase = this->getObject<RefrigerationCase>();
       for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
         if (!refrigerationCases.empty()
@@ -633,7 +634,7 @@ namespace model {
 
     boost::optional<RefrigerationSecondarySystem> RefrigerationCase_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
-      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
+      auto refrigerationCase = this->getObject<RefrigerationCase>();
       for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationCaseVector refrigerationCases = refrigerationSecondarySystem.cases();
         if (!refrigerationCases.empty()
@@ -646,7 +647,7 @@ namespace model {
 
     boost::optional<RefrigerationCompressorRack> RefrigerationCase_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
-      RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
+      auto refrigerationCase = this->getObject<RefrigerationCase>();
       for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationCaseVector refrigerationCases = refrigerationCompressorRack.cases();
         if (!refrigerationCases.empty()
@@ -1358,7 +1359,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCase::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Case);
+    return {IddObjectType::OS_Refrigeration_Case};
   }
 
   std::vector<std::string> RefrigerationCase::latentCaseCreditCurveTypeValues() {

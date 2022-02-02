@@ -114,13 +114,13 @@ struct UTILITIES_API DataErrorLess
 };
 
 /** Set container for DataError. \relates DataError */
-typedef std::set<DataError, DataErrorLess> DataErrorSet;
+using DataErrorSet = std::set<DataError, DataErrorLess>;
 
 /** \relates DataError */
-typedef boost::optional<DataError> OptionalDataError;
+using OptionalDataError = boost::optional<DataError>;
 
 /** \relates DataError */
-typedef std::vector<DataError> DataErrorVector;
+using DataErrorVector = std::vector<DataError>;
 
 /** Ostream operator for DataError. \relates DataError */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const DataError& error);

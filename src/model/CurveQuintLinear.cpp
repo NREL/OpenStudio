@@ -497,7 +497,7 @@ namespace model {
   }
 
   IddObjectType CurveQuintLinear::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Curve_QuintLinear);
+    return {IddObjectType::OS_Curve_QuintLinear};
   }
 
   std::vector<std::string> CurveQuintLinear::inputUnitTypeforvValues() {

@@ -91,7 +91,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
 
   // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
-  if (result.size() == 0) {
+  if (result.empty()) {
     solution.push_back(polygon);
     return solution;
   } else {
@@ -516,7 +516,7 @@ bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& 
     return false;
   }
 
-  if (points.size() == 0) {
+  if (points.empty()) {
     return false;
   }
 

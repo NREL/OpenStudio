@@ -358,7 +358,7 @@ namespace model {
   }
 
   IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedData);
+    return {IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedData};
   }
 
   double CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::ratedWaterHeatingCapacity() const {

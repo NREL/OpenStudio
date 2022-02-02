@@ -125,7 +125,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneHumidityMinimum testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHumidityMinimum>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHumidityMinimum>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -150,7 +150,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_customDataClone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneHumidityMinimum testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHumidityMinimum>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHumidityMinimum>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

@@ -106,7 +106,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MasslessOpaqueMaterial_Impl ImplType;
+    using ImplType = detail::MasslessOpaqueMaterial_Impl;
 
     explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
 
@@ -120,10 +120,10 @@ namespace model {
   };
 
   /** \relates MasslessOpaqueMaterial*/
-  typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
+  using OptionalMasslessOpaqueMaterial = boost::optional<MasslessOpaqueMaterial>;
 
   /** \relates MasslessOpaqueMaterial*/
-  typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
+  using MasslessOpaqueMaterialVector = std::vector<MasslessOpaqueMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

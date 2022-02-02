@@ -134,7 +134,7 @@ namespace model {
     friend class openstudio::IdfObject;
 
     /// @cond
-    typedef detail::FanConstantVolume_Impl ImplType;
+    using ImplType = detail::FanConstantVolume_Impl;
     explicit FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> impl);
 
    private:
@@ -143,10 +143,10 @@ namespace model {
   };
 
   /** \relates FanConstantVolume */
-  typedef boost::optional<FanConstantVolume> OptionalFanConstantVolume;
+  using OptionalFanConstantVolume = boost::optional<FanConstantVolume>;
 
   /** \relates FanConstantVolume */
-  typedef std::vector<FanConstantVolume> FanConstantVolumeVector;
+  using FanConstantVolumeVector = std::vector<FanConstantVolume>;
 
 }  // namespace model
 }  // namespace openstudio

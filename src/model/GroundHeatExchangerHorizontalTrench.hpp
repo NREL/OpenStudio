@@ -158,7 +158,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GroundHeatExchangerHorizontalTrench_Impl ImplType;
+    using ImplType = detail::GroundHeatExchangerHorizontalTrench_Impl;
 
     explicit GroundHeatExchangerHorizontalTrench(std::shared_ptr<detail::GroundHeatExchangerHorizontalTrench_Impl> impl);
 
@@ -172,10 +172,10 @@ namespace model {
   };
 
   /** \relates GroundHeatExchangerHorizontalTrench*/
-  typedef boost::optional<GroundHeatExchangerHorizontalTrench> OptionalGroundHeatExchangerHorizontalTrench;
+  using OptionalGroundHeatExchangerHorizontalTrench = boost::optional<GroundHeatExchangerHorizontalTrench>;
 
   /** \relates GroundHeatExchangerHorizontalTrench*/
-  typedef std::vector<GroundHeatExchangerHorizontalTrench> GroundHeatExchangerHorizontalTrenchVector;
+  using GroundHeatExchangerHorizontalTrenchVector = std::vector<GroundHeatExchangerHorizontalTrench>;
 
 }  // namespace model
 }  // namespace openstudio

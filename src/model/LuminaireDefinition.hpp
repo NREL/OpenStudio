@@ -118,7 +118,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::LuminaireDefinition_Impl ImplType;
+    using ImplType = detail::LuminaireDefinition_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -131,10 +131,10 @@ namespace model {
   };
 
   /** \relates LuminaireDefinition*/
-  typedef boost::optional<LuminaireDefinition> OptionalLuminaireDefinition;
+  using OptionalLuminaireDefinition = boost::optional<LuminaireDefinition>;
 
   /** \relates LuminaireDefinition*/
-  typedef std::vector<LuminaireDefinition> LuminaireDefinitionVector;
+  using LuminaireDefinitionVector = std::vector<LuminaireDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -286,7 +286,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACWaterToAirHeatPump_Impl ImplType;
+    using ImplType = detail::ZoneHVACWaterToAirHeatPump_Impl;
 
     explicit ZoneHVACWaterToAirHeatPump(std::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl);
 
@@ -300,10 +300,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACWaterToAirHeatPump*/
-  typedef boost::optional<ZoneHVACWaterToAirHeatPump> OptionalZoneHVACWaterToAirHeatPump;
+  using OptionalZoneHVACWaterToAirHeatPump = boost::optional<ZoneHVACWaterToAirHeatPump>;
 
   /** \relates ZoneHVACWaterToAirHeatPump*/
-  typedef std::vector<ZoneHVACWaterToAirHeatPump> ZoneHVACWaterToAirHeatPumpVector;
+  using ZoneHVACWaterToAirHeatPumpVector = std::vector<ZoneHVACWaterToAirHeatPump>;
 
 }  // namespace model
 }  // namespace openstudio

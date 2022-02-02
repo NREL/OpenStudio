@@ -116,7 +116,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl ImplType;
+    using ImplType = detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl;
 
     explicit AirLoopHVACDedicatedOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl> impl);
 
@@ -130,10 +130,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACDedicatedOutdoorAirSystem */
-  typedef boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> OptionalAirLoopHVACDedicatedOutdoorAirSystem;
+  using OptionalAirLoopHVACDedicatedOutdoorAirSystem = boost::optional<AirLoopHVACDedicatedOutdoorAirSystem>;
 
   /** \relates AirLoopHVACDedicatedOutdoorAirSystem */
-  typedef std::vector<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACDedicatedOutdoorAirSystemVector;
+  using AirLoopHVACDedicatedOutdoorAirSystemVector = std::vector<AirLoopHVACDedicatedOutdoorAirSystem>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -196,7 +196,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkSurface_Impl ImplType;
+    using ImplType = detail::AirflowNetworkSurface_Impl;
 
     explicit AirflowNetworkSurface(std::shared_ptr<detail::AirflowNetworkSurface_Impl> impl);
 
@@ -218,10 +218,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkSurface*/
-  typedef boost::optional<AirflowNetworkSurface> OptionalAirflowNetworkSurface;
+  using OptionalAirflowNetworkSurface = boost::optional<AirflowNetworkSurface>;
 
   /** \relates AirflowNetworkSurface*/
-  typedef std::vector<AirflowNetworkSurface> AirflowNetworkSurfaceVector;
+  using AirflowNetworkSurfaceVector = std::vector<AirflowNetworkSurface>;
 
 }  // namespace model
 }  // namespace openstudio

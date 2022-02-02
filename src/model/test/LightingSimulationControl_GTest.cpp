@@ -40,5 +40,5 @@ using namespace openstudio;
 
 TEST_F(ModelFixture, LightingSimulationControl_Construction) {
   Model model;
-  LightingSimulationControl lsc = model.getUniqueModelObject<LightingSimulationControl>();
+  auto lsc = model.getUniqueModelObject<LightingSimulationControl>();
 }

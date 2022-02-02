@@ -106,7 +106,7 @@ namespace model {
 
     friend class openstudio::IdfObject;
 
-    typedef detail::ThermostatSetpointDualSetpoint_Impl ImplType;
+    using ImplType = detail::ThermostatSetpointDualSetpoint_Impl;
 
     explicit ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
 
@@ -114,7 +114,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.ThermostatSetpointDualSetpoint");
   };
 
-  typedef boost::optional<ThermostatSetpointDualSetpoint> OptionalThermostatSetpointDualSetpoint;
+  using OptionalThermostatSetpointDualSetpoint = boost::optional<ThermostatSetpointDualSetpoint>;
 
 }  // namespace model
 }  // namespace openstudio

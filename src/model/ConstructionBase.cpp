@@ -167,19 +167,19 @@ namespace model {
       return result;
     }
 
-    bool ConstructionBase_Impl::setUFactor(double value) {
+    bool ConstructionBase_Impl::setUFactor(double /*value*/) {
       return false;
     }
 
-    bool ConstructionBase_Impl::setUFactor(double value, double filmResistance) {
+    bool ConstructionBase_Impl::setUFactor(double /*value*/, double /*filmResistance*/) {
       return false;
     }
 
-    bool ConstructionBase_Impl::setConductance(double value) {
+    bool ConstructionBase_Impl::setConductance(double /*value*/) {
       return false;
     }
 
-    bool ConstructionBase_Impl::setConductance(double value, double filmResistance) {
+    bool ConstructionBase_Impl::setConductance(double /*value*/, double /*filmResistance*/) {
       return false;
     }
 
@@ -191,7 +191,7 @@ namespace model {
       return boost::none;
     }
 
-    boost::optional<double> ConstructionBase_Impl::uFactor(double filmResistance) const {
+    boost::optional<double> ConstructionBase_Impl::uFactor(double /*filmResistance*/) const {
       return boost::none;
     }
 
@@ -199,7 +199,7 @@ namespace model {
       return boost::none;
     }
 
-    boost::optional<double> ConstructionBase_Impl::thermalConductance(double filmResistance) const {
+    boost::optional<double> ConstructionBase_Impl::thermalConductance(double /*filmResistance*/) const {
       return boost::none;
     }
 

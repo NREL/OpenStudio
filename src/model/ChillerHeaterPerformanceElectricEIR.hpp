@@ -239,7 +239,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerHeaterPerformanceElectricEIR_Impl ImplType;
+    using ImplType = detail::ChillerHeaterPerformanceElectricEIR_Impl;
 
     explicit ChillerHeaterPerformanceElectricEIR(std::shared_ptr<detail::ChillerHeaterPerformanceElectricEIR_Impl> impl);
 
@@ -253,10 +253,10 @@ namespace model {
   };
 
   /** \relates ChillerHeaterPerformanceElectricEIR*/
-  typedef boost::optional<ChillerHeaterPerformanceElectricEIR> OptionalChillerHeaterPerformanceElectricEIR;
+  using OptionalChillerHeaterPerformanceElectricEIR = boost::optional<ChillerHeaterPerformanceElectricEIR>;
 
   /** \relates ChillerHeaterPerformanceElectricEIR*/
-  typedef std::vector<ChillerHeaterPerformanceElectricEIR> ChillerHeaterPerformanceElectricEIRVector;
+  using ChillerHeaterPerformanceElectricEIRVector = std::vector<ChillerHeaterPerformanceElectricEIR>;
 
 }  // namespace model
 }  // namespace openstudio

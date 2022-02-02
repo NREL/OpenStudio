@@ -151,7 +151,7 @@ namespace model {
 
     ModelObject Surface_Impl::clone(Model model) const {
       ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
-      ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+      auto newParent = newParentAsModelObject.cast<ParentObject>();
 
       for (const ModelObject& child : children()) {
         ModelObject newChild = child.clone(model);
@@ -575,7 +575,7 @@ namespace model {
 
     SubSurfaceVector Surface_Impl::subSurfaces() const {
       SubSurfaceVector result;
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
       WorkspaceObjectVector idfSubSurfaces = object.getSources(IddObjectType(IddObjectType::OS_SubSurface));
       for (const WorkspaceObject& idfSubSurface : idfSubSurfaces) {
         OptionalSubSurface subSurface = this->model().getModelObject<SubSurface>(idfSubSurface.handle());
@@ -806,7 +806,7 @@ namespace model {
             continue;
           }
 
-          Surface otherSurface = wo.cast<Surface>();
+          auto otherSurface = wo.cast<Surface>();
           test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
           OS_ASSERT(test);
           otherSurface.assignDefaultBoundaryCondition();
@@ -825,7 +825,7 @@ namespace model {
               continue;
             }
 
-            Surface otherSurface = wo.cast<Surface>();
+            auto otherSurface = wo.cast<Surface>();
             test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
             OS_ASSERT(test);
             otherSurface.assignDefaultBoundaryCondition();
@@ -893,7 +893,7 @@ namespace model {
       // clean all other surfaces pointing to this
       for (const WorkspaceObject& wo : this->getSources(IddObjectType::OS_Surface)) {
 
-        Surface otherSurface = wo.cast<Surface>();
+        auto otherSurface = wo.cast<Surface>();
         test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
         OS_ASSERT(test);
         otherSurface.assignDefaultBoundaryCondition();
@@ -907,7 +907,7 @@ namespace model {
     }
 
     boost::optional<SurfaceControlMovableInsulation> Surface_Impl::surfaceControlMovableInsulation() const {
-      Surface thisSurface = getObject<Surface>();
+      auto thisSurface = getObject<Surface>();
       std::vector<SurfaceControlMovableInsulation> movableInsulations =
         thisSurface.getModelObjectSources<SurfaceControlMovableInsulation>(SurfaceControlMovableInsulation::iddObjectType());
       if (movableInsulations.empty()) {
@@ -1660,7 +1660,7 @@ namespace model {
 
       // add a new window
       Model model = this->model();
-      Surface thisSurface = this->getObject<Surface>();
+      auto thisSurface = this->getObject<Surface>();
       boost::optional<Space> space = this->space();
 
       boost::optional<SubSurface> viewWindow;
@@ -1940,7 +1940,7 @@ namespace model {
       std::reverse(insetFaceVertices.begin(), insetFaceVertices.end());
 
       Model model = this->model();
-      Surface surface = getObject<Surface>();
+      auto surface = getObject<Surface>();
       for (const std::vector<Point3d>& face : faces) {
         Point3dVector faceVertices = inverseTransformation * face;
 
@@ -2040,7 +2040,7 @@ namespace model {
 
     boost::optional<SurfacePropertyExposedFoundationPerimeter>
       Surface_Impl::createSurfacePropertyExposedFoundationPerimeter(const std::string& exposedPerimeterCalculationMethod, double exposedPerimeter) {
-      Surface thisSurface = getObject<Surface>();
+      auto thisSurface = getObject<Surface>();
       std::vector<SurfacePropertyExposedFoundationPerimeter> props =
         thisSurface.getModelObjectSources<SurfacePropertyExposedFoundationPerimeter>(SurfacePropertyExposedFoundationPerimeter::iddObjectType());
       if (!props.empty()) {

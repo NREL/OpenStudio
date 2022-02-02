@@ -71,7 +71,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationDefrostCycleParameters_Impl ImplType;
+    using ImplType = detail::RefrigerationDefrostCycleParameters_Impl;
 
     explicit RefrigerationDefrostCycleParameters(std::shared_ptr<detail::RefrigerationDefrostCycleParameters_Impl> impl);
 
@@ -85,10 +85,10 @@ namespace model {
   };
 
   /** \relates RefrigerationDefrostCycleParameters*/
-  typedef boost::optional<RefrigerationDefrostCycleParameters> OptionalRefrigerationDefrostCycleParameters;
+  using OptionalRefrigerationDefrostCycleParameters = boost::optional<RefrigerationDefrostCycleParameters>;
 
   /** \relates RefrigerationDefrostCycleParameters*/
-  typedef std::vector<RefrigerationDefrostCycleParameters> RefrigerationDefrostCycleParametersVector;
+  using RefrigerationDefrostCycleParametersVector = std::vector<RefrigerationDefrostCycleParameters>;
 
 }  // namespace model
 }  // namespace openstudio

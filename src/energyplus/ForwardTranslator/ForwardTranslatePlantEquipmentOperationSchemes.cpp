@@ -229,7 +229,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_ThermalStorage_ChilledWater_Stratified: {
-        ThermalStorageChilledWaterStratified ts = component.cast<ThermalStorageChilledWaterStratified>();
+        auto ts = component.cast<ThermalStorageChilledWaterStratified>();
         result = ts.useSideDesignFlowRate();
         break;
       }
@@ -401,7 +401,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_WaterHeater_Mixed: {
         // Need to handle the case where this is used purely as a storage tank
-        WaterHeaterMixed wh = component.cast<WaterHeaterMixed>();
+        auto wh = component.cast<WaterHeaterMixed>();
         if (boost::optional<double> _cap = wh.heaterMaximumCapacity()) {
           if (_cap.get() == 0.0) {
             // Capacity is zero: it's a storage tank!
@@ -440,7 +440,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_WaterHeater_Stratified: {
         // Need to handle the case where this is used purely as a storage tank
-        WaterHeaterStratified wh = component.cast<WaterHeaterStratified>();
+        auto wh = component.cast<WaterHeaterStratified>();
 
         if (wh.heater2Capacity() == 0.0) {
           if (boost::optional<double> _cap = wh.heater1Capacity()) {
@@ -534,7 +534,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid: {
         // "Smart" defaults instead of ComponentType::BOTH;
-        HeatExchangerFluidToFluid hx = component.cast<HeatExchangerFluidToFluid>();
+        auto hx = component.cast<HeatExchangerFluidToFluid>();
 
         std::string controlType = hx.controlType();
 
@@ -664,7 +664,7 @@ namespace energyplus {
     for (const auto& comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents())) {
       // Special case for CentralHeatPumpSystem. If plantLoop = central_hp.coolingLoop, we add it
       if (comp.iddObject().type().value() == openstudio::IddObjectType::OS_CentralHeatPumpSystem) {
-        CentralHeatPumpSystem central_hp = comp.cast<CentralHeatPumpSystem>();
+        auto central_hp = comp.cast<CentralHeatPumpSystem>();
         if (central_hp.coolingPlantLoop().is_initialized()) {
           if (plantLoop.handle() == central_hp.coolingPlantLoop()->handle()) {
             result.push_back(operationSchemeComponent(comp));
@@ -686,7 +686,7 @@ namespace energyplus {
     for (const auto& comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents())) {
       // Special case for CentralHeatPumpSystem. If plantLoop = central_hp.heatingPlantLoop, we add it
       if (comp.iddObject().type().value() == openstudio::IddObjectType::OS_CentralHeatPumpSystem) {
-        CentralHeatPumpSystem central_hp = comp.cast<CentralHeatPumpSystem>();
+        auto central_hp = comp.cast<CentralHeatPumpSystem>();
         if (central_hp.heatingPlantLoop().is_initialized()) {
           if (plantLoop.handle() == central_hp.heatingPlantLoop()->handle()) {
             result.push_back(operationSchemeComponent(comp));

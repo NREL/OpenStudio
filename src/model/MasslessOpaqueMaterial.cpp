@@ -128,11 +128,11 @@ namespace model {
       return MasslessOpaqueMaterial::iddObjectType();
     }
 
-    bool MasslessOpaqueMaterial_Impl::setThickness(double value) {
+    bool MasslessOpaqueMaterial_Impl::setThickness(double /*value*/) {
       return false;
     }
 
-    bool MasslessOpaqueMaterial_Impl::setThermalConductivity(double value) {
+    bool MasslessOpaqueMaterial_Impl::setThermalConductivity(double /*value*/) {
       return false;
     }
 
@@ -140,7 +140,7 @@ namespace model {
       return setThermalResistance(1.0 / value);
     }
 
-    bool MasslessOpaqueMaterial_Impl::setThermalResistivity(double value) {
+    bool MasslessOpaqueMaterial_Impl::setThermalResistivity(double /*value*/) {
       return false;
     }
 
@@ -274,7 +274,7 @@ namespace model {
   }
 
   IddObjectType MasslessOpaqueMaterial::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material_NoMass);
+    return {IddObjectType::OS_Material_NoMass};
   }
 
   std::vector<std::string> MasslessOpaqueMaterial::roughnessValues() {

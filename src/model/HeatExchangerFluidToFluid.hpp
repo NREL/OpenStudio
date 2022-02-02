@@ -191,7 +191,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeatExchangerFluidToFluid_Impl ImplType;
+    using ImplType = detail::HeatExchangerFluidToFluid_Impl;
 
     explicit HeatExchangerFluidToFluid(std::shared_ptr<detail::HeatExchangerFluidToFluid_Impl> impl);
 
@@ -205,10 +205,10 @@ namespace model {
   };
 
   /** \relates HeatExchangerFluidToFluid*/
-  typedef boost::optional<HeatExchangerFluidToFluid> OptionalHeatExchangerFluidToFluid;
+  using OptionalHeatExchangerFluidToFluid = boost::optional<HeatExchangerFluidToFluid>;
 
   /** \relates HeatExchangerFluidToFluid*/
-  typedef std::vector<HeatExchangerFluidToFluid> HeatExchangerFluidToFluidVector;
+  using HeatExchangerFluidToFluidVector = std::vector<HeatExchangerFluidToFluid>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -83,7 +83,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl ImplType;
+    using ImplType = detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl;
 
     explicit CoilSystemCoolingDXHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl> impl);
 
@@ -97,10 +97,10 @@ namespace model {
   };
 
   /** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
-  typedef boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> OptionalCoilSystemCoolingDXHeatExchangerAssisted;
+  using OptionalCoilSystemCoolingDXHeatExchangerAssisted = boost::optional<CoilSystemCoolingDXHeatExchangerAssisted>;
 
   /** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
-  typedef std::vector<CoilSystemCoolingDXHeatExchangerAssisted> CoilSystemCoolingDXHeatExchangerAssistedVector;
+  using CoilSystemCoolingDXHeatExchangerAssistedVector = std::vector<CoilSystemCoolingDXHeatExchangerAssisted>;
 
 }  // namespace model
 }  // namespace openstudio

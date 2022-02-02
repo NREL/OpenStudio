@@ -81,7 +81,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricLoadCenter_Inverter_SimpleFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ElectricLoadCenterInverterSimple", "Availability"));
       }
@@ -169,7 +170,7 @@ namespace model {
   }
 
   IddObjectType ElectricLoadCenterInverterSimple::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+    return {IddObjectType::OS_ElectricLoadCenter_Inverter_Simple};
   }
 
   boost::optional<Schedule> ElectricLoadCenterInverterSimple::availabilitySchedule() const {

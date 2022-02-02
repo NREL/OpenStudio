@@ -101,7 +101,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceActuator_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceActuator_Impl;
 
     explicit ExternalInterfaceActuator(std::shared_ptr<detail::ExternalInterfaceActuator_Impl> impl);
 
@@ -115,10 +115,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceActuator*/
-  typedef boost::optional<ExternalInterfaceActuator> OptionalExternalInterfaceActuator;
+  using OptionalExternalInterfaceActuator = boost::optional<ExternalInterfaceActuator>;
 
   /** \relates ExternalInterfaceActuator*/
-  typedef std::vector<ExternalInterfaceActuator> ExternalInterfaceActuatorVector;
+  using ExternalInterfaceActuatorVector = std::vector<ExternalInterfaceActuator>;
 
 }  // namespace model
 }  // namespace openstudio

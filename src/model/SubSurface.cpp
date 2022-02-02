@@ -534,13 +534,13 @@ namespace model {
     }
 
     std::vector<ShadingControl> SubSurface_Impl::shadingControls() const {
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
 
       std::vector<ShadingControl> shadingControls;
 
       for (const auto& object : getObject<ModelObject>().getModelObjectSources<ShadingControl>()) {
-        ModelObject modelObject = object.cast<ModelObject>();
-        ShadingControl shadingControl = modelObject.cast<ShadingControl>();
+        auto modelObject = object.cast<ModelObject>();
+        auto shadingControl = modelObject.cast<ShadingControl>();
         for (const SubSurface& subSurface : shadingControl.subSurfaces()) {
           if (subSurface.handle() == thisSubSurface.handle()) {
             shadingControls.push_back(shadingControl);
@@ -690,7 +690,7 @@ namespace model {
     bool SubSurface_Impl::addShadingControl(ShadingControl& shadingControl) {
       bool result = false;
       if (allowShadingControl()) {
-        SubSurface thisSubSurface = getObject<SubSurface>();
+        auto thisSubSurface = getObject<SubSurface>();
         result = shadingControl.addSubSurface(thisSubSurface);
       }
       return result;
@@ -698,7 +698,7 @@ namespace model {
 
     bool SubSurface_Impl::addShadingControls(std::vector<ShadingControl>& shadingControls) {
       bool ok = true;
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
       for (ShadingControl& shadingControl : shadingControls) {
         ok &= shadingControl.addSubSurface(thisSubSurface);
       }
@@ -706,12 +706,12 @@ namespace model {
     }
 
     void SubSurface_Impl::removeShadingControl(ShadingControl& shadingControl) {
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
       shadingControl.removeSubSurface(thisSubSurface);
     }
 
     void SubSurface_Impl::removeAllShadingControls() {
-      SubSurface thisSubSurface = getObject<SubSurface>();
+      auto thisSubSurface = getObject<SubSurface>();
       for (ShadingControl& shadingControl : shadingControls()) {
         shadingControl.removeSubSurface(thisSubSurface);
       }
@@ -1579,7 +1579,7 @@ namespace model {
   boost::optional<ShadingControl> SubSurface::shadingControl() const {
     boost::optional<ShadingControl> result;
     auto scs = shadingControls();
-    if (scs.size() >= 1) {
+    if (!scs.empty()) {
       if (scs.size() > 1) {
         LOG(Warn, briefDescription() << " has more than one ShadingControl and you're using a deprecated method. Use shadingControls() instead");
       }
@@ -1641,7 +1641,9 @@ namespace model {
     double divArea = 0;
     if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
       double dividerWidth = frameAndDivider->dividerWidth();
-      if (dividerWidth == 0) return divArea;
+      if (dividerWidth == 0) {
+        return divArea;
+      }
 
       Transformation faceTransform = Transformation::alignFace(this->vertices());
       std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();

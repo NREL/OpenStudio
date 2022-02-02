@@ -645,7 +645,7 @@ namespace model {
   }
 
   IddObjectType CoilPerformanceDXCooling::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoilPerformance_DX_Cooling);
+    return {IddObjectType::OS_CoilPerformance_DX_Cooling};
   }
 
   std::vector<std::string> CoilPerformanceDXCooling::condenserTypeValues() {

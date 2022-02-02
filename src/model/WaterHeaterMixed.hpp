@@ -367,7 +367,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::WaterHeaterMixed_Impl ImplType;
+    using ImplType = detail::WaterHeaterMixed_Impl;
 
     explicit WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl> impl);
 
@@ -383,10 +383,10 @@ namespace model {
   };
 
   /** \relates WaterHeaterMixed*/
-  typedef boost::optional<WaterHeaterMixed> OptionalWaterHeaterMixed;
+  using OptionalWaterHeaterMixed = boost::optional<WaterHeaterMixed>;
 
   /** \relates WaterHeaterMixed*/
-  typedef std::vector<WaterHeaterMixed> WaterHeaterMixedVector;
+  using WaterHeaterMixedVector = std::vector<WaterHeaterMixed>;
 
 }  // namespace model
 }  // namespace openstudio

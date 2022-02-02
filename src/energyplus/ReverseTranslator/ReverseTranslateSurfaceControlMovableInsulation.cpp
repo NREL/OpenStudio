@@ -100,7 +100,7 @@ namespace energyplus {
     if ((target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::ScheduleName))) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject && modelObject->optionalCast<Schedule>()) {
-        Schedule schedule = modelObject->cast<Schedule>();
+        auto schedule = modelObject->cast<Schedule>();
         surfaceControlMovableInsulation.setSchedule(schedule);
       }
     } else {

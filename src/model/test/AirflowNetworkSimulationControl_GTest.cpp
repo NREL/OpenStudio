@@ -40,7 +40,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, AirflowNetwork_SimulationControl) {
   Model model;
 
-  AirflowNetworkSimulationControl simcon = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+  auto simcon = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
   EXPECT_TRUE(simcon.isAirflowNetworkControlDefaulted());
   EXPECT_TRUE(simcon.isWindPressureCoefficientTypeDefaulted());
   EXPECT_TRUE(simcon.isHeightSelectionforLocalWindPressureCalculationDefaulted());

@@ -119,7 +119,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MeterCustomDecrement_Impl ImplType;
+    using ImplType = detail::MeterCustomDecrement_Impl;
 
     explicit MeterCustomDecrement(std::shared_ptr<detail::MeterCustomDecrement_Impl> impl);
 
@@ -135,10 +135,10 @@ namespace model {
   };
 
   /** \relates MeterCustomDecrement*/
-  typedef boost::optional<MeterCustomDecrement> OptionalMeterCustomDecrement;
+  using OptionalMeterCustomDecrement = boost::optional<MeterCustomDecrement>;
 
   /** \relates MeterCustomDecrement*/
-  typedef std::vector<MeterCustomDecrement> MeterCustomDecrementVector;
+  using MeterCustomDecrementVector = std::vector<MeterCustomDecrement>;
 
 }  // namespace model
 }  // namespace openstudio

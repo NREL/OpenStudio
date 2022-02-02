@@ -112,7 +112,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::RenderingColor_Impl ImplType;
+    using ImplType = detail::RenderingColor_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -125,10 +125,10 @@ namespace model {
   };
 
   /** \relates RenderingColor*/
-  typedef boost::optional<RenderingColor> OptionalRenderingColor;
+  using OptionalRenderingColor = boost::optional<RenderingColor>;
 
   /** \relates RenderingColor*/
-  typedef std::vector<RenderingColor> RenderingColorVector;
+  using RenderingColorVector = std::vector<RenderingColor>;
 
 }  // namespace model
 }  // namespace openstudio

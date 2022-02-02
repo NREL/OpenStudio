@@ -99,7 +99,7 @@ namespace model {
     }
 
     boost::optional<ParentObject> Site_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     std::vector<ModelObject> Site_Impl::children() const {
@@ -163,7 +163,7 @@ namespace model {
 
       // some SkyTemperatures are children (those that do not explicitly point to something else)
       SkyTemperatureVector skyTemperatures = model().getConcreteModelObjects<SkyTemperature>();
-      ParentObject siteAsParent = getObject<ParentObject>();
+      auto siteAsParent = getObject<ParentObject>();
       for (const SkyTemperature& st : skyTemperatures) {
         OptionalParentObject opo = st.parent();
         if (opo && (opo.get() == siteAsParent)) {

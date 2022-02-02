@@ -62,7 +62,7 @@ class EnergyPlusFixture : public ::testing::Test
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  typedef std::pair<openstudio::path, std::string> ComponentDirectoryAndType;
+  using ComponentDirectoryAndType = std::pair<openstudio::path, std::string>;
   static std::vector<ComponentDirectoryAndType> idfComponents;
 };
 

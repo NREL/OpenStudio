@@ -59,9 +59,9 @@ TEST_F(ISOModelFixture, DISABLED_ForwardTranslator) {
   double gas = 0;
   double elec = 0;
 
-  for (std::vector<EndUseFuelType>::const_iterator itr = fuelTypes.begin(); itr != fuelTypes.end(); ++itr) {
+  for (auto itr = fuelTypes.begin(); itr != fuelTypes.end(); ++itr) {
     double value = 0;
-    for (std::vector<EndUses>::const_iterator itr2 = results.monthlyResults.begin(); itr2 != results.monthlyResults.end(); ++itr2) {
+    for (auto itr2 = results.monthlyResults.begin(); itr2 != results.monthlyResults.end(); ++itr2) {
       value += itr2->getEndUseByFuelType(*itr);
     }
 

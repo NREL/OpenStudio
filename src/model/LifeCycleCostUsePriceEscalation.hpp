@@ -93,7 +93,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::LifeCycleCostUsePriceEscalation_Impl ImplType;
+    using ImplType = detail::LifeCycleCostUsePriceEscalation_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -108,10 +108,10 @@ namespace model {
   };
 
   /** \relates LifeCycleCostUsePriceEscalation */
-  typedef boost::optional<LifeCycleCostUsePriceEscalation> OptionalLifeCycleCostUsePriceEscalation;
+  using OptionalLifeCycleCostUsePriceEscalation = boost::optional<LifeCycleCostUsePriceEscalation>;
 
   /** \relates LifeCycleCostUsePriceEscalation */
-  typedef std::vector<LifeCycleCostUsePriceEscalation> LifeCycleCostUsePriceEscalationVector;
+  using LifeCycleCostUsePriceEscalationVector = std::vector<LifeCycleCostUsePriceEscalation>;
 
 }  // namespace model
 }  // namespace openstudio

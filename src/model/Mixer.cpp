@@ -60,7 +60,7 @@ namespace model {
 
     boost::optional<ModelObject> Mixer_Impl::lastInletModelObject() const {
       std::vector<ModelObject> objects = inletModelObjects();
-      if (objects.size() > 0) {
+      if (!objects.empty()) {
         return OptionalModelObject(objects.back());
       } else {
         return {};

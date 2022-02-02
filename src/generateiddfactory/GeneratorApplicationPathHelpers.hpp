@@ -35,7 +35,7 @@
 
 namespace openstudio {
 
-typedef openstudio::filesystem::path path;
+using path = openstudio::filesystem::path;
 
 /** If possible, creates an openstudio::path to a system directory from outdir, otherwise throws
  *  a std::runtime_error. For use by auto-generation applications that are writing files for

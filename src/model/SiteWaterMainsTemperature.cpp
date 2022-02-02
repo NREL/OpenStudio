@@ -85,7 +85,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SiteWaterMainsTemperature_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Site_WaterMainsTemperatureFields::TemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SiteWaterMainsTemperature", "Temperature"));
       }

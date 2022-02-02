@@ -1407,7 +1407,7 @@ namespace model {
       // make the new space
       Model model = this->model();
       Space newSpace(model);
-      ThermalZone thermalZone = this->getObject<ThermalZone>();
+      auto thermalZone = this->getObject<ThermalZone>();
       newSpace.setThermalZone(thermalZone);
       newSpace.setXOrigin(xOrigin);
       newSpace.setYOrigin(yOrigin);
@@ -1646,7 +1646,7 @@ namespace model {
     }
 
     void ThermalZone_Impl::disconnect() {
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
       Model _model = this->model();
 
       auto pl = inletPortList();
@@ -1681,7 +1681,7 @@ namespace model {
         }
 
         if (boost::optional<AirLoopHVAC> airLoop = this->airLoopHVAC()) {
-          ThermalZone thisObject = this->getObject<ThermalZone>();
+          auto thisObject = this->getObject<ThermalZone>();
 
           result &= airLoop->removeBranchForZone(thisObject);
         }
@@ -1865,7 +1865,7 @@ namespace model {
     bool ThermalZone_Impl::addToNodeImpl(Node& node) {
       Model _model = model();
 
-      ThermalZone thisObject = getObject<ThermalZone>();
+      auto thisObject = getObject<ThermalZone>();
 
       if (node.model() != _model) {
         return false;

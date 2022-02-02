@@ -161,7 +161,7 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 
   // Verify that '90.1.2013' exists in the list of all possible templates (from JSON)
-  std::vector<std::string>::const_iterator it = std::find(suggestedStandardsTemplates.begin(), suggestedStandardsTemplates.end(), "90.1-2013");
+  auto it = std::find(suggestedStandardsTemplates.begin(), suggestedStandardsTemplates.end(), "90.1-2013");
   EXPECT_NE(suggestedStandardsTemplates.end(), it);
 
   // Pick a Template in the list of existing
@@ -191,8 +191,7 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 
   // Verify that 'SecondarySchool' exists in the list of all possible building types (from JSON)
-  std::vector<std::string>::const_iterator it2 =
-    std::find(suggestedStandardsBuildingTypes.begin(), suggestedStandardsBuildingTypes.end(), "SecondarySchool");
+  auto it2 = std::find(suggestedStandardsBuildingTypes.begin(), suggestedStandardsBuildingTypes.end(), "SecondarySchool");
   EXPECT_NE(suggestedStandardsBuildingTypes.end(), it2);
 
   EXPECT_TRUE(spaceType.setStandardsBuildingType("SecondarySchool"));
@@ -313,12 +312,12 @@ TEST_F(ModelFixture, SpaceType_Name_Clone) {
   SpaceType st1(m);
   EXPECT_TRUE(st1.setName("My Space Type"));
 
-  SpaceType st2 = st1.clone(m).cast<SpaceType>();
+  auto st2 = st1.clone(m).cast<SpaceType>();
   EXPECT_NE(st1.handle(), st2.handle());
   EXPECT_NE(st1.nameString(), st2.nameString());
 
   Model m2;
-  SpaceType st3 = st1.clone(m2).cast<SpaceType>();
+  auto st3 = st1.clone(m2).cast<SpaceType>();
   EXPECT_NE(st1.handle(), st3.handle());
   EXPECT_EQ(st1.nameString(), st3.nameString());
 }
@@ -331,13 +330,13 @@ TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
   SpaceType m1_st = m.plenumSpaceType();
 
   // Does clone
-  SpaceType m1_stClone = m1_st.clone(m).cast<SpaceType>();
+  auto m1_stClone = m1_st.clone(m).cast<SpaceType>();
   ASSERT_NE(m1_st.handle(), m1_stClone.handle());
   ASSERT_NE(m1_st.nameString(), m1_stClone.nameString()) << m;
 
   // Try in another model with no plenum space type, the clone should become the new plenum space type
   Model m2;
-  SpaceType m2_stClone = m1_st.clone(m2).cast<SpaceType>();
+  auto m2_stClone = m1_st.clone(m2).cast<SpaceType>();
   ASSERT_NE(m1_st.handle(), m2_stClone.handle());
   ASSERT_EQ(m1_st.nameString(), m2_stClone.nameString());
   ASSERT_EQ(m2.plenumSpaceType().handle(), m2_stClone.handle());
@@ -345,7 +344,7 @@ TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
   // Try in another model with a plenum space type, the clone should not become the new plenum space type
   Model m3;
   m3.plenumSpaceType();
-  SpaceType m3_stClone = m1_st.clone(m3).cast<SpaceType>();
+  auto m3_stClone = m1_st.clone(m3).cast<SpaceType>();
   ASSERT_NE(m1_st.handle(), m3_stClone.handle());
   ASSERT_NE(m1_st.nameString(), m3_stClone.nameString());
   ASSERT_NE(m3.plenumSpaceType().handle(), m3_stClone.handle());

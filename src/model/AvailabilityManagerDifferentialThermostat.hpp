@@ -94,7 +94,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerDifferentialThermostat_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerDifferentialThermostat_Impl;
 
     explicit AvailabilityManagerDifferentialThermostat(std::shared_ptr<detail::AvailabilityManagerDifferentialThermostat_Impl> impl);
 
@@ -108,10 +108,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerDifferentialThermostat*/
-  typedef boost::optional<AvailabilityManagerDifferentialThermostat> OptionalAvailabilityManagerDifferentialThermostat;
+  using OptionalAvailabilityManagerDifferentialThermostat = boost::optional<AvailabilityManagerDifferentialThermostat>;
 
   /** \relates AvailabilityManagerDifferentialThermostat*/
-  typedef std::vector<AvailabilityManagerDifferentialThermostat> AvailabilityManagerDifferentialThermostatVector;
+  using AvailabilityManagerDifferentialThermostatVector = std::vector<AvailabilityManagerDifferentialThermostat>;
 
 }  // namespace model
 }  // namespace openstudio

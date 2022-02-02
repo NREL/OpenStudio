@@ -55,7 +55,7 @@ namespace model {
    protected:
     Thermostat(IddObjectType type, const Model& model);
 
-    typedef detail::Thermostat_Impl ImplType;
+    using ImplType = detail::Thermostat_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -66,7 +66,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.Thermostat");
   };
 
-  typedef boost::optional<Thermostat> OptionalThermostat;
+  using OptionalThermostat = boost::optional<Thermostat>;
 
 }  // namespace model
 }  // namespace openstudio

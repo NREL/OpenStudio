@@ -65,7 +65,7 @@ void polygonMatches(std::vector<std::vector<Point3d>> expectedPolygons, std::vec
 
 // Try to find index of last vertex after opposite edge is found.
 // Index is calculated relatively from given starting vertex.
-int findSplitIndex(std::shared_ptr<Vertex> vertex, std::vector<std::shared_ptr<Vertex>>& lav, std::shared_ptr<Edge> oppositeEdge) {
+int findSplitIndex(std::shared_ptr<Vertex> /*vertex*/, std::vector<std::shared_ptr<Vertex>>& lav, std::shared_ptr<Edge> oppositeEdge) {
   for (unsigned i = 0; i < lav.size(); i++) {
     std::shared_ptr<Vertex> currentVertex = lav[i];
     if (oppositeEdge == currentVertex->previousEdge || oppositeEdge == Vertex::previous(currentVertex, lav)->nextEdge) {

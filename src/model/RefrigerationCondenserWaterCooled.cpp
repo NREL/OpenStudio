@@ -104,7 +104,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationCondenserWaterCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationCondenserWaterCooled", "Water Outlet Temperature"));
       }
@@ -399,7 +400,7 @@ namespace model {
       std::vector<RefrigerationSystem> systems =
         getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
 
-      if (systems.size() > 0u) {
+      if (!systems.empty()) {
         if (systems.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
         }
@@ -443,7 +444,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCondenserWaterCooled::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled);
+    return {IddObjectType::OS_Refrigeration_Condenser_WaterCooled};
   }
 
   std::vector<std::string> RefrigerationCondenserWaterCooled::waterCooledLoopFlowTypeValues() {

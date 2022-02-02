@@ -114,7 +114,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirLoopHVACUnitarySystem", "Availability"));
       }
@@ -229,10 +230,14 @@ namespace model {
         boost::optional<HVACComponent> systemStartComponent;
         boost::optional<HVACComponent> systemEndComponent;
 
-        if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+        if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+          return false;
+        }
 
         if (t_airLoop && !t_oaSystem) {
-          if (t_airLoop->demandComponent(node.handle())) return false;
+          if (t_airLoop->demandComponent(node.handle())) {
+            return false;
+          }
 
           systemStartComponent = t_airLoop->supplyInletNode();
           auto nodes = t_airLoop->supplyOutletNodes();
@@ -1361,7 +1366,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVACUnitarySystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC_UnitarySystem);
+    return {IddObjectType::OS_AirLoopHVAC_UnitarySystem};
   }
 
   std::vector<std::string> AirLoopHVACUnitarySystem::controlTypeValues() {

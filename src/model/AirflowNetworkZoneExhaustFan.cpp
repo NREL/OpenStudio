@@ -107,7 +107,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkZoneExhaustFan::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkZoneExhaustFan);
+    return {IddObjectType::OS_AirflowNetworkZoneExhaustFan};
   }
 
   boost::optional<FanZoneExhaust> AirflowNetworkZoneExhaustFan::fanZoneExhaust() const {

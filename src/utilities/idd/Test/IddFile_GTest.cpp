@@ -156,7 +156,9 @@ TEST_F(IddFixture, OSIddFile) {
   EXPECT_EQ(osIddFile.objects().size(), loadedIddFile->objects().size());
   if (osIddFile.objects().size() != loadedIddFile->objects().size()) {
     // get sets of IddObjectType
-    IddObjectTypeSet osIddObjectTypes, loadedIddObjectTypes, diff;
+    IddObjectTypeSet osIddObjectTypes;
+    IddObjectTypeSet loadedIddObjectTypes;
+    IddObjectTypeSet diff;
     for (const IddObject& iddObject : osIddFile.objects()) {
       EXPECT_TRUE(iddObject.type() != IddObjectType::UserCustom);
       osIddObjectTypes.insert(iddObject.type());
@@ -274,7 +276,7 @@ void IddFile_BuildingSurfaceDetailed(const IddFile& iddFile) {
   OptionalIddObject object = iddFile.getObject(objectName);
   ASSERT_TRUE(object);
   EXPECT_TRUE(iequals(object->name(), objectName));
-  ASSERT_TRUE(object->nonextensibleFields().size() > 0);
+  ASSERT_TRUE(!object->nonextensibleFields().empty());
   EXPECT_EQ(object->nonextensibleFields().size(), static_cast<unsigned int>(11));
   EXPECT_FALSE(object->properties().format.empty());
   EXPECT_TRUE(iequals("vertices", object->properties().format));
@@ -286,7 +288,7 @@ void IddFile_BuildingSurfaceDetailed(const IddFile& iddFile) {
   EXPECT_FALSE(object->getField("Vertex 1 X-coordinate"));
   EXPECT_FALSE(object->getField("Vertex 1 X-coordinate"));
 
-  ASSERT_TRUE(object->extensibleGroup().size() > 0);
+  ASSERT_TRUE(!object->extensibleGroup().empty());
   string fieldName("Vertex X-coordinate");
   EXPECT_TRUE(iequals(fieldName, object->extensibleGroup().front().name()));
   OptionalIddField field = object->getField(fieldName);
@@ -314,10 +316,10 @@ void testIddFile(const IddFile& iddFile) {
 TEST_F(IddFixture, IddFile_EpAllReferencesHaveNames) {
   for (const IddObject& object : epIddFile.objects()) {
     if (!object.references().empty()) {
-      if (object.nonextensibleFields().size() == 0) {
+      if (object.nonextensibleFields().empty()) {
         LOG(Debug, "IddObject " << object.name() << " has references, but no fields.");
       }
-      if (object.nonextensibleFields().size() > 0) {
+      if (!object.nonextensibleFields().empty()) {
         // ETH@20100319 Would be nice if \references conformed to this convention, but not getting
         // fixed in EnergyPlus 5.0. Removing failed tests, but retaining log messages.
         // EXPECT_EQ("Name", object.fields().front().name());
@@ -357,11 +359,11 @@ TEST_F(IddFixture, IddFile_EpMinFields) {
 
 TEST_F(IddFixture, IddFile_EpGroups) {
   StringVector groups = epIddFile.groups();
-  EXPECT_TRUE(groups.size() > 0);
+  EXPECT_TRUE(!groups.empty());
   EXPECT_EQ("", groups[0]);
   std::stringstream ss;
   // uniqueness
-  for (StringVector::const_iterator it = groups.begin(), itEnd = groups.end(); it != itEnd; ++it) {
+  for (auto it = groups.begin(), itEnd = groups.end(); it != itEnd; ++it) {
     auto loc = std::find_if(it + 1, itEnd, std::bind(istringEqual, *it, std::placeholders::_1));
     EXPECT_TRUE(loc == itEnd);
     if (loc != itEnd) {

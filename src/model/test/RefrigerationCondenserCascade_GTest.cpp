@@ -171,7 +171,7 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithDefaultData)
 
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
-  RefrigerationCondenserCascade refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
+  auto refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
 
   EXPECT_NE(refrigerationCondenserCascadeClone.handle(), refrigerationCondenserCascade.handle());
 
@@ -190,7 +190,7 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithCustomData) 
   refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(21000.0);
   refrigerationCondenserCascade.setCondensingTemperatureControlType("Float");
 
-  RefrigerationCondenserCascade refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
+  auto refrigerationCondenserCascadeClone = refrigerationCondenserCascade.clone(m).cast<RefrigerationCondenserCascade>();
 
   EXPECT_NE(refrigerationCondenserCascadeClone.handle(), refrigerationCondenserCascade.handle());
 

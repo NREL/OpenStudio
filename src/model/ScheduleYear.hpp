@@ -96,7 +96,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleYear_Impl ImplType;
+    using ImplType = detail::ScheduleYear_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -110,10 +110,10 @@ namespace model {
   };
 
   /** \relates ScheduleYear*/
-  typedef boost::optional<ScheduleYear> OptionalScheduleYear;
+  using OptionalScheduleYear = boost::optional<ScheduleYear>;
 
   /** \relates ScheduleYear*/
-  typedef std::vector<ScheduleYear> ScheduleYearVector;
+  using ScheduleYearVector = std::vector<ScheduleYear>;
 
 }  // namespace model
 }  // namespace openstudio

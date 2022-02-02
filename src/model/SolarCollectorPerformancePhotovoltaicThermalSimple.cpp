@@ -76,7 +76,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SolarCollectorPerformancePhotovoltaicThermalSimple_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SolarCollectorPerformance_PhotovoltaicThermal_SimpleFields::ThermalConversionEfficiencyScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency"));
       }
@@ -191,7 +192,7 @@ namespace model {
   }
 
   IddObjectType SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple);
+    return {IddObjectType::OS_SolarCollectorPerformance_PhotovoltaicThermal_Simple};
   }
 
   std::vector<std::string> SolarCollectorPerformancePhotovoltaicThermalSimple::thermalConversionEfficiencyInputModeTypeValues() {

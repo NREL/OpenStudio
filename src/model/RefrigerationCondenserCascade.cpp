@@ -214,7 +214,7 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationCondenserCascade_Impl::system() const {
       boost::optional<RefrigerationSystem> result;
 
-      RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
+      auto refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
       for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationCondenserCascadeVector refrigerationCondenserCascades = refrigerationSystem.cascadeCondenserLoads();
         if (!refrigerationCondenserCascades.empty()
@@ -230,7 +230,7 @@ namespace model {
 
     void RefrigerationCondenserCascade_Impl::removeFromSystem() {
       if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
-        RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
+        auto refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
         refrigerationSystem->removeCascadeCondenserLoad(refrigerationCondenserCascade);
       }
     }
@@ -238,7 +238,7 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationCondenserCascade_Impl::heatRejectingSystem() const {
       boost::optional<RefrigerationSystem> result;
 
-      RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
+      auto refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
       for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         if (auto cond = refrigerationSystem.refrigerationCondenser()) {
           if (cond.get() == refrigerationCondenserCascade) {
@@ -285,7 +285,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCondenserCascade::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_Cascade);
+    return {IddObjectType::OS_Refrigeration_Condenser_Cascade};
   }
 
   std::vector<std::string> RefrigerationCondenserCascade::condensingTemperatureControlTypeValues() {

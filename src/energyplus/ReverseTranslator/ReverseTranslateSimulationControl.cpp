@@ -42,7 +42,7 @@ namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateSimulationControl(const WorkspaceObject& workspaceObject) {
     OptionalModelObject result;
-    openstudio::model::SimulationControl simCon = m_model.getUniqueModelObject<model::SimulationControl>();
+    auto simCon = m_model.getUniqueModelObject<model::SimulationControl>();
     OptionalString optS = workspaceObject.name();
     if (optS) {
       simCon.setName(*optS);

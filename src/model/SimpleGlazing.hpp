@@ -86,7 +86,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SimpleGlazing_Impl ImplType;
+    using ImplType = detail::SimpleGlazing_Impl;
 
     explicit SimpleGlazing(std::shared_ptr<detail::SimpleGlazing_Impl> impl);
 
@@ -100,10 +100,10 @@ namespace model {
   };
 
   /** \relates SimpleGlazing*/
-  typedef boost::optional<SimpleGlazing> OptionalSimpleGlazing;
+  using OptionalSimpleGlazing = boost::optional<SimpleGlazing>;
 
   /** \relates SimpleGlazing*/
-  typedef std::vector<SimpleGlazing> SimpleGlazingVector;
+  using SimpleGlazingVector = std::vector<SimpleGlazing>;
 
 }  // namespace model
 }  // namespace openstudio

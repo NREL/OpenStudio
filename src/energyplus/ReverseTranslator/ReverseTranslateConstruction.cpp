@@ -62,7 +62,7 @@ namespace energyplus {
 
     // E+ 9.5.0: Check if the construction is referenced by a ConstructionProperty:InternalHeatSource
     std::vector<WorkspaceObject> constructionProps = workspaceObject.getSources(IddObjectType::ConstructionProperty_InternalHeatSource);
-    if (constructionProps.size() > 0) {
+    if (!constructionProps.empty()) {
       LOG(Info, "Construction '" << workspaceObject.nameString() << "' will be translated to a ConstructionWithInternalSource'");
       if (constructionProps.size() > 1) {
         LOG(Warn, "Construction '" << workspaceObject.nameString() << "' is referenced by more than one ConstructionProperty:InternalHeatSource."

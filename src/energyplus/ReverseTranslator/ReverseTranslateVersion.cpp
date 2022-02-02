@@ -40,7 +40,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  OptionalModelObject ReverseTranslator::translateVersion(const WorkspaceObject& workspaceObject) {
+  OptionalModelObject ReverseTranslator::translateVersion(const WorkspaceObject& /*workspaceObject*/) {
     return boost::none;
     //openstudio::model::Version version( m_model );
 

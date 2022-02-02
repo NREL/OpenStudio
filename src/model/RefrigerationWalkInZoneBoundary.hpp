@@ -163,7 +163,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationWalkInZoneBoundary_Impl ImplType;
+    using ImplType = detail::RefrigerationWalkInZoneBoundary_Impl;
 
     explicit RefrigerationWalkInZoneBoundary(std::shared_ptr<detail::RefrigerationWalkInZoneBoundary_Impl> impl);
 
@@ -177,10 +177,10 @@ namespace model {
   };
 
   /** \relates RefrigerationWalkInZoneBoundary*/
-  typedef boost::optional<RefrigerationWalkInZoneBoundary> OptionalRefrigerationWalkInZoneBoundary;
+  using OptionalRefrigerationWalkInZoneBoundary = boost::optional<RefrigerationWalkInZoneBoundary>;
 
   /** \relates RefrigerationWalkInZoneBoundary*/
-  typedef std::vector<RefrigerationWalkInZoneBoundary> RefrigerationWalkInZoneBoundaryVector;
+  using RefrigerationWalkInZoneBoundaryVector = std::vector<RefrigerationWalkInZoneBoundary>;
 
 }  // namespace model
 }  // namespace openstudio

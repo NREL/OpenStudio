@@ -216,7 +216,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl ImplType;
+    using ImplType = detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl;
 
     explicit AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(std::shared_ptr<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl> impl);
 
@@ -230,10 +230,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass*/
-  typedef boost::optional<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> OptionalAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass;
+  using OptionalAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass = boost::optional<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>;
 
   /** \relates AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass*/
-  typedef std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypassVector;
+  using AirLoopHVACUnitaryHeatCoolVAVChangeoverBypassVector = std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>;
 
 }  // namespace model
 }  // namespace openstudio

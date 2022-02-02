@@ -257,7 +257,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationSystem_Impl ImplType;
+    using ImplType = detail::RefrigerationSystem_Impl;
 
     explicit RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl);
 
@@ -271,10 +271,10 @@ namespace model {
   };
 
   /** \relates RefrigerationSystem*/
-  typedef boost::optional<RefrigerationSystem> OptionalRefrigerationSystem;
+  using OptionalRefrigerationSystem = boost::optional<RefrigerationSystem>;
 
   /** \relates RefrigerationSystem*/
-  typedef std::vector<RefrigerationSystem> RefrigerationSystemVector;
+  using RefrigerationSystemVector = std::vector<RefrigerationSystem>;
 
 }  // namespace model
 }  // namespace openstudio

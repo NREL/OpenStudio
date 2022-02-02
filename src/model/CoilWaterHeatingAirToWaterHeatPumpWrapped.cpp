@@ -420,7 +420,7 @@ namespace model {
   }
 
   IddObjectType CoilWaterHeatingAirToWaterHeatPumpWrapped::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped);
+    return {IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped};
   }
 
   std::vector<std::string> CoilWaterHeatingAirToWaterHeatPumpWrapped::evaporatorAirTemperatureTypeforCurveObjectsValues() {

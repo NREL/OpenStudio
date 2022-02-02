@@ -109,7 +109,7 @@ class UTILITIES_API CFMUnit : public Unit
   //@}
  protected:
   /// @cond
-  typedef detail::CFMUnit_Impl ImplType;
+  using ImplType = detail::CFMUnit_Impl;
 
   explicit CFMUnit(std::shared_ptr<detail::CFMUnit_Impl> impl);
 
@@ -122,10 +122,10 @@ class UTILITIES_API CFMUnit : public Unit
 };
 
 /** \relates CFMUnit*/
-typedef boost::optional<CFMUnit> OptionalCFMUnit;
+using OptionalCFMUnit = boost::optional<CFMUnit>;
 
 /** \relates CFMUnit*/
-typedef std::vector<CFMUnit> CFMUnitVector;
+using CFMUnitVector = std::vector<CFMUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

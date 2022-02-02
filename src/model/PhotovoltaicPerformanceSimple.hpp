@@ -96,7 +96,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PhotovoltaicPerformanceSimple_Impl ImplType;
+    using ImplType = detail::PhotovoltaicPerformanceSimple_Impl;
 
     explicit PhotovoltaicPerformanceSimple(std::shared_ptr<detail::PhotovoltaicPerformanceSimple_Impl> impl);
 
@@ -110,10 +110,10 @@ namespace model {
   };
 
   /** \relates PhotovoltaicPerformanceSimple*/
-  typedef boost::optional<PhotovoltaicPerformanceSimple> OptionalPhotovoltaicPerformanceSimple;
+  using OptionalPhotovoltaicPerformanceSimple = boost::optional<PhotovoltaicPerformanceSimple>;
 
   /** \relates PhotovoltaicPerformanceSimple*/
-  typedef std::vector<PhotovoltaicPerformanceSimple> PhotovoltaicPerformanceSimpleVector;
+  using PhotovoltaicPerformanceSimpleVector = std::vector<PhotovoltaicPerformanceSimple>;
 
 }  // namespace model
 }  // namespace openstudio

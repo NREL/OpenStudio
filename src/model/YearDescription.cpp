@@ -258,7 +258,7 @@ namespace model {
         year = this->assumedYear();
       }
 
-      return openstudio::Date(monthOfYear, dayOfMonth, *year);
+      return {monthOfYear, dayOfMonth, *year};
     }
 
     openstudio::Date YearDescription_Impl::makeDate(unsigned monthOfYear, unsigned dayOfMonth) {

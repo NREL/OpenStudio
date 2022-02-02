@@ -108,7 +108,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationCompressorRack_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationCompressorRack", "Water Cooled Condenser Outlet Temperature"));
       }
@@ -132,7 +133,7 @@ namespace model {
       auto modelObjectClone = StraightComponent_Impl::clone(model).cast<RefrigerationCompressorRack>();
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationCompressorRack_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
       }
 
@@ -716,7 +717,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCompressorRack::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_CompressorRack);
+    return {IddObjectType::OS_Refrigeration_CompressorRack};
   }
 
   std::vector<std::string> RefrigerationCompressorRack::condenserTypeValues() {

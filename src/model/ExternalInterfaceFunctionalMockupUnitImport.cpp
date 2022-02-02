@@ -140,7 +140,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceFunctionalMockupUnitImport::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport);
+    return {IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport};
   }
 
   double ExternalInterfaceFunctionalMockupUnitImport::fMUTimeout() const {

@@ -90,7 +90,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerMultiZoneCoolingAverage_Impl ImplType;
+    using ImplType = detail::SetpointManagerMultiZoneCoolingAverage_Impl;
 
     explicit SetpointManagerMultiZoneCoolingAverage(std::shared_ptr<detail::SetpointManagerMultiZoneCoolingAverage_Impl> impl);
 
@@ -104,10 +104,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerMultiZoneCoolingAverage*/
-  typedef boost::optional<SetpointManagerMultiZoneCoolingAverage> OptionalSetpointManagerMultiZoneCoolingAverage;
+  using OptionalSetpointManagerMultiZoneCoolingAverage = boost::optional<SetpointManagerMultiZoneCoolingAverage>;
 
   /** \relates SetpointManagerMultiZoneCoolingAverage*/
-  typedef std::vector<SetpointManagerMultiZoneCoolingAverage> SetpointManagerMultiZoneCoolingAverageVector;
+  using SetpointManagerMultiZoneCoolingAverageVector = std::vector<SetpointManagerMultiZoneCoolingAverage>;
 
 }  // namespace model
 }  // namespace openstudio

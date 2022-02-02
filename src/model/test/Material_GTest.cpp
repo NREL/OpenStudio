@@ -119,7 +119,7 @@ TEST_F(ModelFixture, Material) {
     ASSERT_EQ(static_cast<unsigned>(1), materialInformations.size());
   }
 
-  StandardOpaqueMaterial exteriorClone = exterior.clone().cast<StandardOpaqueMaterial>();
+  auto exteriorClone = exterior.clone().cast<StandardOpaqueMaterial>();
 
   materials = model.getModelObjects<Material>();
   ASSERT_EQ(static_cast<unsigned>(2), materials.size());

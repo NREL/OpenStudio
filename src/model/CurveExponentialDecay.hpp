@@ -125,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveExponentialDecay_Impl ImplType;
+    using ImplType = detail::CurveExponentialDecay_Impl;
 
     explicit CurveExponentialDecay(std::shared_ptr<detail::CurveExponentialDecay_Impl> impl);
 
@@ -140,10 +140,10 @@ namespace model {
   };
 
   /** \relates CurveExponentialDecay*/
-  typedef boost::optional<CurveExponentialDecay> OptionalCurveExponentialDecay;
+  using OptionalCurveExponentialDecay = boost::optional<CurveExponentialDecay>;
 
   /** \relates CurveExponentialDecay*/
-  typedef std::vector<CurveExponentialDecay> CurveExponentialDecayVector;
+  using CurveExponentialDecayVector = std::vector<CurveExponentialDecay>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -127,7 +127,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerMultiZoneHumidityMaximum::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_MultiZone_Humidity_Maximum);
+    return {IddObjectType::OS_SetpointManager_MultiZone_Humidity_Maximum};
   }
 
   std::vector<std::string> SetpointManagerMultiZoneHumidityMaximum::controlVariableValues() {

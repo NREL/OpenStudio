@@ -84,7 +84,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeNoReheat_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  AirTerminalSingleDuctConstantVolumeNoReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
   // 7 initially, plus a branch with ATU inlet Node, ATU, ATU outlet node

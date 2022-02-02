@@ -121,7 +121,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellElectricalStorage_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellElectricalStorage_Impl;
 
     explicit GeneratorFuelCellElectricalStorage(std::shared_ptr<detail::GeneratorFuelCellElectricalStorage_Impl> impl);
 
@@ -135,10 +135,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellElectricalStorage*/
-  typedef boost::optional<GeneratorFuelCellElectricalStorage> OptionalGeneratorFuelCellElectricalStorage;
+  using OptionalGeneratorFuelCellElectricalStorage = boost::optional<GeneratorFuelCellElectricalStorage>;
 
   /** \relates GeneratorFuelCellElectricalStorage*/
-  typedef std::vector<GeneratorFuelCellElectricalStorage> GeneratorFuelCellElectricalStorageVector;
+  using GeneratorFuelCellElectricalStorageVector = std::vector<GeneratorFuelCellElectricalStorage>;
 
 }  // namespace model
 }  // namespace openstudio

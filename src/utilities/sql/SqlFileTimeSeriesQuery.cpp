@@ -69,7 +69,7 @@ boost::optional<boost::regex> TimeSeriesIdentifier::regex() const {
 KeyValueIdentifier::KeyValueIdentifier(const std::string& name) : m_names(1, name) {}
 
 KeyValueIdentifier::KeyValueIdentifier(const std::vector<std::string>& names) : m_names(names) {
-  if (m_names.size() == 0) {
+  if (m_names.empty()) {
     LOG_AND_THROW("KeyValueIdentifier cannot be constructed from an empty string vector. "
                   << "Please use an OptionalKeyValueIdentifier instead.");
   }
@@ -226,7 +226,7 @@ StringSet environmentPeriods(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
   for (const SqlFileTimeSeriesQuery& q : queries) {
     if (!q.vetted()) {
-      return StringSet();
+      return {};
     }
     OS_ASSERT(q.environment().get().name());
     result.insert(*(q.environment().get().name()));
@@ -238,7 +238,7 @@ ReportingFrequencySet reportingFrequencies(const SqlFileTimeSeriesQueryVector& q
   ReportingFrequencySet result;
   for (const SqlFileTimeSeriesQuery& q : queries) {
     if (!q.vetted()) {
-      return ReportingFrequencySet();
+      return {};
     }
     OS_ASSERT(q.reportingFrequency());
     result.insert(*(q.reportingFrequency()));
@@ -250,7 +250,7 @@ StringSet timeSeriesNames(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
   for (const SqlFileTimeSeriesQuery& q : queries) {
     if (!q.vetted()) {
-      return StringSet();
+      return {};
     }
     OS_ASSERT(q.timeSeries().get().name());
     result.insert(*(q.timeSeries().get().name()));

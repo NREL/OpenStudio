@@ -331,7 +331,7 @@ namespace energyplus {
     WorkspaceObjectVector objects = m_workspace.getObjectsByType(IddObjectType::Building);
     if (objects.size() != 1) {
       LOG(Warn, "Could not find Building object, assuming 0 rotation");
-      return Transformation();
+      return {};
     }
     WorkspaceObject building = objects[0];
 

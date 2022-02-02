@@ -225,7 +225,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCompressorRack_Impl ImplType;
+    using ImplType = detail::RefrigerationCompressorRack_Impl;
 
     explicit RefrigerationCompressorRack(std::shared_ptr<detail::RefrigerationCompressorRack_Impl> impl);
 
@@ -239,10 +239,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCompressorRack*/
-  typedef boost::optional<RefrigerationCompressorRack> OptionalRefrigerationCompressorRack;
+  using OptionalRefrigerationCompressorRack = boost::optional<RefrigerationCompressorRack>;
 
   /** \relates RefrigerationCompressorRack*/
-  typedef std::vector<RefrigerationCompressorRack> RefrigerationCompressorRackVector;
+  using RefrigerationCompressorRackVector = std::vector<RefrigerationCompressorRack>;
 
 }  // namespace model
 }  // namespace openstudio

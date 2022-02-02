@@ -115,7 +115,7 @@ namespace model {
     friend class detail::SetpointManagerScheduled_Impl;
 
     /// @cond
-    typedef detail::SetpointManagerScheduled_Impl ImplType;
+    using ImplType = detail::SetpointManagerScheduled_Impl;
 
     explicit SetpointManagerScheduled(std::shared_ptr<detail::SetpointManagerScheduled_Impl> impl);
 

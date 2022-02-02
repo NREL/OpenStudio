@@ -160,7 +160,7 @@ namespace model {
     : SetpointManager(std::move(p)) {}
 
   IddObjectType SetpointManagerFollowOutdoorAirTemperature::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature);
+    return {IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature};
   }
 
   boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature::setpointNode() const {

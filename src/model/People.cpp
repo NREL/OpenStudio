@@ -116,7 +116,8 @@ namespace model {
     std::vector<ScheduleTypeKey> People_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_PeopleFields::NumberofPeopleScheduleName) != e) {
         result.push_back(ScheduleTypeKey("People", "Number of People"));
       }

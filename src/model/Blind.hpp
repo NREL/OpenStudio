@@ -268,7 +268,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Blind_Impl ImplType;
+    using ImplType = detail::Blind_Impl;
 
     explicit Blind(std::shared_ptr<detail::Blind_Impl> impl);
 
@@ -282,10 +282,10 @@ namespace model {
   };
 
   /** \relates Blind*/
-  typedef boost::optional<Blind> OptionalBlind;
+  using OptionalBlind = boost::optional<Blind>;
 
   /** \relates Blind*/
-  typedef std::vector<Blind> BlindVector;
+  using BlindVector = std::vector<Blind>;
 
 }  // namespace model
 }  // namespace openstudio

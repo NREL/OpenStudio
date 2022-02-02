@@ -41,7 +41,7 @@ using std::string;
 TEST_F(ModelFixture, ExternalInterface) {
   Model model;
 
-  ExternalInterface externalinterface = model.getUniqueModelObject<ExternalInterface>();
+  auto externalinterface = model.getUniqueModelObject<ExternalInterface>();
   EXPECT_EQ("PtolemyServer", externalinterface.nameofExternalInterface());
   EXPECT_FALSE(externalinterface.setNameofExternalInterface("bad value"));
   EXPECT_TRUE(externalinterface.setNameofExternalInterface("FunctionalMockupUnitImport"));

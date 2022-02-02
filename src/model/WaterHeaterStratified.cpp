@@ -162,7 +162,8 @@ namespace model {
     std::vector<ScheduleTypeKey> WaterHeaterStratified_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_WaterHeater_StratifiedFields::Heater1SetpointTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("WaterHeaterStratified", "Heater 1 Setpoint Temperature"));
       }
@@ -1278,7 +1279,7 @@ namespace model {
   }
 
   IddObjectType WaterHeaterStratified::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WaterHeater_Stratified);
+    return {IddObjectType::OS_WaterHeater_Stratified};
   }
 
   std::vector<std::string> WaterHeaterStratified::tankShapeValues() {

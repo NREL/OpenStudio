@@ -70,7 +70,7 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> ScheduleCompact_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -105,7 +105,7 @@ namespace model {
               break;
             default: {
               try {
-                double value = boost::lexical_cast<double>(str);
+                auto value = boost::lexical_cast<double>(str);
                 result.push_back(value);
               } catch (...) {
               }

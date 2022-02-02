@@ -398,7 +398,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Merging) {
   // start with an empty model
   Model currentModel;
   Site site = currentModel.getUniqueModelObject<Site>();
-  Facility facility = currentModel.getUniqueModelObject<Facility>();
+  auto facility = currentModel.getUniqueModelObject<Facility>();
   Building building = currentModel.getUniqueModelObject<Building>();
 
   // translate the floorplan to a new model

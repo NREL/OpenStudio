@@ -98,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::MaterialPropertyGlazingSpectralData_Impl ImplType;
+    using ImplType = detail::MaterialPropertyGlazingSpectralData_Impl;
 
     explicit MaterialPropertyGlazingSpectralData(std::shared_ptr<detail::MaterialPropertyGlazingSpectralData_Impl> impl);
 
@@ -112,10 +112,10 @@ namespace model {
   };
 
   /** \relates MaterialPropertyGlazingSpectralData*/
-  typedef boost::optional<MaterialPropertyGlazingSpectralData> OptionalMaterialPropertyGlazingSpectralData;
+  using OptionalMaterialPropertyGlazingSpectralData = boost::optional<MaterialPropertyGlazingSpectralData>;
 
   /** \relates MaterialPropertyGlazingSpectralData*/
-  typedef std::vector<MaterialPropertyGlazingSpectralData> MaterialPropertyGlazingSpectralDataVector;
+  using MaterialPropertyGlazingSpectralDataVector = std::vector<MaterialPropertyGlazingSpectralData>;
 
 }  // namespace model
 }  // namespace openstudio

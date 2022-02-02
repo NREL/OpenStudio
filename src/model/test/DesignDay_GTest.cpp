@@ -323,11 +323,11 @@ TEST_F(ModelFixture, DesignDay_Clone) {
 
   designDay.setSnowIndicator(true);
 
-  DesignDay designDayClone = designDay.clone(m).cast<DesignDay>();
+  auto designDayClone = designDay.clone(m).cast<DesignDay>();
   EXPECT_TRUE(designDayClone.snowIndicator());
 
   Model m2;
-  DesignDay designDayClone2 = designDay.clone(m2).cast<DesignDay>();
+  auto designDayClone2 = designDay.clone(m2).cast<DesignDay>();
   EXPECT_TRUE(designDay.snowIndicator());
 }
 

@@ -169,7 +169,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefractionExtinctionGlazing_Impl ImplType;
+    using ImplType = detail::RefractionExtinctionGlazing_Impl;
 
     explicit RefractionExtinctionGlazing(std::shared_ptr<detail::RefractionExtinctionGlazing_Impl> impl);
 
@@ -183,10 +183,10 @@ namespace model {
   };
 
   /** \relates RefractionExtinctionGlazing*/
-  typedef boost::optional<RefractionExtinctionGlazing> OptionalRefractionExtinctionGlazing;
+  using OptionalRefractionExtinctionGlazing = boost::optional<RefractionExtinctionGlazing>;
 
   /** \relates RefractionExtinctionGlazing*/
-  typedef std::vector<RefractionExtinctionGlazing> RefractionExtinctionGlazingVector;
+  using RefractionExtinctionGlazingVector = std::vector<RefractionExtinctionGlazing>;
 
 }  // namespace model
 }  // namespace openstudio

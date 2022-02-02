@@ -171,7 +171,8 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotRefPts) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
   // reference points
-  boost::optional<std::string> refPt1, refPt2;
+  boost::optional<std::string> refPt1;
+  boost::optional<std::string> refPt2;
   refPt1 = sqlFile.illuminanceMapRefPt(mapName, 1);
   EXPECT_EQ(::std::string("RefPt1=(-4.57:-2.29:0.76)"), *refPt1);
   refPt2 = sqlFile.illuminanceMapRefPt(mapName, 2);

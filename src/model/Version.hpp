@@ -71,7 +71,7 @@ namespace model {
     // constructor
     explicit Version(const Model& model);
 
-    typedef detail::Version_Impl ImplType;
+    using ImplType = detail::Version_Impl;
 
     friend class detail::Model_Impl;
     friend class openstudio::IdfObject;
@@ -85,7 +85,7 @@ namespace model {
   };
 
   /** \relates Version */
-  typedef boost::optional<Version> OptionalVersion;
+  using OptionalVersion = boost::optional<Version>;
 
 }  // namespace model
 }  // namespace openstudio

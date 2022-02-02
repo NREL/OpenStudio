@@ -117,7 +117,7 @@ class UTILITIES_API ImfFile
 
  private:
   // store all idf objects in a map by section
-  typedef std::map<std::string, IdfObjectVector> SectionMapType;
+  using SectionMapType = std::map<std::string, IdfObjectVector>;
   SectionMapType m_sectionMap;
   IddFileAndFactoryWrapper m_iddFileAndFactoryWrapper;
 
@@ -128,10 +128,10 @@ class UTILITIES_API ImfFile
 };
 
 /// optional imf file
-typedef boost::optional<ImfFile> OptionalImfFile;
+using OptionalImfFile = boost::optional<ImfFile>;
 
 /// vector of imf file
-typedef std::vector<ImfFile> ImfFileVector;
+using ImfFileVector = std::vector<ImfFile>;
 
 // ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const ImfFile& imfFile);

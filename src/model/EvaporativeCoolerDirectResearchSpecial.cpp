@@ -87,7 +87,8 @@ namespace model {
     std::vector<ScheduleTypeKey> EvaporativeCoolerDirectResearchSpecial_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_EvaporativeCooler_Direct_ResearchSpecialFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("EvaporativeCoolerDirectResearchSpecial", "Availability"));
       }
@@ -208,7 +209,7 @@ namespace model {
       if (wo) {
         return wo->optionalCast<Node>();
       } else {
-        return boost::optional<Node>();
+        return {};
       }
     }
 

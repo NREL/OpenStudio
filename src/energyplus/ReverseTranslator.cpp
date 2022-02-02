@@ -147,7 +147,7 @@ namespace energyplus {
     // check input
     if (workspace.iddFileType() != IddFileType::EnergyPlus) {
       LOG(Error, "Cannot translate Workspace with IddFileType = '" << workspace.iddFileType().valueName() << "'");
-      return Model();
+      return {};
     }
 
     m_model = Model();

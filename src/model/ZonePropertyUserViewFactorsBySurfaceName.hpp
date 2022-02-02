@@ -151,7 +151,7 @@ class InternalMass; */
     //@}
    protected:
     /// @cond
-    typedef detail::ZonePropertyUserViewFactorsBySurfaceName_Impl ImplType;
+    using ImplType = detail::ZonePropertyUserViewFactorsBySurfaceName_Impl;
 
     explicit ZonePropertyUserViewFactorsBySurfaceName(std::shared_ptr<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl> impl);
 
@@ -165,10 +165,10 @@ class InternalMass; */
   };
 
   /** \relates ZonePropertyUserViewFactorsBySurfaceName*/
-  typedef boost::optional<ZonePropertyUserViewFactorsBySurfaceName> OptionalZonePropertyUserViewFactorsBySurfaceName;
+  using OptionalZonePropertyUserViewFactorsBySurfaceName = boost::optional<ZonePropertyUserViewFactorsBySurfaceName>;
 
   /** \relates ZonePropertyUserViewFactorsBySurfaceName*/
-  typedef std::vector<ZonePropertyUserViewFactorsBySurfaceName> ZonePropertyUserViewFactorsBySurfaceNameVector;
+  using ZonePropertyUserViewFactorsBySurfaceNameVector = std::vector<ZonePropertyUserViewFactorsBySurfaceName>;
 
 }  // namespace model
 }  // namespace openstudio

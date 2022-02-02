@@ -195,7 +195,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirPretreat_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerOutdoorAirPretreat testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirPretreat>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirPretreat>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -226,7 +226,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirPretreat_customDataClone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerOutdoorAirPretreat testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirPretreat>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerOutdoorAirPretreat>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

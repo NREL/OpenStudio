@@ -136,7 +136,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterStorageConverter_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterStorageConverter_Impl;
 
     explicit ElectricLoadCenterStorageConverter(std::shared_ptr<detail::ElectricLoadCenterStorageConverter_Impl> impl);
 
@@ -150,10 +150,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterStorageConverter */
-  typedef boost::optional<ElectricLoadCenterStorageConverter> OptionalElectricLoadCenterStorageConverter;
+  using OptionalElectricLoadCenterStorageConverter = boost::optional<ElectricLoadCenterStorageConverter>;
 
   /** \relates ElectricLoadCenterStorageConverter */
-  typedef std::vector<ElectricLoadCenterStorageConverter> ElectricLoadCenterStorageConverterVector;
+  using ElectricLoadCenterStorageConverterVector = std::vector<ElectricLoadCenterStorageConverter>;
 
 }  // namespace model
 }  // namespace openstudio

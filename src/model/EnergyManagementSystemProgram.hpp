@@ -87,7 +87,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemProgram_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemProgram_Impl;
 
     explicit EnergyManagementSystemProgram(std::shared_ptr<detail::EnergyManagementSystemProgram_Impl> impl);
 
@@ -101,10 +101,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemProgram*/
-  typedef boost::optional<EnergyManagementSystemProgram> OptionalEnergyManagementSystemProgram;
+  using OptionalEnergyManagementSystemProgram = boost::optional<EnergyManagementSystemProgram>;
 
   /** \relates EnergyManagementSystemProgram*/
-  typedef std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramVector;
+  using EnergyManagementSystemProgramVector = std::vector<EnergyManagementSystemProgram>;
 
 }  // namespace model
 }  // namespace openstudio

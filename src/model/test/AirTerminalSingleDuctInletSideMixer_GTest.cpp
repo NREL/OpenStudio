@@ -80,7 +80,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  AirTerminalSingleDuctInletSideMixer testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctInletSideMixer>();
+  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctInletSideMixer>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));

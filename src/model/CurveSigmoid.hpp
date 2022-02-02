@@ -133,7 +133,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveSigmoid_Impl ImplType;
+    using ImplType = detail::CurveSigmoid_Impl;
 
     explicit CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl);
 
@@ -148,10 +148,10 @@ namespace model {
   };
 
   /** \relates CurveSigmoid*/
-  typedef boost::optional<CurveSigmoid> OptionalCurveSigmoid;
+  using OptionalCurveSigmoid = boost::optional<CurveSigmoid>;
 
   /** \relates CurveSigmoid*/
-  typedef std::vector<CurveSigmoid> CurveSigmoidVector;
+  using CurveSigmoidVector = std::vector<CurveSigmoid>;
 
 }  // namespace model
 }  // namespace openstudio

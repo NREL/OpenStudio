@@ -100,7 +100,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SolarCollectorFlatPlateWater_Impl ImplType;
+    using ImplType = detail::SolarCollectorFlatPlateWater_Impl;
 
     explicit SolarCollectorFlatPlateWater(std::shared_ptr<detail::SolarCollectorFlatPlateWater_Impl> impl);
 
@@ -114,10 +114,10 @@ namespace model {
   };
 
   /** \relates SolarCollectorFlatPlateWater*/
-  typedef boost::optional<SolarCollectorFlatPlateWater> OptionalSolarCollectorFlatPlateWater;
+  using OptionalSolarCollectorFlatPlateWater = boost::optional<SolarCollectorFlatPlateWater>;
 
   /** \relates SolarCollectorFlatPlateWater*/
-  typedef std::vector<SolarCollectorFlatPlateWater> SolarCollectorFlatPlateWaterVector;
+  using SolarCollectorFlatPlateWaterVector = std::vector<SolarCollectorFlatPlateWater>;
 
 }  // namespace model
 }  // namespace openstudio

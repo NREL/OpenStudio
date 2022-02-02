@@ -141,7 +141,7 @@ namespace model {
       return ZonePropertyUserViewFactorsBySurfaceName::iddObjectType();
     }
 
-    ModelObject ZonePropertyUserViewFactorsBySurfaceName_Impl::clone(Model model) const {
+    ModelObject ZonePropertyUserViewFactorsBySurfaceName_Impl::clone(Model /*model*/) const {
       LOG_AND_THROW("Cloning isn't allowed for ZonePropertyUserViewFactorsBySurfaceName in order to guarantee that every "
                     "ZonePropertyUserViewFactorsBySurfaceName has a thermal zone, and"
                     "that a thermal zone must have only one ZonePropertyUserViewFactorsBySurfaceName.");
@@ -190,7 +190,7 @@ namespace model {
         return result;
       }
 
-      ModelExtensibleGroup group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
+      auto group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
 
       boost::optional<ModelObject> _toSurface =
         group.getModelObjectTarget<ModelObject>(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
@@ -417,7 +417,7 @@ namespace model {
   }
 
   IddObjectType ZonePropertyUserViewFactorsBySurfaceName::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName);
+    return {IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName};
   }
 
   ThermalZone ZonePropertyUserViewFactorsBySurfaceName::thermalZone() const {

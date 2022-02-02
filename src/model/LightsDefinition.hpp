@@ -147,7 +147,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::LightsDefinition_Impl ImplType;
+    using ImplType = detail::LightsDefinition_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -160,10 +160,10 @@ namespace model {
   };
 
   /** \relates LightsDefinition*/
-  typedef boost::optional<LightsDefinition> OptionalLightsDefinition;
+  using OptionalLightsDefinition = boost::optional<LightsDefinition>;
 
   /** \relates LightsDefinition*/
-  typedef std::vector<LightsDefinition> LightsDefinitionVector;
+  using LightsDefinitionVector = std::vector<LightsDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

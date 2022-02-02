@@ -102,7 +102,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::ComponentCostAdjustments_Impl ImplType;
+    using ImplType = detail::ComponentCostAdjustments_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -120,10 +120,10 @@ namespace model {
   };
 
   /** \relates ComponentCostAdjustments */
-  typedef boost::optional<ComponentCostAdjustments> OptionalComponentCostAdjustments;
+  using OptionalComponentCostAdjustments = boost::optional<ComponentCostAdjustments>;
 
   /** \relates ComponentCostAdjustments */
-  typedef std::vector<ComponentCostAdjustments> ComponentCostAdjustmentsVector;
+  using ComponentCostAdjustmentsVector = std::vector<ComponentCostAdjustments>;
 
 }  // namespace model
 }  // namespace openstudio

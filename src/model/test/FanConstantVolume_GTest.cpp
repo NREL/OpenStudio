@@ -97,7 +97,7 @@ TEST_F(ModelFixture, FanConstantVolume_addToNode) {
     EXPECT_EQ((unsigned)3, outdoorAirSystem.reliefComponents().size());
   }
 
-  FanConstantVolume testObjectClone = testObject.clone(m).cast<FanConstantVolume>();
+  auto testObjectClone = testObject.clone(m).cast<FanConstantVolume>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

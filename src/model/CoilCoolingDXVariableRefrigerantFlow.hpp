@@ -101,7 +101,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXVariableRefrigerantFlow_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXVariableRefrigerantFlow_Impl;
 
     explicit CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl);
 
@@ -116,10 +116,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXVariableRefrigerantFlow*/
-  typedef boost::optional<CoilCoolingDXVariableRefrigerantFlow> OptionalCoilCoolingDXVariableRefrigerantFlow;
+  using OptionalCoilCoolingDXVariableRefrigerantFlow = boost::optional<CoilCoolingDXVariableRefrigerantFlow>;
 
   /** \relates CoilCoolingDXVariableRefrigerantFlow*/
-  typedef std::vector<CoilCoolingDXVariableRefrigerantFlow> CoilCoolingDXVariableRefrigerantFlowVector;
+  using CoilCoolingDXVariableRefrigerantFlowVector = std::vector<CoilCoolingDXVariableRefrigerantFlow>;
 
 }  // namespace model
 }  // namespace openstudio

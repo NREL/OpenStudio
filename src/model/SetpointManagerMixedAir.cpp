@@ -266,7 +266,7 @@ namespace model {
       }
     }
 
-    if (fans.size() > 0) {
+    if (!fans.empty()) {
       boost::optional<ModelObject> mo;
 
       mo = fans.front().inletModelObject();

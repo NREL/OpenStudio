@@ -225,7 +225,7 @@ namespace model {
     friend class openstudio::detail::IdfObject_Impl;
 
     /// @cond
-    typedef detail::CoilCoolingWater_Impl ImplType;
+    using ImplType = detail::CoilCoolingWater_Impl;
 
     explicit CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> impl);
 
@@ -238,7 +238,7 @@ namespace model {
 
   };  // detail
 
-  typedef boost::optional<CoilCoolingWater> OptionalCoilCoolingWater;
+  using OptionalCoilCoolingWater = boost::optional<CoilCoolingWater>;
 
 }  // namespace model
 }  // namespace openstudio

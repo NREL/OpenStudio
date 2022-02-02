@@ -275,7 +275,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermalStorageChilledWaterStratified_Impl ImplType;
+    using ImplType = detail::ThermalStorageChilledWaterStratified_Impl;
 
     explicit ThermalStorageChilledWaterStratified(std::shared_ptr<detail::ThermalStorageChilledWaterStratified_Impl> impl);
 
@@ -289,10 +289,10 @@ namespace model {
   };
 
   /** \relates ThermalStorageChilledWaterStratified*/
-  typedef boost::optional<ThermalStorageChilledWaterStratified> OptionalThermalStorageChilledWaterStratified;
+  using OptionalThermalStorageChilledWaterStratified = boost::optional<ThermalStorageChilledWaterStratified>;
 
   /** \relates ThermalStorageChilledWaterStratified*/
-  typedef std::vector<ThermalStorageChilledWaterStratified> ThermalStorageChilledWaterStratifiedVector;
+  using ThermalStorageChilledWaterStratifiedVector = std::vector<ThermalStorageChilledWaterStratified>;
 
 }  // namespace model
 }  // namespace openstudio

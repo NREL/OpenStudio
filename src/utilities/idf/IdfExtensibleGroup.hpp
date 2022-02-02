@@ -211,7 +211,7 @@ class UTILITIES_API IdfExtensibleGroup
   //@}
  protected:
   ///@cond
-  typedef detail::IdfObject_Impl ImplType;
+  using ImplType = detail::IdfObject_Impl;
 
   friend class detail::IdfObject_Impl;
 
@@ -247,7 +247,7 @@ class UTILITIES_API IdfExtensibleGroup
 };
 
 /** \relates IdfExtensibleGroup */
-typedef std::vector<IdfExtensibleGroup> IdfExtensibleGroupVector;
+using IdfExtensibleGroupVector = std::vector<IdfExtensibleGroup>;
 
 }  // namespace openstudio
 

@@ -172,7 +172,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SpaceInfiltrationDesignFlowRate_Impl ImplType;
+    using ImplType = detail::SpaceInfiltrationDesignFlowRate_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -185,10 +185,10 @@ namespace model {
   };
 
   /** \relates SpaceInfiltrationDesignFlowRate*/
-  typedef boost::optional<SpaceInfiltrationDesignFlowRate> OptionalSpaceInfiltrationDesignFlowRate;
+  using OptionalSpaceInfiltrationDesignFlowRate = boost::optional<SpaceInfiltrationDesignFlowRate>;
 
   /** \relates SpaceInfiltrationDesignFlowRate*/
-  typedef std::vector<SpaceInfiltrationDesignFlowRate> SpaceInfiltrationDesignFlowRateVector;
+  using SpaceInfiltrationDesignFlowRateVector = std::vector<SpaceInfiltrationDesignFlowRate>;
 
 }  // namespace model
 }  // namespace openstudio

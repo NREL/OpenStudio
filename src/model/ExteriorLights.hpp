@@ -123,7 +123,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorLights_Impl ImplType;
+    using ImplType = detail::ExteriorLights_Impl;
 
     explicit ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl);
 
@@ -137,10 +137,10 @@ namespace model {
   };
 
   /** \relates ExteriorLights*/
-  typedef boost::optional<ExteriorLights> OptionalExteriorLights;
+  using OptionalExteriorLights = boost::optional<ExteriorLights>;
 
   /** \relates ExteriorLights*/
-  typedef std::vector<ExteriorLights> ExteriorLightsVector;
+  using ExteriorLightsVector = std::vector<ExteriorLights>;
 
 }  // namespace model
 }  // namespace openstudio

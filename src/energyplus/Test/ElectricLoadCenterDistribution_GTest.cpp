@@ -118,7 +118,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterDistribution_NoInv
   EXPECT_EQ(generators.nameString(), distribution.getString(ElectricLoadCenter_DistributionFields::GeneratorListName, false).get());
 
   ASSERT_EQ(1u, generators.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg = generators.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg = generators.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   EXPECT_EQ(generator.nameString(), w_eg.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName, false).get());
 }
 

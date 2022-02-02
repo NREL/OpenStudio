@@ -77,7 +77,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputEnvironmentalImpactFactors_Impl ImplType;
+    using ImplType = detail::OutputEnvironmentalImpactFactors_Impl;
 
     explicit OutputEnvironmentalImpactFactors(std::shared_ptr<detail::OutputEnvironmentalImpactFactors_Impl> impl);
 
@@ -91,10 +91,10 @@ namespace model {
   };
 
   /** \relates OutputEnvironmentalImpactFactors*/
-  typedef boost::optional<OutputEnvironmentalImpactFactors> OptionalOutputEnvironmentalImpactFactors;
+  using OptionalOutputEnvironmentalImpactFactors = boost::optional<OutputEnvironmentalImpactFactors>;
 
   /** \relates OutputEnvironmentalImpactFactors*/
-  typedef std::vector<OutputEnvironmentalImpactFactors> OutputEnvironmentalImpactFactorsVector;
+  using OutputEnvironmentalImpactFactorsVector = std::vector<OutputEnvironmentalImpactFactors>;
 
 }  // namespace model
 }  // namespace openstudio

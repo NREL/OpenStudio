@@ -95,7 +95,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SpaceInfiltrationEffectiveLeakageArea_Impl ImplType;
+    using ImplType = detail::SpaceInfiltrationEffectiveLeakageArea_Impl;
 
     explicit SpaceInfiltrationEffectiveLeakageArea(std::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl);
 
@@ -108,10 +108,10 @@ namespace model {
   };
 
   /** \relates SpaceInfiltrationEffectiveLeakageArea*/
-  typedef boost::optional<SpaceInfiltrationEffectiveLeakageArea> OptionalSpaceInfiltrationEffectiveLeakageArea;
+  using OptionalSpaceInfiltrationEffectiveLeakageArea = boost::optional<SpaceInfiltrationEffectiveLeakageArea>;
 
   /** \relates SpaceInfiltrationEffectiveLeakageArea*/
-  typedef std::vector<SpaceInfiltrationEffectiveLeakageArea> SpaceInfiltrationEffectiveLeakageAreaVector;
+  using SpaceInfiltrationEffectiveLeakageAreaVector = std::vector<SpaceInfiltrationEffectiveLeakageArea>;
 
 }  // namespace model
 }  // namespace openstudio

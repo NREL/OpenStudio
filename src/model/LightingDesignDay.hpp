@@ -105,7 +105,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::LightingDesignDay_Impl ImplType;
+    using ImplType = detail::LightingDesignDay_Impl;
 
     friend class detail::LightingDesignDay_Impl;
     friend class Model;
@@ -119,10 +119,10 @@ namespace model {
   };
 
   /** \relates LightingDesignDay*/
-  typedef boost::optional<LightingDesignDay> OptionalLightingDesignDay;
+  using OptionalLightingDesignDay = boost::optional<LightingDesignDay>;
 
   /** \relates LightingDesignDay*/
-  typedef std::vector<LightingDesignDay> LightingDesignDayVector;
+  using LightingDesignDayVector = std::vector<LightingDesignDay>;
 
 }  // namespace model
 }  // namespace openstudio

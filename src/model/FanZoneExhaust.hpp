@@ -133,7 +133,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanZoneExhaust_Impl ImplType;
+    using ImplType = detail::FanZoneExhaust_Impl;
 
     explicit FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl);
 
@@ -147,10 +147,10 @@ namespace model {
   };
 
   /** \relates FanZoneExhaust*/
-  typedef boost::optional<FanZoneExhaust> OptionalFanZoneExhaust;
+  using OptionalFanZoneExhaust = boost::optional<FanZoneExhaust>;
 
   /** \relates FanZoneExhaust*/
-  typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
+  using FanZoneExhaustVector = std::vector<FanZoneExhaust>;
 
 }  // namespace model
 }  // namespace openstudio

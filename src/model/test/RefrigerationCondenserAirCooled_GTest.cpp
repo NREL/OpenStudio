@@ -71,7 +71,7 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithDefaultDat
   Model model;
   RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
 
-  RefrigerationCondenserAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();
 
   std::vector<CurveLinear> refrigerationCondenserCurves = model.getModelObjects<CurveLinear>();
   for (auto it = refrigerationCondenserCurves.begin(); it != refrigerationCondenserCurves.end(); ++it) {
@@ -105,7 +105,7 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneOneModelWithCustomData
 
   testObject.setRatedEffectiveTotalHeatRejectionRateCurve(heatRejectionCurve);
 
-  RefrigerationCondenserAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedSubcoolingTemperatureDifference());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedFanPower());
   EXPECT_EQ("TwoSpeed", testObjectClone.condenserFanSpeedControlType());
@@ -120,14 +120,14 @@ TEST_F(ModelFixture, RefrigerationCondenserAirCooled_CloneTwoModelsWithDefaultDa
   Model model;
   RefrigerationCondenserAirCooled testObject = RefrigerationCondenserAirCooled(model);
 
-  RefrigerationCondenserAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationCondenserAirCooled>();
 
   Model model2;
 
   std::vector<CurveLinear> refrigerationCondenserCurves2 = model2.getModelObjects<CurveLinear>();
   EXPECT_EQ(0, refrigerationCondenserCurves2.size());
 
-  RefrigerationCondenserAirCooled testObjectClone2 = testObject.clone(model2).cast<RefrigerationCondenserAirCooled>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationCondenserAirCooled>();
 
   std::vector<CurveLinear> refrigerationCondenserCurves = model.getModelObjects<CurveLinear>();
   EXPECT_EQ(1, refrigerationCondenserCurves.size());

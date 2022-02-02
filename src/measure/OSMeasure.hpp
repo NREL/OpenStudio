@@ -89,10 +89,10 @@ namespace measure {
   };
 
   /** \relates OSMeasure */
-  typedef boost::optional<OSMeasure> OptionalOSMeasure;
+  using OptionalOSMeasure = boost::optional<OSMeasure>;
 
   /** \relates OSMeasure */
-  typedef std::vector<OSMeasure> OSMeasureVector;
+  using OSMeasureVector = std::vector<OSMeasure>;
 
 }  // namespace measure
 }  // namespace openstudio

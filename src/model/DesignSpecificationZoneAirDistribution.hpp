@@ -87,7 +87,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DesignSpecificationZoneAirDistribution_Impl ImplType;
+    using ImplType = detail::DesignSpecificationZoneAirDistribution_Impl;
 
     explicit DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
 
@@ -101,10 +101,10 @@ namespace model {
   };
 
   /** \relates DesignSpecificationZoneAirDistribution*/
-  typedef boost::optional<DesignSpecificationZoneAirDistribution> OptionalDesignSpecificationZoneAirDistribution;
+  using OptionalDesignSpecificationZoneAirDistribution = boost::optional<DesignSpecificationZoneAirDistribution>;
 
   /** \relates DesignSpecificationZoneAirDistribution*/
-  typedef std::vector<DesignSpecificationZoneAirDistribution> DesignSpecificationZoneAirDistributionVector;
+  using DesignSpecificationZoneAirDistributionVector = std::vector<DesignSpecificationZoneAirDistribution>;
 
 }  // namespace model
 }  // namespace openstudio

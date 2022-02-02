@@ -647,7 +647,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableSpeed);
+    return {IddObjectType::OS_Coil_Heating_DX_VariableSpeed};
   }
 
   std::vector<std::string> CoilHeatingDXVariableSpeed::defrostStrategyValues() {

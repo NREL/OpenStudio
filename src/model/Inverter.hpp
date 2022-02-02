@@ -68,7 +68,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::Inverter_Impl ImplType;
+    using ImplType = detail::Inverter_Impl;
 
     explicit Inverter(std::shared_ptr<detail::Inverter_Impl> impl);
 
@@ -78,9 +78,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<Inverter> OptionalInverter;
+  using OptionalInverter = boost::optional<Inverter>;
 
-  typedef std::vector<Inverter> InverterVector;
+  using InverterVector = std::vector<Inverter>;
 
 }  // namespace model
 }  // namespace openstudio

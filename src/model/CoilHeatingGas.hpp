@@ -154,7 +154,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::CoilHeatingGas_Impl ImplType;
+    using ImplType = detail::CoilHeatingGas_Impl;
 
     explicit CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> impl);
 
@@ -165,10 +165,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingGas */
-  typedef boost::optional<CoilHeatingGas> OptionalCoilHeatingGas;
+  using OptionalCoilHeatingGas = boost::optional<CoilHeatingGas>;
 
   /** \relates CoilHeatingGas */
-  typedef std::vector<CoilHeatingGas> CoilHeatingGasVector;
+  using CoilHeatingGasVector = std::vector<CoilHeatingGas>;
 
 }  // namespace model
 }  // namespace openstudio

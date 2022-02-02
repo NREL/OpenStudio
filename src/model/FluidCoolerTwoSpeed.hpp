@@ -198,7 +198,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FluidCoolerTwoSpeed_Impl ImplType;
+    using ImplType = detail::FluidCoolerTwoSpeed_Impl;
 
     explicit FluidCoolerTwoSpeed(std::shared_ptr<detail::FluidCoolerTwoSpeed_Impl> impl);
 
@@ -212,10 +212,10 @@ namespace model {
   };
 
   /** \relates FluidCoolerTwoSpeed*/
-  typedef boost::optional<FluidCoolerTwoSpeed> OptionalFluidCoolerTwoSpeed;
+  using OptionalFluidCoolerTwoSpeed = boost::optional<FluidCoolerTwoSpeed>;
 
   /** \relates FluidCoolerTwoSpeed*/
-  typedef std::vector<FluidCoolerTwoSpeed> FluidCoolerTwoSpeedVector;
+  using FluidCoolerTwoSpeedVector = std::vector<FluidCoolerTwoSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

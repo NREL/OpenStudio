@@ -114,7 +114,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::CoilHeatingElectric_Impl ImplType;
+    using ImplType = detail::CoilHeatingElectric_Impl;
 
     friend class detail::CoilHeatingElectric_Impl;
 
@@ -131,10 +131,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingElectric*/
-  typedef boost::optional<CoilHeatingElectric> OptionalCoilHeatingElectric;
+  using OptionalCoilHeatingElectric = boost::optional<CoilHeatingElectric>;
 
   /** \relates CoilHeatingElectric*/
-  typedef std::vector<CoilHeatingElectric> CoilHeatingElectricVector;
+  using CoilHeatingElectricVector = std::vector<CoilHeatingElectric>;
 
 }  // namespace model
 

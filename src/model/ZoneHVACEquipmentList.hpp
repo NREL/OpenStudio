@@ -160,7 +160,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::ZoneHVACEquipmentList_Impl ImplType;
+    using ImplType = detail::ZoneHVACEquipmentList_Impl;
 
     explicit ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl);
 
@@ -176,10 +176,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACEquipmentList*/
-  typedef boost::optional<ZoneHVACEquipmentList> OptionalZoneHVACEquipmentList;
+  using OptionalZoneHVACEquipmentList = boost::optional<ZoneHVACEquipmentList>;
 
   /** \relates ZoneHVACEquipmentList*/
-  typedef std::vector<ZoneHVACEquipmentList> ZoneHVACEquipmentListVector;
+  using ZoneHVACEquipmentListVector = std::vector<ZoneHVACEquipmentList>;
 
 }  // namespace model
 }  // namespace openstudio

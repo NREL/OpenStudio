@@ -81,7 +81,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkOutdoorAirflow_Impl ImplType;
+    using ImplType = detail::AirflowNetworkOutdoorAirflow_Impl;
 
     AirflowNetworkOutdoorAirflow(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle);
 
@@ -102,10 +102,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkOutdoorAirflow*/
-  typedef boost::optional<AirflowNetworkOutdoorAirflow> OptionalAirflowNetworkOutdoorAirflow;
+  using OptionalAirflowNetworkOutdoorAirflow = boost::optional<AirflowNetworkOutdoorAirflow>;
 
   /** \relates AirflowNetworkOutdoorAirflow*/
-  typedef std::vector<AirflowNetworkOutdoorAirflow> AirflowNetworkOutdoorAirflowVector;
+  using AirflowNetworkOutdoorAirflowVector = std::vector<AirflowNetworkOutdoorAirflow>;
 
 }  // namespace model
 }  // namespace openstudio

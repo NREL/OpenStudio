@@ -130,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterStorageSimple_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterStorageSimple_Impl;
 
     explicit ElectricLoadCenterStorageSimple(std::shared_ptr<detail::ElectricLoadCenterStorageSimple_Impl> impl);
 
@@ -144,10 +144,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterStorageSimple*/
-  typedef boost::optional<ElectricLoadCenterStorageSimple> OptionalElectricLoadCenterStorageSimple;
+  using OptionalElectricLoadCenterStorageSimple = boost::optional<ElectricLoadCenterStorageSimple>;
 
   /** \relates ElectricLoadCenterStorageSimple*/
-  typedef std::vector<ElectricLoadCenterStorageSimple> ElectricLoadCenterStorageSimpleVector;
+  using ElectricLoadCenterStorageSimpleVector = std::vector<ElectricLoadCenterStorageSimple>;
 
 }  // namespace model
 }  // namespace openstudio

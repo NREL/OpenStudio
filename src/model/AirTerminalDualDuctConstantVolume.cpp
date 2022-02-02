@@ -138,7 +138,7 @@ namespace model {
       return std::numeric_limits<unsigned>::max();
     }
 
-    void AirTerminalDualDuctConstantVolume_Impl::removePortForBranch(unsigned branchIndex) {
+    void AirTerminalDualDuctConstantVolume_Impl::removePortForBranch(unsigned /*branchIndex*/) {
       LOG(Warn, "removePortForBranch is not supported for " << briefDescription() << " .");
       LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
     }
@@ -243,7 +243,7 @@ namespace model {
   }
 
   IddObjectType AirTerminalDualDuctConstantVolume::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
+    return {IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume};
   }
 
   Schedule AirTerminalDualDuctConstantVolume::availabilitySchedule() const {

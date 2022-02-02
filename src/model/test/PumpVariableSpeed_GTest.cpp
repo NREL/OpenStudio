@@ -104,7 +104,7 @@ TEST_F(ModelFixture, PumpVariableSpeed_addToNode) {
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop2.demandComponents().size());
 
-  PumpVariableSpeed testObjectClone = testObject.clone(m).cast<PumpVariableSpeed>();
+  auto testObjectClone = testObject.clone(m).cast<PumpVariableSpeed>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

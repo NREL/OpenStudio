@@ -84,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Curve_Impl ImplType;
+    using ImplType = detail::Curve_Impl;
 
     Curve(IddObjectType type, const Model& model);
 
@@ -100,10 +100,10 @@ namespace model {
   };
 
   /** \relates Curve*/
-  typedef boost::optional<Curve> OptionalCurve;
+  using OptionalCurve = boost::optional<Curve>;
 
   /** \relates Curve*/
-  typedef std::vector<Curve> CurveVector;
+  using CurveVector = std::vector<Curve>;
 
 }  // namespace model
 }  // namespace openstudio

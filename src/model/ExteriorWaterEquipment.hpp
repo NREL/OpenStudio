@@ -109,7 +109,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorWaterEquipment_Impl ImplType;
+    using ImplType = detail::ExteriorWaterEquipment_Impl;
 
     explicit ExteriorWaterEquipment(std::shared_ptr<detail::ExteriorWaterEquipment_Impl> impl);
 
@@ -123,10 +123,10 @@ namespace model {
   };
 
   /** \relates ExteriorWaterEquipment*/
-  typedef boost::optional<ExteriorWaterEquipment> OptionalExteriorWaterEquipment;
+  using OptionalExteriorWaterEquipment = boost::optional<ExteriorWaterEquipment>;
 
   /** \relates ExteriorWaterEquipment*/
-  typedef std::vector<ExteriorWaterEquipment> ExteriorWaterEquipmentVector;
+  using ExteriorWaterEquipmentVector = std::vector<ExteriorWaterEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

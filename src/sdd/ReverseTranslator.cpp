@@ -1913,7 +1913,7 @@ namespace sdd {
       }
     }
 
-    return pugi::xml_node();
+    return {};
   }
 
   boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const pugi::xml_node& fluidSegInRefElement,

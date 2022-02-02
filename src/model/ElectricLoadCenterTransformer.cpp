@@ -96,7 +96,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ElectricLoadCenterTransformer_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricLoadCenter_TransformerFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ElectricLoadCenterTransformer", "Availability"));
       }
@@ -421,7 +422,7 @@ namespace model {
       unsigned sizeOfGroup = numExtensibleGroups();
 
       if ((index < sizeOfGroup) && (!groups[index].empty())) {
-        WorkspaceExtensibleGroup group = groups[index].cast<WorkspaceExtensibleGroup>();
+        auto group = groups[index].cast<WorkspaceExtensibleGroup>();
         boost::optional<std::string> wo = group.getString(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
         if (wo) {
           result = wo.get();
@@ -436,7 +437,7 @@ namespace model {
       auto groups = extensibleGroups();
 
       for (const auto& elem : groups) {
-        WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
+        auto group = elem.cast<WorkspaceExtensibleGroup>();
         boost::optional<std::string> wo = group.getString(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
         if (wo) {
           std::string meter = wo.get();
@@ -466,7 +467,7 @@ namespace model {
     bool ElectricLoadCenterTransformer_Impl::addMeter(const std::string& meterName) {
       //add meter to end of vector of meters
       bool result = false;
-      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       result = group.setString(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName, meterName);
       return result;
     }
@@ -479,7 +480,7 @@ namespace model {
       if (index <= sizeOfGroup) {
         IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
         OS_ASSERT(!idfGroup.empty());
-        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        auto group = idfGroup.cast<ModelExtensibleGroup>();
         result = group.setString(0, meterName);
       }
       return result;
@@ -508,7 +509,7 @@ namespace model {
   }
 
   IddObjectType ElectricLoadCenterTransformer::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Transformer);
+    return {IddObjectType::OS_ElectricLoadCenter_Transformer};
   }
 
   std::vector<std::string> ElectricLoadCenterTransformer::transformerUsageValues() {

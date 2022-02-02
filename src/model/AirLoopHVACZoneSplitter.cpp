@@ -85,7 +85,7 @@ namespace model {
 
     std::vector<openstudio::IdfObject> AirLoopHVACZoneSplitter_Impl::remove() {
       if (this->airLoopHVAC()) {
-        return std::vector<openstudio::IdfObject>();
+        return {};
       } else {
         OptionalAirLoopHVACZoneSplitter self = model().getModelObject<AirLoopHVACZoneSplitter>(handle());
         model().disconnect(*self, inletPort());
@@ -97,7 +97,7 @@ namespace model {
     }
 
     void AirLoopHVACZoneSplitter_Impl::disconnect() {
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
       model().disconnect(mo, inletPort());
       for (int i = 0; i < int(nextBranchIndex()); i++) {
         model().disconnect(mo, outletPort(i));

@@ -196,7 +196,7 @@ namespace detail {
       value["step_final_condition"] = stepFinalCondition().get();
     }
 
-    if (complete || (stepErrors().size() > 0)) {
+    if (complete || (!stepErrors().empty())) {
       Json::Value errors(Json::arrayValue);
       for (const auto& stepError : stepErrors()) {
         errors.append(stepError);
@@ -204,7 +204,7 @@ namespace detail {
       value["step_errors"] = errors;
     }
 
-    if (complete || (stepWarnings().size() > 0)) {
+    if (complete || (!stepWarnings().empty())) {
       Json::Value warnings(Json::arrayValue);
       for (const auto& stepWarning : stepWarnings()) {
         warnings.append(stepWarning);
@@ -212,7 +212,7 @@ namespace detail {
       value["step_warnings"] = warnings;
     }
 
-    if (complete || (stepInfo().size() > 0)) {
+    if (complete || (!stepInfo().empty())) {
       Json::Value info(Json::arrayValue);
       for (const auto& stepI : stepInfo()) {
         info.append(stepI);
@@ -220,7 +220,7 @@ namespace detail {
       value["step_info"] = info;
     }
 
-    if (complete || (stepValues().size() > 0)) {
+    if (complete || (!stepValues().empty())) {
       Json::Value values(Json::arrayValue);
       for (const auto& stepValue : stepValues()) {
 
@@ -240,7 +240,7 @@ namespace detail {
       value["step_values"] = values;
     }
 
-    if (complete || (stepFiles().size() > 0)) {
+    if (complete || (!stepFiles().empty())) {
       Json::Value files(Json::arrayValue);
       for (const auto& stepFile : stepFiles()) {
         files.append(toString(stepFile));

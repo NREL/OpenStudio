@@ -236,7 +236,7 @@ namespace model {
   }
 
   IddObjectType WaterUseEquipmentDefinition::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WaterUse_Equipment_Definition);
+    return {IddObjectType::OS_WaterUse_Equipment_Definition};
   }
 
   std::string WaterUseEquipmentDefinition::endUseSubcategory() const {

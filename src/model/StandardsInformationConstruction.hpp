@@ -234,7 +234,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::StandardsInformationConstruction_Impl ImplType;
+    using ImplType = detail::StandardsInformationConstruction_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -252,10 +252,10 @@ namespace model {
   };
 
   /** \relates StandardsInformationConstruction */
-  typedef boost::optional<StandardsInformationConstruction> OptionalStandardsInformationConstruction;
+  using OptionalStandardsInformationConstruction = boost::optional<StandardsInformationConstruction>;
 
   /** \relates StandardsInformationConstruction */
-  typedef std::vector<StandardsInformationConstruction> StandardsInformationConstructionVector;
+  using StandardsInformationConstructionVector = std::vector<StandardsInformationConstruction>;
 
 }  // namespace model
 }  // namespace openstudio

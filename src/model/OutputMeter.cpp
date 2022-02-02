@@ -258,7 +258,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::setSpecificEndUse(const std::string& endUse) {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(endUse, endUseType(), fuelType(), installLocationType(), specificInstallLocation());
 
@@ -275,7 +275,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::setEndUseType(EndUseType type) {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), type, fuelType(), installLocationType(), specificInstallLocation());
 
@@ -288,7 +288,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::resetEndUseType() {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), boost::none, fuelType(), installLocationType(), specificInstallLocation());
 
@@ -301,7 +301,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::setFuelType(FuelType type) {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), endUseType(), type, installLocationType(), specificInstallLocation());
 
@@ -314,7 +314,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::resetFuelType() {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), endUseType(), boost::none, installLocationType(), specificInstallLocation());
 
@@ -327,7 +327,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::setInstallLocationType(InstallLocationType type) {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), endUseType(), fuelType(), type, specificInstallLocation());
 
@@ -340,7 +340,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::resetInstallLocationType() {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), endUseType(), fuelType(), boost::none, specificInstallLocation());
 
@@ -353,7 +353,7 @@ namespace model {
     }
 
     bool OutputMeter_Impl::setSpecificInstallLocation(const std::string& locationName) {
-      ModelObject object = getObject<ModelObject>();
+      auto object = getObject<ModelObject>();
 
       std::string name = OutputMeter::getName(specificEndUse(), endUseType(), fuelType(), installLocationType(), locationName);
 
@@ -378,7 +378,7 @@ namespace model {
       OptionalSqlFile sqlFile = model().sqlFile();
 
       if (sqlFile) {
-        ModelObject object = getObject<ModelObject>();
+        auto object = getObject<ModelObject>();
 
         // get name using specific install location passed in
         std::string name;

@@ -89,7 +89,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::InsideSurfaceConvectionAlgorithm_Impl ImplType;
+    using ImplType = detail::InsideSurfaceConvectionAlgorithm_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -104,7 +104,7 @@ namespace model {
   };
 
   /** \relates InsideSurfaceConvectionAlgorithm */
-  typedef boost::optional<InsideSurfaceConvectionAlgorithm> OptionalInsideSurfaceConvectionAlgorithm;
+  using OptionalInsideSurfaceConvectionAlgorithm = boost::optional<InsideSurfaceConvectionAlgorithm>;
 
 }  // namespace model
 }  // namespace openstudio

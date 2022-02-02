@@ -180,14 +180,14 @@ TEST_F(ModelFixture, FoundationKivaSettings_Clone) {
   kivaSettings.setSoilConductivity(1.75);
 
   // clone it into the same model
-  FoundationKivaSettings kivaSettingsClone = kivaSettings.clone(model).cast<FoundationKivaSettings>();
+  auto kivaSettingsClone = kivaSettings.clone(model).cast<FoundationKivaSettings>();
   ASSERT_FALSE(kivaSettingsClone.isSoilConductivityDefaulted());
   ASSERT_EQ(1.75, kivaSettingsClone.soilConductivity());
   ASSERT_TRUE(kivaSettingsClone.isSoilDensityDefaulted());
 
   // clone it into a different model
   Model model2;
-  FoundationKivaSettings kivaSettingsClone2 = kivaSettings.clone(model2).cast<FoundationKivaSettings>();
+  auto kivaSettingsClone2 = kivaSettings.clone(model2).cast<FoundationKivaSettings>();
   ASSERT_FALSE(kivaSettingsClone2.isSoilConductivityDefaulted());
   ASSERT_EQ(1.75, kivaSettingsClone2.soilConductivity());
   ASSERT_TRUE(kivaSettingsClone2.isSoilDensityDefaulted());

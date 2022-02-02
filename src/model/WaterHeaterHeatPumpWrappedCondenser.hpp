@@ -206,7 +206,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::WaterHeaterHeatPumpWrappedCondenser_Impl ImplType;
+    using ImplType = detail::WaterHeaterHeatPumpWrappedCondenser_Impl;
 
     explicit WaterHeaterHeatPumpWrappedCondenser(std::shared_ptr<detail::WaterHeaterHeatPumpWrappedCondenser_Impl> impl);
 
@@ -220,10 +220,10 @@ namespace model {
   };
 
   /** \relates WaterHeaterHeatPumpWrappedCondenser*/
-  typedef boost::optional<WaterHeaterHeatPumpWrappedCondenser> OptionalWaterHeaterHeatPumpWrappedCondenser;
+  using OptionalWaterHeaterHeatPumpWrappedCondenser = boost::optional<WaterHeaterHeatPumpWrappedCondenser>;
 
   /** \relates WaterHeaterHeatPumpWrappedCondenser*/
-  typedef std::vector<WaterHeaterHeatPumpWrappedCondenser> WaterHeaterHeatPumpWrappedCondenserVector;
+  using WaterHeaterHeatPumpWrappedCondenserVector = std::vector<WaterHeaterHeatPumpWrappedCondenser>;
 
 }  // namespace model
 }  // namespace openstudio

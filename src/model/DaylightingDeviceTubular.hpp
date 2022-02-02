@@ -118,7 +118,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::DaylightingDeviceTubular_Impl ImplType;
+    using ImplType = detail::DaylightingDeviceTubular_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -132,10 +132,10 @@ namespace model {
   };
 
   /** \relates DaylightingDeviceTubular*/
-  typedef boost::optional<DaylightingDeviceTubular> OptionalDaylightingDeviceTubular;
+  using OptionalDaylightingDeviceTubular = boost::optional<DaylightingDeviceTubular>;
 
   /** \relates DaylightingDeviceTubular*/
-  typedef std::vector<DaylightingDeviceTubular> DaylightingDeviceTubularVector;
+  using DaylightingDeviceTubularVector = std::vector<DaylightingDeviceTubular>;
 
 }  // namespace model
 }  // namespace openstudio

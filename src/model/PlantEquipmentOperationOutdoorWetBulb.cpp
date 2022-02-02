@@ -79,7 +79,7 @@ namespace model {
   }
 
   IddObjectType PlantEquipmentOperationOutdoorWetBulb::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulb);
+    return {IddObjectType::OS_PlantEquipmentOperation_OutdoorWetBulb};
   }
 
   /// @cond

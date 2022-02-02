@@ -157,7 +157,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::StandardsInformationMaterial_Impl ImplType;
+    using ImplType = detail::StandardsInformationMaterial_Impl;
 
     explicit StandardsInformationMaterial(const Material& material);
 
@@ -175,10 +175,10 @@ namespace model {
   };
 
   /** \relates StandardsInformationMaterial*/
-  typedef boost::optional<StandardsInformationMaterial> OptionalStandardsInformationMaterial;
+  using OptionalStandardsInformationMaterial = boost::optional<StandardsInformationMaterial>;
 
   /** \relates StandardsInformationMaterial*/
-  typedef std::vector<StandardsInformationMaterial> StandardsInformationMaterialVector;
+  using StandardsInformationMaterialVector = std::vector<StandardsInformationMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

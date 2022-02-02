@@ -246,7 +246,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorMicroTurbine_Impl ImplType;
+    using ImplType = detail::GeneratorMicroTurbine_Impl;
 
     explicit GeneratorMicroTurbine(std::shared_ptr<detail::GeneratorMicroTurbine_Impl> impl);
 
@@ -260,10 +260,10 @@ namespace model {
   };
 
   /** \relates GeneratorMicroTurbine*/
-  typedef boost::optional<GeneratorMicroTurbine> OptionalGeneratorMicroTurbine;
+  using OptionalGeneratorMicroTurbine = boost::optional<GeneratorMicroTurbine>;
 
   /** \relates GeneratorMicroTurbine*/
-  typedef std::vector<GeneratorMicroTurbine> GeneratorMicroTurbineVector;
+  using GeneratorMicroTurbineVector = std::vector<GeneratorMicroTurbine>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -101,7 +101,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirToAirComponent_Impl ImplType;
+    using ImplType = detail::AirToAirComponent_Impl;
 
     explicit AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> impl);
 
@@ -111,7 +111,7 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirToAirComponent> OptionalAirToAirComponent;
+  using OptionalAirToAirComponent = boost::optional<AirToAirComponent>;
 
 }  // namespace model
 }  // namespace openstudio

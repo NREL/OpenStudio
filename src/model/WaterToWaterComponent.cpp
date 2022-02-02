@@ -145,7 +145,7 @@ namespace model {
     }
 
     boost::optional<ParentObject> WaterToWaterComponent_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     std::vector<ModelObject> WaterToWaterComponent_Impl::children() const {
@@ -155,7 +155,7 @@ namespace model {
     }
 
     void WaterToWaterComponent_Impl::disconnect() {
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
       this->model().disconnect(mo, this->supplyInletPort());
       this->model().disconnect(mo, this->supplyOutletPort());
       this->model().disconnect(mo, this->demandInletPort());
@@ -175,7 +175,9 @@ namespace model {
       boost::optional<HVACComponent> systemStartComponent;
       boost::optional<HVACComponent> systemEndComponent;
 
-      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+        return false;
+      }
 
       if (t_plantLoop) {
         if (t_plantLoop->supplyComponent(node.handle())) {
@@ -362,7 +364,9 @@ namespace model {
       boost::optional<HVACComponent> systemStartComponent;
       boost::optional<HVACComponent> systemEndComponent;
 
-      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+        return false;
+      }
 
       if (t_plantLoop) {
         if (t_plantLoop->supplyComponent(node.handle())) {

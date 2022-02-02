@@ -321,7 +321,7 @@ namespace model {
   }
 
   IddObjectType RefractionExtinctionGlazing::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod);
+    return {IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod};
   }
 
   double RefractionExtinctionGlazing::thermalConductivity() const {

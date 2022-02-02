@@ -71,7 +71,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirWallMaterial_Impl ImplType;
+    using ImplType = detail::AirWallMaterial_Impl;
 
     explicit AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl);
 
@@ -85,10 +85,10 @@ namespace model {
   };
 
   /** \relates AirWallMaterial*/
-  typedef boost::optional<AirWallMaterial> OptionalAirWallMaterial;
+  using OptionalAirWallMaterial = boost::optional<AirWallMaterial>;
 
   /** \relates AirWallMaterial*/
-  typedef std::vector<AirWallMaterial> AirWallMaterialVector;
+  using AirWallMaterialVector = std::vector<AirWallMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

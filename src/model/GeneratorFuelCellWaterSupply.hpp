@@ -123,7 +123,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellWaterSupply_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellWaterSupply_Impl;
 
     explicit GeneratorFuelCellWaterSupply(std::shared_ptr<detail::GeneratorFuelCellWaterSupply_Impl> impl);
 
@@ -137,10 +137,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellWaterSupply*/
-  typedef boost::optional<GeneratorFuelCellWaterSupply> OptionalGeneratorFuelCellWaterSupply;
+  using OptionalGeneratorFuelCellWaterSupply = boost::optional<GeneratorFuelCellWaterSupply>;
 
   /** \relates GeneratorFuelCellWaterSupply*/
-  typedef std::vector<GeneratorFuelCellWaterSupply> GeneratorFuelCellWaterSupplyVector;
+  using GeneratorFuelCellWaterSupplyVector = std::vector<GeneratorFuelCellWaterSupply>;
 
 }  // namespace model
 }  // namespace openstudio

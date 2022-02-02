@@ -115,7 +115,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationAirChiller_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_AirChillerFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationAirChiller", "Availability"));
       }
@@ -162,7 +163,7 @@ namespace model {
 
     boost::optional<ThermalZone> RefrigerationAirChiller_Impl::thermalZone() const {
       Model m = this->model();
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -390,7 +391,7 @@ namespace model {
 
     boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      auto refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
       for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
         if (!refrigerationAirChillers.empty()
@@ -404,7 +405,7 @@ namespace model {
 
     boost::optional<RefrigerationSecondarySystem> RefrigerationAirChiller_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
-      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      auto refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
       for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSecondarySystem.airChillers();
         if (!refrigerationAirChillers.empty()
@@ -418,7 +419,7 @@ namespace model {
 
     boost::optional<RefrigerationCompressorRack> RefrigerationAirChiller_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
-      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      auto refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
       for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationCompressorRack.airChillers();
         if (!refrigerationAirChillers.empty()
@@ -798,7 +799,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationAirChiller::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_AirChiller);
+    return {IddObjectType::OS_Refrigeration_AirChiller};
   }
 
   std::vector<std::string> RefrigerationAirChiller::capacityRatingTypeValues() {

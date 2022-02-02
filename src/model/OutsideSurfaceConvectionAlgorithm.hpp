@@ -88,7 +88,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::OutsideSurfaceConvectionAlgorithm_Impl ImplType;
+    using ImplType = detail::OutsideSurfaceConvectionAlgorithm_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -103,7 +103,7 @@ namespace model {
   };
 
   /** \relates OutsideSurfaceConvectionAlgorithm */
-  typedef boost::optional<OutsideSurfaceConvectionAlgorithm> OptionalOutsideSurfaceConvectionAlgorithm;
+  using OptionalOutsideSurfaceConvectionAlgorithm = boost::optional<OutsideSurfaceConvectionAlgorithm>;
 
 }  // namespace model
 }  // namespace openstudio

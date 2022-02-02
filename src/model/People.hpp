@@ -170,7 +170,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::People_Impl ImplType;
+    using ImplType = detail::People_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -183,10 +183,10 @@ namespace model {
   };
 
   /** \relates People*/
-  typedef boost::optional<People> OptionalPeople;
+  using OptionalPeople = boost::optional<People>;
 
   /** \relates People*/
-  typedef std::vector<People> PeopleVector;
+  using PeopleVector = std::vector<People>;
 
 }  // namespace model
 }  // namespace openstudio

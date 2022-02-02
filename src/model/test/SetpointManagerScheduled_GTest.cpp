@@ -139,7 +139,7 @@ TEST_F(ModelFixture, SetpointManagerScheduled_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerScheduled testObjectClone = testObject.clone(m).cast<SetpointManagerScheduled>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerScheduled>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

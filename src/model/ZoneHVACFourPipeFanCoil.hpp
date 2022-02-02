@@ -239,7 +239,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACFourPipeFanCoil_Impl ImplType;
+    using ImplType = detail::ZoneHVACFourPipeFanCoil_Impl;
 
     explicit ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl);
 
@@ -254,10 +254,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACFourPipeFanCoil*/
-  typedef boost::optional<ZoneHVACFourPipeFanCoil> OptionalZoneHVACFourPipeFanCoil;
+  using OptionalZoneHVACFourPipeFanCoil = boost::optional<ZoneHVACFourPipeFanCoil>;
 
   /** \relates ZoneHVACFourPipeFanCoil*/
-  typedef std::vector<ZoneHVACFourPipeFanCoil> ZoneHVACFourPipeFanCoilVector;
+  using ZoneHVACFourPipeFanCoilVector = std::vector<ZoneHVACFourPipeFanCoil>;
 
 }  // namespace model
 }  // namespace openstudio

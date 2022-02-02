@@ -96,7 +96,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::InteriorPartitionSurfaceGroup_Impl ImplType;
+    using ImplType = detail::InteriorPartitionSurfaceGroup_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -109,10 +109,10 @@ namespace model {
   };
 
   /** \relates InteriorPartitionSurfaceGroup*/
-  typedef boost::optional<InteriorPartitionSurfaceGroup> OptionalInteriorPartitionSurfaceGroup;
+  using OptionalInteriorPartitionSurfaceGroup = boost::optional<InteriorPartitionSurfaceGroup>;
 
   /** \relates InteriorPartitionSurfaceGroup*/
-  typedef std::vector<InteriorPartitionSurfaceGroup> InteriorPartitionSurfaceGroupVector;
+  using InteriorPartitionSurfaceGroupVector = std::vector<InteriorPartitionSurfaceGroup>;
 
 }  // namespace model
 }  // namespace openstudio

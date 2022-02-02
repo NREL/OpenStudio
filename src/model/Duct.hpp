@@ -70,7 +70,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Duct_Impl ImplType;
+    using ImplType = detail::Duct_Impl;
 
     explicit Duct(std::shared_ptr<detail::Duct_Impl> impl);
 
@@ -84,10 +84,10 @@ namespace model {
   };
 
   /** \relates Duct*/
-  typedef boost::optional<Duct> OptionalDuct;
+  using OptionalDuct = boost::optional<Duct>;
 
   /** \relates Duct*/
-  typedef std::vector<Duct> DuctVector;
+  using DuctVector = std::vector<Duct>;
 
 }  // namespace model
 }  // namespace openstudio

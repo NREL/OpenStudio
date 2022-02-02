@@ -226,7 +226,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl ImplType;
+    using ImplType = detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl;
 
     explicit PhotovoltaicPerformanceEquivalentOneDiode(std::shared_ptr<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl> impl);
 
@@ -240,10 +240,10 @@ namespace model {
   };
 
   /** \relates PhotovoltaicPerformanceEquivalentOneDiode*/
-  typedef boost::optional<PhotovoltaicPerformanceEquivalentOneDiode> OptionalPhotovoltaicPerformanceEquivalentOneDiode;
+  using OptionalPhotovoltaicPerformanceEquivalentOneDiode = boost::optional<PhotovoltaicPerformanceEquivalentOneDiode>;
 
   /** \relates PhotovoltaicPerformanceEquivalentOneDiode*/
-  typedef std::vector<PhotovoltaicPerformanceEquivalentOneDiode> PhotovoltaicPerformanceEquivalentOneDiodeVector;
+  using PhotovoltaicPerformanceEquivalentOneDiodeVector = std::vector<PhotovoltaicPerformanceEquivalentOneDiode>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -65,7 +65,7 @@ Point3d Point3d::operator+(const Vector3d& vec) const {
   double newX = x() + vec.x();
   double newY = y() + vec.y();
   double newZ = z() + vec.z();
-  return Point3d(newX, newY, newZ);
+  return {newX, newY, newZ};
 }
 
 /// point plus a vector is a new point
@@ -81,7 +81,7 @@ Vector3d Point3d::operator-(const Point3d& other) const {
   double newX = x() - other.x();
   double newY = y() - other.y();
   double newZ = z() - other.z();
-  return Vector3d(newX, newY, newZ);
+  return {newX, newY, newZ};
 }
 
 /// check equality

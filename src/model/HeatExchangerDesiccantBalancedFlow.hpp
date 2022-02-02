@@ -78,7 +78,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::HeatExchangerDesiccantBalancedFlow_Impl ImplType;
+    using ImplType = detail::HeatExchangerDesiccantBalancedFlow_Impl;
 
     explicit HeatExchangerDesiccantBalancedFlow(std::shared_ptr<detail::HeatExchangerDesiccantBalancedFlow_Impl> impl);
 
@@ -94,10 +94,10 @@ namespace model {
   };
 
   /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef boost::optional<HeatExchangerDesiccantBalancedFlow> OptionalHeatExchangerDesiccantBalancedFlow;
+  using OptionalHeatExchangerDesiccantBalancedFlow = boost::optional<HeatExchangerDesiccantBalancedFlow>;
 
   /** \relates HeatExchangerDesiccantBalancedFlow*/
-  typedef std::vector<HeatExchangerDesiccantBalancedFlow> HeatExchangerDesiccantBalancedFlowVector;
+  using HeatExchangerDesiccantBalancedFlowVector = std::vector<HeatExchangerDesiccantBalancedFlow>;
 
 }  // namespace model
 }  // namespace openstudio

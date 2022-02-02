@@ -69,7 +69,7 @@ TEST_F(ModelFixture, ModelObject_Clone_SameModel) {
   EXPECT_EQ(4u, original.numObjects());
 
   // Clone into same model -- new object with different name. resources reused.
-  Surface newSurface = surface.clone(original).cast<Surface>();
+  auto newSurface = surface.clone(original).cast<Surface>();
   EXPECT_FALSE(newSurface == surface);
   EXPECT_EQ(5u, original.numObjects());
   EXPECT_NE(surface.name().get(), newSurface.name().get());
@@ -98,12 +98,12 @@ TEST_F(ModelFixture, ModelObject_Clone_DifferentModel) {
   // Clone into new model -- everything added
   Model newModel;
   EXPECT_EQ(0u, newModel.numObjects());
-  Surface newSurface = surface.clone(newModel).cast<Surface>();
+  auto newSurface = surface.clone(newModel).cast<Surface>();
   EXPECT_EQ(4u, newModel.numObjects());
   EXPECT_TRUE(newModel.isMember(newSurface.handle()));
 
   // Clone into that model again -- object added, resource and children reused
-  Surface anotherNewSurface = surface.clone(newModel).cast<Surface>();
+  auto anotherNewSurface = surface.clone(newModel).cast<Surface>();
   EXPECT_FALSE(anotherNewSurface == newSurface);
   EXPECT_EQ(5u, newModel.numObjects());
   ASSERT_TRUE(anotherNewSurface.construction());

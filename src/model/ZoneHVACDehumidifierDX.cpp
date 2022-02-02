@@ -376,7 +376,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACDehumidifierDX::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_Dehumidifier_DX);
+    return {IddObjectType::OS_ZoneHVAC_Dehumidifier_DX};
   }
 
   Schedule ZoneHVACDehumidifierDX::availabilitySchedule() const {

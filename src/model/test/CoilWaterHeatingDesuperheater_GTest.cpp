@@ -291,7 +291,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithDefaultData) {
   ScheduleCompact schedule = ScheduleCompact(model);
   CoilWaterHeatingDesuperheater testObject = CoilWaterHeatingDesuperheater(model, schedule);
 
-  CoilWaterHeatingDesuperheater testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
+  auto testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(5.0, testObjectClone.deadBandTemperatureDifference());
   EXPECT_DOUBLE_EQ(0.8, testObjectClone.ratedHeatReclaimRecoveryEfficiency().get());
@@ -327,7 +327,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData) {
   EXPECT_TRUE(testObject.addToHeatRejectionTarget(heatRejection));
   EXPECT_TRUE(testObject.setHeatReclaimEfficiencyFunctionofTemperatureCurve(curve));
 
-  CoilWaterHeatingDesuperheater testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
+  auto testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(20.0, testObjectClone.deadBandTemperatureDifference());
   EXPECT_DOUBLE_EQ(0.99, testObjectClone.ratedHeatReclaimRecoveryEfficiency().get());
@@ -367,10 +367,10 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneTwoModelWithCustomData) 
   EXPECT_TRUE(testObject.addToHeatRejectionTarget(heatRejection));
   EXPECT_TRUE(testObject.setHeatReclaimEfficiencyFunctionofTemperatureCurve(curve));
 
-  CoilWaterHeatingDesuperheater testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
+  auto testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
 
   Model model2;
-  CoilWaterHeatingDesuperheater testObjectClone2 = testObject.clone(model2).cast<CoilWaterHeatingDesuperheater>();
+  auto testObjectClone2 = testObject.clone(model2).cast<CoilWaterHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(20.0, testObjectClone2.deadBandTemperatureDifference());
   EXPECT_DOUBLE_EQ(0.99, testObjectClone2.ratedHeatReclaimRecoveryEfficiency().get());

@@ -104,7 +104,7 @@ TEST_F(ModelFixture, FenestrationMaterial_Blind_Constructors) {
   EXPECT_TRUE(blind.iddObject().type() == IddObjectType::OS_WindowMaterial_Blind);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   blinds = modelClone.getModelObjects<Blind>();
   ASSERT_EQ(static_cast<unsigned>(1), blinds.size());
@@ -124,7 +124,7 @@ TEST_F(ModelFixture, FenestrationMaterial_Gas_Constructors) {
   EXPECT_TRUE(gas.iddObject().type() == IddObjectType::OS_WindowMaterial_Gas);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   gases = modelClone.getModelObjects<Gas>();
   ASSERT_EQ(static_cast<unsigned>(1), gases.size());
@@ -200,7 +200,7 @@ TEST_F(ModelFixture, FenestrationMaterial_GasMixture_Constructors) {
   EXPECT_TRUE(gasMixture.iddObject().type() == IddObjectType::OS_WindowMaterial_GasMixture);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   gasMixtures = modelClone.getModelObjects<GasMixture>();
   ASSERT_EQ(static_cast<unsigned>(1), gasMixtures.size());
@@ -237,7 +237,7 @@ TEST_F(ModelFixture, FenestrationMaterial_RefractionExtinctionGlazing_Constructo
   EXPECT_TRUE(glazing.iddObject().type() == IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   glazings = modelClone.getModelObjects<RefractionExtinctionGlazing>();
   ASSERT_EQ(static_cast<unsigned>(1), glazings.size());
@@ -257,7 +257,7 @@ TEST_F(ModelFixture, FenestrationMaterial_Screen_Constructors) {
   EXPECT_TRUE(screen.iddObject().type() == IddObjectType::OS_WindowMaterial_Screen);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   screens = modelClone.getModelObjects<Screen>();
   ASSERT_EQ(static_cast<unsigned>(1), screens.size());
@@ -277,7 +277,7 @@ TEST_F(ModelFixture, FenestrationMaterial_Shade_Constructors) {
   EXPECT_TRUE(shade.iddObject().type() == IddObjectType::OS_WindowMaterial_Shade);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   shades = modelClone.getModelObjects<Shade>();
   ASSERT_EQ(static_cast<unsigned>(1), shades.size());
@@ -297,7 +297,7 @@ TEST_F(ModelFixture, FenestrationMaterial_SimpleGlazing_Constructors) {
   EXPECT_TRUE(glazing.iddObject().type() == IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   glazings = modelClone.getModelObjects<SimpleGlazing>();
   ASSERT_EQ(static_cast<unsigned>(1), glazings.size());
@@ -317,7 +317,7 @@ TEST_F(ModelFixture, FenestrationMaterial_StandardGlazing_Constructors) {
   EXPECT_TRUE(glazing.iddObject().type() == IddObjectType::OS_WindowMaterial_Glazing);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   glazings = modelClone.getModelObjects<StandardGlazing>();
   ASSERT_EQ(static_cast<unsigned>(1), glazings.size());
@@ -337,7 +337,7 @@ TEST_F(ModelFixture, FenestrationMaterial_ThermochromicGlazing_Constructors) {
   EXPECT_TRUE(glazing.iddObject().type() == IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   glazings = modelClone.getModelObjects<ThermochromicGlazing>();
   ASSERT_EQ(static_cast<unsigned>(1), glazings.size());

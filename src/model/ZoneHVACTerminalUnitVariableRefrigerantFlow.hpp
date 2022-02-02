@@ -208,7 +208,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl ImplType;
+    using ImplType = detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
 
     explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
 
@@ -224,10 +224,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
-  typedef boost::optional<ZoneHVACTerminalUnitVariableRefrigerantFlow> OptionalZoneHVACTerminalUnitVariableRefrigerantFlow;
+  using OptionalZoneHVACTerminalUnitVariableRefrigerantFlow = boost::optional<ZoneHVACTerminalUnitVariableRefrigerantFlow>;
 
   /** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
-  typedef std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlowVector;
+  using ZoneHVACTerminalUnitVariableRefrigerantFlowVector = std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -186,7 +186,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellStackCooler_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellStackCooler_Impl;
 
     explicit GeneratorFuelCellStackCooler(std::shared_ptr<detail::GeneratorFuelCellStackCooler_Impl> impl);
 
@@ -200,10 +200,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellStackCooler*/
-  typedef boost::optional<GeneratorFuelCellStackCooler> OptionalGeneratorFuelCellStackCooler;
+  using OptionalGeneratorFuelCellStackCooler = boost::optional<GeneratorFuelCellStackCooler>;
 
   /** \relates GeneratorFuelCellStackCooler*/
-  typedef std::vector<GeneratorFuelCellStackCooler> GeneratorFuelCellStackCoolerVector;
+  using GeneratorFuelCellStackCoolerVector = std::vector<GeneratorFuelCellStackCooler>;
 
 }  // namespace model
 }  // namespace openstudio

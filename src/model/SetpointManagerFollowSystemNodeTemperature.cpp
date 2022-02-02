@@ -181,7 +181,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerFollowSystemNodeTemperature::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_FollowSystemNodeTemperature);
+    return {IddObjectType::OS_SetpointManager_FollowSystemNodeTemperature};
   }
 
   std::vector<std::string> SetpointManagerFollowSystemNodeTemperature::controlVariableValues() {

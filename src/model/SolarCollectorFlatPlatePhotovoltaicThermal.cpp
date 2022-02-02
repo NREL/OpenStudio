@@ -76,13 +76,12 @@ namespace model {
     ModelObject SolarCollectorFlatPlatePhotovoltaicThermal_Impl::clone(Model model) const {
 
       auto result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
-      SolarCollectorPerformancePhotovoltaicThermalSimple newPerformance =
-        this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
+      auto newPerformance = this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
       result.setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, newPerformance.handle());
 
       boost::optional<GeneratorPhotovoltaic> pv = this->generatorPhotovoltaic();
       if (pv) {
-        GeneratorPhotovoltaic newPV = pv->clone(model).cast<GeneratorPhotovoltaic>();
+        auto newPV = pv->clone(model).cast<GeneratorPhotovoltaic>();
         result.setGeneratorPhotovoltaic(newPV);
       }
 
@@ -289,7 +288,7 @@ namespace model {
   }
 
   IddObjectType SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal);
+    return {IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal};
   }
 
   SolarCollectorPerformancePhotovoltaicThermalSimple SolarCollectorFlatPlatePhotovoltaicThermal::solarCollectorPerformance() const {

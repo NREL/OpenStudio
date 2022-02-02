@@ -103,7 +103,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CentralHeatPumpSystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_CentralHeatPumpSystemFields::AncillaryOperationScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CentralHeatPumpSystem", "Ancillary Operation"));
       }
@@ -130,7 +131,7 @@ namespace model {
 
         // The CentralHeatPumpSystemModule_Impl::clone method will set the reference to the same
         // ChillerHeaterPerformanceElectricEIR as the original one
-        CentralHeatPumpSystemModule centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
+        auto centralHPModClone = centralHPMod.clone(model).cast<CentralHeatPumpSystemModule>();
 
         // Add that to the new object
         newCentralHP.addModule(centralHPModClone);
@@ -349,7 +350,7 @@ namespace model {
   }
 
   IddObjectType CentralHeatPumpSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CentralHeatPumpSystem);
+    return {IddObjectType::OS_CentralHeatPumpSystem};
   }
 
   std::vector<std::string> CentralHeatPumpSystem::controlMethodValues() {

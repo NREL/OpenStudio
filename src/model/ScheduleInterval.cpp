@@ -76,7 +76,7 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> ScheduleInterval_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -97,13 +97,13 @@ namespace model {
       result = ScheduleFixedInterval(model);
       if (!result->setTimeSeries(timeSeries)) {
         result->remove();
-        return boost::optional<ScheduleInterval>();
+        return {};
       }
     } else {
       result = ScheduleVariableInterval(model);
       if (!result->setTimeSeries(timeSeries)) {
         result->remove();
-        return boost::optional<ScheduleInterval>();
+        return {};
       }
     }
     return result;

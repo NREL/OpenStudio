@@ -121,7 +121,7 @@ namespace model {
   }
 
   IddObjectType SimpleGlazing::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
+    return {IddObjectType::OS_WindowMaterial_SimpleGlazingSystem};
   }
 
   double SimpleGlazing::uFactor() const {

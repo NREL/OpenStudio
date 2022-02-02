@@ -106,10 +106,10 @@ class UTILITIES_API IddKey
 };
 
 /** \relates IddKey */
-typedef std::vector<IddKey> IddKeyVector;
+using IddKeyVector = std::vector<IddKey>;
 
 /** \relates IddKey */
-typedef boost::optional<IddKey> OptionalIddKey;
+using OptionalIddKey = boost::optional<IddKey>;
 
 /** \relates IddKey */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddKey& iddKey);

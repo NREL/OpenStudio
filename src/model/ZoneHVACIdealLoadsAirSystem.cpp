@@ -130,7 +130,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACIdealLoadsAirSystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_IdealLoadsAirSystemFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACIdealLoadsAirSystem", "Availability"));
       }
@@ -820,7 +821,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACIdealLoadsAirSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
+    return {IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem};
   }
 
   std::vector<std::string> ZoneHVACIdealLoadsAirSystem::heatingLimitValues() {

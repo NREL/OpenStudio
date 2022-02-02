@@ -572,7 +572,7 @@ TEST_F(ModelFixture, Surface_Clone) {
   EXPECT_TRUE(surface.adjacentFoundation());
 
   // clone should maintain connection to Construction
-  Surface clone1 = surface.clone().cast<Surface>();
+  auto clone1 = surface.clone().cast<Surface>();
   ASSERT_TRUE(clone1.model() == surface.model());
   ASSERT_TRUE(clone1.construction());
   EXPECT_TRUE(clone1.construction().get() == construction);
@@ -586,7 +586,7 @@ TEST_F(ModelFixture, Surface_Clone) {
   EXPECT_TRUE(clone1.adjacentFoundation());
 
   // even if through ModelObject
-  Surface clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
+  auto clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
   ASSERT_TRUE(clone2.model() == surface.model());
   ASSERT_TRUE(clone2.construction());
   EXPECT_TRUE(clone2.construction().get() == construction);

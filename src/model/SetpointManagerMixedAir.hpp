@@ -104,7 +104,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SetpointManagerMixedAir_Impl ImplType;
+    using ImplType = detail::SetpointManagerMixedAir_Impl;
 
     explicit SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
 
@@ -114,9 +114,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<SetpointManagerMixedAir> OptionalSetpointManagerMixedAir;
+  using OptionalSetpointManagerMixedAir = boost::optional<SetpointManagerMixedAir>;
 
-  typedef std::vector<SetpointManagerMixedAir> SetpointManagerMixedAirVector;
+  using SetpointManagerMixedAirVector = std::vector<SetpointManagerMixedAir>;
 
 }  // namespace model
 

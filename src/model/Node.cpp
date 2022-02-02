@@ -120,7 +120,7 @@ namespace model {
       return OS_NodeFields::OutletPort;
     }
 
-    std::vector<HVACComponent> Node_Impl::edges(const boost::optional<HVACComponent>& prev) {
+    std::vector<HVACComponent> Node_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
       std::vector<HVACComponent> edges;
       if (boost::optional<ModelObject> edgeModelObject = this->outletModelObject()) {
         if (boost::optional<PortList> portList = edgeModelObject->optionalCast<PortList>()) {
@@ -139,7 +139,7 @@ namespace model {
         this->removeSetpointManagers();
         return ModelObject_Impl::remove();
       } else {
-        return std::vector<IdfObject>();
+        return {};
       }
     }
 
@@ -312,7 +312,7 @@ namespace model {
       return result;
     }
 
-    bool Node_Impl::addToNode(Node& node) {
+    bool Node_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 

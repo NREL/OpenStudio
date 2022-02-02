@@ -508,7 +508,7 @@ namespace model {
   }
 
   IddObjectType GeneratorFuelCellStackCooler::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_FuelCell_StackCooler);
+    return {IddObjectType::OS_Generator_FuelCell_StackCooler};
   }
 
   double GeneratorFuelCellStackCooler::nominalStackTemperature() const {

@@ -138,18 +138,30 @@ namespace model {
       auto _model = model();
       auto thisObject = getObject<HVACComponent>();
 
-      if (systemStartComponent.model() != _model) return false;
-      if (systemEndComponent.model() != _model) return false;
+      if (systemStartComponent.model() != _model) {
+        return false;
+      }
+      if (systemEndComponent.model() != _model) {
+        return false;
+      }
 
       auto inletComponent = connectedObject(componentInletPort);
       auto outletComponent = connectedObject(componentOutletPort);
       auto inletComponentOutletPort = connectedObjectPort(componentInletPort);
       auto outletComponentInletPort = connectedObjectPort(componentOutletPort);
 
-      if (!inletComponent) return false;
-      if (!outletComponent) return false;
-      if (!inletComponentOutletPort) return false;
-      if (!outletComponentInletPort) return false;
+      if (!inletComponent) {
+        return false;
+      }
+      if (!outletComponent) {
+        return false;
+      }
+      if (!inletComponentOutletPort) {
+        return false;
+      }
+      if (!outletComponentInletPort) {
+        return false;
+      }
 
       auto inletNode = inletComponent->optionalCast<Node>();
       auto outletNode = outletComponent->optionalCast<Node>();
@@ -239,8 +251,12 @@ namespace model {
           newOutletComponentInletPort = outletNode->connectedObjectPort(outletNode->outletPort());
         }
 
-        if (!newOutletComponent) newOutletComponent = outletComponent;
-        if (!newOutletComponentInletPort) newOutletComponentInletPort = outletComponentInletPort;
+        if (!newOutletComponent) {
+          newOutletComponent = outletComponent;
+        }
+        if (!newOutletComponentInletPort) {
+          newOutletComponentInletPort = outletComponentInletPort;
+        }
 
         _model.disconnect(thisObject, componentInletPort);
         _model.disconnect(thisObject, componentOutletPort);
@@ -261,11 +277,17 @@ namespace model {
     bool HVACComponent_Impl::addToNode(Node& node, const HVACComponent& systemStartComponent, const HVACComponent& systemEndComponent,
                                        unsigned componentInletPort, unsigned componentOutletPort) {
       Model _model = model();
-      ModelObject thisModelObject = getObject<ModelObject>();
+      auto thisModelObject = getObject<ModelObject>();
 
-      if (node.model() != _model) return false;
-      if (systemStartComponent.model() != _model) return false;
-      if (systemEndComponent.model() != _model) return false;
+      if (node.model() != _model) {
+        return false;
+      }
+      if (systemStartComponent.model() != _model) {
+        return false;
+      }
+      if (systemEndComponent.model() != _model) {
+        return false;
+      }
 
       if ((node == systemEndComponent) && (node.inletModelObject().get() == systemStartComponent)) {
         unsigned oldOutletPort = node.connectedObjectPort(node.inletPort()).get();
@@ -332,19 +354,19 @@ namespace model {
       return false;
     }
 
-    bool HVACComponent_Impl::addToNode(Node& node) {
+    bool HVACComponent_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
     std::vector<ModelObject> HVACComponent_Impl::children() const {
-      return std::vector<ModelObject>();
+      return {};
     }
 
     boost::optional<ParentObject> HVACComponent_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
-    bool HVACComponent_Impl::addToSplitter(Splitter& splitter) {
+    bool HVACComponent_Impl::addToSplitter(Splitter& /*splitter*/) {
       return false;
     }
 
@@ -373,7 +395,7 @@ namespace model {
       if (this->isRemovable()) {
         return ParentObject_Impl::remove();
       } else {
-        return std::vector<IdfObject>();
+        return {};
       }
     }
 
@@ -404,8 +426,8 @@ namespace model {
       return ModelObject_Impl::clone(model);
     }
 
-    std::vector<HVACComponent> HVACComponent_Impl::edges(const boost::optional<HVACComponent>& previous) {
-      return std::vector<HVACComponent>();
+    std::vector<HVACComponent> HVACComponent_Impl::edges(const boost::optional<HVACComponent>& /*previous*/) {
+      return {};
     }
 
     boost::optional<HVACComponent> HVACComponent_Impl::containingHVACComponent() const {
@@ -435,11 +457,11 @@ namespace model {
     }
 
     std::vector<EMSActuatorNames> HVACComponent_Impl::emsActuatorNames() const {
-      return std::vector<EMSActuatorNames>();
+      return {};
     }
 
     std::vector<std::string> HVACComponent_Impl::emsInternalVariableNames() const {
-      return std::vector<std::string>();
+      return {};
     }
 
   }  // namespace detail

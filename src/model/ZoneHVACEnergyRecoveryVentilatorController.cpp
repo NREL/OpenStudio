@@ -76,7 +76,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACEnergyRecoveryVentilatorController_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::TimeofDayEconomizerFlowControlScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACEnergyRecoveryVentilatorController", "Time of Day Economizer Flow Control"));
       }
@@ -289,7 +290,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACEnergyRecoveryVentilatorController::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator_Controller);
+    return {IddObjectType::OS_ZoneHVAC_EnergyRecoveryVentilator_Controller};
   }
 
   std::vector<std::string> ZoneHVACEnergyRecoveryVentilatorController::exhaustAirTemperatureLimitValues() {

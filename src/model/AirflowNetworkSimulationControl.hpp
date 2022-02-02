@@ -264,7 +264,7 @@ namespace model {
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
 
-    typedef detail::AirflowNetworkSimulationControl_Impl ImplType;
+    using ImplType = detail::AirflowNetworkSimulationControl_Impl;
 
     explicit AirflowNetworkSimulationControl(std::shared_ptr<ImplType> impl);
 
@@ -275,7 +275,7 @@ namespace model {
   };
 
   /** \relates AirflowNetworkSimulationControl */
-  typedef boost::optional<AirflowNetworkSimulationControl> OptionalAirflowNetworkSimulationControl;
+  using OptionalAirflowNetworkSimulationControl = boost::optional<AirflowNetworkSimulationControl>;
 
 }  // namespace model
 }  // namespace openstudio

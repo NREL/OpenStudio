@@ -156,7 +156,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveQuadraticLinear_Impl ImplType;
+    using ImplType = detail::CurveQuadraticLinear_Impl;
 
     explicit CurveQuadraticLinear(std::shared_ptr<detail::CurveQuadraticLinear_Impl> impl);
 
@@ -171,10 +171,10 @@ namespace model {
   };
 
   /** \relates CurveQuadraticLinear*/
-  typedef boost::optional<CurveQuadraticLinear> OptionalCurveQuadraticLinear;
+  using OptionalCurveQuadraticLinear = boost::optional<CurveQuadraticLinear>;
 
   /** \relates CurveQuadraticLinear*/
-  typedef std::vector<CurveQuadraticLinear> CurveQuadraticLinearVector;
+  using CurveQuadraticLinearVector = std::vector<CurveQuadraticLinear>;
 
 }  // namespace model
 }  // namespace openstudio

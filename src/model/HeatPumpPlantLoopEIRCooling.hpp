@@ -158,7 +158,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeatPumpPlantLoopEIRCooling_Impl ImplType;
+    using ImplType = detail::HeatPumpPlantLoopEIRCooling_Impl;
 
     explicit HeatPumpPlantLoopEIRCooling(std::shared_ptr<detail::HeatPumpPlantLoopEIRCooling_Impl> impl);
 
@@ -172,10 +172,10 @@ namespace model {
   };
 
   /** \relates HeatPumpPlantLoopEIRCooling*/
-  typedef boost::optional<HeatPumpPlantLoopEIRCooling> OptionalHeatPumpPlantLoopEIRCooling;
+  using OptionalHeatPumpPlantLoopEIRCooling = boost::optional<HeatPumpPlantLoopEIRCooling>;
 
   /** \relates HeatPumpPlantLoopEIRCooling*/
-  typedef std::vector<HeatPumpPlantLoopEIRCooling> HeatPumpPlantLoopEIRCoolingVector;
+  using HeatPumpPlantLoopEIRCoolingVector = std::vector<HeatPumpPlantLoopEIRCooling>;
 
 }  // namespace model
 }  // namespace openstudio

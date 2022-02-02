@@ -53,7 +53,8 @@ namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConverter(const WorkspaceObject& workspaceObject) {
 
-    OptionalModelObject result, omo;
+    OptionalModelObject result;
+    OptionalModelObject omo;
     OptionalDouble optD;
     boost::optional<WorkspaceObject> owo;
     OptionalString optS;

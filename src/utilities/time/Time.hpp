@@ -68,7 +68,7 @@ class UTILITIES_API Time
   friend class DateTime;
 
   /// impl type is boost::posix_time::time_duration
-  typedef boost::posix_time::time_duration ImplType;
+  using ImplType = boost::posix_time::time_duration;
   //typedef std::shared_ptr<ImplType> ImplPtr;
 
   /// get current local time of day
@@ -174,10 +174,10 @@ class UTILITIES_API Time
 };
 
 /// optional Time
-typedef boost::optional<Time> OptionalTime;
+using OptionalTime = boost::optional<Time>;
 
 /// vector of Time
-typedef std::vector<Time> TimeVector;
+using TimeVector = std::vector<Time>;
 
 /// std::ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Time& time);

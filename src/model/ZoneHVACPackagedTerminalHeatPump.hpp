@@ -246,7 +246,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACPackagedTerminalHeatPump_Impl ImplType;
+    using ImplType = detail::ZoneHVACPackagedTerminalHeatPump_Impl;
 
     explicit ZoneHVACPackagedTerminalHeatPump(std::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl);
 
@@ -261,10 +261,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACPackagedTerminalHeatPump*/
-  typedef boost::optional<ZoneHVACPackagedTerminalHeatPump> OptionalZoneHVACPackagedTerminalHeatPump;
+  using OptionalZoneHVACPackagedTerminalHeatPump = boost::optional<ZoneHVACPackagedTerminalHeatPump>;
 
   /** \relates ZoneHVACPackagedTerminalHeatPump*/
-  typedef std::vector<ZoneHVACPackagedTerminalHeatPump> ZoneHVACPackagedTerminalHeatPumpVector;
+  using ZoneHVACPackagedTerminalHeatPumpVector = std::vector<ZoneHVACPackagedTerminalHeatPump>;
 
 }  // namespace model
 }  // namespace openstudio

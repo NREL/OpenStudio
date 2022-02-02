@@ -139,7 +139,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::GeneratorPVWatts_Impl ImplType;
+    using ImplType = detail::GeneratorPVWatts_Impl;
 
     explicit GeneratorPVWatts(std::shared_ptr<detail::GeneratorPVWatts_Impl> impl);
 
@@ -154,10 +154,10 @@ namespace model {
   };
 
   /** \relates GeneratorPVWatts*/
-  typedef boost::optional<GeneratorPVWatts> OptionalGeneratorPVWatts;
+  using OptionalGeneratorPVWatts = boost::optional<GeneratorPVWatts>;
 
   /** \relates GeneratorPVWatts*/
-  typedef std::vector<GeneratorPVWatts> GeneratorPVWattsVector;
+  using GeneratorPVWattsVector = std::vector<GeneratorPVWatts>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -78,7 +78,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ClimateZones_Impl ImplType;
+    using ImplType = detail::ClimateZones_Impl;
 
     friend class IdfExtensibleGroup;
     friend class detail::ClimateZones_Impl;
@@ -94,7 +94,7 @@ namespace model {
   };
 
   /** \relates ClimateZone */
-  typedef std::vector<ClimateZone> ClimateZoneVector;
+  using ClimateZoneVector = std::vector<ClimateZone>;
 
   /** ClimateZones is a unque ModelObject that wraps the OpenStudio IDD object 'OS:ClimateZones'.
  *  As a location identifier, it is a child of Site. ClimateZones was added to support building
@@ -206,7 +206,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ClimateZones_Impl ImplType;
+    using ImplType = detail::ClimateZones_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -221,7 +221,7 @@ namespace model {
   };
 
   /** \relates ClimateZones */
-  typedef boost::optional<ClimateZones> OptionalClimateZones;
+  using OptionalClimateZones = boost::optional<ClimateZones>;
 
 }  // namespace model
 }  // namespace openstudio

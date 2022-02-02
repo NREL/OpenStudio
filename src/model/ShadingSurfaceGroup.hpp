@@ -113,7 +113,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ShadingSurfaceGroup_Impl ImplType;
+    using ImplType = detail::ShadingSurfaceGroup_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -126,10 +126,10 @@ namespace model {
   };
 
   /** \relates ShadingSurfaceGroup*/
-  typedef boost::optional<ShadingSurfaceGroup> OptionalShadingSurfaceGroup;
+  using OptionalShadingSurfaceGroup = boost::optional<ShadingSurfaceGroup>;
 
   /** \relates ShadingSurfaceGroup*/
-  typedef std::vector<ShadingSurfaceGroup> ShadingSurfaceGroupVector;
+  using ShadingSurfaceGroupVector = std::vector<ShadingSurfaceGroup>;
 
 }  // namespace model
 }  // namespace openstudio

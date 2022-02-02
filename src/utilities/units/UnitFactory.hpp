@@ -62,7 +62,7 @@ class UTILITIES_API UnitFactorySingleton
  public:
   /** Units are created by functions that accept no arguments and return
    *  something that can be converted into a Unit::Ptr. */
-  typedef boost::function<Unit()> CreateUnitCallback;
+  using CreateUnitCallback = boost::function<Unit()>;
 
   // FACTORY MAINTENANCE
 
@@ -95,17 +95,17 @@ class UTILITIES_API UnitFactorySingleton
   REGISTER_LOGGER("openstudio.units.UnitFactory");
   UnitFactorySingleton();
 
-  typedef std::map<std::string, boost::optional<Unit>> ResultCacheMap;
+  using ResultCacheMap = std::map<std::string, boost::optional<Unit>>;
 
   mutable ResultCacheMap m_resultCacheMap;
 
-  typedef std::map<std::string, CreateUnitCallback> StandardStringCallbackMap;
-  typedef std::map<UnitSystem, StandardStringCallbackMap> CallbackMapMap;
+  using StandardStringCallbackMap = std::map<std::string, CreateUnitCallback>;
+  using CallbackMapMap = std::map<UnitSystem, StandardStringCallbackMap>;
 
   CallbackMapMap m_callbackMaps;
 
-  typedef std::map<std::string, std::string> PrettyStringLookupMap;
-  typedef std::map<std::string, std::vector<std::string>> StandardStringLookupMap;
+  using PrettyStringLookupMap = std::map<std::string, std::string>;
+  using StandardStringLookupMap = std::map<std::string, std::vector<std::string>>;
 
   StandardStringLookupMap m_standardStringLookupMap;  // look up alias, get back standardString
   PrettyStringLookupMap m_prettyStringLookupMap;      // look up standardString, get back prettyString
@@ -116,7 +116,7 @@ class UTILITIES_API UnitFactorySingleton
 
 /** Typedef for accessing the UnitFactorySingleton as UnitFactory::instance().
  *  \relates UnitFactorySingleton */
-typedef openstudio::Singleton<UnitFactorySingleton> UnitFactory;
+using UnitFactory = openstudio::Singleton<UnitFactorySingleton>;
 
 /** Returns the best match UnitSystem for unitString, in priority order SI, IP, ..., Mixed
  *  \relates UnitFactorySingleton */

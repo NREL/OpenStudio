@@ -287,7 +287,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellPowerModule_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellPowerModule_Impl;
 
     explicit GeneratorFuelCellPowerModule(std::shared_ptr<detail::GeneratorFuelCellPowerModule_Impl> impl);
 
@@ -301,10 +301,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellPowerModule*/
-  typedef boost::optional<GeneratorFuelCellPowerModule> OptionalGeneratorFuelCellPowerModule;
+  using OptionalGeneratorFuelCellPowerModule = boost::optional<GeneratorFuelCellPowerModule>;
 
   /** \relates GeneratorFuelCellPowerModule*/
-  typedef std::vector<GeneratorFuelCellPowerModule> GeneratorFuelCellPowerModuleVector;
+  using GeneratorFuelCellPowerModuleVector = std::vector<GeneratorFuelCellPowerModule>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -81,7 +81,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithDefaultData) {
   ScheduleCompact wds(model);
   RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
   EXPECT_DOUBLE_EQ(4690.0, testObjectClone.ratedCoilCoolingCapacity());
   EXPECT_DOUBLE_EQ(-2.22, testObjectClone.operatingTemperature());
@@ -133,7 +133,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneOneModelWithCustomData) {
   testObject.setInsulatedFloorSurfaceArea(999.0);
   testObject.setInsulatedFloorUValue(999.0);
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedCoilCoolingCapacity());
   EXPECT_DOUBLE_EQ(-999.0, testObjectClone.operatingTemperature());
   EXPECT_DOUBLE_EQ(-70.0, testObjectClone.ratedCoolingSourceTemperature());
@@ -157,11 +157,11 @@ TEST_F(ModelFixture, RefrigerationWalkIn_CloneTwoModelsWithDefaultData) {
   ScheduleCompact wds(model);
   RefrigerationWalkIn testObject = RefrigerationWalkIn(model, wds);
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
   Model model2;
 
-  RefrigerationWalkIn testObjectClone2 = testObject.clone(model2).cast<RefrigerationWalkIn>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationWalkIn>();
   EXPECT_DOUBLE_EQ(4690.0, testObjectClone2.ratedCoilCoolingCapacity());
   EXPECT_DOUBLE_EQ(-2.22, testObjectClone2.operatingTemperature());
   EXPECT_DOUBLE_EQ(-6.67, testObjectClone2.ratedCoolingSourceTemperature());
@@ -238,7 +238,7 @@ TEST_F(ModelFixture, RefrigerationWalkIn_DefrostCycleParameters) {
 
   EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationWalkIn_Impl>()->optionalWalkinDefrostCycleParameters());
 
-  RefrigerationWalkIn testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationWalkIn>();
 
   EXPECT_FALSE(testObjectClone.getImpl<openstudio::model::detail::RefrigerationWalkIn_Impl>()->optionalWalkinDefrostCycleParameters());
 

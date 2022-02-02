@@ -118,7 +118,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationCondenserEvaporativeCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_Condenser_EvaporativeCooledFields::EvaporativeCondenserAvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationCondenserEvaporativeCooled", "Evaporative Condenser Availability"));
       }
@@ -598,7 +599,7 @@ namespace model {
       std::vector<RefrigerationSystem> systems =
         getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
 
-      if (systems.size() > 0u) {
+      if (!systems.empty()) {
         if (systems.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
         }
@@ -642,7 +643,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCondenserEvaporativeCooled::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled);
+    return {IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled};
   }
 
   std::vector<std::string> RefrigerationCondenserEvaporativeCooled::fanSpeedControlTypeValues() {

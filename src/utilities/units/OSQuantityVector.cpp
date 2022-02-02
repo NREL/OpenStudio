@@ -498,7 +498,8 @@ OSQuantityVector operator/(const OSQuantityVector& lVector, double d) {
 }
 
 Quantity dot(OSQuantityVector lVector, const OSQuantityVector& rVector) {
-  Unit lUnits(lVector.units()), rUnits(rVector.units());
+  Unit lUnits(lVector.units());
+  Unit rUnits(rVector.units());
   OptionalTemperatureUnit ltu = lUnits.optionalCast<TemperatureUnit>();
   OptionalTemperatureUnit rtu = rUnits.optionalCast<TemperatureUnit>();
   Unit resultUnits;
@@ -509,7 +510,8 @@ Quantity dot(OSQuantityVector lVector, const OSQuantityVector& rVector) {
   }
   ScaleOpReturnType resultScale = lVector.scale() * rVector.scale();
   lVector *= resultScale.second;
-  DoubleVector lValues(lVector.values()), rValues(rVector.values());
+  DoubleVector lValues(lVector.values());
+  DoubleVector rValues(rVector.values());
   double resultValue = dot(createVector(lValues), createVector(rValues));
   return Quantity(resultValue, resultUnits);
 }

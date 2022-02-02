@@ -154,7 +154,7 @@ namespace model {
       // We use getModelObjectSources to check if more than one
       std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
 
-      if (fcs.size() > 0u) {
+      if (!fcs.empty()) {
         if (fcs.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
         }
@@ -344,7 +344,7 @@ namespace model {
         result = false;
       } else {
         // Push an extensible group
-        WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, constituent.constituentName());
         bool ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, constituent.molarFraction());
         if (temp && ok) {
@@ -565,7 +565,7 @@ namespace model {
   }
 
   IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_FuelCell_AirSupply);
+    return {IddObjectType::OS_Generator_FuelCell_AirSupply};
   }
 
   double GeneratorFuelCellAirSupply::sumofConstituentsMolarFractions() const {

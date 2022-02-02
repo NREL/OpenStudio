@@ -79,7 +79,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::CurrencyType_Impl ImplType;
+    using ImplType = detail::CurrencyType_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -94,10 +94,10 @@ namespace model {
   };
 
   /** \relates CurrencyType */
-  typedef boost::optional<CurrencyType> OptionalCurrencyType;
+  using OptionalCurrencyType = boost::optional<CurrencyType>;
 
   /** \relates CurrencyType */
-  typedef std::vector<CurrencyType> CurrencyTypeVector;
+  using CurrencyTypeVector = std::vector<CurrencyType>;
 
 }  // namespace model
 }  // namespace openstudio

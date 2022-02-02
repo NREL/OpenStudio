@@ -125,7 +125,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerSingleZoneOneStageHeating testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageHeating>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageHeating>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -153,7 +153,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_cloneTwoAirloop) {
 
   Model m2;
 
-  SetpointManagerSingleZoneOneStageHeating testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneOneStageHeating>();
+  auto testObjectClone = testObject.clone(m2).cast<SetpointManagerSingleZoneOneStageHeating>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());
 
@@ -193,7 +193,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageHeating_customDataClone) {
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
   EXPECT_EQ(thermalZone, testObject.controlZone().get());
 
-  SetpointManagerSingleZoneOneStageHeating testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageHeating>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerSingleZoneOneStageHeating>();
 
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.controlZone());

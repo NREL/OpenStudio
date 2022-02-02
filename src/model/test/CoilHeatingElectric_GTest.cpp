@@ -104,7 +104,7 @@ TEST_F(ModelFixture, CoilHeatingElectric_addToNode) {
     EXPECT_EQ((unsigned)3, outdoorAirSystem.reliefComponents().size());
   }
 
-  CoilHeatingElectric testObjectClone = testObject.clone(m).cast<CoilHeatingElectric>();
+  auto testObjectClone = testObject.clone(m).cast<CoilHeatingElectric>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

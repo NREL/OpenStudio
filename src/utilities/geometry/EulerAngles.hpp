@@ -75,10 +75,10 @@ class UTILITIES_API EulerAngles
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const EulerAngles& angles);
 
 // optional EulerAngles
-typedef boost::optional<EulerAngles> OptionalEulerAngles;
+using OptionalEulerAngles = boost::optional<EulerAngles>;
 
 // vector of EulerAngles
-typedef std::vector<EulerAngles> EulerAnglesVector;
+using EulerAnglesVector = std::vector<EulerAngles>;
 
 }  // namespace openstudio
 

@@ -51,7 +51,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    openstudio::model::ZoneAirMassFlowConservation result = m_model.getUniqueModelObject<ZoneAirMassFlowConservation>();
+    auto result = m_model.getUniqueModelObject<ZoneAirMassFlowConservation>();
 
     OptionalString s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance, true);
     if (s) {

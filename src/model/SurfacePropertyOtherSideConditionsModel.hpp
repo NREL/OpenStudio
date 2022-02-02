@@ -81,7 +81,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfacePropertyOtherSideConditionsModel_Impl ImplType;
+    using ImplType = detail::SurfacePropertyOtherSideConditionsModel_Impl;
 
     explicit SurfacePropertyOtherSideConditionsModel(std::shared_ptr<detail::SurfacePropertyOtherSideConditionsModel_Impl> impl);
 
@@ -95,10 +95,10 @@ namespace model {
   };
 
   /** \relates SurfacePropertyOtherSideConditionsModel*/
-  typedef boost::optional<SurfacePropertyOtherSideConditionsModel> OptionalSurfacePropertyOtherSideConditionsModel;
+  using OptionalSurfacePropertyOtherSideConditionsModel = boost::optional<SurfacePropertyOtherSideConditionsModel>;
 
   /** \relates SurfacePropertyOtherSideConditionsModel*/
-  typedef std::vector<SurfacePropertyOtherSideConditionsModel> SurfacePropertyOtherSideConditionsModelVector;
+  using SurfacePropertyOtherSideConditionsModelVector = std::vector<SurfacePropertyOtherSideConditionsModel>;
 
 }  // namespace model
 }  // namespace openstudio

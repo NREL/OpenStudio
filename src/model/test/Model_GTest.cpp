@@ -713,8 +713,8 @@ TEST_F(ModelFixture, MatchSurfaces) {
   ASSERT_TRUE(surface28OptModelObj);
 
   //change the surfaces to Surface class
-  Surface surface16 = surface16OptModelObj.get().cast<Surface>();
-  Surface surface28 = surface28OptModelObj.get().cast<Surface>();
+  auto surface16 = surface16OptModelObj.get().cast<Surface>();
+  auto surface28 = surface28OptModelObj.get().cast<Surface>();
 
   //before surface matching, both walls should have exterior boundary condition
   EXPECT_EQ("Outdoors", surface16.outsideBoundaryCondition());

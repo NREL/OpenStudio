@@ -142,7 +142,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoolingTowerVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_CoolingTower_VariableSpeedFields::BasinHeaterOperatingSchedule) != e) {
         result.push_back(ScheduleTypeKey("CoolingTowerVariableSpeed", "Basin Heater Operating Schedule"));
       }
@@ -766,7 +767,7 @@ namespace model {
   }
 
   IddObjectType CoolingTowerVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_CoolingTower_VariableSpeed);
+    return {IddObjectType::OS_CoolingTower_VariableSpeed};
   }
 
   std::vector<std::string> CoolingTowerVariableSpeed::modelTypeValues() {

@@ -62,7 +62,7 @@ namespace detail {
       return false;
     }
 
-    if (m_standardsRoot.getMemberNames().size() < 1) {
+    if (m_standardsRoot.getMemberNames().empty()) {
       LOG(Warn, "Root doesn't have at least one entry");
       return false;
     }
@@ -74,7 +74,7 @@ namespace detail {
     }
 
     const Json::Value m_standardsArr = m_standardsRoot.get(primaryKey, Json::arrayValue);
-    if (m_standardsArr.size() < 1) {
+    if (m_standardsArr.empty()) {
       LOG(Warn, "First entry should be an array with at least one element");
       return false;
     }

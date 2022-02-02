@@ -291,7 +291,7 @@ double sum(const Vector& vector) {
 /// maximum
 double maximum(const Vector& vector) {
   double max = 0;
-  if (vector.size() > 0) {
+  if (!vector.empty()) {
     max = *std::max_element(vector.begin(), vector.end());
   }
   return max;
@@ -300,7 +300,7 @@ double maximum(const Vector& vector) {
 /// minimum
 double minimum(const Vector& vector) {
   double min = 0;
-  if (vector.size() > 0) {
+  if (!vector.empty()) {
     min = *std::min_element(vector.begin(), vector.end());
   }
   return min;
@@ -333,27 +333,27 @@ double stdDev(const Vector& vector) {
 }
 
 std::function<double(const Vector&)> sumVectorFunctor() {
-  return std::function<double(const Vector&)>(&sum);
+  return {&sum};
 }
 
 std::function<double(const Vector&)> maximumVectorFunctor() {
-  return std::function<double(const Vector&)>(&maximum);
+  return {&maximum};
 }
 
 std::function<double(const Vector&)> minimumVectorFunctor() {
-  return std::function<double(const Vector&)>(&minimum);
+  return {&minimum};
 }
 
 std::function<double(const Vector&)> meanVectorFunctor() {
-  return std::function<double(const Vector&)>(&mean);
+  return {&mean};
 }
 
 std::function<double(const Vector&)> varianceVectorFunctor() {
-  return std::function<double(const Vector&)>(&variance);
+  return {&variance};
 }
 
 std::function<double(const Vector&)> stdDevVectorFunctor() {
-  return std::function<double(const Vector&)>(&stdDev);
+  return {&stdDev};
 }
 
 double evaluateDoubleFromVectorFunctor(const std::function<double(const Vector&)>& functor, const Vector& vector) {

@@ -77,7 +77,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputDebuggingData_Impl ImplType;
+    using ImplType = detail::OutputDebuggingData_Impl;
 
     explicit OutputDebuggingData(std::shared_ptr<detail::OutputDebuggingData_Impl> impl);
 
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates OutputDebuggingData*/
-  typedef boost::optional<OutputDebuggingData> OptionalOutputDebuggingData;
+  using OptionalOutputDebuggingData = boost::optional<OutputDebuggingData>;
 
   /** \relates OutputDebuggingData*/
-  typedef std::vector<OutputDebuggingData> OutputDebuggingDataVector;
+  using OutputDebuggingDataVector = std::vector<OutputDebuggingData>;
 
 }  // namespace model
 }  // namespace openstudio

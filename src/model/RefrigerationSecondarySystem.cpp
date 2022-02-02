@@ -121,7 +121,7 @@ namespace model {
       auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
       }
 
@@ -726,7 +726,7 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationSecondarySystem_Impl::system() const {
       boost::optional<RefrigerationSystem> result;
 
-      RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+      auto refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
       for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationSecondarySystemVector refrigerationSecondarySystems = refrigerationSystem.secondarySystemLoads();
         if (!refrigerationSecondarySystems.empty()
@@ -742,7 +742,7 @@ namespace model {
 
     void RefrigerationSecondarySystem_Impl::removeFromSystem() {
       if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
-        RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+        auto refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
         refrigerationSystem->removeSecondarySystemLoad(refrigerationSecondarySystem);
       }
     }
@@ -778,7 +778,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationSecondarySystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_SecondarySystem);
+    return {IddObjectType::OS_Refrigeration_SecondarySystem};
   }
 
   std::vector<std::string> RefrigerationSecondarySystem::circulatingFluidNameValues() {

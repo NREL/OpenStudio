@@ -59,7 +59,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDiagnostics) {
   Model m;
 
   // Get the unique object
-  OutputDiagnostics outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
+  auto outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
 
   EXPECT_TRUE(outputDiagnostics.keys().empty());
   // No keys: not translated
@@ -117,7 +117,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    OutputDiagnostics outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
+    auto outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
 
     // Should have three keys, one was duplicate
     ASSERT_EQ(3u, outputDiagnostics.keys().size());

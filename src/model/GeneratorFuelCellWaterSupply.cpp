@@ -118,7 +118,7 @@ namespace model {
       // We use getModelObjectSources to check if more than one
       std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
 
-      if (fcs.size() > 0u) {
+      if (!fcs.empty()) {
         if (fcs.size() > 1u) {
           LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
         }
@@ -130,7 +130,8 @@ namespace model {
     std::vector<ScheduleTypeKey> GeneratorFuelCellWaterSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Generator_FuelCell_WaterSupplyFields::WaterTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("GeneratorFuelCellWaterSupply", "Water Temperature"));
       }
@@ -205,7 +206,7 @@ namespace model {
       //make sure SiteWaterMainsTemperature object exits for MainsWaterTemperature mode
       if (waterTemperatureModelingMode == "MainsWaterTemperature") {
         if (!this->model().getOptionalUniqueModelObject<SiteWaterMainsTemperature>()) {
-          SiteWaterMainsTemperature watertemp = this->model().getUniqueModelObject<SiteWaterMainsTemperature>();
+          auto watertemp = this->model().getUniqueModelObject<SiteWaterMainsTemperature>();
           watertemp.setCalculationMethod("Correlation");
           watertemp.setAnnualAverageOutdoorAirTemperature(9.69);
           watertemp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(28.1);
@@ -370,7 +371,7 @@ namespace model {
   }
 
   IddObjectType GeneratorFuelCellWaterSupply::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_FuelCell_WaterSupply);
+    return {IddObjectType::OS_Generator_FuelCell_WaterSupply};
   }
 
   std::vector<std::string> GeneratorFuelCellWaterSupply::waterTemperatureModelingModeValues() {

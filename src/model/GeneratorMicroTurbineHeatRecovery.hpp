@@ -174,7 +174,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorMicroTurbineHeatRecovery_Impl ImplType;
+    using ImplType = detail::GeneratorMicroTurbineHeatRecovery_Impl;
 
     explicit GeneratorMicroTurbineHeatRecovery(std::shared_ptr<detail::GeneratorMicroTurbineHeatRecovery_Impl> impl);
 
@@ -188,10 +188,10 @@ namespace model {
   };
 
   /** \relates GeneratorMicroTurbineHeatRecovery*/
-  typedef boost::optional<GeneratorMicroTurbineHeatRecovery> OptionalGeneratorMicroTurbineHeatRecovery;
+  using OptionalGeneratorMicroTurbineHeatRecovery = boost::optional<GeneratorMicroTurbineHeatRecovery>;
 
   /** \relates GeneratorMicroTurbineHeatRecovery*/
-  typedef std::vector<GeneratorMicroTurbineHeatRecovery> GeneratorMicroTurbineHeatRecoveryVector;
+  using GeneratorMicroTurbineHeatRecoveryVector = std::vector<GeneratorMicroTurbineHeatRecovery>;
 
 }  // namespace model
 }  // namespace openstudio

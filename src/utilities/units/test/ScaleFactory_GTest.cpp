@@ -63,7 +63,7 @@ TEST_F(UnitsFixture, ScaleFactory_RegisteredScales) {
   std::stringstream factoryOut;
 
   std::vector<Scale>::const_iterator scaleIter;
-  std::vector<Scale>::const_iterator scaleEnd = scales.end();
+  auto scaleEnd = scales.end();
   for (scaleIter = scales.begin(); scaleIter != scaleEnd; ++scaleIter) {
     vectorOut << *scaleIter << '\n';
   }
@@ -71,7 +71,7 @@ TEST_F(UnitsFixture, ScaleFactory_RegisteredScales) {
   factoryOut << ScaleFactory::instance();
   std::string factoryOutFromInstance = factoryOut.str();
 
-  EXPECT_FALSE(factoryOutFromInstance == "");
+  EXPECT_FALSE(factoryOutFromInstance.empty());
   EXPECT_TRUE(factoryOutFromInstance == vectorOut.str());
 
   // print to log so can add formatting if desired

@@ -104,7 +104,7 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> ControllerOutdoorAir_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -185,7 +185,7 @@ namespace model {
           return OptionalAirLoopHVACOutdoorAirSystem(*it);
         }
       }
-      return OptionalAirLoopHVACOutdoorAirSystem();
+      return {};
     }
 
     boost::optional<double> ControllerOutdoorAir_Impl::minimumOutdoorAirFlowRate() const {
@@ -444,8 +444,7 @@ namespace model {
     ModelObject ControllerOutdoorAir_Impl::clone(Model model) const {
       auto oaControllerClone = ParentObject_Impl::clone(model).cast<ControllerOutdoorAir>();
 
-      ControllerMechanicalVentilation mechVentControllerClone =
-        controllerMechanicalVentilation().clone(model).cast<ControllerMechanicalVentilation>();
+      auto mechVentControllerClone = controllerMechanicalVentilation().clone(model).cast<ControllerMechanicalVentilation>();
 
       oaControllerClone.setControllerMechanicalVentilation(mechVentControllerClone);
 
@@ -516,7 +515,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ControllerOutdoorAir", "Minimum Outdoor Air"));
       }

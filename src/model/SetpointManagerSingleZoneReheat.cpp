@@ -78,7 +78,7 @@ namespace model {
           ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
           if (!modelObjectVector.empty()) {
             ModelObject mo = modelObjectVector.front();
-            ThermalZone thermalZone = mo.cast<ThermalZone>();
+            auto thermalZone = mo.cast<ThermalZone>();
             this->setControlZone(thermalZone);
           }
           return true;
@@ -131,13 +131,13 @@ namespace model {
     }
 
     boost::optional<ThermalZone> SetpointManagerSingleZoneReheat_Impl::controlZone() {
-      SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
+      auto thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
 
       return thisModelObject.getModelObjectTarget<ThermalZone>(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName);
     }
 
     bool SetpointManagerSingleZoneReheat_Impl::setControlZone(ThermalZone& thermalZone) {
-      SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
+      auto thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
 
       return thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName, thermalZone.handle());
     }

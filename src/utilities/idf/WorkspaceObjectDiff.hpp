@@ -58,7 +58,7 @@ class UTILITIES_API WorkspaceObjectDiff : public IdfObjectDiff
  private:
   friend class IdfObjectDiff;
 
-  typedef detail::WorkspaceObjectDiff_Impl ImplType;
+  using ImplType = detail::WorkspaceObjectDiff_Impl;
 
   WorkspaceObjectDiff(const std::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl);
 };

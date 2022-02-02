@@ -1254,7 +1254,7 @@ TEST_F(EnergyPlusFixture, noForwardTranslatorOutput_EMS) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
   Model model;
-  OutputEnergyManagementSystem oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -1276,7 +1276,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
 TEST_F(EnergyPlusFixture, ReverseTranslatorOutput_EMS) {
 
   Model model;
-  OutputEnergyManagementSystem oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oEMS = model.getUniqueModelObject<OutputEnergyManagementSystem>();
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -1864,7 +1864,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
 
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
   std::vector<Lights> lights = model.getModelObjects<Lights>();
@@ -1922,7 +1922,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   //and the zones in the list are the space.thermalzone names
 
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
   std::vector<Lights> lights = model.getModelObjects<Lights>();
@@ -2006,7 +2006,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API_EMS) {
 
   //Model model;
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
   std::vector<Lights> lights = model.getModelObjects<Lights>();
@@ -2088,7 +2088,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
 
   //Model model;
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
   std::vector<Lights> lights = model.getModelObjects<Lights>();
@@ -2170,7 +2170,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
 
   //Model model;
   Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
   std::vector<Lights> lights = model.getModelObjects<Lights>();
@@ -2315,7 +2315,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   // There should be 10 references in total, 4 for Var1 and 5 for Var2, 1 for DummySubRoutine, so only two unique refs (Var1 and Var2)
   EXPECT_EQ(10u, refObjs.size());
 
-  int n1(0), n2(0), n3(0), n0(0);
+  int n1(0);
+  int n2(0);
+  int n3(0);
+  int n0(0);
 
   for (const ModelObject& refObj : refObjs) {
     std::string oname = refObj.name().get();

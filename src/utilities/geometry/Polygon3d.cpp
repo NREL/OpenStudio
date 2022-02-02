@@ -80,7 +80,7 @@ Vector3d Polygon3d::newallVector() {
     return v.get();
   }
 
-  return Vector3d();
+  return {};
 }
 
 Vector3d Polygon3d::outwardNormal() {
@@ -133,7 +133,7 @@ Point3d Polygon3d::centroid() {
     return p.get();
   }
 
-  return Point3d();
+  return {};
 }
 
 bool Polygon3d::pointInPolygon(const Point3d& point, double tol) {

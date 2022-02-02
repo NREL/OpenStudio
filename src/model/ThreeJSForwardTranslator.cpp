@@ -381,8 +381,8 @@ namespace model {
         faceIndices.push_back(openstudioFaceFormatId());
       }
 
-      Point3dVector::reverse_iterator it = finalVerts.rbegin();
-      Point3dVector::reverse_iterator itend = finalVerts.rend();
+      auto it = finalVerts.rbegin();
+      auto itend = finalVerts.rend();
       for (; it != itend; ++it) {
         faceIndices.push_back(getVertexIndex(*it, allVertices));
       }

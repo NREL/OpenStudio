@@ -120,7 +120,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HotWaterEquipment_Impl ImplType;
+    using ImplType = detail::HotWaterEquipment_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -133,10 +133,10 @@ namespace model {
   };
 
   /** \relates HotWaterEquipment*/
-  typedef boost::optional<HotWaterEquipment> OptionalHotWaterEquipment;
+  using OptionalHotWaterEquipment = boost::optional<HotWaterEquipment>;
 
   /** \relates HotWaterEquipment*/
-  typedef std::vector<HotWaterEquipment> HotWaterEquipmentVector;
+  using HotWaterEquipmentVector = std::vector<HotWaterEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

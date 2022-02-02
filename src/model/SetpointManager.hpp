@@ -92,7 +92,7 @@ namespace model {
     friend class detail::SetpointManager_Impl;
 
     /// @cond
-    typedef detail::SetpointManager_Impl ImplType;
+    using ImplType = detail::SetpointManager_Impl;
 
     explicit SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> impl);
 
@@ -101,8 +101,8 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<SetpointManager> OptionalSetpointManager;
-  typedef std::vector<SetpointManager> SetpointManagerVector;
+  using OptionalSetpointManager = boost::optional<SetpointManager>;
+  using SetpointManagerVector = std::vector<SetpointManager>;
 
 }  // namespace model
 

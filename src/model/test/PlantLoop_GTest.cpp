@@ -116,7 +116,7 @@ TEST_F(ModelFixture, PlantLoop_supplyComponents) {
   ASSERT_TRUE(comp);
   ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Splitter, comp->iddObjectType().value());
 
-  ConnectorSplitter splitter = comp->cast<ConnectorSplitter>();
+  auto splitter = comp->cast<ConnectorSplitter>();
   comp = splitter.lastOutletModelObject();
   ASSERT_TRUE(comp);
   ASSERT_EQ(openstudio::IddObjectType::OS_Node, comp->iddObjectType().value());
@@ -126,7 +126,7 @@ TEST_F(ModelFixture, PlantLoop_supplyComponents) {
   ASSERT_TRUE(comp);
   ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Mixer, comp->iddObjectType().value());
 
-  ConnectorMixer mixer = comp->cast<ConnectorMixer>();
+  auto mixer = comp->cast<ConnectorMixer>();
   comp = mixer.outletModelObject();
   ASSERT_TRUE(comp);
   Node supplyOutletNode = plantLoop.supplyOutletNode();
@@ -144,7 +144,7 @@ TEST_F(ModelFixture, PlantLoop_supplyComponents) {
 
   // Add a new supply branch
 
-  ChillerElectricEIR chiller2 = chiller.clone(m).cast<ChillerElectricEIR>();
+  auto chiller2 = chiller.clone(m).cast<ChillerElectricEIR>();
 
   ASSERT_EQ(1u, splitter.nextBranchIndex());
   ASSERT_EQ(1u, mixer.nextBranchIndex());
@@ -498,12 +498,12 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManagers) {
   ASSERT_EQ(6u, p.availabilityManagers().size());
 
   // Test Clone, same model
-  PlantLoop p2 = p.clone(m).cast<PlantLoop>();
+  auto p2 = p.clone(m).cast<PlantLoop>();
   ASSERT_EQ(6u, p2.availabilityManagers().size());
 
   // Test Clone, different model
   Model m2;
-  PlantLoop p3 = p.clone(m2).cast<PlantLoop>();
+  auto p3 = p.clone(m2).cast<PlantLoop>();
   ASSERT_EQ(6u, p3.availabilityManagers().size());
 
   // reset shouldn't affect the clone

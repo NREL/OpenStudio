@@ -81,7 +81,7 @@ TEST(Compare, IstringCompare) {
   LOG_FREE(Info, "Compare", "Entering IstringEqual")
 
   // make sure insensitive string compare functor works for sets
-  typedef std::set<string, IstringCompare> SetType;
+  using SetType = std::set<string, IstringCompare>;
   SetType words;
   words.insert("lorem ipsum");
 
@@ -107,8 +107,8 @@ TEST(Compare, IstringPairCompare) {
   LOG_FREE(Info, "Compare", "Entering IstringPairCompare")
 
   // make sure insensitive string compare functor works for sets of pairs
-  typedef std::pair<string, string> PairType;
-  typedef std::set<PairType, IstringPairCompare> SetType;
+  using PairType = std::pair<string, string>;
+  using SetType = std::set<PairType, IstringPairCompare>;
   SetType words;
   words.insert(PairType("lorem", "ipsum"));
 
@@ -139,7 +139,7 @@ TEST(Compare, IstringPairCompare) {
 TEST(Compare, checkPtrVecEqual) {
   LOG_FREE(Info, "Compare", "Entering IstringPairCompare")
 
-  typedef std::vector<shared_ptr<double>> VectorType;
+  using VectorType = std::vector<shared_ptr<double>>;
 
   VectorType v1;
   VectorType v2;

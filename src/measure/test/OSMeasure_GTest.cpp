@@ -62,7 +62,7 @@ class TestOSRunner : public OSRunner
  public:
   TestOSRunner(const WorkflowJSON& workflow) : OSRunner(workflow) {}
 
-  virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const override {
+  virtual bool inSelection(const openstudio::model::ModelObject& /*modelObject*/) const override {
     return false;
   }
 };

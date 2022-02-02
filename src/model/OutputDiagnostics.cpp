@@ -88,7 +88,7 @@ namespace model {
         return true;
       }
 
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool result = eg.setString(OS_Output_DiagnosticsExtensibleFields::Key, key);
       if (!result) {
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
@@ -124,7 +124,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputDiagnostics::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_Diagnostics);
+    return {IddObjectType::OS_Output_Diagnostics};
   }
 
   std::vector<std::string> OutputDiagnostics::keyValues() {

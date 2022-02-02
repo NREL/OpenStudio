@@ -261,7 +261,7 @@ namespace model {
         temp.push_back(boost::lexical_cast<std::string>(time.minutes()));
         temp.push_back(toString(values[i]));
 
-        ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+        auto group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
       }
 

@@ -62,7 +62,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::GenericModelObject_Impl ImplType;
+    using ImplType = detail::GenericModelObject_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -77,10 +77,10 @@ namespace model {
   };
 
   // optional GenericModelObject
-  typedef boost::optional<GenericModelObject> OptionalGenericModelObject;
+  using OptionalGenericModelObject = boost::optional<GenericModelObject>;
 
   // vector of GenericModelObject
-  typedef std::vector<GenericModelObject> GenericModelObjectVector;
+  using GenericModelObjectVector = std::vector<GenericModelObject>;
 
 }  // namespace model
 }  // namespace openstudio

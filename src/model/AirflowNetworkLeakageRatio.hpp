@@ -94,7 +94,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkLeakageRatio_Impl ImplType;
+    using ImplType = detail::AirflowNetworkLeakageRatio_Impl;
 
     explicit AirflowNetworkLeakageRatio(std::shared_ptr<detail::AirflowNetworkLeakageRatio_Impl> impl);
 
@@ -108,10 +108,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkLeakageRatio*/
-  typedef boost::optional<AirflowNetworkLeakageRatio> OptionalAirflowNetworkLeakageRatio;
+  using OptionalAirflowNetworkLeakageRatio = boost::optional<AirflowNetworkLeakageRatio>;
 
   /** \relates AirflowNetworkLeakageRatio*/
-  typedef std::vector<AirflowNetworkLeakageRatio> AirflowNetworkLeakageRatioVector;
+  using AirflowNetworkLeakageRatioVector = std::vector<AirflowNetworkLeakageRatio>;
 
 }  // namespace model
 }  // namespace openstudio

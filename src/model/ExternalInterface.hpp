@@ -75,7 +75,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterface_Impl ImplType;
+    using ImplType = detail::ExternalInterface_Impl;
 
     explicit ExternalInterface(std::shared_ptr<detail::ExternalInterface_Impl> impl);
 
@@ -91,10 +91,10 @@ namespace model {
   };
 
   /** \relates ExternalInterface*/
-  typedef boost::optional<ExternalInterface> OptionalExternalInterface;
+  using OptionalExternalInterface = boost::optional<ExternalInterface>;
 
   /** \relates ExternalInterface*/
-  typedef std::vector<ExternalInterface> ExternalInterfaceVector;
+  using ExternalInterfaceVector = std::vector<ExternalInterface>;
 
 }  // namespace model
 }  // namespace openstudio

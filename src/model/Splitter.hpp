@@ -102,7 +102,7 @@ namespace model {
    protected:
     Splitter(IddObjectType type, const Model& model);
 
-    typedef detail::Splitter_Impl ImplType;
+    using ImplType = detail::Splitter_Impl;
 
     friend class Model;
 
@@ -114,7 +114,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.Splitter");
   };
 
-  typedef boost::optional<Splitter> OptionalSplitter;
+  using OptionalSplitter = boost::optional<Splitter>;
 
 }  // namespace model
 

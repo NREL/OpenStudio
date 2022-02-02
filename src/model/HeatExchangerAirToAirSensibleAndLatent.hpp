@@ -152,7 +152,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::HeatExchangerAirToAirSensibleAndLatent_Impl ImplType;
+    using ImplType = detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
 
     explicit HeatExchangerAirToAirSensibleAndLatent(std::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl);
 
@@ -168,10 +168,10 @@ namespace model {
   };
 
   /** \relates HeatExchangerAirToAirSensibleAndLatent*/
-  typedef boost::optional<HeatExchangerAirToAirSensibleAndLatent> OptionalHeatExchangerAirToAirSensibleAndLatent;
+  using OptionalHeatExchangerAirToAirSensibleAndLatent = boost::optional<HeatExchangerAirToAirSensibleAndLatent>;
 
   /** \relates HeatExchangerAirToAirSensibleAndLatent*/
-  typedef std::vector<HeatExchangerAirToAirSensibleAndLatent> HeatExchangerAirToAirSensibleAndLatentVector;
+  using HeatExchangerAirToAirSensibleAndLatentVector = std::vector<HeatExchangerAirToAirSensibleAndLatent>;
 
 }  // namespace model
 }  // namespace openstudio

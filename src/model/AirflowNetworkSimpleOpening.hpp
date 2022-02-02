@@ -93,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkSimpleOpening_Impl ImplType;
+    using ImplType = detail::AirflowNetworkSimpleOpening_Impl;
 
     explicit AirflowNetworkSimpleOpening(std::shared_ptr<detail::AirflowNetworkSimpleOpening_Impl> impl);
 
@@ -107,10 +107,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkSimpleOpening*/
-  typedef boost::optional<AirflowNetworkSimpleOpening> OptionalAirflowNetworkSimpleOpening;
+  using OptionalAirflowNetworkSimpleOpening = boost::optional<AirflowNetworkSimpleOpening>;
 
   /** \relates AirflowNetworkSimpleOpening*/
-  typedef std::vector<AirflowNetworkSimpleOpening> AirflowNetworkSimpleOpeningVector;
+  using AirflowNetworkSimpleOpeningVector = std::vector<AirflowNetworkSimpleOpening>;
 
 }  // namespace model
 }  // namespace openstudio

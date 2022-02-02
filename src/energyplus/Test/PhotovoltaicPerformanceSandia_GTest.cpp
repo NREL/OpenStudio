@@ -76,7 +76,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   auto perfName = perfNames[5];
 
   GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::fromSandiaDatabase(m, perfName);
-  PhotovoltaicPerformanceSandia sandiaPerf = panel.photovoltaicPerformance().cast<PhotovoltaicPerformanceSandia>();
+  auto sandiaPerf = panel.photovoltaicPerformance().cast<PhotovoltaicPerformanceSandia>();
   panel.setNumberOfModulesInParallel(3);
   panel.setNumberOfModulesInSeries(6);
   panel.setRatedElectricPowerOutput(20000);
@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
 
   // There should be only one generator
   ASSERT_EQ(1u, idf_genlist.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg_gen = idf_genlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto w_eg_gen = idf_genlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Generator:Photovoltaic", w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType).get());
   ASSERT_EQ(w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName).get(), panel.name());

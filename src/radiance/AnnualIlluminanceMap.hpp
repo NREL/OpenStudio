@@ -49,7 +49,7 @@ namespace radiance {
   {
    private:
     // map of DateTime to Matrix (illuminance map)
-    typedef std::map<openstudio::DateTime, openstudio::Matrix> DateTimeIlluminanceMap;
+    using DateTimeIlluminanceMap = std::map<openstudio::DateTime, openstudio::Matrix>;
 
    public:
     /// default constructor

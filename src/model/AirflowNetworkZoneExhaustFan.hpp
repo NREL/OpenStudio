@@ -83,7 +83,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkZoneExhaustFan_Impl ImplType;
+    using ImplType = detail::AirflowNetworkZoneExhaustFan_Impl;
 
     AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle);
 
@@ -102,10 +102,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkZoneExhaustFan*/
-  typedef boost::optional<AirflowNetworkZoneExhaustFan> OptionalAirflowNetworkZoneExhaustFan;
+  using OptionalAirflowNetworkZoneExhaustFan = boost::optional<AirflowNetworkZoneExhaustFan>;
 
   /** \relates AirflowNetworkZoneExhaustFan*/
-  typedef std::vector<AirflowNetworkZoneExhaustFan> AirflowNetworkZoneExhaustFanVector;
+  using AirflowNetworkZoneExhaustFanVector = std::vector<AirflowNetworkZoneExhaustFan>;
 
 }  // namespace model
 }  // namespace openstudio

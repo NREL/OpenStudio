@@ -169,7 +169,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(
       std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl> impl);
@@ -184,10 +184,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> OptionalAirTerminalSingleDuctConstantVolumeFourPipeInduction;
+  using OptionalAirTerminalSingleDuctConstantVolumeFourPipeInduction = boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction>;
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeInduction*/
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction> AirTerminalSingleDuctConstantVolumeFourPipeInductionVector;
+  using AirTerminalSingleDuctConstantVolumeFourPipeInductionVector = std::vector<AirTerminalSingleDuctConstantVolumeFourPipeInduction>;
 
 }  // namespace model
 }  // namespace openstudio

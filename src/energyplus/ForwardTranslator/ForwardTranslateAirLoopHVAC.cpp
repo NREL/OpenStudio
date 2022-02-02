@@ -316,7 +316,7 @@ namespace energyplus {
       }
     }
 
-    if (controllers.size() > 0) {
+    if (!controllers.empty()) {
       IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
       _controllerList.clearExtensibleGroups();
       _controllerList.setName(airLoopHVAC.name().get() + " Controllers");

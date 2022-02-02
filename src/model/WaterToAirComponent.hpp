@@ -115,7 +115,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::WaterToAirComponent_Impl ImplType;
+    using ImplType = detail::WaterToAirComponent_Impl;
 
     explicit WaterToAirComponent(std::shared_ptr<detail::WaterToAirComponent_Impl> impl);
 
@@ -127,7 +127,7 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<WaterToAirComponent> OptionalWaterToAirComponent;
+  using OptionalWaterToAirComponent = boost::optional<WaterToAirComponent>;
 
 }  // namespace model
 

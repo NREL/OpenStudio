@@ -189,7 +189,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FanVariableVolume_Impl ImplType;
+    using ImplType = detail::FanVariableVolume_Impl;
 
     friend class detail::FanVariableVolume_Impl;
 
@@ -205,10 +205,10 @@ namespace model {
   };
 
   /** \relates FanVariableVolume*/
-  typedef boost::optional<FanVariableVolume> OptionalFanVariableVolume;
+  using OptionalFanVariableVolume = boost::optional<FanVariableVolume>;
 
   /** \relates FanVariableVolume*/
-  typedef std::vector<FanVariableVolume> FanVariableVolumeVector;
+  using FanVariableVolumeVector = std::vector<FanVariableVolume>;
 
 }  // namespace model
 

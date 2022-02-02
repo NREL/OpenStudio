@@ -160,7 +160,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkHorizontalOpening::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkHorizontalOpening);
+    return {IddObjectType::OS_AirflowNetworkHorizontalOpening};
   }
 
   double AirflowNetworkHorizontalOpening::airMassFlowCoefficientWhenOpeningisClosed() const {

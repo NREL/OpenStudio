@@ -43,7 +43,7 @@ namespace openstudio {
 namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateOutputEnergyManagementSystem(const WorkspaceObject& workspaceObject) {
-    openstudio::model::OutputEnergyManagementSystem outputEMS = m_model.getUniqueModelObject<openstudio::model::OutputEnergyManagementSystem>();
+    auto outputEMS = m_model.getUniqueModelObject<openstudio::model::OutputEnergyManagementSystem>();
 
     OptionalString s = workspaceObject.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting);
     if (s) {

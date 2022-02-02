@@ -219,7 +219,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FoundationKiva_Impl ImplType;
+    using ImplType = detail::FoundationKiva_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -233,10 +233,10 @@ namespace model {
   };
 
   /** \relates FoundationKiva*/
-  typedef boost::optional<FoundationKiva> OptionalFoundationKiva;
+  using OptionalFoundationKiva = boost::optional<FoundationKiva>;
 
   /** \relates FoundationKiva*/
-  typedef std::vector<FoundationKiva> FoundationKivaVector;
+  using FoundationKivaVector = std::vector<FoundationKiva>;
 
 }  // namespace model
 }  // namespace openstudio

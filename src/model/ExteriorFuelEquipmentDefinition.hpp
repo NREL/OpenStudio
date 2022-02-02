@@ -77,7 +77,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorFuelEquipmentDefinition_Impl ImplType;
+    using ImplType = detail::ExteriorFuelEquipmentDefinition_Impl;
 
     explicit ExteriorFuelEquipmentDefinition(std::shared_ptr<detail::ExteriorFuelEquipmentDefinition_Impl> impl);
 
@@ -91,10 +91,10 @@ namespace model {
   };
 
   /** \relates ExteriorFuelEquipmentDefinition*/
-  typedef boost::optional<ExteriorFuelEquipmentDefinition> OptionalExteriorFuelEquipmentDefinition;
+  using OptionalExteriorFuelEquipmentDefinition = boost::optional<ExteriorFuelEquipmentDefinition>;
 
   /** \relates ExteriorFuelEquipmentDefinition*/
-  typedef std::vector<ExteriorFuelEquipmentDefinition> ExteriorFuelEquipmentDefinitionVector;
+  using ExteriorFuelEquipmentDefinitionVector = std::vector<ExteriorFuelEquipmentDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

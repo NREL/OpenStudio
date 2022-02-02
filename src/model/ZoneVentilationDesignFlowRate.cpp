@@ -94,7 +94,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneVentilationDesignFlowRate_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneVentilation_DesignFlowRateFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneVentilationDesignFlowRate", "Zone Ventilation Design Flow Rate"));
       }
@@ -484,7 +485,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneVentilationDesignFlowRate_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -559,7 +560,7 @@ namespace model {
   }
 
   IddObjectType ZoneVentilationDesignFlowRate::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneVentilation_DesignFlowRate);
+    return {IddObjectType::OS_ZoneVentilation_DesignFlowRate};
   }
 
   std::vector<std::string> ZoneVentilationDesignFlowRate::designFlowRateCalculationMethodValues() {

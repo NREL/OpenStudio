@@ -399,7 +399,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationGasCoolerAirCooled::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_GasCooler_AirCooled);
+    return {IddObjectType::OS_Refrigeration_GasCooler_AirCooled};
   }
 
   std::vector<std::string> RefrigerationGasCoolerAirCooled::gasCoolerFanSpeedControlTypeValues() {

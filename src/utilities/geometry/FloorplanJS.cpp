@@ -1873,7 +1873,7 @@ void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, cons
 }
 
 void FloorplanJS::updateObjectReference(Json::Value& value, const std::string& key, const FloorplanObject& objectReference,
-                                        bool removeMissingObjects) {
+                                        bool /*removeMissingObjects*/) {
   std::string searchKey;
   if (key == "thermal_zone_id") {
     searchKey = "thermal_zones";

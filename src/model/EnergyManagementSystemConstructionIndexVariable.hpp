@@ -80,7 +80,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemConstructionIndexVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemConstructionIndexVariable_Impl;
 
     explicit EnergyManagementSystemConstructionIndexVariable(std::shared_ptr<detail::EnergyManagementSystemConstructionIndexVariable_Impl> impl);
 
@@ -94,10 +94,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemConstructionIndexVariable*/
-  typedef boost::optional<EnergyManagementSystemConstructionIndexVariable> OptionalEnergyManagementSystemConstructionIndexVariable;
+  using OptionalEnergyManagementSystemConstructionIndexVariable = boost::optional<EnergyManagementSystemConstructionIndexVariable>;
 
   /** \relates EnergyManagementSystemConstructionIndexVariable*/
-  typedef std::vector<EnergyManagementSystemConstructionIndexVariable> EnergyManagementSystemConstructionIndexVariableVector;
+  using EnergyManagementSystemConstructionIndexVariableVector = std::vector<EnergyManagementSystemConstructionIndexVariable>;
 
 }  // namespace model
 }  // namespace openstudio

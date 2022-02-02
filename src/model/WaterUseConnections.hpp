@@ -97,7 +97,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::WaterUseConnections_Impl ImplType;
+    using ImplType = detail::WaterUseConnections_Impl;
 
     explicit WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl);
 
@@ -112,10 +112,10 @@ namespace model {
   };
 
   /** \relates WaterUseConnections*/
-  typedef boost::optional<WaterUseConnections> OptionalWaterUseConnections;
+  using OptionalWaterUseConnections = boost::optional<WaterUseConnections>;
 
   /** \relates WaterUseConnections*/
-  typedef std::vector<WaterUseConnections> WaterUseConnectionsVector;
+  using WaterUseConnectionsVector = std::vector<WaterUseConnections>;
 
 }  // namespace model
 }  // namespace openstudio

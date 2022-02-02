@@ -44,7 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateIlluminanceMap(model::IlluminanceMap& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateIlluminanceMap(model::IlluminanceMap& /*modelObject*/) {
     // real work is done in translateThermalZone
     return boost::none;
   }

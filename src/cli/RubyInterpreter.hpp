@@ -696,7 +696,7 @@ class RubyInterpreter
   }
 
  public:
-  explicit RubyInterpreter(const std::vector<std::string>& t_includePaths) {
+  explicit RubyInterpreter(const std::vector<std::string>& /*t_includePaths*/) {
 
     //// set load paths
     //std::vector<std::string> rubyArgs;

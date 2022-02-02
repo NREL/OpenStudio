@@ -84,7 +84,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AirLoopHVACSupplyPlenum_Impl ImplType;
+    using ImplType = detail::AirLoopHVACSupplyPlenum_Impl;
 
     explicit AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
 
@@ -98,10 +98,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACSupplyPlenum*/
-  typedef boost::optional<AirLoopHVACSupplyPlenum> OptionalAirLoopHVACSupplyPlenum;
+  using OptionalAirLoopHVACSupplyPlenum = boost::optional<AirLoopHVACSupplyPlenum>;
 
   /** \relates AirLoopHVACSupplyPlenum*/
-  typedef std::vector<AirLoopHVACSupplyPlenum> AirLoopHVACSupplyPlenumVector;
+  using AirLoopHVACSupplyPlenumVector = std::vector<AirLoopHVACSupplyPlenum>;
 
 }  // namespace model
 }  // namespace openstudio

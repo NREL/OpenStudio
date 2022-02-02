@@ -51,7 +51,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::WeatherFileConditionType_Impl ImplType;
+    using ImplType = detail::WeatherFileConditionType_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -64,10 +64,10 @@ namespace model {
   };
 
   /** \relates WeatherFileConditionType */
-  typedef boost::optional<WeatherFileConditionType> OptionalWeatherFileConditionType;
+  using OptionalWeatherFileConditionType = boost::optional<WeatherFileConditionType>;
 
   /** \relates WeatherFileConditionType */
-  typedef std::vector<WeatherFileConditionType> WeatherFileConditionTypeVector;
+  using WeatherFileConditionTypeVector = std::vector<WeatherFileConditionType>;
 
 }  // namespace model
 }  // namespace openstudio

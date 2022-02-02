@@ -117,7 +117,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SteamEquipment_Impl ImplType;
+    using ImplType = detail::SteamEquipment_Impl;
 
     friend class detail::SteamEquipment_Impl;
     friend class openstudio::detail::IdfObject_Impl;
@@ -132,10 +132,10 @@ namespace model {
   };
 
   /** \relates SteamEquipment*/
-  typedef boost::optional<SteamEquipment> OptionalSteamEquipment;
+  using OptionalSteamEquipment = boost::optional<SteamEquipment>;
 
   /** \relates SteamEquipment*/
-  typedef std::vector<SteamEquipment> SteamEquipmentVector;
+  using SteamEquipmentVector = std::vector<SteamEquipment>;
 
 }  // namespace model
 }  // namespace openstudio

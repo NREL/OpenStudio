@@ -145,7 +145,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HumidifierSteamGas_Impl ImplType;
+    using ImplType = detail::HumidifierSteamGas_Impl;
 
     explicit HumidifierSteamGas(std::shared_ptr<detail::HumidifierSteamGas_Impl> impl);
 
@@ -159,10 +159,10 @@ namespace model {
   };
 
   /** \relates HumidifierSteamGas*/
-  typedef boost::optional<HumidifierSteamGas> OptionalHumidifierSteamGas;
+  using OptionalHumidifierSteamGas = boost::optional<HumidifierSteamGas>;
 
   /** \relates HumidifierSteamGas*/
-  typedef std::vector<HumidifierSteamGas> HumidifierSteamGasVector;
+  using HumidifierSteamGasVector = std::vector<HumidifierSteamGas>;
 
 }  // namespace model
 }  // namespace openstudio

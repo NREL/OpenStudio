@@ -322,7 +322,8 @@ namespace model {
         if (currentPath->is_complete() && openstudio::filesystem::exists(*currentPath)) {
           return true;
         }
-        openstudio::path newPath, workingPath(*currentPath);
+        openstudio::path newPath;
+        openstudio::path workingPath(*currentPath);
         if (!currentPath->is_complete()) {
           newPath = openstudio::filesystem::system_complete(workingPath);
           LOG(Debug, "Current path '" << toString(*currentPath) << "' not complete. "

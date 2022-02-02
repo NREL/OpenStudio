@@ -77,7 +77,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExteriorLightsDefinition_Impl ImplType;
+    using ImplType = detail::ExteriorLightsDefinition_Impl;
 
     explicit ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl);
 
@@ -91,10 +91,10 @@ namespace model {
   };
 
   /** \relates ExteriorLightsDefinition*/
-  typedef boost::optional<ExteriorLightsDefinition> OptionalExteriorLightsDefinition;
+  using OptionalExteriorLightsDefinition = boost::optional<ExteriorLightsDefinition>;
 
   /** \relates ExteriorLightsDefinition*/
-  typedef std::vector<ExteriorLightsDefinition> ExteriorLightsDefinitionVector;
+  using ExteriorLightsDefinitionVector = std::vector<ExteriorLightsDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

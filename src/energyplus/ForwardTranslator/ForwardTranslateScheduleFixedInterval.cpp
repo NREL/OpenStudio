@@ -82,9 +82,9 @@ namespace energyplus {
 
     TimeSeries timeseries = modelObject.timeSeries();
     // Check that the time series has at least one point
-    if (timeseries.values().size() == 0) {
+    if (timeseries.values().empty()) {
       LOG(Error, "Time series in schedule '" << modelObject.name().get() << "' has no values, schedule will not be translated");
-      return boost::optional<IdfObject>();
+      return {};
     }
 
     if (modelObject.translatetoScheduleFile()) {  // create a ScheduleFile
@@ -106,7 +106,7 @@ namespace energyplus {
       boost::optional<ExternalFile> externalFile = ExternalFile::getExternalFile(modelObject.model(), toString(filePath));
       if (!externalFile) {
         LOG(Error, "Cannot find file at '" << filePath << ", schedule will not be translated");
-        return boost::optional<IdfObject>();
+        return {};
       }
 
       // create ScheduleFile object pointing to ExternalFile

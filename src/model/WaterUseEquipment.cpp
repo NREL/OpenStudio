@@ -90,7 +90,8 @@ namespace model {
     std::vector<ScheduleTypeKey> WaterUseEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_WaterUse_EquipmentFields::FlowRateFractionScheduleName) != e) {
         result.push_back(ScheduleTypeKey("WaterUseEquipment", "Flow Rate Fraction"));
       }
@@ -152,7 +153,7 @@ namespace model {
 
     std::vector<IdfObject> WaterUseEquipment_Impl::remove() {
       if (boost::optional<WaterUseConnections> c = waterUseConnections()) {
-        WaterUseEquipment e = getObject<WaterUseEquipment>();
+        auto e = getObject<WaterUseEquipment>();
 
         c->removeWaterUseEquipment(e);
       }
@@ -217,7 +218,7 @@ namespace model {
   }
 
   IddObjectType WaterUseEquipment::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WaterUse_Equipment);
+    return {IddObjectType::OS_WaterUse_Equipment};
   }
 
   boost::optional<Schedule> WaterUseEquipment::flowRateFractionSchedule() const {

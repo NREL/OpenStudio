@@ -36,6 +36,8 @@
 
 namespace openstudio {
 namespace model {
+  // Forward declaration
+  class EnergyManagementSystemProgram;
 
   namespace detail {
 

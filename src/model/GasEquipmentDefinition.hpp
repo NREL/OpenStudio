@@ -134,7 +134,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GasEquipmentDefinition_Impl ImplType;
+    using ImplType = detail::GasEquipmentDefinition_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -147,10 +147,10 @@ namespace model {
   };
 
   /** \relates GasEquipmentDefinition*/
-  typedef boost::optional<GasEquipmentDefinition> OptionalGasEquipmentDefinition;
+  using OptionalGasEquipmentDefinition = boost::optional<GasEquipmentDefinition>;
 
   /** \relates GasEquipmentDefinition*/
-  typedef std::vector<GasEquipmentDefinition> GasEquipmentDefinitionVector;
+  using GasEquipmentDefinitionVector = std::vector<GasEquipmentDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

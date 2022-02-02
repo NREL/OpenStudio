@@ -328,7 +328,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationDefrostCycleParameters::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_DefrostCycleParameters);
+    return {IddObjectType::OS_Refrigeration_DefrostCycleParameters};
   }
 
   /// @cond

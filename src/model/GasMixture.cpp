@@ -426,7 +426,7 @@ namespace model {
       if (value) {
         return *value;
       } else {
-        return std::string();
+        return {};
       }
     }
 
@@ -439,7 +439,7 @@ namespace model {
       if (value) {
         return *value;
       } else {
-        return std::string();
+        return {};
       }
     }
 
@@ -602,7 +602,7 @@ namespace model {
   }
 
   IddObjectType GasMixture::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowMaterial_GasMixture);
+    return {IddObjectType::OS_WindowMaterial_GasMixture};
   }
 
   std::vector<std::string> GasMixture::validGasTypes() {

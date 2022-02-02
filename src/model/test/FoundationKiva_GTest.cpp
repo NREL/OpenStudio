@@ -202,7 +202,7 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
   kiva.setInteriorHorizontalInsulationDepth(2.5);
 
   // clone it into the same model
-  FoundationKiva kivaClone = kiva.clone(model).cast<FoundationKiva>();
+  auto kivaClone = kiva.clone(model).cast<FoundationKiva>();
   ASSERT_FALSE(kivaClone.isInteriorHorizontalInsulationDepthDefaulted());
   ASSERT_EQ(2.5, kivaClone.interiorHorizontalInsulationDepth());
   ASSERT_TRUE(kivaClone.isExteriorHorizontalInsulationWidthDefaulted());
@@ -210,7 +210,7 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<FoundationKivaSettings>());
-  FoundationKiva kivaClone2 = kiva.clone(model2).cast<FoundationKiva>();
+  auto kivaClone2 = kiva.clone(model2).cast<FoundationKiva>();
   ASSERT_FALSE(kivaClone2.isInteriorHorizontalInsulationDepthDefaulted());
   ASSERT_EQ(2.5, kivaClone2.interiorHorizontalInsulationDepth());
   ASSERT_TRUE(kivaClone2.isExteriorHorizontalInsulationWidthDefaulted());

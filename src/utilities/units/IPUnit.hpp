@@ -123,7 +123,7 @@ class UTILITIES_API IPUnit : public Unit
   //@}
  protected:
   /// @cond
-  typedef detail::IPUnit_Impl ImplType;
+  using ImplType = detail::IPUnit_Impl;
 
   explicit IPUnit(std::shared_ptr<detail::IPUnit_Impl> impl);
 
@@ -136,10 +136,10 @@ class UTILITIES_API IPUnit : public Unit
 };
 
 /** \relates IPUnit*/
-typedef boost::optional<IPUnit> OptionalIPUnit;
+using OptionalIPUnit = boost::optional<IPUnit>;
 
 /** \relates IPUnit*/
-typedef std::vector<IPUnit> IPUnitVector;
+using IPUnitVector = std::vector<IPUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

@@ -164,7 +164,7 @@ namespace energyplus {
 
       // get extensible groups for sub surfaces
       for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-        WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+        auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
         OptionalWorkspaceObject target = workspaceGroup.getTarget(WindowShadingControlExtensibleFields::FenestrationSurfaceName);
         OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
 

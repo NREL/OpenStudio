@@ -86,7 +86,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirflowNetworkNode_Impl ImplType;
+    using ImplType = detail::AirflowNetworkNode_Impl;
 
     explicit AirflowNetworkNode(std::shared_ptr<detail::AirflowNetworkNode_Impl> impl);
 
@@ -96,9 +96,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirflowNetworkNode> OptionalAirflowNetworkNode;
+  using OptionalAirflowNetworkNode = boost::optional<AirflowNetworkNode>;
 
-  typedef std::vector<AirflowNetworkNode> AirflowNetworkNodeVector;
+  using AirflowNetworkNodeVector = std::vector<AirflowNetworkNode>;
 
 }  // namespace model
 }  // namespace openstudio

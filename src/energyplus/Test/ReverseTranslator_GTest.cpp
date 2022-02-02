@@ -408,7 +408,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateSite) {
 
   ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::Site>());
 
-  openstudio::model::Site site = model.getUniqueModelObject<openstudio::model::Site>();
+  auto site = model.getUniqueModelObject<openstudio::model::Site>();
 
   EXPECT_EQ(7u, site.numFields());  // terrain moves from Building to Site in OS
   EXPECT_EQ("Test Site", *(site.name()));
@@ -928,9 +928,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
   ASSERT_TRUE(_i_zoneList1);
   EXPECT_TRUE(_i_zoneList1->setName("ZoneList1 for Zone1 and Zone2"));
 
-  WorkspaceExtensibleGroup eg1 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg1 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg1.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone1->handle()));
-  WorkspaceExtensibleGroup eg2 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg2 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg2.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone2->handle()));
 
   // To avoid other warnings, we add required objects
@@ -985,7 +985,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
   ASSERT_TRUE(_i_zoneList2);
   EXPECT_TRUE(_i_zoneList2->setName("ZoneList2 for Zone2"));
 
-  WorkspaceExtensibleGroup eg3 = _i_zoneList2->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  auto eg3 = _i_zoneList2->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(eg3.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone2->handle()));
 
   // Translate again

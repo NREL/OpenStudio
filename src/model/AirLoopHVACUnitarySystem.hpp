@@ -438,7 +438,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirLoopHVACUnitarySystem_Impl ImplType;
+    using ImplType = detail::AirLoopHVACUnitarySystem_Impl;
 
     explicit AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl);
 
@@ -452,10 +452,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACUnitarySystem*/
-  typedef boost::optional<AirLoopHVACUnitarySystem> OptionalAirLoopHVACUnitarySystem;
+  using OptionalAirLoopHVACUnitarySystem = boost::optional<AirLoopHVACUnitarySystem>;
 
   /** \relates AirLoopHVACUnitarySystem*/
-  typedef std::vector<AirLoopHVACUnitarySystem> AirLoopHVACUnitarySystemVector;
+  using AirLoopHVACUnitarySystemVector = std::vector<AirLoopHVACUnitarySystem>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -213,14 +213,14 @@ namespace model {
       } else if (keyValue) {
         if (*keyValue == "*") {
           LOG(Error, "Variable specifies '*' for key value and object has no name.");
-          return OptionalString();
+          return {};
         }
       } else if (name) {
         LOG(Warn, "Variable does not specify key value, using object name.");
         keyValue = name;
       } else {
         LOG(Error, "Variable does not specify key value and object has no name.");
-        return OptionalString();
+        return {};
       }
       return keyValue;
     }
@@ -330,7 +330,7 @@ namespace model {
       // Query each row of the Intialization Summary -> Component Sizing table
       // that contains this component to get the desired value.
       std::string valueNameAndUnits = valueName + std::string(" [") + unitString + std::string("]");
-      if (unitString == "") {
+      if (unitString.empty()) {
         valueNameAndUnits = valueName;
       } else if (unitString == "typo_in_energyplus") {
         valueNameAndUnits = valueName + std::string(" []");
@@ -509,7 +509,7 @@ namespace model {
       OptionalWorkspaceObject wo = this->getTarget(port);
       if (wo) {
 
-        Connection connection = wo->cast<Connection>();
+        auto connection = wo->cast<Connection>();
 
         boost::optional<ModelObject> targetObject = connection.targetObject();
         boost::optional<ModelObject> sourceObject = connection.sourceObject();
@@ -522,13 +522,13 @@ namespace model {
           }
         }
       }
-      return boost::optional<ModelObject>();
+      return {};
     }
 
     boost::optional<unsigned> ModelObject_Impl::connectedObjectPort(unsigned port) const {
       OptionalWorkspaceObject wo = this->getTarget(port);
       if (wo) {
-        Connection connection = wo->cast<Connection>();
+        auto connection = wo->cast<Connection>();
 
         if (boost::optional<ModelObject> sourceObject = connection.sourceObject()) {
           if (sourceObject->handle() == this->handle()) {
@@ -541,7 +541,7 @@ namespace model {
           }
         }
       }
-      return boost::optional<unsigned>();
+      return {};
     }
 
     ModelObject ModelObject_Impl::clone(Model model) const {
@@ -599,7 +599,7 @@ namespace model {
       // Not the same model. Resource handling is more complicated.
       result = model.addAndInsertObjects(toAdd, castArray<WorkspaceObject>(getRecursiveResourceSubTrees(getObject<ModelObject>(), true)));
       // Operation should work.
-      OS_ASSERT(result.size() > 0u);
+      OS_ASSERT(!result.empty());
       return result[0].cast<ModelObject>();
     }
 
@@ -626,10 +626,10 @@ namespace model {
     }
 
     boost::optional<ParentObject> ModelObject_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
-    bool ModelObject_Impl::setParent(ParentObject& newParent) {
+    bool ModelObject_Impl::setParent(ParentObject& /*newParent*/) {
       return false;
     }
 
@@ -705,16 +705,16 @@ namespace model {
       return false;
     }
 
-    std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      return std::vector<ScheduleTypeKey>();
+    std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& /*schedule*/) const {
+      return {};
     }
 
     std::vector<EMSActuatorNames> ModelObject_Impl::emsActuatorNames() const {
-      return std::vector<EMSActuatorNames>();
+      return {};
     }
 
     std::vector<std::string> ModelObject_Impl::emsInternalVariableNames() const {
-      return std::vector<std::string>();
+      return {};
     }
 
     AdditionalProperties ModelObject_Impl::additionalProperties() const {
@@ -746,7 +746,7 @@ namespace model {
     bool ModelObject_Impl::hasAdditionalProperties() const {
       bool result = false;
       AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
-      if (candidates.size() > 0) {
+      if (!candidates.empty()) {
         result = true;
       }
       return result;

@@ -99,7 +99,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ConvergenceLimits_Impl ImplType;
+    using ImplType = detail::ConvergenceLimits_Impl;
 
     explicit ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl);
 
@@ -116,10 +116,10 @@ namespace model {
   };
 
   /** \relates ConvergenceLimits */
-  typedef boost::optional<ConvergenceLimits> OptionalConvergenceLimits;
+  using OptionalConvergenceLimits = boost::optional<ConvergenceLimits>;
 
   /** \relates ConvergenceLimits*/
-  typedef std::vector<ConvergenceLimits> ConvergenceLimitsVector;
+  using ConvergenceLimitsVector = std::vector<ConvergenceLimits>;
 
 }  // namespace model
 }  // namespace openstudio

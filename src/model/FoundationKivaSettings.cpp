@@ -337,7 +337,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType FoundationKivaSettings::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Foundation_Kiva_Settings);
+    return {IddObjectType::OS_Foundation_Kiva_Settings};
   }
 
   double FoundationKivaSettings::soilConductivity() const {

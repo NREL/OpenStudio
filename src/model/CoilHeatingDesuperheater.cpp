@@ -102,7 +102,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingDesuperheater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_DesuperheaterFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilHeatingDesuperheater", "Availability"));
       }
@@ -270,7 +271,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDesuperheater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Desuperheater);
+    return {IddObjectType::OS_Coil_Heating_Desuperheater};
   }
 
   boost::optional<Schedule> CoilHeatingDesuperheater::availabilitySchedule() const {

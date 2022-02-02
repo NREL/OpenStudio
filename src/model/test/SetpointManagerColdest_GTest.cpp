@@ -122,7 +122,7 @@ TEST_F(ModelFixture, SetpointManagerColdest_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerColdest testObjectClone = testObject.clone(m).cast<SetpointManagerColdest>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerColdest>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -147,7 +147,7 @@ TEST_F(ModelFixture, SetpointManagerColdest_customDataClone) {
   testObject.setMaximumSetpointTemperature(999.9);
   testObject.setMinimumSetpointTemperature(999.9);
 
-  SetpointManagerColdest testObjectClone = testObject.clone(m).cast<SetpointManagerColdest>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerColdest>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

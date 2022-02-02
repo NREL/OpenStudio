@@ -45,7 +45,7 @@ namespace radiance {
   };
 
   // vector of MaterialProperties
-  typedef std::vector<MaterialProperties> LMaterialPropertiesVector;
+  using LMaterialPropertiesVector = std::vector<MaterialProperties>;
 
 }  // namespace radiance
 }  // namespace openstudio

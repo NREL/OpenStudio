@@ -265,7 +265,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerElectricReformulatedEIR_Impl ImplType;
+    using ImplType = detail::ChillerElectricReformulatedEIR_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -278,10 +278,10 @@ namespace model {
   };
 
   /** \relates ChillerElectricReformulatedEIR*/
-  typedef boost::optional<ChillerElectricReformulatedEIR> OptionalChillerElectricReformulatedEIR;
+  using OptionalChillerElectricReformulatedEIR = boost::optional<ChillerElectricReformulatedEIR>;
 
   /** \relates ChillerElectricReformulatedEIR*/
-  typedef std::vector<ChillerElectricReformulatedEIR> ChillerElectricReformulatedEIRVector;
+  using ChillerElectricReformulatedEIRVector = std::vector<ChillerElectricReformulatedEIR>;
 
 }  // namespace model
 

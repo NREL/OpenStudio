@@ -113,7 +113,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Cooling_DX_MultiSpeedFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXMultiSpeed", "Availability Schedule"));
       }
@@ -441,7 +442,7 @@ namespace model {
       return boost::none;
     }
 
-    bool CoilCoolingDXMultiSpeed_Impl::addToNode(Node& node) {
+    bool CoilCoolingDXMultiSpeed_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
@@ -497,7 +498,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXMultiSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_MultiSpeed);
+    return {IddObjectType::OS_Coil_Cooling_DX_MultiSpeed};
   }
 
   std::vector<std::string> CoilCoolingDXMultiSpeed::condenserTypeValues() {

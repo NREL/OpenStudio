@@ -125,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::InternalMassDefinition_Impl ImplType;
+    using ImplType = detail::InternalMassDefinition_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -138,10 +138,10 @@ namespace model {
   };
 
   /** \relates InternalMassDefinition*/
-  typedef boost::optional<InternalMassDefinition> OptionalInternalMassDefinition;
+  using OptionalInternalMassDefinition = boost::optional<InternalMassDefinition>;
 
   /** \relates InternalMassDefinition*/
-  typedef std::vector<InternalMassDefinition> InternalMassDefinitionVector;
+  using InternalMassDefinitionVector = std::vector<InternalMassDefinition>;
 
 }  // namespace model
 }  // namespace openstudio

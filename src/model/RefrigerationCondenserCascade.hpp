@@ -130,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCondenserCascade_Impl ImplType;
+    using ImplType = detail::RefrigerationCondenserCascade_Impl;
 
     explicit RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl);
 
@@ -144,10 +144,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCondenserCascade*/
-  typedef boost::optional<RefrigerationCondenserCascade> OptionalRefrigerationCondenserCascade;
+  using OptionalRefrigerationCondenserCascade = boost::optional<RefrigerationCondenserCascade>;
 
   /** \relates RefrigerationCondenserCascade*/
-  typedef std::vector<RefrigerationCondenserCascade> RefrigerationCondenserCascadeVector;
+  using RefrigerationCondenserCascadeVector = std::vector<RefrigerationCondenserCascade>;
 
 }  // namespace model
 }  // namespace openstudio

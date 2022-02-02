@@ -121,7 +121,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalDualDuctVAVOutdoorAir_Impl ImplType;
+    using ImplType = detail::AirTerminalDualDuctVAVOutdoorAir_Impl;
 
     explicit AirTerminalDualDuctVAVOutdoorAir(std::shared_ptr<detail::AirTerminalDualDuctVAVOutdoorAir_Impl> impl);
 
@@ -135,10 +135,10 @@ namespace model {
   };
 
   /** \relates AirTerminalDualDuctVAVOutdoorAir*/
-  typedef boost::optional<AirTerminalDualDuctVAVOutdoorAir> OptionalAirTerminalDualDuctVAVOutdoorAir;
+  using OptionalAirTerminalDualDuctVAVOutdoorAir = boost::optional<AirTerminalDualDuctVAVOutdoorAir>;
 
   /** \relates AirTerminalDualDuctVAVOutdoorAir*/
-  typedef std::vector<AirTerminalDualDuctVAVOutdoorAir> AirTerminalDualDuctVAVOutdoorAirVector;
+  using AirTerminalDualDuctVAVOutdoorAirVector = std::vector<AirTerminalDualDuctVAVOutdoorAir>;
 
 }  // namespace model
 }  // namespace openstudio

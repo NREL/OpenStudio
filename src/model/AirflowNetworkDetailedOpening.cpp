@@ -306,7 +306,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkDetailedOpening::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkDetailedOpening);
+    return {IddObjectType::OS_AirflowNetworkDetailedOpening};
   }
 
   std::vector<std::string> AirflowNetworkDetailedOpening::typeofRectangularLargeVerticalOpeningValues() {

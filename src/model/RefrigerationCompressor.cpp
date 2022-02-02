@@ -330,7 +330,7 @@ namespace model {
     boost::optional<RefrigerationSystem> RefrigerationCompressor_Impl::system() const {
       boost::optional<RefrigerationSystem> result;
 
-      RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
+      auto refrigerationCompressor = this->getObject<RefrigerationCompressor>();
       for (const RefrigerationSystem& refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
         RefrigerationCompressorVector refrigerationCompressors = refrigerationSystem.compressors();
         if (!refrigerationCompressors.empty()
@@ -354,7 +354,7 @@ namespace model {
 
     void RefrigerationCompressor_Impl::removeFromSystem() {
       if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
-        RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
+        auto refrigerationCompressor = this->getObject<RefrigerationCompressor>();
         refrigerationSystem->removeCompressor(refrigerationCompressor);
         refrigerationSystem->removeHighStageCompressor(refrigerationCompressor);
       }
@@ -416,7 +416,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCompressor::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Compressor);
+    return {IddObjectType::OS_Refrigeration_Compressor};
   }
 
   std::vector<std::string> RefrigerationCompressor::modeofOperationValues() {

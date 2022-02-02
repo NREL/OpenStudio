@@ -123,7 +123,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHeatingAverage_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneHeatingAverage testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHeatingAverage>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHeatingAverage>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -148,7 +148,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHeatingAverage_customDataClone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerMultiZoneHeatingAverage testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHeatingAverage>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerMultiZoneHeatingAverage>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

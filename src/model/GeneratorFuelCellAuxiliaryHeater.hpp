@@ -148,7 +148,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorFuelCellAuxiliaryHeater_Impl ImplType;
+    using ImplType = detail::GeneratorFuelCellAuxiliaryHeater_Impl;
 
     explicit GeneratorFuelCellAuxiliaryHeater(std::shared_ptr<detail::GeneratorFuelCellAuxiliaryHeater_Impl> impl);
 
@@ -162,10 +162,10 @@ namespace model {
   };
 
   /** \relates GeneratorFuelCellAuxiliaryHeater*/
-  typedef boost::optional<GeneratorFuelCellAuxiliaryHeater> OptionalGeneratorFuelCellAuxiliaryHeater;
+  using OptionalGeneratorFuelCellAuxiliaryHeater = boost::optional<GeneratorFuelCellAuxiliaryHeater>;
 
   /** \relates GeneratorFuelCellAuxiliaryHeater*/
-  typedef std::vector<GeneratorFuelCellAuxiliaryHeater> GeneratorFuelCellAuxiliaryHeaterVector;
+  using GeneratorFuelCellAuxiliaryHeaterVector = std::vector<GeneratorFuelCellAuxiliaryHeater>;
 
 }  // namespace model
 }  // namespace openstudio

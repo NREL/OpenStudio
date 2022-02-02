@@ -164,7 +164,7 @@ TEST_F(ModelFixture, ComponentWatcher_FromScratch) {
   // changing type limits used by schedule in component invalidates the component
   Handle h = componentData.handle();
   EXPECT_TRUE(justLights.isMember(h));
-  ScheduleTypeLimits newTypeLimits = typeLimits.clone(justLights).cast<ScheduleTypeLimits>();
+  auto newTypeLimits = typeLimits.clone(justLights).cast<ScheduleTypeLimits>();
   EXPECT_FALSE(newTypeLimits.handle() == typeLimits.handle());
   EXPECT_TRUE(schedule.setPointer(OS_Schedule_CompactFields::ScheduleTypeLimitsName, newTypeLimits.handle()));
   EXPECT_FALSE(componentData.initialized());

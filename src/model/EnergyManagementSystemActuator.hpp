@@ -111,7 +111,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemActuator_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemActuator_Impl;
 
     explicit EnergyManagementSystemActuator(std::shared_ptr<detail::EnergyManagementSystemActuator_Impl> impl);
 
@@ -130,10 +130,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemActuator*/
-  typedef boost::optional<EnergyManagementSystemActuator> OptionalEnergyManagementSystemActuator;
+  using OptionalEnergyManagementSystemActuator = boost::optional<EnergyManagementSystemActuator>;
 
   /** \relates EnergyManagementSystemActuator*/
-  typedef std::vector<EnergyManagementSystemActuator> EnergyManagementSystemActuatorVector;
+  using EnergyManagementSystemActuatorVector = std::vector<EnergyManagementSystemActuator>;
 
 }  // namespace model
 }  // namespace openstudio

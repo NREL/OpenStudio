@@ -188,7 +188,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkEquivalentDuct::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkEquivalentDuct);
+    return {IddObjectType::OS_AirflowNetworkEquivalentDuct};
   }
 
   boost::optional<StraightComponent> AirflowNetworkEquivalentDuct::straightComponent() const {

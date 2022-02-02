@@ -127,7 +127,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithDefaultData) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
-  RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
   EXPECT_EQ("R404a", testObjectClone.refrigerationSystemWorkingFluidType());
   EXPECT_EQ("ConstantSuctionTemperature", testObjectClone.suctionTemperatureControlType());
   EXPECT_DOUBLE_EQ(21.0, testObjectClone.minimumCondensingTemperature());
@@ -167,7 +167,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData) {
   std::vector<RefrigerationCompressor> _compressors = testObject.compressors();
   std::vector<RefrigerationCompressor> _highStageCompressors = testObject.highStageCompressors();
 
-  RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.minimumCondensingTemperature());
   EXPECT_FALSE(testObjectClone.isSumUASuctionPipingDefaulted());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.sumUASuctionPiping());
@@ -196,11 +196,11 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelsWithDefaultData) {
   ThermalZone thermalZone(model);
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
-  RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
 
   Model model2;
 
-  RefrigerationSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
   EXPECT_EQ("R404a", testObjectClone2.refrigerationSystemWorkingFluidType());
   EXPECT_EQ("ConstantSuctionTemperature", testObjectClone2.suctionTemperatureControlType());
   EXPECT_DOUBLE_EQ(21.0, testObjectClone2.minimumCondensingTemperature());
@@ -242,10 +242,10 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData) {
   std::vector<RefrigerationCompressor> _compressors = testObject.compressors();
   std::vector<RefrigerationCompressor> _highStageCompressors = testObject.highStageCompressors();
 
-  RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
 
   Model model2;
-  RefrigerationSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
 
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.minimumCondensingTemperature());
   EXPECT_FALSE(testObjectClone2.isSumUASuctionPipingDefaulted());
@@ -282,14 +282,14 @@ TEST_F(ModelFixture, RefrigerationSystem_MechanicalSubcooler) {
   std::vector<RefrigerationSubcoolerMechanical> testMechanicalSubcoolers = model.getModelObjects<RefrigerationSubcoolerMechanical>();
   EXPECT_EQ(1, testMechanicalSubcoolers.size());
 
-  RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
   EXPECT_NE(testObjectClone.mechanicalSubcooler().get().handle(), mechSubcooler.handle());
 
   testMechanicalSubcoolers = model.getModelObjects<RefrigerationSubcoolerMechanical>();
   EXPECT_EQ(2, testMechanicalSubcoolers.size());
 
   Model model2;
-  RefrigerationSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
 
   testMechanicalSubcoolers = model2.getModelObjects<RefrigerationSubcoolerMechanical>();
   EXPECT_EQ(1, testMechanicalSubcoolers.size());
@@ -318,14 +318,14 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSubcoolerLiquidSuction) {
   std::vector<RefrigerationSubcoolerLiquidSuction> testLiqSuctionSubcoolers = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(1, testLiqSuctionSubcoolers.size());
 
-  RefrigerationSystem testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSystem>();
   EXPECT_NE(testObjectClone.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcooler.handle());
 
   testLiqSuctionSubcoolers = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(2, testLiqSuctionSubcoolers.size());
 
   Model model2;
-  RefrigerationSystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationSystem>();
 
   testLiqSuctionSubcoolers = model2.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(1, testLiqSuctionSubcoolers.size());

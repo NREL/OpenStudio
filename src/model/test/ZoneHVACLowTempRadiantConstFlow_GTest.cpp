@@ -83,8 +83,8 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   CoilHeatingLowTempRadiantConstFlow testHC(model, heatingHighWaterTempSched, heatingLowWaterTempSched, heatingHighControlTempSched,
                                             heatingLowControlTempSched);
 
-  HVACComponent testCC1 = testCC.cast<HVACComponent>();
-  HVACComponent testHC1 = testHC.cast<HVACComponent>();
+  auto testCC1 = testCC.cast<HVACComponent>();
+  auto testHC1 = testHC.cast<HVACComponent>();
 
   ZoneHVACLowTempRadiantConstFlow testRad(model, availabilitySched, testHC1, testCC1, 200.0);
 

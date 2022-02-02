@@ -178,7 +178,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::HeatPumpWaterToWaterEquationFitCooling_Impl ImplType;
+    using ImplType = detail::HeatPumpWaterToWaterEquationFitCooling_Impl;
 
     explicit HeatPumpWaterToWaterEquationFitCooling(std::shared_ptr<detail::HeatPumpWaterToWaterEquationFitCooling_Impl> impl);
 
@@ -192,10 +192,10 @@ namespace model {
   };
 
   /** \relates HeatPumpWaterToWaterEquationFitCooling*/
-  typedef boost::optional<HeatPumpWaterToWaterEquationFitCooling> OptionalHeatPumpWaterToWaterEquationFitCooling;
+  using OptionalHeatPumpWaterToWaterEquationFitCooling = boost::optional<HeatPumpWaterToWaterEquationFitCooling>;
 
   /** \relates HeatPumpWaterToWaterEquationFitCooling*/
-  typedef std::vector<HeatPumpWaterToWaterEquationFitCooling> HeatPumpWaterToWaterEquationFitCoolingVector;
+  using HeatPumpWaterToWaterEquationFitCoolingVector = std::vector<HeatPumpWaterToWaterEquationFitCooling>;
 
 }  // namespace model
 }  // namespace openstudio

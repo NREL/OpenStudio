@@ -95,7 +95,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PipeOutdoor_Impl ImplType;
+    using ImplType = detail::PipeOutdoor_Impl;
 
     explicit PipeOutdoor(std::shared_ptr<detail::PipeOutdoor_Impl> impl);
 
@@ -109,10 +109,10 @@ namespace model {
   };
 
   /** \relates PipeOutdoor*/
-  typedef boost::optional<PipeOutdoor> OptionalPipeOutdoor;
+  using OptionalPipeOutdoor = boost::optional<PipeOutdoor>;
 
   /** \relates PipeOutdoor*/
-  typedef std::vector<PipeOutdoor> PipeOutdoorVector;
+  using PipeOutdoorVector = std::vector<PipeOutdoor>;
 
 }  // namespace model
 }  // namespace openstudio

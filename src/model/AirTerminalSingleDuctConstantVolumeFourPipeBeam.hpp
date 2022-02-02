@@ -167,7 +167,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl;
 
     explicit AirTerminalSingleDuctConstantVolumeFourPipeBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl> impl);
 
@@ -181,10 +181,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeBeam*/
-  typedef boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> OptionalAirTerminalSingleDuctConstantVolumeFourPipeBeam;
+  using OptionalAirTerminalSingleDuctConstantVolumeFourPipeBeam = boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam>;
 
   /** \relates AirTerminalSingleDuctConstantVolumeFourPipeBeam*/
-  typedef std::vector<AirTerminalSingleDuctConstantVolumeFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeamVector;
+  using AirTerminalSingleDuctConstantVolumeFourPipeBeamVector = std::vector<AirTerminalSingleDuctConstantVolumeFourPipeBeam>;
 
 }  // namespace model
 }  // namespace openstudio

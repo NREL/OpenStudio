@@ -97,7 +97,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneHVACBaseboardConvectiveElectric_Impl ImplType;
+    using ImplType = detail::ZoneHVACBaseboardConvectiveElectric_Impl;
 
     explicit ZoneHVACBaseboardConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl);
 
@@ -113,10 +113,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACBaseboardConvectiveElectric*/
-  typedef boost::optional<ZoneHVACBaseboardConvectiveElectric> OptionalZoneHVACBaseboardConvectiveElectric;
+  using OptionalZoneHVACBaseboardConvectiveElectric = boost::optional<ZoneHVACBaseboardConvectiveElectric>;
 
   /** \relates ZoneHVACBaseboardConvectiveElectric*/
-  typedef std::vector<ZoneHVACBaseboardConvectiveElectric> ZoneHVACBaseboardConvectiveElectricVector;
+  using ZoneHVACBaseboardConvectiveElectricVector = std::vector<ZoneHVACBaseboardConvectiveElectric>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -108,7 +108,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkExternalNode_Impl ImplType;
+    using ImplType = detail::AirflowNetworkExternalNode_Impl;
 
     explicit AirflowNetworkExternalNode(std::shared_ptr<detail::AirflowNetworkExternalNode_Impl> impl);
 
@@ -122,10 +122,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkExternalNode*/
-  typedef boost::optional<AirflowNetworkExternalNode> OptionalAirflowNetworkExternalNode;
+  using OptionalAirflowNetworkExternalNode = boost::optional<AirflowNetworkExternalNode>;
 
   /** \relates AirflowNetworkExternalNode*/
-  typedef std::vector<AirflowNetworkExternalNode> AirflowNetworkExternalNodeVector;
+  using AirflowNetworkExternalNodeVector = std::vector<AirflowNetworkExternalNode>;
 
 }  // namespace model
 }  // namespace openstudio

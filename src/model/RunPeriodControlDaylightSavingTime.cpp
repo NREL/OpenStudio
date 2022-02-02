@@ -224,7 +224,7 @@ namespace model {
         MonthOfYear monthOfYear(boost::lexical_cast<unsigned>(monthString));
 
         std::string dayOfMonthString(matches[2].first, matches[2].second);
-        unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
+        auto dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
 
         result = yd.makeDate(monthOfYear, dayOfMonth);
         return result;
@@ -234,7 +234,7 @@ namespace model {
                                                   boost::regex::icase))) {
 
         std::string dayOfMonthString(matches[1].first, matches[1].second);
-        unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
+        auto dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
         std::string monthString(matches[2].first, matches[2].second);
 
         result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
@@ -246,7 +246,7 @@ namespace model {
 
         std::string monthString(matches[1].first, matches[1].second);
         std::string dayOfMonthString(matches[2].first, matches[2].second);
-        unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
+        auto dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
 
         result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
         return result;
@@ -265,7 +265,7 @@ namespace model {
       }
 
       LOG_AND_THROW("Could not determine date for startDate = '" << text << "'");
-      return Date();
+      return {};
     }
 
     boost::optional<openstudio::NthDayOfWeekInMonth> RunPeriodControlDaylightSavingTime_Impl::getNthDayOfWeekInMonth(const std::string& text) const {

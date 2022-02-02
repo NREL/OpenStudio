@@ -236,7 +236,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctVAVReheat_Impl;
 
     explicit AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
 
@@ -246,7 +246,7 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<AirTerminalSingleDuctVAVReheat> OptionalAirTerminalSingleDuctVAVReheat;
+  using OptionalAirTerminalSingleDuctVAVReheat = boost::optional<AirTerminalSingleDuctVAVReheat>;
 
 }  // namespace model
 }  // namespace openstudio

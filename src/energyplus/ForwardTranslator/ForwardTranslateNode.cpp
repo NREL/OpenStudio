@@ -43,7 +43,7 @@ namespace energyplus {
       translateAndMapModelObject(_setpointManager);
     }
 
-    return boost::optional<IdfObject>();
+    return {};
   }
 
 }  // namespace energyplus

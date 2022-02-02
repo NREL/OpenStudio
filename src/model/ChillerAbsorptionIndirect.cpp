@@ -770,7 +770,7 @@ namespace model {
   }
 
   IddObjectType ChillerAbsorptionIndirect::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Chiller_Absorption_Indirect);
+    return {IddObjectType::OS_Chiller_Absorption_Indirect};
   }
 
   std::vector<std::string> ChillerAbsorptionIndirect::chillerFlowModeValues() {

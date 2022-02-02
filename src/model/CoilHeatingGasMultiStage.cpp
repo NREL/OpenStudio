@@ -86,7 +86,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingGasMultiStage_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("CoilHeatingGasMultiStage", "Availability Schedule"));
       }
@@ -207,7 +208,7 @@ namespace model {
       return boost::none;
     }
 
-    bool CoilHeatingGasMultiStage_Impl::addToNode(Node& node) {
+    bool CoilHeatingGasMultiStage_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
@@ -218,7 +219,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingGasMultiStage::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage);
+    return {IddObjectType::OS_Coil_Heating_Gas_MultiStage};
   }
 
   boost::optional<Schedule> CoilHeatingGasMultiStage::availabilitySchedule() const {

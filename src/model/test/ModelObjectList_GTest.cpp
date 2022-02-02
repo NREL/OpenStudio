@@ -83,7 +83,7 @@ TEST_F(ModelFixture, ModelObjectList_CloneOneModel) {
 
   std::vector<ModelObject> modelObjects = testObject.modelObjects();
 
-  ModelObjectList testObjectClone = testObject.clone(model).cast<ModelObjectList>();
+  auto testObjectClone = testObject.clone(model).cast<ModelObjectList>();
   std::vector<ModelObject> modelObjectsClone = testObjectClone.modelObjects();
   std::vector<Connection> connObjects = model.getModelObjects<Connection>();
   EXPECT_EQ(2, connObjects.size());
@@ -100,11 +100,11 @@ TEST_F(ModelFixture, ModelObjectList_CloneTwoModels) {
 
   std::vector<ModelObject> modelObjects = testObject.modelObjects();
 
-  ModelObjectList testObjectClone = testObject.clone(model).cast<ModelObjectList>();
+  auto testObjectClone = testObject.clone(model).cast<ModelObjectList>();
 
   Model model2;
 
-  ModelObjectList testObjectClone2 = testObject.clone(model2).cast<ModelObjectList>();
+  auto testObjectClone2 = testObject.clone(model2).cast<ModelObjectList>();
   std::vector<ModelObject> modelObjectsClone2 = testObjectClone2.modelObjects();
   std::vector<Connection> connObjects = model.getModelObjects<Connection>();
   std::vector<Connection> connObjects2 = model2.getModelObjects<Connection>();

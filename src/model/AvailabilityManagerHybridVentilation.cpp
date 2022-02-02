@@ -87,7 +87,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AvailabilityManagerHybridVentilation_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule) != e) {
         result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation", "Ventilation Control Mode Schedule"));
       }
@@ -413,7 +414,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerHybridVentilation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManager_HybridVentilation);
+    return {IddObjectType::OS_AvailabilityManager_HybridVentilation};
   }
 
   boost::optional<ThermalZone> AvailabilityManagerHybridVentilation::controlledZone() const {

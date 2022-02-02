@@ -182,7 +182,7 @@ namespace model {
 
       {
         // Perhaps call a clone(Loop loop) instead...
-        AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
+        auto avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
         avmListClone.setName(plantLoopClone.name().get() + " AvailabilityManagerAssigmentList");
         plantLoopClone.setPointer(OS_PlantLoopFields::AvailabilityManagerListName, avmListClone.handle());
       }
@@ -287,7 +287,7 @@ namespace model {
         }  // END OF Initialization
 
         // We loop on the components of the original plant loop
-        for (std::vector<ModelObject>::iterator it = components.begin(); it != components.end(); ++it) {
+        for (auto it = components.begin(); it != components.end(); ++it) {
           ModelObject comp = *it;
           if (comp.iddObjectType() == Node::iddObjectType()) {
             // If a Node, we don't clone, we just push it to the nodes vector
@@ -722,7 +722,9 @@ namespace model {
 
     Mixer PlantLoop_Impl::supplyMixer() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::SupplyMixerName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return supplyComponents(IddObjectType::OS_Connector_Mixer).front().cast<Mixer>();
     }
 
@@ -734,7 +736,9 @@ namespace model {
 
     Splitter PlantLoop_Impl::supplySplitter() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::SupplySplitterName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return supplyComponents(IddObjectType::OS_Connector_Splitter).front().cast<Splitter>();
     }
 
@@ -746,7 +750,9 @@ namespace model {
 
     Mixer PlantLoop_Impl::demandMixer() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::DemandMixerName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return demandComponents(IddObjectType::OS_Connector_Mixer).front().cast<Mixer>();
     }
 
@@ -758,7 +764,9 @@ namespace model {
 
     Splitter PlantLoop_Impl::demandSplitter() const {
       auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::DemandSplitterName);
-      if (result) return result.get();
+      if (result) {
+        return result.get();
+      }
       return demandComponents(IddObjectType::OS_Connector_Splitter).front().cast<Splitter>();
     }
 
@@ -1584,7 +1592,7 @@ namespace model {
   boost::optional<AvailabilityManager> PlantLoop::availabilityManager() const {
     boost::optional<AvailabilityManager> avm;
     std::vector<AvailabilityManager> avmVector = availabilityManagers();
-    if (avmVector.size() > 0) {
+    if (!avmVector.empty()) {
       avm = avmVector[0];
     }
     return avm;

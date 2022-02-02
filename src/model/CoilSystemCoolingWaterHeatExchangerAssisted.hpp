@@ -85,7 +85,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl ImplType;
+    using ImplType = detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
 
     explicit CoilSystemCoolingWaterHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl> impl);
 
@@ -99,10 +99,10 @@ namespace model {
   };
 
   /** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-  typedef boost::optional<CoilSystemCoolingWaterHeatExchangerAssisted> OptionalCoilSystemCoolingWaterHeatExchangerAssisted;
+  using OptionalCoilSystemCoolingWaterHeatExchangerAssisted = boost::optional<CoilSystemCoolingWaterHeatExchangerAssisted>;
 
   /** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-  typedef std::vector<CoilSystemCoolingWaterHeatExchangerAssisted> CoilSystemCoolingWaterHeatExchangerAssistedVector;
+  using CoilSystemCoolingWaterHeatExchangerAssistedVector = std::vector<CoilSystemCoolingWaterHeatExchangerAssisted>;
 
 }  // namespace model
 }  // namespace openstudio

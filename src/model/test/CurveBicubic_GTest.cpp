@@ -211,7 +211,7 @@ TEST_F(ModelFixture, CurveBicubic_Remove) {
   EXPECT_EQ(0u, m.objects().size());
 
   refrigeration = RefrigerationCompressor(m);
-  RefrigerationCompressor refrigerationClone = refrigeration.clone(m).cast<RefrigerationCompressor>();
+  auto refrigerationClone = refrigeration.clone(m).cast<RefrigerationCompressor>();
   // Should have 2 refrigereation objects, but with the same curves
   EXPECT_EQ(2u, m.getModelObjects<RefrigerationCompressor>().size());
   EXPECT_EQ(2u, m.getModelObjects<CurveBicubic>().size());

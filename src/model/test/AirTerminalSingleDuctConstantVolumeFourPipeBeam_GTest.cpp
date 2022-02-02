@@ -157,7 +157,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_CloneAndRem
   EXPECT_EQ(7u, hw_p.demandComponents().size());
 
   // Now clone
-  AirTerminalSingleDuctConstantVolumeFourPipeBeam atuClone = atu.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+  auto atuClone = atu.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
   // I expect the cooling/heating coils to have been cloned too
   EXPECT_EQ(2u, m.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeBeam>().size());

@@ -299,7 +299,7 @@ namespace model {
   }
 
   IddObjectType MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
+    return {IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings};
   }
 
   std::string MaterialPropertyMoisturePenetrationDepthSettings::materialName() const {

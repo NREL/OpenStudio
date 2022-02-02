@@ -61,7 +61,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::WindowDataFile_Impl ImplType;
+    using ImplType = detail::WindowDataFile_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -75,10 +75,10 @@ namespace model {
   };
 
   /** \relates WindowDataFile */
-  typedef boost::optional<WindowDataFile> OptionalWindowDataFile;
+  using OptionalWindowDataFile = boost::optional<WindowDataFile>;
 
   /** \relates WindowDataFile */
-  typedef std::vector<WindowDataFile> WindowDataFileVector;
+  using WindowDataFileVector = std::vector<WindowDataFile>;
 
 }  // namespace model
 }  // namespace openstudio

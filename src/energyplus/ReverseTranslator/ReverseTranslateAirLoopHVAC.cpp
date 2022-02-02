@@ -133,7 +133,7 @@ namespace energyplus {
           OptionalNode node;
           OptionalModelObject targetModelObject;
 
-          if (componentName && (componentName.get() != "") && componentType && (componentType.get() != "")) {
+          if (componentName && (!componentName.get().empty()) && componentType && (!componentType.get().empty())) {
             IddObjectType iddType(componentType.get());
             wo = _workspace.getObjectByTypeAndName(iddType, componentName.get());
           }

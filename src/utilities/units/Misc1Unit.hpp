@@ -109,7 +109,7 @@ class UTILITIES_API Misc1Unit : public Unit
   //@}
  protected:
   /// @cond
-  typedef detail::Misc1Unit_Impl ImplType;
+  using ImplType = detail::Misc1Unit_Impl;
 
   explicit Misc1Unit(std::shared_ptr<detail::Misc1Unit_Impl> impl);
 
@@ -121,10 +121,10 @@ class UTILITIES_API Misc1Unit : public Unit
 };
 
 /** \relates Misc1Unit*/
-typedef boost::optional<Misc1Unit> OptionalMisc1Unit;
+using OptionalMisc1Unit = boost::optional<Misc1Unit>;
 
 /** \relates Misc1Unit*/
-typedef std::vector<Misc1Unit> Misc1UnitVector;
+using Misc1UnitVector = std::vector<Misc1Unit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

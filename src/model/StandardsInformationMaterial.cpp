@@ -1024,7 +1024,7 @@ namespace model {
   }
 
   IddObjectType StandardsInformationMaterial::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_StandardsInformation_Material);
+    return {IddObjectType::OS_StandardsInformation_Material};
   }
 
   Material StandardsInformationMaterial::material() const {

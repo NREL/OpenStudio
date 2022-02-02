@@ -223,7 +223,8 @@ TEST_F(IddFixture, CommentRegex_Blocks) {
 
 TEST_F(IddFixture, CommentRegex_MakeComment) {
   std::stringstream block;
-  std::string comment, editorComment;
+  std::string comment;
+  std::string editorComment;
   boost::smatch matches;
 
   block << "One line without endl";

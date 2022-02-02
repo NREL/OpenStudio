@@ -102,7 +102,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::SetpointManagerSingleZoneReheat_Impl ImplType;
+    using ImplType = detail::SetpointManagerSingleZoneReheat_Impl;
 
     explicit SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
 
@@ -112,9 +112,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<SetpointManagerSingleZoneReheat> OptionalSetpointManagerSingleZoneReheat;
+  using OptionalSetpointManagerSingleZoneReheat = boost::optional<SetpointManagerSingleZoneReheat>;
 
-  typedef std::vector<SetpointManagerSingleZoneReheat> SetpointManagerSingleZoneReheatVector;
+  using SetpointManagerSingleZoneReheatVector = std::vector<SetpointManagerSingleZoneReheat>;
 
 }  // namespace model
 

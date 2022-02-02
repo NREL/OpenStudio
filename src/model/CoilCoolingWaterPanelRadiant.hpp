@@ -140,7 +140,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingWaterPanelRadiant_Impl ImplType;
+    using ImplType = detail::CoilCoolingWaterPanelRadiant_Impl;
 
     explicit CoilCoolingWaterPanelRadiant(std::shared_ptr<detail::CoilCoolingWaterPanelRadiant_Impl> impl);
 
@@ -154,10 +154,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingWaterPanelRadiant*/
-  typedef boost::optional<CoilCoolingWaterPanelRadiant> OptionalCoilCoolingWaterPanelRadiant;
+  using OptionalCoilCoolingWaterPanelRadiant = boost::optional<CoilCoolingWaterPanelRadiant>;
 
   /** \relates CoilCoolingWaterPanelRadiant*/
-  typedef std::vector<CoilCoolingWaterPanelRadiant> CoilCoolingWaterPanelRadiantVector;
+  using CoilCoolingWaterPanelRadiantVector = std::vector<CoilCoolingWaterPanelRadiant>;
 
 }  // namespace model
 }  // namespace openstudio

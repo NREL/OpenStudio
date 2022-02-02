@@ -79,7 +79,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirGap_Impl ImplType;
+    using ImplType = detail::AirGap_Impl;
 
     explicit AirGap(std::shared_ptr<detail::AirGap_Impl> impl);
 
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates AirGap*/
-  typedef boost::optional<AirGap> OptionalAirGap;
+  using OptionalAirGap = boost::optional<AirGap>;
 
   /** \relates AirGap*/
-  typedef std::vector<AirGap> AirGapVector;
+  using AirGapVector = std::vector<AirGap>;
 
 }  // namespace model
 }  // namespace openstudio

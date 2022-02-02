@@ -87,7 +87,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirTerminalSingleDuctInletSideMixer_Impl ImplType;
+    using ImplType = detail::AirTerminalSingleDuctInletSideMixer_Impl;
 
     explicit AirTerminalSingleDuctInletSideMixer(std::shared_ptr<detail::AirTerminalSingleDuctInletSideMixer_Impl> impl);
 
@@ -101,10 +101,10 @@ namespace model {
   };
 
   /** \relates AirTerminalSingleDuctInletSideMixer*/
-  typedef boost::optional<AirTerminalSingleDuctInletSideMixer> OptionalAirTerminalSingleDuctInletSideMixer;
+  using OptionalAirTerminalSingleDuctInletSideMixer = boost::optional<AirTerminalSingleDuctInletSideMixer>;
 
   /** \relates AirTerminalSingleDuctInletSideMixer*/
-  typedef std::vector<AirTerminalSingleDuctInletSideMixer> AirTerminalSingleDuctInletSideMixerVector;
+  using AirTerminalSingleDuctInletSideMixerVector = std::vector<AirTerminalSingleDuctInletSideMixer>;
 
 }  // namespace model
 }  // namespace openstudio

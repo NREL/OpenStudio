@@ -306,7 +306,7 @@ namespace model {
   }
 
   IddObjectType GlareSensor::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Glare_Sensor);
+    return {IddObjectType::OS_Glare_Sensor};
   }
 
   double GlareSensor::positionXCoordinate() const {

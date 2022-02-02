@@ -65,7 +65,7 @@ boost::optional<Time> System::systemIdleTime() {
 
 /// return the amount of time that the system has been idle
 boost::optional<Time> System::systemIdleTime() {
-  return boost::optional<Time>();
+  return {};
 }
 
 #endif
@@ -180,13 +180,15 @@ void System::testExceptions5() {
   struct BreakUBlas
   {
     static bool invertMatrix(matrix<double>& orig, matrix<double>& inverted) {
-      typedef permutation_matrix<std::size_t> pmatrix;
+      using pmatrix = permutation_matrix<std::size_t>;
       matrix<double> A(orig);
       pmatrix pm(A.size1());
 
       // perform LU-factorization
       int res = lu_factorize(A, pm);
-      if (res != 0) return false;
+      if (res != 0) {
+        return false;
+      }
 
       inverted.assign(identity_matrix<double>(A.size1()));
       lu_substitute(A, pm, inverted);
@@ -203,9 +205,11 @@ void System::testExceptions5() {
                            {2.29091e+09, 1.27611e+13, 2.29941e+14, 4.16694e+15, 7.58705e+16, 1.38694e+18}};
 
       matrix<double> a(6, 6);
-      for (unsigned i = 0; i < a.size1(); ++i)
-        for (unsigned j = 0; j < a.size2(); ++j)
+      for (unsigned i = 0; i < a.size1(); ++i) {
+        for (unsigned j = 0; j < a.size2(); ++j) {
           a(i, j) = data[i][j];
+        }
+      }
 
       matrix<double> b(a);
       invertMatrix(a, b);

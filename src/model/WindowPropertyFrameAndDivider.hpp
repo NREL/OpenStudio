@@ -272,7 +272,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::WindowPropertyFrameAndDivider_Impl ImplType;
+    using ImplType = detail::WindowPropertyFrameAndDivider_Impl;
 
     explicit WindowPropertyFrameAndDivider(std::shared_ptr<detail::WindowPropertyFrameAndDivider_Impl> impl);
 
@@ -286,10 +286,10 @@ namespace model {
   };
 
   /** \relates WindowPropertyFrameAndDivider*/
-  typedef boost::optional<WindowPropertyFrameAndDivider> OptionalWindowPropertyFrameAndDivider;
+  using OptionalWindowPropertyFrameAndDivider = boost::optional<WindowPropertyFrameAndDivider>;
 
   /** \relates WindowPropertyFrameAndDivider*/
-  typedef std::vector<WindowPropertyFrameAndDivider> WindowPropertyFrameAndDividerVector;
+  using WindowPropertyFrameAndDividerVector = std::vector<WindowPropertyFrameAndDivider>;
 
 }  // namespace model
 }  // namespace openstudio

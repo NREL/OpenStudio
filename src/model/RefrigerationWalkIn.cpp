@@ -109,7 +109,8 @@ namespace model {
     std::vector<ScheduleTypeKey> RefrigerationWalkIn_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Refrigeration_WalkInFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("RefrigerationWalkIn", "Availability"));
       }
@@ -170,7 +171,7 @@ namespace model {
 
       std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
       for (const auto& zoneBoundary : zoneBoundaries) {
-        RefrigerationWalkInZoneBoundary zoneBoundaryClone = zoneBoundary.clone(model).cast<RefrigerationWalkInZoneBoundary>();
+        auto zoneBoundaryClone = zoneBoundary.clone(model).cast<RefrigerationWalkInZoneBoundary>();
         modelObjectClone.addZoneBoundary(zoneBoundaryClone);
       }
 
@@ -178,7 +179,7 @@ namespace model {
     }
 
     bool RefrigerationWalkIn_Impl::addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary) {
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool temp = eg.setPointer(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary, refrigerationWalkInZoneBoundary.handle());
       if (!temp) {
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
@@ -537,7 +538,7 @@ namespace model {
 
     boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
       std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      auto refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
       for (const RefrigerationSystem& refrigerationSystem : refrigerationSystems) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
         if (!refrigerationWalkIns.empty()
@@ -550,7 +551,7 @@ namespace model {
 
     boost::optional<RefrigerationSecondarySystem> RefrigerationWalkIn_Impl::secondarySystem() const {
       std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
-      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      auto refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
       for (const RefrigerationSecondarySystem& refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationSecondarySystem.walkins();
         if (!refrigerationWalkIns.empty()
@@ -563,7 +564,7 @@ namespace model {
 
     boost::optional<RefrigerationCompressorRack> RefrigerationWalkIn_Impl::compressorRack() const {
       std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
-      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      auto refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
       for (const RefrigerationCompressorRack& refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationWalkInVector refrigerationWalkIns = refrigerationCompressorRack.walkins();
         if (!refrigerationWalkIns.empty()
@@ -1010,7 +1011,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationWalkIn::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_WalkIn);
+    return {IddObjectType::OS_Refrigeration_WalkIn};
   }
 
   std::vector<std::string> RefrigerationWalkIn::defrostTypeValues() {

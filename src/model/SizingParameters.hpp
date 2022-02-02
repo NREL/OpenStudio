@@ -95,7 +95,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SizingParameters_Impl ImplType;
+    using ImplType = detail::SizingParameters_Impl;
 
     explicit SizingParameters(std::shared_ptr<detail::SizingParameters_Impl> impl);
 
@@ -111,10 +111,10 @@ namespace model {
   };
 
   /** \relates SizingParameters*/
-  typedef boost::optional<SizingParameters> OptionalSizingParameters;
+  using OptionalSizingParameters = boost::optional<SizingParameters>;
 
   /** \relates SizingParameters*/
-  typedef std::vector<SizingParameters> SizingParametersVector;
+  using SizingParametersVector = std::vector<SizingParameters>;
 
 }  // namespace model
 }  // namespace openstudio

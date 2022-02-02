@@ -79,7 +79,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::SetpointManagerWarmest_Impl ImplType;
+    using ImplType = detail::SetpointManagerWarmest_Impl;
 
     explicit SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
 
@@ -94,10 +94,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerWarmest*/
-  typedef boost::optional<SetpointManagerWarmest> OptionalSetpointManagerWarmest;
+  using OptionalSetpointManagerWarmest = boost::optional<SetpointManagerWarmest>;
 
   /** \relates SetpointManagerWarmest*/
-  typedef std::vector<SetpointManagerWarmest> SetpointManagerWarmestVector;
+  using SetpointManagerWarmestVector = std::vector<SetpointManagerWarmest>;
 
 }  // namespace model
 }  // namespace openstudio

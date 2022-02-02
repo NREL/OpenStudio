@@ -72,8 +72,8 @@ std::vector<EndUseFuelType> EndUses::fuelTypes() {
   std::vector<EndUseFuelType> result;
 
   std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
-  std::map<int, std::string>::const_iterator endUseFuelTypesIt = endUseFuelTypes.begin();
-  std::map<int, std::string>::const_iterator endUseFuelTypesItEnd = endUseFuelTypes.end();
+  auto endUseFuelTypesIt = endUseFuelTypes.begin();
+  auto endUseFuelTypesItEnd = endUseFuelTypes.end();
 
   for (; endUseFuelTypesIt != endUseFuelTypesItEnd; ++endUseFuelTypesIt) {
     result.push_back(EndUseFuelType(endUseFuelTypesIt->first));
@@ -86,8 +86,8 @@ std::vector<EndUseCategoryType> EndUses::categories() {
   std::vector<EndUseCategoryType> result;
 
   std::map<int, std::string> endUseCategoryTypes = EndUseCategoryType::getNames();
-  std::map<int, std::string>::const_iterator endUseCategoryTypesIt = endUseCategoryTypes.begin();
-  std::map<int, std::string>::const_iterator endUseCategoryTypesItEnd = endUseCategoryTypes.end();
+  auto endUseCategoryTypesIt = endUseCategoryTypes.begin();
+  auto endUseCategoryTypesItEnd = endUseCategoryTypes.end();
 
   for (; endUseCategoryTypesIt != endUseCategoryTypesItEnd; ++endUseCategoryTypesIt) {
     result.push_back(EndUseCategoryType(endUseCategoryTypesIt->first));
@@ -250,8 +250,8 @@ double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryTy
 double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory) const {
   double result = 0;
   std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
-  std::map<int, std::string>::const_iterator endUseFuelTypesIt = endUseFuelTypes.begin();
-  std::map<int, std::string>::const_iterator endUseFuelTypesItEnd = endUseFuelTypes.end();
+  auto endUseFuelTypesIt = endUseFuelTypes.begin();
+  auto endUseFuelTypesItEnd = endUseFuelTypes.end();
 
   for (; endUseFuelTypesIt != endUseFuelTypesItEnd; ++endUseFuelTypesIt) {
     result += getEndUse(EndUseFuelType(endUseFuelTypesIt->second), category, subCategory);
@@ -263,8 +263,8 @@ double EndUses::getEndUseByCategory(const EndUseCategoryType& category, const st
 double EndUses::getEndUseByCategory(const EndUseCategoryType& category) const {
   double result = 0;
   std::map<int, std::string> endUseFuelTypes = EndUseFuelType::getNames();
-  std::map<int, std::string>::const_iterator endUseFuelTypesIt = endUseFuelTypes.begin();
-  std::map<int, std::string>::const_iterator endUseFuelTypesItEnd = endUseFuelTypes.end();
+  auto endUseFuelTypesIt = endUseFuelTypes.begin();
+  auto endUseFuelTypesItEnd = endUseFuelTypes.end();
 
   for (; endUseFuelTypesIt != endUseFuelTypesItEnd; ++endUseFuelTypesIt) {
     result += getEndUse(EndUseFuelType(endUseFuelTypesIt->second), category);
@@ -276,8 +276,8 @@ double EndUses::getEndUseByCategory(const EndUseCategoryType& category) const {
 double EndUses::getEndUseByFuelType(const EndUseFuelType& fuelType) const {
   double result = 0;
   std::map<int, std::string> endUseCategoryTypes = EndUseCategoryType::getNames();
-  std::map<int, std::string>::const_iterator endUseCategoryTypesIt = endUseCategoryTypes.begin();
-  std::map<int, std::string>::const_iterator endUseCategoryTypesItEnd = endUseCategoryTypes.end();
+  auto endUseCategoryTypesIt = endUseCategoryTypes.begin();
+  auto endUseCategoryTypesItEnd = endUseCategoryTypes.end();
 
   for (; endUseCategoryTypesIt != endUseCategoryTypesItEnd; ++endUseCategoryTypesIt) {
     result += getEndUse(fuelType, EndUseCategoryType(endUseCategoryTypesIt->second));
@@ -296,7 +296,7 @@ std::vector<std::string> EndUses::subCategories() const {
     }
   }
 
-  return std::vector<std::string>(subCategories.begin(), subCategories.end());
+  return {subCategories.begin(), subCategories.end()};
 }
 
 }  // namespace openstudio

@@ -154,7 +154,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerWarmestTemperatureFlow::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_WarmestTemperatureFlow);
+    return {IddObjectType::OS_SetpointManager_WarmestTemperatureFlow};
   }
 
   std::vector<std::string> SetpointManagerWarmestTemperatureFlow::controlVariableValues() {

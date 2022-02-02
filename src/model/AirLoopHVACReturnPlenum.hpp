@@ -80,7 +80,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AirLoopHVACReturnPlenum_Impl ImplType;
+    using ImplType = detail::AirLoopHVACReturnPlenum_Impl;
 
     explicit AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
 
@@ -94,10 +94,10 @@ namespace model {
   };
 
   /** \relates AirLoopHVACReturnPlenum*/
-  typedef boost::optional<AirLoopHVACReturnPlenum> OptionalAirLoopHVACReturnPlenum;
+  using OptionalAirLoopHVACReturnPlenum = boost::optional<AirLoopHVACReturnPlenum>;
 
   /** \relates AirLoopHVACReturnPlenum*/
-  typedef std::vector<AirLoopHVACReturnPlenum> AirLoopHVACReturnPlenumVector;
+  using AirLoopHVACReturnPlenumVector = std::vector<AirLoopHVACReturnPlenum>;
 
 }  // namespace model
 }  // namespace openstudio

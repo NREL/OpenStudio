@@ -147,7 +147,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_MultiZone_MinimumHumidity_Average);
+    return {IddObjectType::OS_SetpointManager_MultiZone_MinimumHumidity_Average};
   }
 
   std::vector<std::string> SetpointManagerMultiZoneMinimumHumidityAverage::controlVariableValues() {

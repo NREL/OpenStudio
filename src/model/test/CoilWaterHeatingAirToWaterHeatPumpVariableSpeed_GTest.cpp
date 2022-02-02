@@ -141,7 +141,7 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Clone) {
   EXPECT_EQ(1, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
   EXPECT_EQ(1, m.getConcreteModelObjects<ModelObjectList>().size());
 
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coilClone = coil.clone(m).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
+  auto coilClone = coil.clone(m).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
   ASSERT_EQ(1900.0, coilClone.ratedWaterHeatingCapacity());
 
   EXPECT_EQ(2, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
@@ -149,7 +149,7 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Clone) {
   EXPECT_EQ(2, m.getConcreteModelObjects<ModelObjectList>().size());
 
   Model m2;
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coilClone2 = coil.clone(m2).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
+  auto coilClone2 = coil.clone(m2).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
   ASSERT_EQ(1900.0, coilClone2.ratedWaterHeatingCapacity());
   EXPECT_EQ(2, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
   EXPECT_EQ(2, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());

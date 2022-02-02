@@ -94,7 +94,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
+    using ImplType = detail::ExternalFile_Impl;
 
     explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
 
@@ -111,10 +111,10 @@ namespace model {
   };
 
   /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
+  using OptionalExternalFile = boost::optional<ExternalFile>;
 
   /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
+  using ExternalFileVector = std::vector<ExternalFile>;
 
 }  // namespace model
 }  // namespace openstudio

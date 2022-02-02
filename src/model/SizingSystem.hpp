@@ -316,7 +316,7 @@ namespace model {
 
     bool setAirLoopHVAC(const AirLoopHVAC& airLoopHVAC);
 
-    typedef detail::SizingSystem_Impl ImplType;
+    using ImplType = detail::SizingSystem_Impl;
 
     explicit SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl);
 
@@ -334,10 +334,10 @@ namespace model {
   };
 
   /** \relates SizingSystem*/
-  typedef boost::optional<SizingSystem> OptionalSizingSystem;
+  using OptionalSizingSystem = boost::optional<SizingSystem>;
 
   /** \relates SizingSystem*/
-  typedef std::vector<SizingSystem> SizingSystemVector;
+  using SizingSystemVector = std::vector<SizingSystem>;
 
 }  // namespace model
 

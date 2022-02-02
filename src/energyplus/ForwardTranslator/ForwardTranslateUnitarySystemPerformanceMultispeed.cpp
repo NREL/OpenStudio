@@ -77,10 +77,10 @@ namespace energyplus {
     boost::optional<HVACComponent> heatingCoil = unitarySystem.heatingCoil();
     if (heatingCoil) {
       if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed) {
-        CoilHeatingDXMultiSpeed heatingCoilDXMultispeed = heatingCoil->cast<CoilHeatingDXMultiSpeed>();
+        auto heatingCoilDXMultispeed = heatingCoil->cast<CoilHeatingDXMultiSpeed>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilDXMultispeed.stages().size());
       } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_Gas_MultiStage) {
-        CoilHeatingGasMultiStage heatingCoilGasMultiStage = heatingCoil->cast<CoilHeatingGasMultiStage>();
+        auto heatingCoilGasMultiStage = heatingCoil->cast<CoilHeatingGasMultiStage>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilGasMultiStage.stages().size());
       } else {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
@@ -93,7 +93,7 @@ namespace energyplus {
     boost::optional<HVACComponent> coolingCoil = unitarySystem.coolingCoil();
     if (coolingCoil) {
       if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed) {
-        CoilCoolingDXMultiSpeed coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
+        auto coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
       } else {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);

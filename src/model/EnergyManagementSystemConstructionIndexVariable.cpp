@@ -108,7 +108,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemConstructionIndexVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable);
+    return {IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable};
   }
 
   ModelObject EnergyManagementSystemConstructionIndexVariable::constructionObject() const {

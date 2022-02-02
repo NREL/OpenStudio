@@ -86,7 +86,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputControlReportingTolerances_Impl ImplType;
+    using ImplType = detail::OutputControlReportingTolerances_Impl;
 
     explicit OutputControlReportingTolerances(std::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl);
 
@@ -102,10 +102,10 @@ namespace model {
   };
 
   /** \relates OutputControlReportingTolerances*/
-  typedef boost::optional<OutputControlReportingTolerances> OptionalOutputControlReportingTolerances;
+  using OptionalOutputControlReportingTolerances = boost::optional<OutputControlReportingTolerances>;
 
   /** \relates OutputControlReportingTolerances*/
-  typedef std::vector<OutputControlReportingTolerances> OutputControlReportingTolerancesVector;
+  using OutputControlReportingTolerancesVector = std::vector<OutputControlReportingTolerances>;
 
 }  // namespace model
 }  // namespace openstudio

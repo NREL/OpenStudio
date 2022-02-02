@@ -195,7 +195,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GasMixture_Impl ImplType;
+    using ImplType = detail::GasMixture_Impl;
 
     explicit GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl);
 
@@ -209,10 +209,10 @@ namespace model {
   };
 
   /** \relates GasMixture*/
-  typedef boost::optional<GasMixture> OptionalGasMixture;
+  using OptionalGasMixture = boost::optional<GasMixture>;
 
   /** \relates GasMixture*/
-  typedef std::vector<GasMixture> GasMixtureVector;
+  using GasMixtureVector = std::vector<GasMixture>;
 
 }  // namespace model
 }  // namespace openstudio

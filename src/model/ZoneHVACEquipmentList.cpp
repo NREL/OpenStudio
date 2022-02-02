@@ -85,7 +85,8 @@ namespace model {
       std::sort(fieldIndices.begin(), fieldIndices.end());
       fieldIndices.erase(std::unique(fieldIndices.begin(), fieldIndices.end()), fieldIndices.end());
 
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACEquipmentList", "Sequential Cooling Fraction"));
       }
@@ -129,7 +130,7 @@ namespace model {
       unsigned heatingCount = this->equipmentInHeatingOrder().size();
       unsigned coolingCount = this->equipmentInCoolingOrder().size();
 
-      ModelExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
 
       bool ok = eg.setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment, equipment.handle());
 
@@ -280,7 +281,7 @@ namespace model {
 
           OS_ASSERT(wo);
 
-          ModelObject mo = wo->cast<ModelObject>();
+          auto mo = wo->cast<ModelObject>();
 
           equipmentMap.insert(std::make_pair(heatingPriority, mo));
         }
@@ -313,7 +314,7 @@ namespace model {
 
           OS_ASSERT(wo);
 
-          ModelObject mo = wo->cast<ModelObject>();
+          auto mo = wo->cast<ModelObject>();
 
           equipmentMap.insert(std::make_pair(coolingPriority, mo));
         }
@@ -592,7 +593,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACEquipmentList::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_EquipmentList);
+    return {IddObjectType::OS_ZoneHVAC_EquipmentList};
   }
 
   std::string ZoneHVACEquipmentList::loadDistributionScheme() const {

@@ -53,7 +53,7 @@ std::vector<std::vector<Point3d>> generateGableRoof(std::vector<Point3d>& polygo
   std::vector<std::vector<Point3d>> surfaces;
   try {
     surfaces = doStraightSkeleton(polygon, roofPitchDegrees);
-    if (surfaces.size() == 0) {
+    if (surfaces.empty()) {
       return surfaces;
     }
 

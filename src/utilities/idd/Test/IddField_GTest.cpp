@@ -50,7 +50,7 @@ TEST_F(IddFixture, IddField_Properties) {
 
   // ==, != operators
   ASSERT_TRUE(iddZone.nonextensibleFields().size() > 2);
-  ASSERT_TRUE(iddZoneList.nonextensibleFields().size() > 0);
+  ASSERT_TRUE(!iddZoneList.nonextensibleFields().empty());
   EXPECT_TRUE(iddZone.nonextensibleFields()[0].properties() == iddZone.nonextensibleFields()[0].properties());
   // ETH@20100326 Would expect these to be the same--probably only differ by note/memo.
   // Is that the behavior we want?
@@ -60,7 +60,7 @@ TEST_F(IddFixture, IddField_Properties) {
   // referencesEqual
   candidate = IddFactory::instance().getObject(IddObjectType::SizingPeriod_DesignDay);
   ASSERT_TRUE(candidate);
-  ASSERT_TRUE(candidate->nonextensibleFields().size() > 0);
+  ASSERT_TRUE(!candidate->nonextensibleFields().empty());
   IddField designDayName = candidate->getField(0).get();
   EXPECT_FALSE(referencesEqual(designDayName, iddZone.getField(0).get()));
   candidate = IddFactory::instance().getObject(IddObjectType::SizingPeriod_WeatherFileDays);

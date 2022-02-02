@@ -91,7 +91,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterInverterPVWatts_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterInverterPVWatts_Impl;
 
     explicit ElectricLoadCenterInverterPVWatts(std::shared_ptr<detail::ElectricLoadCenterInverterPVWatts_Impl> impl);
 
@@ -105,10 +105,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterInverterPVWatts*/
-  typedef boost::optional<ElectricLoadCenterInverterPVWatts> OptionalElectricLoadCenterInverterPVWatts;
+  using OptionalElectricLoadCenterInverterPVWatts = boost::optional<ElectricLoadCenterInverterPVWatts>;
 
   /** \relates ElectricLoadCenterInverterPVWatts*/
-  typedef std::vector<ElectricLoadCenterInverterPVWatts> ElectricLoadCenterInverterPVWattsVector;
+  using ElectricLoadCenterInverterPVWattsVector = std::vector<ElectricLoadCenterInverterPVWatts>;
 
 }  // namespace model
 }  // namespace openstudio

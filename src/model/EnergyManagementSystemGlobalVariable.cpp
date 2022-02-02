@@ -106,7 +106,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemGlobalVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
+    return {IddObjectType::OS_EnergyManagementSystem_GlobalVariable};
   }
 
   bool EnergyManagementSystemGlobalVariable::exportToBCVTB() const {

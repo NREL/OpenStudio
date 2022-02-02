@@ -311,7 +311,7 @@ namespace model {
       return setDouble(OS_Material_RoofVegetationFields::SpecificHeatofDrySoil, value);
     }
 
-    bool RoofVegetation_Impl::setThermalTransmittance(double value) {
+    bool RoofVegetation_Impl::setThermalTransmittance(double /*value*/) {
       return false;
     }
 
@@ -330,7 +330,7 @@ namespace model {
       return setThermalAbsorptance(od);
     }
 
-    bool RoofVegetation_Impl::setSolarTransmittance(double value) {
+    bool RoofVegetation_Impl::setSolarTransmittance(double /*value*/) {
       return false;
     }
 
@@ -349,7 +349,7 @@ namespace model {
       return setSolarAbsorptance(od);
     }
 
-    bool RoofVegetation_Impl::setVisibleTransmittance(double value) {
+    bool RoofVegetation_Impl::setVisibleTransmittance(double /*value*/) {
       return false;
     }
 
@@ -667,7 +667,7 @@ namespace model {
   }
 
   IddObjectType RoofVegetation::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material_RoofVegetation);
+    return {IddObjectType::OS_Material_RoofVegetation};
   }
 
   std::vector<std::string> RoofVegetation::roughnessValues() {

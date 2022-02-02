@@ -427,7 +427,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoolingTowerTwoSpeed_Impl ImplType;
+    using ImplType = detail::CoolingTowerTwoSpeed_Impl;
 
     explicit CoolingTowerTwoSpeed(std::shared_ptr<detail::CoolingTowerTwoSpeed_Impl> impl);
 
@@ -441,10 +441,10 @@ namespace model {
   };
 
   /** \relates CoolingTowerTwoSpeed*/
-  typedef boost::optional<CoolingTowerTwoSpeed> OptionalCoolingTowerTwoSpeed;
+  using OptionalCoolingTowerTwoSpeed = boost::optional<CoolingTowerTwoSpeed>;
 
   /** \relates CoolingTowerTwoSpeed*/
-  typedef std::vector<CoolingTowerTwoSpeed> CoolingTowerTwoSpeedVector;
+  using CoolingTowerTwoSpeedVector = std::vector<CoolingTowerTwoSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

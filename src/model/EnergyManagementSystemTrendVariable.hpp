@@ -122,7 +122,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemTrendVariable_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemTrendVariable_Impl;
 
     explicit EnergyManagementSystemTrendVariable(std::shared_ptr<detail::EnergyManagementSystemTrendVariable_Impl> impl);
 
@@ -138,10 +138,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemTrendVariable*/
-  typedef boost::optional<EnergyManagementSystemTrendVariable> OptionalEnergyManagementSystemTrendVariable;
+  using OptionalEnergyManagementSystemTrendVariable = boost::optional<EnergyManagementSystemTrendVariable>;
 
   /** \relates EnergyManagementSystemTrendVariable*/
-  typedef std::vector<EnergyManagementSystemTrendVariable> EnergyManagementSystemTrendVariableVector;
+  using EnergyManagementSystemTrendVariableVector = std::vector<EnergyManagementSystemTrendVariable>;
 
 }  // namespace model
 }  // namespace openstudio

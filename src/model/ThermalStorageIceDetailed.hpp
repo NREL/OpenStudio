@@ -127,7 +127,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermalStorageIceDetailed_Impl ImplType;
+    using ImplType = detail::ThermalStorageIceDetailed_Impl;
 
     explicit ThermalStorageIceDetailed(std::shared_ptr<detail::ThermalStorageIceDetailed_Impl> impl);
 
@@ -141,10 +141,10 @@ namespace model {
   };
 
   /** \relates ThermalStorageIceDetailed*/
-  typedef boost::optional<ThermalStorageIceDetailed> OptionalThermalStorageIceDetailed;
+  using OptionalThermalStorageIceDetailed = boost::optional<ThermalStorageIceDetailed>;
 
   /** \relates ThermalStorageIceDetailed*/
-  typedef std::vector<ThermalStorageIceDetailed> ThermalStorageIceDetailedVector;
+  using ThermalStorageIceDetailedVector = std::vector<ThermalStorageIceDetailed>;
 
 }  // namespace model
 }  // namespace openstudio

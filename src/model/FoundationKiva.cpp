@@ -375,7 +375,7 @@ namespace model {
         result = false;
       } else {
         // Push an extensible group
-        WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         bool material = eg.setPointer(OS_Foundation_KivaExtensibleFields::CustomBlockMaterialName, customBlock.material().handle());
         bool depth = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth, customBlock.depth());
         bool xPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition, customBlock.xPosition());
@@ -458,7 +458,7 @@ namespace model {
   FoundationKiva::FoundationKiva(Model& model) : ModelObject(FoundationKiva::iddObjectType(), model) {}
 
   IddObjectType FoundationKiva::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Foundation_Kiva);
+    return {IddObjectType::OS_Foundation_Kiva};
   }
 
   boost::optional<double> FoundationKiva::initialIndoorAirTemperature() {

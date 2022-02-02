@@ -150,7 +150,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkOccupantVentilationControl_Impl ImplType;
+    using ImplType = detail::AirflowNetworkOccupantVentilationControl_Impl;
 
     explicit AirflowNetworkOccupantVentilationControl(std::shared_ptr<detail::AirflowNetworkOccupantVentilationControl_Impl> impl);
 
@@ -164,10 +164,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkOccupantVentilationControl*/
-  typedef boost::optional<AirflowNetworkOccupantVentilationControl> OptionalAirflowNetworkOccupantVentilationControl;
+  using OptionalAirflowNetworkOccupantVentilationControl = boost::optional<AirflowNetworkOccupantVentilationControl>;
 
   /** \relates AirflowNetworkOccupantVentilationControl*/
-  typedef std::vector<AirflowNetworkOccupantVentilationControl> AirflowNetworkOccupantVentilationControlVector;
+  using AirflowNetworkOccupantVentilationControlVector = std::vector<AirflowNetworkOccupantVentilationControl>;
 
 }  // namespace model
 }  // namespace openstudio

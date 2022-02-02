@@ -61,7 +61,8 @@ namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateGeneratorMicroTurbine(const WorkspaceObject& workspaceObject) {
 
-    OptionalModelObject result, temp;
+    OptionalModelObject result;
+    OptionalModelObject temp;
     OptionalDouble d;
     boost::optional<WorkspaceObject> owo;
     OptionalString optS;

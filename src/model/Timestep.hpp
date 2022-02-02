@@ -85,7 +85,7 @@ namespace model {
     //@}
 
     /// @cond
-    typedef detail::Timestep_Impl ImplType;
+    using ImplType = detail::Timestep_Impl;
 
     friend class Model;
 
@@ -101,7 +101,7 @@ namespace model {
   };
 
   /** \relates Timestep */
-  typedef boost::optional<Timestep> OptionalTimestep;
+  using OptionalTimestep = boost::optional<Timestep>;
 
 }  // namespace model
 

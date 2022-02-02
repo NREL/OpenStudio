@@ -127,7 +127,7 @@ namespace model {
       }
 
       // if removedObject is the primary componentObject, nullify the component.
-      OS_ASSERT(m_componentObjects.size() > 0);
+      OS_ASSERT(!m_componentObjects.empty());
       if (handleOfRemovedObject == m_componentObjects[0].handle()) {
         mf_removeComponent();
         return;

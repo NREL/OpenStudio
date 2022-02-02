@@ -113,7 +113,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithDefaultData) 
 
   RefrigerationGasCoolerAirCooled testObject = RefrigerationGasCoolerAirCooled(model);
 
-  RefrigerationGasCoolerAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
   std::vector<CurveLinear> refrigerationGasCoolerCurves = model.getModelObjects<CurveLinear>();
   for (auto it = refrigerationGasCoolerCurves.begin(); it != refrigerationGasCoolerCurves.end(); ++it) {
@@ -154,7 +154,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithCustomData) {
   testObject.setGasCoolerOutletPipingRefrigerantInventory(99.0);
   // testObject.setAirInletNode(thermalZone);
 
-  RefrigerationGasCoolerAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
   EXPECT_EQ(testObjectClone.gasCoolerFanSpeedControlType(), "VariableSpeed");
   EXPECT_DOUBLE_EQ(testObjectClone.ratedFanPower(), 99.0);
@@ -190,10 +190,10 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneTwoModelWithCustomData
   testObject.setGasCoolerOutletPipingRefrigerantInventory(99.0);
   // testObject.setAirInletNode(thermalZone);
 
-  RefrigerationGasCoolerAirCooled testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
   Model model2;
-  RefrigerationGasCoolerAirCooled testObjectClone2 = testObject.clone(model2).cast<RefrigerationGasCoolerAirCooled>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationGasCoolerAirCooled>();
 
   EXPECT_EQ(testObjectClone2.gasCoolerFanSpeedControlType(), "VariableSpeed");
   EXPECT_DOUBLE_EQ(testObjectClone2.ratedFanPower(), 99.0);

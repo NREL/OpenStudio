@@ -128,7 +128,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ConstructionAirBoundary_Impl ImplType;
+    using ImplType = detail::ConstructionAirBoundary_Impl;
 
     explicit ConstructionAirBoundary(std::shared_ptr<detail::ConstructionAirBoundary_Impl> impl);
 
@@ -142,10 +142,10 @@ namespace model {
   };
 
   /** \relates ConstructionAirBoundary*/
-  typedef boost::optional<ConstructionAirBoundary> OptionalConstructionAirBoundary;
+  using OptionalConstructionAirBoundary = boost::optional<ConstructionAirBoundary>;
 
   /** \relates ConstructionAirBoundary*/
-  typedef std::vector<ConstructionAirBoundary> ConstructionAirBoundaryVector;
+  using ConstructionAirBoundaryVector = std::vector<ConstructionAirBoundary>;
 
 }  // namespace model
 }  // namespace openstudio

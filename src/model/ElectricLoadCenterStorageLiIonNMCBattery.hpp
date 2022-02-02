@@ -171,7 +171,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl ImplType;
+    using ImplType = detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl;
 
     explicit ElectricLoadCenterStorageLiIonNMCBattery(std::shared_ptr<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl> impl);
 
@@ -185,10 +185,10 @@ namespace model {
   };
 
   /** \relates ElectricLoadCenterStorageLiIonNMCBattery*/
-  typedef boost::optional<ElectricLoadCenterStorageLiIonNMCBattery> OptionalElectricLoadCenterStorageLiIonNMCBattery;
+  using OptionalElectricLoadCenterStorageLiIonNMCBattery = boost::optional<ElectricLoadCenterStorageLiIonNMCBattery>;
 
   /** \relates ElectricLoadCenterStorageLiIonNMCBattery*/
-  typedef std::vector<ElectricLoadCenterStorageLiIonNMCBattery> ElectricLoadCenterStorageLiIonNMCBatteryVector;
+  using ElectricLoadCenterStorageLiIonNMCBatteryVector = std::vector<ElectricLoadCenterStorageLiIonNMCBattery>;
 
 }  // namespace model
 }  // namespace openstudio

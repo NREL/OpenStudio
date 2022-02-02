@@ -98,7 +98,8 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilWaterHeatingDesuperheater_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_WaterHeating_DesuperheaterFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilWaterHeatingDesuperheater", "Availability"));
       }
@@ -139,7 +140,7 @@ namespace model {
       return result;
     }
 
-    bool CoilWaterHeatingDesuperheater_Impl::addToNode(Node& node) {
+    bool CoilWaterHeatingDesuperheater_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
@@ -151,7 +152,7 @@ namespace model {
     boost::optional<ModelObject> CoilWaterHeatingDesuperheater_Impl::heatRejectionTarget() const {
       boost::optional<ModelObject> inletHeatRejectionTarget;
       boost::optional<ModelObject> outletHeatRejectionTarget;
-      StraightComponent desuperheater = this->getObject<ModelObject>().cast<StraightComponent>();
+      auto desuperheater = this->getObject<ModelObject>().cast<StraightComponent>();
       if (boost::optional<ModelObject> outletModelObject = desuperheater.outletModelObject()) {
         if (boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>()) {
           if (boost::optional<ModelObject> heatRejectionTarget = outletNode->outletModelObject()) {
@@ -179,7 +180,9 @@ namespace model {
         validChoice = true;
       }
 
-      if (!validChoice) return false;
+      if (!validChoice) {
+        return false;
+      }
 
       if (boost::optional<WaterToWaterComponent> _heatRejectionTarget = heatRejectionTarget.optionalCast<WaterToWaterComponent>()) {
         Model _model = this->model();
@@ -523,7 +526,7 @@ namespace model {
   }
 
   IddObjectType CoilWaterHeatingDesuperheater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
+    return {IddObjectType::OS_Coil_WaterHeating_Desuperheater};
   }
 
   boost::optional<ModelObject> CoilWaterHeatingDesuperheater::heatRejectionTarget() const {

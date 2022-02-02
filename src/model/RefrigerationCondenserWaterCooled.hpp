@@ -171,7 +171,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationCondenserWaterCooled_Impl ImplType;
+    using ImplType = detail::RefrigerationCondenserWaterCooled_Impl;
 
     explicit RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl);
 
@@ -185,10 +185,10 @@ namespace model {
   };
 
   /** \relates RefrigerationCondenserWaterCooled*/
-  typedef boost::optional<RefrigerationCondenserWaterCooled> OptionalRefrigerationCondenserWaterCooled;
+  using OptionalRefrigerationCondenserWaterCooled = boost::optional<RefrigerationCondenserWaterCooled>;
 
   /** \relates RefrigerationCondenserWaterCooled*/
-  typedef std::vector<RefrigerationCondenserWaterCooled> RefrigerationCondenserWaterCooledVector;
+  using RefrigerationCondenserWaterCooledVector = std::vector<RefrigerationCondenserWaterCooled>;
 
 }  // namespace model
 }  // namespace openstudio

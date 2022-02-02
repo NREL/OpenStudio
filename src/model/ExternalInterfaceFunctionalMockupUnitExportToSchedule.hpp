@@ -80,7 +80,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl ImplType;
+    using ImplType = detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl;
 
     explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(
       std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl> impl);
@@ -95,10 +95,10 @@ namespace model {
   };
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
-  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportToSchedule> OptionalExternalInterfaceFunctionalMockupUnitExportToSchedule;
+  using OptionalExternalInterfaceFunctionalMockupUnitExportToSchedule = boost::optional<ExternalInterfaceFunctionalMockupUnitExportToSchedule>;
 
   /** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
-  typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToSchedule> ExternalInterfaceFunctionalMockupUnitExportToScheduleVector;
+  using ExternalInterfaceFunctionalMockupUnitExportToScheduleVector = std::vector<ExternalInterfaceFunctionalMockupUnitExportToSchedule>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -63,7 +63,7 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> LifeCycleCostParameters_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -376,7 +376,7 @@ namespace model {
     }
 
     // set the parent, child may have to call methods on the parent
-    bool LifeCycleCostParameters_Impl::setParent(ParentObject& newParent) {
+    bool LifeCycleCostParameters_Impl::setParent(ParentObject& /*newParent*/) {
       return false;
     }
 

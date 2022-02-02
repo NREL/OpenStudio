@@ -107,7 +107,7 @@ namespace model {
         return WaterToAirComponent_Impl::remove();
       }
 
-      return std::vector<IdfObject>();
+      return {};
     }
 
     boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratedAirFlowRate() const {
@@ -504,7 +504,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
+    return {IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit};
   }
 
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::ratedAirFlowRate() const {

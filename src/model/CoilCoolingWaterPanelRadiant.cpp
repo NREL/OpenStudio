@@ -365,7 +365,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingWaterPanelRadiant::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_Water_Panel_Radiant);
+    return {IddObjectType::OS_Coil_Cooling_Water_Panel_Radiant};
   }
 
   std::vector<std::string> CoilCoolingWaterPanelRadiant::coolingDesignCapacityMethodValues() {

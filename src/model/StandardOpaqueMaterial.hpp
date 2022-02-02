@@ -178,7 +178,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::StandardOpaqueMaterial_Impl ImplType;
+    using ImplType = detail::StandardOpaqueMaterial_Impl;
 
     explicit StandardOpaqueMaterial(std::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl);
 
@@ -192,10 +192,10 @@ namespace model {
   };
 
   /** \relates StandardOpaqueMaterial*/
-  typedef boost::optional<StandardOpaqueMaterial> OptionalStandardOpaqueMaterial;
+  using OptionalStandardOpaqueMaterial = boost::optional<StandardOpaqueMaterial>;
 
   /** \relates StandardOpaqueMaterial*/
-  typedef std::vector<StandardOpaqueMaterial> StadardOpaqueMaterialVector;
+  using StadardOpaqueMaterialVector = std::vector<StandardOpaqueMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

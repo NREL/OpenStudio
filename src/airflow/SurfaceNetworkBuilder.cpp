@@ -68,27 +68,28 @@ namespace airflow {
     }
   }
 
-  bool SurfaceNetworkBuilder::linkExteriorSurface(model::ThermalZone zone, model::Space space, model::Surface surface) {
+  bool SurfaceNetworkBuilder::linkExteriorSurface(model::ThermalZone zone, model::Space /*space*/, model::Surface surface) {
     LOG(Info, "Surface '" << surface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
     return true;
   }
 
-  bool SurfaceNetworkBuilder::linkInteriorSurface(model::ThermalZone zone, model::Space space, model::Surface surface, model::Surface adjacentSurface,
-                                                  model::Space adjacentSpace, model::ThermalZone adjacentZone) {
+  bool SurfaceNetworkBuilder::linkInteriorSurface(model::ThermalZone zone, model::Space /*space*/, model::Surface surface,
+                                                  model::Surface adjacentSurface, model::Space /*adjacentSpace*/, model::ThermalZone adjacentZone) {
     LOG(Info, "Surfaces '" << surface.name().get() << "' and '" << adjacentSurface.name().get() << "' connect zone '" << zone.name().get()
                            << "' to zone '" << adjacentZone.name().get() << "'");
     return true;
   }
 
-  bool SurfaceNetworkBuilder::linkExteriorSubSurface(model::ThermalZone zone, model::Space space, model::Surface surface,
+  bool SurfaceNetworkBuilder::linkExteriorSubSurface(model::ThermalZone zone, model::Space /*space*/, model::Surface /*surface*/,
                                                      model::SubSurface subSurface) {
     LOG(Info, "Subsurface '" << subSurface.name().get() << "' connects zone '" << zone.name().get() << "' to the ambient");
     return true;
   }
 
-  bool SurfaceNetworkBuilder::linkInteriorSubSurface(model::ThermalZone zone, model::Space space, model::Surface surface,
+  bool SurfaceNetworkBuilder::linkInteriorSubSurface(model::ThermalZone zone, model::Space /*space*/, model::Surface /*surface*/,
                                                      model::SubSurface subSurface, model::SubSurface adjacentSubSurface,
-                                                     model::Surface adjacentSurface, model::Space adjacentSpace, model::ThermalZone adjacentZone) {
+                                                     model::Surface /*adjacentSurface*/, model::Space /*adjacentSpace*/,
+                                                     model::ThermalZone adjacentZone) {
     LOG(Info, "Subsurfaces '" << subSurface.name().get() << "' and '" << adjacentSubSurface.name().get() << "' connect zone '" << zone.name().get()
                               << "' to zone '" << adjacentZone.name().get() << "'");
     return true;
@@ -206,7 +207,7 @@ namespace airflow {
         }
       }
     }
-    if (surfaces.size() > 0) {
+    if (!surfaces.empty()) {
       progress();
     }
     return nowarnings;

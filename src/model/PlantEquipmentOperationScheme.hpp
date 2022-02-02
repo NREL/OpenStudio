@@ -54,7 +54,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationScheme_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationScheme_Impl;
 
     explicit PlantEquipmentOperationScheme(std::shared_ptr<detail::PlantEquipmentOperationScheme_Impl> impl);
 
@@ -67,9 +67,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
   };
 
-  typedef boost::optional<PlantEquipmentOperationScheme> OptionalPlantEquipmentOperationScheme;
+  using OptionalPlantEquipmentOperationScheme = boost::optional<PlantEquipmentOperationScheme>;
 
-  typedef std::vector<PlantEquipmentOperationScheme> PlantEquipmentOperationSchemeVector;
+  using PlantEquipmentOperationSchemeVector = std::vector<PlantEquipmentOperationScheme>;
 
 }  // namespace model
 }  // namespace openstudio

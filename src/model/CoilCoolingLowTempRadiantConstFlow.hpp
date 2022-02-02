@@ -129,7 +129,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingLowTempRadiantConstFlow_Impl ImplType;
+    using ImplType = detail::CoilCoolingLowTempRadiantConstFlow_Impl;
 
     explicit CoilCoolingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantConstFlow_Impl> impl);
 
@@ -143,10 +143,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingLowTempRadiantConstFlow*/
-  typedef boost::optional<CoilCoolingLowTempRadiantConstFlow> OptionalCoilCoolingLowTempRadiantConstFlow;
+  using OptionalCoilCoolingLowTempRadiantConstFlow = boost::optional<CoilCoolingLowTempRadiantConstFlow>;
 
   /** \relates CoilCoolingLowTempRadiantConstFlow*/
-  typedef std::vector<CoilCoolingLowTempRadiantConstFlow> CoilCoolingLowTempRadiantConstFlowVector;
+  using CoilCoolingLowTempRadiantConstFlowVector = std::vector<CoilCoolingLowTempRadiantConstFlow>;
 
 }  // namespace model
 }  // namespace openstudio

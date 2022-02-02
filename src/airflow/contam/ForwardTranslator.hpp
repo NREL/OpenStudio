@@ -96,7 +96,7 @@ namespace contam {
     }
     /** Returns true if the object has no time series. */
     bool isEmpty() {
-      return m_names.size() == 0;
+      return m_names.empty();
     }
     /** Clear the object and make it empty. */
     void clear();

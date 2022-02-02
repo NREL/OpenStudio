@@ -95,7 +95,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::LightingSimulationZone_Impl ImplType;
+    using ImplType = detail::LightingSimulationZone_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -108,10 +108,10 @@ namespace model {
   };
 
   /** \relates LightingSimulationZone*/
-  typedef boost::optional<LightingSimulationZone> OptionalLightingSimulationZone;
+  using OptionalLightingSimulationZone = boost::optional<LightingSimulationZone>;
 
   /** \relates LightingSimulationZone*/
-  typedef std::vector<LightingSimulationZone> LightingSimulationZoneVector;
+  using LightingSimulationZoneVector = std::vector<LightingSimulationZone>;
 
 }  // namespace model
 }  // namespace openstudio

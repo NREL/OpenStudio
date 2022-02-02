@@ -73,7 +73,8 @@ namespace model {
     std::vector<ScheduleTypeKey> SurfacePropertyOtherSideCoefficients_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SurfaceProperty_OtherSideCoefficientsFields::ConstantTemperatureScheduleName) != e) {
         result.push_back(ScheduleTypeKey("SurfacePropertyOtherSideCoefficients", "Constant Temperature"));
       }
@@ -335,7 +336,7 @@ namespace model {
   }
 
   IddObjectType SurfacePropertyOtherSideCoefficients::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
+    return {IddObjectType::OS_SurfaceProperty_OtherSideCoefficients};
   }
 
   boost::optional<double> SurfacePropertyOtherSideCoefficients::combinedConvectiveRadiativeFilmCoefficient() const {

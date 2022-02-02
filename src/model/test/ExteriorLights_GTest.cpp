@@ -112,7 +112,7 @@ TEST_F(ModelFixture, ExteriorLights_SettersGetters) {
   EXPECT_EQ("AstronomicalClock", lights.controlOption());
 
   // Facility
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
   EXPECT_EQ(facility.handle(), lights.facility().handle());
 }
 

@@ -40,7 +40,8 @@ namespace detail {
 
   std::string makeCommentHelper(const std::string& str, const std::string& linePrefix, int indentSize) {
     // istream for parsing, ostream for composing comment
-    std::stringstream ss(str), comment;
+    std::stringstream ss(str);
+    std::stringstream comment;
 
     // helper variables
     boost::smatch m;

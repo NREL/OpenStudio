@@ -198,7 +198,7 @@ namespace energyplus {
           if (!layers.empty()) {
 
             if (layers[0].optionalCast<model::StandardOpaqueMaterial>()) {
-              model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
+              auto outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
 
               boost::optional<double> solRefl = outerMaterial.solarReflectance();
               if (solRefl) {
@@ -214,7 +214,7 @@ namespace energyplus {
             }
 
             if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()) {
-              model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
+              auto outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
 
               boost::optional<double> solRefl = outerMaterial.solarReflectance();
               if (solRefl) {

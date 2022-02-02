@@ -154,7 +154,7 @@ namespace model {
   }
 
   IddObjectType EnvironmentalImpactFactors::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnvironmentalImpactFactors);
+    return {IddObjectType::OS_EnvironmentalImpactFactors};
   }
 
   double EnvironmentalImpactFactors::districtHeatingEfficiency() const {

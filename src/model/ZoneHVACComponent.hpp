@@ -143,7 +143,7 @@ namespace model {
    protected:
     ZoneHVACComponent(IddObjectType type, const Model& model);
 
-    typedef detail::ZoneHVACComponent_Impl ImplType;
+    using ImplType = detail::ZoneHVACComponent_Impl;
 
     friend class Model;
 
@@ -159,7 +159,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.HVACComponent");
   };
 
-  typedef boost::optional<ZoneHVACComponent> OptionalZoneHVACComponent;
+  using OptionalZoneHVACComponent = boost::optional<ZoneHVACComponent>;
 
 }  // namespace model
 

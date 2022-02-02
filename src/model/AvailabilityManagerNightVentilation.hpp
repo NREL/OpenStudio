@@ -103,7 +103,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerNightVentilation_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerNightVentilation_Impl;
 
     explicit AvailabilityManagerNightVentilation(std::shared_ptr<detail::AvailabilityManagerNightVentilation_Impl> impl);
 
@@ -117,10 +117,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerNightVentilation*/
-  typedef boost::optional<AvailabilityManagerNightVentilation> OptionalAvailabilityManagerNightVentilation;
+  using OptionalAvailabilityManagerNightVentilation = boost::optional<AvailabilityManagerNightVentilation>;
 
   /** \relates AvailabilityManagerNightVentilation*/
-  typedef std::vector<AvailabilityManagerNightVentilation> AvailabilityManagerNightVentilationVector;
+  using AvailabilityManagerNightVentilationVector = std::vector<AvailabilityManagerNightVentilation>;
 
 }  // namespace model
 }  // namespace openstudio

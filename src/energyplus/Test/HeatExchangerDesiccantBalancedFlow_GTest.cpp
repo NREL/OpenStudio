@@ -63,7 +63,7 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_HeatExchangerDesiccantBalancedFlow) {
   Model m;
 
-  AirLoopHVAC loop = addSystemType3(m).cast<AirLoopHVAC>();
+  auto loop = addSystemType3(m).cast<AirLoopHVAC>();
 
   AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
 

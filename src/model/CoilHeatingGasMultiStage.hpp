@@ -99,7 +99,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingGasMultiStage_Impl ImplType;
+    using ImplType = detail::CoilHeatingGasMultiStage_Impl;
 
     explicit CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilHeatingGasMultiStage_Impl> impl);
 
@@ -113,10 +113,10 @@ namespace model {
   };
 
   /** \relates CoilHeatingGasMultiStage*/
-  typedef boost::optional<CoilHeatingGasMultiStage> OptionalCoilHeatingGasMultiStage;
+  using OptionalCoilHeatingGasMultiStage = boost::optional<CoilHeatingGasMultiStage>;
 
   /** \relates CoilHeatingGasMultiStage*/
-  typedef std::vector<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageVector;
+  using CoilHeatingGasMultiStageVector = std::vector<CoilHeatingGasMultiStage>;
 
 }  // namespace model
 }  // namespace openstudio

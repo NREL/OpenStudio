@@ -177,7 +177,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationGasCoolerAirCooled_Impl ImplType;
+    using ImplType = detail::RefrigerationGasCoolerAirCooled_Impl;
 
     explicit RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl);
 
@@ -191,10 +191,10 @@ namespace model {
   };
 
   /** \relates RefrigerationGasCoolerAirCooled*/
-  typedef boost::optional<RefrigerationGasCoolerAirCooled> OptionalRefrigerationGasCoolerAirCooled;
+  using OptionalRefrigerationGasCoolerAirCooled = boost::optional<RefrigerationGasCoolerAirCooled>;
 
   /** \relates RefrigerationGasCoolerAirCooled*/
-  typedef std::vector<RefrigerationGasCoolerAirCooled> RefrigerationGasCoolerAirCooledVector;
+  using RefrigerationGasCoolerAirCooledVector = std::vector<RefrigerationGasCoolerAirCooled>;
 
 }  // namespace model
 }  // namespace openstudio

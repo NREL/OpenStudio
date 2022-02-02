@@ -94,7 +94,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneCapacitanceMultiplierResearchSpecial_Impl ImplType;
+    using ImplType = detail::ZoneCapacitanceMultiplierResearchSpecial_Impl;
 
     explicit ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl);
 
@@ -110,10 +110,10 @@ namespace model {
   };
 
   /** \relates ZoneCapacitanceMultiplierResearchSpecial*/
-  typedef boost::optional<ZoneCapacitanceMultiplierResearchSpecial> OptionalZoneCapacitanceMultiplierResearchSpecial;
+  using OptionalZoneCapacitanceMultiplierResearchSpecial = boost::optional<ZoneCapacitanceMultiplierResearchSpecial>;
 
   /** \relates ZoneCapacitanceMultiplierResearchSpecial*/
-  typedef std::vector<ZoneCapacitanceMultiplierResearchSpecial> ZoneCapacitanceMultiplierResearchSpecialVector;
+  using ZoneCapacitanceMultiplierResearchSpecialVector = std::vector<ZoneCapacitanceMultiplierResearchSpecial>;
 
 }  // namespace model
 }  // namespace openstudio

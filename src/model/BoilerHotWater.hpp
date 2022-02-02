@@ -179,7 +179,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::BoilerHotWater_Impl ImplType;
+    using ImplType = detail::BoilerHotWater_Impl;
 
     friend class detail::BoilerHotWater_Impl;
     friend class Model;
@@ -194,10 +194,10 @@ namespace model {
   };
 
   /** \relates BoilerHotWater*/
-  typedef boost::optional<BoilerHotWater> OptionalBoilerHotWater;
+  using OptionalBoilerHotWater = boost::optional<BoilerHotWater>;
 
   /** \relates BoilerHotWater*/
-  typedef std::vector<BoilerHotWater> BoilerHotWaterVector;
+  using BoilerHotWaterVector = std::vector<BoilerHotWater>;
 
 }  // namespace model
 }  // namespace openstudio

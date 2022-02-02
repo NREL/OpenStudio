@@ -96,7 +96,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RefrigerationSubcoolerLiquidSuction_Impl ImplType;
+    using ImplType = detail::RefrigerationSubcoolerLiquidSuction_Impl;
 
     explicit RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl);
 
@@ -110,10 +110,10 @@ namespace model {
   };
 
   /** \relates RefrigerationSubcoolerLiquidSuction*/
-  typedef boost::optional<RefrigerationSubcoolerLiquidSuction> OptionalRefrigerationSubcoolerLiquidSuction;
+  using OptionalRefrigerationSubcoolerLiquidSuction = boost::optional<RefrigerationSubcoolerLiquidSuction>;
 
   /** \relates RefrigerationSubcoolerLiquidSuction*/
-  typedef std::vector<RefrigerationSubcoolerLiquidSuction> RefrigerationSubcoolerLiquidSuctionVector;
+  using RefrigerationSubcoolerLiquidSuctionVector = std::vector<RefrigerationSubcoolerLiquidSuction>;
 
 }  // namespace model
 }  // namespace openstudio

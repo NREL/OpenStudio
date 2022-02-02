@@ -91,7 +91,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneMixingFields::ScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneMixing", "Zone Mixing"));
       }
@@ -401,7 +402,7 @@ namespace model {
   }
 
   IddObjectType ZoneMixing::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneMixing);
+    return {IddObjectType::OS_ZoneMixing};
   }
 
   ThermalZone ZoneMixing::zone() const {

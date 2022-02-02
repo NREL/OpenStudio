@@ -65,7 +65,7 @@ TEST_F(IdfFixture, IdfFile_BasicTests_FromScratch) {
 
 TEST_F(IdfFixture, IdfFile_BasicTests_LoadedFile) {
   // as loaded
-  EXPECT_TRUE(epIdfFile.objects().size() > 0);
+  EXPECT_TRUE(!epIdfFile.objects().empty());
   LOG(Info, "Checking validity of epIdfFile.");
   ValidityReport report = epIdfFile.validityReport(StrictnessLevel::Final);
   EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());

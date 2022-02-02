@@ -89,7 +89,7 @@ namespace model {
     // return the parent object in the hierarchy
     boost::optional<ParentObject> AirflowNetworkSimulationControl_Impl::parent() const {
       // Simulation is highest level, there is no parent
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -435,7 +435,7 @@ namespace model {
     : ParentObject(impl) {}
 
   IddObjectType AirflowNetworkSimulationControl::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkSimulationControl);
+    return {IddObjectType::OS_AirflowNetworkSimulationControl};
   }
 
   std::vector<std::string> AirflowNetworkSimulationControl::solverValues() {

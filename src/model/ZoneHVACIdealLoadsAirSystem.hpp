@@ -274,7 +274,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACIdealLoadsAirSystem_Impl ImplType;
+    using ImplType = detail::ZoneHVACIdealLoadsAirSystem_Impl;
 
     explicit ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl);
 
@@ -288,10 +288,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACIdealLoadsAirSystem*/
-  typedef boost::optional<ZoneHVACIdealLoadsAirSystem> OptionalZoneHVACIdealLoadsAirSystem;
+  using OptionalZoneHVACIdealLoadsAirSystem = boost::optional<ZoneHVACIdealLoadsAirSystem>;
 
   /** \relates ZoneHVACIdealLoadsAirSystem*/
-  typedef std::vector<ZoneHVACIdealLoadsAirSystem> ZoneHVACIdealLoadsAirSystemVector;
+  using ZoneHVACIdealLoadsAirSystemVector = std::vector<ZoneHVACIdealLoadsAirSystem>;
 
 }  // namespace model
 }  // namespace openstudio

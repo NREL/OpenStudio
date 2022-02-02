@@ -92,7 +92,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_WaterHeater_HeatPumpFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("WaterHeaterHeatPump", "Availability Schedule"));
       }
@@ -627,7 +628,7 @@ namespace model {
   }
 
   IddObjectType WaterHeaterHeatPump::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WaterHeater_HeatPump);
+    return {IddObjectType::OS_WaterHeater_HeatPump};
   }
 
   std::vector<std::string> WaterHeaterHeatPump::inletAirConfigurationValues() {

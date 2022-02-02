@@ -146,12 +146,12 @@ TEST_F(UnitsFixture, UnitFactory_TestForAndReturnUnitObjects) {
   OptionalUnit e1 = openstudio::createUnit("Btu/h");
   ASSERT_TRUE(e1);
   ASSERT_NO_THROW(e1->cast<BTUUnit>());
-  BTUUnit btuU = e1->cast<BTUUnit>();
+  auto btuU = e1->cast<BTUUnit>();
   EXPECT_EQ(1, btuU.baseUnitExponent("Btu"));
   EXPECT_EQ(-1, btuU.baseUnitExponent("h"));
 
   ASSERT_TRUE(openstudio::getSystem("CFM") == UnitSystem::CFM);
-  CFMUnit cfmU = openstudio::createUnit("CFM")->cast<CFMUnit>();
+  auto cfmU = openstudio::createUnit("CFM")->cast<CFMUnit>();
   EXPECT_EQ(3, cfmU.baseUnitExponent("ft"));
   EXPECT_EQ(-1, cfmU.baseUnitExponent("min"));
   EXPECT_EQ("cfm", cfmU.prettyString());
@@ -166,18 +166,18 @@ TEST_F(UnitsFixture, UnitFactory_TestForAndReturnUnitObjects) {
 
 TEST_F(UnitsFixture, UnitFactory_KitchenSink) {
   // unregistered compound units
-  SIUnit eui = openstudio::createUnit("J/m^2", UnitSystem::SI)->cast<SIUnit>();
+  auto eui = openstudio::createUnit("J/m^2", UnitSystem::SI)->cast<SIUnit>();
   testStreamOutput("J/m^2", eui);
   EXPECT_EQ("kg/s^2", eui.standardString(false));
   EXPECT_EQ(0, eui.scale().exponent);
 
-  BTUUnit ipEui = openstudio::createUnit("Btu/ft^2", UnitSystem::BTU)->cast<BTUUnit>();
+  auto ipEui = openstudio::createUnit("Btu/ft^2", UnitSystem::BTU)->cast<BTUUnit>();
   testStreamOutput("Btu/ft^2", ipEui);
   EXPECT_EQ("", ipEui.prettyString());
   EXPECT_EQ(0, eui.scale().exponent);
 
   // scaled atomic units
-  SIUnit f1 = openstudio::createUnit("\\muN", UnitSystem::SI)->cast<SIUnit>();
+  auto f1 = openstudio::createUnit("\\muN", UnitSystem::SI)->cast<SIUnit>();
   testStreamOutput("\\muN", f1);
   EXPECT_EQ(-6, f1.scale().exponent);
 
@@ -199,7 +199,7 @@ TEST_F(UnitsFixture, UnitFactory_KitchenSink) {
   EXPECT_EQ(3, ipEui.scale().exponent);
 
   // multiple baseUnits scaled
-  SIUnit u = openstudio::createUnit("MJ/ms*kK", UnitSystem::SI)->cast<SIUnit>();
+  auto u = openstudio::createUnit("MJ/ms*kK", UnitSystem::SI)->cast<SIUnit>();
   testStreamOutput("MW/K", u);
   EXPECT_EQ(6, u.scale().exponent);
   EXPECT_EQ(1, u.baseUnitExponent("kg"));

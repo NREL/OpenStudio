@@ -96,7 +96,8 @@ namespace model {
     std::vector<ScheduleTypeKey> FanZoneExhaust_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_ZoneExhaustFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FanZoneExhaust", "Availability"));
       }
@@ -151,7 +152,7 @@ namespace model {
 
       m.connect(exhaustPortList, nextPort, exhaustNode, exhaustNode.inletPort());
 
-      ModelObject mo = this->getObject<ModelObject>();
+      auto mo = this->getObject<ModelObject>();
 
       m.connect(exhaustNode, exhaustNode.outletPort(), mo, this->inletPort());
 
@@ -348,7 +349,7 @@ namespace model {
   }
 
   IddObjectType FanZoneExhaust::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Fan_ZoneExhaust);
+    return {IddObjectType::OS_Fan_ZoneExhaust};
   }
 
   std::vector<std::string> FanZoneExhaust::systemAvailabilityManagerCouplingModeValues() {

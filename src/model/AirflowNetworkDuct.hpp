@@ -132,7 +132,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkDuct_Impl ImplType;
+    using ImplType = detail::AirflowNetworkDuct_Impl;
 
     explicit AirflowNetworkDuct(std::shared_ptr<detail::AirflowNetworkDuct_Impl> impl);
 
@@ -146,10 +146,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkDuct*/
-  typedef boost::optional<AirflowNetworkDuct> OptionalAirflowNetworkDuct;
+  using OptionalAirflowNetworkDuct = boost::optional<AirflowNetworkDuct>;
 
   /** \relates AirflowNetworkDuct*/
-  typedef std::vector<AirflowNetworkDuct> AirflowNetworkDuctVector;
+  using AirflowNetworkDuctVector = std::vector<AirflowNetworkDuct>;
 
 }  // namespace model
 }  // namespace openstudio

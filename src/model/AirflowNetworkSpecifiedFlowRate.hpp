@@ -87,7 +87,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkSpecifiedFlowRate_Impl ImplType;
+    using ImplType = detail::AirflowNetworkSpecifiedFlowRate_Impl;
 
     explicit AirflowNetworkSpecifiedFlowRate(std::shared_ptr<detail::AirflowNetworkSpecifiedFlowRate_Impl> impl);
 
@@ -101,10 +101,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkSpecifiedFlowRate*/
-  typedef boost::optional<AirflowNetworkSpecifiedFlowRate> OptionalAirflowNetworkSpecifiedFlowRate;
+  using OptionalAirflowNetworkSpecifiedFlowRate = boost::optional<AirflowNetworkSpecifiedFlowRate>;
 
   /** \relates AirflowNetworkSpecifiedFlowRate*/
-  typedef std::vector<AirflowNetworkSpecifiedFlowRate> AirflowNetworkSpecifiedFlowRateVector;
+  using AirflowNetworkSpecifiedFlowRateVector = std::vector<AirflowNetworkSpecifiedFlowRate>;
 
 }  // namespace model
 }  // namespace openstudio

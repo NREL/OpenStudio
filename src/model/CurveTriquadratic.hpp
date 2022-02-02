@@ -330,7 +330,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveTriquadratic_Impl ImplType;
+    using ImplType = detail::CurveTriquadratic_Impl;
 
     explicit CurveTriquadratic(std::shared_ptr<detail::CurveTriquadratic_Impl> impl);
 
@@ -345,10 +345,10 @@ namespace model {
   };
 
   /** \relates CurveTriquadratic*/
-  typedef boost::optional<CurveTriquadratic> OptionalCurveTriquadratic;
+  using OptionalCurveTriquadratic = boost::optional<CurveTriquadratic>;
 
   /** \relates CurveTriquadratic*/
-  typedef std::vector<CurveTriquadratic> CurveTriquadraticVector;
+  using CurveTriquadraticVector = std::vector<CurveTriquadratic>;
 
 }  // namespace model
 }  // namespace openstudio

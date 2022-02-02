@@ -106,7 +106,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SpaceInfiltrationFlowCoefficient_Impl ImplType;
+    using ImplType = detail::SpaceInfiltrationFlowCoefficient_Impl;
 
     explicit SpaceInfiltrationFlowCoefficient(std::shared_ptr<detail::SpaceInfiltrationFlowCoefficient_Impl> impl);
 
@@ -119,10 +119,10 @@ namespace model {
   };
 
   /** \relates SpaceInfiltrationFlowCoefficient*/
-  typedef boost::optional<SpaceInfiltrationFlowCoefficient> OptionalSpaceInfiltrationFlowCoefficient;
+  using OptionalSpaceInfiltrationFlowCoefficient = boost::optional<SpaceInfiltrationFlowCoefficient>;
 
   /** \relates SpaceInfiltrationFlowCoefficient*/
-  typedef std::vector<SpaceInfiltrationFlowCoefficient> SpaceInfiltrationFlowCoefficientVector;
+  using SpaceInfiltrationFlowCoefficientVector = std::vector<SpaceInfiltrationFlowCoefficient>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -231,7 +231,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ShadingControl_Impl ImplType;
+    using ImplType = detail::ShadingControl_Impl;
 
     explicit ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl);
 
@@ -246,10 +246,10 @@ namespace model {
   };
 
   /** \relates ShadingControl*/
-  typedef boost::optional<ShadingControl> OptionalShadingControl;
+  using OptionalShadingControl = boost::optional<ShadingControl>;
 
   /** \relates ShadingControl*/
-  typedef std::vector<ShadingControl> ShadingControlVector;
+  using ShadingControlVector = std::vector<ShadingControl>;
 
 }  // namespace model
 }  // namespace openstudio

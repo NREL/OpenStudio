@@ -65,7 +65,7 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> ExternalInterfaceSchedule_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -173,7 +173,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceSchedule::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_Schedule);
+    return {IddObjectType::OS_ExternalInterface_Schedule};
   }
 
   double ExternalInterfaceSchedule::initialValue() const {

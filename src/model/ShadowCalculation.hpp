@@ -154,7 +154,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ShadowCalculation_Impl ImplType;
+    using ImplType = detail::ShadowCalculation_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -169,7 +169,7 @@ namespace model {
   };
 
   /** \relates ShadowCalculation */
-  typedef boost::optional<ShadowCalculation> OptionalShadowCalculation;
+  using OptionalShadowCalculation = boost::optional<ShadowCalculation>;
 
 }  // namespace model
 }  // namespace openstudio

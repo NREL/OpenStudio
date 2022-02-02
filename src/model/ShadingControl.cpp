@@ -465,7 +465,7 @@ namespace model {
 
       bool result;
 
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       bool subsurface = eg.setPointer(OS_ShadingControlExtensibleFields::SubSurfaceName, subSurface.handle());
       if (subsurface) {
         result = true;
@@ -644,7 +644,7 @@ namespace model {
   }
 
   IddObjectType ShadingControl::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ShadingControl);
+    return {IddObjectType::OS_ShadingControl};
   }
 
   std::vector<std::string> ShadingControl::shadingTypeValues() {

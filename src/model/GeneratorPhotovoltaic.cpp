@@ -88,7 +88,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Generator_PhotovoltaicFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("GeneratorPhotovoltaic", "Availability"));
       }
@@ -107,12 +108,12 @@ namespace model {
     }
 
     std::vector<IddObjectType> GeneratorPhotovoltaic_Impl::allowableChildTypes() const {
-      return std::vector<IddObjectType>();
+      return {};
     }
 
     ModelObject GeneratorPhotovoltaic_Impl::clone(Model model) const {
       auto result = ModelObject_Impl::clone(model).cast<GeneratorPhotovoltaic>();
-      PhotovoltaicPerformance newPerformance = this->photovoltaicPerformance().clone(model).cast<PhotovoltaicPerformance>();
+      auto newPerformance = this->photovoltaicPerformance().clone(model).cast<PhotovoltaicPerformance>();
       result.setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, newPerformance.handle());
 
       result.resetSurface();
@@ -284,7 +285,7 @@ namespace model {
   }
 
   IddObjectType GeneratorPhotovoltaic::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_Photovoltaic);
+    return {IddObjectType::OS_Generator_Photovoltaic};
   }
 
   std::vector<std::string> GeneratorPhotovoltaic::heatTransferIntegrationModeValues() {

@@ -2020,7 +2020,7 @@ namespace model {
 
     void Space_Impl::hardApplySpaceType(bool hardSizeLoads) {
       Model model = this->model();
-      Space space = this->getObject<Space>();
+      auto space = this->getObject<Space>();
 
       std::string plenumSpaceTypeName = model.plenumSpaceTypeName();
 
@@ -2582,7 +2582,7 @@ namespace model {
               z = point.z();
             } else if (std::abs(z.get() - point.z()) > tol) {
               LOG(Error, "All floor surfaces must lie on the same x, y plane to compute space floor print");
-              return std::vector<Point3d>();
+              return {};
             }
           }
         }
@@ -2593,7 +2593,7 @@ namespace model {
 
       if (floors.empty()) {
         LOG(Error, "No floor surfaces found to compute space floor print");
-        return std::vector<Point3d>();
+        return {};
 
       } else if (floors.size() == 1) {
         // just return this floors vertices
@@ -2612,10 +2612,10 @@ namespace model {
 
         OS_ASSERT(z);
 
-        typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
-        typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-        typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-        typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
+        using BoostPoint = boost::geometry::model::d2::point_xy<double>;
+        using BoostPolygon = boost::geometry::model::polygon<BoostPoint>;
+        using BoostRing = boost::geometry::model::ring<BoostPoint>;
+        using BoostMultiPolygon = boost::geometry::model::multi_polygon<BoostPolygon>;
 
         BoostMultiPolygon boostResult;
 
@@ -2638,7 +2638,7 @@ namespace model {
         }
 
         if (boostResult.size() != 1) {
-          return std::vector<Point3d>();
+          return {};
         }
 
         for (const BoostPoint& boostPoint : boostResult[0].outer()) {
@@ -2658,7 +2658,7 @@ namespace model {
 
         // if result is now empty just quit
         if (result.size() < 3) {
-          return std::vector<Point3d>();
+          return {};
         }
 
         Point3d lastOuterVertex = result.back();
@@ -2710,7 +2710,7 @@ namespace model {
 
       // if result is now empty just quit
       if (result.size() < 3) {
-        return std::vector<Point3d>();
+        return {};
       }
 
       return result;

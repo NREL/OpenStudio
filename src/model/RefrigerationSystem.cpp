@@ -205,32 +205,32 @@ namespace model {
       }
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-        ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
+        auto caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationSystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
       }
 
       if (boost::optional<ModelObjectList> transferLoadList = this->refrigerationTransferLoadList()) {
-        ModelObjectList transferLoadListClone = transferLoadList->clone(model).cast<ModelObjectList>();
+        auto transferLoadListClone = transferLoadList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationTransferLoadList(transferLoadListClone);
       }
 
       if (boost::optional<ModelObjectList> compressorList = this->compressorList()) {
-        ModelObjectList compressorListClone = compressorList->clone(model).cast<ModelObjectList>();
+        auto compressorListClone = compressorList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationSystem_Impl>()->setCompressorList(compressorListClone);
       }
 
       if (boost::optional<RefrigerationSubcoolerMechanical> mechSubcooler = this->mechanicalSubcooler()) {
-        RefrigerationSubcoolerMechanical mechSubClone = mechSubcooler->clone(model).cast<RefrigerationSubcoolerMechanical>();
+        auto mechSubClone = mechSubcooler->clone(model).cast<RefrigerationSubcoolerMechanical>();
         modelObjectClone.setMechanicalSubcooler(mechSubClone);
       }
 
       if (boost::optional<RefrigerationSubcoolerLiquidSuction> liqSuctionSubcooler = this->liquidSuctionHeatExchangerSubcooler()) {
-        RefrigerationSubcoolerLiquidSuction liqSuctionSubClone = liqSuctionSubcooler->clone(model).cast<RefrigerationSubcoolerLiquidSuction>();
+        auto liqSuctionSubClone = liqSuctionSubcooler->clone(model).cast<RefrigerationSubcoolerLiquidSuction>();
         modelObjectClone.setLiquidSuctionHeatExchangerSubcooler(liqSuctionSubClone);
       }
 
       if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
-        ModelObjectList highStageCompressorListClone = highStageCompressorList->clone(model).cast<ModelObjectList>();
+        auto highStageCompressorListClone = highStageCompressorList->clone(model).cast<ModelObjectList>();
         modelObjectClone.getImpl<detail::RefrigerationSystem_Impl>()->setHighStageCompressorList(highStageCompressorListClone);
       }
 
@@ -865,7 +865,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationSystem::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_System);
+    return {IddObjectType::OS_Refrigeration_System};
   }
 
   std::vector<std::string> RefrigerationSystem::refrigerationSystemWorkingFluidTypeValues() {

@@ -69,7 +69,7 @@ namespace detail {
     for (const IddObject& object : objects()) {
       result.insert(object.group());
     }
-    return StringVector(result.begin(), result.end());
+    return {result.begin(), result.end()};
   }
 
   std::vector<IddObject> IddFile_Impl::getObjectsInGroup(const std::string& group) const {

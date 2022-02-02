@@ -55,7 +55,7 @@ namespace energyplus {
     OutputTableSummaryReports outputTableSummaryReports = m_model.getUniqueModelObject<OutputTableSummaryReports>();
 
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
       OptionalString summaryReport = workspaceGroup.getString(Output_Table_SummaryReportsExtensibleFields::ReportName);
 
       // add the summary report

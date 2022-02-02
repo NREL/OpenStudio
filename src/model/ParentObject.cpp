@@ -61,7 +61,7 @@ namespace model {
       : ModelObject_Impl(other, model, keepHandle) {}
 
     std::vector<ModelObject> ParentObject_Impl::children() const {
-      return ModelObjectVector();
+      return {};
     }
 
     /// remove self and all children objects recursively
@@ -102,7 +102,7 @@ namespace model {
 
     ModelObject ParentObject_Impl::clone(Model model) const {
       ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
-      ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+      auto newParent = newParentAsModelObject.cast<ParentObject>();
       for (const ModelObject& child : children()) {
         ModelObject newChild = child.clone(model);
         newChild.setParent(newParent);
@@ -148,7 +148,7 @@ namespace model {
     std::deque<ParentObject> parents;
     parents.push_back(object);
 
-    while (parents.size() > 0) {
+    while (!parents.empty()) {
       ParentObject currentParent(parents[0]);
       parents.pop_front();
 
@@ -195,7 +195,7 @@ namespace model {
     std::deque<ModelObject> objectQueue;
     objectQueue.push_back(object);
 
-    while (objectQueue.size() > 0) {
+    while (!objectQueue.empty()) {
       ModelObject currentObject(objectQueue[0]);
       objectQueue.pop_front();
       // resources
@@ -203,7 +203,7 @@ namespace model {
         insertResult = resultSet.insert(resource.handle());
         if (insertResult.second) {
           // new object
-          ModelObject mo = resource.cast<ModelObject>();
+          auto mo = resource.cast<ModelObject>();
           result.push_back(mo);
           objectQueue.push_back(mo);
         }

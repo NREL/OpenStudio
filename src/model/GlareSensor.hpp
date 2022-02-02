@@ -139,7 +139,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::GlareSensor_Impl ImplType;
+    using ImplType = detail::GlareSensor_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -152,10 +152,10 @@ namespace model {
   };
 
   /** \relates GlareSensor*/
-  typedef boost::optional<GlareSensor> OptionalGlareSensor;
+  using OptionalGlareSensor = boost::optional<GlareSensor>;
 
   /** \relates GlareSensor*/
-  typedef std::vector<GlareSensor> GlareSensorVector;
+  using GlareSensorVector = std::vector<GlareSensor>;
 
 }  // namespace model
 }  // namespace openstudio

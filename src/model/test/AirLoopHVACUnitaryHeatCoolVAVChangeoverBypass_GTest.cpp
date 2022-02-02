@@ -183,7 +183,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Clone) {
   CoilCoolingDXSingleSpeed coolingCoil = makeCoolingCoil(m);
   AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass testObject = AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(m, fan, coolingCoil, heatingCoil);
 
-  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass clone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+  auto clone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
 
   ASSERT_FALSE(clone.heatingCoil().handle().isNull());
   ASSERT_FALSE(clone.coolingCoil().handle().isNull());

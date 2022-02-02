@@ -79,7 +79,7 @@ namespace model {
   }
 
   IddObjectType PlantEquipmentOperationOutdoorRelativeHumidity::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorRelativeHumidity);
+    return {IddObjectType::OS_PlantEquipmentOperation_OutdoorRelativeHumidity};
   }
 
   /// @cond

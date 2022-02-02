@@ -75,7 +75,8 @@ namespace model {
     std::vector<ScheduleTypeKey> FuelFactors_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_FuelFactorsFields::SourceEnergyScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FuelFactors", "Source Energy"));
       }
@@ -596,7 +597,7 @@ namespace model {
   }
 
   IddObjectType FuelFactors::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_FuelFactors);
+    return {IddObjectType::OS_FuelFactors};
   }
 
   std::vector<std::string> FuelFactors::existingFuelResourceNameValues() {

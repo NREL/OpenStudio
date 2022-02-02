@@ -57,7 +57,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ModelPartitionMaterial_Impl ImplType;
+    using ImplType = detail::ModelPartitionMaterial_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -73,10 +73,10 @@ namespace model {
   };
 
   /** \relates ModelPartitionMaterial */
-  typedef boost::optional<ModelPartitionMaterial> OptionalModelPartitionMaterial;
+  using OptionalModelPartitionMaterial = boost::optional<ModelPartitionMaterial>;
 
   /** \relates ModelPartitionMaterial */
-  typedef std::vector<ModelPartitionMaterial> ModelPartitionMaterialVector;
+  using ModelPartitionMaterialVector = std::vector<ModelPartitionMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

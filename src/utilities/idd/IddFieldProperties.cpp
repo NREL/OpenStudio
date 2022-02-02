@@ -228,7 +228,7 @@ StringVector intersectReferenceLists(const StringVector& list1, const StringVect
   IStringSet intersection;
   std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(intersection, intersection.begin()),
                         IStringSet::key_compare());
-  return StringVector(intersection.begin(), intersection.end());
+  return {intersection.begin(), intersection.end()};
 }
 
 }  // namespace openstudio

@@ -178,7 +178,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AirflowNetworkZone_Impl ImplType;
+    using ImplType = detail::AirflowNetworkZone_Impl;
 
     explicit AirflowNetworkZone(std::shared_ptr<detail::AirflowNetworkZone_Impl> impl);
     AirflowNetworkZone(const Model& model, const Handle& handle);
@@ -198,10 +198,10 @@ namespace model {
   };
 
   /** \relates AirflowNetworkZone*/
-  typedef boost::optional<AirflowNetworkZone> OptionalAirflowNetworkZone;
+  using OptionalAirflowNetworkZone = boost::optional<AirflowNetworkZone>;
 
   /** \relates AirflowNetworkZone*/
-  typedef std::vector<AirflowNetworkZone> AirflowNetworkZoneVector;
+  using AirflowNetworkZoneVector = std::vector<AirflowNetworkZone>;
 
 }  // namespace model
 }  // namespace openstudio

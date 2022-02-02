@@ -172,7 +172,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::GeneratorWindTurbine_Impl ImplType;
+    using ImplType = detail::GeneratorWindTurbine_Impl;
 
     explicit GeneratorWindTurbine(std::shared_ptr<detail::GeneratorWindTurbine_Impl> impl);
 
@@ -186,10 +186,10 @@ namespace model {
   };
 
   /** \relates GeneratorWindTurbine*/
-  typedef boost::optional<GeneratorWindTurbine> OptionalGeneratorWindTurbine;
+  using OptionalGeneratorWindTurbine = boost::optional<GeneratorWindTurbine>;
 
   /** \relates GeneratorWindTurbine*/
-  typedef std::vector<GeneratorWindTurbine> GeneratorWindTurbineVector;
+  using GeneratorWindTurbineVector = std::vector<GeneratorWindTurbine>;
 
 }  // namespace model
 }  // namespace openstudio

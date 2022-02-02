@@ -270,7 +270,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PumpVariableSpeed_Impl ImplType;
+    using ImplType = detail::PumpVariableSpeed_Impl;
 
     friend class detail::PumpVariableSpeed_Impl;
     friend class Model;
@@ -285,10 +285,10 @@ namespace model {
   };
 
   /** \relates PumpVariableSpeed*/
-  typedef boost::optional<PumpVariableSpeed> OptionalPumpVariableSpeed;
+  using OptionalPumpVariableSpeed = boost::optional<PumpVariableSpeed>;
 
   /** \relates PumpVariableSpeed*/
-  typedef std::vector<PumpVariableSpeed> PumpVariableSpeedVector;
+  using PumpVariableSpeedVector = std::vector<PumpVariableSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

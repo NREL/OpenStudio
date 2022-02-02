@@ -109,7 +109,7 @@ class UTILITIES_API GPDUnit : public Unit
   //@}
  protected:
   /// @cond
-  typedef detail::GPDUnit_Impl ImplType;
+  using ImplType = detail::GPDUnit_Impl;
 
   explicit GPDUnit(std::shared_ptr<detail::GPDUnit_Impl> impl);
 
@@ -121,10 +121,10 @@ class UTILITIES_API GPDUnit : public Unit
 };
 
 /** \relates GPDUnit*/
-typedef boost::optional<GPDUnit> OptionalGPDUnit;
+using OptionalGPDUnit = boost::optional<GPDUnit>;
 
 /** \relates GPDUnit*/
-typedef std::vector<GPDUnit> GPDUnitVector;
+using GPDUnitVector = std::vector<GPDUnit>;
 
 /** @name Create Functions Used by UnitFactory */
 //@{

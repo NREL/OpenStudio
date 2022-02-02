@@ -514,7 +514,7 @@ TEST_F(ModelFixture, FanSystemModel_Clone_SameModel) {
   EXPECT_EQ(1, powerCurves.size());
   EXPECT_EQ(1, m.getModelObjects<FanSystemModel>().size());
 
-  FanSystemModel fanClone = fan.clone(m).cast<FanSystemModel>();
+  auto fanClone = fan.clone(m).cast<FanSystemModel>();
 
   EXPECT_EQ(2, m.getModelObjects<FanSystemModel>().size());
 
@@ -544,7 +544,7 @@ TEST_F(ModelFixture, FanSystemModel_Clone_OtherModel) {
   EXPECT_EQ(0, m2.getModelObjects<FanSystemModel>().size());
   EXPECT_EQ(0, m2.getModelObjects<CurveExponent>().size());
 
-  FanSystemModel fanClone = fan.clone(m2).cast<FanSystemModel>();
+  auto fanClone = fan.clone(m2).cast<FanSystemModel>();
   EXPECT_EQ(1, m.getModelObjects<FanSystemModel>().size());
   EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
   EXPECT_EQ(1, m2.getModelObjects<FanSystemModel>().size());

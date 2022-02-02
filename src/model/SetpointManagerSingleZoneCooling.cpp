@@ -138,7 +138,7 @@ namespace model {
           ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
           if (!modelObjectVector.empty()) {
             ModelObject mo = modelObjectVector.front();
-            ThermalZone thermalZone = mo.cast<ThermalZone>();
+            auto thermalZone = mo.cast<ThermalZone>();
             this->setControlZone(thermalZone);
           }
           return true;
@@ -160,7 +160,7 @@ namespace model {
   }
 
   IddObjectType SetpointManagerSingleZoneCooling::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SetpointManager_SingleZone_Cooling);
+    return {IddObjectType::OS_SetpointManager_SingleZone_Cooling};
   }
 
   double SetpointManagerSingleZoneCooling::minimumSupplyAirTemperature() const {

@@ -51,7 +51,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::SkyTemperature_Impl ImplType;
+    using ImplType = detail::SkyTemperature_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -64,10 +64,10 @@ namespace model {
   };
 
   /** \relates SkyTemperature */
-  typedef boost::optional<SkyTemperature> OptionalSkyTemperature;
+  using OptionalSkyTemperature = boost::optional<SkyTemperature>;
 
   /** \relates SkyTemperature */
-  typedef std::vector<SkyTemperature> SkyTemperatureVector;
+  using SkyTemperatureVector = std::vector<SkyTemperature>;
 
 }  // namespace model
 }  // namespace openstudio

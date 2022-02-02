@@ -122,10 +122,10 @@ namespace energyplus {
         boost::optional<model::ModelObject> modelObject = translateAndMapWorkspaceObject(wsObject);
         if (modelObject) {
           if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Program) {
-            EnergyManagementSystemProgram program = modelObject.get().cast<EnergyManagementSystemProgram>();
+            auto program = modelObject.get().cast<EnergyManagementSystemProgram>();
             emsOutputVariable.setEMSProgramOrSubroutineName(program);
           } else if (modelObject.get().iddObjectType() == IddObjectType::OS_EnergyManagementSystem_Subroutine) {
-            EnergyManagementSystemSubroutine subroutine = modelObject.get().cast<EnergyManagementSystemSubroutine>();
+            auto subroutine = modelObject.get().cast<EnergyManagementSystemSubroutine>();
             emsOutputVariable.setEMSProgramOrSubroutineName(subroutine);
           }
           break;
