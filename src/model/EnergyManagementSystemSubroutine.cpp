@@ -131,7 +131,7 @@ namespace model {
         //split string on comment character !
         comments = splitString(body_minus_nl.at(i), '!');
         //get extensibleGroup object
-        WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
         //make sure program line exists and insert
         if (comments.size() > 0) {
           //remove whitespace at end of comments[0]
@@ -200,7 +200,7 @@ namespace model {
         line_rn.erase(pos, 1);
       }
       //get extensibleGroup object
-      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
       //split string on comment character !
       std::vector<std::string> comments = splitString(line_rn, '!');
       //make sure program line exists and insert
@@ -368,7 +368,7 @@ namespace model {
   }
 
   IddObjectType EnergyManagementSystemSubroutine::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_Subroutine);
+    return {IddObjectType::OS_EnergyManagementSystem_Subroutine};
   }
 
   std::string EnergyManagementSystemSubroutine::body() const {

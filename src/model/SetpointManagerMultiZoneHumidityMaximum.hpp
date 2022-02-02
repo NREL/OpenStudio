@@ -90,7 +90,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerMultiZoneHumidityMaximum_Impl ImplType;
+    using ImplType = detail::SetpointManagerMultiZoneHumidityMaximum_Impl;
 
     explicit SetpointManagerMultiZoneHumidityMaximum(std::shared_ptr<detail::SetpointManagerMultiZoneHumidityMaximum_Impl> impl);
 
@@ -104,10 +104,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerMultiZoneHumidityMaximum*/
-  typedef boost::optional<SetpointManagerMultiZoneHumidityMaximum> OptionalSetpointManagerMultiZoneHumidityMaximum;
+  using OptionalSetpointManagerMultiZoneHumidityMaximum = boost::optional<SetpointManagerMultiZoneHumidityMaximum>;
 
   /** \relates SetpointManagerMultiZoneHumidityMaximum*/
-  typedef std::vector<SetpointManagerMultiZoneHumidityMaximum> SetpointManagerMultiZoneHumidityMaximumVector;
+  using SetpointManagerMultiZoneHumidityMaximumVector = std::vector<SetpointManagerMultiZoneHumidityMaximum>;
 
 }  // namespace model
 }  // namespace openstudio

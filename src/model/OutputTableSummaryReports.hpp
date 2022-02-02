@@ -95,7 +95,7 @@ namespace model {
     explicit OutputTableSummaryReports(Model& model);
 
     /// @cond
-    typedef detail::OutputTableSummaryReports_Impl ImplType;
+    using ImplType = detail::OutputTableSummaryReports_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -109,10 +109,10 @@ namespace model {
   };
 
   /** \relates OutputTableSummaryReports*/
-  typedef boost::optional<OutputTableSummaryReports> OptionalOutputTableSummaryReports;
+  using OptionalOutputTableSummaryReports = boost::optional<OutputTableSummaryReports>;
 
   /** \relates OutputTableSummaryReports*/
-  typedef std::vector<OutputTableSummaryReports> OutputTableSummaryReportsVector;
+  using OutputTableSummaryReportsVector = std::vector<OutputTableSummaryReports>;
 
 }  // namespace model
 }  // namespace openstudio

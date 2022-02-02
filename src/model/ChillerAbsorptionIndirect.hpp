@@ -214,7 +214,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ChillerAbsorptionIndirect_Impl ImplType;
+    using ImplType = detail::ChillerAbsorptionIndirect_Impl;
 
     explicit ChillerAbsorptionIndirect(std::shared_ptr<detail::ChillerAbsorptionIndirect_Impl> impl);
 
@@ -228,10 +228,10 @@ namespace model {
   };
 
   /** \relates ChillerAbsorptionIndirect*/
-  typedef boost::optional<ChillerAbsorptionIndirect> OptionalChillerAbsorptionIndirect;
+  using OptionalChillerAbsorptionIndirect = boost::optional<ChillerAbsorptionIndirect>;
 
   /** \relates ChillerAbsorptionIndirect*/
-  typedef std::vector<ChillerAbsorptionIndirect> ChillerAbsorptionIndirectVector;
+  using ChillerAbsorptionIndirectVector = std::vector<ChillerAbsorptionIndirect>;
 
 }  // namespace model
 }  // namespace openstudio

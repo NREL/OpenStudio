@@ -102,10 +102,10 @@ OPENSTUDIO_ENUM(FuelType,
 );
 
 /** \relates FuelType */
-typedef boost::optional<FuelType> OptionalFuelType;
+using OptionalFuelType = boost::optional<FuelType>;
 
 /** \relates FuelType */
-typedef std::vector<FuelType> FuelTypeVector;
+using FuelTypeVector = std::vector<FuelType>;
 
 /** \class EndUseFuelType
  *  \brief Fuel types reported by OpenStudio.

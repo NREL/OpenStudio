@@ -44,7 +44,6 @@ namespace contam {
     m_stream.str(string);
   }
 
-
   double Reader::readDouble() {
     const auto string = readString();
     try {

@@ -79,7 +79,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl;
 
     explicit PlantEquipmentOperationOutdoorDewpointDifference(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpointDifference_Impl> impl);
 
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
-  typedef boost::optional<PlantEquipmentOperationOutdoorDewpointDifference> OptionalPlantEquipmentOperationOutdoorDewpointDifference;
+  using OptionalPlantEquipmentOperationOutdoorDewpointDifference = boost::optional<PlantEquipmentOperationOutdoorDewpointDifference>;
 
   /** \relates PlantEquipmentOperationOutdoorDewpointDifference*/
-  typedef std::vector<PlantEquipmentOperationOutdoorDewpointDifference> PlantEquipmentOperationOutdoorDewpointDifferenceVector;
+  using PlantEquipmentOperationOutdoorDewpointDifferenceVector = std::vector<PlantEquipmentOperationOutdoorDewpointDifference>;
 
 }  // namespace model
 }  // namespace openstudio

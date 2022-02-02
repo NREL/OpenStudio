@@ -256,7 +256,7 @@ namespace model {
     T getUniqueModelObject() {
       std::vector<WorkspaceObject> objects = this->allObjects();
       std::shared_ptr<typename T::ImplType> p;
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
+      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         p = it->getImpl<typename T::ImplType>();
         if (p) {
           return T(p);
@@ -275,7 +275,7 @@ namespace model {
     boost::optional<T> getOptionalUniqueModelObject() const {
       boost::optional<T> result;
       std::vector<WorkspaceObject> objects = this->allObjects();
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
+      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
           result = T(p);
@@ -297,7 +297,7 @@ namespace model {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->objects(sorted);
       result.reserve(objects.size());
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
+      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
@@ -313,7 +313,7 @@ namespace model {
     std::vector<T> getConcreteModelObjects() const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
+      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
@@ -335,7 +335,7 @@ namespace model {
       std::vector<T> result;
       result.reserve(handles.size());
       std::vector<WorkspaceObject> objects = this->getObjects(handles);
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
+      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
@@ -374,7 +374,7 @@ namespace model {
     std::vector<T> getModelObjectsByName(const std::string& name, bool exactMatch = true) const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByName(name, exactMatch);
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
+      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
@@ -400,7 +400,7 @@ namespace model {
     std::vector<T> getConcreteModelObjectsByName(const std::string& name) const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByTypeAndName(T::iddObjectType(), name);
-      for (std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it) {
+      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
@@ -476,7 +476,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::Model_Impl ImplType;
+    using ImplType = detail::Model_Impl;
 
     friend class openstudio::IdfObject;
     friend class ModelObject;
@@ -496,10 +496,10 @@ namespace model {
   };
 
   /** \relates Model */
-  typedef boost::optional<Model> OptionalModel;
+  using OptionalModel = boost::optional<Model>;
 
   /** \relates Model */
-  typedef std::vector<Model> ModelVector;
+  using ModelVector = std::vector<Model>;
 
   //DLM@20110614: why is this here?  seems like something for the unit tests.
 

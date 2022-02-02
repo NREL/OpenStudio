@@ -53,11 +53,11 @@
 #  pragma warning(pop)
 #endif
 
-typedef double coordinate_type;
-typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
-typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
+using coordinate_type = double;
+using BoostPoint = boost::geometry::model::d2::point_xy<double>;
+using BoostPolygon = boost::geometry::model::polygon<BoostPoint>;
+using BoostRing = boost::geometry::model::ring<BoostPoint>;
+using BoostMultiPolygon = boost::geometry::model::multi_polygon<BoostPolygon>;
 
 #include <polypartition/polypartition.h>
 
@@ -183,7 +183,8 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
   }
 
   // convert back to BoostPolygon
-  std::list<TPPLPoly>::iterator it, itend;
+  std::list<TPPLPoly>::iterator it;
+  std::list<TPPLPoly>::iterator itend;
   for (it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it) {
     BoostPolygon newBoostPolygon;
     //std::cout << "result :";
@@ -368,7 +369,7 @@ std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon, std::
   }
 
   if (result.size() < 3) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   return result;
@@ -400,7 +401,7 @@ std::vector<Point3d> verticesFromBoostRing(const BoostRing& ring, std::vector<Po
   }
 
   if (result.size() < 3) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   return result;
@@ -495,7 +496,7 @@ std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double to
   // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> boostPolygon = boostPolygonFromVertices(polygon, allPoints, tol);
   if (!boostPolygon) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   BoostPolygon boostResult = removeSpikes(*boostPolygon);
@@ -1037,7 +1038,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   bool reversed = false;
   boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
   if (!outwardNormal) {
-    return std::vector<Point3d>();
+    return {};
   } else if (outwardNormal->z() > 0) {
     reversed = true;
   }
@@ -1050,7 +1051,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   }
 
   if (!bp) {
-    return std::vector<Point3d>();
+    return {};
   }
 
   boost::geometry::remove_spikes(*bp);
@@ -1258,7 +1259,7 @@ std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& 
   return joinAll(inputPolygons, tol);
 }
 
-std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double tol) {
+std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double /*tol*/) {
 
   std::vector<Polygon3d> result;
 

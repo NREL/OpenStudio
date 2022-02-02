@@ -270,7 +270,7 @@ namespace model {
 
     //@}
    protected:
-    typedef detail::ModelObject_Impl ImplType;
+    using ImplType = detail::ModelObject_Impl;
 
     friend class openstudio::IdfObject;
     friend class openstudio::IdfExtensibleGroup;
@@ -319,10 +319,10 @@ namespace model {
   };
 
   /// optional ModelObject
-  typedef boost::optional<ModelObject> OptionalModelObject;
+  using OptionalModelObject = boost::optional<ModelObject>;
 
   /// vector of ModelObject
-  typedef std::vector<ModelObject> ModelObjectVector;
+  using ModelObjectVector = std::vector<ModelObject>;
 
 }  // namespace model
 }  // namespace openstudio

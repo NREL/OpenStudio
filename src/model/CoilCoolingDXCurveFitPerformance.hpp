@@ -138,7 +138,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDXCurveFitPerformance_Impl ImplType;
+    using ImplType = detail::CoilCoolingDXCurveFitPerformance_Impl;
 
     explicit CoilCoolingDXCurveFitPerformance(std::shared_ptr<detail::CoilCoolingDXCurveFitPerformance_Impl> impl);
 
@@ -152,10 +152,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDXCurveFitPerformance*/
-  typedef boost::optional<CoilCoolingDXCurveFitPerformance> OptionalCoilCoolingDXCurveFitPerformance;
+  using OptionalCoilCoolingDXCurveFitPerformance = boost::optional<CoilCoolingDXCurveFitPerformance>;
 
   /** \relates CoilCoolingDXCurveFitPerformance*/
-  typedef std::vector<CoilCoolingDXCurveFitPerformance> CoilCoolingDXCurveFitPerformanceVector;
+  using CoilCoolingDXCurveFitPerformanceVector = std::vector<CoilCoolingDXCurveFitPerformance>;
 
 }  // namespace model
 }  // namespace openstudio

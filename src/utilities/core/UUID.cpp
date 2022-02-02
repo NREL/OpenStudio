@@ -88,7 +88,7 @@ UUID toUUID(const std::string& str) {
   try {
     return UUID::string_generate(str);
   } catch (...) {
-    return UUID();
+    return {};
   }
 }
 

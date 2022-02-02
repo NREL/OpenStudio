@@ -400,38 +400,52 @@ namespace model {
       for (const auto& elem : zoneHVACComponent) {
         switch (elem.iddObject().type().value()) {
           case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil: {
-            ZoneHVACFourPipeFanCoil component = elem.cast<ZoneHVACFourPipeFanCoil>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACFourPipeFanCoil>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump: {
-            ZoneHVACPackagedTerminalHeatPump component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner: {
-            ZoneHVACPackagedTerminalAirConditioner component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow: {
-            ZoneHVACTerminalUnitVariableRefrigerantFlow component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump: {
-            ZoneHVACWaterToAirHeatPump component = elem.cast<ZoneHVACWaterToAirHeatPump>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACWaterToAirHeatPump>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater: {
-            ZoneHVACUnitHeater component = elem.cast<ZoneHVACUnitHeater>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACUnitHeater>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator: {
-            ZoneHVACUnitVentilator component = elem.cast<ZoneHVACUnitVentilator>();
-            if (component.supplyAirFan().handle() == this->handle()) return elem;
+            auto component = elem.cast<ZoneHVACUnitVentilator>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
             break;
           }
           default: {
@@ -582,7 +596,7 @@ namespace model {
   }
 
   IddObjectType FanOnOff::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Fan_OnOff);
+    return {IddObjectType::OS_Fan_OnOff};
   }
 
   // Field Availability Schedule Name

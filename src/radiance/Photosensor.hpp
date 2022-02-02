@@ -53,7 +53,7 @@ namespace radiance {
   };
 
   // vector of Photosensor
-  typedef std::vector<Photosensor> PhotosensorVector;
+  using PhotosensorVector = std::vector<Photosensor>;
 
 }  // namespace radiance
 }  // namespace openstudio

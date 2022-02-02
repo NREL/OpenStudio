@@ -93,7 +93,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RunPeriodControlDaylightSavingTime_Impl ImplType;
+    using ImplType = detail::RunPeriodControlDaylightSavingTime_Impl;
 
     friend class detail::RunPeriodControlDaylightSavingTime_Impl;
     friend class Model;
@@ -110,10 +110,10 @@ namespace model {
   };
 
   /** \relates RunPeriodControlDaylightSavingTime*/
-  typedef boost::optional<RunPeriodControlDaylightSavingTime> OptionalRunPeriodControlDaylightSavingTime;
+  using OptionalRunPeriodControlDaylightSavingTime = boost::optional<RunPeriodControlDaylightSavingTime>;
 
   /** \relates RunPeriodControlDaylightSavingTime*/
-  typedef std::vector<RunPeriodControlDaylightSavingTime> RunPeriodControlDaylightSavingTimeVector;
+  using RunPeriodControlDaylightSavingTimeVector = std::vector<RunPeriodControlDaylightSavingTime>;
 
 }  // namespace model
 }  // namespace openstudio

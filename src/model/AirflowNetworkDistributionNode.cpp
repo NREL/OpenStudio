@@ -137,7 +137,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkDistributionNode::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkDistributionNode);
+    return {IddObjectType::OS_AirflowNetworkDistributionNode};
   }
 
   boost::optional<Node> AirflowNetworkDistributionNode::node() const {

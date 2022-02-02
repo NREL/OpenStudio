@@ -77,7 +77,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ProgramControl_Impl ImplType;
+    using ImplType = detail::ProgramControl_Impl;
 
     explicit ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl);
 
@@ -91,10 +91,10 @@ namespace model {
   };
 
   /** \relates ProgramControl*/
-  typedef boost::optional<ProgramControl> OptionalProgramControl;
+  using OptionalProgramControl = boost::optional<ProgramControl>;
 
   /** \relates ProgramControl*/
-  typedef std::vector<ProgramControl> ProgramControlVector;
+  using ProgramControlVector = std::vector<ProgramControl>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -111,7 +111,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputControlReportingTolerances::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_OutputControl_ReportingTolerances);
+    return {IddObjectType::OS_OutputControl_ReportingTolerances};
   }
 
   double OutputControlReportingTolerances::toleranceforTimeHeatingSetpointNotMet() const {

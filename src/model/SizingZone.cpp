@@ -817,7 +817,7 @@ namespace model {
   }
 
   IddObjectType SizingZone::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Sizing_Zone);
+    return {IddObjectType::OS_Sizing_Zone};
   }
 
   std::vector<std::string> SizingZone::coolingDesignAirFlowMethodValues() {

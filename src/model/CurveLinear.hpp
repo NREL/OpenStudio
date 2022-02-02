@@ -121,7 +121,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CurveLinear_Impl ImplType;
+    using ImplType = detail::CurveLinear_Impl;
 
     explicit CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl);
 
@@ -136,10 +136,10 @@ namespace model {
   };
 
   /** \relates CurveLinear*/
-  typedef boost::optional<CurveLinear> OptionalCurveLinear;
+  using OptionalCurveLinear = boost::optional<CurveLinear>;
 
   /** \relates CurveLinear*/
-  typedef std::vector<CurveLinear> CurveLinearVector;
+  using CurveLinearVector = std::vector<CurveLinear>;
 
 }  // namespace model
 }  // namespace openstudio

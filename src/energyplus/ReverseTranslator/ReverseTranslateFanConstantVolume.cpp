@@ -45,7 +45,8 @@ namespace openstudio {
 namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateFanConstantVolume(const WorkspaceObject& workspaceObject) {
-    OptionalModelObject result, temp;
+    OptionalModelObject result;
+    OptionalModelObject temp;
     OptionalSchedule schedule;
 
     OptionalWorkspaceObject owo = workspaceObject.getTarget(Fan_ConstantVolumeFields::AvailabilityScheduleName);

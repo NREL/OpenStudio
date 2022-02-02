@@ -298,9 +298,9 @@ class UTILITIES_API BCLMeasure
   BCLXML m_bclXML;
 };
 
-typedef boost::optional<BCLMeasure> OptionalBCLMeasure;
+using OptionalBCLMeasure = boost::optional<BCLMeasure>;
 
-typedef std::vector<BCLMeasure> BCLMeasureVector;
+using BCLMeasureVector = std::vector<BCLMeasure>;
 
 }  // namespace openstudio
 

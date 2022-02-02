@@ -221,7 +221,7 @@ waterCoolingCoil.addToSplitter( plantLoop.demandSplitter() );
 
     /// @cond
 
-    typedef detail::Loop_Impl ImplType;
+    using ImplType = detail::Loop_Impl;
 
     explicit Loop(std::shared_ptr<ImplType> impl);
 
@@ -233,7 +233,7 @@ waterCoolingCoil.addToSplitter( plantLoop.demandSplitter() );
     /// @endcond
   };
 
-  typedef boost::optional<Loop> OptionalLoop;
+  using OptionalLoop = boost::optional<Loop>;
 
 }  // namespace model
 }  // namespace openstudio

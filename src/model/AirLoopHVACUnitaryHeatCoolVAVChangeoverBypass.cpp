@@ -79,7 +79,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass", "Availability Schedule"));
       }
@@ -705,7 +706,7 @@ namespace model {
   }
 
   IddObjectType AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass);
+    return {IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass};
   }
 
   std::vector<std::string> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::supplyAirFanPlacementValues() {

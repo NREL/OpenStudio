@@ -343,7 +343,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::PlantLoop_Impl ImplType;
+    using ImplType = detail::PlantLoop_Impl;
 
     explicit PlantLoop(std::shared_ptr<ImplType> impl);
 
@@ -362,7 +362,7 @@ namespace model {
   };
 
   /** \relates PlantLoop */
-  typedef boost::optional<PlantLoop> OptionalPlantLoop;
+  using OptionalPlantLoop = boost::optional<PlantLoop>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -544,7 +544,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ThermalZone_Impl ImplType;
+    using ImplType = detail::ThermalZone_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -558,10 +558,10 @@ namespace model {
   };
 
   /** \relates ThermalZone*/
-  typedef boost::optional<ThermalZone> OptionalThermalZone;
+  using OptionalThermalZone = boost::optional<ThermalZone>;
 
   /** \relates ThermalZone*/
-  typedef std::vector<ThermalZone> ThermalZoneVector;
+  using ThermalZoneVector = std::vector<ThermalZone>;
 
   /** This class implements a transition zone, for DaylightingDeviceTubular */
   class MODEL_API TransitionZone

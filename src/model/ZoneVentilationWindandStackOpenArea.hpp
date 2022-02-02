@@ -151,7 +151,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneVentilationWindandStackOpenArea_Impl ImplType;
+    using ImplType = detail::ZoneVentilationWindandStackOpenArea_Impl;
 
     explicit ZoneVentilationWindandStackOpenArea(std::shared_ptr<detail::ZoneVentilationWindandStackOpenArea_Impl> impl);
 
@@ -165,10 +165,10 @@ namespace model {
   };
 
   /** \relates ZoneVentilationWindandStackOpenArea*/
-  typedef boost::optional<ZoneVentilationWindandStackOpenArea> OptionalZoneVentilationWindandStackOpenArea;
+  using OptionalZoneVentilationWindandStackOpenArea = boost::optional<ZoneVentilationWindandStackOpenArea>;
 
   /** \relates ZoneVentilationWindandStackOpenArea*/
-  typedef std::vector<ZoneVentilationWindandStackOpenArea> ZoneVentilationWindandStackOpenAreaVector;
+  using ZoneVentilationWindandStackOpenAreaVector = std::vector<ZoneVentilationWindandStackOpenArea>;
 
 }  // namespace model
 }  // namespace openstudio

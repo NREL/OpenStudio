@@ -92,7 +92,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SurfacePropertyExposedFoundationPerimeter_Impl ImplType;
+    using ImplType = detail::SurfacePropertyExposedFoundationPerimeter_Impl;
 
     explicit SurfacePropertyExposedFoundationPerimeter(std::shared_ptr<detail::SurfacePropertyExposedFoundationPerimeter_Impl> impl);
 
@@ -106,10 +106,10 @@ namespace model {
   };
 
   /** \relates SurfacePropertyExposedFoundationPerimeter*/
-  typedef boost::optional<SurfacePropertyExposedFoundationPerimeter> OptionalSurfacePropertyExposedFoundationPerimeter;
+  using OptionalSurfacePropertyExposedFoundationPerimeter = boost::optional<SurfacePropertyExposedFoundationPerimeter>;
 
   /** \relates SurfacePropertyExposedFoundationPerimeter*/
-  typedef std::vector<SurfacePropertyExposedFoundationPerimeter> SurfacePropertyExposedFoundationPerimeterVector;
+  using SurfacePropertyExposedFoundationPerimeterVector = std::vector<SurfacePropertyExposedFoundationPerimeter>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -118,10 +118,10 @@ class UTILITIES_API Plane
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Plane& plane);
 
 /// optional Plane
-typedef boost::optional<Plane> OptionalPlane;
+using OptionalPlane = boost::optional<Plane>;
 
 /// vector of Plane
-typedef std::vector<Plane> PlaneVector;
+using PlaneVector = std::vector<Plane>;
 
 }  // namespace openstudio
 

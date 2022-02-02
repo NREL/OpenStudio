@@ -108,7 +108,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::RunPeriod_Impl ImplType;
+    using ImplType = detail::RunPeriod_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -126,10 +126,10 @@ namespace model {
   };
 
   /** \relates RunPeriod */
-  typedef boost::optional<RunPeriod> OptionalRunPeriod;
+  using OptionalRunPeriod = boost::optional<RunPeriod>;
 
   /** \relates RunPeriod */
-  typedef std::vector<RunPeriod> RunPeriodVector;
+  using RunPeriodVector = std::vector<RunPeriod>;
 
 }  // namespace model
 }  // namespace openstudio

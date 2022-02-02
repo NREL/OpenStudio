@@ -106,7 +106,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerFollowSystemNodeTemperature_Impl ImplType;
+    using ImplType = detail::SetpointManagerFollowSystemNodeTemperature_Impl;
 
     explicit SetpointManagerFollowSystemNodeTemperature(std::shared_ptr<detail::SetpointManagerFollowSystemNodeTemperature_Impl> impl);
 
@@ -120,10 +120,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerFollowSystemNodeTemperature*/
-  typedef boost::optional<SetpointManagerFollowSystemNodeTemperature> OptionalSetpointManagerFollowSystemNodeTemperature;
+  using OptionalSetpointManagerFollowSystemNodeTemperature = boost::optional<SetpointManagerFollowSystemNodeTemperature>;
 
   /** \relates SetpointManagerFollowSystemNodeTemperature*/
-  typedef std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatureVector;
+  using SetpointManagerFollowSystemNodeTemperatureVector = std::vector<SetpointManagerFollowSystemNodeTemperature>;
 
 }  // namespace model
 }  // namespace openstudio

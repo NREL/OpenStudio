@@ -233,7 +233,7 @@ namespace model {
       boost::optional<std::string> getSpecificKeyValue(OptionalString keyValue) const;
     };
 
-    typedef std::shared_ptr<ModelObject_Impl> ModelObject_ImplPtr;
+    using ModelObject_ImplPtr = std::shared_ptr<ModelObject_Impl>;
 
   }  // namespace detail
 }  // namespace model

@@ -473,7 +473,7 @@ class UTILITIES_API Workspace
 
   //@}
  protected:
-  typedef detail::Workspace_Impl ImplType;
+  using ImplType = detail::Workspace_Impl;
 
   friend class WorkspaceObject;
   friend class detail::WorkspaceObject_Impl;
@@ -496,10 +496,10 @@ class UTILITIES_API Workspace
 };
 
 /** \relates Workspace */
-typedef boost::optional<Workspace> OptionalWorkspace;
+using OptionalWorkspace = boost::optional<Workspace>;
 
 /** \relates Workspace */
-typedef std::vector<Workspace> WorkspaceVector;
+using WorkspaceVector = std::vector<Workspace>;
 
 /** \relates Workspace */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Workspace& workspace);

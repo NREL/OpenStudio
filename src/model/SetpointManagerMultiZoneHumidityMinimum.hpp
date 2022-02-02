@@ -98,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerMultiZoneHumidityMinimum_Impl ImplType;
+    using ImplType = detail::SetpointManagerMultiZoneHumidityMinimum_Impl;
 
     explicit SetpointManagerMultiZoneHumidityMinimum(std::shared_ptr<detail::SetpointManagerMultiZoneHumidityMinimum_Impl> impl);
 
@@ -112,10 +112,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerMultiZoneHumidityMinimum*/
-  typedef boost::optional<SetpointManagerMultiZoneHumidityMinimum> OptionalSetpointManagerMultiZoneHumidityMinimum;
+  using OptionalSetpointManagerMultiZoneHumidityMinimum = boost::optional<SetpointManagerMultiZoneHumidityMinimum>;
 
   /** \relates SetpointManagerMultiZoneHumidityMinimum*/
-  typedef std::vector<SetpointManagerMultiZoneHumidityMinimum> SetpointManagerMultiZoneHumidityMinimumVector;
+  using SetpointManagerMultiZoneHumidityMinimumVector = std::vector<SetpointManagerMultiZoneHumidityMinimum>;
 
 }  // namespace model
 }  // namespace openstudio

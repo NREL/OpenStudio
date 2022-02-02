@@ -32,7 +32,6 @@
 namespace openstudio {
 namespace measure {
 
-
   std::string OSMeasure::name() const {
     return "";
   }

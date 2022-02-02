@@ -49,7 +49,6 @@ namespace contam {
 
   WeatherData::WeatherData(const WeatherData& other) : m_impl(other.m_impl) {}
 
-
   WeatherData& WeatherData::operator=(const WeatherData& other) {
     m_impl = other.m_impl;
     return *this;
@@ -176,7 +175,6 @@ namespace contam {
   Icon::Icon(int icon, int col, int row, int nr) : m_impl(std::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon, col, row, nr))) {}
 
   Icon::Icon(const Icon& other) : m_impl(other.m_impl) {}
-
 
   Icon& Icon::operator=(const Icon& other) {
     m_impl = other.m_impl;

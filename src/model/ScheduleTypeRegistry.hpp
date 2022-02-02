@@ -71,7 +71,7 @@ namespace model {
   };
 
   /** \relates ScheduleType */
-  typedef std::vector<ScheduleType> ScheduleTypeVector;
+  using ScheduleTypeVector = std::vector<ScheduleType>;
 
   /** Returns true if candidate is consistent with scheduleType.
  * When isStringent is true, we also check that if scheduleType does not have a lower/upper bound, then candidate must not have them either.
@@ -112,12 +112,12 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.ScheduleTypeRegistry");
     ScheduleTypeRegistrySingleton();
 
-    typedef std::map<std::string, std::vector<ScheduleType>> ClassNameToScheduleTypesMap;
+    using ClassNameToScheduleTypesMap = std::map<std::string, std::vector<ScheduleType>>;
     ClassNameToScheduleTypesMap m_classNameToScheduleTypesMap;
   };
 
   /** \relates ScheduleTypeRegistrySingleton */
-  typedef openstudio::Singleton<ScheduleTypeRegistrySingleton> ScheduleTypeRegistry;
+  using ScheduleTypeRegistry = openstudio::Singleton<ScheduleTypeRegistrySingleton>;
 
   /** Returns true if candidate is consistent with the ScheduleType that corresponds to className
  *  and scheduleRelationshipName. Throws if there is no such ScheduleType.

@@ -40,7 +40,8 @@ using namespace openstudio;
 void testGenericFunctions() {
   double scalar = 2;
   double test[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-  Vector vTest = Vector(12), vTest2 = Vector(12);
+  Vector vTest = Vector(12);
+  Vector vTest2 = Vector(12);
   for (unsigned int i = 0; i < vTest.size(); i++) {
     vTest[i] = i;
     vTest2[i] = 11 - i;

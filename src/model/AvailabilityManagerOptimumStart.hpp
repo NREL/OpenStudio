@@ -125,7 +125,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerOptimumStart_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerOptimumStart_Impl;
 
     explicit AvailabilityManagerOptimumStart(std::shared_ptr<detail::AvailabilityManagerOptimumStart_Impl> impl);
 
@@ -139,10 +139,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerOptimumStart*/
-  typedef boost::optional<AvailabilityManagerOptimumStart> OptionalAvailabilityManagerOptimumStart;
+  using OptionalAvailabilityManagerOptimumStart = boost::optional<AvailabilityManagerOptimumStart>;
 
   /** \relates AvailabilityManagerOptimumStart*/
-  typedef std::vector<AvailabilityManagerOptimumStart> AvailabilityManagerOptimumStartVector;
+  using AvailabilityManagerOptimumStartVector = std::vector<AvailabilityManagerOptimumStart>;
 
 }  // namespace model
 }  // namespace openstudio

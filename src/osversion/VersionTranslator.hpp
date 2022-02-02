@@ -179,7 +179,7 @@ namespace osversion {
    private:
     REGISTER_LOGGER("openstudio.osversion.VersionTranslator");
 
-    typedef boost::function<std::string(VersionTranslator*, const IdfFile&, const IddFileAndFactoryWrapper&)> OSVersionUpdater;
+    using OSVersionUpdater = boost::function<std::string(VersionTranslator*, const IdfFile&, const IddFileAndFactoryWrapper&)>;
     std::map<VersionString, OSVersionUpdater> m_updateMethods;
     std::vector<VersionString> m_startVersions;
 

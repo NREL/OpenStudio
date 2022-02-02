@@ -43,7 +43,8 @@ namespace openstudio {
 namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateCoilHeatingGas(const WorkspaceObject& workspaceObject) {
-    OptionalModelObject result, temp;
+    OptionalModelObject result;
+    OptionalModelObject temp;
 
     OptionalSchedule schedule;
 

@@ -57,7 +57,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
   Model m;
 
   // Get the unique object
-  OutputDebuggingData outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
+  auto outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
 
   {
     EXPECT_TRUE(outputDebuggingData.setReportDebuggingData(true));
@@ -114,7 +114,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    OutputDebuggingData outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
+    auto outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
     EXPECT_TRUE(outputDebuggingData.reportDebuggingData());
     EXPECT_FALSE(outputDebuggingData.reportDuringWarmup());
   }
@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    OutputDebuggingData outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
+    auto outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
     EXPECT_FALSE(outputDebuggingData.reportDebuggingData());
     EXPECT_TRUE(outputDebuggingData.reportDuringWarmup());
   }

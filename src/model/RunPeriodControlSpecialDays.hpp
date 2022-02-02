@@ -103,7 +103,7 @@ namespace model {
    protected:
     /// @cond
 
-    typedef detail::RunPeriodControlSpecialDays_Impl ImplType;
+    using ImplType = detail::RunPeriodControlSpecialDays_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -118,10 +118,10 @@ namespace model {
   };
 
   /** \relates RunPeriodControlSpecialDays */
-  typedef boost::optional<RunPeriodControlSpecialDays> OptionalRunPeriodControlSpecialDays;
+  using OptionalRunPeriodControlSpecialDays = boost::optional<RunPeriodControlSpecialDays>;
 
   /** \relates RunPeriodControlSpecialDays */
-  typedef std::vector<RunPeriodControlSpecialDays> RunPeriodControlSpecialDaysVector;
+  using RunPeriodControlSpecialDaysVector = std::vector<RunPeriodControlSpecialDays>;
 
 }  // namespace model
 }  // namespace openstudio

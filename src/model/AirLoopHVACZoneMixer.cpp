@@ -59,7 +59,6 @@ namespace model {
     AirLoopHVACZoneMixer_Impl::AirLoopHVACZoneMixer_Impl(const AirLoopHVACZoneMixer_Impl& other, Model_Impl* model, bool keepHandle)
       : Mixer_Impl(other, model, keepHandle) {}
 
-
     const std::vector<std::string>& AirLoopHVACZoneMixer_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       // Not Appropriate: No variables available

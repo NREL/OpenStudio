@@ -179,7 +179,7 @@ namespace energyplus {
 
     // get extensible groups for custom blocks
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
       OptionalWorkspaceObject target = workspaceGroup.getTarget(Foundation_KivaExtensibleFields::CustomBlockMaterialName);
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       OptionalDouble depth = workspaceGroup.getDouble(Foundation_KivaExtensibleFields::CustomBlockDepth);

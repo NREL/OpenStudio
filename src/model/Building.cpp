@@ -417,7 +417,7 @@ namespace model {
       // If standardsTemplate isn't set, return empty
       boost::optional<std::string> standardsTemplate = this->standardsTemplate();
       if (!standardsTemplate) {
-        return std::vector<std::string>();
+        return {};
       } else {
 
         boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();

@@ -37,7 +37,7 @@
 #include "../UtilitiesAPI.hpp"
 
 namespace openstudio {
-typedef boost::filesystem::path path;
+using path = boost::filesystem::path;
 
 namespace filesystem {
 

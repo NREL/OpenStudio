@@ -132,7 +132,7 @@ namespace model {
     //@}
 
     /// @cond
-    typedef detail::PlanarSurfaceGroup_Impl ImplType;
+    using ImplType = detail::PlanarSurfaceGroup_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -146,10 +146,10 @@ namespace model {
   };
 
   /** \relates PlanarSurfaceGroup */
-  typedef boost::optional<PlanarSurfaceGroup> OptionalPlanarSurfaceGroup;
+  using OptionalPlanarSurfaceGroup = boost::optional<PlanarSurfaceGroup>;
 
   /** \relates PlanarSurfaceGroup */
-  typedef std::vector<PlanarSurfaceGroup> PlanarSurfaceGroupVector;
+  using PlanarSurfaceGroupVector = std::vector<PlanarSurfaceGroup>;
 
 }  // namespace model
 }  // namespace openstudio

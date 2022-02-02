@@ -189,7 +189,7 @@ namespace model {
     bool setRuleIndex(int index);
 
     /// @cond
-    typedef detail::ScheduleRule_Impl ImplType;
+    using ImplType = detail::ScheduleRule_Impl;
 
     explicit ScheduleRule(std::shared_ptr<detail::ScheduleRule_Impl> impl);
 
@@ -204,10 +204,10 @@ namespace model {
   };
 
   /** \relates ScheduleRule */
-  typedef boost::optional<ScheduleRule> OptionalScheduleRule;
+  using OptionalScheduleRule = boost::optional<ScheduleRule>;
 
   /** \relates ScheduleRule */
-  typedef std::vector<ScheduleRule> ScheduleRuleVector;
+  using ScheduleRuleVector = std::vector<ScheduleRule>;
 
 }  // namespace model
 }  // namespace openstudio

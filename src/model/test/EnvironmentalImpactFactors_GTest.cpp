@@ -39,7 +39,7 @@ TEST_F(ModelFixture, EnvironmentalImpactFactors_GettersSetters) {
   Model m;
 
   // This is a unique ModelObject
-  EnvironmentalImpactFactors environmentalImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
+  auto environmentalImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
 
   // District Heating Efficiency: Required Double
   EXPECT_TRUE(environmentalImpactFactors.setDistrictHeatingEfficiency(0.1));

@@ -87,7 +87,8 @@ namespace model {
     std::vector<ScheduleTypeKey> AirTerminalDualDuctConstantVolume_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirTerminal_DualDuct_ConstantVolumeFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalDualDuctConstantVolume", "Availability Schedule"));
       }
@@ -131,7 +132,7 @@ namespace model {
       return std::numeric_limits<unsigned>::max();
     }
 
-    unsigned AirTerminalDualDuctConstantVolume_Impl::newInletPortAfterBranch(unsigned branchIndex) {
+    unsigned AirTerminalDualDuctConstantVolume_Impl::newInletPortAfterBranch(unsigned /*branchIndex*/) {
       LOG(Warn, "newInletPortAfterBranch is not supported for " << briefDescription() << " .");
       LOG(Warn, "Ports cannot be added or removed for " << briefDescription() << " .");
       return std::numeric_limits<unsigned>::max();

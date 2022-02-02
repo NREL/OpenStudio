@@ -142,7 +142,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData) {
   testObject.setHeatingCoil(heatingCoil);
   testObject.setSupplementalHeatingCoil(suppHeatingCoil);
 
-  AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
+  auto testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 
   // EXPECT_EQ("Load", testObjectClone.controlType());
   EXPECT_EQ("None", testObjectClone.dehumidificationControlType());
@@ -225,7 +225,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData) {
   testObject.setAncilliaryOffCycleElectricPower(999.0);
   // testObject.setMaximumTemperatureforHeatRecovery(100.0);
 
-  AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
+  auto testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 
   // EXPECT_EQ("SetPoint", testObjectClone.controlType());
   EXPECT_EQ("CoolReheat", testObjectClone.dehumidificationControlType());
@@ -279,7 +279,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneTwoModelsWithCustomData) {
   testObject.setHeatingCoil(heatingCoil);
   testObject.setSupplementalHeatingCoil(suppHeatingCoil);
 
-  AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
+  auto testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 
   EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
   EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
@@ -299,7 +299,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneTwoModelsWithCustomData) {
   EXPECT_EQ(2, coolingCoils.size());
 
   Model m2;
-  AirLoopHVACUnitarySystem testObjectClone2 = testObject.clone(m2).cast<AirLoopHVACUnitarySystem>();
+  auto testObjectClone2 = testObject.clone(m2).cast<AirLoopHVACUnitarySystem>();
 
   unitarySystem = m2.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(1, unitarySystem.size());

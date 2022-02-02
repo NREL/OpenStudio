@@ -159,7 +159,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator);
+    return {IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator};
   }
 
   ModelObject ExternalInterfaceFunctionalMockupUnitExportToActuator::actuatedComponentUnique() const {

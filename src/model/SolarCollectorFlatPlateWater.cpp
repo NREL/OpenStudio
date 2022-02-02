@@ -212,7 +212,7 @@ namespace model {
   }
 
   IddObjectType SolarCollectorFlatPlateWater::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollector_FlatPlate_Water);
+    return {IddObjectType::OS_SolarCollector_FlatPlate_Water};
   }
 
   SolarCollectorPerformanceFlatPlate SolarCollectorFlatPlateWater::solarCollectorPerformance() const {

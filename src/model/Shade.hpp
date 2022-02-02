@@ -182,7 +182,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Shade_Impl ImplType;
+    using ImplType = detail::Shade_Impl;
 
     explicit Shade(std::shared_ptr<detail::Shade_Impl> impl);
 
@@ -196,10 +196,10 @@ namespace model {
   };
 
   /** \relates Shade*/
-  typedef boost::optional<Shade> OptionalShade;
+  using OptionalShade = boost::optional<Shade>;
 
   /** \relates Shade*/
-  typedef std::vector<Shade> ShadeVector;
+  using ShadeVector = std::vector<Shade>;
 
 }  // namespace model
 }  // namespace openstudio

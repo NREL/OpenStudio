@@ -162,7 +162,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkDistributionLinkage::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkDistributionLinkage);
+    return {IddObjectType::OS_AirflowNetworkDistributionLinkage};
   }
 
   AirflowNetworkNode AirflowNetworkDistributionLinkage::node1() const {

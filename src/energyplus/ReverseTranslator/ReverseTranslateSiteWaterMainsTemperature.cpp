@@ -48,7 +48,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    SiteWaterMainsTemperature mo = m_model.getUniqueModelObject<SiteWaterMainsTemperature>();
+    auto mo = m_model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
     boost::optional<WorkspaceObject> wo;
     boost::optional<Schedule> schedule;

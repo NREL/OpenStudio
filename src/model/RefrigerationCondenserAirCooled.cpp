@@ -364,7 +364,7 @@ namespace model {
   }
 
   IddObjectType RefrigerationCondenserAirCooled::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_AirCooled);
+    return {IddObjectType::OS_Refrigeration_Condenser_AirCooled};
   }
 
   std::vector<std::string> RefrigerationCondenserAirCooled::condenserFanSpeedControlTypeValues() {

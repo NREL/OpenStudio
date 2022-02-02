@@ -114,7 +114,7 @@ namespace model {
     explicit PerformancePrecisionTradeoffs(Model& model);
 
     /// @cond
-    typedef detail::PerformancePrecisionTradeoffs_Impl ImplType;
+    using ImplType = detail::PerformancePrecisionTradeoffs_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -128,10 +128,10 @@ namespace model {
   };
 
   /** \relates PerformancePrecisionTradeoffs*/
-  typedef boost::optional<PerformancePrecisionTradeoffs> OptionalPerformancePrecisionTradeoffs;
+  using OptionalPerformancePrecisionTradeoffs = boost::optional<PerformancePrecisionTradeoffs>;
 
   /** \relates PerformancePrecisionTradeoffs*/
-  typedef std::vector<PerformancePrecisionTradeoffs> PerformancePrecisionTradeoffsVector;
+  using PerformancePrecisionTradeoffsVector = std::vector<PerformancePrecisionTradeoffs>;
 
 }  // namespace model
 }  // namespace openstudio

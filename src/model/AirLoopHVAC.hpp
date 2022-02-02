@@ -394,7 +394,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirLoopHVAC_Impl ImplType;
+    using ImplType = detail::AirLoopHVAC_Impl;
 
     explicit AirLoopHVAC(std::shared_ptr<ImplType> impl);
 
@@ -405,10 +405,10 @@ namespace model {
   };
 
   // optional AirLoopHVAC
-  typedef boost::optional<AirLoopHVAC> OptionalAirLoopHVAC;
+  using OptionalAirLoopHVAC = boost::optional<AirLoopHVAC>;
 
   // vector of AirLoopHVAC
-  typedef std::vector<AirLoopHVAC> AirLoopHVACVector;
+  using AirLoopHVACVector = std::vector<AirLoopHVAC>;
 
 }  // namespace model
 

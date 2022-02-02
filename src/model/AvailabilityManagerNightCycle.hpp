@@ -119,7 +119,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerNightCycle_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerNightCycle_Impl;
 
     explicit AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl);
 
@@ -135,10 +135,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerNightCycle*/
-  typedef boost::optional<AvailabilityManagerNightCycle> OptionalAvailabilityManagerNightCycle;
+  using OptionalAvailabilityManagerNightCycle = boost::optional<AvailabilityManagerNightCycle>;
 
   /** \relates AvailabilityManagerNightCycle*/
-  typedef std::vector<AvailabilityManagerNightCycle> AvailabilityManagerNightCycleVector;
+  using AvailabilityManagerNightCycleVector = std::vector<AvailabilityManagerNightCycle>;
 
 }  // namespace model
 }  // namespace openstudio

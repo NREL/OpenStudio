@@ -148,7 +148,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
 
   construction.setLayers(layers);
 
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
 
   Building building = model.getUniqueModelObject<Building>();
 

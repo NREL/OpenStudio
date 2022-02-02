@@ -423,7 +423,7 @@ namespace model {
   }
 
   IddObjectType BoilerSteam::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Boiler_Steam);
+    return {IddObjectType::OS_Boiler_Steam};
   }
 
   std::vector<std::string> BoilerSteam::fuelTypeValues() {

@@ -417,7 +417,7 @@ class UTILITIES_API IdfObject
   //@}
 
  protected:
-  typedef detail::IdfObject_Impl ImplType;
+  using ImplType = detail::IdfObject_Impl;
 
   friend struct IdfObjectImplLess;            // lets friend sort by impl
   friend class detail::IdfObject_Impl;        // for IdfObject_Impl::getObject<T>()
@@ -456,13 +456,13 @@ struct UTILITIES_API IdfObjectTypeLess
 };
 
 /** \relates IdfObject */
-typedef boost::optional<IdfObject> OptionalIdfObject;
+using OptionalIdfObject = boost::optional<IdfObject>;
 
 /** \relates IdfObject */
-typedef std::vector<IdfObject> IdfObjectVector;
+using IdfObjectVector = std::vector<IdfObject>;
 
 /** \relates IdfObject */
-typedef std::pair<IdfObject, IdfObject> IdfObjectPair;
+using IdfObjectPair = std::pair<IdfObject, IdfObject>;
 
 /** \relates IdfObject */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IdfObject& IdfObject);

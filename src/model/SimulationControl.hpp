@@ -255,7 +255,7 @@ namespace model {
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
 
-    typedef detail::SimulationControl_Impl ImplType;
+    using ImplType = detail::SimulationControl_Impl;
 
     explicit SimulationControl(std::shared_ptr<ImplType> impl);
 
@@ -266,7 +266,7 @@ namespace model {
   };
 
   /** \relates SimulationControl */
-  typedef boost::optional<SimulationControl> OptionalSimulationControl;
+  using OptionalSimulationControl = boost::optional<SimulationControl>;
 
 }  // namespace model
 }  // namespace openstudio

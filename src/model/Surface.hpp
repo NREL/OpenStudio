@@ -328,7 +328,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::Surface_Impl ImplType;
+    using ImplType = detail::Surface_Impl;
 
     friend class Model;
     friend class openstudio::detail::IdfObject_Impl;
@@ -343,10 +343,10 @@ namespace model {
   };
 
   /** \relates Surface*/
-  typedef boost::optional<Surface> OptionalSurface;
+  using OptionalSurface = boost::optional<Surface>;
 
   /** \relates Surface*/
-  typedef std::vector<Surface> SurfaceVector;
+  using SurfaceVector = std::vector<Surface>;
 
   /** SurfaceIntersection contains detailed information about a surface intersection. */
   class MODEL_API SurfaceIntersection

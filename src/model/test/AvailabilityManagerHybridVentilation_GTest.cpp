@@ -314,7 +314,7 @@ TEST_F(ModelFixture, AvailabilityManagerHybridVentilation_Clone) {
   EXPECT_TRUE(avm.setMinimumVentilationTime(0.2));
   EXPECT_EQ(0.2, avm.minimumVentilationTime());
 
-  AvailabilityManagerHybridVentilation avmClone = avm.clone(m).cast<AvailabilityManagerHybridVentilation>();
+  auto avmClone = avm.clone(m).cast<AvailabilityManagerHybridVentilation>();
   EXPECT_FALSE(avmClone.controlledZone());
   EXPECT_FALSE(avmClone.loop());
   EXPECT_FALSE(avmClone.zoneVentilationObject());

@@ -75,7 +75,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_NoRunPeriodControlDaylightSavingTime
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime) {
   Model model;
-  RunPeriodControlDaylightSavingTime dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  auto dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
   // defaults to US
 
   ForwardTranslator forwardTranslator;
@@ -93,7 +93,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime) 
   Model model2 = reverseTranslator.translateWorkspace(workspace);
 
   ASSERT_TRUE(model2.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
-  RunPeriodControlDaylightSavingTime dst2 = model2.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  auto dst2 = model2.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
 
   ASSERT_TRUE(dst2.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate));
   EXPECT_EQ("2nd Sunday in March", dst2.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate).get());
@@ -107,7 +107,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime) 
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime2) {
   Model model;
-  RunPeriodControlDaylightSavingTime dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  auto dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
   //European Last Sunday in March, Last Sunday in October;
   dst.setStartDate(NthDayOfWeekInMonth::fifth, DayOfWeek::Sunday, MonthOfYear::Mar);
   dst.setEndDate(NthDayOfWeekInMonth::fifth, DayOfWeek::Sunday, MonthOfYear::Oct);
@@ -127,7 +127,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime2)
   Model model2 = reverseTranslator.translateWorkspace(workspace);
 
   ASSERT_TRUE(model2.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
-  RunPeriodControlDaylightSavingTime dst2 = model2.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  auto dst2 = model2.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
 
   ASSERT_TRUE(dst2.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate));
   EXPECT_EQ("Last Sunday in March", dst2.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate).get());
@@ -141,7 +141,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime2)
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime3) {
   Model model;
-  RunPeriodControlDaylightSavingTime dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  auto dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
   //Syrian 4/1, 10/1;
   dst.setStartDate(MonthOfYear::Mar, 1);
   dst.setEndDate(MonthOfYear::Oct, 1);
@@ -161,7 +161,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime3)
   Model model2 = reverseTranslator.translateWorkspace(workspace);
 
   ASSERT_TRUE(model2.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
-  RunPeriodControlDaylightSavingTime dst2 = model2.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  auto dst2 = model2.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
 
   ASSERT_TRUE(dst2.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate));
   EXPECT_EQ("3/1", dst2.getString(OS_RunPeriodControl_DaylightSavingTimeFields::StartDate).get());

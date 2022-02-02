@@ -78,7 +78,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ResourceObject_Impl ImplType;
+    using ImplType = detail::ResourceObject_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates ResourceObject */
-  typedef boost::optional<ResourceObject> OptionalResourceObject;
+  using OptionalResourceObject = boost::optional<ResourceObject>;
 
   /** \relates ResourceObject */
-  typedef std::vector<ResourceObject> ResourceObjectVector;
+  using ResourceObjectVector = std::vector<ResourceObject>;
 
   /** Returns all \link ResourceObject ResourceObjects \endlink accessible by recursively calling
  *  .resources() starting from object. Will not return object even if object is a ResourceObject.

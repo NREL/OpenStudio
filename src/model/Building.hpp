@@ -323,7 +323,7 @@ namespace model {
     explicit Building(Model& model);
 
     /// @cond
-    typedef detail::Building_Impl ImplType;
+    using ImplType = detail::Building_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -336,10 +336,10 @@ namespace model {
   };
 
   /** \relates Building*/
-  typedef boost::optional<Building> OptionalBuilding;
+  using OptionalBuilding = boost::optional<Building>;
 
   /** \relates Building*/
-  typedef std::vector<Building> BuildingVector;
+  using BuildingVector = std::vector<Building>;
 
 }  // namespace model
 }  // namespace openstudio

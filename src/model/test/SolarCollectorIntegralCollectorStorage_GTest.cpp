@@ -139,7 +139,7 @@ TEST_F(ModelFixture, SolarCollectorIntegralCollectorStorage_Clone) {
 
     ModelObject clone = collector.clone(model);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorIntegralCollectorStorage>());
-    SolarCollectorIntegralCollectorStorage collector2 = clone.cast<SolarCollectorIntegralCollectorStorage>();
+    auto collector2 = clone.cast<SolarCollectorIntegralCollectorStorage>();
     SolarCollectorPerformanceIntegralCollectorStorage performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());
@@ -153,7 +153,7 @@ TEST_F(ModelFixture, SolarCollectorIntegralCollectorStorage_Clone) {
     Model model2;
     ModelObject clone = collector.clone(model2);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorIntegralCollectorStorage>());
-    SolarCollectorIntegralCollectorStorage collector2 = clone.cast<SolarCollectorIntegralCollectorStorage>();
+    auto collector2 = clone.cast<SolarCollectorIntegralCollectorStorage>();
     SolarCollectorPerformanceIntegralCollectorStorage performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());

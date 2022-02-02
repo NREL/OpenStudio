@@ -131,7 +131,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_clone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerFollowGroundTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowGroundTemperature>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerFollowGroundTemperature>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
@@ -158,7 +158,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_customDataClone) {
   ASSERT_TRUE(testObject.setpointNode());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerFollowGroundTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowGroundTemperature>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerFollowGroundTemperature>();
   EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);

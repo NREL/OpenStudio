@@ -170,7 +170,7 @@ namespace model {
     explicit WeatherFile(Model& model);
 
     /// @cond
-    typedef detail::WeatherFile_Impl ImplType;
+    using ImplType = detail::WeatherFile_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -183,10 +183,10 @@ namespace model {
   };
 
   /** \relates WeatherFile*/
-  typedef boost::optional<WeatherFile> OptionalWeatherFile;
+  using OptionalWeatherFile = boost::optional<WeatherFile>;
 
   /** \relates WeatherFile*/
-  typedef std::vector<WeatherFile> WeatherFileVector;
+  using WeatherFileVector = std::vector<WeatherFile>;
 
 }  // namespace model
 }  // namespace openstudio

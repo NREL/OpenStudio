@@ -72,8 +72,8 @@ struct UTILITIES_API IddFileType : public ::EnumBase<IddFileType>
 
  private:
   friend class EnumBase<IddFileType>;
-  typedef std::pair<std::string, int> PT;
-  typedef std::vector<PT> VecType;
+  using PT = std::pair<std::string, int>;
+  using VecType = std::vector<PT>;
   static VecType buildStringVec(bool isd);
 };
 
@@ -81,17 +81,17 @@ inline std::ostream& operator<<(std::ostream& os, const IddFileType& e) {
   return os << e.valueName() << "(" << e.value() << ")";
 }
 
-typedef boost::optional<IddFileType> OptionalIddFileType;
+using OptionalIddFileType = boost::optional<IddFileType>;
 #endif
 /** \relates IddFileType */
-typedef std::vector<IddFileType> IddFileTypeVector;
+using IddFileTypeVector = std::vector<IddFileType>;
 /** \relates IddFileType */
-typedef std::set<IddFileType> IddFileTypeSet;
+using IddFileTypeSet = std::set<IddFileType>;
 
 /** \relates IddFileType */
-typedef boost::optional<std::vector<IddFileType>> OptionalIddFileTypeVector;
+using OptionalIddFileTypeVector = boost::optional<std::vector<IddFileType>>;
 /** \relates IddFileType */
-typedef boost::optional<std::set<IddFileType>> OptionalIddFileTypeSet;
+using OptionalIddFileTypeSet = boost::optional<std::set<IddFileType>>;
 
 /** \class IddObjectType
  *  \brief Enumeration of the \link openstudio::IddObject IddObject\endlink types available
@@ -128,8 +128,8 @@ struct UTILITIES_API IddObjectType : public ::EnumBase<IddObjectType>
 
  private:
   friend class EnumBase<IddObjectType>;
-  typedef std::pair<std::string, int> PT;
-  typedef std::vector<PT> VecType;
+  using PT = std::pair<std::string, int>;
+  using VecType = std::vector<PT>;
   static VecType buildStringVec(bool isd);
 };
 
@@ -137,17 +137,17 @@ inline std::ostream& operator<<(std::ostream& os, const IddObjectType& e) {
   return os << e.valueName() << "(" << e.value() << ")";
 }
 
-typedef boost::optional<IddObjectType> OptionalIddObjectType;
+using OptionalIddObjectType = boost::optional<IddObjectType>;
 #endif
 /** \relates IddObjectType */
-typedef std::vector<IddObjectType> IddObjectTypeVector;
+using IddObjectTypeVector = std::vector<IddObjectType>;
 /** \relates IddObjectType */
-typedef std::set<IddObjectType> IddObjectTypeSet;
+using IddObjectTypeSet = std::set<IddObjectType>;
 
 /** \relates IddObjectType */
-typedef boost::optional<std::vector<IddObjectType>> OptionalIddObjectTypeVector;
+using OptionalIddObjectTypeVector = boost::optional<std::vector<IddObjectType>>;
 /** \relates IddObjectType */
-typedef boost::optional<std::set<IddObjectType>> OptionalIddObjectTypeSet;
+using OptionalIddObjectTypeSet = boost::optional<std::set<IddObjectType>>;
 
 }  // namespace openstudio
 

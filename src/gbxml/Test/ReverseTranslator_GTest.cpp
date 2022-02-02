@@ -382,8 +382,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_HandleMapping) {
     EXPECT_FALSE(model1->getObject(object.handle()));
   }
 
-  model::Model model1Clone1 = model1->clone(false).cast<model::Model>();
-  model::Model model1Clone2 = model1->clone(false).cast<model::Model>();
+  auto model1Clone1 = model1->clone(false).cast<model::Model>();
+  auto model1Clone2 = model1->clone(false).cast<model::Model>();
 
   for (const auto& object : model1Clone1.objects()) {
     EXPECT_FALSE(model1->getObject(object.handle()));

@@ -997,7 +997,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_Daylighting) {
     ASSERT_EQ(2u, idf_d.extensibleGroups().size());
 
     // Check that there is a value for primary, and that it's right
-    WorkspaceExtensibleGroup w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
     sp = w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
     ASSERT_TRUE(sp);
     ASSERT_EQ(d_pri.illuminanceSetpoint(), sp.get());

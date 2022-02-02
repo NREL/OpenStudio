@@ -127,7 +127,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData) 
   Model model;
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
 
   EXPECT_EQ("PropyleneGlycol", testObjectClone.circulatingFluidName());
   EXPECT_EQ(30, testObjectClone.glycolConcentration().get());
@@ -168,7 +168,7 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithCustomData) {
   testObject.setTotalPumpHead(999.0);
   testObject.setPumpMotorHeattoFluid(0.5);
 
-  RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
 
   std::vector<CurveCubic> refrigerationSecondarySystemCurves = model.getModelObjects<CurveCubic>();
   for (auto it = refrigerationSecondarySystemCurves.begin(); it != refrigerationSecondarySystemCurves.end(); ++it) {
@@ -197,11 +197,11 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneTwoModelsWithDefaultData)
   ThermalZone thermalZone(model);
   RefrigerationSecondarySystem testObject = RefrigerationSecondarySystem(model);
 
-  RefrigerationSecondarySystem testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone = testObject.clone(model).cast<RefrigerationSecondarySystem>();
 
   Model model2;
 
-  RefrigerationSecondarySystem testObjectClone2 = testObject.clone(model2).cast<RefrigerationSecondarySystem>();
+  auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationSecondarySystem>();
   EXPECT_EQ("PropyleneGlycol", testObjectClone2.circulatingFluidName());
   EXPECT_EQ(30, testObjectClone2.glycolConcentration().get());
   EXPECT_DOUBLE_EQ(35000.0, testObjectClone2.evaporatorCapacity().get());

@@ -68,7 +68,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
    protected:
-    typedef detail::Connection_Impl ImplType;
+    using ImplType = detail::Connection_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -82,10 +82,10 @@ namespace model {
   };
 
   /** \relates Connection */
-  typedef boost::optional<Connection> OptionalConnection;
+  using OptionalConnection = boost::optional<Connection>;
 
   /** \relates Connection */
-  typedef std::vector<Connection> ConnectionVector;
+  using ConnectionVector = std::vector<Connection>;
 
 }  // namespace model
 }  // namespace openstudio

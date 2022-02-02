@@ -40,15 +40,15 @@ namespace openstudio {
 /// Workaround to get Vector typedef, http://www.gotw.ca/gotw/079.htm
 struct UTILITIES_API VectorStruct
 {
-  typedef boost::numeric::ublas::vector<double> VectorType;
-  typedef boost::numeric::ublas::scalar_vector<double> ScalarVectorType;
+  using VectorType = boost::numeric::ublas::vector<double>;
+  using ScalarVectorType = boost::numeric::ublas::scalar_vector<double>;
 };
 
 /// Vector
-typedef VectorStruct::VectorType Vector;
+using Vector = VectorStruct::VectorType;
 
 /// ScalarVector
-typedef VectorStruct::ScalarVectorType ScalarVector;
+using ScalarVector = VectorStruct::ScalarVectorType;
 
 /// Helper function to construct Vector from std::vector<double>.
 UTILITIES_API Vector createVector(const std::vector<double>& values);

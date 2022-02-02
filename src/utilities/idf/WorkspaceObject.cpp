@@ -73,7 +73,6 @@ namespace detail {
       m_sourceData(other.m_sourceData),
       m_targetData(other.m_targetData) {}
 
-
   std::vector<IdfObject> WorkspaceObject_Impl::remove() {
     std::vector<IdfObject> result;
     result.push_back(this->idfObject());

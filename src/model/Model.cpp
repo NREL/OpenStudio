@@ -212,7 +212,7 @@ namespace model {
     Model Model_Impl::model() const {
       // const cast looks pretty bad but is justified here as this operation does not
       // modify the model, this is similar to a copy constructor, don't abuse it though
-      return Model(std::dynamic_pointer_cast<Model_Impl>(std::const_pointer_cast<openstudio::detail::Workspace_Impl>(this->shared_from_this())));
+      return {std::dynamic_pointer_cast<Model_Impl>(std::const_pointer_cast<openstudio::detail::Workspace_Impl>(this->shared_from_this()))};
     }
 
     bool Model_Impl::setIddFile(IddFileType iddFileType) {
@@ -695,7 +695,7 @@ namespace model {
       if (m_sqlFile) {
         return boost::optional<openstudio::SqlFile>(*m_sqlFile);
       } else {
-        return boost::optional<openstudio::SqlFile>();
+        return {};
       }
     }
 
@@ -939,19 +939,19 @@ namespace model {
       m_cachedOutputTableSummaryReports.reset();
     }
 
-    void Model_Impl::clearCachedLifeCycleCostParameters(const Handle& handle) {
+    void Model_Impl::clearCachedLifeCycleCostParameters(const Handle&  /*handle*/) {
       m_cachedLifeCycleCostParameters.reset();
     }
 
-    void Model_Impl::clearCachedRunPeriod(const Handle& handle) {
+    void Model_Impl::clearCachedRunPeriod(const Handle&  /*handle*/) {
       m_cachedRunPeriod.reset();
     }
 
-    void Model_Impl::clearCachedYearDescription(const Handle& handle) {
+    void Model_Impl::clearCachedYearDescription(const Handle&  /*handle*/) {
       m_cachedYearDescription.reset();
     }
 
-    void Model_Impl::clearCachedWeatherFile(const Handle& handle) {
+    void Model_Impl::clearCachedWeatherFile(const Handle&  /*handle*/) {
       m_cachedWeatherFile.reset();
     }
 

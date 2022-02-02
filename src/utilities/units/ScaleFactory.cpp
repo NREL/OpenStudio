@@ -39,7 +39,6 @@
 
 namespace openstudio {
 
-
 bool ScaleFactorySingleton::registerScale(ScaleConstant scale) {
 
   bool result = m_exponentMap.insert(ExponentLookupMap::value_type(scale().exponent, scale)).second;

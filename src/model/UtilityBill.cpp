@@ -440,7 +440,7 @@ namespace model {
       boost::optional<double> result;
       boost::optional<unsigned> timestepsInPeakDemandWindow = this->timestepsInPeakDemandWindow();
       if (timestepsInPeakDemandWindow) {
-        Timestep timestep = this->model().getUniqueModelObject<Timestep>();
+        auto timestep = this->model().getUniqueModelObject<Timestep>();
         result = (60.0 * timestepsInPeakDemandWindow.get()) / timestep.numberOfTimestepsPerHour();
       }
       return result;
@@ -489,7 +489,7 @@ namespace model {
     bool UtilityBill_Impl::setConsumptionUnit(const std::string& consumptionUnit) {
       bool result = false;
       std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();
-      std::vector<std::string>::const_iterator it = std::find(consumptionUnitValues.begin(), consumptionUnitValues.end(), consumptionUnit);
+      auto it = std::find(consumptionUnitValues.begin(), consumptionUnitValues.end(), consumptionUnit);
       if (it != consumptionUnitValues.end()) {
         std::string oldConsumptionUnit = this->consumptionUnit();
         result = setString(OS_UtilityBillFields::ConsumptionUnit, consumptionUnit);
@@ -516,7 +516,7 @@ namespace model {
       if (peakDemandUnitValues.empty() && peakDemandUnit.empty()) {
         result = setString(OS_UtilityBillFields::PeakDemandUnit, peakDemandUnit);
       } else {
-        std::vector<std::string>::const_iterator it = std::find(peakDemandUnitValues.begin(), peakDemandUnitValues.end(), peakDemandUnit);
+        auto it = std::find(peakDemandUnitValues.begin(), peakDemandUnitValues.end(), peakDemandUnit);
         if (it != peakDemandUnitValues.end()) {
           result = setString(OS_UtilityBillFields::PeakDemandUnit, peakDemandUnit);
         }
@@ -813,7 +813,7 @@ namespace model {
 
       this->emitChangeSignals();
 
-      BillingPeriod result = eg.cast<BillingPeriod>();
+      auto result = eg.cast<BillingPeriod>();
 
       return result;
     }
@@ -897,7 +897,7 @@ namespace model {
     boost::optional<unsigned> beginYear = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear);
     OS_ASSERT(beginYear);
 
-    return Date(beginMonth.get(), beginDay.get(), beginYear.get());
+    return {beginMonth.get(), beginDay.get(), beginYear.get()};
   }
 
   Date BillingPeriod::endDate() const {
@@ -1112,17 +1112,17 @@ namespace model {
 
     boost::optional<RunPeriod> runPeriod = model.runPeriod();
     if (!runPeriod) {
-      return Vector();
+      return {};
     }
 
     boost::optional<model::YearDescription> yd = model.yearDescription();
     if (!yd) {
-      return Vector();
+      return {};
     }
 
     boost::optional<int> calendarYear = yd->calendarYear();
     if (!calendarYear) {
-      return Vector();
+      return {};
     }
 
     Vector result;
@@ -1150,7 +1150,7 @@ namespace model {
         double value = timeseries->value(dateTime);
         if (value == outOfRangeValue) {
           LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
-          return Vector();
+          return {};
         } else {
           result[i] = value;
         }
@@ -1282,7 +1282,7 @@ namespace model {
   }
 
   IddObjectType UtilityBill::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_UtilityBill);
+    return {IddObjectType::OS_UtilityBill};
   }
 
   std::vector<std::string> UtilityBill::consumptionUnitValues() {

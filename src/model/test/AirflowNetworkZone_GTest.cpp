@@ -93,7 +93,7 @@ TEST_F(ModelFixture, AirflowNetwork_Zone_Basic) {
   ASSERT_TRUE(zone.occupantVentilationControl());
   EXPECT_EQ(ovc, zone.occupantVentilationControl().get());
 
-  ThermalZone thermalZoneClone = thermalZone.clone(model).cast<ThermalZone>();
+  auto thermalZoneClone = thermalZone.clone(model).cast<ThermalZone>();
   optzone = thermalZoneClone.airflowNetworkZone();
   ASSERT_TRUE(optzone);
   EXPECT_NE(zone, optzone.get());

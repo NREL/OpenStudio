@@ -89,7 +89,7 @@ TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
   site2.setLongitude(longitude);
   site2.setElevation(elevation);
 
-  Facility facility2 = model2.getUniqueModelObject<Facility>();
+  auto facility2 = model2.getUniqueModelObject<Facility>();
   facility2.setName(facilityName);
 
   Building building2 = model2.getUniqueModelObject<Building>();
@@ -178,7 +178,7 @@ TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
   EXPECT_DOUBLE_EQ(site1.longitude(), longitude);
   EXPECT_DOUBLE_EQ(site1.elevation(), elevation);
 
-  Facility facility1 = model1.getUniqueModelObject<Facility>();
+  auto facility1 = model1.getUniqueModelObject<Facility>();
   //EXPECT_EQ(facility1.nameString(), facilityName); // DLM: Facility does not have a name field in IDD
 
   Building building1 = model1.getUniqueModelObject<Building>();
@@ -238,7 +238,7 @@ TEST_F(ModelFixture, ModelMerger_Initial_Minimal) {
   site2.setLongitude(longitude);
   site2.setElevation(elevation);
 
-  Facility facility2 = model2.getUniqueModelObject<Facility>();
+  auto facility2 = model2.getUniqueModelObject<Facility>();
   facility2.setName(facilityName);
 
   Building building2 = model2.getUniqueModelObject<Building>();
@@ -328,7 +328,7 @@ TEST_F(ModelFixture, ModelMerger_Initial_Minimal) {
   EXPECT_DOUBLE_EQ(site1.longitude(), longitude);
   EXPECT_DOUBLE_EQ(site1.elevation(), elevation);
 
-  Facility facility1 = model1.getUniqueModelObject<Facility>();
+  auto facility1 = model1.getUniqueModelObject<Facility>();
   //EXPECT_EQ(facility1.nameString(), facilityName); // DLM: Facility does not have a name field in IDD
 
   Building building1 = model1.getUniqueModelObject<Building>();
@@ -894,7 +894,7 @@ TEST_F(ModelFixture, ModelMerger_ClimateZones_4166) {
   Model model2;
 
   // Add a Climate Zone to model1 only
-  ClimateZones czs = model1.getUniqueModelObject<ClimateZones>();
+  auto czs = model1.getUniqueModelObject<ClimateZones>();
   ClimateZone cz = czs.setClimateZone(ClimateZones::ashraeInstitutionName(), "4A");
   EXPECT_EQ(1, czs.numClimateZones());
   EXPECT_EQ(1, czs.climateZones().size());

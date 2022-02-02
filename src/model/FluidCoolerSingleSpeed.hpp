@@ -142,7 +142,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FluidCoolerSingleSpeed_Impl ImplType;
+    using ImplType = detail::FluidCoolerSingleSpeed_Impl;
 
     explicit FluidCoolerSingleSpeed(std::shared_ptr<detail::FluidCoolerSingleSpeed_Impl> impl);
 
@@ -156,10 +156,10 @@ namespace model {
   };
 
   /** \relates FluidCoolerSingleSpeed*/
-  typedef boost::optional<FluidCoolerSingleSpeed> OptionalFluidCoolerSingleSpeed;
+  using OptionalFluidCoolerSingleSpeed = boost::optional<FluidCoolerSingleSpeed>;
 
   /** \relates FluidCoolerSingleSpeed*/
-  typedef std::vector<FluidCoolerSingleSpeed> FluidCoolerSingleSpeedVector;
+  using FluidCoolerSingleSpeedVector = std::vector<FluidCoolerSingleSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

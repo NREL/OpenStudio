@@ -135,7 +135,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACEnergyRecoveryVentilatorController_Impl ImplType;
+    using ImplType = detail::ZoneHVACEnergyRecoveryVentilatorController_Impl;
 
     explicit ZoneHVACEnergyRecoveryVentilatorController(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl> impl);
 
@@ -149,10 +149,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACEnergyRecoveryVentilatorController*/
-  typedef boost::optional<ZoneHVACEnergyRecoveryVentilatorController> OptionalZoneHVACEnergyRecoveryVentilatorController;
+  using OptionalZoneHVACEnergyRecoveryVentilatorController = boost::optional<ZoneHVACEnergyRecoveryVentilatorController>;
 
   /** \relates ZoneHVACEnergyRecoveryVentilatorController*/
-  typedef std::vector<ZoneHVACEnergyRecoveryVentilatorController> ZoneHVACEnergyRecoveryVentilatorControllerVector;
+  using ZoneHVACEnergyRecoveryVentilatorControllerVector = std::vector<ZoneHVACEnergyRecoveryVentilatorController>;
 
 }  // namespace model
 }  // namespace openstudio

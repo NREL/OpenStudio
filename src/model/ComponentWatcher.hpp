@@ -79,7 +79,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ComponentWatcher_Impl ImplType;
+    using ImplType = detail::ComponentWatcher_Impl;
 
     friend class detail::Model_Impl;
     friend class detail::ComponentWatcher_Impl;
@@ -94,7 +94,7 @@ namespace model {
   };
 
   /** \relates ComponentWatcher */
-  typedef std::vector<ComponentWatcher> ComponentWatcherVector;
+  using ComponentWatcherVector = std::vector<ComponentWatcher>;
 
 }  // namespace model
 }  // namespace openstudio

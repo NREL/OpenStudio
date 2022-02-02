@@ -43,7 +43,6 @@ WorkspaceObjectWatcher::WorkspaceObjectWatcher(const openstudio::WorkspaceObject
     ->detail::WorkspaceObject_Impl::onRemoveFromWorkspace.connect<WorkspaceObjectWatcher, &WorkspaceObjectWatcher::removedFromWorkspace>(this);
 }
 
-
 bool WorkspaceObjectWatcher::relationshipChanged() const {
   return m_relationshipChanged;
 }

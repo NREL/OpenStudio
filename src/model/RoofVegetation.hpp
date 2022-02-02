@@ -246,7 +246,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::RoofVegetation_Impl ImplType;
+    using ImplType = detail::RoofVegetation_Impl;
 
     explicit RoofVegetation(std::shared_ptr<detail::RoofVegetation_Impl> impl);
 
@@ -260,10 +260,10 @@ namespace model {
   };
 
   /** \relates RoofVegetation*/
-  typedef boost::optional<RoofVegetation> OptionalRoofVegetation;
+  using OptionalRoofVegetation = boost::optional<RoofVegetation>;
 
   /** \relates RoofVegetation*/
-  typedef std::vector<RoofVegetation> RoofVegetationVector;
+  using RoofVegetationVector = std::vector<RoofVegetation>;
 
 }  // namespace model
 }  // namespace openstudio

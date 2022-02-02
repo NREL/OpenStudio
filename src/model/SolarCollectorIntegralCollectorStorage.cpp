@@ -228,7 +228,7 @@ namespace model {
   }
 
   IddObjectType SolarCollectorIntegralCollectorStorage::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_SolarCollector_IntegralCollectorStorage);
+    return {IddObjectType::OS_SolarCollector_IntegralCollectorStorage};
   }
 
   std::vector<std::string> SolarCollectorIntegralCollectorStorage::bottomSurfaceBoundaryConditionsTypeValues() {

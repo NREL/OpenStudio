@@ -141,7 +141,8 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACFourPipeFanCoil_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_FourPipeFanCoilFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ZoneHVACFourPipeFanCoil", "Availability"));
       }
@@ -837,7 +838,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACFourPipeFanCoil::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil);
+    return {IddObjectType::OS_ZoneHVAC_FourPipeFanCoil};
   }
 
   std::vector<std::string> ZoneHVACFourPipeFanCoil::capacityControlMethodValues() {

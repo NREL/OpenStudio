@@ -48,7 +48,7 @@ class Object
 {
  public:
   COMMON_PTR_TYPEDEFS(Object)
-  typedef boost::optional<Object> Opt;
+  using Opt = boost::optional<Object>;
   Object(const string& name, unsigned number) : m_name(name), m_number(number) {}
   static Ptr create(const string& name, unsigned number) {
     return Ptr(new Object(name, number));
@@ -72,7 +72,7 @@ class Object
 TEST(Finder, NameFinder_Ptr) {
   LOG_FREE(Info, "Finder", "Entering NameFinder_Ptr")
 
-  typedef std::vector<Object::Ptr> VectorType;
+  using VectorType = std::vector<Object::Ptr>;
   VectorType haystack;
 
   Object::Ptr needle = Object::create("Billy", 1);
@@ -83,7 +83,7 @@ TEST(Finder, NameFinder_Ptr) {
 
   // not found
   // cppcheck-suppress knownEmptyContainer
-  VectorType::const_iterator it = find_if(haystack.begin(), haystack.end(), finder);
+  auto it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() == it);
 
   // not found
@@ -97,8 +97,8 @@ TEST(Finder, NameFinder_Ptr) {
   EXPECT_TRUE(haystack.end() != it);
 
   // now search in reverse order
-  VectorType::const_reverse_iterator it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
-  VectorType::const_reverse_iterator rend = haystack.rend();
+  auto it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
+  auto rend = haystack.rend();
   EXPECT_TRUE(rend != it2);
 
   // two needles are the same
@@ -134,7 +134,7 @@ TEST(Finder, NameFinder_Ptr) {
 TEST(Finder, NameFinder_POD) {
   LOG_FREE(Info, "Finder", "Entering NameFinder_POD")
 
-  typedef std::vector<Object> VectorType;
+  using VectorType = std::vector<Object>;
   VectorType haystack;
 
   Object needle = Object("Billy", 1);
@@ -145,7 +145,7 @@ TEST(Finder, NameFinder_POD) {
 
   // not found
   // cppcheck-suppress knownEmptyContainer
-  VectorType::const_iterator it = find_if(haystack.begin(), haystack.end(), finder);
+  auto it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() == it);
 
   // not found
@@ -159,8 +159,8 @@ TEST(Finder, NameFinder_POD) {
   EXPECT_TRUE(haystack.end() != it);
 
   // now search in reverse order
-  VectorType::const_reverse_iterator it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
-  VectorType::const_reverse_iterator rend = haystack.rend();
+  auto it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
+  auto rend = haystack.rend();
   EXPECT_TRUE(rend != it2);
 
   // two needles are the same
@@ -196,7 +196,7 @@ TEST(Finder, NameFinder_POD) {
 TEST(Finder, findByName_Ptr) {
   LOG_FREE(Info, "Finder", "Entering findByName_Ptr")
 
-  typedef std::vector<Object::Ptr> VectorType;
+  using VectorType = std::vector<Object::Ptr>;
   VectorType haystack;
   Object::Ptr obj;
 
@@ -255,7 +255,7 @@ TEST(Finder, findByName_Ptr) {
 TEST(Finder, findByName_POD) {
   LOG_FREE(Info, "Finder", "findByName_POD findByName_Ptr")
 
-  typedef std::vector<Object> VectorType;
+  using VectorType = std::vector<Object>;
   VectorType haystack;
   Object::Opt obj;
 
@@ -307,7 +307,7 @@ TEST(Finder, findByName_POD) {
 }
 
 TEST(Finder, findIndexByName_POD) {
-  typedef std::vector<Object> VectorType;
+  using VectorType = std::vector<Object>;
   VectorType haystack;
   boost::optional<int> index;
 

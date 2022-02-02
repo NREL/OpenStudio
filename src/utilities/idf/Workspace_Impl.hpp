@@ -481,18 +481,18 @@ namespace detail {
     IddFileAndFactoryWrapper m_iddFileAndFactoryWrapper;  // IDD file to be used for validity checking
     bool m_fastNaming;
 
-    typedef std::unordered_map<Handle, std::shared_ptr<WorkspaceObject_Impl>, boost::hash<boost::uuids::uuid>> WorkspaceObjectMap;
+    using WorkspaceObjectMap = std::unordered_map<Handle, std::shared_ptr<WorkspaceObject_Impl>, boost::hash<boost::uuids::uuid>>;
     WorkspaceObjectMap m_workspaceObjectMap;
 
     // object for ordering objects in the collection.
     WorkspaceObjectOrder m_workspaceObjectOrder;
 
     // map of IddObjectType to set of objects identified by UUID
-    typedef std::map<IddObjectType, WorkspaceObjectMap> IddObjectTypeMap;
+    using IddObjectTypeMap = std::map<IddObjectType, WorkspaceObjectMap>;
     IddObjectTypeMap m_iddObjectTypeMap;
 
     // map of reference to set of objects identified by UUID
-    typedef std::unordered_map<std::string, WorkspaceObjectMap> IdfReferencesMap;  // , IstringCompare
+    using IdfReferencesMap = std::unordered_map<std::string, WorkspaceObjectMap>;  // , IstringCompare
     IdfReferencesMap m_idfReferencesMap;
 
     // data object for undos
@@ -503,8 +503,8 @@ namespace detail {
       OptionalUnsigned orderIndex;
       SavedWorkspaceObject(const Handle& h, const std::shared_ptr<WorkspaceObject_Impl>& o) : handle(h), objectImplPtr(o) {}
     };
-    typedef boost::optional<SavedWorkspaceObject> OptionalSavedWorkspaceObject;
-    typedef std::vector<SavedWorkspaceObject> SavedWorkspaceObjectVector;
+    using OptionalSavedWorkspaceObject = boost::optional<SavedWorkspaceObject>;
+    using SavedWorkspaceObjectVector = std::vector<SavedWorkspaceObject>;
 
     // GETTERS
 
@@ -583,7 +583,7 @@ namespace detail {
     REGISTER_LOGGER("utilities.idf.Workspace");
   };
 
-  typedef std::shared_ptr<Workspace_Impl> Workspace_ImplPtr;
+  using Workspace_ImplPtr = std::shared_ptr<Workspace_Impl>;
 
 }  // namespace detail
 

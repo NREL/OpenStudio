@@ -54,7 +54,6 @@ SqlFile::SqlFile(const openstudio::path& t_path, const openstudio::EpwFile& t_ep
   }
 }
 
-
 void SqlFile::createIndexes() {
   if (m_impl) {
     m_impl->createIndexes();
@@ -175,7 +174,7 @@ boost::optional<double> SqlFile::economicsEnergyCost() const {
   if (m_impl) {
     return m_impl->economicsEnergyCost();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -183,7 +182,7 @@ boost::optional<EndUses> SqlFile::endUses() const {
   if (m_impl) {
     return m_impl->endUses();
   } else {
-    return boost::optional<EndUses>();
+    return {};
   }
 }
 
@@ -191,7 +190,7 @@ boost::optional<double> SqlFile::getElecOrGasCost(bool t_getGas) const {
   if (m_impl) {
     return m_impl->getElecOrGasCost(t_getGas);
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -199,7 +198,7 @@ boost::optional<double> SqlFile::getElecOrGasUse(bool t_getGas) const {
   if (m_impl) {
     return m_impl->getElecOrGasUse(t_getGas);
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -209,7 +208,7 @@ boost::optional<double> SqlFile::energyConsumptionByMonth(const openstudio::EndU
   if (m_impl) {
     return m_impl->energyConsumptionByMonth(t_fuelType, t_categoryType, t_monthOfYear);
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -219,7 +218,7 @@ boost::optional<double> SqlFile::peakEnergyDemandByMonth(const openstudio::EndUs
   if (m_impl) {
     return m_impl->peakEnergyDemandByMonth(t_fuelType, t_categoryType, t_monthOfYear);
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -227,7 +226,7 @@ boost::optional<double> SqlFile::electricityHeating() const {
   if (m_impl) {
     return m_impl->electricityHeating();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -235,7 +234,7 @@ boost::optional<double> SqlFile::electricityCooling() const {
   if (m_impl) {
     return m_impl->electricityCooling();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -243,7 +242,7 @@ boost::optional<double> SqlFile::electricityInteriorLighting() const {
   if (m_impl) {
     return m_impl->electricityInteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -251,7 +250,7 @@ boost::optional<double> SqlFile::electricityExteriorLighting() const {
   if (m_impl) {
     return m_impl->electricityExteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -259,7 +258,7 @@ boost::optional<double> SqlFile::electricityInteriorEquipment() const {
   if (m_impl) {
     return m_impl->electricityInteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -267,7 +266,7 @@ boost::optional<double> SqlFile::electricityExteriorEquipment() const {
   if (m_impl) {
     return m_impl->electricityExteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -275,7 +274,7 @@ boost::optional<double> SqlFile::electricityFans() const {
   if (m_impl) {
     return m_impl->electricityFans();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -283,7 +282,7 @@ boost::optional<double> SqlFile::electricityPumps() const {
   if (m_impl) {
     return m_impl->electricityPumps();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -291,7 +290,7 @@ boost::optional<double> SqlFile::electricityHeatRejection() const {
   if (m_impl) {
     return m_impl->electricityHeatRejection();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -299,7 +298,7 @@ boost::optional<double> SqlFile::electricityHumidification() const {
   if (m_impl) {
     return m_impl->electricityHumidification();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -307,7 +306,7 @@ boost::optional<double> SqlFile::electricityHeatRecovery() const {
   if (m_impl) {
     return m_impl->electricityHeatRecovery();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -315,7 +314,7 @@ boost::optional<double> SqlFile::electricityWaterSystems() const {
   if (m_impl) {
     return m_impl->electricityWaterSystems();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -323,7 +322,7 @@ boost::optional<double> SqlFile::electricityRefrigeration() const {
   if (m_impl) {
     return m_impl->electricityRefrigeration();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -331,7 +330,7 @@ boost::optional<double> SqlFile::electricityGenerators() const {
   if (m_impl) {
     return m_impl->electricityGenerators();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -339,7 +338,7 @@ boost::optional<double> SqlFile::electricityTotalEndUses() const {
   if (m_impl) {
     return m_impl->electricityTotalEndUses();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -347,7 +346,7 @@ boost::optional<double> SqlFile::naturalGasHeating() const {
   if (m_impl) {
     return m_impl->naturalGasHeating();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -355,7 +354,7 @@ boost::optional<double> SqlFile::naturalGasCooling() const {
   if (m_impl) {
     return m_impl->naturalGasCooling();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -363,7 +362,7 @@ boost::optional<double> SqlFile::naturalGasInteriorLighting() const {
   if (m_impl) {
     return m_impl->naturalGasInteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -371,7 +370,7 @@ boost::optional<double> SqlFile::naturalGasExteriorLighting() const {
   if (m_impl) {
     return m_impl->naturalGasExteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -379,7 +378,7 @@ boost::optional<double> SqlFile::naturalGasInteriorEquipment() const {
   if (m_impl) {
     return m_impl->naturalGasInteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -387,7 +386,7 @@ boost::optional<double> SqlFile::naturalGasExteriorEquipment() const {
   if (m_impl) {
     return m_impl->naturalGasExteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -395,7 +394,7 @@ boost::optional<double> SqlFile::naturalGasFans() const {
   if (m_impl) {
     return m_impl->naturalGasFans();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -403,7 +402,7 @@ boost::optional<double> SqlFile::naturalGasPumps() const {
   if (m_impl) {
     return m_impl->naturalGasPumps();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -411,7 +410,7 @@ boost::optional<double> SqlFile::naturalGasHeatRejection() const {
   if (m_impl) {
     return m_impl->naturalGasHeatRejection();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -419,7 +418,7 @@ boost::optional<double> SqlFile::naturalGasHumidification() const {
   if (m_impl) {
     return m_impl->naturalGasHumidification();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -427,7 +426,7 @@ boost::optional<double> SqlFile::naturalGasHeatRecovery() const {
   if (m_impl) {
     return m_impl->naturalGasHeatRecovery();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -435,7 +434,7 @@ boost::optional<double> SqlFile::naturalGasWaterSystems() const {
   if (m_impl) {
     return m_impl->naturalGasWaterSystems();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -443,7 +442,7 @@ boost::optional<double> SqlFile::naturalGasRefrigeration() const {
   if (m_impl) {
     return m_impl->naturalGasRefrigeration();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -451,7 +450,7 @@ boost::optional<double> SqlFile::naturalGasGenerators() const {
   if (m_impl) {
     return m_impl->naturalGasGenerators();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -459,7 +458,7 @@ boost::optional<double> SqlFile::naturalGasTotalEndUses() const {
   if (m_impl) {
     return m_impl->naturalGasTotalEndUses();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -467,7 +466,7 @@ boost::optional<double> SqlFile::otherFuelHeating() const {
   if (m_impl) {
     return m_impl->otherFuelHeating();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -475,7 +474,7 @@ boost::optional<double> SqlFile::otherFuelCooling() const {
   if (m_impl) {
     return m_impl->otherFuelCooling();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -483,7 +482,7 @@ boost::optional<double> SqlFile::otherFuelInteriorLighting() const {
   if (m_impl) {
     return m_impl->otherFuelInteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -491,7 +490,7 @@ boost::optional<double> SqlFile::otherFuelExteriorLighting() const {
   if (m_impl) {
     return m_impl->otherFuelExteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -499,7 +498,7 @@ boost::optional<double> SqlFile::otherFuelInteriorEquipment() const {
   if (m_impl) {
     return m_impl->otherFuelInteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -507,7 +506,7 @@ boost::optional<double> SqlFile::otherFuelExteriorEquipment() const {
   if (m_impl) {
     return m_impl->otherFuelExteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -515,7 +514,7 @@ boost::optional<double> SqlFile::otherFuelFans() const {
   if (m_impl) {
     return m_impl->otherFuelFans();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -523,7 +522,7 @@ boost::optional<double> SqlFile::otherFuelPumps() const {
   if (m_impl) {
     return m_impl->otherFuelPumps();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -531,7 +530,7 @@ boost::optional<double> SqlFile::otherFuelHeatRejection() const {
   if (m_impl) {
     return m_impl->otherFuelHeatRejection();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -539,7 +538,7 @@ boost::optional<double> SqlFile::otherFuelHumidification() const {
   if (m_impl) {
     return m_impl->otherFuelHumidification();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -547,7 +546,7 @@ boost::optional<double> SqlFile::otherFuelHeatRecovery() const {
   if (m_impl) {
     return m_impl->otherFuelHeatRecovery();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -555,7 +554,7 @@ boost::optional<double> SqlFile::otherFuelWaterSystems() const {
   if (m_impl) {
     return m_impl->otherFuelWaterSystems();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -563,7 +562,7 @@ boost::optional<double> SqlFile::otherFuelRefrigeration() const {
   if (m_impl) {
     return m_impl->otherFuelRefrigeration();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -571,7 +570,7 @@ boost::optional<double> SqlFile::otherFuelGenerators() const {
   if (m_impl) {
     return m_impl->otherFuelGenerators();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -579,7 +578,7 @@ boost::optional<double> SqlFile::otherFuelTotalEndUses() const {
   if (m_impl) {
     return m_impl->otherFuelTotalEndUses();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -587,7 +586,7 @@ boost::optional<double> SqlFile::districtCoolingHeating() const {
   if (m_impl) {
     return m_impl->districtCoolingHeating();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -595,7 +594,7 @@ boost::optional<double> SqlFile::districtCoolingCooling() const {
   if (m_impl) {
     return m_impl->districtCoolingCooling();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -603,7 +602,7 @@ boost::optional<double> SqlFile::districtCoolingInteriorLighting() const {
   if (m_impl) {
     return m_impl->districtCoolingInteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -611,7 +610,7 @@ boost::optional<double> SqlFile::districtCoolingExteriorLighting() const {
   if (m_impl) {
     return m_impl->districtCoolingExteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -619,7 +618,7 @@ boost::optional<double> SqlFile::districtCoolingInteriorEquipment() const {
   if (m_impl) {
     return m_impl->districtCoolingInteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -627,7 +626,7 @@ boost::optional<double> SqlFile::districtCoolingExteriorEquipment() const {
   if (m_impl) {
     return m_impl->districtCoolingExteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -635,7 +634,7 @@ boost::optional<double> SqlFile::districtCoolingFans() const {
   if (m_impl) {
     return m_impl->districtCoolingFans();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -643,7 +642,7 @@ boost::optional<double> SqlFile::districtCoolingPumps() const {
   if (m_impl) {
     return m_impl->districtCoolingPumps();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -651,7 +650,7 @@ boost::optional<double> SqlFile::districtCoolingHeatRejection() const {
   if (m_impl) {
     return m_impl->districtCoolingHeatRejection();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -659,7 +658,7 @@ boost::optional<double> SqlFile::districtCoolingHumidification() const {
   if (m_impl) {
     return m_impl->districtCoolingHumidification();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -667,7 +666,7 @@ boost::optional<double> SqlFile::districtCoolingHeatRecovery() const {
   if (m_impl) {
     return m_impl->districtCoolingHeatRecovery();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -675,7 +674,7 @@ boost::optional<double> SqlFile::districtCoolingWaterSystems() const {
   if (m_impl) {
     return m_impl->districtCoolingWaterSystems();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -683,7 +682,7 @@ boost::optional<double> SqlFile::districtCoolingRefrigeration() const {
   if (m_impl) {
     return m_impl->districtCoolingRefrigeration();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -691,7 +690,7 @@ boost::optional<double> SqlFile::districtCoolingGenerators() const {
   if (m_impl) {
     return m_impl->districtCoolingGenerators();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -699,7 +698,7 @@ boost::optional<double> SqlFile::districtCoolingTotalEndUses() const {
   if (m_impl) {
     return m_impl->districtCoolingTotalEndUses();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -707,7 +706,7 @@ boost::optional<double> SqlFile::districtHeatingHeating() const {
   if (m_impl) {
     return m_impl->districtHeatingHeating();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -715,7 +714,7 @@ boost::optional<double> SqlFile::districtHeatingCooling() const {
   if (m_impl) {
     return m_impl->districtHeatingCooling();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -723,7 +722,7 @@ boost::optional<double> SqlFile::districtHeatingInteriorLighting() const {
   if (m_impl) {
     return m_impl->districtHeatingInteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -731,7 +730,7 @@ boost::optional<double> SqlFile::districtHeatingExteriorLighting() const {
   if (m_impl) {
     return m_impl->districtHeatingExteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -739,7 +738,7 @@ boost::optional<double> SqlFile::districtHeatingInteriorEquipment() const {
   if (m_impl) {
     return m_impl->districtHeatingInteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -747,7 +746,7 @@ boost::optional<double> SqlFile::districtHeatingExteriorEquipment() const {
   if (m_impl) {
     return m_impl->districtHeatingExteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -755,7 +754,7 @@ boost::optional<double> SqlFile::districtHeatingFans() const {
   if (m_impl) {
     return m_impl->districtHeatingFans();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -763,7 +762,7 @@ boost::optional<double> SqlFile::districtHeatingPumps() const {
   if (m_impl) {
     return m_impl->districtHeatingPumps();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -771,7 +770,7 @@ boost::optional<double> SqlFile::districtHeatingHeatRejection() const {
   if (m_impl) {
     return m_impl->districtHeatingHeatRejection();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -779,7 +778,7 @@ boost::optional<double> SqlFile::districtHeatingHumidification() const {
   if (m_impl) {
     return m_impl->districtHeatingHumidification();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -787,7 +786,7 @@ boost::optional<double> SqlFile::districtHeatingHeatRecovery() const {
   if (m_impl) {
     return m_impl->districtHeatingHeatRecovery();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -795,7 +794,7 @@ boost::optional<double> SqlFile::districtHeatingWaterSystems() const {
   if (m_impl) {
     return m_impl->districtHeatingWaterSystems();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -803,7 +802,7 @@ boost::optional<double> SqlFile::districtHeatingRefrigeration() const {
   if (m_impl) {
     return m_impl->districtHeatingRefrigeration();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -811,7 +810,7 @@ boost::optional<double> SqlFile::districtHeatingGenerators() const {
   if (m_impl) {
     return m_impl->districtHeatingGenerators();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -819,7 +818,7 @@ boost::optional<double> SqlFile::districtHeatingTotalEndUses() const {
   if (m_impl) {
     return m_impl->districtHeatingTotalEndUses();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -827,7 +826,7 @@ boost::optional<double> SqlFile::waterHeating() const {
   if (m_impl) {
     return m_impl->waterHeating();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -835,7 +834,7 @@ boost::optional<double> SqlFile::waterCooling() const {
   if (m_impl) {
     return m_impl->waterCooling();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -843,7 +842,7 @@ boost::optional<double> SqlFile::waterInteriorLighting() const {
   if (m_impl) {
     return m_impl->waterInteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -851,7 +850,7 @@ boost::optional<double> SqlFile::waterExteriorLighting() const {
   if (m_impl) {
     return m_impl->waterExteriorLighting();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -859,7 +858,7 @@ boost::optional<double> SqlFile::waterInteriorEquipment() const {
   if (m_impl) {
     return m_impl->waterInteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -867,7 +866,7 @@ boost::optional<double> SqlFile::waterExteriorEquipment() const {
   if (m_impl) {
     return m_impl->waterExteriorEquipment();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -875,7 +874,7 @@ boost::optional<double> SqlFile::waterFans() const {
   if (m_impl) {
     return m_impl->waterFans();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -883,7 +882,7 @@ boost::optional<double> SqlFile::waterPumps() const {
   if (m_impl) {
     return m_impl->waterPumps();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -891,7 +890,7 @@ boost::optional<double> SqlFile::waterHeatRejection() const {
   if (m_impl) {
     return m_impl->waterHeatRejection();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -899,7 +898,7 @@ boost::optional<double> SqlFile::waterHumidification() const {
   if (m_impl) {
     return m_impl->waterHumidification();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -907,7 +906,7 @@ boost::optional<double> SqlFile::waterHeatRecovery() const {
   if (m_impl) {
     return m_impl->waterHeatRecovery();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -915,7 +914,7 @@ boost::optional<double> SqlFile::waterWaterSystems() const {
   if (m_impl) {
     return m_impl->waterWaterSystems();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -923,7 +922,7 @@ boost::optional<double> SqlFile::waterRefrigeration() const {
   if (m_impl) {
     return m_impl->waterRefrigeration();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -931,7 +930,7 @@ boost::optional<double> SqlFile::waterGenerators() const {
   if (m_impl) {
     return m_impl->waterGenerators();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -939,7 +938,7 @@ boost::optional<double> SqlFile::waterTotalEndUses() const {
   if (m_impl) {
     return m_impl->waterTotalEndUses();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -947,7 +946,7 @@ boost::optional<double> SqlFile::hoursHeatingSetpointNotMet() const {
   if (m_impl) {
     return m_impl->hoursHeatingSetpointNotMet();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -955,7 +954,7 @@ boost::optional<double> SqlFile::hoursCoolingSetpointNotMet() const {
   if (m_impl) {
     return m_impl->hoursCoolingSetpointNotMet();
   } else {
-    return boost::optional<double>();
+    return {};
   }
 }
 
@@ -1126,7 +1125,7 @@ boost::optional<int> SqlFile::illuminanceMapHourlyReportIndex(int mapIndex, cons
   if (m_impl) {
     return m_impl->illuminanceMapHourlyReportIndex(mapIndex, dateTime);
   } else {
-    return boost::optional<int>();
+    return {};
   }
 }
 
@@ -1222,52 +1221,68 @@ boost::optional<int> SqlFile::illuminanceMapIndex(const std::string& name) const
 /// reference point for map - form RefPtn=(x:y:illuminance)
 boost::optional<std::string> SqlFile::illuminanceMapRefPt(const std::string& name, int ptNum) const {
   boost::optional<std::string> result;
-  if (m_impl) result = m_impl->illuminanceMapRefPt(name, ptNum);
+  if (m_impl) {
+    result = m_impl->illuminanceMapRefPt(name, ptNum);
+  }
   return result;
 }
 
 boost::optional<std::string> SqlFile::illuminanceMapRefPt(int mapIndex, int ptNum) const {
   boost::optional<std::string> result;
-  if (m_impl) result = m_impl->illuminanceMapRefPt(mapIndex, ptNum);
+  if (m_impl) {
+    result = m_impl->illuminanceMapRefPt(mapIndex, ptNum);
+  }
   return result;
 }
 
 /// min value for map
 boost::optional<double> SqlFile::illuminanceMapMinValue(const std::string& name) const {
   boost::optional<double> result;
-  if (m_impl) result = m_impl->illuminanceMapMinValue(name);
+  if (m_impl) {
+    result = m_impl->illuminanceMapMinValue(name);
+  }
   return result;
 }
 
 /// min value for map
 boost::optional<double> SqlFile::illuminanceMapMinValue(int mapIndex) const {
   boost::optional<double> result;
-  if (m_impl) result = m_impl->illuminanceMapMinValue(mapIndex);
+  if (m_impl) {
+    result = m_impl->illuminanceMapMinValue(mapIndex);
+  }
   return result;
 }
 
 /// max value for map
 boost::optional<double> SqlFile::illuminanceMapMaxValue(const std::string& name) const {
   boost::optional<double> result;
-  if (m_impl) result = m_impl->illuminanceMapMaxValue(name);
+  if (m_impl) {
+    result = m_impl->illuminanceMapMaxValue(name);
+  }
   return result;
 }
 
 /// max value for map
 boost::optional<double> SqlFile::illuminanceMapMaxValue(int mapIndex) const {
   boost::optional<double> result;
-  if (m_impl) result = m_impl->illuminanceMapMaxValue(mapIndex);
+  if (m_impl) {
+    result = m_impl->illuminanceMapMaxValue(mapIndex);
+  }
   return result;
 }
 
 /// min and max values for map
 void SqlFile::illuminanceMapMaxValue(const std::string& name, double& minValue, double& maxValue) const {
-  if (m_impl) m_impl->illuminanceMapMaxValue(name, minValue, maxValue);
+  if (m_impl) {
+    m_impl->illuminanceMapMaxValue(name, minValue, maxValue);
+  }
 }
 
 /// min and max values for map
 void SqlFile::illuminanceMapMaxValue(int mapIndex, double& minValue, double& maxValue) const {
-  if (m_impl) m_impl->illuminanceMapMaxValue(mapIndex, minValue, maxValue);
+  if (m_impl) {
+    m_impl->illuminanceMapMaxValue(mapIndex, minValue, maxValue);
+  }
 }
 
 /// hourly report indices of the illuminance map
@@ -1330,7 +1345,7 @@ std::vector<SummaryData> SqlFile::getSummaryData() const {
   if (m_impl) {
     return m_impl->getSummaryData();
   }
-  return std::vector<SummaryData>();
+  return {};
 }
 
 /** value (lux) of the illuminance map at hourlyReportIndex

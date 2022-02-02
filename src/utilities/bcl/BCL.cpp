@@ -516,7 +516,6 @@ std::vector<BCLCost> BCLSearchResult::costs() const {
 
 BCL::BCL() {}
 
-
 boost::optional<BCLComponent> getComponent(const std::string& uid, const std::string& versionId) {
   OptionalBCLComponent localComponent = LocalBCL::instance().getComponent(uid, versionId);
 

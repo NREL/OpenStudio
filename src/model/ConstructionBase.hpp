@@ -141,7 +141,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ConstructionBase_Impl ImplType;
+    using ImplType = detail::ConstructionBase_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -158,10 +158,10 @@ namespace model {
   };
 
   /** \relates ConstructionBase */
-  typedef boost::optional<ConstructionBase> OptionalConstructionBase;
+  using OptionalConstructionBase = boost::optional<ConstructionBase>;
 
   /** \relates ConstructionBase */
-  typedef std::vector<ConstructionBase> ConstructionBaseVector;
+  using ConstructionBaseVector = std::vector<ConstructionBase>;
 
 }  // namespace model
 }  // namespace openstudio

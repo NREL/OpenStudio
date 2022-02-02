@@ -144,7 +144,9 @@ namespace model {
     bool TemperingValve_Impl::setControlNodes() {
       auto plant = plantLoop();
 
-      if (!plant) return false;
+      if (!plant) {
+        return false;
+      }
 
       bool ok = true;
 
@@ -176,7 +178,7 @@ namespace model {
       auto mixer = plant->supplyMixer();
 
       if (!stream2SourceNode()) {
-        TemperingValve thisObject = getObject<TemperingValve>();
+        auto thisObject = getObject<TemperingValve>();
         auto inletObjects = mixer.inletModelObjects();
         for (auto& inletObject : inletObjects) {
           if (auto node = inletObject.optionalCast<Node>()) {
@@ -193,9 +195,13 @@ namespace model {
     bool TemperingValve_Impl::addToNode(Node& node) {
       auto plant = node.plantLoop();
 
-      if (!plant) return false;
+      if (!plant) {
+        return false;
+      }
 
-      if (!plant->supplyComponent(node.handle())) return false;
+      if (!plant->supplyComponent(node.handle())) {
+        return false;
+      }
 
       return StraightComponent_Impl::addToNode(node);
     }
@@ -210,7 +216,7 @@ namespace model {
   }
 
   IddObjectType TemperingValve::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_TemperingValve);
+    return {IddObjectType::OS_TemperingValve};
   }
 
   boost::optional<Node> TemperingValve::stream2SourceNode() const {

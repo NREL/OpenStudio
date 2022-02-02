@@ -61,13 +61,13 @@ enum LogLevel
 namespace openstudio {
 
 /// LogChannel identifies a logger
-typedef std::string LogChannel;
+using LogChannel = std::string;
 
 /// Type of stream sink used
-typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> LogSinkBackend;
+using LogSinkBackend = boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend>;
 
 /// Type of logger used
-typedef boost::log::sources::severity_channel_logger_mt<LogLevel> LoggerType;
+using LoggerType = boost::log::sources::severity_channel_logger_mt<LogLevel>;
 
 /// LogMessage encapsulates a single logging message
 class UTILITIES_API LogMessage

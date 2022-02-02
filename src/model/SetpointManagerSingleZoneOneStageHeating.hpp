@@ -97,7 +97,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerSingleZoneOneStageHeating_Impl ImplType;
+    using ImplType = detail::SetpointManagerSingleZoneOneStageHeating_Impl;
 
     explicit SetpointManagerSingleZoneOneStageHeating(std::shared_ptr<detail::SetpointManagerSingleZoneOneStageHeating_Impl> impl);
 
@@ -111,10 +111,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerSingleZoneOneStageHeating*/
-  typedef boost::optional<SetpointManagerSingleZoneOneStageHeating> OptionalSetpointManagerSingleZoneOneStageHeating;
+  using OptionalSetpointManagerSingleZoneOneStageHeating = boost::optional<SetpointManagerSingleZoneOneStageHeating>;
 
   /** \relates SetpointManagerSingleZoneOneStageHeating*/
-  typedef std::vector<SetpointManagerSingleZoneOneStageHeating> SetpointManagerSingleZoneOneStageHeatingVector;
+  using SetpointManagerSingleZoneOneStageHeatingVector = std::vector<SetpointManagerSingleZoneOneStageHeating>;
 
 }  // namespace model
 }  // namespace openstudio

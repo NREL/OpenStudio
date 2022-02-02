@@ -190,7 +190,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteGroundTemperatureFCfactorMethod_Impl ImplType;
+    using ImplType = detail::SiteGroundTemperatureFCfactorMethod_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -204,10 +204,10 @@ namespace model {
   };
 
   /** \relates SiteGroundTemperatureFCfactorMethod*/
-  typedef boost::optional<SiteGroundTemperatureFCfactorMethod> OptionalSiteGroundTemperatureFCfactorMethod;
+  using OptionalSiteGroundTemperatureFCfactorMethod = boost::optional<SiteGroundTemperatureFCfactorMethod>;
 
   /** \relates SiteGroundTemperatureFCfactorMethod*/
-  typedef std::vector<SiteGroundTemperatureFCfactorMethod> SiteGroundTemperatureFCfactorMethodVector;
+  using SiteGroundTemperatureFCfactorMethodVector = std::vector<SiteGroundTemperatureFCfactorMethod>;
 
 }  // namespace model
 }  // namespace openstudio

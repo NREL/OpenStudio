@@ -87,7 +87,6 @@ namespace model {
     FanConstantVolume_Impl::FanConstantVolume_Impl(const FanConstantVolume_Impl& other, Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {}
 
-
     const std::vector<std::string>& FanConstantVolume_Impl::outputVariableNames() const {
       static const std::vector<std::string> results{"Fan Electricity Rate", "Fan Rise in Air Temperature", "Fan Heat Gain to Air",
                                                     "Fan Electricity Energy", "Fan Air Mass Flow Rate"};
@@ -102,7 +101,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Fan_ConstantVolumeFields::AvailabilityScheduleName) != e) {
         result.push_back(ScheduleTypeKey("FanConstantVolume", "Availability"));
       }

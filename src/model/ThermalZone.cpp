@@ -447,21 +447,17 @@ namespace model {
       return ThermalZone::iddObjectType();
     }
 
-    std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent>& prev) {
-      std::vector<HVACComponent> edges;
-      auto returncomps = subsetCastVector<HVACComponent>(returnPortList().modelObjects());
-      for (auto& comp : returncomps) {
-        edges.push_back(comp);
-      }
-      return edges;
+    std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent>& /*prev*/) {
+      return subsetCastVector<HVACComponent>(returnPortList().modelObjects());
     }
 
     std::vector<ScheduleTypeKey> ThermalZone_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ThermalZoneFields::DaylightingControlsAvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ThermalZone", "Daylighting Controls Availability"));
+        result.emplace_back("ThermalZone", "Daylighting Controls Availability");
       }
       return result;
     }
@@ -2308,7 +2304,9 @@ namespace model {
         }
       }
 
-      if (!zoneSplitter) result = false;
+      if (!zoneSplitter) {
+        result = false;
+      }
 
       if (result) {
         removeSupplyPlenum();
@@ -2616,7 +2614,7 @@ namespace model {
     }
 
     ZonePropertyUserViewFactorsBySurfaceName ThermalZone_Impl::getZonePropertyUserViewFactorsBySurfaceName() const {
-      ThermalZone thisThermalZone = getObject<ThermalZone>();
+      auto thisThermalZone = getObject<ThermalZone>();
       std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps =
         thisThermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
       if (!zoneProps.empty()) {

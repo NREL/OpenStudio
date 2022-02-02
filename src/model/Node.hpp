@@ -171,7 +171,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::Node_Impl ImplType;
+    using ImplType = detail::Node_Impl;
 
     explicit Node(std::shared_ptr<detail::Node_Impl> impl);
 
@@ -182,10 +182,10 @@ namespace model {
   };
 
   /** \relates Node */
-  typedef boost::optional<Node> OptionalNode;
+  using OptionalNode = boost::optional<Node>;
 
   /** \relates Node */
-  typedef std::vector<Node> NodeVector;
+  using NodeVector = std::vector<Node>;
 
 }  // namespace model
 }  // namespace openstudio

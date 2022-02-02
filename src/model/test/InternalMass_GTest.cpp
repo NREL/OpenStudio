@@ -56,6 +56,6 @@ TEST_F(ModelFixture, InternalMass_Clone) {
   InternalMass internalMass1(definition);
   SurfacePropertyConvectionCoefficients cc(internalMass1);
 
-  InternalMass internalMass2 = internalMass1.clone(model).cast<InternalMass>();
+  auto internalMass2 = internalMass1.clone(model).cast<InternalMass>();
   EXPECT_TRUE(internalMass2.surfacePropertyConvectionCoefficients());
 }

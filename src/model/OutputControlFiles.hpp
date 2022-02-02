@@ -189,7 +189,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputControlFiles_Impl ImplType;
+    using ImplType = detail::OutputControlFiles_Impl;
 
     explicit OutputControlFiles(std::shared_ptr<detail::OutputControlFiles_Impl> impl);
 
@@ -205,10 +205,10 @@ namespace model {
   };
 
   /** \relates OutputControlFiles*/
-  typedef boost::optional<OutputControlFiles> OptionalOutputControlFiles;
+  using OptionalOutputControlFiles = boost::optional<OutputControlFiles>;
 
   /** \relates OutputControlFiles*/
-  typedef std::vector<OutputControlFiles> OutputControlFilesVector;
+  using OutputControlFilesVector = std::vector<OutputControlFiles>;
 
 }  // namespace model
 }  // namespace openstudio

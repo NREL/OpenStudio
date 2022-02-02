@@ -212,12 +212,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_Nodes) {
     // Should have three branches: supply inlet, the one with the centralHP, supply outlet
     ASSERT_EQ(3u, idf_brlist.extensibleGroups().size());
     // Get the Central HP one
-    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
     WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
     // There should be only one equipment on the branch
     ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
     ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), central_hp.name());
 
@@ -236,12 +236,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_Nodes) {
     // Should have three branches: supply inlet, the one with the centralHP, supply outlet
     ASSERT_EQ(3u, idf_brlist.extensibleGroups().size());
     // Get the Central HP one
-    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
     WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
     // There should be only one equipment on the branch
     ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
     ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), central_hp.name());
 
@@ -261,12 +261,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_Nodes) {
     // Should have four branches: supply inlet, the one with the centralHP, a bypass, supply outlet
     ASSERT_EQ(4u, idf_brlist.extensibleGroups().size());
     // Get the Central HP one, which should be the second one
-    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
     WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
     // There should be only one equipment on the branch
     ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
     ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), central_hp.name());
 
@@ -340,7 +340,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentO
 
     // Should have created a Cooling Load one only
     ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
     ASSERT_EQ("PlantEquipmentOperation:CoolingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
     // Get the Operation Scheme
@@ -372,7 +372,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentO
 
     // Should have created a Heating Load one only
     ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
     ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
     // Get the Operation Scheme
@@ -404,7 +404,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentO
 
     // Should have created a Cooling Load one only
     ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    auto w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
     ASSERT_EQ("PlantEquipmentOperation:CoolingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
     // Get the Operation Scheme

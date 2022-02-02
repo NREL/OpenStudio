@@ -98,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::EnergyManagementSystemSensor_Impl ImplType;
+    using ImplType = detail::EnergyManagementSystemSensor_Impl;
 
     explicit EnergyManagementSystemSensor(std::shared_ptr<detail::EnergyManagementSystemSensor_Impl> impl);
 
@@ -114,10 +114,10 @@ namespace model {
   };
 
   /** \relates EnergyManagementSystemSensor*/
-  typedef boost::optional<EnergyManagementSystemSensor> OptionalEnergyManagementSystemSensor;
+  using OptionalEnergyManagementSystemSensor = boost::optional<EnergyManagementSystemSensor>;
 
   /** \relates EnergyManagementSystemSensor*/
-  typedef std::vector<EnergyManagementSystemSensor> EnergyManagementSystemSensorVector;
+  using EnergyManagementSystemSensorVector = std::vector<EnergyManagementSystemSensor>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -88,7 +88,6 @@ namespace model {
     SimulationControl_Impl::SimulationControl_Impl(const SimulationControl_Impl& other, Model_Impl* model, bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {}
 
-
     // return the parent object in the hierarchy
     boost::optional<ParentObject> SimulationControl_Impl::parent() const {
       // Simulation is highest level, there is no parent

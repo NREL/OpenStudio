@@ -578,7 +578,7 @@ namespace model {
     //@}
 
     /// @cond
-    typedef detail::Facility_Impl ImplType;
+    using ImplType = detail::Facility_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -591,7 +591,7 @@ namespace model {
   };
 
   /** \relates Facility*/
-  typedef boost::optional<Facility> OptionalFacility;
+  using OptionalFacility = boost::optional<Facility>;
 
 }  // namespace model
 }  // namespace openstudio

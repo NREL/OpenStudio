@@ -339,7 +339,7 @@ namespace model {
     }
 
     boost::optional<ThermalZone> ZoneHVACLowTemperatureRadiantElectric_Impl::thermalZone() const {
-      ModelObject thisObject = this->getObject<ModelObject>();
+      auto thisObject = this->getObject<ModelObject>();
       std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
       for (const auto& thermalZone : thermalZones) {
         std::vector<ModelObject> equipment = thermalZone.equipment();
@@ -428,7 +428,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACLowTemperatureRadiantElectric::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+    return {IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric};
   }
 
   std::vector<std::string> ZoneHVACLowTemperatureRadiantElectric::radiantSurfaceTypeValues() {

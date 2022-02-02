@@ -54,7 +54,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AvailabilityManager_Impl ImplType;
+    using ImplType = detail::AvailabilityManager_Impl;
 
     explicit AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> impl);
 
@@ -67,9 +67,9 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.AvailabilityManager");
   };
 
-  typedef boost::optional<AvailabilityManager> OptionalAvailabilityManager;
+  using OptionalAvailabilityManager = boost::optional<AvailabilityManager>;
 
-  typedef std::vector<AvailabilityManager> AvailabilityManagerVector;
+  using AvailabilityManagerVector = std::vector<AvailabilityManager>;
 
 }  // namespace model
 }  // namespace openstudio

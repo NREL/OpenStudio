@@ -91,7 +91,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::SizingPlant_Impl ImplType;
+    using ImplType = detail::SizingPlant_Impl;
 
     explicit SizingPlant(std::shared_ptr<detail::SizingPlant_Impl> impl);
 
@@ -106,10 +106,10 @@ namespace model {
   };
 
   /** \relates SizingPlant*/
-  typedef boost::optional<SizingPlant> OptionalSizingPlant;
+  using OptionalSizingPlant = boost::optional<SizingPlant>;
 
   /** \relates SizingPlant*/
-  typedef std::vector<SizingPlant> SizingPlantVector;
+  using SizingPlantVector = std::vector<SizingPlant>;
 
 }  // namespace model
 }  // namespace openstudio

@@ -51,7 +51,7 @@ namespace energyplus {
 
     // get extensible groups for spectral data fields
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
       OptionalDouble wavelength = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength);
       OptionalDouble transmittance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance);
       OptionalDouble frontReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance);

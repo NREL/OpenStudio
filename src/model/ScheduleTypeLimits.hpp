@@ -109,7 +109,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleTypeLimits_Impl ImplType;
+    using ImplType = detail::ScheduleTypeLimits_Impl;
 
     explicit ScheduleTypeLimits(std::shared_ptr<detail::ScheduleTypeLimits_Impl> impl);
 
@@ -123,10 +123,10 @@ namespace model {
   };
 
   /** \relates ScheduleTypeLimits */
-  typedef boost::optional<ScheduleTypeLimits> OptionalScheduleTypeLimits;
+  using OptionalScheduleTypeLimits = boost::optional<ScheduleTypeLimits>;
 
   /** \relates ScheduleTypeLimits */
-  typedef std::vector<ScheduleTypeLimits> ScheduleTypeLimitsVector;
+  using ScheduleTypeLimitsVector = std::vector<ScheduleTypeLimits>;
 
   /** Returns true if candidate is compatible with parentLimits, that is, if it is the same
  *  type and has bounds that are as least as strict as parentLimits's.

@@ -103,7 +103,7 @@ TEST_F(ModelFixture, Construction_Layers) {
   EXPECT_TRUE(testLayers[2] == interior);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(4), modelClone.objects().size());
   ConstructionVector constructions = modelClone.getModelObjects<Construction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
@@ -196,7 +196,7 @@ TEST_F(ModelFixture, CFactorUndergroundWallConstruction) {
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_CfactorUndergroundWall);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   constructions = modelClone.getModelObjects<CFactorUndergroundWallConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
@@ -216,7 +216,7 @@ TEST_F(ModelFixture, FFactorGroundFloorConstruction) {
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_FfactorGroundFloor);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   constructions = modelClone.getModelObjects<FFactorGroundFloorConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
@@ -236,7 +236,7 @@ TEST_F(ModelFixture, WindowDataFile) {
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_WindowDataFile);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   constructions = modelClone.getModelObjects<WindowDataFile>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
@@ -405,7 +405,7 @@ TEST_F(ModelFixture, Construction_SetUFactor) {
   Construction construction(*tempC);
   OptionalOpaqueMaterial tempM = construction.insulation();
   ASSERT_TRUE(tempM);
-  StandardOpaqueMaterial insulation = tempM->cast<StandardOpaqueMaterial>();
+  auto insulation = tempM->cast<StandardOpaqueMaterial>();
   // should not be able to make insulation thickness go < 0
   double originalResistance = 1.0 / construction.thermalConductance().get();
   double insulationResistance = insulation.thermalResistance();

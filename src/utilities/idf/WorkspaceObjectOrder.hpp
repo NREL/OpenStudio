@@ -50,7 +50,7 @@ namespace detail {
   class UTILITIES_API WorkspaceObjectOrder_Impl : public ObjectOrderBase
   {
    public:
-    typedef std::function<boost::optional<WorkspaceObject>(const Handle&)> ObjectGetter;
+    using ObjectGetter = std::function<boost::optional<WorkspaceObject>(const Handle&)>;
 
     WorkspaceObjectOrder_Impl(const ObjectGetter& objectGetter);
 
@@ -151,7 +151,7 @@ namespace detail {
     virtual bool less_IddObjectType(IddObjectType left, IddObjectType right) const;
   };
 
-  typedef std::shared_ptr<WorkspaceObjectOrder_Impl> WorkspaceObjectOrder_ImplPtr;
+  using WorkspaceObjectOrder_ImplPtr = std::shared_ptr<WorkspaceObjectOrder_Impl>;
 }  // namespace detail
 
 class Workspace;  // forward declaration

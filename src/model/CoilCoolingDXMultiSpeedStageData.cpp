@@ -705,7 +705,7 @@ namespace model {
   }
 
   IddObjectType CoilCoolingDXMultiSpeedStageData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_MultiSpeed_StageData);
+    return {IddObjectType::OS_Coil_Cooling_DX_MultiSpeed_StageData};
   }
 
   boost::optional<double> CoilCoolingDXMultiSpeedStageData::grossRatedTotalCoolingCapacity() const {

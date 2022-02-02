@@ -102,7 +102,7 @@ namespace model {
    protected:
     Mixer(IddObjectType type, const Model& model);
 
-    typedef detail::Mixer_Impl ImplType;
+    using ImplType = detail::Mixer_Impl;
 
     friend class Model;
 
@@ -114,7 +114,7 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.Mixer");
   };
 
-  typedef boost::optional<Mixer> OptionalMixer;
+  using OptionalMixer = boost::optional<Mixer>;
 
 }  // namespace model
 

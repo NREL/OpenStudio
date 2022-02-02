@@ -104,14 +104,14 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterPVWatts_Clone) {
   inverter.setInverterEfficiency(0.99);
 
   // clone it into the same model
-  ElectricLoadCenterInverterPVWatts inverterClone = inverter.clone(model).cast<ElectricLoadCenterInverterPVWatts>();
+  auto inverterClone = inverter.clone(model).cast<ElectricLoadCenterInverterPVWatts>();
   ASSERT_FALSE(inverterClone.isInverterEfficiencyDefaulted());
   ASSERT_EQ(0.99, inverterClone.inverterEfficiency());
   ASSERT_TRUE(inverterClone.isDCToACSizeRatioDefaulted());
 
   // clone it into a different model
   Model model2;
-  ElectricLoadCenterInverterPVWatts inverterClone2 = inverter.clone(model).cast<ElectricLoadCenterInverterPVWatts>();
+  auto inverterClone2 = inverter.clone(model).cast<ElectricLoadCenterInverterPVWatts>();
   ASSERT_FALSE(inverterClone2.isInverterEfficiencyDefaulted());
   ASSERT_EQ(0.99, inverterClone2.inverterEfficiency());
   ASSERT_TRUE(inverterClone2.isDCToACSizeRatioDefaulted());

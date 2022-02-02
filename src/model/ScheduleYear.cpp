@@ -77,7 +77,7 @@ namespace model {
     }
 
     std::vector<double> ScheduleYear_Impl::values() const {
-      return DoubleVector();
+      return {};
     }
 
     bool ScheduleYear_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {

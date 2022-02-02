@@ -107,7 +107,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilCoolingDX_Impl ImplType;
+    using ImplType = detail::CoilCoolingDX_Impl;
 
     explicit CoilCoolingDX(std::shared_ptr<detail::CoilCoolingDX_Impl> impl);
 
@@ -121,10 +121,10 @@ namespace model {
   };
 
   /** \relates CoilCoolingDX*/
-  typedef boost::optional<CoilCoolingDX> OptionalCoilCoolingDX;
+  using OptionalCoilCoolingDX = boost::optional<CoilCoolingDX>;
 
   /** \relates CoilCoolingDX*/
-  typedef std::vector<CoilCoolingDX> CoilCoolingDXVector;
+  using CoilCoolingDXVector = std::vector<CoilCoolingDX>;
 
 }  // namespace model
 }  // namespace openstudio

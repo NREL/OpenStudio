@@ -110,7 +110,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleDay_Impl ImplType;
+    using ImplType = detail::ScheduleDay_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -125,10 +125,10 @@ namespace model {
   };
 
   /** \relates ScheduleDay*/
-  typedef boost::optional<ScheduleDay> OptionalScheduleDay;
+  using OptionalScheduleDay = boost::optional<ScheduleDay>;
 
   /** \relates ScheduleDay*/
-  typedef std::vector<ScheduleDay> ScheduleDayVector;
+  using ScheduleDayVector = std::vector<ScheduleDay>;
 
 }  // namespace model
 }  // namespace openstudio

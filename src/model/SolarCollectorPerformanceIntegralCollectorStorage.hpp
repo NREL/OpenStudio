@@ -215,7 +215,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl ImplType;
+    using ImplType = detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl;
 
     explicit SolarCollectorPerformanceIntegralCollectorStorage(const Model& model);
 
@@ -233,10 +233,10 @@ namespace model {
   };
 
   /** \relates SolarCollectorPerformanceIntegralCollectorStorage*/
-  typedef boost::optional<SolarCollectorPerformanceIntegralCollectorStorage> OptionalSolarCollectorPerformanceIntegralCollectorStorage;
+  using OptionalSolarCollectorPerformanceIntegralCollectorStorage = boost::optional<SolarCollectorPerformanceIntegralCollectorStorage>;
 
   /** \relates SolarCollectorPerformanceIntegralCollectorStorage*/
-  typedef std::vector<SolarCollectorPerformanceIntegralCollectorStorage> SolarCollectorPerformanceIntegralCollectorStorageVector;
+  using SolarCollectorPerformanceIntegralCollectorStorageVector = std::vector<SolarCollectorPerformanceIntegralCollectorStorage>;
 
 }  // namespace model
 }  // namespace openstudio

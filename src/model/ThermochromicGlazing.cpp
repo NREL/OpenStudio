@@ -164,62 +164,62 @@ namespace model {
       return true;
     }
 
-    bool ThermochromicGlazing_Impl::setThermalConductivity(double value) {
+    bool ThermochromicGlazing_Impl::setThermalConductivity(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setThermalConductance(double value) {
+    bool ThermochromicGlazing_Impl::setThermalConductance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setThermalResistivity(double value) {
+    bool ThermochromicGlazing_Impl::setThermalResistivity(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setThermalResistance(double value) {
+    bool ThermochromicGlazing_Impl::setThermalResistance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setThermalTransmittance(double value) {
+    bool ThermochromicGlazing_Impl::setThermalTransmittance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setThermalAbsorptance(double value) {
+    bool ThermochromicGlazing_Impl::setThermalAbsorptance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setThermalReflectance(double value) {
+    bool ThermochromicGlazing_Impl::setThermalReflectance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setSolarTransmittance(double value) {
+    bool ThermochromicGlazing_Impl::setSolarTransmittance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setSolarAbsorptance(double value) {
+    bool ThermochromicGlazing_Impl::setSolarAbsorptance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setSolarReflectance(double value) {
+    bool ThermochromicGlazing_Impl::setSolarReflectance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setVisibleTransmittance(double value) {
+    bool ThermochromicGlazing_Impl::setVisibleTransmittance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setVisibleAbsorptance(double value) {
+    bool ThermochromicGlazing_Impl::setVisibleAbsorptance(double /*value*/) {
       return false;
     }
 
-    bool ThermochromicGlazing_Impl::setVisibleReflectance(double value) {
+    bool ThermochromicGlazing_Impl::setVisibleReflectance(double /*value*/) {
       return false;
     }
 
     std::vector<Glazing> ThermochromicGlazing_Impl::mf_glazings() const {
       GlazingVector result;
       for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
-        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        auto group = idfGroup.cast<ModelExtensibleGroup>();
         OptionalWorkspaceObject owo = group.getTarget(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::WindowMaterialGlazingName);
         if (owo) {
           OptionalGlazing og = owo->optionalCast<Glazing>();
@@ -251,7 +251,7 @@ namespace model {
   }
 
   IddObjectType ThermochromicGlazing::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic);
+    return {IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic};
   }
 
   /// @cond

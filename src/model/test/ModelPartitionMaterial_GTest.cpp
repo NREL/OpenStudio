@@ -70,7 +70,7 @@ TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Constructors) {
   EXPECT_TRUE(airWallMaterial.iddObject().type() == IddObjectType::OS_Material_AirWall);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   airWallMaterials = modelClone.getModelObjects<AirWallMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), airWallMaterials.size());
@@ -90,7 +90,7 @@ TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Construc
   EXPECT_TRUE(infraredTransparentMaterial.iddObject().type() == IddObjectType::OS_Material_InfraredTransparent);
 
   // construct by clone
-  Model modelClone = model.clone().cast<Model>();
+  auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   infraredTransparentMaterials = modelClone.getModelObjects<InfraredTransparentMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), infraredTransparentMaterials.size());

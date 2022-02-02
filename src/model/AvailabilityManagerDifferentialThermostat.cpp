@@ -141,7 +141,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerDifferentialThermostat::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManager_DifferentialThermostat);
+    return {IddObjectType::OS_AvailabilityManager_DifferentialThermostat};
   }
 
   boost::optional<Node> AvailabilityManagerDifferentialThermostat::hotNode() const {

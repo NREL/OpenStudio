@@ -57,7 +57,6 @@ namespace model {
 
     SetpointManager_Impl::SetpointManager_Impl(IddObjectType type, Model_Impl* model) : HVACComponent_Impl(type, model) {}
 
-
     const std::vector<std::string>& SetpointManager_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;

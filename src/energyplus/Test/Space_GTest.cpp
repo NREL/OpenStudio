@@ -212,11 +212,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   ASSERT_EQ(1U, idf_spaceList1.extensibleGroups().size());
   ASSERT_EQ(1U, idf_spaceList2.extensibleGroups().size());
 
-  WorkspaceExtensibleGroup eg_spaceList1 = idf_spaceList1.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto eg_spaceList1 = idf_spaceList1.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(eg_spaceList1.getString(SpaceListExtensibleFields::SpaceName));
   EXPECT_EQ(space1.name().get(), eg_spaceList1.getString(SpaceListExtensibleFields::SpaceName).get());
 
-  WorkspaceExtensibleGroup eg_spaceList2 = idf_spaceList2.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  auto eg_spaceList2 = idf_spaceList2.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(eg_spaceList2.getString(SpaceListExtensibleFields::SpaceName));
   EXPECT_EQ(space2.name().get(), eg_spaceList2.getString(SpaceListExtensibleFields::SpaceName).get());
 

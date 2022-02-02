@@ -113,7 +113,7 @@ TEST_F(ModelFixture, ExteriorFuelEquipment_SettersGetters) {
   EXPECT_EQ("NaturalGas", fuelEq.fuelType());
 
   // Facility
-  Facility facility = model.getUniqueModelObject<Facility>();
+  auto facility = model.getUniqueModelObject<Facility>();
   EXPECT_EQ(facility.handle(), fuelEq.facility().handle());
 }
 

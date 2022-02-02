@@ -133,7 +133,7 @@ namespace energyplus {
       }
 
       for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
-        WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+        auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
         boost::optional<WorkspaceObject> fromTarget =
           workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurface);

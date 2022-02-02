@@ -251,7 +251,6 @@ namespace contam {
 
   PlrOrf::PlrOrf(const PlrOrf& other) : m_impl(other.m_impl) {}
 
-
   PlrOrf& PlrOrf::operator=(const PlrOrf& other) {
     m_impl = other.m_impl;
     return *this;
@@ -425,7 +424,6 @@ namespace contam {
       new detail::PlrLeakImpl(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP))) {}
 
   PlrLeak::PlrLeak(const PlrLeak& other) : m_impl(other.m_impl) {}
-
 
   PlrLeak& PlrLeak::operator=(const PlrLeak& other) {
     m_impl = other.m_impl;
@@ -624,7 +622,6 @@ namespace contam {
                      std::string pres, std::string area1, std::string area2, std::string area3, int u_A1, int u_A2, int u_A3, int u_dP)
     : PlrLeak(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP) {}
 
-
   PlrLeak2::PlrLeak2() : PlrLeak() {}
 
   PlrLeak2::PlrLeak2(int nr, int icon, std::string name, std::string desc) : PlrLeak(nr, icon, name, desc) {}
@@ -644,7 +641,6 @@ namespace contam {
                      std::string pres, std::string area2)
     : PlrLeak(0, icon, name, desc, lam, turb, expt, coef, pres, "0.0", area2, "0.0", 0, 0, 0, 0) {}
 
-
   PlrLeak3::PlrLeak3() : PlrLeak() {}
 
   PlrLeak3::PlrLeak3(int nr, int icon, std::string name, std::string desc) : PlrLeak(nr, icon, name, desc) {}
@@ -656,7 +652,6 @@ namespace contam {
   PlrLeak3::PlrLeak3(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string coef,
                      std::string pres, std::string area1, std::string area2, std::string area3, int u_A1, int u_A2, int u_A3, int u_dP)
     : PlrLeak(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP) {}
-
 
   PlrConn::PlrConn() : m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl)) {}
 
@@ -671,7 +666,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::PlrConnImpl>(new detail::PlrConnImpl(nr, icon, name, desc, lam, turb, expt, area, coef, u_A))) {}
 
   PlrConn::PlrConn(const PlrConn& other) : m_impl(other.m_impl) {}
-
 
   PlrConn& PlrConn::operator=(const PlrConn& other) {
     m_impl = other.m_impl;
@@ -811,7 +805,6 @@ namespace contam {
 
   PlrGeneral::PlrGeneral(const PlrGeneral& other) : m_impl(other.m_impl) {}
 
-
   PlrGeneral& PlrGeneral::operator=(const PlrGeneral& other) {
     m_impl = other.m_impl;
     return *this;
@@ -915,7 +908,6 @@ namespace contam {
   PlrQcn::PlrQcn(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt)
     : PlrGeneral(nr, icon, name, desc, lam, turb, expt) {}
 
-
   PlrFcn::PlrFcn() : PlrGeneral() {}
 
   PlrFcn::PlrFcn(int nr, int icon, std::string name, std::string desc) : PlrGeneral(nr, icon, name, desc) {}
@@ -925,7 +917,6 @@ namespace contam {
 
   PlrFcn::PlrFcn(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt)
     : PlrGeneral(nr, icon, name, desc, lam, turb, expt) {}
-
 
   PlrTest1::PlrTest1() : m_impl(std::shared_ptr<detail::PlrTest1Impl>(new detail::PlrTest1Impl)) {}
 
@@ -948,7 +939,6 @@ namespace contam {
     : PlrTest1(0, icon, name, desc, lam, turb, expt, dP, Flow, 0, 0) {}
 
   PlrTest1::PlrTest1(const PlrTest1& other) : m_impl(other.m_impl) {}
-
 
   PlrTest1& PlrTest1::operator=(const PlrTest1& other) {
     m_impl = other.m_impl;
@@ -1099,7 +1089,6 @@ namespace contam {
       new detail::PlrTest2Impl(nr, icon, name, desc, lam, turb, expt, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
 
   PlrTest2::PlrTest2(const PlrTest2& other) : m_impl(other.m_impl) {}
-
 
   PlrTest2& PlrTest2::operator=(const PlrTest2& other) {
     m_impl = other.m_impl;
@@ -1289,7 +1278,6 @@ namespace contam {
 
   PlrCrack::PlrCrack(const PlrCrack& other) : m_impl(other.m_impl) {}
 
-
   PlrCrack& PlrCrack::operator=(const PlrCrack& other) {
     m_impl = other.m_impl;
     return *this;
@@ -1439,7 +1427,6 @@ namespace contam {
   }
 
   PlrStair::PlrStair(const PlrStair& other) : m_impl(other.m_impl) {}
-
 
   PlrStair& PlrStair::operator=(const PlrStair& other) {
     m_impl = other.m_impl;
@@ -1610,7 +1597,6 @@ namespace contam {
       new detail::PlrShaftImpl(nr, icon, name, desc, lam, turb, expt, Ht, area, perim, rough, u_A, u_D, u_P, u_R))) {}
 
   PlrShaft::PlrShaft(const PlrShaft& other) : m_impl(other.m_impl) {}
-
 
   PlrShaft& PlrShaft::operator=(const PlrShaft& other) {
     m_impl = other.m_impl;
@@ -1799,7 +1785,6 @@ namespace contam {
 
   PlrBackDamper::PlrBackDamper(const PlrBackDamper& other) : m_impl(other.m_impl) {}
 
-
   PlrBackDamper& PlrBackDamper::operator=(const PlrBackDamper& other) {
     m_impl = other.m_impl;
     return *this;
@@ -1928,7 +1913,6 @@ namespace contam {
                  std::string xn)
     : PlrBackDamper(nr, icon, name, desc, lam, Cp, xp, Cn, xn) {}
 
-
   PlrBdf::PlrBdf() : PlrBackDamper() {}
 
   PlrBdf::PlrBdf(int nr, int icon, std::string name, std::string desc) : PlrBackDamper(nr, icon, name, desc) {}
@@ -1939,7 +1923,6 @@ namespace contam {
   PlrBdf::PlrBdf(int nr, int icon, std::string name, std::string desc, std::string lam, std::string Cp, std::string xp, std::string Cn,
                  std::string xn)
     : PlrBackDamper(nr, icon, name, desc, lam, Cp, xp, Cn, xn) {}
-
 
   QfrGeneral::QfrGeneral() : m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl)) {}
 
@@ -1953,7 +1936,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::QfrQuadraticImpl>(new detail::QfrQuadraticImpl(nr, icon, name, desc, a, b))) {}
 
   QfrGeneral::QfrGeneral(const QfrGeneral& other) : m_impl(other.m_impl) {}
-
 
   QfrGeneral& QfrGeneral::operator=(const QfrGeneral& other) {
     m_impl = other.m_impl;
@@ -2044,7 +2026,6 @@ namespace contam {
 
   QfrQab::QfrQab(int nr, int icon, std::string name, std::string desc, std::string a, std::string b) : QfrGeneral(nr, icon, name, desc, a, b) {}
 
-
   QfrFab::QfrFab() : QfrGeneral() {}
 
   QfrFab::QfrFab(int nr, int icon, std::string name, std::string desc) : QfrGeneral(nr, icon, name, desc) {}
@@ -2052,7 +2033,6 @@ namespace contam {
   QfrFab::QfrFab(int nr, int icon, std::string name, std::string desc, double a, double b) : QfrGeneral(nr, icon, name, desc, a, b) {}
 
   QfrFab::QfrFab(int nr, int icon, std::string name, std::string desc, std::string a, std::string b) : QfrGeneral(nr, icon, name, desc, a, b) {}
-
 
   QfrCrack::QfrCrack() : m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl)) {}
 
@@ -2068,7 +2048,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::QfrCrackImpl>(new detail::QfrCrackImpl(nr, icon, name, desc, a, b, length, width, depth, nB, u_L, u_W, u_D))) {}
 
   QfrCrack::QfrCrack(const QfrCrack& other) : m_impl(other.m_impl) {}
-
 
   QfrCrack& QfrCrack::operator=(const QfrCrack& other) {
     m_impl = other.m_impl;
@@ -2233,7 +2212,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::QfrTest2Impl>(new detail::QfrTest2Impl(nr, icon, name, desc, a, b, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
 
   QfrTest2::QfrTest2(const QfrTest2& other) : m_impl(other.m_impl) {}
-
 
   QfrTest2& QfrTest2::operator=(const QfrTest2& other) {
     m_impl = other.m_impl;
@@ -2410,7 +2388,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::AfeDorImpl>(new detail::AfeDorImpl(nr, icon, name, desc, lam, turb, expt, dTmin, ht, wd, cd, u_T, u_H, u_W))) {}
 
   AfeDor::AfeDor(const AfeDor& other) : m_impl(other.m_impl) {}
-
 
   AfeDor& AfeDor::operator=(const AfeDor& other) {
     m_impl = other.m_impl;
@@ -2592,7 +2569,6 @@ namespace contam {
 
   DrPl2::DrPl2(const DrPl2& other) : m_impl(other.m_impl) {}
 
-
   DrPl2& DrPl2::operator=(const DrPl2& other) {
     m_impl = other.m_impl;
     return *this;
@@ -2763,7 +2739,6 @@ namespace contam {
 
   AfeFlow::AfeFlow(const AfeFlow& other) : m_impl(other.m_impl) {}
 
-
   AfeFlow& AfeFlow::operator=(const AfeFlow& other) {
     m_impl = other.m_impl;
     return *this;
@@ -2849,7 +2824,6 @@ namespace contam {
 
   AfeCmf::AfeCmf(int nr, int icon, std::string name, std::string desc, std::string Flow, int u_F) : AfeFlow(nr, icon, name, desc, Flow, u_F) {}
 
-
   AfeCvf::AfeCvf() : AfeFlow() {}
 
   AfeCvf::AfeCvf(int nr, int icon, std::string name, std::string desc) : AfeFlow(nr, icon, name, desc) {}
@@ -2857,7 +2831,6 @@ namespace contam {
   AfeCvf::AfeCvf(int nr, int icon, std::string name, std::string desc, double Flow, int u_F) : AfeFlow(nr, icon, name, desc, Flow, u_F) {}
 
   AfeCvf::AfeCvf(int nr, int icon, std::string name, std::string desc, std::string Flow, int u_F) : AfeFlow(nr, icon, name, desc, Flow, u_F) {}
-
 
   AfeFan::AfeFan() : m_impl(std::shared_ptr<detail::AfeFanImpl>(new detail::AfeFanImpl)) {}
 
@@ -2876,7 +2849,6 @@ namespace contam {
       new detail::AfeFanImpl(nr, icon, name, desc, lam, turb, expt, rdens, fdf, sop, off, fpc, Sarea, u_Sa, data))) {}
 
   AfeFan::AfeFan(const AfeFan& other) : m_impl(other.m_impl) {}
-
 
   AfeFan& AfeFan::operator=(const AfeFan& other) {
     m_impl = other.m_impl;
@@ -3069,7 +3041,6 @@ namespace contam {
 
   AfeCsf::AfeCsf(const AfeCsf& other) : m_impl(other.m_impl) {}
 
-
   AfeCsf& AfeCsf::operator=(const AfeCsf& other) {
     m_impl = other.m_impl;
     return *this;
@@ -3158,14 +3129,12 @@ namespace contam {
   AfeFsp::AfeFsp(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
 
-
   AfeQsp::AfeQsp() : AfeCsf() {}
 
   AfeQsp::AfeQsp(int nr, int icon, std::string name, std::string desc) : AfeCsf(nr, icon, name, desc) {}
 
   AfeQsp::AfeQsp(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
-
 
   AfePsf::AfePsf() : AfeCsf() {}
 
@@ -3174,14 +3143,12 @@ namespace contam {
   AfePsf::AfePsf(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
 
-
   AfePsq::AfePsq() : AfeCsf() {}
 
   AfePsq::AfePsq(int nr, int icon, std::string name, std::string desc) : AfeCsf(nr, icon, name, desc) {}
 
   AfePsq::AfePsq(int nr, int icon, std::string name, std::string desc, int u_x, int u_y, std::vector<XyDataPoint> data)
     : AfeCsf(nr, icon, name, desc, u_x, u_y, data) {}
-
 
   AfeSup::AfeSup() : m_impl(std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl)) {}
 
@@ -3192,7 +3159,6 @@ namespace contam {
     : m_impl(std::shared_ptr<detail::AfeSupImpl>(new detail::AfeSupImpl(nr, icon, name, desc, sched, u_H, subelements))) {}
 
   AfeSup::AfeSup(const AfeSup& other) : m_impl(other.m_impl) {}
-
 
   AfeSup& AfeSup::operator=(const AfeSup& other) {
     m_impl = other.m_impl;

@@ -86,7 +86,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputDebuggingData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_DebuggingData);
+    return {IddObjectType::OS_Output_DebuggingData};
   }
 
   bool OutputDebuggingData::reportDebuggingData() const {

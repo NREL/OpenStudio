@@ -136,7 +136,7 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_clone) {
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
   ASSERT_TRUE(testObject.referenceNode());
 
-  SetpointManagerFollowSystemNodeTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowSystemNodeTemperature>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.referenceNode());
 
@@ -172,7 +172,7 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_customDataClone)
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
   ASSERT_TRUE(testObject.referenceNode());
 
-  SetpointManagerFollowSystemNodeTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowSystemNodeTemperature>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   EXPECT_FALSE(testObjectClone.referenceNode());
 

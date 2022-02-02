@@ -275,7 +275,7 @@ namespace model {
     bool setThermalZone(const ThermalZone& thermalZone);
 
     /// @cond
-    typedef detail::SizingZone_Impl ImplType;
+    using ImplType = detail::SizingZone_Impl;
 
     explicit SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl);
 
@@ -291,10 +291,10 @@ namespace model {
   };
 
   /** \relates SizingZone*/
-  typedef boost::optional<SizingZone> OptionalSizingZone;
+  using OptionalSizingZone = boost::optional<SizingZone>;
 
   /** \relates SizingZone*/
-  typedef std::vector<SizingZone> SizingZoneVector;
+  using SizingZoneVector = std::vector<SizingZone>;
 
 }  // namespace model
 }  // namespace openstudio

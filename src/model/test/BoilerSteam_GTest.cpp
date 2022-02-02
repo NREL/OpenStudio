@@ -191,7 +191,7 @@ TEST_F(ModelFixture, BoilerSteam_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  BoilerSteam testObjectClone = testObject.clone(m).cast<BoilerSteam>();
+  auto testObjectClone = testObject.clone(m).cast<BoilerSteam>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

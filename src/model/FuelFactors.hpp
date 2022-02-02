@@ -234,7 +234,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::FuelFactors_Impl ImplType;
+    using ImplType = detail::FuelFactors_Impl;
 
     explicit FuelFactors(std::shared_ptr<detail::FuelFactors_Impl> impl);
 
@@ -248,10 +248,10 @@ namespace model {
   };
 
   /** \relates FuelFactors*/
-  typedef boost::optional<FuelFactors> OptionalFuelFactors;
+  using OptionalFuelFactors = boost::optional<FuelFactors>;
 
   /** \relates FuelFactors*/
-  typedef std::vector<FuelFactors> FuelFactorsVector;
+  using FuelFactorsVector = std::vector<FuelFactors>;
 
 }  // namespace model
 }  // namespace openstudio

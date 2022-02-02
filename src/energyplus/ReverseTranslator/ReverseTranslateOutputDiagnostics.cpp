@@ -56,7 +56,7 @@ namespace energyplus {
 
     if (!keys.empty()) {
       // Instantiate an object of the class to store the values,
-      openstudio::model::OutputDiagnostics modelObject = m_model.getUniqueModelObject<OutputDiagnostics>();
+      auto modelObject = m_model.getUniqueModelObject<OutputDiagnostics>();
       modelObject.setKeys(keys);
       result = modelObject;
     }

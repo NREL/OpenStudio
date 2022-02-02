@@ -91,7 +91,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::StraightComponent_Impl ImplType;
+    using ImplType = detail::StraightComponent_Impl;
 
     explicit StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> impl);
 
@@ -101,9 +101,9 @@ namespace model {
     /// @endcond
   };
 
-  typedef boost::optional<StraightComponent> OptionalStraightComponent;
+  using OptionalStraightComponent = boost::optional<StraightComponent>;
 
-  typedef std::vector<StraightComponent> StraightComponentVector;
+  using StraightComponentVector = std::vector<StraightComponent>;
 
 }  // namespace model
 }  // namespace openstudio

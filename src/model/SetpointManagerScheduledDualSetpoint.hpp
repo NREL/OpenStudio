@@ -94,7 +94,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerScheduledDualSetpoint_Impl ImplType;
+    using ImplType = detail::SetpointManagerScheduledDualSetpoint_Impl;
 
     explicit SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl);
 
@@ -108,10 +108,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerScheduledDualSetpoint*/
-  typedef boost::optional<SetpointManagerScheduledDualSetpoint> OptionalSetpointManagerScheduledDualSetpoint;
+  using OptionalSetpointManagerScheduledDualSetpoint = boost::optional<SetpointManagerScheduledDualSetpoint>;
 
   /** \relates SetpointManagerScheduledDualSetpoint*/
-  typedef std::vector<SetpointManagerScheduledDualSetpoint> SetpointManagerScheduledDualSetpointVector;
+  using SetpointManagerScheduledDualSetpointVector = std::vector<SetpointManagerScheduledDualSetpoint>;
 
 }  // namespace model
 }  // namespace openstudio

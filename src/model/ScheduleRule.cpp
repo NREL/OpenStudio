@@ -67,7 +67,6 @@ namespace model {
     ScheduleRule_Impl::ScheduleRule_Impl(const ScheduleRule_Impl& other, Model_Impl* model, bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {}
 
-
     boost::optional<ParentObject> ScheduleRule_Impl::parent() const {
       return this->scheduleRuleset();
     }

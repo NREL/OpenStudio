@@ -79,7 +79,7 @@ namespace model {
   }
 
   IddObjectType PlantEquipmentOperationOutdoorDewpoint::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpoint);
+    return {IddObjectType::OS_PlantEquipmentOperation_OutdoorDewpoint};
   }
 
   /// @cond

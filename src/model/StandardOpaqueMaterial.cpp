@@ -341,7 +341,7 @@ namespace model {
   }
 
   IddObjectType StandardOpaqueMaterial::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material);
+    return {IddObjectType::OS_Material};
   }
 
   double StandardOpaqueMaterial::thermalConductivity() const {

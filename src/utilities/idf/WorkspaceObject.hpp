@@ -165,7 +165,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject
   //@}
 
  protected:
-  typedef detail::WorkspaceObject_Impl ImplType;
+  using ImplType = detail::WorkspaceObject_Impl;
 
   friend class Workspace;
   friend class detail::Workspace_Impl;
@@ -183,10 +183,10 @@ class UTILITIES_API WorkspaceObject : public IdfObject
 };
 
 /** \relates WorkspaceObject */
-typedef boost::optional<WorkspaceObject> OptionalWorkspaceObject;
+using OptionalWorkspaceObject = boost::optional<WorkspaceObject>;
 
 /** \relates WorkspaceObject */
-typedef std::vector<WorkspaceObject> WorkspaceObjectVector;
+using WorkspaceObjectVector = std::vector<WorkspaceObject>;
 
 /** \relates WorkspaceObject
  *  Outputs WorkspaceObject as (IDF) text. */

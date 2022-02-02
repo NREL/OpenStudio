@@ -113,7 +113,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::YearDescription_Impl ImplType;
+    using ImplType = detail::YearDescription_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -129,10 +129,10 @@ namespace model {
   };
 
   /** \relates YearDescription*/
-  typedef boost::optional<YearDescription> OptionalYearDescription;
+  using OptionalYearDescription = boost::optional<YearDescription>;
 
   /** \relates YearDescription*/
-  typedef std::vector<YearDescription> YearDescriptionVector;
+  using YearDescriptionVector = std::vector<YearDescription>;
 
 }  // namespace model
 }  // namespace openstudio

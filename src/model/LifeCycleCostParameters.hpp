@@ -312,7 +312,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::LifeCycleCostParameters_Impl ImplType;
+    using ImplType = detail::LifeCycleCostParameters_Impl;
 
     friend class Model;
     friend class IdfObject;
@@ -327,10 +327,10 @@ namespace model {
   };
 
   /** \relates LifeCycleCostParameters */
-  typedef boost::optional<LifeCycleCostParameters> OptionalLifeCycleCostParameters;
+  using OptionalLifeCycleCostParameters = boost::optional<LifeCycleCostParameters>;
 
   /** \relates LifeCycleCostParameters */
-  typedef std::vector<LifeCycleCostParameters> LifeCycleCostParametersVector;
+  using LifeCycleCostParametersVector = std::vector<LifeCycleCostParameters>;
 
 }  // namespace model
 }  // namespace openstudio

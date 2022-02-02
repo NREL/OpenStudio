@@ -108,7 +108,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl ImplType;
+    using ImplType = detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl;
 
     explicit SolarCollectorFlatPlatePhotovoltaicThermal(std::shared_ptr<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl> impl);
 
@@ -122,10 +122,10 @@ namespace model {
   };
 
   /** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
-  typedef boost::optional<SolarCollectorFlatPlatePhotovoltaicThermal> OptionalSolarCollectorFlatPlatePhotovoltaicThermal;
+  using OptionalSolarCollectorFlatPlatePhotovoltaicThermal = boost::optional<SolarCollectorFlatPlatePhotovoltaicThermal>;
 
   /** \relates SolarCollectorFlatPlatePhotovoltaicThermal*/
-  typedef std::vector<SolarCollectorFlatPlatePhotovoltaicThermal> SolarCollectorFlatPlatePhotovoltaicThermalVector;
+  using SolarCollectorFlatPlatePhotovoltaicThermalVector = std::vector<SolarCollectorFlatPlatePhotovoltaicThermal>;
 
 }  // namespace model
 }  // namespace openstudio

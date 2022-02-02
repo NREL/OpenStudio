@@ -56,18 +56,18 @@ namespace detail {
     ForwardPointer() : fieldIndex(0) {}
     ForwardPointer(unsigned i, const Handle& h) : fieldIndex(i), targetHandle(h) {}
   };
-  typedef std::set<ForwardPointer, FieldIndexLess<ForwardPointer>> ForwardPointerSet;
+  using ForwardPointerSet = std::set<ForwardPointer, FieldIndexLess<ForwardPointer>>;
 
   struct UTILITIES_API SourceData
   {
-    typedef ForwardPointer pointer_type;
-    typedef ForwardPointerSet pointer_set;
+    using pointer_type = ForwardPointer;
+    using pointer_set = ForwardPointerSet;
 
     pointer_set pointers;
 
     SourceData() {}
   };
-  typedef boost::optional<SourceData> OptionalSourceData;
+  using OptionalSourceData = boost::optional<SourceData>;
 
   struct UTILITIES_API ReversePointer
   {
@@ -87,16 +87,16 @@ namespace detail {
       }
     }
   };
-  typedef std::set<ReversePointer, ReversePointerLess> ReversePointerSet;
+  using ReversePointerSet = std::set<ReversePointer, ReversePointerLess>;
 
   struct UTILITIES_API TargetData
   {
-    typedef ReversePointer pointer_type;
-    typedef ReversePointerSet pointer_set;
+    using pointer_type = ReversePointer;
+    using pointer_set = ReversePointerSet;
 
     pointer_set reversePointers;
   };
-  typedef boost::optional<TargetData> OptionalTargetData;
+  using OptionalTargetData = boost::optional<TargetData>;
 
   template <class T>
   typename T::pointer_set::iterator getIteratorAtFieldIndex(typename T::pointer_set& pointerSet, unsigned fieldIndex) {
@@ -357,10 +357,10 @@ namespace detail {
   };
 
   /** \relates WorkspaceObject_Impl */
-  typedef std::shared_ptr<WorkspaceObject_Impl> WorkspaceObject_ImplPtr;
+  using WorkspaceObject_ImplPtr = std::shared_ptr<WorkspaceObject_Impl>;
 
   /** \relates WorkspaceObject_Impl */
-  typedef std::vector<WorkspaceObject_ImplPtr> WorkspaceObject_ImplPtrVector;
+  using WorkspaceObject_ImplPtrVector = std::vector<WorkspaceObject_ImplPtr>;
 
 }  // namespace detail
 

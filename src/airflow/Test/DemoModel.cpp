@@ -186,7 +186,7 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
 
   // add the air system
   openstudio::model::Loop loop = openstudio::model::addSystemType3(model);
-  openstudio::model::AirLoopHVAC airLoop = loop.cast<openstudio::model::AirLoopHVAC>();
+  auto airLoop = loop.cast<openstudio::model::AirLoopHVAC>();
   airLoop.addBranchForZone(libraryZone);
   airLoop.addBranchForZone(office1Zone);
   airLoop.addBranchForZone(office2Zone);
@@ -197,7 +197,7 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
     break;
   }
   if (!setpointManager) {
-    return boost::optional<openstudio::model::Model>();
+    return {};
   }
   setpointManager->setControlZone(libraryZone);
 

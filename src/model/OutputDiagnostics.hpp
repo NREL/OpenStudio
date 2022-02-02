@@ -86,7 +86,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputDiagnostics_Impl ImplType;
+    using ImplType = detail::OutputDiagnostics_Impl;
 
     explicit OutputDiagnostics(std::shared_ptr<detail::OutputDiagnostics_Impl> impl);
 
@@ -102,10 +102,10 @@ namespace model {
   };
 
   /** \relates OutputDiagnostics*/
-  typedef boost::optional<OutputDiagnostics> OptionalOutputDiagnostics;
+  using OptionalOutputDiagnostics = boost::optional<OutputDiagnostics>;
 
   /** \relates OutputDiagnostics*/
-  typedef std::vector<OutputDiagnostics> OutputDiagnosticsVector;
+  using OutputDiagnosticsVector = std::vector<OutputDiagnostics>;
 
 }  // namespace model
 }  // namespace openstudio

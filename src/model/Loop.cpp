@@ -106,7 +106,9 @@ namespace model {
       }
 
       boost::optional<HVACComponent> prev;
-      if (visited.size() >= 2u) prev = visited.rbegin()[1];
+      if (visited.size() >= 2u) {
+        prev = visited.rbegin()[1];
+      }
 
       std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(prev);
 
@@ -160,18 +162,18 @@ namespace model {
     }
 
     std::vector<ModelObject> Loop_Impl::children() const {
-      return std::vector<ModelObject>();
+      return {};
     }
 
-    std::vector<ModelObject> Loop_Impl::supplyComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
-                                                         openstudio::IddObjectType type) const {
+    std::vector<ModelObject> Loop_Impl::supplyComponents(std::vector<HVACComponent> /*inletComps*/, std::vector<HVACComponent> /*outletComps*/,
+                                                         openstudio::IddObjectType /*type*/) const {
       LOG(Warn, "supplyComponents method for " << briefDescription() << " is not implemented to take multiple inlet and outlet components");
-      return std::vector<ModelObject>();
+      return {};
     }
 
-    std::vector<ModelObject> Loop_Impl::demandComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
-                                                         openstudio::IddObjectType type) const {
-      return std::vector<ModelObject>();
+    std::vector<ModelObject> Loop_Impl::demandComponents(std::vector<HVACComponent> /*inletComps*/, std::vector<HVACComponent> /*outletComps*/,
+                                                         openstudio::IddObjectType /*type*/) const {
+      return {};
     }
 
     boost::optional<ModelObject> Loop_Impl::supplyInletNodeAsModelObject() {
@@ -200,7 +202,9 @@ namespace model {
     void findModelObjects(const HVACComponent& sink, std::vector<HVACComponent>& visited, std::vector<HVACComponent>& paths,
                           bool isDemandComponents) {
       boost::optional<HVACComponent> prev;
-      if (visited.size() >= 2u) prev = visited.rbegin()[1];
+      if (visited.size() >= 2u) {
+        prev = visited.rbegin()[1];
+      }
 
       std::vector<HVACComponent> nodes = visited.back().getImpl<HVACComponent_Impl>()->edges(prev);
 
@@ -289,7 +293,7 @@ namespace model {
       if (t_supplyOutletNodes.size() > 1u) {
         Duplicate<ModelObject> pred;
         auto it = std::remove_if(result.begin(), result.end(), std::ref(pred));
-        return std::vector<ModelObject>(result.begin(), it);
+        return {result.begin(), it};
       } else {
         return result;
       }
@@ -310,7 +314,7 @@ namespace model {
       if (t_demandInletNodes.size() > 1u) {
         Duplicate<ModelObject> pred;
         auto it = std::remove_if(result.begin(), result.end(), std::ref(pred));
-        return std::vector<ModelObject>(result.begin(), it);
+        return {result.begin(), it};
       } else {
         return result;
       }
@@ -361,7 +365,7 @@ namespace model {
         return demandComponents(inletComp, outletComp, type);
       }
 
-      return std::vector<ModelObject>();
+      return {};
     }
 
     // default implementation does nothing.

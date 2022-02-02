@@ -59,7 +59,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationCoolingLoad_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationCoolingLoad_Impl;
 
     explicit PlantEquipmentOperationCoolingLoad(std::shared_ptr<detail::PlantEquipmentOperationCoolingLoad_Impl> impl);
 
@@ -73,10 +73,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationCoolingLoad*/
-  typedef boost::optional<PlantEquipmentOperationCoolingLoad> OptionalPlantEquipmentOperationCoolingLoad;
+  using OptionalPlantEquipmentOperationCoolingLoad = boost::optional<PlantEquipmentOperationCoolingLoad>;
 
   /** \relates PlantEquipmentOperationCoolingLoad*/
-  typedef std::vector<PlantEquipmentOperationCoolingLoad> PlantEquipmentOperationCoolingLoadVector;
+  using PlantEquipmentOperationCoolingLoadVector = std::vector<PlantEquipmentOperationCoolingLoad>;
 
 }  // namespace model
 }  // namespace openstudio

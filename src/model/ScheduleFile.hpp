@@ -136,7 +136,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleFile_Impl ImplType;
+    using ImplType = detail::ScheduleFile_Impl;
 
     explicit ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl);
 
@@ -149,10 +149,10 @@ namespace model {
   };
 
   /** \relates ScheduleFile*/
-  typedef boost::optional<ScheduleFile> OptionalScheduleFile;
+  using OptionalScheduleFile = boost::optional<ScheduleFile>;
 
   /** \relates ScheduleFile*/
-  typedef std::vector<ScheduleFile> ScheduleFileVector;
+  using ScheduleFileVector = std::vector<ScheduleFile>;
 
 }  // namespace model
 }  // namespace openstudio

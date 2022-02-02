@@ -45,7 +45,6 @@ namespace detail {
       m_skipEnergyPlusPreprocess(false),
       m_cleanup(true) {}
 
-
   void RunOptions_Impl::onUpdate() {
     this->onChange.nano_emit();
   }
@@ -273,7 +272,6 @@ std::string CustomOutputAdapter::options() const {
 RunOptions::RunOptions() : m_impl(std::shared_ptr<detail::RunOptions_Impl>(new detail::RunOptions_Impl())) {
   OS_ASSERT(getImpl<detail::RunOptions_Impl>());
 }
-
 
 boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
   boost::optional<RunOptions> result;

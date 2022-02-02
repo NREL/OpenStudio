@@ -77,7 +77,7 @@ TEST_F(ModelFixture, CoolingTowerTwoSpeed_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
-  CoolingTowerTwoSpeed testObjectClone = testObject.clone(m).cast<CoolingTowerTwoSpeed>();
+  auto testObjectClone = testObject.clone(m).cast<CoolingTowerTwoSpeed>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));

@@ -230,7 +230,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::PlanarSurface_Impl ImplType;
+    using ImplType = detail::PlanarSurface_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -246,10 +246,10 @@ namespace model {
   };
 
   /** \relates PlanarSurface */
-  typedef boost::optional<PlanarSurface> OptionalPlanarSurface;
+  using OptionalPlanarSurface = boost::optional<PlanarSurface>;
 
   /** \relates PlanarSurface */
-  typedef std::vector<PlanarSurface> PlanarSurfaceVector;
+  using PlanarSurfaceVector = std::vector<PlanarSurface>;
 
 }  // namespace model
 }  // namespace openstudio

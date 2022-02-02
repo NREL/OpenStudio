@@ -79,7 +79,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirflowNetworkZoneFields::VentilationControlZoneTemperatureSetpointScheduleName) != e) {
         result.push_back(ScheduleTypeKey("AirflowNetworkZone", "Ventilation Control Zone Temperature Setpoint"));
       }
@@ -338,7 +339,7 @@ namespace model {
   }
 
   IddObjectType AirflowNetworkZone::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AirflowNetworkZone);
+    return {IddObjectType::OS_AirflowNetworkZone};
   }
 
   std::vector<std::string> AirflowNetworkZone::ventilationControlModeValues() {

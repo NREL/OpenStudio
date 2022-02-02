@@ -254,7 +254,6 @@ Plane::Plane(double a, double b, double c, double d) : m_a(a), m_b(b), m_c(c), m
   OS_ASSERT(fabs(1.0 - length) <= tol);
 }
 
-
 Vector3d Plane::outwardNormal() const {
   return Vector3d(m_a, m_b, m_c);
 }

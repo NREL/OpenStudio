@@ -165,7 +165,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SiteGroundReflectance_Impl ImplType;
+    using ImplType = detail::SiteGroundReflectance_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -181,10 +181,10 @@ namespace model {
   };
 
   /** \relates SiteGroundReflectance*/
-  typedef boost::optional<SiteGroundReflectance> OptionalSiteGroundReflectance;
+  using OptionalSiteGroundReflectance = boost::optional<SiteGroundReflectance>;
 
   /** \relates SiteGroundReflectance*/
-  typedef std::vector<SiteGroundReflectance> SiteGroundReflectanceVector;
+  using SiteGroundReflectanceVector = std::vector<SiteGroundReflectance>;
 
 }  // namespace model
 }  // namespace openstudio

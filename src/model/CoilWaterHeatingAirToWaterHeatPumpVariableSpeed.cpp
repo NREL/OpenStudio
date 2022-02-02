@@ -559,7 +559,7 @@ namespace model {
   }
 
   IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
+    return {IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed};
   }
 
   int CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::nominalSpeedLevel() const {

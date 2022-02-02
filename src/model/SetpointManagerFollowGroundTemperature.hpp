@@ -100,7 +100,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::SetpointManagerFollowGroundTemperature_Impl ImplType;
+    using ImplType = detail::SetpointManagerFollowGroundTemperature_Impl;
 
     explicit SetpointManagerFollowGroundTemperature(std::shared_ptr<detail::SetpointManagerFollowGroundTemperature_Impl> impl);
 
@@ -114,10 +114,10 @@ namespace model {
   };
 
   /** \relates SetpointManagerFollowGroundTemperature*/
-  typedef boost::optional<SetpointManagerFollowGroundTemperature> OptionalSetpointManagerFollowGroundTemperature;
+  using OptionalSetpointManagerFollowGroundTemperature = boost::optional<SetpointManagerFollowGroundTemperature>;
 
   /** \relates SetpointManagerFollowGroundTemperature*/
-  typedef std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatureVector;
+  using SetpointManagerFollowGroundTemperatureVector = std::vector<SetpointManagerFollowGroundTemperature>;
 
 }  // namespace model
 }  // namespace openstudio

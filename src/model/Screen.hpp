@@ -183,7 +183,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Screen_Impl ImplType;
+    using ImplType = detail::Screen_Impl;
 
     explicit Screen(std::shared_ptr<detail::Screen_Impl> impl);
 
@@ -197,10 +197,10 @@ namespace model {
   };
 
   /** \relates Screen*/
-  typedef boost::optional<Screen> OptionalScreen;
+  using OptionalScreen = boost::optional<Screen>;
 
   /** \relates Screen*/
-  typedef std::vector<Screen> ScreenVector;
+  using ScreenVector = std::vector<Screen>;
 
 }  // namespace model
 }  // namespace openstudio

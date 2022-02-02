@@ -71,7 +71,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl;
 
     explicit PlantEquipmentOperationOutdoorRelativeHumidity(std::shared_ptr<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl> impl);
 
@@ -85,10 +85,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
-  typedef boost::optional<PlantEquipmentOperationOutdoorRelativeHumidity> OptionalPlantEquipmentOperationOutdoorRelativeHumidity;
+  using OptionalPlantEquipmentOperationOutdoorRelativeHumidity = boost::optional<PlantEquipmentOperationOutdoorRelativeHumidity>;
 
   /** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
-  typedef std::vector<PlantEquipmentOperationOutdoorRelativeHumidity> PlantEquipmentOperationOutdoorRelativeHumidityVector;
+  using PlantEquipmentOperationOutdoorRelativeHumidityVector = std::vector<PlantEquipmentOperationOutdoorRelativeHumidity>;
 
 }  // namespace model
 }  // namespace openstudio

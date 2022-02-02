@@ -84,7 +84,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerHighTemperatureTurnOn_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerHighTemperatureTurnOn_Impl;
 
     explicit AvailabilityManagerHighTemperatureTurnOn(std::shared_ptr<detail::AvailabilityManagerHighTemperatureTurnOn_Impl> impl);
 
@@ -98,10 +98,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerHighTemperatureTurnOn*/
-  typedef boost::optional<AvailabilityManagerHighTemperatureTurnOn> OptionalAvailabilityManagerHighTemperatureTurnOn;
+  using OptionalAvailabilityManagerHighTemperatureTurnOn = boost::optional<AvailabilityManagerHighTemperatureTurnOn>;
 
   /** \relates AvailabilityManagerHighTemperatureTurnOn*/
-  typedef std::vector<AvailabilityManagerHighTemperatureTurnOn> AvailabilityManagerHighTemperatureTurnOnVector;
+  using AvailabilityManagerHighTemperatureTurnOnVector = std::vector<AvailabilityManagerHighTemperatureTurnOn>;
 
 }  // namespace model
 }  // namespace openstudio

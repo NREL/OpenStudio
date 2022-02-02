@@ -319,7 +319,7 @@ TEST_F(ModelFixture, Schedule_Day_Clone) {
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleTypeLimits>().size());
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
 
-  ScheduleDay daySchedule2 = daySchedule.clone(model).cast<ScheduleDay>();
+  auto daySchedule2 = daySchedule.clone(model).cast<ScheduleDay>();
 
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleTypeLimits>().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());

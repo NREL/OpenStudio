@@ -168,10 +168,10 @@ class UTILITIES_API IddFile
 };
 
 /** \relates IddFile */
-typedef boost::optional<IddFile> OptionalIddFile;
+using OptionalIddFile = boost::optional<IddFile>;
 
 /** \relates IddFile */
-typedef std::vector<IddFile> IddFileVector;
+using IddFileVector = std::vector<IddFile>;
 
 /** \relates IddFile */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddFile& iddFile);

@@ -88,7 +88,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleBase_Impl ImplType;
+    using ImplType = detail::ScheduleBase_Impl;
 
     explicit ScheduleBase(std::shared_ptr<detail::ScheduleBase_Impl> impl);
 
@@ -105,10 +105,10 @@ namespace model {
   };
 
   /** \relates ScheduleBase*/
-  typedef boost::optional<ScheduleBase> OptionalScheduleBase;
+  using OptionalScheduleBase = boost::optional<ScheduleBase>;
 
   /** \relates ScheduleBase*/
-  typedef std::vector<ScheduleBase> ScheduleBaseVector;
+  using ScheduleBaseVector = std::vector<ScheduleBase>;
 
 }  // namespace model
 }  // namespace openstudio

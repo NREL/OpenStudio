@@ -68,7 +68,7 @@ namespace energyplus {
 
     if (reportDebuggingData || reportDuringWarmup) {
       // This is a Unique ModelObject
-      openstudio::model::OutputDebuggingData modelObject = m_model.getUniqueModelObject<OutputDebuggingData>();
+      auto modelObject = m_model.getUniqueModelObject<OutputDebuggingData>();
       modelObject.setReportDebuggingData(reportDebuggingData);
       modelObject.setReportDuringWarmup(reportDuringWarmup);
       result = modelObject;

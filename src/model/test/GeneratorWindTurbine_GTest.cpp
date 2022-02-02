@@ -157,12 +157,12 @@ TEST_F(ModelFixture, GeneratorWindTurbine_Clone) {
   generator.setAnnualLocalAverageWindSpeed(12.0);
 
   // clone it into the same model
-  GeneratorWindTurbine generatorClone = generator.clone(model).cast<GeneratorWindTurbine>();
+  auto generatorClone = generator.clone(model).cast<GeneratorWindTurbine>();
   ASSERT_TRUE(generatorClone.annualLocalAverageWindSpeed());
 
   // clone it into a different model
   Model model2;
-  GeneratorWindTurbine generatorClone2 = generator.clone(model2).cast<GeneratorWindTurbine>();
+  auto generatorClone2 = generator.clone(model2).cast<GeneratorWindTurbine>();
   ASSERT_TRUE(generatorClone2.annualLocalAverageWindSpeed());
 }
 

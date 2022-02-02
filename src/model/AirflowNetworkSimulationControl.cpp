@@ -86,7 +86,6 @@ namespace model {
                                                                                bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {}
 
-
     // return the parent object in the hierarchy
     boost::optional<ParentObject> AirflowNetworkSimulationControl_Impl::parent() const {
       // Simulation is highest level, there is no parent

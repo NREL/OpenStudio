@@ -92,7 +92,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ScheduleVariableInterval_Impl ImplType;
+    using ImplType = detail::ScheduleVariableInterval_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -105,10 +105,10 @@ namespace model {
   };
 
   /** \relates ScheduleVariableInterval*/
-  typedef boost::optional<ScheduleVariableInterval> OptionalScheduleVariableInterval;
+  using OptionalScheduleVariableInterval = boost::optional<ScheduleVariableInterval>;
 
   /** \relates ScheduleVariableInterval*/
-  typedef std::vector<ScheduleVariableInterval> ScheduleVariableIntervalVector;
+  using ScheduleVariableIntervalVector = std::vector<ScheduleVariableInterval>;
 
 }  // namespace model
 }  // namespace openstudio

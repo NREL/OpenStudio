@@ -483,7 +483,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingDXMultiSpeedStageData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_MultiSpeed_StageData);
+    return {IddObjectType::OS_Coil_Heating_DX_MultiSpeed_StageData};
   }
 
   boost::optional<double> CoilHeatingDXMultiSpeedStageData::grossRatedHeatingCapacity() const {

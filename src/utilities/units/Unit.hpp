@@ -262,7 +262,7 @@ class UTILITIES_API Unit
   //@}
  protected:
   /// @cond
-  typedef detail::Unit_Impl ImplType;
+  using ImplType = detail::Unit_Impl;
 
   explicit Unit(std::shared_ptr<detail::Unit_Impl> impl);
 
@@ -276,10 +276,10 @@ class UTILITIES_API Unit
 };
 
 /** \relates Unit*/
-typedef boost::optional<Unit> OptionalUnit;
+using OptionalUnit = boost::optional<Unit>;
 
 /** \relates Unit*/
-typedef std::vector<Unit> UnitVector;
+using UnitVector = std::vector<Unit>;
 
 /** Print u to a stream. Scale abbreviation, if any, is printed before prettyString (if
  *  non-empty) or standardString. */

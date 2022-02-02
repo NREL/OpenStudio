@@ -67,7 +67,7 @@ namespace model {
 
     // return the parent object in the hierarchy
     boost::optional<ParentObject> ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl::parent() const {
-      return boost::optional<ParentObject>();
+      return {};
     }
 
     // return any children objects in the hierarchy
@@ -158,7 +158,7 @@ namespace model {
   }
 
   IddObjectType ExternalInterfaceFunctionalMockupUnitExportToSchedule::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Schedule);
+    return {IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Schedule};
   }
 
   std::string ExternalInterfaceFunctionalMockupUnitExportToSchedule::fMUVariableName() const {

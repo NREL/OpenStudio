@@ -98,7 +98,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctSeriesPIUReheat) {
     terminal.reheatCoil();
     terminal.fan();
 
-    AirTerminalSingleDuctSeriesPIUReheat terminalClone = terminal.clone(m).cast<AirTerminalSingleDuctSeriesPIUReheat>();
+    auto terminalClone = terminal.clone(m).cast<AirTerminalSingleDuctSeriesPIUReheat>();
     ASSERT_NO_THROW(terminalClone.reheatCoil());
     ASSERT_NO_THROW(terminalClone.fan());
 

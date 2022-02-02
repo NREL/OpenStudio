@@ -125,11 +125,11 @@ class UTILITIES_API LoggerSingleton
   LogSink m_standardErrLogger;
 
   /// map of std::string to logger
-  typedef std::map<std::string, LoggerType, openstudio::IstringCompare> LoggerMapType;
+  using LoggerMapType = std::map<std::string, LoggerType, openstudio::IstringCompare>;
   LoggerMapType m_loggerMap;
 
   /// current sinks, kept here so don't destruct when LogSink wrapper goes out of scope
-  typedef std::set<boost::shared_ptr<LogSinkBackend>> SinkSetType;
+  using SinkSetType = std::set<boost::shared_ptr<LogSinkBackend>>;
   SinkSetType m_sinks;
 };
 
@@ -141,7 +141,7 @@ UTILITIES_TEMPLATE_EXT template class UTILITIES_API openstudio::Singleton<Logger
 
 #endif
 
-typedef openstudio::Singleton<LoggerSingleton> Logger;
+using Logger = openstudio::Singleton<LoggerSingleton>;
 }  // namespace openstudio
 
 #endif  // UTILITIES_CORE_LOGGER_HPP

@@ -41,7 +41,7 @@
 namespace openstudio {
 
 /// Matrix
-typedef boost::numeric::ublas::matrix<double> Matrix;
+using Matrix = boost::numeric::ublas::matrix<double>;
 
 //////////////////////////////////////////////////////////////////////////
 // Begin SWIG'able, copy and paste into Matrix.i

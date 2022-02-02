@@ -71,7 +71,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationOutdoorWetBulb_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationOutdoorWetBulb_Impl;
 
     explicit PlantEquipmentOperationOutdoorWetBulb(std::shared_ptr<detail::PlantEquipmentOperationOutdoorWetBulb_Impl> impl);
 
@@ -85,10 +85,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationOutdoorWetBulb*/
-  typedef boost::optional<PlantEquipmentOperationOutdoorWetBulb> OptionalPlantEquipmentOperationOutdoorWetBulb;
+  using OptionalPlantEquipmentOperationOutdoorWetBulb = boost::optional<PlantEquipmentOperationOutdoorWetBulb>;
 
   /** \relates PlantEquipmentOperationOutdoorWetBulb*/
-  typedef std::vector<PlantEquipmentOperationOutdoorWetBulb> PlantEquipmentOperationOutdoorWetBulbVector;
+  using PlantEquipmentOperationOutdoorWetBulbVector = std::vector<PlantEquipmentOperationOutdoorWetBulb>;
 
 }  // namespace model
 }  // namespace openstudio

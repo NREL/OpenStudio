@@ -175,7 +175,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PumpConstantSpeed_Impl ImplType;
+    using ImplType = detail::PumpConstantSpeed_Impl;
 
     explicit PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
 
@@ -191,10 +191,10 @@ namespace model {
   };
 
   /** \relates PumpConstantSpeed*/
-  typedef boost::optional<PumpConstantSpeed> OptionalPumpConstantSpeed;
+  using OptionalPumpConstantSpeed = boost::optional<PumpConstantSpeed>;
 
   /** \relates PumpConstantSpeed*/
-  typedef std::vector<PumpConstantSpeed> PumpConstantSpeedVector;
+  using PumpConstantSpeedVector = std::vector<PumpConstantSpeed>;
 
 }  // namespace model
 }  // namespace openstudio

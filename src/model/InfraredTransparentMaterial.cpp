@@ -77,7 +77,7 @@ namespace model {
   }
 
   IddObjectType InfraredTransparentMaterial::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Material_InfraredTransparent);
+    return {IddObjectType::OS_Material_InfraredTransparent};
   }
 
   /// @cond

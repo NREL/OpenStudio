@@ -98,7 +98,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Material_Impl ImplType;
+    using ImplType = detail::Material_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -115,10 +115,10 @@ namespace model {
   };
 
   /** \relates Material */
-  typedef boost::optional<Material> OptionalMaterial;
+  using OptionalMaterial = boost::optional<Material>;
 
   /** \relates Material */
-  typedef std::vector<Material> MaterialVector;
+  using MaterialVector = std::vector<Material>;
 
 }  // namespace model
 }  // namespace openstudio

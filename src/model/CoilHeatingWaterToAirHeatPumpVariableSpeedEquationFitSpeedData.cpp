@@ -441,7 +441,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData);
+    return {IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_SpeedData};
   }
 
   double CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData::referenceUnitGrossRatedHeatingCapacity() const {

@@ -130,7 +130,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OpaqueMaterial_Impl ImplType;
+    using ImplType = detail::OpaqueMaterial_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -146,10 +146,10 @@ namespace model {
   };
 
   /** \relates OpaqueMaterial */
-  typedef boost::optional<OpaqueMaterial> OptionalOpaqueMaterial;
+  using OptionalOpaqueMaterial = boost::optional<OpaqueMaterial>;
 
   /** \relates OpaqueMaterial */
-  typedef std::vector<OpaqueMaterial> OpaqueMaterialVector;
+  using OpaqueMaterialVector = std::vector<OpaqueMaterial>;
 
 }  // namespace model
 }  // namespace openstudio

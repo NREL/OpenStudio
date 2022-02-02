@@ -197,7 +197,7 @@ namespace energyplus {
         if (std::find_if(_setpointManagers.begin(), _setpointManagers.end(), isTemperatureControl) == _setpointManagers.end()) {
           for (auto _setpointManager : _supplyOutletSetpointManagers) {
             if (isTemperatureControl(_setpointManager)) {
-              SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
+              auto spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
               spmClone.addToNode(lowerNode);
               spmClone.setName(lowerNode.name().get() + " OS Default SPM");
             }

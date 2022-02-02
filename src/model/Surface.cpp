@@ -108,7 +108,6 @@ namespace model {
 
     Surface_Impl::Surface_Impl(const Surface_Impl& other, Model_Impl* model, bool keepHandle) : PlanarSurface_Impl(other, model, keepHandle) {}
 
-
     boost::optional<ParentObject> Surface_Impl::parent() const {
       boost::optional<ParentObject> result;
       result = this->space();

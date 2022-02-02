@@ -65,7 +65,6 @@ namespace contam {
 
   Zone::Zone(const Zone& other) : m_impl(other.m_impl) {}
 
-
   Zone& Zone::operator=(const Zone& other) {
     m_impl = other.m_impl;
     return *this;
@@ -447,7 +446,6 @@ namespace contam {
 
   Species::Species(const Species& other) : m_impl(other.m_impl) {}
 
-
   Species& Species::operator=(const Species& other) {
     m_impl = other.m_impl;
     return *this;
@@ -640,7 +638,6 @@ namespace contam {
 
   Ahs::Ahs(const Ahs& other) : m_impl(other.m_impl) {}
 
-
   Ahs& Ahs::operator=(const Ahs& other) {
     m_impl = other.m_impl;
     return *this;
@@ -803,7 +800,6 @@ namespace contam {
                                                                                   u_F, cfd, cfd_name, cfd_ptype, cfd_btype, cfd_capp))) {}
 
   AirflowPath::AirflowPath(const AirflowPath& other) : m_impl(other.m_impl) {}
-
 
   AirflowPath& AirflowPath::operator=(const AirflowPath& other) {
     m_impl = other.m_impl;
@@ -1229,7 +1225,6 @@ cfd_zref,cfd_imax,cfd_dtcmo);
 }*/
 
   RunControl::RunControl(const RunControl& other) : m_impl(other.m_impl) {}
-
 
   RunControl& RunControl::operator=(const RunControl& other) {
     m_impl = other.m_impl;
@@ -2200,7 +2195,6 @@ cfd_zref,cfd_imax,cfd_dtcmo);
 
   Level::Level(const Level& other) : m_impl(other.m_impl) {}
 
-
   Level& Level::operator=(const Level& other) {
     m_impl = other.m_impl;
     return *this;
@@ -2293,7 +2287,6 @@ cfd_zref,cfd_imax,cfd_dtcmo);
 
   DaySchedule::DaySchedule(const DaySchedule& other) : m_impl(other.m_impl) {}
 
-
   DaySchedule& DaySchedule::operator=(const DaySchedule& other) {
     m_impl = other.m_impl;
     return *this;
@@ -2378,7 +2371,6 @@ cfd_zref,cfd_imax,cfd_dtcmo);
 
   WeekSchedule::WeekSchedule(const WeekSchedule& other) : m_impl(other.m_impl) {}
 
-
   WeekSchedule& WeekSchedule::operator=(const WeekSchedule& other) {
     m_impl = other.m_impl;
     return *this;
@@ -2454,7 +2446,6 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     : m_impl(std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl(nr, type, name, desc, coeffs))) {}
 
   WindPressureProfile::WindPressureProfile(const WindPressureProfile& other) : m_impl(other.m_impl) {}
-
 
   WindPressureProfile& WindPressureProfile::operator=(const WindPressureProfile& other) {
     m_impl = other.m_impl;
@@ -2609,7 +2600,6 @@ cfd_zref,cfd_imax,cfd_dtcmo);
     : m_impl(std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr, seqnr, flags, inreq, n1, n2, name, desc, valuename))) {}
 
   CdvDat::CdvDat(const CdvDat& other) : m_impl(other.m_impl) {}
-
 
   CdvDat& CdvDat::operator=(const CdvDat& other) {
     m_impl = other.m_impl;

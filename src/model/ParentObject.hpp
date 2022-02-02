@@ -81,7 +81,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::ParentObject_Impl ImplType;
+    using ImplType = detail::ParentObject_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -97,10 +97,10 @@ namespace model {
   };
 
   // optional ParentObject
-  typedef boost::optional<ParentObject> OptionalParentObject;
+  using OptionalParentObject = boost::optional<ParentObject>;
 
   // vector of ParentObject
-  typedef std::vector<ParentObject> ParentObjectVector;
+  using ParentObjectVector = std::vector<ParentObject>;
 
   /** Returns object and all other objects accessible by calling children() on encountered
  *  \link ParentObject ParentObjects \endlink. LifeCycleCost and AdditionalProperties objects

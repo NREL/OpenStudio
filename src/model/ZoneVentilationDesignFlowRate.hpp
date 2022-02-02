@@ -188,7 +188,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneVentilationDesignFlowRate_Impl ImplType;
+    using ImplType = detail::ZoneVentilationDesignFlowRate_Impl;
 
     explicit ZoneVentilationDesignFlowRate(std::shared_ptr<detail::ZoneVentilationDesignFlowRate_Impl> impl);
 
@@ -202,10 +202,10 @@ namespace model {
   };
 
   /** \relates ZoneVentilationDesignFlowRate*/
-  typedef boost::optional<ZoneVentilationDesignFlowRate> OptionalZoneVentilationDesignFlowRate;
+  using OptionalZoneVentilationDesignFlowRate = boost::optional<ZoneVentilationDesignFlowRate>;
 
   /** \relates ZoneVentilationDesignFlowRate*/
-  typedef std::vector<ZoneVentilationDesignFlowRate> ZoneVentilationDesignFlowRateVector;
+  using ZoneVentilationDesignFlowRateVector = std::vector<ZoneVentilationDesignFlowRate>;
 
 }  // namespace model
 }  // namespace openstudio

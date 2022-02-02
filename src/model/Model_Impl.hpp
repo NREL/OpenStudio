@@ -321,13 +321,12 @@ namespace model {
       void clearCachedYearDescription(const Handle& handle);
       void clearCachedWeatherFile(const Handle& handle);
 
-      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
-        Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>
-        CopyConstructorFunction;
-      typedef std::map<IddObjectType, CopyConstructorFunction> CopyConstructorMap;
+      using CopyConstructorFunction = std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
+        Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>;
+      using CopyConstructorMap = std::map<IddObjectType, CopyConstructorFunction>;
 
-      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)> NewConstructorFunction;
-      typedef std::map<IddObjectType, NewConstructorFunction> NewConstructorMap;
+      using NewConstructorFunction = std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)>;
+      using NewConstructorMap = std::map<IddObjectType, NewConstructorFunction>;
 
       // The purpose of ModelObjectCreator is to support static initialization of two large maps.
       // One is a map from IddObjectType to a function that creates a new ModelObject instance,

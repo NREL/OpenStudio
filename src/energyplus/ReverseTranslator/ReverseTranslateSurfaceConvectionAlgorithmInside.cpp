@@ -45,7 +45,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    InsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
+    auto mo = m_model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
 
     if (OptionalString s = workspaceObject.getString(SurfaceConvectionAlgorithm_InsideFields::Algorithm)) {
       mo.setAlgorithm(s.get());

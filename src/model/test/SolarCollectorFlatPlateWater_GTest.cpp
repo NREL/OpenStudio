@@ -148,7 +148,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_Clone) {
 
     ModelObject clone = collector.clone(model);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
-    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
+    auto collector2 = clone.cast<SolarCollectorFlatPlateWater>();
     SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlateWater_Clone) {
     Model model2;
     ModelObject clone = collector.clone(model2);
     ASSERT_TRUE(clone.optionalCast<SolarCollectorFlatPlateWater>());
-    SolarCollectorFlatPlateWater collector2 = clone.cast<SolarCollectorFlatPlateWater>();
+    auto collector2 = clone.cast<SolarCollectorFlatPlateWater>();
     SolarCollectorPerformanceFlatPlate performance2 = collector2.solarCollectorPerformance();
 
     EXPECT_NE(collector.handle(), collector2.handle());

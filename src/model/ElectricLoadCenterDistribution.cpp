@@ -94,7 +94,8 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ElectricLoadCenter_DistributionFields::TrackScheduleNameSchemeScheduleName) != e) {
         result.push_back(ScheduleTypeKey("ElectricLoadCenterDistribution", "Track  Scheme"));
       }
@@ -130,7 +131,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> ElectricLoadCenterDistribution_Impl::allowableChildTypes() const {
-      return std::vector<IddObjectType>();
+      return {};
     }
 
     ModelObject ElectricLoadCenterDistribution_Impl::clone(Model model) const {
@@ -734,7 +735,7 @@ namespace model {
   }
 
   IddObjectType ElectricLoadCenterDistribution::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Distribution);
+    return {IddObjectType::OS_ElectricLoadCenter_Distribution};
   }
 
   std::vector<std::string> ElectricLoadCenterDistribution::generatorOperationSchemeTypeValues() {

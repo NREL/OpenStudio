@@ -108,59 +108,59 @@ namespace model {
       return 0.0;
     }
 
-    bool ModelPartitionMaterial_Impl::setThickness(double value) {
+    bool ModelPartitionMaterial_Impl::setThickness(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setThermalConductivity(double value) {
+    bool ModelPartitionMaterial_Impl::setThermalConductivity(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setThermalConductance(double value) {
+    bool ModelPartitionMaterial_Impl::setThermalConductance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setThermalResistivity(double value) {
+    bool ModelPartitionMaterial_Impl::setThermalResistivity(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setThermalResistance(double value) {
+    bool ModelPartitionMaterial_Impl::setThermalResistance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setThermalTransmittance(double value) {
+    bool ModelPartitionMaterial_Impl::setThermalTransmittance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setThermalAbsorptance(double value) {
+    bool ModelPartitionMaterial_Impl::setThermalAbsorptance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setThermalReflectance(double value) {
+    bool ModelPartitionMaterial_Impl::setThermalReflectance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setSolarTransmittance(double value) {
+    bool ModelPartitionMaterial_Impl::setSolarTransmittance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setSolarAbsorptance(double value) {
+    bool ModelPartitionMaterial_Impl::setSolarAbsorptance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setSolarReflectance(double value) {
+    bool ModelPartitionMaterial_Impl::setSolarReflectance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setVisibleTransmittance(double value) {
+    bool ModelPartitionMaterial_Impl::setVisibleTransmittance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setVisibleAbsorptance(double value) {
+    bool ModelPartitionMaterial_Impl::setVisibleAbsorptance(double /*value*/) {
       return false;
     }
 
-    bool ModelPartitionMaterial_Impl::setVisibleReflectance(double value) {
+    bool ModelPartitionMaterial_Impl::setVisibleReflectance(double /*value*/) {
       return false;
     }
 

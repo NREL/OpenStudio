@@ -140,7 +140,7 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_clone) {
   ASSERT_TRUE(testObject.lowSetpointSchedule());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
-  SetpointManagerScheduledDualSetpoint testObjectClone = testObject.clone(m).cast<SetpointManagerScheduledDualSetpoint>();
+  auto testObjectClone = testObject.clone(m).cast<SetpointManagerScheduledDualSetpoint>();
   EXPECT_FALSE(testObjectClone.setpointNode());
   ASSERT_TRUE(testObjectClone.highSetpointSchedule());
   ASSERT_TRUE(testObjectClone.lowSetpointSchedule());

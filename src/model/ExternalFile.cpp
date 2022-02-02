@@ -70,7 +70,6 @@ namespace model {
       return result;
     }
 
-
     IddObjectType ExternalFile_Impl::iddObjectType() const {
       return ExternalFile::iddObjectType();
     }

@@ -70,7 +70,6 @@ namespace model {
     SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model, bool keepHandles)
       : SetpointManager_Impl(other, model, keepHandles) {}
 
-
     const std::vector<std::string>& SetpointManagerMixedAir_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
       return result;

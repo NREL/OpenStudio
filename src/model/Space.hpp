@@ -589,7 +589,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::Space_Impl ImplType;
+    using ImplType = detail::Space_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -622,10 +622,10 @@ namespace model {
                                                                       double desiredHeight);
 
   /** \relates Space*/
-  typedef boost::optional<Space> OptionalSpace;
+  using OptionalSpace = boost::optional<Space>;
 
   /** \relates Space*/
-  typedef std::vector<Space> SpaceVector;
+  using SpaceVector = std::vector<Space>;
 
 }  // namespace model
 }  // namespace openstudio

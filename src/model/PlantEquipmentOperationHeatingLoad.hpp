@@ -59,7 +59,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::PlantEquipmentOperationHeatingLoad_Impl ImplType;
+    using ImplType = detail::PlantEquipmentOperationHeatingLoad_Impl;
 
     explicit PlantEquipmentOperationHeatingLoad(std::shared_ptr<detail::PlantEquipmentOperationHeatingLoad_Impl> impl);
 
@@ -73,10 +73,10 @@ namespace model {
   };
 
   /** \relates PlantEquipmentOperationHeatingLoad*/
-  typedef boost::optional<PlantEquipmentOperationHeatingLoad> OptionalPlantEquipmentOperationHeatingLoad;
+  using OptionalPlantEquipmentOperationHeatingLoad = boost::optional<PlantEquipmentOperationHeatingLoad>;
 
   /** \relates PlantEquipmentOperationHeatingLoad*/
-  typedef std::vector<PlantEquipmentOperationHeatingLoad> PlantEquipmentOperationHeatingLoadVector;
+  using PlantEquipmentOperationHeatingLoadVector = std::vector<PlantEquipmentOperationHeatingLoad>;
 
 }  // namespace model
 }  // namespace openstudio
